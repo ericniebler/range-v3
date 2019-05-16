@@ -1,5 +1,6 @@
 var meta_8hpp =
 [
+    [ "and_c", "structmeta_1_1and__c.html", null ],
     [ "compose_< Fn0 >", "structmeta_1_1compose___3_01_fn0_01_4.html", "structmeta_1_1compose___3_01_fn0_01_4" ],
     [ "compose_< Fn0, Fns... >", "structmeta_1_1compose___3_01_fn0_00_01_fns_8_8_8_01_4.html", "structmeta_1_1compose___3_01_fn0_00_01_fns_8_8_8_01_4" ],
     [ "count_", "structmeta_1_1detail_1_1count__.html", null ],
@@ -26,7 +27,6 @@ var meta_8hpp =
     [ "all_of", "meta_8hpp.html#ga94c7bfb104bbe50874f280f59a624477", null ],
     [ "and_", "meta_8hpp.html#gafedb0b5d2625d8008a7212495ac37c33", null ],
     [ "and_", "meta_8hpp.html#gad308c19572f36349d611c4e5e8457550", null ],
-    [ "and_c", "meta_8hpp.html#ab16454bffc834ae207ae0947439d0907", null ],
     [ "any_of", "meta_8hpp.html#ga458c0596c85f41edc60b5230e76087e1", null ],
     [ "any_of", "meta_8hpp.html#gaae0682664bcebd1e81441f9a0a66e0a0", null ],
     [ "apply", "meta_8hpp.html#ga2f71f17b6a6b48ea99134ddabd0e19a9", null ],
@@ -156,7 +156,6 @@ var meta_8hpp =
     [ "on_", "meta_8hpp.html#gaf53cbfe64fd00f1c5b0d252365ea7548", null ],
     [ "or_", "meta_8hpp.html#ga137096d8c283b5a723865f29c3aa57ce", null ],
     [ "or_", "meta_8hpp.html#gac6b7cfec9bc49c4e50bd6f107db4a303", null ],
-    [ "or_c", "meta_8hpp.html#ga09eddc3ab9df6f4754dda2fffd7073b4", null ],
     [ "pair", "meta_8hpp.html#gafd1e131e4e3ae4b0ae9bd3d2ec3a5f74", null ],
     [ "partition", "meta_8hpp.html#ga15c1c01dfb904208e7d71d660caff4ca", null ],
     [ "partition", "meta_8hpp.html#ga2410e097ab79bafcf93fa2751fce162d", null ],
@@ -221,5 +220,6 @@ var meta_8hpp =
     [ "_nullptr_v", "meta_8hpp.html#abe228400557af7a8855dd70d965d57ca", null ],
     [ "count_i_", "meta_8hpp.html#adbb5c49f90e042faaa211484afd46516", null ],
     [ "operator\"\"_z", "meta_8hpp.html#gaddea0d053893b5bec6ba3d75af70624e", null ],
+    [ "_v", "meta_8hpp.html#ga63ad9a7984ab9ece32f80a3d065d1729", null ],
     [ "for_each", "meta_8hpp.html#ga8beaba5ae537715c97e180b05160cc03", null ]
 ];

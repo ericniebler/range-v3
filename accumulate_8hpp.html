@@ -98,8 +98,7 @@ $(document).ready(function(){initNavTree('accumulate_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">accumulate.hpp File Reference</div>  </div>
@@ -108,27 +107,23 @@ $(document).ready(function(){initNavTree('accumulate_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1accumulate__fn.html">ranges::v3::accumulate_fn</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1accumulate__fn.html">ranges::accumulate_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:afc1cf99673f8c0a887a53272c1863cd5"><td class="memTemplParams" colspan="2"><a id="afc1cf99673f8c0a887a53272c1863cd5"></a>
-template&lt;typename I , typename T , typename Op  = plus, typename P  = ident&gt; </td></tr>
-<tr class="memitem:afc1cf99673f8c0a887a53272c1863cd5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Accumulateable</b> = meta::strict_and&lt; InputIterator&lt; I &gt;, IndirectInvocable&lt; Op, T *, projected&lt; I, P &gt; &gt;, Assignable&lt; T &amp;, indirect_invoke_result_t&lt; Op &amp;, T *, projected&lt; I, P &gt; &gt;&gt; &gt;</td></tr>
-<tr class="separator:afc1cf99673f8c0a887a53272c1863cd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga1c472a22bd64b968d93944981bc7856b"><td class="memItemLeft" align="right" valign="top">
+&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::CPP_PP_CAT</b> (CPP_PP_DEF_, template(typename I, typename T, typename Op=plus, typename P=identity)) META_CONCEPT CPP_PP_CAT(CPP_PP_DEF_</td></tr>
+<tr class="separator:ga1c472a22bd64b968d93944981bc7856b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a05f9387ade687636000d01ba06a35399"><td class="memItemLeft" align="right" valign="top"><a id="a05f9387ade687636000d01ba06a35399"></a>
-constexpr with_braced_init_args&lt; accumulate_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::accumulate</b> {}</td></tr>
-<tr class="separator:a05f9387ade687636000d01ba06a35399"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9ff37f2b8a2f10a8988efb7466f140c6"><td class="memItemLeft" align="right" valign="top">
+constexpr accumulate_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::accumulate</b> {}</td></tr>
+<tr class="separator:ga9ff37f2b8a2f10a8988efb7466f140c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1dc3599be45732e723826b3681a25678"><td class="memItemLeft" align="right" valign="top">
+concept&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::Accumulateable</b> = CPP_PP_CAT( CPP_PP_DEF_IMPL_, 0 )( InputIterator&lt;I&gt; &amp;&amp; IndirectBinaryInvocable_&lt;Op, T *, projected&lt;I, P&gt;&gt; &amp;&amp; Assignable&lt;T&amp;, indirect_result_t&lt;Op &amp;, T *, projected&lt;I, P&gt;&gt;&gt; )</td></tr>
+<tr class="separator:ga1dc3599be45732e723826b3681a25678"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

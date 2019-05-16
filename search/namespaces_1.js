@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['cpos',['CPOs',['../namespaceranges_1_1v3_1_1_c_p_os.html',1,'ranges::v3']]],
-  ['ranges',['ranges',['../namespaceranges.html',1,'']]]
+  ['detail',['detail',['../namespaceranges_1_1detail.html',1,'ranges']]]
 ];

@@ -99,7 +99,8 @@ $(document).ready(function(){initNavTree('meta__fwd_8hpp.html','');});
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">meta_fwd.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -161,6 +162,9 @@ Macros</h2></td></tr>
 <tr class="memitem:a2e5bdcb2956f67586ae7176376cef9ab"><td class="memItemLeft" align="right" valign="top"><a id="a2e5bdcb2956f67586ae7176376cef9ab"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>META_CXX_STD_17</b>&#160;&#160;&#160;201703L</td></tr>
 <tr class="separator:a2e5bdcb2956f67586ae7176376cef9ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a632bbcf5ed49b750011f3d199935b0f1"><td class="memItemLeft" align="right" valign="top"><a id="a632bbcf5ed49b750011f3d199935b0f1"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>META_CXX_TRAIT_VARIABLE_TEMPLATES</b>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a632bbcf5ed49b750011f3d199935b0f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa103ecf91d7771bca739cb7717109999"><td class="memItemLeft" align="right" valign="top"><a id="aa103ecf91d7771bca739cb7717109999"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>META_CXX_VARIABLE_TEMPLATES</b>&#160;&#160;&#160;(META_CXX_VER &gt;= META_CXX_STD_14)</td></tr>
 <tr class="separator:aa103ecf91d7771bca739cb7717109999"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -179,9 +183,24 @@ Macros</h2></td></tr>
 <tr class="memitem:a75095c1ef1f69c7f86aed3d9a0b42bc0"><td class="memItemLeft" align="right" valign="top"><a id="a75095c1ef1f69c7f86aed3d9a0b42bc0"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>META_INLINE_VAR</b></td></tr>
 <tr class="separator:a75095c1ef1f69c7f86aed3d9a0b42bc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8af0802d1b710d644fd6746daf18d46"><td class="memItemLeft" align="right" valign="top"><a id="af8af0802d1b710d644fd6746daf18d46"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>META_IS_SAME</b>(...)&#160;&#160;&#160;std::is_same&lt;__VA_ARGS__&gt;::value</td></tr>
+<tr class="separator:af8af0802d1b710d644fd6746daf18d46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3fe546f2387d610a9c3f74031d0267d8"><td class="memItemLeft" align="right" valign="top"><a id="a3fe546f2387d610a9c3f74031d0267d8"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>META_TYPE_CONSTRAINT</b>(...)&#160;&#160;&#160;typename</td></tr>
 <tr class="separator:a3fe546f2387d610a9c3f74031d0267d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:gad44e618cd853bf9c253add6b93234302"><td class="memTemplParams" colspan="2">
+template&lt;typename , template&lt; typename... &gt; class&gt; </td></tr>
+<tr class="memitem:gad44e618cd853bf9c253add6b93234302"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gad44e618cd853bf9c253add6b93234302">meta::is_v</a> = false</td></tr>
+<tr class="memdesc:gad44e618cd853bf9c253add6b93234302"><td class="mdescLeft">&#160;</td><td class="mdescRight">is_v Test whether a type <code>T</code> is an instantiation of class template <code>C</code>. <br /></td></tr>
+<tr class="separator:gad44e618cd853bf9c253add6b93234302"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a4149bc7e37f4e1a6a783b45b8afa3f"><td class="memTemplParams" colspan="2"><a id="a7a4149bc7e37f4e1a6a783b45b8afa3f"></a>
+template&lt;typename... Ts, template&lt; typename... &gt; class C&gt; </td></tr>
+<tr class="memitem:a7a4149bc7e37f4e1a6a783b45b8afa3f"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>meta::is_v&lt; C&lt; Ts... &gt;, C &gt;</b> = true</td></tr>
+<tr class="separator:a7a4149bc7e37f4e1a6a783b45b8afa3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Forward declarations. </p>

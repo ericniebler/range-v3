@@ -11,5 +11,6 @@ var group__invocation =
     [ "apply", "group__invocation.html#ga2f71f17b6a6b48ea99134ddabd0e19a9", null ],
     [ "defer_trait", "group__invocation.html#ga5fef8be9ed0280ec1553a8f3cc5d85a1", null ],
     [ "defer_trait_i", "group__invocation.html#ga596c8fb8ea9eebc4892c682c14c0064f", null ],
-    [ "invoke", "group__invocation.html#gac5c75197d5412d032f662b81e1a37e22", null ]
+    [ "invoke", "group__invocation.html#gac5c75197d5412d032f662b81e1a37e22", null ],
+    [ "_v", "group__invocation.html#ga63ad9a7984ab9ece32f80a3d065d1729", null ]
 ];

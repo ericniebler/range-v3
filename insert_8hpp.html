@@ -98,8 +98,6 @@ $(document).ready(function(){initNavTree('insert_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -109,41 +107,69 @@ $(document).ready(function(){initNavTree('insert_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1concepts_1_1_insertable_range.html">ranges::concepts::InsertableRange</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1insert__fn.html">ranges::insert_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1insert__fn.html">ranges::v3::insert_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:ga3823e8373e2a77b9c595b4efc1e2b425"><td class="memTemplParams" colspan="2">
-template&lt;typename Rng , typename... Rest&gt; </td></tr>
-<tr class="memitem:ga3823e8373e2a77b9c595b4efc1e2b425"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::InsertableRange</b> = concepts::models&lt; concepts::InsertableRange, Rng, Rest... &gt;</td></tr>
-<tr class="separator:ga3823e8373e2a77b9c595b4efc1e2b425"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae2b9fe7dbfb66dad1e39c476569439e7"><td class="memTemplParams" colspan="2"><a id="ae2b9fe7dbfb66dad1e39c476569439e7"></a>
-template&lt;typename Cont , typename P , typename I , typename S , typename C  = common_iterator_t&lt;I, S&gt;, requires  = (LvalueContainerLike&lt;Cont&gt;() &amp;&amp; Iterator&lt;P&gt;() &amp;&amp;                    Sentinel&lt;S, I&gt;() &amp;&amp; !Range&lt;S&gt;())&gt; </td></tr>
-<tr class="memitem:ae2b9fe7dbfb66dad1e39c476569439e7"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::insert</b> (Cont &amp;&amp;cont, P p, I i, S j) -&gt; decltype(detail::insert_impl(static_cast&lt; Cont &amp;&amp; &gt;(cont), std::move(p), std::move(i), std::move(j), meta::strict_and&lt; RandomAccessReservable&lt; Cont &gt;, SizedSentinel&lt; S, I &gt;&gt;</td></tr>
-<tr class="separator:ae2b9fe7dbfb66dad1e39c476569439e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa973f14f5189bf02318759330279dc16"><td class="memTemplParams" colspan="2"><a id="aa973f14f5189bf02318759330279dc16"></a>
-template&lt;typename Cont , typename I , typename Rng , typename C  = range_common_iterator_t&lt;Rng&gt;, requires  = (LvalueContainerLike&lt;Cont&gt;() &amp;&amp; Iterator&lt;I&gt;() &amp;&amp; Range&lt;Rng&gt;())&gt; </td></tr>
-<tr class="memitem:aa973f14f5189bf02318759330279dc16"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::insert</b> (Cont &amp;&amp;cont, I p, Rng &amp;&amp;rng) -&gt; decltype(detail::insert_impl(static_cast&lt; Cont &amp;&amp; &gt;(cont), std::move(p), static_cast&lt; Rng &amp;&amp; &gt;(rng), meta::strict_and&lt; RandomAccessReservable&lt; Cont &gt;, SizedRange&lt; Rng &gt;&gt;</td></tr>
-<tr class="separator:aa973f14f5189bf02318759330279dc16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabcb5e4e6084ef86980d19be900cb02b6"><td class="memItemLeft" align="right" valign="top">
+&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_PP_CAT</b> (CPP_PP_DEF_, template(typename Rng, typename... Rest)) META_CONCEPT CPP_PP_CAT(CPP_PP_DEF_</td></tr>
+<tr class="separator:gabcb5e4e6084ef86980d19be900cb02b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b7a63b8a6cabc48b2190bd095e35c7e"><td class="memTemplParams" colspan="2"><a id="a0b7a63b8a6cabc48b2190bd095e35c7e"></a>
+template&lt;typename Cont , typename P , typename I , typename S &gt; </td></tr>
+<tr class="memitem:a0b7a63b8a6cabc48b2190bd095e35c7e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::insert</b> (Cont &amp;&amp;cont, P p, I i, S j) -&gt; decltype(detail::insert_impl(static_cast&lt; Cont &amp;&amp; &gt;(cont), std::move(p), std::move(i), std::move(j), <a class="el" href="group__integral.html#ga8cd5c79222ce70365f7469f35ece905a">meta::bool_</a>&lt; RandomAccessReservable&lt; Cont &gt; &amp;&amp;SizedSentinel&lt; S, I &gt;&gt;</td></tr>
+<tr class="separator:a0b7a63b8a6cabc48b2190bd095e35c7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e3aa3851e1a97a904a91e77c56ab105"><td class="memTemplParams" colspan="2"><a id="a2e3aa3851e1a97a904a91e77c56ab105"></a>
+template&lt;typename Cont , typename I , typename Rng &gt; </td></tr>
+<tr class="memitem:a2e3aa3851e1a97a904a91e77c56ab105"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::insert</b> (Cont &amp;&amp;cont, I p, Rng &amp;&amp;rng) -&gt; decltype(detail::insert_impl(static_cast&lt; Cont &amp;&amp; &gt;(cont), std::move(p), static_cast&lt; Rng &amp;&amp; &gt;(rng), <a class="el" href="group__integral.html#ga8cd5c79222ce70365f7469f35ece905a">meta::bool_</a>&lt; RandomAccessReservable&lt; Cont &gt; &amp;&amp;SizedRange&lt; Rng &gt;&gt;</td></tr>
+<tr class="separator:a2e3aa3851e1a97a904a91e77c56ab105"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:gade8cf570c27cf211eb6390954c837e5e"><td class="memItemLeft" align="right" valign="top">
-constexpr adl_insert_detail::insert_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::insert</b> {}</td></tr>
-<tr class="separator:gade8cf570c27cf211eb6390954c837e5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26a8202825f42b49121d8a0221f920a8"><td class="memItemLeft" align="right" valign="top">requires LvalueContainerLike&lt; Cont &gt; &amp;&amp;Iterator&lt; P &gt; &amp;&amp;Sentinel&lt; S, I &gt; &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::!Range&lt; S &gt;</b></td></tr>
+<tr class="separator:a26a8202825f42b49121d8a0221f920a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga25563fde5ef208fd66780f6139cf2ba9"><td class="memItemLeft" align="right" valign="top">
+constexpr adl_insert_detail::insert_fn&#160;</td><td class="memItemRight" valign="bottom"><b>insert</b> {}</td></tr>
+<tr class="separator:ga25563fde5ef208fd66780f6139cf2ba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6c83830215a5ae722be50f1f898e738"><td class="memItemLeft" align="right" valign="top"><a id="aa6c83830215a5ae722be50f1f898e738"></a>
+concept&#160;</td><td class="memItemRight" valign="bottom"><b>InsertableRange</b> = CPP_PP_CAT( CPP_PP_DEF_IMPL_, 0 )( requires (Rng &amp;&amp;rng, Rest &amp;&amp;... rest) ( ranges::insert( static_cast&lt;Rng &amp;&amp;&gt;(rng), static_cast&lt;Rest &amp;&amp;&gt;(rest)...) ) &amp;&amp; Range&lt;Rng&gt; )</td></tr>
+<tr class="separator:aa6c83830215a5ae722be50f1f898e738"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d9974c19e6c9ebaddff242c59ca0d3e"><td class="memItemLeft" align="right" valign="top">requires LvalueContainerLike&lt; Cont &gt; &amp;&amp;Iterator&lt; I &gt; &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::Range&lt; Rng &gt;</b></td></tr>
+<tr class="separator:a5d9974c19e6c9ebaddff242c59ca0d3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="file_a26a8202825f42b49121d8a0221f920a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a26a8202825f42b49121d8a0221f920a8">&#9670;&nbsp;</a></span>!Range&lt; S &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">requires LvalueContainerLike&lt;Cont&gt;&amp;&amp; Iterator&lt;P&gt;&amp;&amp; Sentinel&lt;S, I&gt;&amp;&amp; ranges::!Range&lt; S &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div><div class="line">            <span class="keywordflow">return</span> detail::insert_impl(</div><div class="line">                static_cast&lt;Cont &amp;&amp;&gt;(cont),</div><div class="line">                <a class="code" href="group__group-algorithms.html#ga0b2fdb8123a8df06072057e380557dc3">std::move</a>(p),</div><div class="line">                <a class="code" href="group__group-algorithms.html#ga0b2fdb8123a8df06072057e380557dc3">std::move</a>(i),</div><div class="line">                <a class="code" href="group__group-algorithms.html#ga0b2fdb8123a8df06072057e380557dc3">std::move</a>(j),</div><div class="line">                <a class="code" href="group__integral.html#ga8cd5c79222ce70365f7469f35ece905a">meta::bool_</a>&lt;RandomAccessReservable&lt;Cont&gt; &amp;&amp; SizedSentinel&lt;S, I&gt;&gt;{})</div><div class="ttc" id="group__integral_html_ga8cd5c79222ce70365f7469f35ece905a"><div class="ttname"><a href="group__integral.html#ga8cd5c79222ce70365f7469f35ece905a">meta::bool_</a></div><div class="ttdeci">std::integral_constant&lt; bool, B &gt; bool_</div><div class="ttdoc">An integral constant wrapper for bool.</div><div class="ttdef"><b>Definition:</b> meta.hpp:168</div></div>
+<div class="ttc" id="group__group-algorithms_html_ga0b2fdb8123a8df06072057e380557dc3"><div class="ttname"><a href="group__group-algorithms.html#ga0b2fdb8123a8df06072057e380557dc3">ranges::move</a></div><div class="ttdeci">constexpr move_fn move</div><div class="ttdef"><b>Definition:</b> move.hpp:66</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="file_a5d9974c19e6c9ebaddff242c59ca0d3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a5d9974c19e6c9ebaddff242c59ca0d3e">&#9670;&nbsp;</a></span>Range&lt; Rng &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">requires LvalueContainerLike&lt;Cont&gt;&amp;&amp; Iterator&lt;I&gt;&amp;&amp; ranges::Range&lt; Rng &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div><div class="line">            <span class="keywordflow">return</span> detail::insert_impl(</div><div class="line">                static_cast&lt;Cont &amp;&amp;&gt;(cont),</div><div class="line">                <a class="code" href="group__group-algorithms.html#ga0b2fdb8123a8df06072057e380557dc3">std::move</a>(p),</div><div class="line">                static_cast&lt;Rng &amp;&amp;&gt;(rng),</div><div class="line">                <a class="code" href="group__integral.html#ga8cd5c79222ce70365f7469f35ece905a">meta::bool_</a>&lt;RandomAccessReservable&lt;Cont&gt; &amp;&amp; SizedRange&lt;Rng&gt;&gt;{})</div><div class="ttc" id="group__integral_html_ga8cd5c79222ce70365f7469f35ece905a"><div class="ttname"><a href="group__integral.html#ga8cd5c79222ce70365f7469f35ece905a">meta::bool_</a></div><div class="ttdeci">std::integral_constant&lt; bool, B &gt; bool_</div><div class="ttdoc">An integral constant wrapper for bool.</div><div class="ttdef"><b>Definition:</b> meta.hpp:168</div></div>
+<div class="ttc" id="group__group-algorithms_html_ga0b2fdb8123a8df06072057e380557dc3"><div class="ttname"><a href="group__group-algorithms.html#ga0b2fdb8123a8df06072057e380557dc3">ranges::move</a></div><div class="ttdeci">constexpr move_fn move</div><div class="ttdef"><b>Definition:</b> move.hpp:66</div></div>
+</div><!-- fragment -->
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

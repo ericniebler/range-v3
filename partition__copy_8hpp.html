@@ -98,7 +98,6 @@ $(document).ready(function(){initNavTree('partition__copy_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -108,26 +107,20 @@ $(document).ready(function(){initNavTree('partition__copy_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1partition__copy__fn.html">ranges::v3::partition_copy_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1partition__copy__fn.html">ranges::partition_copy_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga5c959d0ba6110faea7e16a61ac9215cc"><td class="memTemplParams" colspan="2">
-template&lt;typename I , typename O0 , typename O1 , typename C , typename P  = ident&gt; </td></tr>
-<tr class="memitem:ga5c959d0ba6110faea7e16a61ac9215cc"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::PartitionCopyable</b> = meta::strict_and&lt; InputIterator&lt; I &gt;, WeaklyIncrementable&lt; O0 &gt;, WeaklyIncrementable&lt; O1 &gt;, IndirectlyCopyable&lt; I, O0 &gt;, IndirectlyCopyable&lt; I, O1 &gt;, IndirectPredicate&lt; C, projected&lt; I, P &gt; &gt;&gt;</td></tr>
-<tr class="separator:ga5c959d0ba6110faea7e16a61ac9215cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga196586ea2693c3b679d7c75c8c8c4eb2"><td class="memTemplParams" colspan="2">
+template&lt;typename I , typename O0 , typename O1 &gt; </td></tr>
+<tr class="memitem:ga196586ea2693c3b679d7c75c8c8c4eb2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::partition_copy_result</b> = detail::in_out1_out2_result&lt; I, O0, O1 &gt;</td></tr>
+<tr class="separator:ga196586ea2693c3b679d7c75c8c8c4eb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga798952e773075c765b42436bf6ffd872"><td class="memItemLeft" align="right" valign="top">constexpr with_braced_init_args&lt; partition_copy_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga798952e773075c765b42436bf6ffd872">ranges::v3::partition_copy</a> {}</td></tr>
-<tr class="separator:ga798952e773075c765b42436bf6ffd872"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga59ea691ae5049005532d4730bdef6bd9"><td class="memItemLeft" align="right" valign="top">constexpr partition_copy_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga59ea691ae5049005532d4730bdef6bd9">ranges::partition_copy</a> {}</td></tr>
+<tr class="separator:ga59ea691ae5049005532d4730bdef6bd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

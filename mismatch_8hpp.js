@@ -1,5 +1,5 @@
 var mismatch_8hpp =
 [
-    [ "Mismatchable", "mismatch_8hpp.html#ga996458535fe696ed2208ab883a688724", null ],
-    [ "mismatch", "mismatch_8hpp.html#ga5c3a873dddafa04cba5b6b0f7e6c3bce", null ]
+    [ "mismatch_result", "mismatch_8hpp.html#ga228c0cdeb71847092b416b855e17c017", null ],
+    [ "mismatch", "mismatch_8hpp.html#ga6ffb90c7a49de1c098c82a200a092b97", null ]
 ];

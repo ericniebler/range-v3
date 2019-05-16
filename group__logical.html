@@ -98,6 +98,7 @@ $(document).ready(function(){initNavTree('group__logical.html','');});
 <div class="header">
   <div class="summary">
 <a href="#groups">Modules</a> &#124;
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
 <div class="title">Logical<div class="ingroups"><a class="el" href="group__meta.html">Meta</a></div></div>  </div>
@@ -109,6 +110,12 @@ $(document).ready(function(){initNavTree('group__logical.html','');});
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="groups"></a>
 Modules</h2></td></tr>
 <tr class="memitem:group__lazy__logical"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lazy__logical.html">lazy</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1or__c.html">meta::or_c&lt; Bs &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically OR together all the Boolean parameters.  <a href="structmeta_1_1or__c.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -138,19 +145,14 @@ template&lt;typename... Bs&gt; </td></tr>
 <tr class="memitem:ga137096d8c283b5a723865f29c3aa57ce"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#ga137096d8c283b5a723865f29c3aa57ce">meta::or_</a> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt; <a class="el" href="structmeta_1_1defer.html">defer</a>&lt; detail::_or_&lt; 0==sizeof...(Bs)&gt;::template <a class="el" href="group__invocation.html#gac5c75197d5412d032f662b81e1a37e22">invoke</a>, Bs... &gt; &gt;</td></tr>
 <tr class="memdesc:ga137096d8c283b5a723865f29c3aa57ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically OR together all the integral constant-wrapped Boolean parameters, <em>with</em> short-circuiting. <br /></td></tr>
 <tr class="separator:ga137096d8c283b5a723865f29c3aa57ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga09eddc3ab9df6f4754dda2fffd7073b4"><td class="memTemplParams" colspan="2"><a id="ga09eddc3ab9df6f4754dda2fffd7073b4"></a>
-template&lt;bool... Bs&gt; </td></tr>
-<tr class="memitem:ga09eddc3ab9df6f4754dda2fffd7073b4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#ga09eddc3ab9df6f4754dda2fffd7073b4">meta::or_c</a> = <a class="el" href="group__logical.html#ga72884249179b0b22a27cc0709b75f23b">not_</a>&lt; std::is_same&lt; <a class="el" href="structmeta_1_1integer__sequence.html">integer_sequence</a>&lt; bool, Bs... &gt;, <a class="el" href="structmeta_1_1integer__sequence.html">integer_sequence</a>&lt; bool,(Bs &amp;&amp;false)... &gt; &gt;&gt;</td></tr>
-<tr class="memdesc:ga09eddc3ab9df6f4754dda2fffd7073b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically OR together all the Boolean parameters. <br /></td></tr>
-<tr class="separator:ga09eddc3ab9df6f4754dda2fffd7073b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad6c4944687eb36519341d2ba83a10fb8"><td class="memTemplParams" colspan="2"><a id="gad6c4944687eb36519341d2ba83a10fb8"></a>
 template&lt;typename... Bs&gt; </td></tr>
-<tr class="memitem:gad6c4944687eb36519341d2ba83a10fb8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#gad6c4944687eb36519341d2ba83a10fb8">meta::strict_and_</a> = and_c&lt; Bs::type::value... &gt;</td></tr>
+<tr class="memitem:gad6c4944687eb36519341d2ba83a10fb8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#gad6c4944687eb36519341d2ba83a10fb8">meta::strict_and_</a> = <a class="el" href="structmeta_1_1and__c.html">and_c</a>&lt; Bs::type::value... &gt;</td></tr>
 <tr class="memdesc:gad6c4944687eb36519341d2ba83a10fb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically AND together all the integral constant-wrapped Boolean parameters, <em>without</em> short-circuiting. <br /></td></tr>
 <tr class="separator:gad6c4944687eb36519341d2ba83a10fb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf8d3a296d5d944c83c38f70c2837889a"><td class="memTemplParams" colspan="2"><a id="gaf8d3a296d5d944c83c38f70c2837889a"></a>
 template&lt;typename... Bs&gt; </td></tr>
-<tr class="memitem:gaf8d3a296d5d944c83c38f70c2837889a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#gaf8d3a296d5d944c83c38f70c2837889a">meta::strict_or_</a> = <a class="el" href="group__logical.html#ga09eddc3ab9df6f4754dda2fffd7073b4">or_c</a>&lt; Bs::type::value... &gt;</td></tr>
+<tr class="memitem:gaf8d3a296d5d944c83c38f70c2837889a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#gaf8d3a296d5d944c83c38f70c2837889a">meta::strict_or_</a> = <a class="el" href="structmeta_1_1or__c.html">or_c</a>&lt; Bs::type::value... &gt;</td></tr>
 <tr class="memdesc:gaf8d3a296d5d944c83c38f70c2837889a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically OR together all the integral constant-wrapped Boolean parameters, <em>without</em> short-circuiting. <br /></td></tr>
 <tr class="separator:gaf8d3a296d5d944c83c38f70c2837889a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

@@ -1,6 +1,6 @@
 var algorithm_2transform_8hpp =
 [
-    [ "Transformable1", "algorithm_2transform_8hpp.html#ga4453d6695cf72368861f1f4ad258f570", null ],
-    [ "Transformable2", "algorithm_2transform_8hpp.html#ga9156be97c0c6a38a8d6517cfee34e8a8", null ],
-    [ "transform", "algorithm_2transform_8hpp.html#ga96739c9c340ea9a34d3b4d1cddd0d11e", null ]
+    [ "binary_transform_result", "algorithm_2transform_8hpp.html#ga4ec55cd1aee7604d0c5a335fb3d8641b", null ],
+    [ "unary_transform_result", "algorithm_2transform_8hpp.html#gaef72d2db7ea1c57f60101e18336e4037", null ],
+    [ "transform", "algorithm_2transform_8hpp.html#ga3442d493ab0502446fb8800fbf8c0f1e", null ]
 ];

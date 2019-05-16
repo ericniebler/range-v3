@@ -1,12 +1,14 @@
 var optional_8hpp =
 [
-    [ "bad_optional_access", "structranges_1_1v3_1_1bad__optional__access.html", "structranges_1_1v3_1_1bad__optional__access" ],
-    [ "nullopt_t", "structranges_1_1v3_1_1nullopt__t.html", "structranges_1_1v3_1_1nullopt__t" ],
-    [ "tag", "structranges_1_1v3_1_1nullopt__t_1_1tag.html", null ],
-    [ "optional", "structranges_1_1v3_1_1optional.html", "structranges_1_1v3_1_1optional" ],
-    [ "optional", "structranges_1_1v3_1_1optional.html", "structranges_1_1v3_1_1optional" ],
-    [ "make_optional", "optional_8hpp.html#a7a95ab73eb08c6e026cdd8417c3617b3", null ],
-    [ "make_optional", "optional_8hpp.html#ac328d24fcb6215a767a20c21cfe2ee67", null ],
-    [ "make_optional", "optional_8hpp.html#abb3811b7382d32522e8a1c1a2332ed3d", null ],
-    [ "in_place", "optional_8hpp.html#a550aea94af40a144f30dbceedb579dd2", null ]
+    [ "bad_optional_access", "structranges_1_1bad__optional__access.html", "structranges_1_1bad__optional__access" ],
+    [ "nullopt_t", "structranges_1_1nullopt__t.html", "structranges_1_1nullopt__t" ],
+    [ "tag", "structranges_1_1nullopt__t_1_1tag.html", null ],
+    [ "optional", "structranges_1_1optional.html", "structranges_1_1optional" ],
+    [ "optional", "structranges_1_1optional.html", "structranges_1_1optional" ],
+    [ "CPP_PP_CAT", "optional_8hpp.html#a6b7ba2ad24280e6554333fa5ec48a234", null ],
+    [ "make_optional", "optional_8hpp.html#a77da433abe1f6b7cf6dc947c703667fe", null ],
+    [ "make_optional", "optional_8hpp.html#adf2c119d5babc12f2c7a98ae2735bc8a", null ],
+    [ "make_optional", "optional_8hpp.html#ab0463d2f50943f425a149e1b866a22c2", null ],
+    [ "OptionalShouldConvert", "optional_8hpp.html#a54562fab2a60f78bc1de514d115e98dd", null ],
+    [ "OptionalShouldConvertAssign", "optional_8hpp.html#a58634437ecbf69399fb883f5430ccacd", null ]
 ];

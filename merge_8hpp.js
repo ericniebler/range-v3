@@ -1,4 +1,5 @@
 var merge_8hpp =
 [
-    [ "merge", "merge_8hpp.html#ga7437484b2859ef48d5b5cc1f87c9a7ae", null ]
+    [ "merge_result", "merge_8hpp.html#ga4fb3de5f6f61105bed9816cbbe1c20e4", null ],
+    [ "merge", "merge_8hpp.html#gac5e8ef2a123286212accdd0ef1d3361f", null ]
 ];

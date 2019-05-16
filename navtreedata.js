@@ -47,7 +47,7 @@ var NAVTREE =
     [ "Reference", "modules.html", "modules" ],
     [ "Indexes", "usergroup0.html", [
       [ "Methods", "functions.html", [
-        [ "All", "functions.html", "functions_dup" ],
+        [ "All", "functions.html", null ],
         [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", null ],
         [ "Related Functions", "functions_rela.html", null ]
@@ -61,22 +61,20 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"common__tuple_8hpp.html#a54bd2e0cafb960892d4250cb58a654df",
-"group__group-algorithms.html#ga46dc29289a10772b9505424cd25797a6",
-"group__group-views.html#gaadcb7b54d680a4069d98c275cbd67c4e",
-"index.html#tutorial-installation",
-"meta_8hpp.html#ga90ea080c869ea76ffbbbec8f0104c301",
-"replace__copy__if_8hpp.html#ga4362625e37683a8ba9dca11815e3febc",
-"structboost_1_1range__size_3_01_1_1ranges_1_1v3_1_1drop__view_3_01_ts_8_8_8_01_4_01const_01_4.html",
-"structranges_1_1v3_1_1action_1_1remove__fn_1_1_concept_impl.html",
-"structranges_1_1v3_1_1coerce.html#af5cd2f4abd6375afcce06ea8e5c07335",
-"structranges_1_1v3_1_1copy__n__fn.html",
-"structranges_1_1v3_1_1getlines__range.html#a9bbcb72e47a064ef0b4735063c2c13e9",
-"structranges_1_1v3_1_1mismatch__fn.html#a4051298bc40f151b2645a155dbc0be71",
-"structranges_1_1v3_1_1remove__if__view.html#add5ddea2ca6da9889cb081ee50c97eb2",
-"structranges_1_1v3_1_1transform__fn.html#a8f55fb08d2231ec0bcad110e0782585d",
-"structranges_1_1v3_1_1view_1_1view__access_1_1impl.html",
-"view_2view_8hpp.html"
+"common_8hpp.html#aab6cefe5e7659bc9c229237a1cedcc9c",
+"diffmax__t_8hpp.html#a6cfb90a174f7dd4b57169e2b47d2c637",
+"group__group-iterator.html#ga0aa18a80b34a8f805a97d492760c3e29",
+"group__lazy__trait.html#gaa3e15ef7898ef1404a77ded9579aa7ec",
+"meta_8hpp.html#aadb66468b5a3e40fde75a05937b676b8",
+"numeric_2partial__sum_8hpp.html#gac1d496fb5ca4e32264e6eb540bff3370",
+"stream__iterators_8hpp.html#ga5ebba4d76b2cd87487faa6a27c559e55",
+"structranges_1_1basic__iterator.html#af035ccc90308ad9bca203ff948a4f07f",
+"structranges_1_1experimental_1_1shared__view.html#a0ba14603752f8b8844295986c2e451aa",
+"structranges_1_1join__with__view.html#af2fadac1ee0975dd8616170e059e5599",
+"structranges_1_1partial__sort__fn.html",
+"structranges_1_1span.html#a592b13b8d4c8e58d7398d7b444b922d4",
+"structranges_1_1view_1_1ints__fn.html#a6ae1b3c0dfd4565b16d7063e51c63145",
+"unique__copy_8hpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

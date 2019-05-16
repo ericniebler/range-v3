@@ -9,6 +9,7 @@ var namespacemeta =
       [ "count_if_< list<>, Fn >", "structmeta_1_1detail_1_1count__if___3_01list_3_4_00_01_fn_01_4.html", "structmeta_1_1detail_1_1count__if___3_01list_3_4_00_01_fn_01_4" ]
     ] ],
     [ "extension", "namespacemeta_1_1extension.html", "namespacemeta_1_1extension" ],
+    [ "and_c", "structmeta_1_1and__c.html", null ],
     [ "bind_back", "structmeta_1_1bind__back.html", "structmeta_1_1bind__back" ],
     [ "bind_front", "structmeta_1_1bind__front.html", "structmeta_1_1bind__front" ],
     [ "compose_", "structmeta_1_1compose__.html", null ],
@@ -21,6 +22,7 @@ var namespacemeta =
     [ "integer_sequence", "structmeta_1_1integer__sequence.html", "structmeta_1_1integer__sequence" ],
     [ "list", "structmeta_1_1list.html", "structmeta_1_1list" ],
     [ "nil_", "structmeta_1_1nil__.html", null ],
+    [ "or_c", "structmeta_1_1or__c.html", null ],
     [ "quote", "structmeta_1_1quote.html", "structmeta_1_1quote" ],
     [ "quote_i", "structmeta_1_1quote__i.html", "structmeta_1_1quote__i" ],
     [ "var", "structmeta_1_1var.html", null ]

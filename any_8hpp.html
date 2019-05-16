@@ -98,7 +98,6 @@ $(document).ready(function(){initNavTree('any_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">any.hpp File Reference</div>  </div>
@@ -107,38 +106,32 @@ $(document).ready(function(){initNavTree('any_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1any.html">ranges::v3::any</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1any.html">ranges::any</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1bad__any__cast.html">ranges::v3::bad_any_cast</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1bad__any__cast.html">ranges::bad_any_cast</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:afda8e2746ff203bca10bd6397b3a861b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:afda8e2746ff203bca10bd6397b3a861b"><td class="memTemplItemLeft" align="right" valign="top">meta::if_c&lt; std::is_reference&lt; T &gt;)||Copyable&lt; T &gt;), T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="any_8hpp.html#afda8e2746ff203bca10bd6397b3a861b">ranges::v3::any_cast</a> (any &amp;)</td></tr>
-<tr class="separator:afda8e2746ff203bca10bd6397b3a861b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea6bf5bfffcc7871ecc5517896056287"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:aea6bf5bfffcc7871ecc5517896056287"><td class="memTemplItemLeft" align="right" valign="top">meta::if_c&lt; std::is_reference&lt; T &gt;)||Copyable&lt; T &gt;), T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="any_8hpp.html#aea6bf5bfffcc7871ecc5517896056287">ranges::v3::any_cast</a> (any const &amp;)</td></tr>
-<tr class="separator:aea6bf5bfffcc7871ecc5517896056287"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa43f09207b1f525822914b447abfad46"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:aa43f09207b1f525822914b447abfad46"><td class="memTemplItemLeft" align="right" valign="top">meta::if_c&lt; std::is_reference&lt; T &gt;)||Copyable&lt; T &gt;), T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="any_8hpp.html#aa43f09207b1f525822914b447abfad46">ranges::v3::any_cast</a> (any &amp;&amp;)</td></tr>
-<tr class="separator:aa43f09207b1f525822914b447abfad46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac07e28d0e22785413a521ed51954919e"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ac07e28d0e22785413a521ed51954919e"><td class="memTemplItemLeft" align="right" valign="top">T *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="any_8hpp.html#ac07e28d0e22785413a521ed51954919e">ranges::v3::any_cast</a> (any *) noexcept</td></tr>
-<tr class="separator:ac07e28d0e22785413a521ed51954919e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c375ce9f8204da349596c918aedc9ad"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a6c375ce9f8204da349596c918aedc9ad"><td class="memTemplItemLeft" align="right" valign="top">T const  *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="any_8hpp.html#a6c375ce9f8204da349596c918aedc9ad">ranges::v3::any_cast</a> (any const *) noexcept</td></tr>
-<tr class="separator:a6c375ce9f8204da349596c918aedc9ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e2192b358cf77c16179160714cfe55a"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a2e2192b358cf77c16179160714cfe55a"><td class="memTemplItemLeft" align="right" valign="top">meta::if_c&lt; std::is_reference&lt; T &gt;)||Copyable&lt; T &gt;, T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="any_8hpp.html#a2e2192b358cf77c16179160714cfe55a">ranges::any_cast</a> (any &amp;)</td></tr>
+<tr class="separator:a2e2192b358cf77c16179160714cfe55a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a912754fb98f1bc5d130f487b281d913c"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a912754fb98f1bc5d130f487b281d913c"><td class="memTemplItemLeft" align="right" valign="top">meta::if_c&lt; std::is_reference&lt; T &gt;)||Copyable&lt; T &gt;, T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="any_8hpp.html#a912754fb98f1bc5d130f487b281d913c">ranges::any_cast</a> (any const &amp;)</td></tr>
+<tr class="separator:a912754fb98f1bc5d130f487b281d913c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30b20ea485691fa49d037f2b191a7153"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a30b20ea485691fa49d037f2b191a7153"><td class="memTemplItemLeft" align="right" valign="top">meta::if_c&lt; std::is_reference&lt; T &gt;)||Copyable&lt; T &gt;, T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="any_8hpp.html#a30b20ea485691fa49d037f2b191a7153">ranges::any_cast</a> (any &amp;&amp;)</td></tr>
+<tr class="separator:a30b20ea485691fa49d037f2b191a7153"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b84e29b0af25efd2a63698e01e37392"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a5b84e29b0af25efd2a63698e01e37392"><td class="memTemplItemLeft" align="right" valign="top">T *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="any_8hpp.html#a5b84e29b0af25efd2a63698e01e37392">ranges::any_cast</a> (any *) noexcept</td></tr>
+<tr class="separator:a5b84e29b0af25efd2a63698e01e37392"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0610ef53ba85c6cd4c9ae7dae5ccbab"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:af0610ef53ba85c6cd4c9ae7dae5ccbab"><td class="memTemplItemLeft" align="right" valign="top">T const  *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="any_8hpp.html#af0610ef53ba85c6cd4c9ae7dae5ccbab">ranges::any_cast</a> (any const *) noexcept</td></tr>
+<tr class="separator:af0610ef53ba85c6cd4c9ae7dae5ccbab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="file_afda8e2746ff203bca10bd6397b3a861b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#file_afda8e2746ff203bca10bd6397b3a861b">&#9670;&nbsp;</a></span>any_cast() <span class="overload">[1/5]</span></h2>
+<a id="file_a2e2192b358cf77c16179160714cfe55a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a2e2192b358cf77c16179160714cfe55a">&#9670;&nbsp;</a></span>any_cast() <span class="overload">[1/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -146,9 +139,9 @@ Functions</h2></td></tr>
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">meta::if_c&lt; std::is_reference&lt; T &gt;)||Copyable&lt; T &gt;), T &gt; ranges::v3::any_cast </td>
+          <td class="memname">meta::if_c&lt; std::is_reference&lt; T &gt;)||Copyable&lt; T &gt;, T &gt; ranges::any_cast </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structranges_1_1v3_1_1any.html">any</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structranges_1_1any.html">any</a> &amp;&#160;</td>
           <td class="paramname"><em>x</em></td><td>)</td>
           <td></td>
         </tr>
@@ -161,14 +154,14 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="any_8hpp.html#afda8e2746ff203bca10bd6397b3a861b">ranges::v3::any_cast()</a>, and <a class="el" href="group__group-core.html#ga0a1b211c1926d91ee09c9b299dabff9c">ranges::v3::get()</a>.</p>
+<p class="reference">References <a class="el" href="any_8hpp.html#a2e2192b358cf77c16179160714cfe55a">ranges::any_cast()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="any_8hpp.html#afda8e2746ff203bca10bd6397b3a861b">ranges::v3::any_cast()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="any_8hpp.html#a2e2192b358cf77c16179160714cfe55a">ranges::any_cast()</a>.</p>
 
 </div>
 </div>
-<a id="file_aea6bf5bfffcc7871ecc5517896056287"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#file_aea6bf5bfffcc7871ecc5517896056287">&#9670;&nbsp;</a></span>any_cast() <span class="overload">[2/5]</span></h2>
+<a id="file_a912754fb98f1bc5d130f487b281d913c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a912754fb98f1bc5d130f487b281d913c">&#9670;&nbsp;</a></span>any_cast() <span class="overload">[2/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -176,9 +169,9 @@ template&lt;typename T &gt; </div>
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">meta::if_c&lt; std::is_reference&lt; T &gt;)||Copyable&lt; T &gt;), T &gt; ranges::v3::any_cast </td>
+          <td class="memname">meta::if_c&lt; std::is_reference&lt; T &gt;)||Copyable&lt; T &gt;, T &gt; ranges::any_cast </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structranges_1_1v3_1_1any.html">any</a> const &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structranges_1_1any.html">any</a> const &amp;&#160;</td>
           <td class="paramname"><em>x</em></td><td>)</td>
           <td></td>
         </tr>
@@ -186,12 +179,12 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
-<p class="reference">References <a class="el" href="any_8hpp.html#afda8e2746ff203bca10bd6397b3a861b">ranges::v3::any_cast()</a>, and <a class="el" href="group__group-core.html#ga0a1b211c1926d91ee09c9b299dabff9c">ranges::v3::get()</a>.</p>
+<p class="reference">References <a class="el" href="any_8hpp.html#a2e2192b358cf77c16179160714cfe55a">ranges::any_cast()</a>.</p>
 
 </div>
 </div>
-<a id="file_aa43f09207b1f525822914b447abfad46"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#file_aa43f09207b1f525822914b447abfad46">&#9670;&nbsp;</a></span>any_cast() <span class="overload">[3/5]</span></h2>
+<a id="file_a30b20ea485691fa49d037f2b191a7153"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a30b20ea485691fa49d037f2b191a7153">&#9670;&nbsp;</a></span>any_cast() <span class="overload">[3/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -199,9 +192,9 @@ template&lt;typename T &gt; </div>
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">meta::if_c&lt; std::is_reference&lt; T &gt;)||Copyable&lt; T &gt;), T &gt; ranges::v3::any_cast </td>
+          <td class="memname">meta::if_c&lt; std::is_reference&lt; T &gt;)||Copyable&lt; T &gt;, T &gt; ranges::any_cast </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structranges_1_1v3_1_1any.html">any</a> &amp;&amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structranges_1_1any.html">any</a> &amp;&amp;&#160;</td>
           <td class="paramname"><em>x</em></td><td>)</td>
           <td></td>
         </tr>
@@ -209,12 +202,12 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
-<p class="reference">References <a class="el" href="any_8hpp.html#afda8e2746ff203bca10bd6397b3a861b">ranges::v3::any_cast()</a>, and <a class="el" href="group__group-core.html#ga0a1b211c1926d91ee09c9b299dabff9c">ranges::v3::get()</a>.</p>
+<p class="reference">References <a class="el" href="any_8hpp.html#a2e2192b358cf77c16179160714cfe55a">ranges::any_cast()</a>.</p>
 
 </div>
 </div>
-<a id="file_ac07e28d0e22785413a521ed51954919e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#file_ac07e28d0e22785413a521ed51954919e">&#9670;&nbsp;</a></span>any_cast() <span class="overload">[4/5]</span></h2>
+<a id="file_a5b84e29b0af25efd2a63698e01e37392"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a5b84e29b0af25efd2a63698e01e37392">&#9670;&nbsp;</a></span>any_cast() <span class="overload">[4/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -225,9 +218,9 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">T * ranges::v3::any_cast </td>
+          <td class="memname">T * ranges::any_cast </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structranges_1_1v3_1_1any.html">any</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structranges_1_1any.html">any</a> *&#160;</td>
           <td class="paramname"><em>p</em></td><td>)</td>
           <td></td>
         </tr>
@@ -240,12 +233,10 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
-<p class="reference">References <a class="el" href="any_8hpp.html#afda8e2746ff203bca10bd6397b3a861b">ranges::v3::any_cast()</a>.</p>
-
 </div>
 </div>
-<a id="file_a6c375ce9f8204da349596c918aedc9ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#file_a6c375ce9f8204da349596c918aedc9ad">&#9670;&nbsp;</a></span>any_cast() <span class="overload">[5/5]</span></h2>
+<a id="file_af0610ef53ba85c6cd4c9ae7dae5ccbab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_af0610ef53ba85c6cd4c9ae7dae5ccbab">&#9670;&nbsp;</a></span>any_cast() <span class="overload">[5/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -256,9 +247,9 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">T const  * ranges::v3::any_cast </td>
+          <td class="memname">T const  * ranges::any_cast </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structranges_1_1v3_1_1any.html">any</a> const *&#160;</td>
+          <td class="paramtype"><a class="el" href="structranges_1_1any.html">any</a> const *&#160;</td>
           <td class="paramname"><em>p</em></td><td>)</td>
           <td></td>
         </tr>
@@ -270,8 +261,6 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
-
-<p class="reference">References <a class="el" href="any_8hpp.html#afda8e2746ff203bca10bd6397b3a861b">ranges::v3::any_cast()</a>.</p>
 
 </div>
 </div>

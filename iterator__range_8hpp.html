@@ -96,71 +96,10 @@ $(document).ready(function(){initNavTree('iterator__range_8hpp.html','');});
 </div>
 
 <div class="header">
-  <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">iterator_range.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1iterator__range.html">ranges::v3::iterator_range&lt; I, S &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1make__iterator__range__fn.html">ranges::v3::make_iterator_range_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1sized__iterator__range.html">ranges::v3::sized_iterator_range&lt; I, S &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:ga0a1b211c1926d91ee09c9b299dabff9c"><td class="memTemplParams" colspan="2">
-template&lt;std::size_t N, typename I , typename S , requires  = (N &lt; 2)&gt; </td></tr>
-<tr class="memitem:ga0a1b211c1926d91ee09c9b299dabff9c"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga0a1b211c1926d91ee09c9b299dabff9c">ranges::v3::get</a> (sized_iterator_range&lt; I, S &gt; const &amp;p) -&gt; decltype(ranges::get&lt; N &gt;(static_cast&lt; iterator_range&lt; I, S &gt; const &amp; &gt;(p)))</td></tr>
-<tr class="memdesc:ga0a1b211c1926d91ee09c9b299dabff9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tuple-like access for <code><a class="el" href="structranges_1_1v3_1_1sized__iterator__range.html">sized_iterator_range</a></code> <br /></td></tr>
-<tr class="separator:ga0a1b211c1926d91ee09c9b299dabff9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0a1b211c1926d91ee09c9b299dabff9c"><td class="memTemplParams" colspan="2">template&lt;std::size_t N, typename I , typename S , requires  = (N == 2)&gt; </td></tr>
-<tr class="memitem:ga0a1b211c1926d91ee09c9b299dabff9c"><td class="memTemplItemLeft" align="right" valign="top">constexpr size_type_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="iterator__range_8hpp.html#ga0a1b211c1926d91ee09c9b299dabff9c">ranges::v3::get</a> (sized_iterator_range&lt; I, S &gt; const &amp;p)</td></tr>
-<tr class="separator:ga0a1b211c1926d91ee09c9b299dabff9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:gaf295cac4cc679ca932ce873fbbcbc806"><td class="memItemLeft" align="right" valign="top">constexpr make_iterator_range_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#gaf295cac4cc679ca932ce873fbbcbc806">ranges::v3::make_iterator_range</a> {}</td></tr>
-<tr class="separator:gaf295cac4cc679ca932ce873fbbcbc806"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="file_ga0a1b211c1926d91ee09c9b299dabff9c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#file_ga0a1b211c1926d91ee09c9b299dabff9c">&#9670;&nbsp;</a></span>get()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;std::size_t N, typename I , typename S , requires  = (N == 2)&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr size_type_t&lt;I&gt; ranges::v3::get </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structranges_1_1v3_1_1sized__iterator__range.html">sized_iterator_range</a>&lt; I, S &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>p</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
-
-<p class="reference">References <a class="el" href="group__group-core.html#ga0a1b211c1926d91ee09c9b299dabff9c">ranges::v3::get()</a>.</p>
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

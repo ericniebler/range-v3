@@ -114,11 +114,11 @@ Modules</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:gae65ae2955249d7b8322e1135f680103b"><td class="memTemplParams" colspan="2">template&lt;typename L , typename Fn &gt; </td></tr>
-<tr class="memitem:gae65ae2955249d7b8322e1135f680103b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#gae65ae2955249d7b8322e1135f680103b">meta::all_of</a> = <a class="el" href="group__list.html#gae64f0978e680ad1a96438c0756b4644d">empty</a>&lt; <a class="el" href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">find_if</a>&lt; L, <a class="el" href="group__trait.html#gad54adef1c420be333e5027f7c63dc5db">not_fn</a>&lt; <a class="el" href="class_fn.html">Fn</a> &gt; &gt;&gt;</td></tr>
+<tr class="memitem:gae65ae2955249d7b8322e1135f680103b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#gae65ae2955249d7b8322e1135f680103b">meta::all_of</a> = <a class="el" href="group__list.html#gae64f0978e680ad1a96438c0756b4644d">empty</a>&lt; <a class="el" href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">find_if</a>&lt; L, <a class="el" href="group__trait.html#gad54adef1c420be333e5027f7c63dc5db">not_fn</a>&lt; Fn &gt; &gt;&gt;</td></tr>
 <tr class="memdesc:gae65ae2955249d7b8322e1135f680103b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>invoke&lt;Fn, A&gt;::value</code> is <code>true</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types.">meta::list</a></code> <code>L</code>; <code>false</code>, otherwise.  <a href="group__query.html#gae65ae2955249d7b8322e1135f680103b">More...</a><br /></td></tr>
 <tr class="separator:gae65ae2955249d7b8322e1135f680103b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga458c0596c85f41edc60b5230e76087e1"><td class="memTemplParams" colspan="2">template&lt;typename L , typename Fn &gt; </td></tr>
-<tr class="memitem:ga458c0596c85f41edc60b5230e76087e1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga458c0596c85f41edc60b5230e76087e1">meta::any_of</a> = <a class="el" href="group__logical.html#ga72884249179b0b22a27cc0709b75f23b">not_</a>&lt; <a class="el" href="group__list.html#gae64f0978e680ad1a96438c0756b4644d">empty</a>&lt; <a class="el" href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">find_if</a>&lt; L, <a class="el" href="class_fn.html">Fn</a> &gt; &gt;&gt;</td></tr>
+<tr class="memitem:ga458c0596c85f41edc60b5230e76087e1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga458c0596c85f41edc60b5230e76087e1">meta::any_of</a> = <a class="el" href="group__logical.html#ga72884249179b0b22a27cc0709b75f23b">not_</a>&lt; <a class="el" href="group__list.html#gae64f0978e680ad1a96438c0756b4644d">empty</a>&lt; <a class="el" href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">find_if</a>&lt; L, Fn &gt; &gt;&gt;</td></tr>
 <tr class="memdesc:ga458c0596c85f41edc60b5230e76087e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>invoke&lt;Fn, A&gt;::value</code> is <code>true</code> for any element <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types.">meta::list</a></code> <code>L</code>; <code>false</code>, otherwise.  <a href="group__query.html#ga458c0596c85f41edc60b5230e76087e1">More...</a><br /></td></tr>
 <tr class="separator:ga458c0596c85f41edc60b5230e76087e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8a395b36c7a028e67cf7cbaa28ab3ccc"><td class="memTemplParams" colspan="2">template&lt;typename L , typename T &gt; </td></tr>
@@ -126,7 +126,7 @@ Typedefs</h2></td></tr>
 <tr class="memdesc:ga8a395b36c7a028e67cf7cbaa28ab3ccc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count the number of times a type <code>T</code> appears in the list <code>L</code>.  <a href="group__query.html#ga8a395b36c7a028e67cf7cbaa28ab3ccc">More...</a><br /></td></tr>
 <tr class="separator:ga8a395b36c7a028e67cf7cbaa28ab3ccc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga665bd44f6d231438a3200df8030f593a"><td class="memTemplParams" colspan="2">template&lt;typename L , typename Fn &gt; </td></tr>
-<tr class="memitem:ga665bd44f6d231438a3200df8030f593a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga665bd44f6d231438a3200df8030f593a">meta::count_if</a> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt; <a class="el" href="structmeta_1_1detail_1_1count__if__.html">detail::count_if_</a>&lt; L, <a class="el" href="class_fn.html">Fn</a> &gt; &gt;</td></tr>
+<tr class="memitem:ga665bd44f6d231438a3200df8030f593a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga665bd44f6d231438a3200df8030f593a">meta::count_if</a> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt; <a class="el" href="structmeta_1_1detail_1_1count__if__.html">detail::count_if_</a>&lt; L, Fn &gt; &gt;</td></tr>
 <tr class="memdesc:ga665bd44f6d231438a3200df8030f593a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count the number of times the predicate <code>Fn</code> evaluates to true for all the elements in the list <code>L</code>.  <a href="group__query.html#ga665bd44f6d231438a3200df8030f593a">More...</a><br /></td></tr>
 <tr class="separator:ga665bd44f6d231438a3200df8030f593a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4e7b439f707e529f3df7745ff7e2eb19"><td class="memTemplParams" colspan="2">template&lt;typename L , typename T &gt; </td></tr>
@@ -134,7 +134,7 @@ Typedefs</h2></td></tr>
 <tr class="memdesc:ga4e7b439f707e529f3df7745ff7e2eb19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>L</code> starting at the first occurrence of <code>T</code>, if any such element exists; the empty list, otherwise.  <a href="group__query.html#ga4e7b439f707e529f3df7745ff7e2eb19">More...</a><br /></td></tr>
 <tr class="separator:ga4e7b439f707e529f3df7745ff7e2eb19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf33139f1b442de0272477e126d6d66a7"><td class="memTemplParams" colspan="2">template&lt;typename L , typename Fn &gt; </td></tr>
-<tr class="memitem:gaf33139f1b442de0272477e126d6d66a7"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">meta::find_if</a> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt; detail::find_if_&lt; L, <a class="el" href="class_fn.html">Fn</a> &gt; &gt;</td></tr>
+<tr class="memitem:gaf33139f1b442de0272477e126d6d66a7"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">meta::find_if</a> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt; detail::find_if_&lt; L, Fn &gt; &gt;</td></tr>
 <tr class="memdesc:gaf33139f1b442de0272477e126d6d66a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>L</code> starting at the first element <code>A</code> such that <code>invoke&lt;Fn, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise.  <a href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">More...</a><br /></td></tr>
 <tr class="separator:gaf33139f1b442de0272477e126d6d66a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga613514a0b471a7a1eecabfe6c2e8963c"><td class="memTemplParams" colspan="2">template&lt;typename L , typename T &gt; </td></tr>
@@ -146,7 +146,7 @@ Typedefs</h2></td></tr>
 <tr class="memdesc:ga7e59a2a7df311e0d88e2781f753e5a9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if there is at least one occurrence of <code>T</code> in <code>L</code>.  <a href="group__query.html#ga7e59a2a7df311e0d88e2781f753e5a9a">More...</a><br /></td></tr>
 <tr class="separator:ga7e59a2a7df311e0d88e2781f753e5a9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0722ed3a3840cbeffd4d49876abbd7d8"><td class="memTemplParams" colspan="2">template&lt;typename L , typename Fn &gt; </td></tr>
-<tr class="memitem:ga0722ed3a3840cbeffd4d49876abbd7d8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga0722ed3a3840cbeffd4d49876abbd7d8">meta::none_of</a> = <a class="el" href="group__list.html#gae64f0978e680ad1a96438c0756b4644d">empty</a>&lt; <a class="el" href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">find_if</a>&lt; L, <a class="el" href="class_fn.html">Fn</a> &gt; &gt;</td></tr>
+<tr class="memitem:ga0722ed3a3840cbeffd4d49876abbd7d8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga0722ed3a3840cbeffd4d49876abbd7d8">meta::none_of</a> = <a class="el" href="group__list.html#gae64f0978e680ad1a96438c0756b4644d">empty</a>&lt; <a class="el" href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">find_if</a>&lt; L, Fn &gt; &gt;</td></tr>
 <tr class="memdesc:ga0722ed3a3840cbeffd4d49876abbd7d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>invoke&lt;Fn, A&gt;::value</code> is <code>false</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types.">meta::list</a></code> <code>L</code>; <code>false</code>, otherwise.  <a href="group__query.html#ga0722ed3a3840cbeffd4d49876abbd7d8">More...</a><br /></td></tr>
 <tr class="separator:ga0722ed3a3840cbeffd4d49876abbd7d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf9fc68d4879145b2e75be42224ae1571"><td class="memTemplParams" colspan="2">template&lt;typename L , typename T &gt; </td></tr>
@@ -154,7 +154,7 @@ Typedefs</h2></td></tr>
 <tr class="memdesc:gaf9fc68d4879145b2e75be42224ae1571"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>L</code> starting at the last occurrence of <code>T</code>, if any such element exists; the empty list, otherwise.  <a href="group__query.html#gaf9fc68d4879145b2e75be42224ae1571">More...</a><br /></td></tr>
 <tr class="separator:gaf9fc68d4879145b2e75be42224ae1571"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabbb3ce2f521f38bcceb821a8eda51d5f"><td class="memTemplParams" colspan="2">template&lt;typename L , typename Fn &gt; </td></tr>
-<tr class="memitem:gabbb3ce2f521f38bcceb821a8eda51d5f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#gabbb3ce2f521f38bcceb821a8eda51d5f">meta::reverse_find_if</a> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt; detail::reverse_find_if_&lt; L, <a class="el" href="class_fn.html">Fn</a> &gt; &gt;</td></tr>
+<tr class="memitem:gabbb3ce2f521f38bcceb821a8eda51d5f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#gabbb3ce2f521f38bcceb821a8eda51d5f">meta::reverse_find_if</a> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt; detail::reverse_find_if_&lt; L, Fn &gt; &gt;</td></tr>
 <tr class="memdesc:gabbb3ce2f521f38bcceb821a8eda51d5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>L</code> starting at the last element <code>A</code> such that <code>invoke&lt;Fn, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise.  <a href="group__query.html#gabbb3ce2f521f38bcceb821a8eda51d5f">More...</a><br /></td></tr>
 <tr class="separator:gabbb3ce2f521f38bcceb821a8eda51d5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6a29ed9ce437db81ee3a046e368e942f"><td class="memTemplParams" colspan="2">template&lt;typename L , typename T &gt; </td></tr>
@@ -172,7 +172,7 @@ Typedefs</h2></td></tr>
 template&lt;typename L , typename Fn &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__query.html#gae65ae2955249d7b8322e1135f680103b">meta::all_of</a> = typedef <a class="el" href="group__list.html#gae64f0978e680ad1a96438c0756b4644d">empty</a>&lt;<a class="el" href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">find_if</a>&lt;L, <a class="el" href="group__trait.html#gad54adef1c420be333e5027f7c63dc5db">not_fn</a>&lt;<a class="el" href="class_fn.html">Fn</a>&gt; &gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__query.html#gae65ae2955249d7b8322e1135f680103b">meta::all_of</a> = typedef <a class="el" href="group__list.html#gae64f0978e680ad1a96438c0756b4644d">empty</a>&lt;<a class="el" href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">find_if</a>&lt;L, <a class="el" href="group__trait.html#gad54adef1c420be333e5027f7c63dc5db">not_fn</a>&lt;Fn&gt; &gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -193,7 +193,7 @@ template&lt;typename L , typename Fn &gt; </div>
 template&lt;typename L , typename Fn &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__query.html#ga458c0596c85f41edc60b5230e76087e1">meta::any_of</a> = typedef <a class="el" href="group__logical.html#ga72884249179b0b22a27cc0709b75f23b">not_</a>&lt;<a class="el" href="group__list.html#gae64f0978e680ad1a96438c0756b4644d">empty</a>&lt;<a class="el" href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">find_if</a>&lt;L, <a class="el" href="class_fn.html">Fn</a>&gt; &gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__query.html#ga458c0596c85f41edc60b5230e76087e1">meta::any_of</a> = typedef <a class="el" href="group__logical.html#ga72884249179b0b22a27cc0709b75f23b">not_</a>&lt;<a class="el" href="group__list.html#gae64f0978e680ad1a96438c0756b4644d">empty</a>&lt;<a class="el" href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">find_if</a>&lt;L, Fn&gt; &gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -235,7 +235,7 @@ template&lt;typename L , typename T &gt; </div>
 template&lt;typename L , typename Fn &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__query.html#ga665bd44f6d231438a3200df8030f593a">meta::count_if</a> = typedef <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt;<a class="el" href="structmeta_1_1detail_1_1count__if__.html">detail::count_if_</a>&lt;L, <a class="el" href="class_fn.html">Fn</a>&gt; &gt;</td>
+          <td class="memname">using <a class="el" href="group__query.html#ga665bd44f6d231438a3200df8030f593a">meta::count_if</a> = typedef <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt;<a class="el" href="structmeta_1_1detail_1_1count__if__.html">detail::count_if_</a>&lt;L, Fn&gt; &gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -277,7 +277,7 @@ template&lt;typename L , typename T &gt; </div>
 template&lt;typename L , typename Fn &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">meta::find_if</a> = typedef <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt;detail::find_if_&lt;L, <a class="el" href="class_fn.html">Fn</a>&gt; &gt;</td>
+          <td class="memname">using <a class="el" href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">meta::find_if</a> = typedef <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt;detail::find_if_&lt;L, Fn&gt; &gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -341,7 +341,7 @@ template&lt;typename L , typename T &gt; </div>
 template&lt;typename L , typename Fn &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__query.html#ga0722ed3a3840cbeffd4d49876abbd7d8">meta::none_of</a> = typedef <a class="el" href="group__list.html#gae64f0978e680ad1a96438c0756b4644d">empty</a>&lt;<a class="el" href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">find_if</a>&lt;L, <a class="el" href="class_fn.html">Fn</a>&gt; &gt;</td>
+          <td class="memname">using <a class="el" href="group__query.html#ga0722ed3a3840cbeffd4d49876abbd7d8">meta::none_of</a> = typedef <a class="el" href="group__list.html#gae64f0978e680ad1a96438c0756b4644d">empty</a>&lt;<a class="el" href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">find_if</a>&lt;L, Fn&gt; &gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -383,7 +383,7 @@ template&lt;typename L , typename T &gt; </div>
 template&lt;typename L , typename Fn &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__query.html#gabbb3ce2f521f38bcceb821a8eda51d5f">meta::reverse_find_if</a> = typedef <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt;detail::reverse_find_if_&lt;L, <a class="el" href="class_fn.html">Fn</a>&gt; &gt;</td>
+          <td class="memname">using <a class="el" href="group__query.html#gabbb3ce2f521f38bcceb821a8eda51d5f">meta::reverse_find_if</a> = typedef <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt;detail::reverse_find_if_&lt;L, Fn&gt; &gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">

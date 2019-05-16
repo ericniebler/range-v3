@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['views',['Views',['../group__group-views.html',1,'']]]
+  ['trait',['Trait',['../group__trait.html',1,'']]],
+  ['transformation',['Transformation',['../group__transformation.html',1,'']]]
 ];

@@ -98,7 +98,6 @@ $(document).ready(function(){initNavTree('action_2action_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">action.hpp File Reference</div>  </div>
@@ -107,27 +106,21 @@ $(document).ready(function(){initNavTree('action_2action_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1action_1_1action.html">ranges::v3::action::action&lt; Action &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1action_1_1action.html">ranges::action::action&lt; Action &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1action_1_1action__access.html">ranges::v3::action::action_access</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1action_1_1action__access.html">ranges::action::action_access</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1action_1_1action__access_1_1impl.html">ranges::v3::action::action_access::impl&lt; Action &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1action_1_1action__access_1_1impl.html">ranges::action::action_access::impl&lt; Action &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1action_1_1make__action__fn.html">ranges::v3::action::make_action_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1action_1_1make__action__fn.html">ranges::action::make_action_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a27539f1f1392d84b59f2eaad0753794d"><td class="memTemplParams" colspan="2"><a id="a27539f1f1392d84b59f2eaad0753794d"></a>
-template&lt;typename Rng , typename Action , requires  = (is_pipeable&lt;Action&gt;() &amp;&amp; Range&lt;Rng &amp;&gt;() &amp;&amp;                    Invocable&lt;bitwise_or, ref_t&lt;Rng &amp;&gt;, Action &amp;&gt;() &amp;&amp;                    Same&lt;ref_t&lt;Rng &amp;&gt;,                        invoke_result_t&lt;bitwise_or, ref_t&lt;Rng &amp;&gt;, Action &amp;&gt;&gt;())&gt; </td></tr>
-<tr class="memitem:a27539f1f1392d84b59f2eaad0753794d"><td class="memTemplItemLeft" align="right" valign="top">Rng &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::action::operator|=</b> (Rng &amp;rng, Action &amp;&amp;action)</td></tr>
-<tr class="separator:a27539f1f1392d84b59f2eaad0753794d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe2a5d1e1bd6a8e297d7402f9f5052e3"><td class="memTemplParams" colspan="2"><a id="abe2a5d1e1bd6a8e297d7402f9f5052e3"></a>
+template&lt;typename Rng , typename Action &gt; </td></tr>
+<tr class="memitem:abe2a5d1e1bd6a8e297d7402f9f5052e3"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::action::operator|=</b> (Rng &amp;rng, Action &amp;&amp;action) -&gt; Rng &amp;requires is_pipeable&lt; Action &gt;::value &amp;&amp;Range&lt; Rng &amp; &gt; &amp;&amp;Invocable&lt; bitwise_or, ref_view&lt; Rng &gt;, Action &amp; &gt; &amp;&amp;Same&lt; ref_view&lt; Rng &gt;, invoke_result_t&lt; bitwise_or, ref_view&lt; Rng &gt;, Action &amp; &gt;&gt;</td></tr>
+<tr class="separator:abe2a5d1e1bd6a8e297d7402f9f5052e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['integer_20sequence',['Integer sequence',['../group__integral.html',1,'']]],
-  ['invocation',['Invocation',['../group__invocation.html',1,'']]]
+  ['functional',['Functional',['../group__group-functional.html',1,'']]]
 ];

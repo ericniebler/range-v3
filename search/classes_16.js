@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['yield_5ffn',['yield_fn',['../structranges_1_1v3_1_1yield__fn.html',1,'ranges::v3']]],
-  ['yield_5ffrom_5ffn',['yield_from_fn',['../structranges_1_1v3_1_1yield__from__fn.html',1,'ranges::v3']]],
-  ['yield_5fif_5ffn',['yield_if_fn',['../structranges_1_1v3_1_1yield__if__fn.html',1,'ranges::v3']]]
+  ['zip_5ffn',['zip_fn',['../structranges_1_1view_1_1zip__fn.html',1,'ranges::view']]],
+  ['zip_5fview',['zip_view',['../structranges_1_1zip__view.html',1,'ranges']]],
+  ['zip_5fwith_5ffn',['zip_with_fn',['../structranges_1_1view_1_1zip__with__fn.html',1,'ranges::view']]],
+  ['zip_5fwith_5fview',['zip_with_view',['../structranges_1_1zip__with__view.html',1,'ranges']]]
 ];

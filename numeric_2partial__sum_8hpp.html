@@ -98,8 +98,8 @@ $(document).ready(function(){initNavTree('numeric_2partial__sum_8hpp.html','');}
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">partial_sum.hpp File Reference</div>  </div>
@@ -108,31 +108,36 @@ $(document).ready(function(){initNavTree('numeric_2partial__sum_8hpp.html','');}
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1partial__sum__fn.html">ranges::v3::partial_sum_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1partial__sum__fn.html">ranges::partial_sum_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a66e8212891b7254132e886c6dd7b1c28"><td class="memTemplParams" colspan="2"><a id="a66e8212891b7254132e886c6dd7b1c28"></a>
-template&lt;typename I , typename BOp &gt; </td></tr>
-<tr class="memitem:a66e8212891b7254132e886c6dd7b1c28"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::IndirectSemigroup</b> = meta::strict_and&lt; Readable&lt; I &gt;, Copyable&lt; value_type_t&lt; I &gt; &gt;, IndirectRegularInvocable&lt; composed&lt; coerce&lt; value_type_t&lt; I &gt; &gt;, BOp &gt;, value_type_t&lt; I &gt; *, I &gt; &gt;</td></tr>
-<tr class="separator:a66e8212891b7254132e886c6dd7b1c28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2ea938a0826847d4e196bdb86c06521"><td class="memTemplParams" colspan="2"><a id="ac2ea938a0826847d4e196bdb86c06521"></a>
-template&lt;typename I , typename O , typename BOp  = plus, typename P  = ident, typename X  = projected&lt;projected&lt;I, detail::as_value_type_t&lt;I&gt;&gt;, P&gt;&gt; </td></tr>
-<tr class="memitem:ac2ea938a0826847d4e196bdb86c06521"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::PartialSummable</b> = meta::strict_and&lt; InputIterator&lt; I &gt;, IndirectSemigroup&lt; X, BOp &gt;, OutputIterator&lt; O, value_type_t&lt; X &gt; const &amp; &gt; &gt;</td></tr>
-<tr class="separator:ac2ea938a0826847d4e196bdb86c06521"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad1c0a072ae922a436557add645c6e11a"><td class="memTemplParams" colspan="2">
+template&lt;typename I , typename O &gt; </td></tr>
+<tr class="memitem:gad1c0a072ae922a436557add645c6e11a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::partial_sum_result</b> = detail::in_out_result&lt; I, O &gt;</td></tr>
+<tr class="separator:gad1c0a072ae922a436557add645c6e11a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga393cad666a02e1527117188317ffb963"><td class="memItemLeft" align="right" valign="top">
+&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::CPP_PP_CAT</b> (CPP_PP_DEF_, template(typename I, typename BOp)) META_CONCEPT CPP_PP_CAT(CPP_PP_DEF_</td></tr>
+<tr class="separator:ga393cad666a02e1527117188317ffb963"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac1d496fb5ca4e32264e6eb540bff3370"><td class="memItemLeft" align="right" valign="top">
+&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::CPP_PP_CAT</b> (CPP_PP_DEF_, template(typename I, typename O, typename BOp=plus, typename P=identity)) META_CONCEPT CPP_PP_CAT(CPP_PP_DEF_</td></tr>
+<tr class="separator:gac1d496fb5ca4e32264e6eb540bff3370"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a029a7900cfd42c2ff414d9420c65c071"><td class="memItemLeft" align="right" valign="top"><a id="a029a7900cfd42c2ff414d9420c65c071"></a>
-constexpr partial_sum_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::partial_sum</b> {}</td></tr>
-<tr class="separator:a029a7900cfd42c2ff414d9420c65c071"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga49902af588437ae75c7fefa5bf482fb8"><td class="memItemLeft" align="right" valign="top">
+concept&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::IndirectSemigroup</b> = CPP_PP_CAT( CPP_PP_DEF_IMPL_, 0 )( Readable&lt;I&gt; &amp;&amp; Copyable&lt;iter_value_t&lt;I&gt;&gt; &amp;&amp; IndirectRegularBinaryInvocable_&lt;composed&lt;coerce&lt;iter_value_t&lt;I&gt;&gt;, BOp&gt;, iter_value_t&lt;I&gt;*, I&gt; )</td></tr>
+<tr class="separator:ga49902af588437ae75c7fefa5bf482fb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad54f9e9fd106d4b4c079f572ea4d2087"><td class="memItemLeft" align="right" valign="top">
+constexpr partial_sum_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::partial_sum</b> {}</td></tr>
+<tr class="separator:gad54f9e9fd106d4b4c079f572ea4d2087"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga97e0e93f51219de96b15e89802ede671"><td class="memItemLeft" align="right" valign="top">
+concept&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::PartialSummable</b> = CPP_PP_CAT( CPP_PP_DEF_IMPL_, 0 )( InputIterator&lt;I&gt; &amp;&amp; IndirectSemigroup&lt;projected&lt;projected&lt;I, detail::as_value_type_t&lt;I&gt;&gt;, P&gt;, BOp&gt; &amp;&amp; OutputIterator&lt;O, iter_value_t&lt;projected&lt;projected&lt;I, detail::as_value_type_t&lt;I&gt;&gt;, P&gt;&gt; const &amp;&gt; )</td></tr>
+<tr class="separator:ga97e0e93f51219de96b15e89802ede671"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

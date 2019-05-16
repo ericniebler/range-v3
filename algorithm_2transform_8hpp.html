@@ -98,7 +98,6 @@ $(document).ready(function(){initNavTree('algorithm_2transform_8hpp.html','');})
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -108,30 +107,24 @@ $(document).ready(function(){initNavTree('algorithm_2transform_8hpp.html','');})
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1transform__fn.html">ranges::v3::transform_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1transform__fn.html">ranges::transform_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga4453d6695cf72368861f1f4ad258f570"><td class="memTemplParams" colspan="2">
-template&lt;typename I , typename O , typename F , typename P  = ident&gt; </td></tr>
-<tr class="memitem:ga4453d6695cf72368861f1f4ad258f570"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Transformable1</b> = meta::strict_and&lt; InputIterator&lt; I &gt;, WeaklyIncrementable&lt; O &gt;, CopyConstructible&lt; F &gt;, Writable&lt; O, indirect_invoke_result_t&lt; F &amp;, projected&lt; I, P &gt; &gt;&gt; &gt;</td></tr>
-<tr class="separator:ga4453d6695cf72368861f1f4ad258f570"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9156be97c0c6a38a8d6517cfee34e8a8"><td class="memTemplParams" colspan="2">
-template&lt;typename I0 , typename I1 , typename O , typename F , typename P0  = ident, typename P1  = ident&gt; </td></tr>
-<tr class="memitem:ga9156be97c0c6a38a8d6517cfee34e8a8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Transformable2</b> = meta::strict_and&lt; InputIterator&lt; I0 &gt;, InputIterator&lt; I1 &gt;, WeaklyIncrementable&lt; O &gt;, CopyConstructible&lt; F &gt;, Writable&lt; O, indirect_invoke_result_t&lt; F &amp;, projected&lt; I0, P0 &gt;, projected&lt; I1, P1 &gt; &gt;&gt; &gt;</td></tr>
-<tr class="separator:ga9156be97c0c6a38a8d6517cfee34e8a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4ec55cd1aee7604d0c5a335fb3d8641b"><td class="memTemplParams" colspan="2">
+template&lt;typename I1 , typename I2 , typename O &gt; </td></tr>
+<tr class="memitem:ga4ec55cd1aee7604d0c5a335fb3d8641b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::binary_transform_result</b> = detail::in1_in2_out_result&lt; I1, I2, O &gt;</td></tr>
+<tr class="separator:ga4ec55cd1aee7604d0c5a335fb3d8641b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaef72d2db7ea1c57f60101e18336e4037"><td class="memTemplParams" colspan="2">
+template&lt;typename I , typename O &gt; </td></tr>
+<tr class="memitem:gaef72d2db7ea1c57f60101e18336e4037"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::unary_transform_result</b> = detail::in_out_result&lt; I, O &gt;</td></tr>
+<tr class="separator:gaef72d2db7ea1c57f60101e18336e4037"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga96739c9c340ea9a34d3b4d1cddd0d11e"><td class="memItemLeft" align="right" valign="top">constexpr with_braced_init_args&lt; transform_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga96739c9c340ea9a34d3b4d1cddd0d11e">ranges::v3::transform</a> {}</td></tr>
-<tr class="separator:ga96739c9c340ea9a34d3b4d1cddd0d11e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3442d493ab0502446fb8800fbf8c0f1e"><td class="memItemLeft" align="right" valign="top">constexpr transform_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga3442d493ab0502446fb8800fbf8c0f1e">ranges::transform</a> {}</td></tr>
+<tr class="separator:ga3442d493ab0502446fb8800fbf8c0f1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

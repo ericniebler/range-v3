@@ -1,5 +1,5 @@
 var reverse__copy_8hpp =
 [
-    [ "ReverseCopyable", "reverse__copy_8hpp.html#ga082f87a3801335e3b60f9e1774e84c1f", null ],
-    [ "reverse_copy", "reverse__copy_8hpp.html#gad161f34ae92dfc2bb687db1d92bdcc14", null ]
+    [ "reverse_copy_result", "reverse__copy_8hpp.html#ga7bff287e5ec676e01a086ac147d4b618", null ],
+    [ "reverse_copy", "reverse__copy_8hpp.html#ga7297f0ba562acaface80940487de636b", null ]
 ];

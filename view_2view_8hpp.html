@@ -98,8 +98,6 @@ $(document).ready(function(){initNavTree('view_2view_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -109,41 +107,38 @@ $(document).ready(function(){initNavTree('view_2view_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1_simple_view.html">ranges::v3::SimpleView</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1view_1_1make__view__fn.html">ranges::view::make_view_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1make__view__fn.html">ranges::v3::view::make_view_fn</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1view_1_1view.html">ranges::view::view&lt; View &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1view.html">ranges::v3::view::view&lt; View &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1view_1_1view__access.html">ranges::view::view_access</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1view__access.html">ranges::v3::view::view_access</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1view_1_1view__access_1_1impl.html">ranges::view::view_access::impl&lt; View &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1view__access_1_1impl.html">ranges::v3::view::view_access::impl&lt; View &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:a17b3fdb179090d2a0fd61ae150dcf328"><td class="memTemplParams" colspan="2"><a id="a17b3fdb179090d2a0fd61ae150dcf328"></a>
-template&lt;typename Rng &gt; </td></tr>
-<tr class="memitem:a17b3fdb179090d2a0fd61ae150dcf328"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::ViewableRange</b> = <a class="el" href="group__logical.html#gafedb0b5d2625d8008a7212495ac37c33">meta::and_</a>&lt; Range&lt; Rng &gt;, <a class="el" href="group__logical.html#ga137096d8c283b5a723865f29c3aa57ce">meta::or_</a>&lt; std::is_lvalue_reference&lt; Rng &gt;, View&lt; uncvref_t&lt; Rng &gt; &gt;&gt; &gt;</td></tr>
-<tr class="separator:a17b3fdb179090d2a0fd61ae150dcf328"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a1b823054d4c1ebbe9eb5066e951af88f"><td class="memTemplParams" colspan="2"><a id="a1b823054d4c1ebbe9eb5066e951af88f"></a>
+<tr class="memitem:a5b30df3ab53ae04a685d5d40e1d5e35e"><td class="memItemLeft" align="right" valign="top"><a id="a5b30df3ab53ae04a685d5d40e1d5e35e"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::CPP_PP_CAT</b> (CPP_PP_DEF_, template(typename Rng)) META_CONCEPT CPP_PP_CAT(CPP_PP_DEF_</td></tr>
+<tr class="separator:a5b30df3ab53ae04a685d5d40e1d5e35e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab97aadc6f5dba36f1d98897d43471ac6"><td class="memItemLeft" align="right" valign="top">
+&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::view::CPP_PP_CAT</b> (CPP_PP_DEF_, template(typename View, typename Rng, typename ...Rest)) META_CONCEPT CPP_PP_CAT(CPP_PP_DEF_</td></tr>
+<tr class="separator:gab97aadc6f5dba36f1d98897d43471ac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d7a1ca2212da411af6adf28dcfcb7a3"><td class="memTemplParams" colspan="2"><a id="a2d7a1ca2212da411af6adf28dcfcb7a3"></a>
 template&lt;typename Rng &gt; </td></tr>
-<tr class="memitem:a1b823054d4c1ebbe9eb5066e951af88f"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::simple_view</b> ()</td></tr>
-<tr class="separator:a1b823054d4c1ebbe9eb5066e951af88f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d7a1ca2212da411af6adf28dcfcb7a3"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::simple_view</b> ()</td></tr>
+<tr class="separator:a2d7a1ca2212da411af6adf28dcfcb7a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga8d9cf14e40cd0d2e3d0955f773e70749"><td class="memItemLeft" align="right" valign="top">constexpr make_view_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga8d9cf14e40cd0d2e3d0955f773e70749">ranges::v3::view::make_view</a> {}</td></tr>
-<tr class="separator:ga8d9cf14e40cd0d2e3d0955f773e70749"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga80a4fa0a17ec20d578b332d71d8ee366"><td class="memItemLeft" align="right" valign="top">constexpr make_view_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga80a4fa0a17ec20d578b332d71d8ee366">ranges::view::make_view</a> {}</td></tr>
+<tr class="separator:ga80a4fa0a17ec20d578b332d71d8ee366"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d6b73cca6c7796a347d245d60389764"><td class="memItemLeft" align="right" valign="top"><a id="a5d6b73cca6c7796a347d245d60389764"></a>
+concept&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::SimpleView</b> = CPP_PP_CAT( CPP_PP_DEF_IMPL_, 0 )( View&lt;Rng&gt; &amp;&amp; Range&lt;Rng const&gt; &amp;&amp; Same&lt;iterator_t&lt;Rng&gt;, iterator_t&lt;Rng const&gt;&gt; &amp;&amp; Same&lt;sentinel_t&lt;Rng&gt;, sentinel_t&lt;Rng const&gt;&gt; )</td></tr>
+<tr class="separator:a5d6b73cca6c7796a347d245d60389764"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2283d4a05a75dc65d8eff6b55759d3d0"><td class="memItemLeft" align="right" valign="top">
+concept&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::view::ViewConcept</b> = CPP_PP_CAT( CPP_PP_DEF_IMPL_, 0 )( ViewableRange&lt;Rng&gt; &amp;&amp; Invocable&lt;View&amp;, Rng, Rest...&gt; )</td></tr>
+<tr class="separator:ga2283d4a05a75dc65d8eff6b55759d3d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

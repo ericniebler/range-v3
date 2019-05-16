@@ -1,8 +1,10 @@
 var searchData=
 [
-  ['unique',['unique',['../group__group-actions.html#gaa148f0f5f607b640c2b14652d498b0eb',1,'ranges::v3::action::unique_fn::unique()'],['../group__group-algorithms.html#ga29d833ff0ccf72d5b1e9665b703760dd',1,'ranges::v3::unique()']]],
-  ['unique_5fcopy',['unique_copy',['../group__group-algorithms.html#ga487eba78c844adbe80e2051c2d090349',1,'ranges::v3']]],
-  ['unstable_5fremove_5fif',['unstable_remove_if',['../group__group-actions.html#ga35fdc2045c5b47ec7239e0584ccbf799',1,'ranges::v3::action::unstable_remove_if()'],['../group__group-algorithms.html#ga4a9d5202b382c7862374a14626bbc113',1,'ranges::v3::unstable_remove_if()']]],
-  ['unwrap_5freference',['unwrap_reference',['../group__group-utility.html#gaa6bceaad1449d5660daa86733cf4790a',1,'ranges::v3']]],
-  ['upper_5fbound',['upper_bound',['../group__group-algorithms.html#gaa94c5196b9f3075de0f68a35d3378a9e',1,'ranges::v3']]]
+  ['take',['take',['../group__group-actions.html#ga712480018907f61217d703a609fb4995',1,'ranges::action::take_fn']]],
+  ['take_5fwhile',['take_while',['../group__group-actions.html#gabf8373b1db6121fbe5cab20ba57a46fe',1,'ranges::action::take_while_fn']]],
+  ['transform',['transform',['../group__group-actions.html#gaf9135baba87fb451e6e904428239ad19',1,'ranges::action::transform_fn::transform()'],['../group__group-algorithms.html#ga3442d493ab0502446fb8800fbf8c0f1e',1,'ranges::transform()']]],
+  ['tuple_5fapply',['tuple_apply',['../group__group-utility.html#ga1f0504978bb752b0dbedbfaacca67778',1,'ranges']]],
+  ['tuple_5ffoldl',['tuple_foldl',['../group__group-utility.html#gab2f0f09dcd52b7dc22ab9b3ec4f3b03e',1,'ranges']]],
+  ['tuple_5ffor_5feach',['tuple_for_each',['../group__group-utility.html#ga64ad43a79c7ba29e188a4c4a7afcc1e2',1,'ranges']]],
+  ['tuple_5ftransform',['tuple_transform',['../group__group-utility.html#ga5a3717f9963046b5e8a269e390137618',1,'ranges']]]
 ];

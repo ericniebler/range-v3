@@ -98,9 +98,7 @@ $(document).ready(function(){initNavTree('utility_2move_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">move.hpp File Reference</div>  </div>
@@ -109,40 +107,19 @@ $(document).ready(function(){initNavTree('utility_2move_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1aux_1_1move__fn.html">ranges::v3::aux::move_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1is__indirectly__movable.html">ranges::v3::is_indirectly_movable&lt; I, O &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1is__nothrow__indirectly__movable.html">ranges::v3::is_nothrow_indirectly_movable&lt; I, O &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespaceranges_1_1v3_1_1_c_p_os"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges_1_1v3_1_1_c_p_os.html">ranges::v3::CPOs</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1aux_1_1move__fn.html">ranges::aux::move_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga7465bd869ea861f5f8789d36c7c47e36"><td class="memTemplParams" colspan="2">template&lt;typename R &gt; </td></tr>
-<tr class="memitem:ga7465bd869ea861f5f8789d36c7c47e36"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga7465bd869ea861f5f8789d36c7c47e36">ranges::v3::aux::move_t</a> = <a class="el" href="group__logical.html#ga433228617142da594a03300b7550628a">meta::if_</a>&lt; std::is_reference&lt; R &gt;, <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::remove_reference&lt; R &gt; &gt; &amp;&amp;, detail::decay_t&lt; R &gt; &gt;</td></tr>
-<tr class="separator:ga7465bd869ea861f5f8789d36c7c47e36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:ga666ada406594f0fc35648f34b069d5a7"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga666ada406594f0fc35648f34b069d5a7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::remove_reference&lt; T &gt; &gt; &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga666ada406594f0fc35648f34b069d5a7">ranges::v3::aux::operator|</a> (T &amp;&amp;t, move_fn move) noexcept</td></tr>
-<tr class="separator:ga666ada406594f0fc35648f34b069d5a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad1dd3ed7b298f876eba78dfb3c8e61e6"><td class="memTemplParams" colspan="2">template&lt;typename R &gt; </td></tr>
+<tr class="memitem:gad1dd3ed7b298f876eba78dfb3c8e61e6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gad1dd3ed7b298f876eba78dfb3c8e61e6">ranges::aux::move_t</a> = meta::if_c&lt; std::is_reference&lt; R &gt;::value, <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::remove_reference&lt; R &gt; &gt; &amp;&amp;, detail::decay_t&lt; R &gt; &gt;</td></tr>
+<tr class="separator:gad1dd3ed7b298f876eba78dfb3c8e61e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a3b76617e069c668c53c7f81cf5fecdc1"><td class="memItemLeft" align="right" valign="top"><a id="a3b76617e069c668c53c7f81cf5fecdc1"></a>
-constexpr adl_move_detail::iter_move_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::CPOs::iter_move</b> {}</td></tr>
-<tr class="separator:a3b76617e069c668c53c7f81cf5fecdc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacff94b96a5b7150b9ebc65e67ad5168b"><td class="memItemLeft" align="right" valign="top">constexpr move_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gacff94b96a5b7150b9ebc65e67ad5168b">ranges::v3::aux::move</a> {}</td></tr>
-<tr class="separator:gacff94b96a5b7150b9ebc65e67ad5168b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga20b5b25347e7f8173b2118fdb5ea5f58"><td class="memItemLeft" align="right" valign="top">constexpr move_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga20b5b25347e7f8173b2118fdb5ea5f58">ranges::aux::move</a> {}</td></tr>
+<tr class="separator:ga20b5b25347e7f8173b2118fdb5ea5f58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

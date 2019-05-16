@@ -137,7 +137,7 @@ Classes</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:gaf3f1c009ba67c7274eedea5bf9442c27"><td class="memTemplParams" colspan="2"><a id="gaf3f1c009ba67c7274eedea5bf9442c27"></a>
 template&lt;typename Fn , typename Q  = quote&lt;list&gt;&gt; </td></tr>
-<tr class="memitem:gaf3f1c009ba67c7274eedea5bf9442c27"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#gaf3f1c009ba67c7274eedea5bf9442c27">meta::curry</a> = <a class="el" href="structmeta_1_1compose__.html">compose</a>&lt; <a class="el" href="class_fn.html">Fn</a>, Q &gt;</td></tr>
+<tr class="memitem:gaf3f1c009ba67c7274eedea5bf9442c27"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#gaf3f1c009ba67c7274eedea5bf9442c27">meta::curry</a> = <a class="el" href="structmeta_1_1compose__.html">compose</a>&lt; Fn, Q &gt;</td></tr>
 <tr class="memdesc:gaf3f1c009ba67c7274eedea5bf9442c27"><td class="mdescLeft">&#160;</td><td class="mdescRight">An Invocable that takes a bunch of arguments, bundles them into a type list, and then calls the Invocable <code>Fn</code> with the type list <code>Q</code>. <br /></td></tr>
 <tr class="separator:gaf3f1c009ba67c7274eedea5bf9442c27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf53cbfe64fd00f1c5b0d252365ea7548"><td class="memTemplParams" colspan="2"><a id="gaf53cbfe64fd00f1c5b0d252365ea7548"></a>
@@ -156,7 +156,7 @@ template&lt;typename T , template&lt; T... &gt; class C&gt; </td></tr>
 <tr class="separator:ga4e3348a777312c3f3b7cc0d6cd93a240"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5fa0228061e71036b311db6c3d93ab02"><td class="memTemplParams" colspan="2"><a id="ga5fa0228061e71036b311db6c3d93ab02"></a>
 template&lt;typename Fn &gt; </td></tr>
-<tr class="memitem:ga5fa0228061e71036b311db6c3d93ab02"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#ga5fa0228061e71036b311db6c3d93ab02">meta::uncurry</a> = <a class="el" href="structmeta_1_1bind__front.html">bind_front</a>&lt; <a class="el" href="structmeta_1_1quote.html">quote</a>&lt; <a class="el" href="group__invocation.html#ga2f71f17b6a6b48ea99134ddabd0e19a9">apply</a> &gt;, <a class="el" href="class_fn.html">Fn</a> &gt;</td></tr>
+<tr class="memitem:ga5fa0228061e71036b311db6c3d93ab02"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#ga5fa0228061e71036b311db6c3d93ab02">meta::uncurry</a> = <a class="el" href="structmeta_1_1bind__front.html">bind_front</a>&lt; <a class="el" href="structmeta_1_1quote.html">quote</a>&lt; <a class="el" href="group__invocation.html#ga2f71f17b6a6b48ea99134ddabd0e19a9">apply</a> &gt;, Fn &gt;</td></tr>
 <tr class="memdesc:ga5fa0228061e71036b311db6c3d93ab02"><td class="mdescLeft">&#160;</td><td class="mdescRight">An Invocable that takes a type list, unpacks the types, and then calls the Invocable <code>Fn</code> with the types. <br /></td></tr>
 <tr class="separator:ga5fa0228061e71036b311db6c3d93ab02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -178,7 +178,7 @@ template&lt;template&lt; typename... &gt; class C&gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Turn a trait template <code>C</code> into an Invocable. </p>
-<div class="fragment"><div class="line">static_assert(std::is_same&lt;<a class="code" href="group__invocation.html#gac5c75197d5412d032f662b81e1a37e22">invoke</a>&lt;quote_trait&lt;std::add_const&gt;, <span class="keywordtype">int</span>&gt;, <span class="keywordtype">int</span> <span class="keyword">const</span>&gt;::value, <span class="stringliteral">&quot;&quot;</span>);</div></div><!-- fragment --> 
+<div class="fragment"><div class="line">static_assert(std::is_same_v&lt;<a class="code" href="group__invocation.html#gac5c75197d5412d032f662b81e1a37e22">invoke</a>&lt;quote_trait&lt;std::add_const&gt;, <span class="keywordtype">int</span>&gt;, <span class="keywordtype">int</span> <span class="keyword">const</span>&gt;, <span class="stringliteral">&quot;&quot;</span>);</div></div><!-- fragment --> 
 </div>
 </div>
 </div><!-- contents -->

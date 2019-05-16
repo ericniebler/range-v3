@@ -98,7 +98,7 @@ $(document).ready(function(){initNavTree('algorithm_2set__algorithm_8hpp.html','
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">set_algorithm.hpp File Reference</div>  </div>
@@ -107,35 +107,44 @@ $(document).ready(function(){initNavTree('algorithm_2set__algorithm_8hpp.html','
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1includes__fn.html">ranges::v3::includes_fn</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1includes__fn.html">ranges::includes_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1set__difference__fn.html">ranges::v3::set_difference_fn</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1set__difference__fn.html">ranges::set_difference_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1set__intersection__fn.html">ranges::v3::set_intersection_fn</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1set__intersection__fn.html">ranges::set_intersection_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1set__symmetric__difference__fn.html">ranges::v3::set_symmetric_difference_fn</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1set__symmetric__difference__fn.html">ranges::set_symmetric_difference_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1set__union__fn.html">ranges::v3::set_union_fn</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1set__union__fn.html">ranges::set_union_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga46e34ec570ccc79f695689635145bed4"><td class="memTemplParams" colspan="2">
+template&lt;typename I , typename O &gt; </td></tr>
+<tr class="memitem:ga46e34ec570ccc79f695689635145bed4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::set_difference_result</b> = detail::in1_out_result&lt; I, O &gt;</td></tr>
+<tr class="separator:ga46e34ec570ccc79f695689635145bed4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa40276d355563038380b94ca8c500cd2"><td class="memTemplParams" colspan="2">
+template&lt;typename I1 , typename I2 , typename O &gt; </td></tr>
+<tr class="memitem:gaa40276d355563038380b94ca8c500cd2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::set_symmetric_difference_result</b> = detail::in1_in2_out_result&lt; I1, I2, O &gt;</td></tr>
+<tr class="separator:gaa40276d355563038380b94ca8c500cd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa28c664ec5818d4c1e4458486d109519"><td class="memTemplParams" colspan="2">
+template&lt;typename I1 , typename I2 , typename O &gt; </td></tr>
+<tr class="memitem:gaa28c664ec5818d4c1e4458486d109519"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::set_union_result</b> = detail::in1_in2_out_result&lt; I1, I2, O &gt;</td></tr>
+<tr class="separator:gaa28c664ec5818d4c1e4458486d109519"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga171d9b16c205d86e45c3255ac01d7caa"><td class="memItemLeft" align="right" valign="top">constexpr with_braced_init_args&lt; includes_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga171d9b16c205d86e45c3255ac01d7caa">ranges::v3::includes</a> {}</td></tr>
-<tr class="separator:ga171d9b16c205d86e45c3255ac01d7caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga46dc29289a10772b9505424cd25797a6"><td class="memItemLeft" align="right" valign="top">constexpr with_braced_init_args&lt; set_difference_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga46dc29289a10772b9505424cd25797a6">ranges::v3::set_difference</a> {}</td></tr>
-<tr class="separator:ga46dc29289a10772b9505424cd25797a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga32c8b9861783cae7eb488669c8dd7ded"><td class="memItemLeft" align="right" valign="top">constexpr with_braced_init_args&lt; set_intersection_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga32c8b9861783cae7eb488669c8dd7ded">ranges::v3::set_intersection</a> {}</td></tr>
-<tr class="separator:ga32c8b9861783cae7eb488669c8dd7ded"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3ff3af2dbb3a996dd1f2ba2bc401f446"><td class="memItemLeft" align="right" valign="top">constexpr with_braced_init_args&lt; set_symmetric_difference_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga3ff3af2dbb3a996dd1f2ba2bc401f446">ranges::v3::set_symmetric_difference</a> {}</td></tr>
-<tr class="separator:ga3ff3af2dbb3a996dd1f2ba2bc401f446"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3e72d851b5bcaceefc63dd0b7205513d"><td class="memItemLeft" align="right" valign="top">constexpr with_braced_init_args&lt; set_union_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga3e72d851b5bcaceefc63dd0b7205513d">ranges::v3::set_union</a> {}</td></tr>
-<tr class="separator:ga3e72d851b5bcaceefc63dd0b7205513d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac381d08a2818d28dc9e74f0dcb8dbcca"><td class="memItemLeft" align="right" valign="top">constexpr includes_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gac381d08a2818d28dc9e74f0dcb8dbcca">ranges::includes</a> {}</td></tr>
+<tr class="separator:gac381d08a2818d28dc9e74f0dcb8dbcca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac285217d4fd7b6e6e88153388b5f6aaf"><td class="memItemLeft" align="right" valign="top">constexpr set_difference_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gac285217d4fd7b6e6e88153388b5f6aaf">ranges::set_difference</a> {}</td></tr>
+<tr class="separator:gac285217d4fd7b6e6e88153388b5f6aaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga400b8ef52222855ec1e0fc1449123cfa"><td class="memItemLeft" align="right" valign="top">constexpr set_intersection_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga400b8ef52222855ec1e0fc1449123cfa">ranges::set_intersection</a> {}</td></tr>
+<tr class="separator:ga400b8ef52222855ec1e0fc1449123cfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3c1431963d76cf0f73f57353b1500ee7"><td class="memItemLeft" align="right" valign="top">constexpr set_symmetric_difference_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga3c1431963d76cf0f73f57353b1500ee7">ranges::set_symmetric_difference</a> {}</td></tr>
+<tr class="separator:ga3c1431963d76cf0f73f57353b1500ee7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9adf51174aed9a22f8d4e71c53d825bf"><td class="memItemLeft" align="right" valign="top">constexpr set_union_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga9adf51174aed9a22f8d4e71c53d825bf">ranges::set_union</a> {}</td></tr>
+<tr class="separator:ga9adf51174aed9a22f8d4e71c53d825bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

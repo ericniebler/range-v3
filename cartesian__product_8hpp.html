@@ -98,8 +98,7 @@ $(document).ready(function(){initNavTree('cartesian__product_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">cartesian_product.hpp File Reference</div>  </div>
@@ -108,35 +107,42 @@ $(document).ready(function(){initNavTree('cartesian__product_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classranges_1_1v3_1_1cartesian__product__view.html">ranges::v3::cartesian_product_view&lt; Views &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classranges_1_1cartesian__product__view.html">ranges::cartesian_product_view&lt; Views &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1detail_1_1cartesian__size__fn.html">ranges::v3::detail::cartesian_size_fn</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classranges_1_1cartesian__product__view_1_1cursor.html">ranges::cartesian_product_view&lt; Views &gt;::cursor&lt; IsConst_ &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1cartesian__product__fn.html">ranges::v3::view::cartesian_product_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1view_1_1cartesian__product__fn.html">ranges::view::cartesian_product_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:a219bb85bbc410db144f5ac62cd36d6f3"><td class="memTemplParams" colspan="2"><a id="a219bb85bbc410db144f5ac62cd36d6f3"></a>
-template&lt;typename... Views&gt; </td></tr>
-<tr class="memitem:a219bb85bbc410db144f5ac62cd36d6f3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::detail::cartesian_product_cardinality</b> = <a class="el" href="group__transformation.html#gae11d8d9eabc75f1812113d03334f54d6">meta::fold</a>&lt; <a class="el" href="structmeta_1_1list.html">meta::list</a>&lt; range_cardinality&lt; Views &gt;... &gt;, std::integral_constant&lt; cardinality, static_cast&lt; cardinality &gt;((sizeof...(Views) &gt; 0))&gt;, <a class="el" href="structmeta_1_1quote.html">meta::quote</a>&lt; detail::product_cardinality &gt; &gt;</td></tr>
-<tr class="separator:a219bb85bbc410db144f5ac62cd36d6f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f2427b1e3974985c052a4b821a31b46"><td class="memTemplParams" colspan="2"><a id="a6f2427b1e3974985c052a4b821a31b46"></a>
-template&lt;typename State , typename Value &gt; </td></tr>
-<tr class="memitem:a6f2427b1e3974985c052a4b821a31b46"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::detail::product_cardinality</b> = std::integral_constant&lt; cardinality, State::value==0||Value::value==0 ? static_cast&lt; cardinality &gt;(0) :State::value==unknown||Value::value==unknown ? unknown :State::value==infinite||Value::value==infinite ? infinite :State::value==finite||Value::value==finite ? finite :static_cast&lt; cardinality &gt;(State::value *Value::value)&gt;</td></tr>
-<tr class="separator:a6f2427b1e3974985c052a4b821a31b46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:abeff2e1398ae777ed1ff2ca2e06c4277"><td class="memItemLeft" align="right" valign="top"><a id="abeff2e1398ae777ed1ff2ca2e06c4277"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::CPP_PP_CAT</b> (CPP_PP_DEF_, template(typename...Views)) META_CONCEPT CPP_PP_CAT(CPP_PP_DEF_</td></tr>
+<tr class="separator:abeff2e1398ae777ed1ff2ca2e06c4277"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5349aac552b00faa5f5bbd0f16f5d6a"><td class="memItemLeft" align="right" valign="top"><a id="ad5349aac552b00faa5f5bbd0f16f5d6a"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::CPP_PP_CAT</b> (CPP_PP_DEF_, template(typename IsConst, typename...Views)) META_CONCEPT CPP_PP_CAT(CPP_PP_DEF_</td></tr>
+<tr class="separator:ad5349aac552b00faa5f5bbd0f16f5d6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a59783b9d6c4b9a8161e4e8c181356b73"><td class="memItemLeft" align="right" valign="top"><a id="a59783b9d6c4b9a8161e4e8c181356b73"></a>
-constexpr cartesian_product_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::view::cartesian_product</b> {}</td></tr>
-<tr class="separator:a59783b9d6c4b9a8161e4e8c181356b73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a81f7830ea3dbb20a7a7d960f72a720"><td class="memItemLeft" align="right" valign="top"><a id="a6a81f7830ea3dbb20a7a7d960f72a720"></a>
+constexpr cartesian_product_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::view::cartesian_product</b> {}</td></tr>
+<tr class="separator:a6a81f7830ea3dbb20a7a7d960f72a720"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fb1787f3cd7f1f9837d47ac96502c26"><td class="memItemLeft" align="right" valign="top"><a id="a9fb1787f3cd7f1f9837d47ac96502c26"></a>
+concept&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::CartesianProductViewCanBidi</b> = CPP_PP_CAT( CPP_PP_DEF_IMPL_, 0 )( CartesianProductViewCanRandom&lt;IsConst, Views...&gt; || And&lt;CommonRange&lt;meta::const_if&lt;IsConst, Views&gt;&gt;..., BidirectionalIterator&lt;iterator_t&lt; meta::const_if&lt;IsConst, Views&gt;&gt;&gt;...&gt; )</td></tr>
+<tr class="separator:a9fb1787f3cd7f1f9837d47ac96502c26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac62c78d7f6e401b16ee9df09290fb1c4"><td class="memItemLeft" align="right" valign="top"><a id="ac62c78d7f6e401b16ee9df09290fb1c4"></a>
+concept&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::CartesianProductViewCanConst</b> = CPP_PP_CAT( CPP_PP_DEF_IMPL_, 0 )( And&lt;Range&lt;Views const&gt;...&gt; )</td></tr>
+<tr class="separator:ac62c78d7f6e401b16ee9df09290fb1c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25e7a6bae2b12c712c8364a4e45dc591"><td class="memItemLeft" align="right" valign="top"><a id="a25e7a6bae2b12c712c8364a4e45dc591"></a>
+concept&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::CartesianProductViewCanDistance</b> = CPP_PP_CAT( CPP_PP_DEF_IMPL_, 0 )( CartesianProductViewCanSize&lt;IsConst, Views...&gt; &amp;&amp; And&lt;SizedSentinel&lt; iterator_t&lt;meta::const_if&lt;IsConst, Views&gt;&gt;, iterator_t&lt;meta::const_if&lt;IsConst, Views&gt;&gt;&gt;...&gt; )</td></tr>
+<tr class="separator:a25e7a6bae2b12c712c8364a4e45dc591"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34cfb2530ad331dfbc37b2134295ae50"><td class="memItemLeft" align="right" valign="top"><a id="a34cfb2530ad331dfbc37b2134295ae50"></a>
+concept&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::CartesianProductViewCanRandom</b> = CPP_PP_CAT( CPP_PP_DEF_IMPL_, 0 )( CartesianProductViewCanDistance&lt;IsConst, Views...&gt; &amp;&amp; And&lt;RandomAccessIterator&lt;iterator_t&lt; meta::const_if&lt;IsConst, Views&gt;&gt;&gt;...&gt; )</td></tr>
+<tr class="separator:a34cfb2530ad331dfbc37b2134295ae50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a4b7d1f7c0fb04c64fbc038b272d197"><td class="memItemLeft" align="right" valign="top"><a id="a2a4b7d1f7c0fb04c64fbc038b272d197"></a>
+concept&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::CartesianProductViewCanSize</b> = CPP_PP_CAT( CPP_PP_DEF_IMPL_, 0 )( And&lt;SizedRange&lt;meta::const_if&lt;IsConst, Views&gt;&gt;...&gt; &amp;&amp; Type&lt;common_type_t&lt;std::uintmax_t, range_size_t&lt;meta::const_if&lt;IsConst, Views&gt;&gt;...&gt;&gt; )</td></tr>
+<tr class="separator:a2a4b7d1f7c0fb04c64fbc038b272d197"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

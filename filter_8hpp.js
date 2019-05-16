@@ -1,5 +1,7 @@
 var filter_8hpp =
 [
-    [ "filter_fn", "filter_8hpp.html#aa5180d9a6095fad5be5b2e3005037289", null ],
-    [ "filter", "group__group-views.html#ga9510d382f71c1402e14df2ca2ed4bd54", null ]
+    [ "cpp20_filter_fn", "structranges_1_1view_1_1cpp20__filter__fn.html", "structranges_1_1view_1_1cpp20__filter__fn" ],
+    [ "filter_fn", "structranges_1_1view_1_1filter__fn.html", "structranges_1_1view_1_1filter__fn" ],
+    [ "filter_view", "filter_8hpp.html#ac96baa2647e9055a0a753a8efd7c49cc", null ],
+    [ "filter", "filter_8hpp.html#aa05874526d3dac644f78f24af677ede8", null ]
 ];

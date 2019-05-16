@@ -1,8 +1,11 @@
 var algorithm_2set__algorithm_8hpp =
 [
-    [ "includes", "algorithm_2set__algorithm_8hpp.html#ga171d9b16c205d86e45c3255ac01d7caa", null ],
-    [ "set_difference", "algorithm_2set__algorithm_8hpp.html#ga46dc29289a10772b9505424cd25797a6", null ],
-    [ "set_intersection", "algorithm_2set__algorithm_8hpp.html#ga32c8b9861783cae7eb488669c8dd7ded", null ],
-    [ "set_symmetric_difference", "algorithm_2set__algorithm_8hpp.html#ga3ff3af2dbb3a996dd1f2ba2bc401f446", null ],
-    [ "set_union", "algorithm_2set__algorithm_8hpp.html#ga3e72d851b5bcaceefc63dd0b7205513d", null ]
+    [ "set_difference_result", "algorithm_2set__algorithm_8hpp.html#ga46e34ec570ccc79f695689635145bed4", null ],
+    [ "set_symmetric_difference_result", "algorithm_2set__algorithm_8hpp.html#gaa40276d355563038380b94ca8c500cd2", null ],
+    [ "set_union_result", "algorithm_2set__algorithm_8hpp.html#gaa28c664ec5818d4c1e4458486d109519", null ],
+    [ "includes", "algorithm_2set__algorithm_8hpp.html#gac381d08a2818d28dc9e74f0dcb8dbcca", null ],
+    [ "set_difference", "algorithm_2set__algorithm_8hpp.html#gac285217d4fd7b6e6e88153388b5f6aaf", null ],
+    [ "set_intersection", "algorithm_2set__algorithm_8hpp.html#ga400b8ef52222855ec1e0fc1449123cfa", null ],
+    [ "set_symmetric_difference", "algorithm_2set__algorithm_8hpp.html#ga3c1431963d76cf0f73f57353b1500ee7", null ],
+    [ "set_union", "algorithm_2set__algorithm_8hpp.html#ga9adf51174aed9a22f8d4e71c53d825bf", null ]
 ];

@@ -97,7 +97,7 @@ $(document).ready(function(){initNavTree('filter_8hpp.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a> &#124;
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -105,24 +105,29 @@ $(document).ready(function(){initNavTree('filter_8hpp.html','');});
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1filter__view.html">ranges::filter_view&lt; Rng, Pred &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1view_1_1cpp20__filter__fn.html">ranges::view::cpp20_filter_fn</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a source range and a unary predicate, present a view of the elements that satisfy the predicate.  <a href="structranges_1_1view_1_1cpp20__filter__fn.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1view_1_1filter__fn.html">ranges::view::filter_fn</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a source range, unary predicate, and optional projection, present a view of the elements that satisfy the predicate.  <a href="structranges_1_1view_1_1filter__fn.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:aa5180d9a6095fad5be5b2e3005037289"><td class="memItemLeft" align="right" valign="top"><a id="aa5180d9a6095fad5be5b2e3005037289"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="filter_8hpp.html#aa5180d9a6095fad5be5b2e3005037289">ranges::v3::view::filter_fn</a> = remove_if_fn_&lt; not_fn_fn &gt;</td></tr>
-<tr class="memdesc:aa5180d9a6095fad5be5b2e3005037289"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a source range, unary predicate, and optional projection, present a view of the elements that satisfy the predicate. <br /></td></tr>
-<tr class="separator:aa5180d9a6095fad5be5b2e3005037289"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac96baa2647e9055a0a753a8efd7c49cc"><td class="memTemplParams" colspan="2"><a id="ac96baa2647e9055a0a753a8efd7c49cc"></a>
+template&lt;typename V , typename Pred &gt; </td></tr>
+<tr class="memitem:ac96baa2647e9055a0a753a8efd7c49cc"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::cpp20::filter_view</b> = <a class="el" href="structranges_1_1filter__view.html">ranges::filter_view</a>&lt; V, Pred &gt;</td></tr>
+<tr class="separator:ac96baa2647e9055a0a753a8efd7c49cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga9510d382f71c1402e14df2ca2ed4bd54"><td class="memItemLeft" align="right" valign="top">
-constexpr view&lt; filter_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>filter</b> {}</td></tr>
-<tr class="separator:ga9510d382f71c1402e14df2ca2ed4bd54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa05874526d3dac644f78f24af677ede8"><td class="memItemLeft" align="right" valign="top"><a id="aa05874526d3dac644f78f24af677ede8"></a>
+constexpr <a class="el" href="structranges_1_1view_1_1view.html">ranges::view::view</a>&lt; <a class="el" href="structranges_1_1view_1_1cpp20__filter__fn.html">ranges::view::cpp20_filter_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::cpp20::view::filter</b> {}</td></tr>
+<tr class="separator:aa05874526d3dac644f78f24af677ede8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

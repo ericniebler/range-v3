@@ -98,7 +98,6 @@ $(document).ready(function(){initNavTree('view_2all_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
 <div class="title">all.hpp File Reference</div>  </div>
@@ -107,23 +106,21 @@ $(document).ready(function(){initNavTree('view_2all_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1identity__adaptor.html">ranges::v3::identity_adaptor&lt; Rng &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1identity__adaptor.html">ranges::identity_adaptor&lt; Rng &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1all__fn.html">ranges::v3::view::all_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1view_1_1all__fn.html">ranges::view::all_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:afe0af72136342d500f7ae087fc4d6828"><td class="memTemplParams" colspan="2"><a id="afe0af72136342d500f7ae087fc4d6828"></a>
+<tr class="memitem:a0d4010443d3b8c82ed4202839b136945"><td class="memTemplParams" colspan="2"><a id="a0d4010443d3b8c82ed4202839b136945"></a>
 template&lt;typename Rng &gt; </td></tr>
-<tr class="memitem:afe0af72136342d500f7ae087fc4d6828"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::all_t</b> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::decay&lt; decltype(all(std::declval&lt; Rng &gt;()))&gt; &gt;</td></tr>
-<tr class="separator:afe0af72136342d500f7ae087fc4d6828"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d4010443d3b8c82ed4202839b136945"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::view::all_t</b> = decltype(all(std::declval&lt; Rng &gt;()))</td></tr>
+<tr class="separator:a0d4010443d3b8c82ed4202839b136945"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18ebf38683d83675ac94086587c2ec21"><td class="memTemplParams" colspan="2"><a id="a18ebf38683d83675ac94086587c2ec21"></a>
+template&lt;typename Rng &gt; </td></tr>
+<tr class="memitem:a18ebf38683d83675ac94086587c2ec21"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::cpp20::all_view</b> = ranges::view::all_t&lt; Rng &gt;</td></tr>
+<tr class="separator:a18ebf38683d83675ac94086587c2ec21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

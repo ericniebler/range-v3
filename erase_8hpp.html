@@ -97,38 +97,27 @@ $(document).ready(function(){initNavTree('erase_8hpp.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">erase.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_erasable_range.html">ranges::v3::concepts::ErasableRange</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:ga6eefd775545bbaece88dcbc2e5ac4eb8"><td class="memTemplParams" colspan="2">
-template&lt;typename Rng , typename... Rest&gt; </td></tr>
-<tr class="memitem:ga6eefd775545bbaece88dcbc2e5ac4eb8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::ErasableRange</b> = concepts::models&lt; concepts::ErasableRange, Rng, Rest... &gt;</td></tr>
-<tr class="separator:ga6eefd775545bbaece88dcbc2e5ac4eb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gac6c1627c3133e9299fcea3fc8707af36"><td class="memItemLeft" align="right" valign="top">
+&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::CPP_PP_CAT</b> (CPP_PP_DEF_, template(typename Rng, typename I, typename S)) META_CONCEPT CPP_PP_CAT(CPP_PP_DEF_</td></tr>
+<tr class="separator:gac6c1627c3133e9299fcea3fc8707af36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga114e8583a053e08c5f535006fbbb624e"><td class="memItemLeft" align="right" valign="top">
-constexpr adl_erase_detail::erase_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::erase</b> {}</td></tr>
-<tr class="separator:ga114e8583a053e08c5f535006fbbb624e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1a23296428da283e5374f7d9279a1caa"><td class="memItemLeft" align="right" valign="top">
+concept&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::ErasableRange</b> = CPP_PP_CAT( CPP_PP_DEF_IMPL_, 0 )( requires (Rng &amp;&amp;rng, I begin, S end) ( ranges::erase(static_cast&lt;Rng &amp;&amp;&gt;(rng), begin, end) ) &amp;&amp; Range&lt;Rng&gt; )</td></tr>
+<tr class="separator:ga1a23296428da283e5374f7d9279a1caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaed3c82ef9ea70aa232829488f69d66cf"><td class="memItemLeft" align="right" valign="top">
+constexpr adl_erase_detail::erase_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::erase</b> {}</td></tr>
+<tr class="separator:gaed3c82ef9ea70aa232829488f69d66cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

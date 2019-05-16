@@ -98,7 +98,6 @@ $(document).ready(function(){initNavTree('memory_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">memory.hpp File Reference</div>  </div>
@@ -107,33 +106,25 @@ $(document).ready(function(){initNavTree('memory_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1iterator__category_3_01iterator__wrapper_3_01_i_01_4_01_4.html">ranges::v3::iterator_category&lt; iterator_wrapper&lt; I &gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1iterator__wrapper.html">ranges::iterator_wrapper&lt; I &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1iterator__wrapper.html">ranges::v3::iterator_wrapper&lt; I &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1raw__buffer.html">ranges::raw_buffer&lt; Val &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1raw__buffer.html">ranges::v3::raw_buffer&lt; Val &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1raw__storage__iterator.html">ranges::raw_storage_iterator&lt; O, Val &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1raw__storage__iterator.html">ranges::v3::raw_storage_iterator&lt; O, Val &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1value__type_3_01iterator__wrapper_3_01_i_01_4_01_4.html">ranges::v3::value_type&lt; iterator_wrapper&lt; I &gt; &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1readable__traits_3_01iterator__wrapper_3_01_i_01_4_01_4.html">ranges::readable_traits&lt; iterator_wrapper&lt; I &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gaf00564590e452ae2daa95d275f0503fd"><td class="memTemplParams" colspan="2">
-template&lt;typename I , requires  = (Iterator&lt;I&gt;())&gt; </td></tr>
-<tr class="memitem:gaf00564590e452ae2daa95d275f0503fd"><td class="memTemplItemLeft" align="right" valign="top">iterator_wrapper&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::iter_ref</b> (I &amp;i)</td></tr>
-<tr class="separator:gaf00564590e452ae2daa95d275f0503fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3c102fcaafb2f4255b7ed5b7d9692326"><td class="memTemplParams" colspan="2">
+<tr class="memitem:ga15d5a0692f264269802550ae5cbc686a"><td class="memTemplParams" colspan="2">
+template&lt;typename I &gt; </td></tr>
+<tr class="memitem:ga15d5a0692f264269802550ae5cbc686a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::iter_ref</b> (I &amp;i) -&gt; iterator_wrapper&lt; I &gt; requires Iterator&lt; I &gt;</td></tr>
+<tr class="separator:ga15d5a0692f264269802550ae5cbc686a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga210213dccfbcc10d705e41e2031cadf6"><td class="memTemplParams" colspan="2">
 template&lt;typename Val &gt; </td></tr>
-<tr class="memitem:ga3c102fcaafb2f4255b7ed5b7d9692326"><td class="memTemplItemLeft" align="right" valign="top">raw_buffer&lt; Val &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_raw_buffer</b> (Val *val)</td></tr>
-<tr class="separator:ga3c102fcaafb2f4255b7ed5b7d9692326"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga210213dccfbcc10d705e41e2031cadf6"><td class="memTemplItemLeft" align="right" valign="top">raw_buffer&lt; Val &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::make_raw_buffer</b> (Val *val)</td></tr>
+<tr class="separator:ga210213dccfbcc10d705e41e2031cadf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

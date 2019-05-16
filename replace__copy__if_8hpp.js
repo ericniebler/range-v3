@@ -1,5 +1,5 @@
 var replace__copy__if_8hpp =
 [
-    [ "ReplaceCopyIfable", "replace__copy__if_8hpp.html#ga4362625e37683a8ba9dca11815e3febc", null ],
-    [ "replace_copy_if", "replace__copy__if_8hpp.html#ga97b82a20c332217b2703e47be2b093ca", null ]
+    [ "replace_copy_if_result", "replace__copy__if_8hpp.html#gaf4f4af78a9add9145c784b58d209e16e", null ],
+    [ "replace_copy_if", "replace__copy__if_8hpp.html#gaebd42987f50337ea95d04b28dbf4a608", null ]
 ];
