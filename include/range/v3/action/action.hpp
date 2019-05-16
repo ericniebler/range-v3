@@ -37,7 +37,7 @@ namespace ranges
             struct impl
             {
                 template<typename...Ts, typename A = Action>
-                static auto CPP_auto_fun(bind)(Ts &&...ts)
+                static constexpr auto CPP_auto_fun(bind)(Ts &&...ts)
                 (
                     return A::bind(static_cast<Ts &&>(ts)...)
                 )
@@ -78,7 +78,9 @@ namespace ranges
 
         public:
             action() = default;
+
             constexpr explicit action(Action a)
+                noexcept(std::is_nothrow_move_constructible<Action>::value)
               : action_(detail::move(a))
             {}
 

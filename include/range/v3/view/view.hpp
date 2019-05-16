@@ -73,7 +73,7 @@ namespace ranges
             struct impl
             {
                 template<typename...Ts, typename V = View>
-                static auto CPP_auto_fun(bind)(Ts &&...ts)
+                static constexpr auto CPP_auto_fun(bind)(Ts &&...ts)
                 (
                     return V::bind(static_cast<Ts &&>(ts)...)
                 )
@@ -83,9 +83,9 @@ namespace ranges
         struct make_view_fn
         {
             template<typename Fun>
-            view<Fun> operator()(Fun fun) const
+            constexpr view<Fun> operator()(Fun fun) const
             {
-                return {std::move(fun)};
+                return view<Fun>{std::move(fun)};
             }
         };
 
@@ -117,14 +117,17 @@ namespace ranges
             }
         public:
             view() = default;
-            view(View a)
+
+            constexpr explicit view(View a)
+                noexcept(std::is_nothrow_move_constructible<View>::value)
               : view_(std::move(a))
             {}
 
             // Calling directly requires a ViewableRange.
-            CPP_template(typename Rng, typename...Rest)(
-                requires ViewableRange<Rng> && Invocable<View const &, Rng, Rest...>)
-            auto operator()(Rng &&rng, Rest &&... rest) const
+            template<typename Rng, typename...Rest>
+            auto operator()(Rng &&rng, Rest &&... rest) const ->
+                CPP_ret(invoke_result_t<View const &, Rng, Rest...>)(
+                    requires ViewableRange<Rng> && Invocable<View const &, Rng, Rest...>)
             {
                 return view_(static_cast<Rng &&>(rng), static_cast<Rest &&>(rest)...);
             }

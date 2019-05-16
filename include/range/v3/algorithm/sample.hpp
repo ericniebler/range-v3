@@ -20,7 +20,7 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/algorithm/min.hpp>
+#include <range/v3/algorithm/copy_n.hpp>
 #include <range/v3/utility/random.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/concepts.hpp>
@@ -41,28 +41,35 @@ namespace ranges
     private:
         template<typename I, typename S, typename O, typename Gen>
         static auto sized_impl(I first, S last, iter_difference_t<I> pop_size, O out,
-                iter_difference_t<I> n, Gen &&gen) ->
+                iter_difference_t<O> sample_size, Gen &&gen) ->
             sample_result<I, O>
         {
-            std::uniform_int_distribution<iter_difference_t<I>> dist;
-            using param_t = typename decltype(dist)::param_type;
-            n = ranges::min(pop_size, n);
-            for(; n > 0 && first != last; ++first)
+            if(pop_size > 0 && sample_size > 0)
             {
-                if(dist(gen, param_t{0, --pop_size}) < n)
+                std::uniform_int_distribution<difference_type_t<I>> dist;
+                using param_t = typename decltype(dist)::param_type;
+                for(; first != last; ++first)
                 {
-                    --n;
-                    *out = *first;
-                    ++out;
+                    if(sample_size >= pop_size)
+                        return copy_n(std::move(first), pop_size, std::move(out));
+
+                    if(dist(gen, param_t{0, --pop_size}) < sample_size)
+                    {
+                        *out = *first;
+                        ++out;
+                        if(--sample_size == 0)
+                            break;
+                    }
                 }
             }
+
             return {std::move(first), std::move(out)};
         }
 
     public:
         template<typename I, typename S, typename O,
             typename Gen = detail::default_random_engine &>
-        auto operator()(I first, S last, O out, iter_difference_t<I> n,
+        auto operator()(I first, S last, O out, iter_difference_t<O> const n,
                 Gen &&gen = detail::get_random_engine()) const ->
             CPP_ret(sample_result<I, O>)(
                 requires InputIterator<I> && Sentinel<S, I> &&
@@ -73,7 +80,7 @@ namespace ranges
         {
             if RANGES_CONSTEXPR_IF (ForwardIterator<I> || SizedSentinel<S, I>)
             {
-                auto k = distance(first, last);
+                auto const k = distance(first, last);
                 return sample_fn::sized_impl(std::move(first), std::move(last),
                     k, std::move(out), n, static_cast<Gen &&>(gen));
             }
@@ -81,26 +88,29 @@ namespace ranges
             {
                 // out is random-access here; calls to advance(out,n) and
                 // next(out,n) are O(1).
-                std::uniform_int_distribution<iter_difference_t<I>> dist;
-                if(n <= 0)
-                    goto done;
-                for(iter_difference_t<I> i = 0; i < n; (void)++i, ++first)
+                if(n > 0)
                 {
-                    if(first == last)
+                    for(difference_type_t<O> i = 0; i < n; (void)++i, ++first)
                     {
-                        advance(out, i);
-                        goto done;
-                    }
-                    *next(out, i) = *first;
-                }
-                using param_t = typename decltype(dist)::param_type;
-                for(auto pop_size = n; first != last; (void)++first, ++pop_size)
-                {
-                    auto const i = dist(gen, param_t{0, pop_size});
-                    if(i < n)
+                        if(first == last)
+                        {
+                            advance(out, i);
+                            goto done;
+                        }
                         *next(out, i) = *first;
+                    }
+
+                    std::uniform_int_distribution<difference_type_t<O>> dist;
+                    using param_t = typename decltype(dist)::param_type;
+                    for(auto pop_size = n; first != last; (void)++first, ++pop_size)
+                    {
+                        auto const i = dist(gen, param_t{0, pop_size});
+                        if(i < n)
+                            *next(out, i) = *first;
+                    }
+
+                    advance(out, n);
                 }
-                advance(out, n);
             done:
                 return {std::move(first), std::move(out)};
             }
@@ -132,7 +142,7 @@ namespace ranges
         }
 
         template<typename Rng, typename O, typename Gen = detail::default_random_engine &>
-        auto operator()(Rng &&rng, O out, range_difference_t<Rng> n,
+        auto operator()(Rng &&rng, O out, difference_type_t<O> const n,
             Gen &&gen = detail::get_random_engine()) const ->
             CPP_ret(sample_result<safe_iterator_t<Rng>, O>)(
                 requires InputRange<Rng> &&

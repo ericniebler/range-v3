@@ -91,9 +91,9 @@ namespace ranges
                     j - j,
                     i += n,
                     i -= n,
-                    static_cast<I>(i - n),
-                    static_cast<I>(i + n),
-                    static_cast<I>(n + i),
+                    static_cast<I>(j - n),
+                    static_cast<I>(j + n),
+                    static_cast<I>(n + j),
                     // NOT TO SPEC:
                     // Unsigned integers are advanceable, but subtracting them results in
                     // an unsigned integral, which is not the same as the difference type,
