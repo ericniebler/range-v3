@@ -15,42 +15,41 @@
 #define RANGES_V3_UTILITY_COPY_HPP
 
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/concepts.hpp>
+#include <concepts/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-utility
+    /// @{
+    namespace aux
     {
-        /// \addtogroup group-utility
-        /// @{
-        namespace aux
+        struct copy_fn : copy_tag
         {
-            struct copy_fn : copy_tag
-            {
-                template<typename T,
-                    CONCEPT_REQUIRES_(Constructible<detail::decay_t<T>, T>())>
-                detail::decay_t<T> operator()(T && t) const
-                {
-                    return static_cast<T &&>(t);
-                }
-            };
-
-            /// \ingroup group-utility
-            /// \sa `copy_fn`
-            RANGES_INLINE_VARIABLE(copy_fn, copy)
-
-            /// \ingroup group-utility
-            /// \sa `copy_fn`
-            template<typename T,
-                CONCEPT_REQUIRES_(Constructible<detail::decay_t<T>, T>())>
-            detail::decay_t<T> operator|(T && t, copy_fn)
+            template<typename T>
+            constexpr auto operator()(T &&t) const ->
+                CPP_ret(detail::decay_t<T>)(
+                    requires Constructible<detail::decay_t<T>, T>)
             {
                 return static_cast<T &&>(t);
             }
-        }
-        /// @}
+
+            /// \ingroup group-utility
+            /// \sa `copy_fn`
+            template<typename T>
+            friend constexpr auto operator|(T &&t, copy_fn) ->
+                CPP_broken_friend_ret(detail::decay_t<T>)(
+                    requires Constructible<detail::decay_t<T>, T>)
+            {
+                return static_cast<T &&>(t);
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `copy_fn`
+        RANGES_INLINE_VARIABLE(copy_fn, copy)
     }
+    /// @}
 }
 
 #endif

@@ -25,12 +25,12 @@ int main()
 
     int rgi[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-    auto && rng = rgi | view::partial_sum;
+    auto rng = rgi | view::partial_sum;
     has_type<int &>(*begin(rgi));
     has_type<int>(*begin(rng));
-    models<concepts::SizedView>(aux::copy(rng));
-    models<concepts::ForwardView>(aux::copy(rng));
-    models_not<concepts::BidirectionalView>(aux::copy(rng));
+    models<SizedViewConcept>(aux::copy(rng));
+    models<ForwardViewConcept>(aux::copy(rng));
+    models_not<BidirectionalViewConcept>(aux::copy(rng));
     ::check_equal(rng, {1, 3, 6, 10, 15, 21, 28, 36, 45, 55});
 
     auto it = begin(rng);
@@ -48,8 +48,8 @@ int main()
     auto mutable_rng = view::partial_sum(rgi, [cnt](int i, int j) mutable { return i + j + cnt++;});
     ::check_equal(mutable_rng, {1, 3, 7, 13, 21, 31, 43, 57, 73, 91});
     CHECK(cnt == 0);
-    CONCEPT_ASSERT(View<decltype(mutable_rng)>());
-    CONCEPT_ASSERT(!View<decltype(mutable_rng) const>());
+    CPP_assert(View<decltype(mutable_rng)>);
+    CPP_assert(!View<decltype(mutable_rng) const>);
 
     {
         auto rng = debug_input_view<int const>{rgi} | view::partial_sum;

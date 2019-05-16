@@ -18,80 +18,46 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
-#include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-actions
+    /// @{
+    namespace action
     {
-        /// \addtogroup group-actions
-        /// @{
-        namespace action
+        struct drop_fn
         {
-            struct drop_fn
+        private:
+            friend action_access;
+            template<typename Int>
+            static auto CPP_fun(bind)(drop_fn drop, Int n)(
+                requires Integral<Int>)
             {
-            private:
-                friend action_access;
-                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
-                static auto bind(drop_fn drop, Int n)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    std::bind(drop, std::placeholders::_1, n)
-                )
-            public:
-                struct ConceptImpl
-                {
-                    template<typename Rng, typename T,
-                        typename I = iterator_t<Rng>,
-                        typename D = range_difference_type_t<Rng>>
-                    auto requires_() -> decltype(
-                        concepts::valid_expr(
-                            concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::model_of<concepts::ErasableRange, Rng, I, I>(),
-                            concepts::model_of<concepts::ConvertibleTo, T, D>()
-                        ));
-                };
+                return std::bind(drop, std::placeholders::_1, n);
+            }
+        public:
+            template<typename Rng>
+            auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
+                CPP_ret(Rng)(
+                    requires ForwardRange<Rng> &&
+                        ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
+            {
+                RANGES_EXPECT(n >= 0);
+                ranges::action::erase(rng, begin(rng), ranges::next(begin(rng), n, end(rng)));
+                return static_cast<Rng &&>(rng);
+            }
+        };
 
-                template<typename Rng, typename T>
-                using Concept = concepts::models<ConceptImpl, Rng, T>;
-
-                template<typename Rng, typename D = range_difference_type_t<Rng>,
-                    CONCEPT_REQUIRES_(Concept<Rng, D>())>
-                Rng operator()(Rng && rng, range_difference_type_t<Rng> n) const
-                {
-                    RANGES_EXPECT(n >= 0);
-                    ranges::action::erase(rng, begin(rng), ranges::next(begin(rng), n, end(rng)));
-                    return static_cast<Rng&&>(rng);
-                }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!Concept<Rng, T>())>
-                void operator()(Rng &&, T &&) const
-                {
-                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
-                        "The object on which action::drop operates must be a model of the "
-                        "ForwardRange concept.");
-                    using I = iterator_t<Rng>;
-                    CONCEPT_ASSERT_MSG(ErasableRange<Rng, I, I>(),
-                        "The object on which action::drop operates must allow element removal.");
-                    CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_difference_type_t<Rng>>(),
-                        "The count passed to action::drop must be an integral type.");
-                }
-            #endif
-            };
-
-            /// \ingroup group-actions
-            /// \relates drop_fn
-            /// \sa action
-            RANGES_INLINE_VARIABLE(action<drop_fn>, drop)
-        }
-        /// @}
+        /// \ingroup group-actions
+        /// \relates drop_fn
+        /// \sa action
+        RANGES_INLINE_VARIABLE(action<drop_fn>, drop)
     }
+    /// @}
 }
 
 #endif

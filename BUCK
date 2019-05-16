@@ -1,4 +1,16 @@
 prebuilt_cxx_library(
+  name = 'concepts',
+  header_namespace = 'concepts',
+  header_only = True,
+  exported_headers = subdir_glob([
+    ('include/concepts', '**/*.hpp'),
+  ]),
+  licenses = [
+    'LICENSE.txt',
+  ],
+)
+
+prebuilt_cxx_library(
   name = 'meta',
   header_namespace = 'meta',
   header_only = True,
@@ -24,6 +36,7 @@ prebuilt_cxx_library(
     'PUBLIC'
   ],
   deps = [
+    ':concepts',
     ':meta',
   ],
 )

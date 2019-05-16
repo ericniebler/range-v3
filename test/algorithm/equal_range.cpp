@@ -22,14 +22,17 @@
 #include <vector>
 #include <iterator>
 #include <range/v3/core.hpp>
-#include <range/v3/view/join.hpp>
-#include <range/v3/view/transform.hpp>
-#include <range/v3/view/iota.hpp>
-#include <range/v3/view/repeat_n.hpp>
-#include <range/v3/view/take.hpp>
-#include <range/v3/utility/iterator.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/equal_range.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
+#include <range/v3/view/iota.hpp>
+#include <range/v3/view/join.hpp>
+#include <range/v3/view/repeat_n.hpp>
+#include <range/v3/view/take.hpp>
+#include <range/v3/view/transform.hpp>
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
@@ -50,12 +53,12 @@ void not_totally_ordered()
     ranges::equal_range(vec, my_int{10}, compare);
 }
 
-template<class Iter, class Sent, class T, class Proj = ranges::ident>
+template<class Iter, class Sent, class T, class Proj = ranges::identity>
 void
 test(Iter first, Sent last, const T& value, Proj proj = Proj{})
 {
-    ranges::iterator_range<Iter, Iter> i =
-        ranges::equal_range(first, last, value, ranges::ordered_less{}, proj);
+    ranges::subrange<Iter, Iter> i =
+        ranges::equal_range(first, last, value, ranges::less{}, proj);
     for (Iter j = first; j != i.begin(); ++j)
         CHECK(ranges::invoke(proj, *j) < value);
     for (Iter j = i.begin(); j != last; ++j)
@@ -66,14 +69,14 @@ test(Iter first, Sent last, const T& value, Proj proj = Proj{})
         CHECK(value < ranges::invoke(proj, *j));
 
     auto res = ranges::equal_range(
-        ranges::make_iterator_range(first, last), value, ranges::ordered_less{}, proj);
-    for (Iter j = first; j != res.get_unsafe().begin(); ++j)
+        ranges::make_subrange(first, last), value, ranges::less{}, proj);
+    for (Iter j = first; j != res.begin(); ++j)
         CHECK(ranges::invoke(proj, *j) < value);
-    for (Iter j = res.get_unsafe().begin(); j != last; ++j)
+    for (Iter j = res.begin(); j != last; ++j)
         CHECK(!(ranges::invoke(proj, *j) < value));
-    for (Iter j = first; j != res.get_unsafe().end(); ++j)
+    for (Iter j = first; j != res.end(); ++j)
         CHECK(!(value < ranges::invoke(proj, *j)));
-    for (Iter j = res.get_unsafe().end(); j != last; ++j)
+    for (Iter j = res.end(); j != last; ++j)
         CHECK(value < ranges::invoke(proj, *j));
 }
 

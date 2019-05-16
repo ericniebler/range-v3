@@ -22,13 +22,12 @@
 int main()
 {
     using namespace ranges;
-
     {
         std::vector<int> v = view::ints(0, 100);
 
         auto v2 = v | copy | action::slice(10, 20);
         CHECK(size(v2) == 10u);
-        ::models<concepts::Same>(v, v2);
+        ::models<SameConcept>(v, v2);
         ::check_equal(v2, {10, 11, 12, 13, 14, 15, 16, 17, 18, 19});
 
         v2 = v2 | move | action::slice(2, 8);

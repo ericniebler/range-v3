@@ -22,9 +22,10 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include <functional>
 #include <memory>
 #include <utility>
-#include <functional>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/remove_copy_if.hpp>
 #include "../simple_test.hpp"
@@ -38,9 +39,9 @@ test_iter()
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
     constexpr auto sa = ranges::size(ia);
     int ib[sa];
-    std::pair<InIter, OutIter> r = ranges::remove_copy_if(InIter(ia), Sent(ia+sa), OutIter(ib), [](int i){return i == 2;});
-    CHECK(base(r.first) == ia + sa);
-    CHECK(base(r.second) == ib + sa-3);
+    ranges::remove_copy_if_result<InIter, OutIter> r = ranges::remove_copy_if(InIter(ia), Sent(ia+sa), OutIter(ib), [](int i){return i == 2;});
+    CHECK(base(r.in) == ia + sa);
+    CHECK(base(r.out) == ib + sa-3);
     CHECK(ib[0] == 0);
     CHECK(ib[1] == 1);
     CHECK(ib[2] == 3);
@@ -56,9 +57,9 @@ test_range()
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
     constexpr auto sa = ranges::size(ia);
     int ib[sa];
-    std::pair<InIter, OutIter> r = ranges::remove_copy_if(::as_lvalue(ranges::make_iterator_range(InIter(ia), Sent(ia+sa))), OutIter(ib), [](int i){return i == 2;});
-    CHECK(base(r.first) == ia + sa);
-    CHECK(base(r.second) == ib + sa-3);
+    ranges::remove_copy_if_result<InIter, OutIter> r = ranges::remove_copy_if(::as_lvalue(ranges::make_subrange(InIter(ia), Sent(ia+sa))), OutIter(ib), [](int i){return i == 2;});
+    CHECK(base(r.in) == ia + sa);
+    CHECK(base(r.out) == ib + sa-3);
     CHECK(ib[0] == 0);
     CHECK(ib[1] == 1);
     CHECK(ib[2] == 3);
@@ -141,9 +142,9 @@ int main()
         S ia[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
         constexpr auto sa = ranges::size(ia);
         S ib[sa];
-        std::pair<S*, S*> r = ranges::remove_copy_if(ia, ib, [](int i){return i == 2;}, &S::i);
-        CHECK(r.first == ia + sa);
-        CHECK(r.second == ib + sa-3);
+        ranges::remove_copy_if_result<S*, S*> r = ranges::remove_copy_if(ia, ib, [](int i){return i == 2;}, &S::i);
+        CHECK(r.in == ia + sa);
+        CHECK(r.out == ib + sa-3);
         CHECK(ib[0].i == 0);
         CHECK(ib[1].i == 1);
         CHECK(ib[2].i == 3);
@@ -156,10 +157,24 @@ int main()
     {
         S ia[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
         constexpr auto sa = ranges::size(ia);
-        S ib[sa];
-        auto r = ranges::remove_copy_if(ranges::view::all(ia), ib, [](int i){return i == 2;}, &S::i);
-        CHECK(r.first.get_unsafe() == ia + sa);
-        CHECK(r.second == ib + sa-3);
+        S ib[sa] = {};
+        auto r0 = ranges::remove_copy_if(std::move(ia), ib, [](int i){return i == 2;}, &S::i);
+#ifndef RANGES_WORKAROUND_MSVC_573728
+        CHECK(::is_dangling(r0.in));
+#endif // RANGES_WORKAROUND_MSVC_573728
+        CHECK(r0.out == ib + sa-3);
+        CHECK(ib[0].i == 0);
+        CHECK(ib[1].i == 1);
+        CHECK(ib[2].i == 3);
+        CHECK(ib[3].i == 4);
+        CHECK(ib[4].i == 3);
+        CHECK(ib[5].i == 4);
+
+        std::fill(ranges::begin(ib), ranges::end(ib), S{});
+        std::vector<S> vec(ranges::begin(ia), ranges::end(ia));
+        auto r1 = ranges::remove_copy_if(std::move(vec), ib, [](int i){return i == 2;}, &S::i);
+        CHECK(::is_dangling(r1.in));
+        CHECK(r1.out == ib + sa-3);
         CHECK(ib[0].i == 0);
         CHECK(ib[1].i == 1);
         CHECK(ib[2].i == 3);

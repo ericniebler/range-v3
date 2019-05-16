@@ -27,218 +27,222 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/detail/config.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/polymorphic_cast.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \cond
+    namespace detail
     {
-        /// \cond
-        namespace detail
+        template<typename T>
+        std::pair<T *, std::ptrdiff_t> get_temporary_buffer_impl(std::size_t count) noexcept
+        {
+            RANGES_EXPECT(count >= 0);
+            std::size_t n = static_cast<std::size_t>(count);
+            if (n > PTRDIFF_MAX / sizeof(T))
+                n = PTRDIFF_MAX / sizeof(T);
+
+            void *ptr = nullptr;
+            for (; ptr == nullptr && n > 0; n /= 2)
+            {
+#if RANGES_CXX_ALIGNED_NEW < RANGES_CXX_ALIGNED_NEW_17
+                static_assert(alignof(T) <= alignof(std::max_align_t),
+                    "Sorry: over-aligned types are supported only with C++17.");
+#else // RANGES_CXX_ALIGNED_NEW
+                if RANGES_CONSTEXPR_IF (alignof(T) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+                    ptr = ::operator new(sizeof(T) * n, std::align_val_t{alignof(T)}, std::nothrow);
+                else
+#endif // RANGES_CXX_ALIGNED_NEW
+                    ptr = ::operator new(sizeof(T) * n, std::nothrow);
+            }
+
+            return {static_cast<T *>(ptr), static_cast<std::ptrdiff_t>(n)};
+        }
+
+        template<typename T, typename D>
+        std::pair<T *, std::ptrdiff_t> get_temporary_buffer(D count) noexcept
+        {
+            RANGES_EXPECT(count >= 0);
+            return detail::get_temporary_buffer_impl<T>(static_cast<std::size_t>(count));
+        }
+
+        struct return_temporary_buffer
         {
             template<typename T>
-            std::pair<T *, std::ptrdiff_t> get_temporary_buffer(std::ptrdiff_t count) noexcept
+            void operator()(T *p) const
             {
-                RANGES_EXPECT(count >= 0);
-                std::size_t n = static_cast<std::size_t>(count);
-                if (n > PTRDIFF_MAX / sizeof(T))
-                    n = PTRDIFF_MAX / sizeof(T);
-
-                void *ptr = nullptr;
-                for (; ptr == nullptr && n > 0; n /= 2)
-                {
 #if RANGES_CXX_ALIGNED_NEW < RANGES_CXX_ALIGNED_NEW_17
-                    static_assert(alignof(T) <= alignof(std::max_align_t),
-                        "Sorry: over-aligned types are supported only with C++17.");
+                static_assert(alignof(T) <= alignof(std::max_align_t),
+                    "Sorry: over-aligned types are supported only with C++17.");
 #else // RANGES_CXX_ALIGNED_NEW
-                    if RANGES_CONSTEXPR_IF (alignof(T) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
-                        ptr = ::operator new(sizeof(T) * n, std::align_val_t{alignof(T)}, std::nothrow);
-                    else
+                if RANGES_CONSTEXPR_IF (alignof(T) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+                    ::operator delete(p, std::align_val_t{alignof(T)});
+                else
 #endif // RANGES_CXX_ALIGNED_NEW
-                        ptr = ::operator new(sizeof(T) * n, std::nothrow);
-                }
-
-                return {static_cast<T *>(ptr), static_cast<std::ptrdiff_t>(n)};
-            }
-
-            struct return_temporary_buffer
-            {
-                template<typename T>
-                void operator()(T *p) const
-                {
-#if RANGES_CXX_ALIGNED_NEW < RANGES_CXX_ALIGNED_NEW_17
-                    static_assert(alignof(T) <= alignof(std::max_align_t),
-                        "Sorry: over-aligned types are supported only with C++17.");
-#else // RANGES_CXX_ALIGNED_NEW
-                    if RANGES_CONSTEXPR_IF (alignof(T) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
-                        ::operator delete(p, std::align_val_t{alignof(T)});
-                    else
-#endif // RANGES_CXX_ALIGNED_NEW
-                        ::operator delete(p);
-                }
-            };
-
-            template<typename T, typename... Args,
-                CONCEPT_REQUIRES_(!std::is_array<T>::value)>
-            std::unique_ptr<T> make_unique(Args &&... args)
-            {
-                return std::unique_ptr<T>{new T(static_cast<Args &&>(args)...)};
-            }
-        }
-        /// \endcond
-
-        /// \addtogroup group-utility
-        /// @{
-        template<typename O, typename Val>
-        struct raw_storage_iterator
-        {
-        private:
-            CONCEPT_ASSERT(OutputIterator<O, Val>());
-            CONCEPT_ASSERT(std::is_lvalue_reference<reference_t<O>>());
-            O out_;
-        public:
-            using difference_type = difference_type_t<O>;
-            raw_storage_iterator() = default;
-            explicit raw_storage_iterator(O out)
-              : out_(std::move(out))
-            {}
-            raw_storage_iterator &operator*() noexcept
-            {
-                return *this;
-            }
-            CONCEPT_REQUIRES(CopyConstructible<Val>())
-            raw_storage_iterator &operator=(Val const & val)
-            {
-                ::new((void*) std::addressof(*out_)) Val(val);
-                return *this;
-            }
-            CONCEPT_REQUIRES(MoveConstructible<Val>())
-            raw_storage_iterator &operator=(Val && val)
-            {
-                ::new((void*) std::addressof(*out_)) Val(std::move(val));
-                return *this;
-            }
-            raw_storage_iterator &operator++()
-            {
-                ++out_;
-                return *this;
-            }
-            CONCEPT_REQUIRES(!ForwardIterator<O>())
-            void operator++(int)
-            {
-                ++out_;
-            }
-            CONCEPT_REQUIRES(ForwardIterator<O>())
-            raw_storage_iterator operator++(int)
-            {
-                auto tmp = *this;
-                ++out_;
-                return tmp;
-            }
-            O base() const
-            {
-                return out_;
+                    ::operator delete(p);
             }
         };
 
-        template<typename I>
-        struct iterator_wrapper
+        template<typename T, typename... Args>
+        auto make_unique(Args &&... args) -> CPP_ret(std::unique_ptr<T>)(
+            requires (not std::is_array<T>::value))
         {
-        private:
-            CONCEPT_ASSERT(Iterator<I>());
-            mutable I *i_ = nullptr;
-        public:
-            using difference_type = difference_type_t<I>;
-            iterator_wrapper() = default;
-            iterator_wrapper(iterator_wrapper const &that)
-              : i_(that.i_)
-            {
-                that.i_ = nullptr;
-            }
-            iterator_wrapper &operator=(iterator_wrapper const &that)
-            {
-                i_ = that.i_;
-                that.i_ = nullptr;
-                return *this;
-            }
-            iterator_wrapper(I &i)
-              : i_(std::addressof(i))
-            {}
-            auto operator*() const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                **i_
-            )
-            iterator_wrapper &operator++()
-            {
-                ++*i_;
-                return *this;
-            }
-            void operator++(int)
-            {
-                ++*i_;
-            }
-            I base() const
-            {
-                return *i_;
-            }
-        };
-
-        template<typename I,
-            CONCEPT_REQUIRES_(Iterator<I>())>
-        iterator_wrapper<I> iter_ref(I &i)
-        {
-            return i;
+            return std::unique_ptr<T>{new T(static_cast<Args &&>(args)...)};
         }
-
-        template<typename I>
-        struct iterator_category<iterator_wrapper<I>>
-          : meta::if_<
-                InputIterator<I>,
-                meta::id<input_iterator_tag>,
-                meta::nil_>
-        {};
-
-        template<typename I>
-        struct value_type<iterator_wrapper<I>>
-          : meta::if_<
-                InputIterator<I>,
-                meta::defer<value_type_t, I>,
-                meta::nil_>
-        {};
-
-        template<typename Val>
-        struct raw_buffer
-        {
-        private:
-            Val *begin_;
-            raw_storage_iterator<Val *, Val> rsi_;
-        public:
-            explicit raw_buffer(Val *begin)
-              : begin_(begin), rsi_(begin)
-            {}
-            raw_buffer(raw_buffer &&) = default;
-            raw_buffer(raw_buffer const &) = delete;
-            ~raw_buffer()
-            {
-                for(; begin_ != rsi_.base(); ++begin_)
-                    begin_->~Val();
-            }
-            iterator_wrapper<raw_storage_iterator<Val *, Val>> begin()
-            {
-                return ranges::iter_ref(rsi_);
-            }
-        };
-
-        template<typename Val>
-        raw_buffer<Val> make_raw_buffer(Val *val)
-        {
-            return raw_buffer<Val>(val);
-        }
-        /// @}
     }
+    /// \endcond
+
+    /// \addtogroup group-utility
+    /// @{
+    template<typename O, typename Val>
+    struct raw_storage_iterator
+    {
+    private:
+        CPP_assert(OutputIterator<O, Val>);
+        CPP_assert(std::is_lvalue_reference<iter_reference_t<O>>());
+        O out_;
+    public:
+        using difference_type = iter_difference_t<O>;
+        raw_storage_iterator() = default;
+        explicit raw_storage_iterator(O out)
+          : out_(std::move(out))
+        {}
+        raw_storage_iterator &operator*() noexcept
+        {
+            return *this;
+        }
+        CPP_member
+        auto operator=(Val const & val) ->
+            CPP_ret(raw_storage_iterator &)(
+                requires CopyConstructible<Val>)
+        {
+            ::new((void*) std::addressof(*out_)) Val(val);
+            return *this;
+        }
+        CPP_member
+        auto operator=(Val &&val) ->
+            CPP_ret(raw_storage_iterator &)(
+                requires MoveConstructible<Val>)
+        {
+            ::new((void*) std::addressof(*out_)) Val(std::move(val));
+            return *this;
+        }
+        raw_storage_iterator &operator++()
+        {
+            ++out_;
+            return *this;
+        }
+        CPP_member
+        auto operator++(int) ->
+            CPP_ret(void)(
+                requires (not ForwardIterator<O>))
+        {
+            ++out_;
+        }
+        CPP_member
+        auto operator++(int) ->
+            CPP_ret(raw_storage_iterator)(
+                requires ForwardIterator<O>)
+        {
+            auto tmp = *this;
+            ++out_;
+            return tmp;
+        }
+        O base() const
+        {
+            return out_;
+        }
+    };
+
+    template<typename I>
+    struct iterator_wrapper
+    {
+    private:
+        CPP_assert(Iterator<I>);
+        mutable I *i_ = nullptr;
+    public:
+        using difference_type = iter_difference_t<I>;
+        iterator_wrapper() = default;
+        iterator_wrapper(iterator_wrapper const &that)
+          : i_(that.i_)
+        {
+            that.i_ = nullptr;
+        }
+        iterator_wrapper &operator=(iterator_wrapper const &that)
+        {
+            i_ = that.i_;
+            that.i_ = nullptr;
+            return *this;
+        }
+        iterator_wrapper(I &i)
+          : i_(std::addressof(i))
+        {}
+        auto CPP_auto_fun(operator*)() (const)
+        (
+            return **i_
+        )
+        iterator_wrapper &operator++()
+        {
+            ++*i_;
+            return *this;
+        }
+        void operator++(int)
+        {
+            ++*i_;
+        }
+        I base() const
+        {
+            return *i_;
+        }
+    };
+
+    template<typename I>
+    auto iter_ref(I &i) ->
+        CPP_ret(iterator_wrapper<I>)(
+            requires Iterator<I>)
+    {
+        return i;
+    }
+
+    template<typename I>
+    struct readable_traits<iterator_wrapper<I>>
+      : meta::if_c<
+            (bool) InputIterator<I>,
+            readable_traits<I>,
+            meta::nil_>
+    {};
+
+    template<typename Val>
+    struct raw_buffer
+    {
+    private:
+        Val *begin_;
+        raw_storage_iterator<Val *, Val> rsi_;
+    public:
+        explicit raw_buffer(Val *begin)
+          : begin_(begin), rsi_(begin)
+        {}
+        raw_buffer(raw_buffer &&) = default;
+        raw_buffer(raw_buffer const &) = delete;
+        ~raw_buffer()
+        {
+            for(; begin_ != rsi_.base(); ++begin_)
+                begin_->~Val();
+        }
+        iterator_wrapper<raw_storage_iterator<Val *, Val>> begin()
+        {
+            return ranges::iter_ref(rsi_);
+        }
+    };
+
+    template<typename Val>
+    raw_buffer<Val> make_raw_buffer(Val *val)
+    {
+        return raw_buffer<Val>(val);
+    }
+    /// @}
 }
 
 #endif

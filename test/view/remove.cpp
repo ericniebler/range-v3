@@ -23,12 +23,11 @@ using namespace ranges;
 
 void test_straight()
 {
-    std::vector<int> list = {1,2,3,4,5};
-    auto out = list | view::remove(2);
+    std::vector<int> vec = {1,2,3,4,5};
+    auto out = vec | view::remove(2);
 
     ::check_equal(out, {1,3,4,5});
 }
-
 
 struct Int
 {
@@ -40,13 +39,11 @@ bool operator==(Int left, Int right)
 }
 void test_proj()
 {
-    using List = std::vector<Int>;
-    const List list{ Int{1}, Int{2}, Int{3}, Int{4}, Int{5} };
-    auto out = list | view::remove(2, &Int::i);
+    const std::vector<Int> vec{ Int{1}, Int{2}, Int{3}, Int{4}, Int{5} };
+    auto out = vec | view::remove(2, &Int::i);
 
     ::check_equal(out, {Int{1}, Int{3}, Int{4}, Int{5}});
 }
-
 
 int main()
 {

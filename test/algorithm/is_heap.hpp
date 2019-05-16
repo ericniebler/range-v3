@@ -1059,8 +1059,5 @@ int main()
     S i183[] = {S{0}, S{1}, S{1}, S{1}, S{1}, S{1}, S{1}};
     CHECK(ranges::is_heap(i183, i183+7, std::greater<int>(), &S::i));
 
-    // Test initializer_list
-    CHECK(ranges::is_heap({S{0}, S{1}, S{1}, S{1}, S{1}, S{1}, S{1}}, std::greater<int>(), &S::i));
-
     return ::test_result();
 }

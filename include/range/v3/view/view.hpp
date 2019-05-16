@@ -18,146 +18,129 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/functional/concepts.hpp>
+#include <range/v3/functional/pipeable.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \cond
+    namespace detail
     {
-        /// \cond
-        namespace detail
-        {
-            struct null_pipe
-            {
-                template<typename Rng>
-                void operator()(Rng &&) const
-                {}
-            };
-        }
-        /// \endcond
-
-        struct SimpleView
+        struct null_pipe
         {
             template<typename Rng>
-            auto requires_() -> decltype(
-                concepts::valid_expr(
-                    concepts::model_of<concepts::View, Rng>() &&
-                    concepts::model_of<concepts::Range, Rng const>() &&
-                    concepts::model_of<concepts::Same, iterator_t<Rng>, iterator_t<Rng const>>() &&
-                    concepts::model_of<concepts::Same, sentinel_t<Rng>, sentinel_t<Rng const>>()
-                ));
+            void operator()(Rng &&) const
+            {}
         };
 
-        template<typename Rng>
-        constexpr bool simple_view()
+        struct dereference_fn
         {
-            return concepts::models<SimpleView, Rng>::value;
-        }
+            template<typename I>
+            constexpr auto CPP_auto_fun(operator())(I &&i) (const)
+            (
+                return *(I &&) i
+            )
+        };
+    }
+    /// \endcond
 
-        template<typename Rng>
-        using ViewableRange = meta::and_<
-            Range<Rng>,
-            meta::or_<std::is_lvalue_reference<Rng>, View<uncvref_t<Rng>>>>;
+    CPP_def
+    (
+        template(typename Rng)
+        concept SimpleView,
+            View<Rng> &&
+            Range<Rng const> &&
+            Same<iterator_t<Rng>, iterator_t<Rng const>> &&
+            Same<sentinel_t<Rng>, sentinel_t<Rng const>>
+    );
 
-        namespace view
+    template<typename Rng>
+    constexpr bool simple_view()
+    {
+        return (bool) SimpleView<Rng>;
+    }
+
+    namespace view
+    {
+        /// \addtogroup group-views
+        /// @{
+        struct view_access
         {
-            /// \addtogroup group-views
-            /// @{
-            struct view_access
-            {
-                template<typename View>
-                struct impl
-                {
-                    template<typename...Ts, typename V = View>
-                    static auto bind(Ts &&...ts)
-                    RANGES_DECLTYPE_AUTO_RETURN
-                    (
-                        V::bind(static_cast<Ts&&>(ts)...)
-                    )
-                };
-            };
-
-            struct make_view_fn
-            {
-                template<typename Fun>
-                view<Fun> operator()(Fun fun) const
-                {
-                    return view<Fun>{std::move(fun)};
-                }
-            };
-
-            /// \ingroup group-views
-            /// \sa make_view_fn
-            RANGES_INLINE_VARIABLE(make_view_fn, make_view)
-
             template<typename View>
-            struct view : pipeable<view<View>>
+            struct impl
             {
-            private:
-                View view_;
-                friend pipeable_access;
-
-                template<typename Rng, typename ...Rest>
-                using ViewConcept = meta::and_<ViewableRange<Rng>, Invocable<View&, Rng, Rest...>>;
-
-                // Piping requires range arguments or lvalue containers.
-                template<typename Rng, typename Vw,
-                    CONCEPT_REQUIRES_(ViewConcept<Rng>())>
-                static auto pipe(Rng && rng, Vw && v)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    v.view_(static_cast<Rng&&>(rng))
-                )
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                // For better error messages:
-                template<typename Rng, typename Vw,
-                    CONCEPT_REQUIRES_(!ViewConcept<Rng>())>
-                static void pipe(Rng &&, Vw &&)
-                {
-                    CONCEPT_ASSERT_MSG(Range<Rng>(),
-                        "The type Rng must be a model of the Range concept.");
-                    // BUGBUG This isn't a very helpful message. This is probably the wrong place
-                    // to put this check:
-                    CONCEPT_ASSERT_MSG(Invocable<View&, Rng>(),
-                        "This view is not callable with this range type.");
-                    static_assert(ranges::View<Rng>() || std::is_lvalue_reference<Rng>(),
-                        "You can't pipe an rvalue container into a view. First, save the container into "
-                        "a named variable, and then pipe it to the view.");
-                }
-            #endif
-
-            public:
-                view() = default;
-
-                constexpr explicit view(View a)
-                noexcept(std::is_nothrow_move_constructible<View>::value)
-                  : view_(std::move(a))
-                {}
-
-                // Calling directly requires View arguments or lvalue containers.
-                template<typename Rng, typename...Rest,
-                    CONCEPT_REQUIRES_(ViewConcept<Rng, Rest...>())>
-                auto operator()(Rng && rng, Rest &&... rest) const
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    view_(static_cast<Rng&&>(rng), static_cast<Rest&&>(rest)...)
-                )
-
-                // Currying overload.
                 template<typename...Ts, typename V = View>
-                auto operator()(Ts &&... ts) const
-                RANGES_DECLTYPE_AUTO_RETURN
+                static constexpr auto CPP_auto_fun(bind)(Ts &&...ts)
                 (
-                    make_view(view_access::impl<V>::bind(view_,
-                        static_cast<Ts&&>(ts)...))
+                    return V::bind(static_cast<Ts &&>(ts)...)
                 )
             };
-            /// \endcond
-        }
+        };
+
+        struct make_view_fn
+        {
+            template<typename Fun>
+            constexpr view<Fun> operator()(Fun fun) const
+            {
+                return view<Fun>{std::move(fun)};
+            }
+        };
+
+        /// \ingroup group-views
+        /// \sa make_view_fn
+        RANGES_INLINE_VARIABLE(make_view_fn, make_view)
+
+        CPP_def
+        (
+            template(typename View, typename Rng, typename ...Rest)
+            (concept ViewConcept)(View, Rng, Rest...),
+                ViewableRange<Rng> &&
+                Invocable<View&, Rng, Rest...>
+        );
+
+        template<typename View>
+        struct view : pipeable<view<View>>
+        {
+        private:
+            View view_;
+            friend pipeable_access;
+
+            // Piping requires range arguments or lvalue containers.
+            template<typename Rng, typename Vw>
+            static auto CPP_fun(pipe)(Rng &&rng, Vw &&v)(
+                requires ViewableRange<Rng> && Invocable<View &, Rng>)
+            {
+                return v.view_(static_cast<Rng &&>(rng));
+            }
+        public:
+            view() = default;
+
+            constexpr explicit view(View a)
+                noexcept(std::is_nothrow_move_constructible<View>::value)
+              : view_(std::move(a))
+            {}
+
+            // Calling directly requires a ViewableRange.
+            template<typename Rng, typename...Rest>
+            auto operator()(Rng &&rng, Rest &&... rest) const ->
+                CPP_ret(invoke_result_t<View const &, Rng, Rest...>)(
+                    requires ViewableRange<Rng> && Invocable<View const &, Rng, Rest...>)
+            {
+                return view_(static_cast<Rng &&>(rng), static_cast<Rest &&>(rest)...);
+            }
+
+            // Currying overload.
+            template<typename...Ts, typename V = View>
+            auto CPP_auto_fun(operator())(Ts &&... ts) (const)
+            (
+                return make_view(view_access::impl<V>::bind(view_,
+                    static_cast<Ts &&>(ts)...))
+            )
+        };
+        /// \endcond
     }
 }
 

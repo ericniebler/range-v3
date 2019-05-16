@@ -88,7 +88,7 @@ namespace test_impl
             return true;
         }
     public:
-        R(char const *filename, int lineno, char const *expr, T && t)
+        R(char const *filename, int lineno, char const *expr, T &&t)
           : filename_(filename), lineno_(lineno), expr_(expr)
           , t_(std::forward<T>(t))
         {}
@@ -146,7 +146,7 @@ namespace test_impl
           : filename_(filename), lineno_(lineno), expr_(expr)
         {}
         template<typename T>
-        R<T> operator->*(T && t)
+        R<T> operator->*(T &&t)
         {
             return {filename_, lineno_, expr_, std::forward<T>(t)};
         }
@@ -161,5 +161,8 @@ inline int test_result()
 #define CHECK(...)                                                           \
     (void)(::test_impl::S{__FILE__, __LINE__, #__VA_ARGS__} ->* __VA_ARGS__) \
     /**/
+
+template<class>
+struct undef;
 
 #endif

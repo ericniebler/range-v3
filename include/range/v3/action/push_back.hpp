@@ -17,100 +17,87 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/functional.hpp>
 #include <range/v3/action/insert.hpp>
 #include <range/v3/action/action.hpp>
+#include <range/v3/detail/with_braced_init_args.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \cond
+    namespace adl_push_back_detail
     {
-        /// \cond
-        namespace adl_push_back_detail
+        template<typename Cont, typename T>
+        using push_back_t =
+            decltype(static_cast<void>(unwrap_reference(
+                std::declval<Cont &>()).push_back(std::declval<T>())));
+
+        template<typename Cont, typename Rng>
+        using insert_t =
+            decltype(static_cast<void>(ranges::insert(
+                std::declval<Cont &>(),
+                std::declval<sentinel_t<Cont>>(),
+                std::declval<Rng>())));
+
+        template<typename Cont, typename T>
+        auto push_back(Cont &&cont, T &&t) ->
+            CPP_ret(push_back_t<Cont, T>)(
+                requires LvalueContainerLike<Cont> && (!Range<T>) &&
+                    Constructible<range_value_t<Cont>, T>)
         {
-            template<typename Cont, typename T,
-                CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Constructible<range_value_type_t<Cont>, T>())>
-            auto push_back(Cont && cont, T && t) ->
-                decltype((void)unwrap_reference(cont).push_back(static_cast<T&&>(t)))
-            {
-                unwrap_reference(cont).push_back(static_cast<T&&>(t));
-            }
+            unwrap_reference(cont).push_back(static_cast<T &&>(t));
+        }
 
-            template<typename Cont, typename Rng,
-                CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Range<Rng>())>
-            auto push_back(Cont && cont, Rng && rng) ->
-                decltype((void)ranges::insert(unwrap_reference(cont), end(cont), static_cast<Rng&&>(rng)))
-            {
-                ranges::insert(unwrap_reference(cont), end(cont), static_cast<Rng&&>(rng));
-            }
+        template<typename Cont, typename Rng>
+        auto push_back(Cont &&cont, Rng &&rng) ->
+            CPP_ret(insert_t<Cont, Rng>)(
+                requires LvalueContainerLike<Cont> && Range<Rng>)
+        {
+            ranges::insert(cont, end(cont), static_cast<Rng &&>(rng));
+        }
 
-            struct push_back_fn
-            {
-            private:
-                friend action::action_access;
-                template<typename T>
-                static auto bind(push_back_fn push_back, T && val)
-                RANGES_DECLTYPE_AUTO_RETURN
+        CPP_def
+        (
+            template(typename Rng, typename T)
+            concept PushBackActionConcept,
+                requires (Rng &&rng, T &&t)
                 (
-                    std::bind(push_back, std::placeholders::_1, bind_forward<T>(val))
-                )
-            public:
-                struct ConceptImpl
-                {
-                    template<typename Rng, typename T>
-                    auto requires_(Rng &&rng, T &&t) -> decltype(
-                        concepts::valid_expr(
-                            concepts::model_of<concepts::InputRange, Rng>(),
-                            concepts::is_true(meta::or_<
-                                Constructible<range_value_type_t<Rng>, T>,
-                                Range<T>>()),
-                            ((void)push_back(rng, (T &&) t), 42)
-                        ));
-                };
+                    push_back(rng, (T &&) t)
+                ) &&
+                InputRange<Rng> &&
+                    (Range<T> || Constructible<range_value_t<Rng>, T>)
+        );
 
-                template<typename Rng, typename Fun>
-                using Concept = concepts::models<ConceptImpl, Rng, Fun>;
-
-                template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(Concept<Rng, T>())>
-                Rng operator()(Rng && rng, T && t) const
-                {
-                    push_back(rng, static_cast<T&&>(t));
-                    return static_cast<Rng&&>(rng);
-                }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!Concept<Rng, T>())>
-                void operator()(Rng &&rng, T &&t) const
-                {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
-                        "The object on which action::push_back operates must be a model of the "
-                        "InputRange concept.");
-                    CONCEPT_ASSERT_MSG(meta::or_<
-                        Constructible<range_value_type_t<Rng>, T>,
-                        Range<T>>(),
-                        "The object to be inserted with action::push_back must either be "
-                        "convertible to the range's value type, or else it must be a range "
-                        "of elements that are convertible to the range's value type.");
-                    push_back(rng, (T &&) t);
-                }
-            #endif
-            };
-        }
-        /// \endcond
-
-        namespace action
+        struct push_back_fn
         {
-            /// \ingroup group-actions
-            /// \sa with_braced_init_args
-            RANGES_INLINE_VARIABLE(with_braced_init_args<action<adl_push_back_detail::push_back_fn>>,
-                                   push_back)
-        }
-
-        using action::push_back;
+        private:
+            friend action::action_access;
+            template<typename T>
+            static auto bind(push_back_fn push_back, T &&val)
+            {
+                return std::bind(push_back, std::placeholders::_1, bind_forward<T>(val));
+            }
+        public:
+            template<typename Rng, typename T>
+            auto operator()(Rng &&rng, T &&t) const -> CPP_ret(Rng)(
+                requires PushBackActionConcept<Rng, T>)
+            {
+                push_back(rng, static_cast<T &&>(t));
+                return static_cast<Rng &&>(rng);
+            }
+        };
     }
+    /// \endcond
+
+    namespace action
+    {
+        /// \ingroup group-actions
+        RANGES_INLINE_VARIABLE(
+            detail::with_braced_init_args<action<adl_push_back_detail::push_back_fn>>,
+            push_back)
+    }
+
+    using action::push_back;
 }
 
 #endif

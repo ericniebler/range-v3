@@ -13,6 +13,7 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/for_each.hpp>
+#include <range/v3/view/ref.hpp>
 #include <range/v3/action/insert.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -65,11 +66,8 @@ int main()
         CHECK(j.second == true);
         ::check_equal(s, {0,2,4,6,8,10});
 
-        insert(std::ref(s), 12);
+        insert(view::ref(s), 12);
         ::check_equal(s, {0,2,4,6,8,10,12});
-
-        insert(ranges::ref(s), 14);
-        ::check_equal(s, {0,2,4,6,8,10,12,14});
     }
 
     {

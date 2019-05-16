@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_ACTION_HPP
 #define RANGES_V3_ACTION_HPP
 
+#include <range/v3/action/action.hpp>
 #include <range/v3/action/adjacent_remove_if.hpp>
 #include <range/v3/action/concepts.hpp>
 #include <range/v3/action/drop.hpp>
@@ -29,11 +30,13 @@
 #include <range/v3/action/slice.hpp>
 #include <range/v3/action/sort.hpp>
 #include <range/v3/action/split.hpp>
+#include <range/v3/action/split_when.hpp>
 #include <range/v3/action/stable_sort.hpp>
 #include <range/v3/action/stride.hpp>
 #include <range/v3/action/take.hpp>
 #include <range/v3/action/take_while.hpp>
 #include <range/v3/action/transform.hpp>
 #include <range/v3/action/unique.hpp>
+#include <range/v3/action/unstable_remove_if.hpp>
 
 #endif

@@ -17,88 +17,92 @@
 #define RANGES_V3_ALGORITHM_MINMAX_ELEMENT_HPP
 
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/algorithm/result_types.hpp>
+#include <range/v3/functional/comparisons.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    template<typename I>
+    using minmax_element_result = detail::min_max_result<I, I>;
+
+    struct minmax_element_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct minmax_element_fn
+        template<typename I, typename S, typename C = less, typename P = identity>
+        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
+            CPP_ret(minmax_element_result<I>)(
+                requires ForwardIterator<I> && Sentinel<S, I> &&
+                    IndirectStrictWeakOrder<C, projected<I, P>>)
         {
-            template<typename I, typename S, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(ForwardIterator<I>() && Sentinel<S, I>() &&
-                    IndirectRelation<C, projected<I, P>>())>
-            tagged_pair<tag::min(I), tag::max(I)>
-            operator()(I begin, S end, C pred = C{}, P proj = P{}) const
+            minmax_element_result<I> result{begin, begin};
+            if(begin == end || ++begin == end)
+                return result;
+            if(invoke(pred, invoke(proj, *begin), invoke(proj, *result.min)))
+                result.min = begin;
+            else
+                result.max = begin;
+            while(++begin != end)
             {
-                tagged_pair<tag::min(I), tag::max(I)> result{begin, begin};
-                if(begin == end || ++begin == end)
-                    return result;
-                if(invoke(pred, invoke(proj, *begin), invoke(proj, *result.first)))
-                    result.first = begin;
-                else
-                    result.second = begin;
-                while(++begin != end)
+                I tmp = begin;
+                if(++begin == end)
                 {
-                    I tmp = begin;
-                    if(++begin == end)
+                    if(invoke(pred, invoke(proj, *tmp), invoke(proj, *result.min)))
+                        result.min = tmp;
+                    else if(!invoke(pred, invoke(proj, *tmp), invoke(proj, *result.max)))
+                        result.max = tmp;
+                    break;
+                }
+                else
+                {
+                    if(invoke(pred, invoke(proj, *begin), invoke(proj, *tmp)))
                     {
-                        if(invoke(pred, invoke(proj, *tmp), invoke(proj, *result.first)))
-                            result.first = tmp;
-                        else if(!invoke(pred, invoke(proj, *tmp), invoke(proj, *result.second)))
-                            result.second = tmp;
-                        break;
+                        if(invoke(pred, invoke(proj, *begin), invoke(proj, *result.min)))
+                            result.min = begin;
+                        if(!invoke(pred, invoke(proj, *tmp), invoke(proj, *result.max)))
+                            result.max = tmp;
                     }
                     else
                     {
-                        if(invoke(pred, invoke(proj, *begin), invoke(proj, *tmp)))
-                        {
-                            if(invoke(pred, invoke(proj, *begin), invoke(proj, *result.first)))
-                                result.first = begin;
-                            if(!invoke(pred, invoke(proj, *tmp), invoke(proj, *result.second)))
-                                result.second = tmp;
-                        }
-                        else
-                        {
-                            if(invoke(pred, invoke(proj, *tmp), invoke(proj, *result.first)))
-                                result.first = tmp;
-                            if(!invoke(pred, invoke(proj, *begin), invoke(proj, *result.second)))
-                                result.second = begin;
-                        }
+                        if(invoke(pred, invoke(proj, *tmp), invoke(proj, *result.min)))
+                            result.min = tmp;
+                        if(!invoke(pred, invoke(proj, *begin), invoke(proj, *result.max)))
+                            result.max = begin;
                     }
                 }
-                return result;
             }
+            return result;
+        }
 
-            template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(ForwardRange<Rng>() &&
-                    IndirectRelation<C, projected<I, P>>())>
-            meta::if_<std::is_lvalue_reference<Rng>,
-                tagged_pair<tag::min(I), tag::max(I)>,
-                dangling<tagged_pair<tag::min(I), tag::max(I)>>>
-            operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
-            {
-                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
-            }
-        };
+        template<typename Rng, typename C = less, typename P = identity>
+        auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
+            CPP_ret(minmax_element_result<safe_iterator_t<Rng>>)(
+                requires ForwardRange<Rng> &&
+                    IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>>)
+        {
+            return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
+        }
+    };
 
-        /// \sa `minmax_element_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<minmax_element_fn>, minmax_element)
-        /// @}
-    } // namespace v3
+    /// \sa `minmax_element_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(minmax_element_fn, minmax_element)
+
+    namespace cpp20
+    {
+        using ranges::minmax_element_result;
+        using ranges::minmax_element;
+    }
+    /// @}
 } // namespace ranges
 
 #endif // include guard

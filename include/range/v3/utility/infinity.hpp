@@ -1,4 +1,3 @@
-/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014-present
@@ -15,52 +14,52 @@
 #define RANGES_V3_UTILITY_INFINITY_HPP
 
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/concepts.hpp>
+#include <concepts/concepts.hpp>
+RANGES_DEPRECATED_HEADER("This header is deprecated and will be removed from a future version of range-v3.")
 
 namespace ranges
 {
-    inline namespace v3
+    /// \cond
+    struct infinity
     {
-        /// \cond
-        struct infinity
-        {
-        };
-
-        constexpr bool operator==(infinity, infinity)
+        friend constexpr bool operator==(infinity, infinity)
         {
             return true;
         }
-        constexpr bool operator!=(infinity, infinity)
+        friend constexpr bool operator!=(infinity, infinity)
         {
             return false;
         }
-
-        template<typename Integer,
-            CONCEPT_REQUIRES_(Integral<Integer>())>
-        constexpr bool operator==(Integer, infinity)
+        template<typename Integer>
+        friend constexpr auto operator==(Integer, infinity) noexcept ->
+            CPP_broken_friend_ret(bool)(
+                requires Integral<Integer>)
         {
             return false;
         }
-        template<typename Integer,
-            CONCEPT_REQUIRES_(Integral<Integer>())>
-        constexpr bool operator==(infinity, Integer)
+        template<typename Integer>
+        friend constexpr auto operator==(infinity, Integer) noexcept ->
+            CPP_broken_friend_ret(bool)(
+                requires Integral<Integer>)
         {
             return false;
         }
-        template<typename Integer,
-            CONCEPT_REQUIRES_(Integral<Integer>())>
-        constexpr bool operator!=(Integer, infinity)
+        template<typename Integer>
+        friend constexpr auto operator!=(Integer, infinity) noexcept ->
+            CPP_broken_friend_ret(bool)(
+                requires Integral<Integer>)
         {
             return true;
         }
-        template<typename Integer,
-            CONCEPT_REQUIRES_(Integral<Integer>())>
-        constexpr bool operator!=(infinity, Integer)
+        template<typename Integer>
+        friend constexpr auto operator!=(infinity, Integer) noexcept ->
+            CPP_broken_friend_ret(bool)(
+                requires Integral<Integer>)
         {
             return true;
         }
-        /// \endcond
-    }
+    };
+    /// \endcond
 }
 
 #endif

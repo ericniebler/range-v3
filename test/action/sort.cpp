@@ -37,7 +37,7 @@ int main()
     CHECK(size(v2) == size(v));
     CHECK(is_sorted(v2));
     CHECK(!is_sorted(v));
-    ::models<concepts::Same>(v, v2);
+    ::models<SameConcept>(v, v2);
 
     v |= action::sort;
     CHECK(is_sorted(v));
@@ -57,7 +57,7 @@ int main()
     CHECK(is_sorted(v));
     CHECK(&v3 == &v);
 
-    auto ref=std::ref(v);
+    auto ref = view::ref(v);
     ref |= action::sort;
 
     // Can pipe a view to a "container" algorithm.

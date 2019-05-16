@@ -24,6 +24,7 @@
 
 #include <memory>
 #include <utility>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/remove.hpp>
 #include "../simple_test.hpp"
@@ -52,7 +53,7 @@ test_range()
 {
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
     constexpr auto sa = ranges::size(ia);
-    Iter r = ranges::remove(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), 2);
+    Iter r = ranges::remove(ranges::make_subrange(Iter(ia), Sent(ia+sa)), 2);
     CHECK(base(r) == ia + sa-3);
     CHECK(ia[0] == 0);
     CHECK(ia[1] == 1);
@@ -96,7 +97,7 @@ test_range_rvalue()
     ia[4].reset(new int(4));
     ia[6].reset(new int(3));
     ia[7].reset(new int(4));
-    Iter r = ranges::remove(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), std::unique_ptr<int>());
+    Iter r = ranges::remove(ranges::make_subrange(Iter(ia), Sent(ia+sa)), std::unique_ptr<int>());
     CHECK(base(r) == ia + sa-3);
     CHECK(*ia[0] == 0);
     CHECK(*ia[1] == 1);
@@ -157,17 +158,28 @@ int main()
     CHECK(ia[4].i == 3);
     CHECK(ia[5].i == 4);
 
-    // Check rvalue range
+    // Check rvalue ranges
     S ia2[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
-    constexpr auto sa2 = ranges::size(ia2);
-    auto r2 = ranges::remove(ranges::view::all(ia2), 2, &S::i);
-    CHECK(r2.get_unsafe() == ia2 + sa2-3);
+    auto r2 = ranges::remove(std::move(ia2), 2, &S::i);
+#ifndef RANGES_WORKAROUND_MSVC_573728
+    CHECK(::is_dangling(r2));
+#endif // RANGES_WORKAROUND_MSVC_573728
     CHECK(ia2[0].i == 0);
     CHECK(ia2[1].i == 1);
     CHECK(ia2[2].i == 3);
     CHECK(ia2[3].i == 4);
     CHECK(ia2[4].i == 3);
     CHECK(ia2[5].i == 4);
+
+    std::vector<S> vec{S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
+    auto r3 = ranges::remove(std::move(vec), 2, &S::i);
+    CHECK(::is_dangling(r3));
+    CHECK(vec[0].i == 0);
+    CHECK(vec[1].i == 1);
+    CHECK(vec[2].i == 3);
+    CHECK(vec[3].i == 4);
+    CHECK(vec[4].i == 3);
+    CHECK(vec[5].i == 4);
 
     return ::test_result();
 }

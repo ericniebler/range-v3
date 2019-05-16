@@ -13,6 +13,7 @@
 #include <iostream>
 
 using namespace ranges;
+
 // A range that iterates over all the characters in a
 // null-terminated string.
 class c_string_range
@@ -21,7 +22,7 @@ class c_string_range
     friend range_access;
     char const * sz_;
     char const & read() const { return *sz_; }
-    bool equal(default_sentinel) const { return *sz_ == '\0'; }
+    bool equal(default_sentinel_t) const { return *sz_ == '\0'; }
     void next() { ++sz_; }
 public:
     c_string_range() = default;
@@ -30,8 +31,6 @@ public:
         assert(sz != nullptr);
     }
 };
-
-
 
 int main()
 {

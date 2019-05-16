@@ -12,7 +12,6 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/for_each.hpp>
-#include <range/v3/algorithm/equal.hpp>
 #include <range/v3/action/reverse.hpp>
 #include <range/v3/action/unique.hpp>
 #include "../simple_test.hpp"
@@ -30,7 +29,7 @@ int main()
     check_equal(v, {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
 
     v |= action::unique | action::reverse;
-    CHECK(equal(v, {5,4,3,2,1}));
+    check_equal(v, {5,4,3,2,1});
 
     return ::test_result();
 }

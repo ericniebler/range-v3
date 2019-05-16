@@ -30,41 +30,34 @@
 
 #include <tuple>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/copy_n.hpp>
 #include <range/v3/algorithm/aux_/merge_n.hpp>
+#include <range/v3/functional/comparisons.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    namespace aux
     {
-        namespace aux
+        struct merge_n_with_buffer_fn
         {
-            struct merge_n_with_buffer_fn
+            template<typename I, typename B, typename C = less, typename P = identity>
+            auto operator()(I begin0, iter_difference_t<I> n0, I begin1,
+                    iter_difference_t<I> n1, B buff, C r = C{}, P p = P{}) const ->
+                CPP_ret(I)(
+                    requires Same<iter_common_reference_t<I>, iter_common_reference_t<B>> &&
+                        IndirectlyCopyable<I, B> && Mergeable<B, I, I, C, P, P>)
             {
-                template<typename I, typename B, typename C = ordered_less, typename P = ident,
-                    typename VI = iter_common_reference_t<I>,
-                    typename VB = iter_common_reference_t<B>,
-                    CONCEPT_REQUIRES_(
-                        Same<VI, VB>() &&
-                        IndirectlyCopyable<I, B>() &&
-                        Mergeable<B, I, I, C, P, P>()
-                    )>
-                I operator()(I begin0, difference_type_t<I> n0,
-                             I begin1, difference_type_t<I> n1,
-                             B buff, C r = C{}, P p = P{}) const
-                {
-                    copy_n(begin0, n0, buff);
-                    return merge_n(buff, n0, begin1, n1, begin0, r, p, p).out();
-                }
-            };
+                copy_n(begin0, n0, buff);
+                return merge_n(buff, n0, begin1, n1, begin0, r, p, p).out;
+            }
+        };
 
-            RANGES_INLINE_VARIABLE(merge_n_with_buffer_fn, merge_n_with_buffer)
-        } // namespace aux
-    } // namespace v3
+        RANGES_INLINE_VARIABLE(merge_n_with_buffer_fn, merge_n_with_buffer)
+    } // namespace aux
 } // namespace ranges
 
 #endif // include guard

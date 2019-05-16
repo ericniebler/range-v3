@@ -19,7 +19,8 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/unique.hpp>
 #include <range/v3/utility/copy.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -63,11 +64,11 @@ int main()
 
         auto rng = rgi | view::unique;
         has_type<int &>(*begin(rng));
-        models<concepts::BidirectionalView>(aux::copy(rng));
-        models_not<concepts::RandomAccessRange>(rng);
-        models<concepts::BoundedRange>(rng);
-        models_not<concepts::SizedRange>(rng);
-        CONCEPT_ASSERT(Range<decltype(rng) const>());
+        models<BidirectionalViewConcept>(aux::copy(rng));
+        models_not<RandomAccessRangeConcept>(rng);
+        models<BoundedRangeConcept>(rng);
+        models_not<SizedRangeConcept>(rng);
+        CPP_assert(Range<decltype(rng) const>);
         copy(rng, ranges::back_inserter(out));
         ::check_equal(out, {1, 2, 3, 4});
         ::check_equal(view::reverse(out), {4, 3, 2, 1});
@@ -77,13 +78,13 @@ int main()
         std::vector<ci_string> rgs{"hello", "HELLO", "bye", "Bye", "BYE"};
         auto rng = rgs | view::unique;
         has_type<ci_string &>(*begin(rng));
-        models<concepts::BidirectionalView>(aux::copy(rng));
-        models_not<concepts::RandomAccessRange>(rng);
-        models<concepts::BoundedRange>(rng);
-        models_not<concepts::SizedRange>(rng);
-        CONCEPT_ASSERT(Range<decltype(rng) const>());
+        models<BidirectionalViewConcept>(aux::copy(rng));
+        models_not<RandomAccessRangeConcept>(rng);
+        models<BoundedRangeConcept>(rng);
+        models_not<SizedRangeConcept>(rng);
+        CPP_assert(Range<decltype(rng) const>);
         auto fs = rng | view::transform([](ci_string s){return std::string(s.data(), s.size());});
-        models<concepts::BidirectionalView>(aux::copy(fs));
+        models<BidirectionalViewConcept>(aux::copy(fs));
         ::check_equal(fs, {"hello","bye"});
         ::check_equal(view::reverse(fs), {"bye","hello"});
     }
@@ -92,14 +93,14 @@ int main()
         int const rgi[] = {1, 1, 1, 2, 3, 4, 4, 42, 7};
         auto rng0 = view::delimit(rgi, 42) | view::reverse;
         // rng0 is mutable-only...
-        CONCEPT_ASSERT(ForwardRange<decltype(rng0)>());
-        CONCEPT_ASSERT(!ForwardRange<decltype(rng0) const>());
+        CPP_assert(ForwardRange<decltype(rng0)>);
+        CPP_assert(!ForwardRange<decltype(rng0) const>);
         // ...and composable
         auto rng = rng0 | view::unique(equal_to{});
-        models<concepts::BidirectionalView>(aux::copy(rng));
-        models_not<concepts::RandomAccessRange>(rng);
-        models<concepts::BoundedRange>(rng);
-        models_not<concepts::SizedRange>(rng);
+        models<BidirectionalViewConcept>(aux::copy(rng));
+        models_not<RandomAccessRangeConcept>(rng);
+        models<BoundedRangeConcept>(rng);
+        models_not<SizedRangeConcept>(rng);
         ::check_equal(rng, {4, 3, 2, 1});
     }
 
@@ -117,29 +118,29 @@ int main()
         std::vector<std::string> rgs{"hello", "HELLO", "bye", "Bye", "BYE"};
         auto rng = rgs | view::unique(caseInsensitiveCompare);
         has_type<std::string &>(*begin(rng));
-        models<concepts::BidirectionalView>(aux::copy(rng));
-        models_not<concepts::RandomAccessRange>(rng);
-        models<concepts::BoundedRange>(rng);
-        models_not<concepts::SizedRange>(rng);
-        CONCEPT_ASSERT(Range<decltype(rng) const>());
-        models<concepts::BidirectionalView>(aux::copy(rng));
+        models<BidirectionalViewConcept>(aux::copy(rng));
+        models_not<RandomAccessRangeConcept>(rng);
+        models<BoundedRangeConcept>(rng);
+        models_not<SizedRangeConcept>(rng);
+        CPP_assert(Range<decltype(rng) const>);
+        models<BidirectionalViewConcept>(aux::copy(rng));
         ::check_equal(rng, {"hello","bye"});
         ::check_equal(view::reverse(rng), {"bye","hello"});
     }
-    
+
     {
         int const rgi[] = {-1, 1, -1, 2, 3, 4, -4, 42, 7};
         auto rng0 = view::delimit(rgi, 42) | view::reverse;
         // rng0 is mutable-only...
-        CONCEPT_ASSERT(ForwardRange<decltype(rng0)>());
-        CONCEPT_ASSERT(!ForwardRange<decltype(rng0) const>());
+        CPP_assert(ForwardRange<decltype(rng0)>);
+        CPP_assert(!ForwardRange<decltype(rng0) const>);
         // ...and composable
         auto rng = rng0 | view::unique([](const int& n1, const int& n2){ return n1==n2 || n1==-n2; })
                         | view::transform([](const int& n){ return n > 0 ? n: -n;});
-        models<concepts::BidirectionalView>(aux::copy(rng));
-        models_not<concepts::RandomAccessRange>(rng);
-        models<concepts::BoundedRange>(rng);
-        models_not<concepts::SizedRange>(rng);
+        models<BidirectionalViewConcept>(aux::copy(rng));
+        models_not<RandomAccessRangeConcept>(rng);
+        models<BoundedRangeConcept>(rng);
+        models_not<SizedRangeConcept>(rng);
         ::check_equal(rng, {4, 3, 2, 1});
     }
 

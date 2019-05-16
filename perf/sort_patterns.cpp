@@ -61,7 +61,7 @@ namespace
   };
 
   struct ascending_integer_sequence {
-    auto operator()(std::size_t) { return ranges::view::ints(1); }
+    auto operator()(std::size_t) { return ranges::view::iota(1); }
     static std::string name() { return "ascending_integer_sequence"; }
   };
 
@@ -119,13 +119,13 @@ namespace
   }
 
   template<typename Durations> auto compute_mean(Durations &&durations) {
-    using D = ranges::range_value_type_t<Durations>;
+    using D = ranges::range_value_t<Durations>;
     D total = ranges::accumulate(durations, D{}, ranges::plus{}, ranges::convert_to<D>{});
     return total / ranges::size(durations);
   }
 
   template<typename Durations> auto compute_stddev(Durations &&durations) {
-    using D = ranges::range_value_type_t<Durations>;
+    using D = ranges::range_value_t<Durations>;
     using Rep = typename D::rep;
     const auto mean = compute_mean(durations);
     const auto stddev = ranges::accumulate(
@@ -171,12 +171,12 @@ namespace
         }
         auto minmax = ranges::minmax(durations);
         results.emplace_back(
-            result_t{mean_duration, minmax.second, minmax.first, size, deviation});
+            result_t{mean_duration, minmax.max, minmax.min, size, deviation});
         std::cerr << "size: " << size << " iter: " << iter
                   << " dev: " << to_millis(deviation)
                   << " mean: " << to_millis(mean_duration)
-                  << " max: " << to_millis(minmax.second)
-                  << " min: " << to_millis(minmax.first) << '\n';
+                  << " max: " << to_millis(minmax.max)
+                  << " min: " << to_millis(minmax.min) << '\n';
       }
     }
   };
@@ -185,7 +185,7 @@ namespace
   struct computation_on_sequence {
     Seq seq;
     Comp comp;
-    std::vector<ranges::range_value_type_t<decltype(seq(std::size_t{}))>> data;
+    std::vector<ranges::range_value_t<decltype(seq(std::size_t{}))>> data;
     computation_on_sequence(Seq s, Comp c, std::size_t max_size)
         : seq(std::move(s)), comp(std::move(c)) {
       data.reserve(max_size);
@@ -232,7 +232,8 @@ namespace
   }
 } // unnamed namespace
 
-int main() {
+int main()
+{
   constexpr std::size_t max_size = 2000000;
 
   print(random_uniform_integer_sequence(), 20);

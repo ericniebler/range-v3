@@ -10,6 +10,7 @@
 // Project home: https://github.com/ericniebler/range-v3
 #include <cmath>
 #include <range/v3/algorithm/equal.hpp>
+#include <range/v3/functional/arithmetic.hpp>
 #include <range/v3/view/linear_distribute.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/iota.hpp>
@@ -27,8 +28,8 @@ int main()
     {
         auto irng = linear_distribute(0, 1, 2);
         CHECK(ranges::size(irng) == std::size_t{2});
-        CONCEPT_ASSERT(ranges::ForwardRange<decltype(irng)>());
-        CONCEPT_ASSERT(ranges::SizedRange<decltype(irng)>());
+        CPP_assert(ranges::ForwardRange<decltype(irng)>);
+        CPP_assert(ranges::SizedRange<decltype(irng)>);
         auto il = {0, 1};
         check_equal(irng, il);
     }
@@ -45,19 +46,20 @@ int main()
     }
     {
         auto frng = linear_distribute(0.0, 1.0, 11);
-        CONCEPT_ASSERT(ranges::ForwardRange<decltype(frng)>());
-        CONCEPT_ASSERT(ranges::SizedRange<decltype(frng)>());
+        CPP_assert(ranges::ForwardRange<decltype(frng)>);
+        CPP_assert(ranges::SizedRange<decltype(frng)>);
         CHECK(ranges::size(frng) == std::size_t{11});
         auto il = {0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
         CHECK(ranges::size(il) == std::size_t{11});
         CHECK(ranges::equal(frng, il, float_eq));
     }
     {
+        using ILD = std::initializer_list<double>;
         auto frng = linear_distribute(1.0, 3.0, 21);
         CHECK(ranges::equal(frng,
-                            {1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
-                             2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9,
-                             3.0},
+                            ILD{1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
+                                2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9,
+                                3.0},
                             float_eq));
     }
     {   // empty interval
@@ -75,7 +77,7 @@ int main()
 
         auto frng = linear_distribute(0., 0., 3);
         CHECK(ranges::size(frng) == std::size_t{3});
-        CHECK(ranges::equal(frng, {0.,0.,0.}, float_eq));
+        CHECK(ranges::equal(frng, std::initializer_list<double>{0.,0.,0.}, float_eq));
     }
 
     {   // regression test for #1088

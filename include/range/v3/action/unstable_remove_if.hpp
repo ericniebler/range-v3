@@ -13,67 +13,58 @@
 #ifndef RANGES_V3_ACTION_UNSTABLE_REMOVE_IF_HPP
 #define RANGES_V3_ACTION_UNSTABLE_REMOVE_IF_HPP
 
-#include <meta/meta.hpp>
-#include <range/v3/core.hpp>
-#include <range/v3/range_concepts.hpp>
+#include <functional>
+#include <utility>
+#include <concepts/concepts.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/algorithm/unstable_remove_if.hpp>
-
+#include <range/v3/functional/bind.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-actions
+    /// @{
+    namespace action
     {
-        /// \addtogroup group-actions
-        /// @{
-        namespace action
+        struct unstable_remove_if_fn
         {
-            struct unstable_remove_if_fn
+        private:
+            friend action_access;
+            template<typename C, typename P = identity>
+            static auto CPP_fun(bind)(unstable_remove_if_fn unstable_remove_if, C pred,
+                    P proj = P{})(requires (!Range<C>))
             {
-            private:
-                friend action_access;
-                template<typename C, typename P = ident, CONCEPT_REQUIRES_(!Range<C>())>
-                static auto bind(unstable_remove_if_fn unstable_remove_if, C pred, P proj = P{})
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    std::bind(unstable_remove_if, std::placeholders::_1,
-                              protect(std::move(pred)), protect(std::move(proj)))
-                )
-            public:
+                return std::bind(unstable_remove_if, std::placeholders::_1,
+                    protect(std::move(pred)), protect(std::move(proj)));
+            }
+        public:
+            template<typename Rng, typename C, typename P = identity>
+            auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
+                CPP_ret(Rng)(
+                    requires BidirectionalRange<Rng> && CommonRange<Rng> &&
+                        Permutable<iterator_t<Rng>> &&
+                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>> &&
+                        ErasableRange<Rng, iterator_t<Rng>, iterator_t<Rng>>)
+            {
+                auto it = ranges::unstable_remove_if(
+                    ranges::begin(rng), ranges::end(rng), std::move(pred), std::move(proj));
+                ranges::erase(rng, it, ranges::end(rng));
+                return static_cast<Rng &&>(rng);
+            }
+        };
 
-                struct ConceptImpl
-                {
-                    template<typename Rng, typename C, typename P = ident,
-                            typename I = iterator_t<Rng>, typename S = sentinel_t<Rng>>
-                    auto requires_() -> decltype(
-                    concepts::valid_expr(
-                            concepts::model_of<concepts::ErasableRange, Rng, I, S>(),
-                            concepts::is_true(UnstableRemovableIf<I, S, C, P>())
-                    ));
-                };
+        /// \ingroup group-actions
+        /// \sa `action`
+        /// \sa `action::unstable_remove_if_fn`
+        RANGES_INLINE_VARIABLE(action<unstable_remove_if_fn>, unstable_remove_if)
+    } // namespace action
+    /// @}
+} // namespace ranges
 
-                template<typename Rng, typename C, typename P = ident>
-                using Concept = concepts::models<ConceptImpl, Rng, C, P>;
-
-                template<typename Rng, typename C, typename P = ident,
-                        CONCEPT_REQUIRES_(Concept<Rng, C, P>())>
-                Rng operator()(Rng &&rng, C pred, P proj = P{}) const
-                {
-                    auto it = ranges::unstable_remove_if(ranges::begin(rng), ranges::end(rng), std::move(pred), std::move(proj));
-                    ranges::erase(rng, it, ranges::end(rng));
-                    return static_cast<Rng&&>(rng);
-                }
-            };
-
-
-            /// \ingroup group-actions
-            /// \sa action
-            /// \sa with_braced_init_args
-            RANGES_INLINE_VARIABLE(action<unstable_remove_if_fn>, unstable_remove_if)
-        }
-        /// @}
-    }
-}
-
-#endif // include guard
+#endif // RANGES_V3_ACTION_UNSTABLE_REMOVE_IF_HPP

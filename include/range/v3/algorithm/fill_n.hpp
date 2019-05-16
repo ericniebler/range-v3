@@ -15,39 +15,42 @@
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct fill_n_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct fill_n_fn
+        template<typename O, typename V>
+        auto operator()(O begin, iter_difference_t<O> n, V const & val) const ->
+            CPP_ret(O)(
+                requires OutputIterator<O, V const &>)
         {
-            template<typename O, typename V,
-                CONCEPT_REQUIRES_(OutputIterator<O, V const &>())>
-            O operator()(O begin, difference_type_t<O> n, V const & val) const
-            {
-                RANGES_EXPECT(n >= 0);
-                auto norig = n;
-                auto b = uncounted(begin);
-                for(; n != 0; ++b, --n)
-                    *b = val;
-                return recounted(begin, b, norig);
-            }
-        };
+            RANGES_EXPECT(n >= 0);
+            auto norig = n;
+            auto b = uncounted(begin);
+            for(; n != 0; ++b, --n)
+                *b = val;
+            return recounted(begin, b, norig);
+        }
+    };
 
-        /// \sa `fill_n_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(fill_n_fn, fill_n)
-        /// @}
-    } // namespace v3
+    /// \sa `fill_n_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(fill_n_fn, fill_n)
+
+    namespace cpp20
+    {
+        using ranges::fill_n;
+    }
+    /// @}
 } // namespace ranges
 
 #endif // include guard

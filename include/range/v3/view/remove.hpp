@@ -17,85 +17,78 @@
 #include <type_traits>
 #include <utility>
 #include <meta/meta.hpp>
-#include <range/v3/utility/invoke.hpp>
-#include <range/v3/view/view.hpp>
-#include <range/v3/view/remove_if.hpp>
+#include <concepts/concepts.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/functional/bind.hpp>
+#include <range/v3/functional/comparisons.hpp>
+#include <range/v3/functional/pipeable.hpp>
+#include <range/v3/view/remove_if.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-views
+    /// @{
+    namespace view
     {
-        /// \addtogroup group-views
-        /// @{
-        namespace view
+        struct remove_fn
         {
-            struct remove_fn
+        private:
+            friend view_access;
+
+            template<typename Value>
+            static auto bind(remove_fn remove, Value value)
             {
-            private:
-                friend view_access;
+                return make_pipeable(
+                    std::bind(remove, std::placeholders::_1, std::move(value)));
+            }
+            template<typename Value, typename Proj>
+            static auto CPP_fun(bind)(remove_fn remove, Value value, Proj proj)(
+                requires (!Range<Value>))
+            {
+                return make_pipeable(
+                    std::bind(remove, std::placeholders::_1, std::move(value),
+                        protect(std::move(proj))));
+            }
 
-                template<typename Value, typename Proj>
-                static auto bind(remove_fn remove, Value value, Proj proj)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    make_pipeable(
-                        std::bind(remove,
-                            std::placeholders::_1,
-                            std::move(value),
-                            protect(std::move(proj))
-                        )
-                    )
-                )
-
-                template<typename Value>
-                static auto bind(remove_fn remove, Value value)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    make_pipeable(
-                        std::bind(remove,
-                            std::placeholders::_1, std::move(value)
-                        )
-                    )
-                )
-
-                template<class Value>
-                struct pred
+            template<typename Value>
+            struct pred
+            {
+                Value value_;
+                template<typename T>
+                auto operator()(T &&other) const ->
+                    CPP_ret(bool)(
+                        requires EqualityComparableWith<T, Value const &>)
                 {
-                    Value value;
-
-                    template<typename T,
-                        CONCEPT_REQUIRES_(EqualityComparable<T, const Value&>())>
-                    bool operator()(T&& other_value) const
-                    {
-                        return static_cast<T&&>(other_value) == value;
-                    }
-                };
-
-            public:
-                template<typename Rng, typename Value, typename Proj>
-                using Constraint = meta::and_<
-                    MoveConstructible<Value>,
-                    remove_if_fn::Constraint<Rng, pred<Value>, Proj>>;
-
-                template<typename Rng, typename Value, typename Proj = ident,
-                    CONCEPT_REQUIRES_(Constraint<Rng, Value, Proj>())>
-                RANGES_CXX14_CONSTEXPR
-                auto operator()(Rng&& rng, Value value, Proj proj = Proj{}) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    remove_if(all(static_cast<Rng&&>(rng)),
-                        pred<Value>{std::move(value)},
-                        std::move(proj))
-                )
+                    return static_cast<T &&>(other) == value_;
+                }
             };
+        public:
+            template<typename Rng, typename Value>
+            constexpr /*c++14*/
+            auto CPP_fun(operator())(Rng&& rng, Value value) (const
+                requires MoveConstructible<Value> && ViewableRange<Rng> && InputRange<Rng> &&
+                    IndirectlyComparable<iterator_t<Rng>, Value const *, equal_to>)
+            {
+                return remove_if(static_cast<Rng&&>(rng), pred<Value>{std::move(value)});
+            }
 
-            /// \relates remove_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(view<remove_fn>, remove)
-        }
-        /// @}
+            template<typename Rng, typename Value, typename Proj>
+            constexpr /*c++14*/
+            auto CPP_fun(operator())(Rng&& rng, Value value, Proj proj) (const
+                requires MoveConstructible<Value> && ViewableRange<Rng> && InputRange<Rng> &&
+                    IndirectlyComparable<iterator_t<Rng>, Value const *, equal_to, Proj>)
+            {
+                return remove_if(static_cast<Rng&&>(rng), pred<Value>{std::move(value)},
+                    std::move(proj));
+            }
+        };
+
+        /// \relates remove_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(view<remove_fn>, remove)
     }
+    /// @}
 }
 
 #endif //RANGES_V3_VIEW_REMOVE_HPP

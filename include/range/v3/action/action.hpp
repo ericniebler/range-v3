@@ -17,132 +17,108 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_concepts.hpp>
+#include <range/v3/range/concepts.hpp>
 #include <range/v3/action/concepts.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/functional/arithmetic.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/functional/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/ref.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-actions
+    /// @{
+    namespace action
     {
-        /// \addtogroup group-actions
-        /// @{
-        namespace action
+        struct action_access
         {
-            struct action_access
-            {
-                template<typename Action>
-                struct impl
-                {
-                    template<typename...Ts, typename A = Action>
-                    static auto bind(Ts &&...ts)
-                    RANGES_DECLTYPE_AUTO_RETURN
-                    (
-                        A::bind(static_cast<Ts&&>(ts)...)
-                    )
-                };
-            };
-
-            struct make_action_fn
-            {
-                template<typename Fun>
-                action<Fun> operator()(Fun fun) const
-                {
-                    return action<Fun>{detail::move(fun)};
-                }
-            };
-
-            /// \ingroup group-actions
-            /// \relates make_action_fn
-            RANGES_INLINE_VARIABLE(make_action_fn, make_action)
-
             template<typename Action>
-            struct action : pipeable<action<Action>>
+            struct impl
             {
-            private:
-                Action action_;
-                friend pipeable_access;
-
-                template<typename Rng, typename...Rest>
-                using ActionConcept = meta::and_<
-                    Range<Rng>,
-                    Invocable<Action const&, Rng, Rest...>>;
-
-                template<typename Rng>
-                using ActionPipeConcept = meta::and_<
-                    Invocable<Action&, Rng>,
-                    Range<Rng>,
-                    meta::not_<std::is_reference<Rng>>>;
-
-                // Piping requires things are passed by value.
-                template<typename Rng, typename Act,
-                    CONCEPT_REQUIRES_(ActionPipeConcept<Rng>())>
-                static auto pipe(Rng && rng, Act && act)
-                RANGES_DECLTYPE_AUTO_RETURN
+                template<typename...Ts, typename A = Action>
+                static constexpr auto CPP_auto_fun(bind)(Ts &&...ts)
                 (
-                    invoke(act.action_, detail::move(rng))
-                )
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                // For better error messages:
-                template<typename Rng, typename Act,
-                    CONCEPT_REQUIRES_(!ActionPipeConcept<Rng>())>
-                static void pipe(Rng &&, Act &&)
-                {
-                    CONCEPT_ASSERT_MSG(Range<Rng>(),
-                        "The type Rng must be a model of the Range concept.");
-                    // BUGBUG This isn't a very helpful message. This is probably the wrong place
-                    // to put this check:
-                    CONCEPT_ASSERT_MSG(Invocable<Action&, Rng>(),
-                        "This action is not callable with this range type.");
-                    static_assert(!std::is_reference<Rng>(),
-                        "You can't pipe an lvalue into an action. Try using std::move on the argument, "
-                        "and be sure to save the result somewhere or pipe the result to another action. "
-                        "Or, wrap the argument with std::ref to pass it by reference.");
-                }
-            #endif
-
-            public:
-                action() = default;
-                
-                constexpr explicit action(Action a)
-                noexcept(std::is_nothrow_move_constructible<Action>::value)
-                  : action_(detail::move(a))
-                {}
-
-                // Calling directly requires things are passed by reference.
-                template<typename Rng, typename...Rest,
-                    CONCEPT_REQUIRES_(ActionConcept<Rng &, Rest...>())>
-                auto operator()(Rng & rng, Rest &&... rest) const
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    invoke(action_, rng, static_cast<Rest&&>(rest)...)
-                )
-
-                // Currying overload.
-                template<typename T, typename...Rest, typename A = Action>
-                auto operator()(T && t, Rest &&... rest) const
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_action(action_access::impl<A>::bind(action_, static_cast<T&&>(t),
-                        static_cast<Rest&&>(rest)...))
+                    return A::bind(static_cast<Ts &&>(ts)...)
                 )
             };
+        };
 
-            template<typename Rng, typename Action,
-                CONCEPT_REQUIRES_(is_pipeable<Action>() && Range<Rng &>() &&
-                    Invocable<bitwise_or, ref_t<Rng &>, Action &>() &&
-                    Same<ref_t<Rng &>,
-                        invoke_result_t<bitwise_or, ref_t<Rng &>, Action &>>())>
-            Rng & operator|=(Rng & rng, Action && action)
+        struct make_action_fn
+        {
+            template<typename Fun>
+            constexpr action<Fun> operator()(Fun fun) const
             {
-                ref(rng) | action;
-                return rng;
+                return action<Fun>{detail::move(fun)};
             }
+        };
+
+        /// \ingroup group-actions
+        /// \relates make_action_fn
+        RANGES_INLINE_VARIABLE(make_action_fn, make_action)
+
+        template<typename Action>
+        struct action
+          : pipeable<action<Action>>
+        {
+        private:
+            Action action_;
+            friend pipeable_access;
+
+            // Piping requires things are passed by value.
+            template<typename Rng, typename Act>
+            static auto pipe(Rng &&rng, Act &&act) ->
+                CPP_ret(invoke_result_t<Action &, Rng>)(
+                    requires Range<Rng> &&
+                        Invocable<Action &, Rng> &&
+                        (!std::is_reference<Rng>::value))
+            {
+                return invoke(act.action_, detail::move(rng));
+            }
+
+        public:
+            action() = default;
+
+            constexpr explicit action(Action a)
+                noexcept(std::is_nothrow_move_constructible<Action>::value)
+              : action_(detail::move(a))
+            {}
+
+            // Calling directly requires things are passed by reference.
+            template<typename Rng, typename ...Rest>
+            auto operator()(Rng &rng, Rest &&... rest) const ->
+                CPP_ret(invoke_result_t<Action const &, Rng &, Rest...>)(
+                    requires Range<Rng> &&
+                        Invocable<Action const &, Rng &, Rest...>)
+            {
+                return invoke(action_, rng, static_cast<Rest &&>(rest)...);
+            }
+
+            // Currying overload.
+            template<typename T, typename... Rest, typename A = Action>
+            auto CPP_auto_fun(operator())(T &&t, Rest &&... rest) (const)
+            (
+                return make_action(
+                    action_access::impl<A>::bind(
+                        action_,
+                        static_cast<T &&>(t),
+                        static_cast<Rest &&>(rest)...))
+            )
+        };
+
+        template<typename Rng, typename Action>
+        auto operator|=(Rng &rng, Action &&action) ->
+            CPP_ret(Rng &)(
+                requires is_pipeable<Action>::value && Range<Rng &> &&
+                Invocable<bitwise_or, ref_view<Rng>, Action &> &&
+                Same<ref_view<Rng>,
+                    invoke_result_t<bitwise_or, ref_view<Rng>, Action &>>)
+        {
+            view::ref(rng) | action;
+            return rng;
         }
-        /// @}
     }
+    /// @}
 }
 
 #endif

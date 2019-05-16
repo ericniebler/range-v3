@@ -21,20 +21,18 @@ int main()
     ::has_type<const std::sub_match<std::string::iterator>&>(*ranges::begin(rng));
     ::has_type<const std::sub_match<std::string::iterator>&>(*ranges::begin(crng));
 
-    ::models<concepts::BoundedRange>(rng);
-    ::models<concepts::ForwardRange>(rng);
-    ::models_not<concepts::BidirectionalRange>(rng);
-    ::models_not<concepts::SizedRange>(rng);
-    ::models_not<concepts::OutputRange>(rng);
+    ::models<BoundedRangeConcept>(rng);
+    ::models<ForwardRangeConcept>(rng);
+    ::models_not<BidirectionalRangeConcept>(rng);
+    ::models_not<SizedRangeConcept>(rng);
 
-    ::models<concepts::BoundedRange>(crng);
-    ::models<concepts::ForwardRange>(crng);
-    ::models_not<concepts::BidirectionalRange>(crng);
-    ::models_not<concepts::SizedRange>(crng);
-    ::models_not<concepts::OutputRange>(crng);
+    ::models<BoundedRangeConcept>(crng);
+    ::models<ForwardRangeConcept>(crng);
+    ::models_not<BidirectionalRangeConcept>(crng);
+    ::models_not<SizedRangeConcept>(crng);
 
-    ::models<concepts::View>(aux::copy(rng));
-    ::models<concepts::View>(aux::copy(crng));
+    ::models<ViewConcept>(aux::copy(rng));
+    ::models<ViewConcept>(aux::copy(crng));
 #endif
 
     return test_result();

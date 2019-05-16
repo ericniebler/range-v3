@@ -948,7 +948,7 @@ namespace meta
     // clang-format off
     /// Turn a trait template \p C into an Invocable.
     /// \code
-    /// static_assert(std::is_same<invoke<quote_trait<std::add_const>, int>, int const>::value, "");
+    /// static_assert(std::is_same_v<invoke<quote_trait<std::add_const>, int>, int const>, "");
     /// \endcode
     /// \ingroup composition
     template <template <typename...> class C>
@@ -1339,16 +1339,22 @@ namespace meta
 #else
 #if defined(META_WORKAROUND_GCC_66405)
     template <bool... Bs>
-    using and_c = std::is_same<integer_sequence<bool, true, Bs...>,
-                                integer_sequence<bool, Bs..., true>>;
+    using and_c = meta::bool_<
+        META_IS_SAME(integer_sequence<bool, true, Bs...>,
+                     integer_sequence<bool, Bs..., true>)>;
 #else
     template <bool... Bs>
-    using and_c = std::is_same<integer_sequence<bool, Bs...>,
-                                integer_sequence<bool, (Bs || true)...>>;
+    struct and_c
+      : meta::bool_<
+            META_IS_SAME(integer_sequence<bool, Bs...>,
+                         integer_sequence<bool, (Bs || true)...>)>
+    {};
 #endif
 #if META_CXX_VARIABLE_TEMPLATES
     template <bool... Bs>
-    META_INLINE_VAR constexpr bool and_v = and_c<Bs...>::value;
+    META_INLINE_VAR constexpr bool and_v =
+        META_IS_SAME(integer_sequence<bool, Bs...>,
+                     integer_sequence<bool, (Bs || true)...>);
 #endif
 #endif
 
@@ -1387,11 +1393,16 @@ namespace meta
 #endif
 #else
     template <bool... Bs>
-    using or_c = not_<std::is_same<integer_sequence<bool, Bs...>,
-                                    integer_sequence<bool, (Bs && false)...>>>;
+    struct or_c
+      : meta::bool_<
+            !META_IS_SAME(integer_sequence<bool, Bs...>,
+                          integer_sequence<bool, (Bs && false)...>)>
+    {};
 #if META_CXX_VARIABLE_TEMPLATES
     template <bool... Bs>
-    META_INLINE_VAR constexpr bool or_v = or_c<Bs...>::value;
+    META_INLINE_VAR constexpr bool or_v =
+        !META_IS_SAME(integer_sequence<bool, Bs...>,
+                      integer_sequence<bool, (Bs && false)...>);
 #endif
 #endif
 
@@ -1762,14 +1773,14 @@ namespace meta
         };
 
         template <typename... Ts, Invocable Fn>
-        requires (Valid<invoke, Fn, Ts> && ...)
+        requires and_v<Valid<invoke, Fn, Ts>...>
         struct transform_<list<Ts...>, Fn>
         {
             using type = list<invoke<Fn, Ts>...>;
         };
 
         template <typename... Ts, typename... Us, Invocable Fn>
-        requires (Valid<invoke, Fn, Ts, Us> && ...)
+        requires and_v<Valid<invoke, Fn, Ts, Us>...>
         struct transform_<list<Ts...>, list<Us...>, Fn>
         {
             using type = list<invoke<Fn, Ts, Us>...>;
@@ -2253,9 +2264,9 @@ namespace meta
         struct find_index_<list<T...>, V>
         {
 #ifdef META_WORKAROUND_LLVM_28385
-            static constexpr bool s_v[sizeof...(T)] = {std::is_same<T, V>::value...};
+            static constexpr bool s_v[sizeof...(T)] = {META_IS_SAME(T, V)...};
 #else
-            static constexpr bool s_v[] = {std::is_same<T, V>::value...};
+            static constexpr bool s_v[] = {META_IS_SAME(T, V)...};
 #endif
             using type = size_t<find_index_i_(s_v, s_v + sizeof...(T))>;
         };
@@ -2308,9 +2319,9 @@ namespace meta
         struct reverse_find_index_<list<T...>, V>
         {
 #ifdef META_WORKAROUND_LLVM_28385
-            static constexpr bool s_v[sizeof...(T)] = {std::is_same<T, V>::value...};
+            static constexpr bool s_v[sizeof...(T)] = {META_IS_SAME(T, V)...};
 #else
-            static constexpr bool s_v[] = {std::is_same<T, V>::value...};
+            static constexpr bool s_v[] = {META_IS_SAME(T, V)...};
 #endif
             using type = size_t<reverse_find_index_i_(s_v, s_v + sizeof...(T), sizeof...(T))>;
         };
@@ -2562,7 +2573,7 @@ namespace meta
         template <typename... L, typename T, typename U>
         struct replace_<list<L...>, T, U>
         {
-            using type = list<if_<std::is_same<T, L>, U, L>...>;
+            using type = list<if_c<META_IS_SAME(T, L), U, L>...>;
         };
     } // namespace detail
     /// \endcond
@@ -2595,7 +2606,7 @@ namespace meta
         };
 
         template <typename... L, typename C, typename U>
-        requires (Integral<invoke<C, L>> &&...)
+        requires and_v<Integral<invoke<C, L>>...>
         struct replace_if_<list<L...>, C, U>
         {
             using type = list<if_<invoke<C, L>, U, L>...>;
@@ -2642,15 +2653,15 @@ namespace meta
         {
         };
 
-#if defined(META_CONCEPT) || META_CXX_VARIABLE_TEMPLATES && META_CXX_FOLD_EXPRESSIONS
+#if (defined(META_CONCEPT) || META_CXX_VARIABLE_TEMPLATES) && META_CXX_FOLD_EXPRESSIONS
         template <typename... Ts, typename T>
         struct count_<list<Ts...>, T>
         {
-            using type = meta::size_t<((std::size_t)_v<std::is_same<T, Ts>> + ...)>;
+            using type = meta::size_t<((std::size_t)META_IS_SAME(T, Ts) + ...)>;
         };
 #else
         constexpr std::size_t count_i_(bool const *const begin, bool const *const end,
-                                        std::size_t n)
+                                       std::size_t n)
         {
             return begin == end ? n : detail::count_i_(begin + 1, end, n + *begin);
         }
@@ -2665,9 +2676,9 @@ namespace meta
         struct count_<list<L...>, T>
         {
 #ifdef META_WORKAROUND_LLVM_28385
-            static constexpr bool s_v[sizeof...(L)] = {std::is_same<T, L>::value...};
+            static constexpr bool s_v[sizeof...(L)] = {META_IS_SAME(T, L)...};
 #else
-            static constexpr bool s_v[] = {std::is_same<T, L>::value...};
+            static constexpr bool s_v[] = {META_IS_SAME(T, L)...};
 #endif
             using type = meta::size_t<detail::count_i_(s_v, s_v + sizeof...(L), 0u)>;
         };
@@ -2693,14 +2704,14 @@ namespace meta
     // count_if
     namespace detail
     {
-#ifdef META_CONCEPT
+#if defined(META_CONCEPT) && META_CXX_FOLD_EXPRESSIONS
         template <typename, typename>
         struct count_if_
         {
         };
 
         template <typename... Ts, typename Fn>
-        requires (Integral<invoke<Fn, Ts>> &&...)
+        requires (Integral<invoke<Fn, Ts>> && ...)
         struct count_if_<list<Ts...>, Fn>
         {
             using type = meta::size_t<((std::size_t)(bool)_v<invoke<Fn, Ts>> + ...)>;
@@ -3225,7 +3236,7 @@ namespace meta
     /// \code
     /// using L0 = list<char[5], char[3], char[2], char[6], char[1], char[5], char[10]>;
     /// using L1 = meta::sort<L0, lambda<_a, _b, lazy::less<lazy::sizeof_<_a>, lazy::sizeof_<_b>>>>;
-    /// static_assert(std::is_same<L1, list<char[1], char[2], char[3], char[5], char[5], char[6], char[10]>>::value, "");
+    /// static_assert(std::is_same_v<L1, list<char[1], char[2], char[3], char[5], char[5], char[6], char[10]>>, "");
     /// \endcode
     /// \ingroup transformation
     // clang-format on
@@ -3286,7 +3297,7 @@ namespace meta
                 bind_back<quote_trait<subst1_>, back<As>, drop_c<Ts, size<As>{} - 2>>>>,
             list<back<As>>>;
 
-#ifdef META_CONCEPT
+#if 0//def META_CONCEPT
         template <List As, List Ts>
         requires (_v<size<Ts>> + 2 >= _v<size<As>>)
         using substitutions = substitutions_<As, Ts>;
@@ -3328,7 +3339,7 @@ namespace meta
             struct impl;
             template <typename T, META_TYPE_CONSTRAINT(List) Args>
             using lazy_impl_ = lazy::_t<defer<impl, T, protect_<Args>>>;
-#ifdef META_CONCEPT
+#if 0//def META_CONCEPT
             template <typename, List>
 #else
             template <typename, typename, typename = void>
@@ -3337,7 +3348,7 @@ namespace meta
             {
             };
             template <template <typename...> class C, typename... Ts, typename Args>
-#ifdef META_CONCEPT
+#if 0//def META_CONCEPT
             requires Valid<C, _t<impl<Ts, Args>>...> struct subst_<defer<C, Ts...>, Args>
 #else
             struct subst_<defer<C, Ts...>, Args, void_<C<_t<impl<Ts, Args>>...>>>
@@ -3346,7 +3357,7 @@ namespace meta
                 using type = C<_t<impl<Ts, Args>>...>;
             };
             template <typename T, template <T...> class C, T... Is, typename Args>
-#ifdef META_CONCEPT
+#if 0//def META_CONCEPT
             requires Valid_I<T, C, Is...> struct subst_<defer_i<T, C, Is...>, Args>
 #else
             struct subst_<defer_i<T, C, Is...>, Args, void_<C<Is...>>>
@@ -3439,7 +3450,7 @@ namespace meta
             template <template <typename...> class C, META_TYPE_CONSTRAINT(List) Args,
                         META_TYPE_CONSTRAINT(List) Ts>
             using try_subst_ = apply<quote<C>, join<transform<Ts, eval_impl_<Args>>>>;
-#ifdef META_CONCEPT
+#if 0//def META_CONCEPT
             template <typename, List>
 #else
             template <typename, typename, typename = void>
@@ -3448,7 +3459,7 @@ namespace meta
             {
             };
             template <template <typename...> class C, typename... Ts, typename Args>
-#ifdef META_CONCEPT
+#if 0//def META_CONCEPT
             requires True<try_subst_<C, Args, list<Ts...>>> struct subst_<defer<C, Ts...>, Args>
 #else
             struct subst_<defer<C, Ts...>, Args, void_<try_subst_<C, Args, list<Ts...>>>>
@@ -3457,7 +3468,7 @@ namespace meta
                 using type = list<try_subst_<C, Args, list<Ts...>>>;
             };
             template <typename T, template <T...> class C, T... Is, typename Args>
-#ifdef META_CONCEPT
+#if 0//def META_CONCEPT
             requires Valid_I<T, C, Is...> struct subst_<defer_i<T, C, Is...>, Args>
 #else
             struct subst_<defer_i<T, C, Is...>, Args, void_<C<Is...>>>
@@ -3540,7 +3551,7 @@ namespace meta
     /// \code
     /// using L = lambda<_a, _b, std::pair<_b, std::pair<_a, _a>>>;
     /// using P = invoke<L, int, short>;
-    /// static_assert(std::is_same<P, std::pair<short, std::pair<int, int>>>::value, "");
+    /// static_assert(std::is_same_v<P, std::pair<short, std::pair<int, int>>>, "");
     /// \endcode
     /// \ingroup trait
     template <typename... Ts>
@@ -3711,9 +3722,9 @@ namespace meta
     ///////////////////////////////////////////////////////////////////////////////////////////
     // const_if
     template <bool If, typename T>
-    using const_if_c = invoke<add_const_if_c<If>, T>;
+    using const_if_c = typename add_const_if_c<If>::template invoke<T>;
     template <typename If, typename T>
-    using const_if = invoke<add_const_if<If>, T>;
+    using const_if = typename add_const_if<If>::template invoke<T>;
     /// \endcond
 
     /// \cond
@@ -3740,54 +3751,71 @@ namespace meta
 } // namespace meta
 
 /// \cond
-#if defined(_LIBCPP_VERSION) && _LIBCPP_VERSION <= 1101
-
-_LIBCPP_BEGIN_NAMESPACE_STD
+// Non-portable forward declarations of standard containers
+#ifndef META_NO_STD_FORWARD_DECLARATIONS
+#if defined(__apple_build_version__) || (defined(__clang__) && __clang_major__ < 6)
+META_BEGIN_NAMESPACE_STD
+META_BEGIN_NAMESPACE_VERSION
 template <class>
-class _LIBCPP_TYPE_VIS_ONLY allocator;
+class META_TEMPLATE_VIS allocator;
 template <class, class>
-struct _LIBCPP_TYPE_VIS_ONLY pair;
+struct META_TEMPLATE_VIS pair;
 template <class>
-struct _LIBCPP_TYPE_VIS_ONLY hash;
+struct META_TEMPLATE_VIS hash;
 template <class>
-struct _LIBCPP_TYPE_VIS_ONLY less;
+struct META_TEMPLATE_VIS less;
 template <class>
-struct _LIBCPP_TYPE_VIS_ONLY equal_to;
+struct META_TEMPLATE_VIS equal_to;
 template <class>
-struct _LIBCPP_TYPE_VIS_ONLY char_traits;
-template <class, class>
-class _LIBCPP_TYPE_VIS_ONLY list;
-template <class, class>
-class _LIBCPP_TYPE_VIS_ONLY forward_list;
-template <class, class>
-class _LIBCPP_TYPE_VIS_ONLY vector;
-template <class, class>
-class _LIBCPP_TYPE_VIS_ONLY deque;
+struct META_TEMPLATE_VIS char_traits;
+#if defined(_GLIBCXX_USE_CXX11_ABI) && _GLIBCXX_USE_CXX11_ABI
+inline namespace __cxx11 {
+#endif
 template <class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY basic_string;
+class META_TEMPLATE_VIS basic_string;
+#if defined(_GLIBCXX_USE_CXX11_ABI) && _GLIBCXX_USE_CXX11_ABI
+}
+#endif
+META_END_NAMESPACE_VERSION
+META_BEGIN_NAMESPACE_CONTAINER
+#if defined(__GLIBCXX__)
+inline namespace __cxx11 {
+#endif
+template <class, class>
+class META_TEMPLATE_VIS list;
+#if defined(__GLIBCXX__)
+}
+#endif
+template <class, class>
+class META_TEMPLATE_VIS forward_list;
+template <class, class>
+class META_TEMPLATE_VIS vector;
+template <class, class>
+class META_TEMPLATE_VIS deque;
 template <class, class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY map;
+class META_TEMPLATE_VIS map;
 template <class, class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY multimap;
+class META_TEMPLATE_VIS multimap;
 template <class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY set;
+class META_TEMPLATE_VIS set;
 template <class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY multiset;
+class META_TEMPLATE_VIS multiset;
 template <class, class, class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY unordered_map;
+class META_TEMPLATE_VIS unordered_map;
 template <class, class, class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY unordered_multimap;
+class META_TEMPLATE_VIS unordered_multimap;
 template <class, class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY unordered_set;
+class META_TEMPLATE_VIS unordered_set;
 template <class, class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY unordered_multiset;
+class META_TEMPLATE_VIS unordered_multiset;
 template <class, class>
-class _LIBCPP_TYPE_VIS_ONLY queue;
+class META_TEMPLATE_VIS queue;
 template <class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY priority_queue;
+class META_TEMPLATE_VIS priority_queue;
 template <class, class>
-class _LIBCPP_TYPE_VIS_ONLY stack;
-_LIBCPP_END_NAMESPACE_STD
+class META_TEMPLATE_VIS stack;
+META_END_NAMESPACE_CONTAINER
+META_END_NAMESPACE_STD
 
 namespace meta
 {
@@ -3902,6 +3930,7 @@ namespace meta
     };
 } // namespace meta
 
+#endif
 #endif
 /// \endcond
 

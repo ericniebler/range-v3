@@ -13,13 +13,15 @@
 #include <vector>
 #include <sstream>
 #include <range/v3/core.hpp>
-#include <range/v3/istream_range.hpp>
+#include <range/v3/view/istream.hpp>
 #include <range/v3/view/move.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/stride.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/algorithm/copy.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
+#include <range/v3/iterator/stream_iterators.hpp>
 #include <range/v3/numeric.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -38,11 +40,11 @@ int main()
     {
         auto rng = v | view::stride(3);
         using R = decltype(rng);
-        CONCEPT_ASSERT(RandomAccessView<R>());
-        CONCEPT_ASSERT(!ContiguousRange<R>());
-        CONCEPT_ASSERT(BoundedRange<R>());
-        CONCEPT_ASSERT(SizedRange<R>());
-        CONCEPT_ASSERT(Range<R const>());
+        CPP_assert(RandomAccessView<R>);
+        CPP_assert(!ContiguousRange<R>);
+        CPP_assert(CommonRange<R>);
+        CPP_assert(SizedRange<R>);
+        CPP_assert(Range<R const>);
         ::check_equal(rng | view::reverse,
                     {48, 45, 42, 39, 36, 33, 30, 27, 24, 21, 18, 15, 12, 9, 6, 3, 0});
     }
@@ -52,11 +54,11 @@ int main()
         copy(v, ostream_iterator<int>{str, " "});
         auto rng = istream<int>(str) | view::stride(3);
         using R = decltype(rng);
-        CONCEPT_ASSERT(InputView<R>());
-        CONCEPT_ASSERT(!ForwardRange<R>());
-        CONCEPT_ASSERT(!BoundedRange<R>());
-        CONCEPT_ASSERT(!SizedRange<R>());
-        CONCEPT_ASSERT(!Range<R const>());
+        CPP_assert(InputView<R>);
+        CPP_assert(!ForwardRange<R>);
+        CPP_assert(!CommonRange<R>);
+        CPP_assert(!SizedRange<R>);
+        CPP_assert(!Range<R const>);
         check_equal(rng, {0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48});
     }
 
@@ -65,11 +67,11 @@ int main()
         copy(v, back_inserter(li));
         auto rng = li | view::stride(3);
         using R = decltype(rng);
-        CONCEPT_ASSERT(BidirectionalView<R>());
-        CONCEPT_ASSERT(!RandomAccessRange<R>());
-        CONCEPT_ASSERT(BoundedRange<R>());
-        CONCEPT_ASSERT(SizedRange<R>());
-        CONCEPT_ASSERT(Range<R const>());
+        CPP_assert(BidirectionalView<R>);
+        CPP_assert(!RandomAccessRange<R>);
+        CPP_assert(CommonRange<R>);
+        CPP_assert(SizedRange<R>);
+        CPP_assert(Range<R const>);
         ::check_equal(rng,
                     {0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48});
         ::check_equal(rng | view::reverse,
@@ -108,25 +110,25 @@ int main()
         int const some_ints[] = {0,1,2,3,4,5,6,7};
         auto rng = debug_input_view<int const>{some_ints} | view::stride(2);
         using R = decltype(rng);
-        CONCEPT_ASSERT(InputView<R>());
-        CONCEPT_ASSERT(!ForwardRange<R>());
-        CONCEPT_ASSERT(!BoundedRange<R>());
-        CONCEPT_ASSERT(SizedRange<R>());
-        CONCEPT_ASSERT(!Range<R const>());
+        CPP_assert(InputView<R>);
+        CPP_assert(!ForwardRange<R>);
+        CPP_assert(!CommonRange<R>);
+        CPP_assert(SizedRange<R>);
+        CPP_assert(!Range<R const>);
         ::check_equal(rng, {0,2,4,6});
     }
 
     {
         std::list<int> li;
         copy(v, back_inserter(li));
-        iterator_range<std::list<int>::const_iterator> tmp{li.begin(), li.end()};
+        subrange<std::list<int>::const_iterator> tmp{li.begin(), li.end()};
         auto rng = tmp | view::stride(3);
         using R = decltype(rng);
-        CONCEPT_ASSERT(BidirectionalView<R>());
-        CONCEPT_ASSERT(!RandomAccessRange<R>());
-        CONCEPT_ASSERT(!BoundedRange<R>());
-        CONCEPT_ASSERT(!SizedRange<R>());
-        CONCEPT_ASSERT(!Range<R const>());
+        CPP_assert(BidirectionalView<R>);
+        CPP_assert(!RandomAccessRange<R>);
+        CPP_assert(!CommonRange<R>);
+        CPP_assert(!SizedRange<R>);
+        CPP_assert(!Range<R const>);
         ::check_equal(rng,
                     {0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48});
         ::check_equal(rng | view::reverse,
@@ -136,14 +138,15 @@ int main()
     {
         std::list<int> li;
         copy(v, back_inserter(li));
-        sized_iterator_range<std::list<int>::const_iterator> tmp{li.begin(), li.end(), li.size()};
+        using CLI = std::list<int>::const_iterator;
+        subrange<CLI, CLI, subrange_kind::sized> tmp{li};
         auto rng = tmp | view::stride(3);
         using R = decltype(rng);
-        CONCEPT_ASSERT(BidirectionalView<R>());
-        CONCEPT_ASSERT(!RandomAccessRange<R>());
-        CONCEPT_ASSERT(BoundedRange<R>());
-        CONCEPT_ASSERT(SizedRange<R>());
-        CONCEPT_ASSERT(Range<R const>());
+        CPP_assert(BidirectionalView<R>);
+        CPP_assert(!RandomAccessRange<R>);
+        CPP_assert(CommonRange<R>);
+        CPP_assert(SizedRange<R>);
+        CPP_assert(Range<R const>);
         CHECK((*--rng.end()) == 48);
         ::check_equal(rng,
                     {0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48});

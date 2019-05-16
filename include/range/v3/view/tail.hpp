@@ -16,132 +16,115 @@
 
 #include <utility>
 #include <type_traits>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/empty.hpp>
-#include <range/v3/size.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/view_interface.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/primitives.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/view/interface.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    namespace detail
     {
-        namespace detail
+        template<typename T>
+        constexpr T prev_or_zero_(T n)
         {
-            template<typename T>
-            constexpr T prev_or_zero_(T n)
-            {
-                return n == 0 ? T(0) : T(n - 1);
-            }
+            return n == 0 ? T(0) : T(n - 1);
         }
+    }
 
-        /// \addtogroup group-views
-        /// @{
-        template<typename Rng>
-        struct tail_view
-          : view_interface<
-                tail_view<Rng>,
-                (range_cardinality<Rng>::value >= 0)
-                  ? detail::prev_or_zero_(range_cardinality<Rng>::value)
-                  : range_cardinality<Rng>::value>
+    /// \addtogroup group-views
+    /// @{
+    template<typename Rng>
+    struct tail_view
+      : view_interface<
+            tail_view<Rng>,
+            (range_cardinality<Rng>::value >= 0)
+              ? detail::prev_or_zero_(range_cardinality<Rng>::value)
+              : range_cardinality<Rng>::value>
+    {
+    private:
+        Rng rng_;
+    public:
+        tail_view() = default;
+        tail_view(Rng rng)
+          : rng_(static_cast<Rng &&>(rng))
         {
-        private:
-            Rng rng_;
-            using size_type_ = range_size_type_t<Rng>;
-            template<typename R>
-            static constexpr size_type_ size_(R &rng)
-            {
-                return range_cardinality<Rng>::value >= 0
-                  ? detail::prev_or_zero_((size_type_)range_cardinality<Rng>::value)
-                  : detail::prev_or_zero_(ranges::size(rng));
-            }
-        public:
-            using iterator = iterator_t<Rng>;
-            using sentinel = sentinel_t<Rng>;
+            CPP_assert(InputRange<Rng>);
+        }
+        iterator_t<Rng> begin()
+        {
+            return next(ranges::begin(rng_), 1, ranges::end(rng_));
+        }
+        template<bool Const = true>
+        auto begin() const ->
+            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)(
+                requires Const && Range<meta::const_if_c<Const, Rng>>)
+        {
+            return next(ranges::begin(rng_), 1, ranges::end(rng_));
+        }
+        sentinel_t<Rng> end()
+        {
+            return ranges::end(rng_);
+        }
+        template<bool Const = true>
+        auto end() const ->
+            CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)(
+                requires Const && Range<meta::const_if_c<Const, Rng>>)
+        {
+            return ranges::end(rng_);
+        }
+        CPP_member
+        constexpr /*c++14*/ auto CPP_fun(size)() (
+            requires SizedRange<Rng>)
+        {
+            using size_type = range_size_t<Rng>;
+            return range_cardinality<Rng>::value >= 0
+              ? detail::prev_or_zero_((size_type)range_cardinality<Rng>::value)
+              : detail::prev_or_zero_(ranges::size(rng_));
+        }
+        CPP_member
+        constexpr auto CPP_fun(size)() (const
+            requires SizedRange<Rng const>)
+        {
+            using size_type = range_size_t<Rng>;
+            return range_cardinality<Rng>::value >= 0
+              ? detail::prev_or_zero_((size_type)range_cardinality<Rng>::value)
+              : detail::prev_or_zero_(ranges::size(rng_));
+        }
+        Rng base() const
+        {
+            return rng_;
+        }
+    };
 
-            tail_view() = default;
-            tail_view(Rng rng)
-              : rng_(static_cast<Rng&&>(rng))
+    namespace view
+    {
+        struct tail_fn
+        {
+            template<typename Rng>
+            auto operator()(Rng &&rng) const ->
+                CPP_ret(meta::if_c<range_cardinality<Rng>::value == 0,
+                        all_t<Rng>, tail_view<all_t<Rng>>>)(
+                    requires ViewableRange<Rng> && InputRange<Rng>)
             {
-                CONCEPT_ASSERT(InputRange<Rng>());
-            }
-            iterator begin()
-            {
-                return next(ranges::begin(rng_), 1, ranges::end(rng_));
-            }
-            template<class CRng = Rng const,
-                CONCEPT_REQUIRES_(Range<CRng>())>
-            iterator_t<CRng> begin() const
-            {
-                return next(ranges::begin(rng_), 1, ranges::end(rng_));
-            }
-            sentinel end()
-            {
-                return ranges::end(rng_);
-            }
-            template<class CRng = Rng const,
-                CONCEPT_REQUIRES_(Range<CRng>())>
-            sentinel_t<CRng> end() const
-            {
-                return ranges::end(rng_);
-            }
-            CONCEPT_REQUIRES(SizedRange<Rng>())
-            RANGES_CXX14_CONSTEXPR size_type_ size()
-            {
-                return tail_view::size_(rng_);
-            }
-            CONCEPT_REQUIRES(SizedRange<Rng const>())
-            constexpr size_type_ size() const
-            {
-                return tail_view::size_(rng_);
-            }
-            Rng & base()
-            {
-                return rng_;
-            }
-            Rng const & base() const
-            {
-                return rng_;
+                return all(static_cast<Rng &&>(rng));
             }
         };
 
-        namespace view
-        {
-            struct tail_fn
-            {
-                template<typename Rng, CONCEPT_REQUIRES_(InputRange<Rng>())>
-                meta::if_c<range_cardinality<Rng>::value == 0, all_t<Rng>, tail_view<all_t<Rng>>>
-                operator()(Rng && rng) const
-                {
-                    return all(static_cast<Rng&&>(rng));
-                }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, CONCEPT_REQUIRES_(!InputRange<Rng>())>
-                void operator()(Rng &&) const
-                {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
-                        "The object on which view::tail is to operate must be a model of the "
-                        "InputRange concept.");
-                }
-            #endif
-            };
-
-            /// \relates tail_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(view<tail_fn>, tail)
-        }
-        /// @}
+        /// \relates tail_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(view<tail_fn>, tail)
     }
+    /// @}
 }
 
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::tail_view)
+#include <range/v3/detail/satisfy_boost_range.hpp>
+RANGES_SATISFY_BOOST_RANGE(::ranges::tail_view)
 
 #endif

@@ -13,11 +13,10 @@
 //
 
 #include <iostream>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/empty.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/primitives.hpp>
 #include <range/v3/range_for.hpp>
-#include <range/v3/size.hpp>
-#include <range/v3/span.hpp>
+#include <range/v3/view/span.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/view/cartesian_product.hpp>
 #include <range/v3/view/chunk.hpp>
@@ -26,6 +25,7 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/take_exactly.hpp>
+#include <range/v3/view/filter.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -62,19 +62,19 @@ void test_empty_set()
 {
     auto rng = view::cartesian_product();
     using Rng = decltype(rng);
-    CONCEPT_ASSERT(range_cardinality<Rng>::value ==
+    CPP_assert(range_cardinality<Rng>::value ==
         static_cast<cardinality>(0));
 
-    CONCEPT_ASSERT(RandomAccessView<Rng>());
-    CONCEPT_ASSERT(BoundedRange<Rng>());
-    CONCEPT_ASSERT(SizedRange<Rng>());
+    CPP_assert(RandomAccessView<Rng>);
+    CPP_assert(CommonRange<Rng>);
+    CPP_assert(SizedRange<Rng>);
     CHECK(size(rng) == 0u);
     CHECK(empty(rng));
 
-    CONCEPT_ASSERT(std::is_same<
-        range_value_type_t<Rng>,
+    CPP_assert(std::is_same<
+        range_value_t<Rng>,
         std::tuple<>>());
-    CONCEPT_ASSERT(std::is_same<
+    CPP_assert(std::is_same<
         range_reference_t<Rng>,
         std::tuple<>&>());
 
@@ -97,24 +97,24 @@ void test_empty_set()
 void test_empty_range()
 {
     int some_ints[] = {0,1,2,3};
-    auto e = view::empty<char>();
+    auto e = view::empty<char>;
     auto rng = view::cartesian_product(
         span<int, size(some_ints)>{some_ints},
         e
     );
     using Rng = decltype(rng);
-    CONCEPT_ASSERT(range_cardinality<Rng>::value ==
+    CPP_assert(range_cardinality<Rng>::value ==
         static_cast<cardinality>(0));
 
-    CONCEPT_ASSERT(RandomAccessView<Rng>());
-    CONCEPT_ASSERT(BoundedRange<Rng>());
-    CONCEPT_ASSERT(SizedRange<Rng>());
+    CPP_assert(RandomAccessView<Rng>);
+    CPP_assert(CommonRange<Rng>);
+    CPP_assert(SizedRange<Rng>);
     CHECK(size(rng) == 0u);
 
-    CONCEPT_ASSERT(std::is_same<
-        range_value_type_t<Rng>,
+    CPP_assert(std::is_same<
+        range_value_t<Rng>,
         std::tuple<int, char>>());
-    CONCEPT_ASSERT(std::is_same<
+    CPP_assert(std::is_same<
         range_reference_t<Rng>,
         common_tuple<int &, char &>>());
 
@@ -126,7 +126,7 @@ void test_empty_range()
 
     auto const first = begin(rng);
     auto const last = end(rng);
-    CHECK((last - first) == size(rng));
+    CHECK((last - first) == (std::intmax_t) size(rng));
     for(auto i = 0; i <= distance(rng); ++i)
     {
         for(auto j = 0; j <= distance(rng); ++j)
@@ -155,13 +155,13 @@ void test_bug_823()
 {
     // https://github.com/ericniebler/range-v3/issues/823
     auto three = ranges::view::iota(0) | ranges::view::take_exactly(3);
-    CONCEPT_ASSERT(ranges::RandomAccessView<decltype(three)>());
-    CONCEPT_ASSERT(!ranges::RandomAccessView<const decltype(three)>());
+    CPP_assert(ranges::RandomAccessView<decltype(three)>);
+    CPP_assert(!ranges::RandomAccessView<const decltype(three)>);
 
     auto prod = ranges::view::cartesian_product(three, three);
-    CONCEPT_ASSERT(ranges::RandomAccessView<decltype(prod)>());
-    CONCEPT_ASSERT(!ranges::RandomAccessView<const decltype(prod)>());
-    CONCEPT_ASSERT(ranges::SizedRange<decltype(prod)>());
+    CPP_assert(ranges::RandomAccessView<decltype(prod)>);
+    CPP_assert(!ranges::RandomAccessView<const decltype(prod)>);
+    CPP_assert(ranges::SizedRange<decltype(prod)>);
     CHECK(ranges::size(prod) == 9u);
 
     {
@@ -174,8 +174,8 @@ void test_bug_823()
     }
 
     auto twoD = prod | ranges::view::chunk(3);
-    CONCEPT_ASSERT(ranges::RandomAccessView<decltype(twoD)>());
-    CONCEPT_ASSERT(!ranges::RandomAccessView<const decltype(twoD)>());
+    CPP_assert(ranges::RandomAccessView<decltype(twoD)>);
+    CPP_assert(!ranges::RandomAccessView<const decltype(twoD)>);
 
     {
         int i = 0;
@@ -211,7 +211,7 @@ void test_bug_919()
         span<char const*, size(some_strings)>{some_strings}
     );
     constexpr std::intmax_t n = size(rng);
-    CONCEPT_ASSERT(n == 16);
+    static_assert(n == 16, "");
 
     for (std::intmax_t i = 0; i <= n; ++i) {
         auto const x = rng.begin() + i;
@@ -219,6 +219,16 @@ void test_bug_919()
         for (std::intmax_t j = 0; j <= n; ++j)
             CHECK((rng.begin() + j == x + (j - i)));
     }
+}
+
+// https://github.com/ericniebler/range-v3/issues/978
+void test_bug_978()
+{
+    int data[] = {1};
+    ranges::view::cartesian_product(
+        data | ranges::view::filter([](int){ return true; }),
+        data
+    );
 }
 
 int main()
@@ -230,19 +240,19 @@ int main()
         span<char const*, size(some_strings)>{some_strings}
     );
     using Rng = decltype(rng);
-    CONCEPT_ASSERT(range_cardinality<Rng>::value ==
+    CPP_assert(range_cardinality<Rng>::value ==
         range_cardinality<decltype(some_ints)>::value *
         range_cardinality<decltype(some_strings)>::value);
 
-    CONCEPT_ASSERT(RandomAccessView<Rng>());
-    CONCEPT_ASSERT(BoundedRange<Rng>());
-    CONCEPT_ASSERT(SizedRange<Rng>());
-    CHECK(size(rng) == static_cast<std::intmax_t>(size(some_ints) * size(some_strings)));
+    CPP_assert(RandomAccessView<Rng>);
+    CPP_assert(CommonRange<Rng>);
+    CPP_assert(SizedRange<Rng>);
+    CHECK(size(rng) == size(some_ints) * size(some_strings));
 
-    CONCEPT_ASSERT(std::is_same<
-        range_value_type_t<Rng>,
+    CPP_assert(std::is_same<
+        range_value_t<Rng>,
         std::tuple<int, char const *>>());
-    CONCEPT_ASSERT(std::is_same<
+    CPP_assert(std::is_same<
         range_reference_t<Rng>,
         common_tuple<int &, char const * &>>());
 
@@ -259,7 +269,7 @@ int main()
 
     auto const first = begin(rng);
     auto const last = end(rng);
-    CHECK((last - first) == size(rng));
+    CHECK((last - first) == (std::intmax_t) size(rng));
     for(auto i = 0; i <= distance(rng); ++i)
     {
         for(auto j = 0; j <= distance(rng); ++j)
@@ -273,12 +283,7 @@ int main()
     test_bug_820();
     test_bug_823();
     test_bug_919();
-
-    {
-        static constexpr int data[] = {1};
-        ranges::view::cartesian_product(data |
-            ranges::view::filter([](int) { return true; }));
-    }
+    test_bug_978();
 
     return test_result();
 }

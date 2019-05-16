@@ -15,52 +15,60 @@
 
 #include <functional>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/algorithm/result_types.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/functional/reference_wrapper.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    template<typename I, typename F>
+    using for_each_result = detail::in_fun_result<I, F>;
+
+    struct for_each_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct for_each_fn
+        template<typename I, typename S, typename F, typename P = identity>
+        auto operator()(I begin, S end, F fun, P proj = P{}) const ->
+            CPP_ret(for_each_result<I, F>)(
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    IndirectUnaryInvocable<F, projected<I, P>>)
         {
-            template<typename I, typename S, typename F, typename P = ident,
-                CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
-                    MoveIndirectInvocable<F, projected<I, P>>())>
-            tagged_pair<tag::in(I), tag::fun(F)>
-            operator()(I begin, S end, F fun, P proj = P{}) const
+            for(; begin != end; ++begin)
             {
-                for(; begin != end; ++begin)
-                {
-                    invoke(fun, invoke(proj, *begin));
-                }
-                return {detail::move(begin), detail::move(fun)};
+                invoke(fun, invoke(proj, *begin));
             }
+            return {detail::move(begin), detail::move(fun)};
+        }
 
-            template<typename Rng, typename F, typename P = ident,
-                CONCEPT_REQUIRES_(InputRange<Rng>() &&
-                    MoveIndirectInvocable<F, projected<iterator_t<Rng>, P>>())>
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::fun(F)>
-            operator()(Rng &&rng, F fun, P proj = P{}) const
-            {
-                return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in(),
-                    detail::move(fun)};
-            }
-        };
+        template<typename Rng, typename F, typename P = identity>
+        auto operator()(Rng &&rng, F fun, P proj = P{}) const ->
+            CPP_ret(for_each_result<safe_iterator_t<Rng>, F>)(
+                requires InputRange<Rng> &&
+                    IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
+        {
+            return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in,
+                detail::move(fun)};
+        }
+    };
 
-        /// \sa `for_each_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<for_each_fn>, for_each)
-        /// @}
-    } // namespace v3
+    /// \sa `for_each_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(for_each_fn, for_each)
+
+    namespace cpp20
+    {
+        using ranges::for_each_result;
+        using ranges::for_each;
+    }
+    /// @}
 } // namespace ranges
 
 #endif // include guard

@@ -9,31 +9,35 @@
 # Compilation flags
 include(CheckCXXCompilerFlag)
 macro(ranges_append_flag testname flag)
-    # As -Wno-* flags do not lead to build failure when there are no other
-    # diagnostics, we check positive option to determine their applicability.
-    # Of course, we set the original flag that is requested in the parameters.
-    string(REGEX REPLACE "^-Wno-" "-W" alt ${flag})
-    check_cxx_compiler_flag(${alt} ${testname})
-    if (${testname})
-        add_compile_options(${flag})
-    endif()
+  # As -Wno-* flags do not lead to build failure when there are no other
+  # diagnostics, we check positive option to determine their applicability.
+  # Of course, we set the original flag that is requested in the parameters.
+  string(REGEX REPLACE "^-Wno-" "-W" alt ${flag})
+  check_cxx_compiler_flag(${alt} ${testname})
+  if (${testname})
+    add_compile_options(${flag})
+  endif()
 endmacro()
 
 # All compilation flags
 # Language flag: version of the C++ standard to use
 message(STATUS "[range-v3]: C++ std=${RANGES_CXX_STD}")
 if (RANGES_CXX_COMPILER_CLANGCL OR RANGES_CXX_COMPILER_MSVC)
-  ranges_append_flag(RANGES_HAS_CXXSTDCOLON "-std:c++${RANGES_CXX_STD}")
-  set(RANGES_STD_FLAG "-std:c++${RANGES_CXX_STD}")
+  ranges_append_flag(RANGES_HAS_CXXSTDCOLON "/std:c++${RANGES_CXX_STD}")
+  set(RANGES_STD_FLAG "/std:c++${RANGES_CXX_STD}")
   # Enable strict mode
-  ranges_append_flag(RANGES_HAS_PERMISSIVEMINUS "-permissive-")
+  ranges_append_flag(RANGES_HAS_PERMISSIVEMINUS "/permissive-")
   if (RANGES_CXX_COMPILER_CLANGCL)
     ranges_append_flag(RANGES_HAS_FNO_MS_COMPATIBIILITY "-fno-ms-compatibility")
     ranges_append_flag(RANGES_HAS_FNO_DELAYED_TEMPLATE_PARSING "-fno-delayed-template-parsing")
   endif()
   # Enable "normal" warnings and make them errors:
-  ranges_append_flag(RANGES_HAS_W3 -W3)
-  ranges_append_flag(RANGES_HAS_WX -WX)
+  ranges_append_flag(RANGES_HAS_W3 /W3)
+  ranges_append_flag(RANGES_HAS_WX /WX)
+  # range-v3 needs MSVC's experimental actually-conforming preprocessor...
+  ranges_append_flag(RANGES_HAS_EXPERIMENTAL_PREPROCESSOR /experimental:preprocessor)
+  # ...which warns about UB in macros in the UCRT headers =(
+  ranges_append_flag(RANGES_HAS_WD5105 /wd5105)
 else()
   ranges_append_flag(RANGES_HAS_CXXSTD "-std=c++${RANGES_CXX_STD}")
   set(RANGES_STD_FLAG "-std=c++${RANGES_CXX_STD}")
@@ -53,9 +57,20 @@ if (RANGES_ENV_LINUX AND RANGES_CXX_COMPILER_CLANG)
   ranges_append_flag(RANGES_HAS_D__EXTERN_ALWAYS_INLINE -D__extern_always_inline=inline)
 endif()
 
+# Deep integration support
+if (RANGES_DEEP_STL_INTEGRATION)
+  if (RANGES_CXX_COMPILER_MSVC)
+    add_compile_options(/I "${PROJECT_SOURCE_DIR}/include/std")
+  else()
+    add_compile_options(-isystem "${PROJECT_SOURCE_DIR}/include/std")
+  endif()
+  add_compile_options(-DRANGES_DEEP_STL_INTEGRATION=1)
+endif()
+
 # Template diagnostic flags
 ranges_append_flag(RANGES_HAS_FDIAGNOSTIC_SHOW_TEMPLATE_TREE -fdiagnostics-show-template-tree)
 ranges_append_flag(RANGES_HAS_FTEMPLATE_BACKTRACE_LIMIT "-ftemplate-backtrace-limit=0")
+ranges_append_flag(RANGES_HAS_FMACRO_BACKTRACE_LIMIT "-fmacro-backtrace-limit=1")
 
 # Clang modules support
 if (RANGES_MODULES)
@@ -195,7 +210,7 @@ if(RANGES_CXX_COMPILER_MSVC)
     set(RANGE_V3_COROUTINE_FLAGS "/await")
   endif()
 elseif(RANGES_CXX_COMPILER_CLANG)
-  set(CMAKE_REQUIRED_FLAGS "-fcoroutines-ts")
+  set(CMAKE_REQUIRED_FLAGS "-fcoroutines-ts ${RANGES_STD_FLAG}")
   check_cxx_source_compiles("${RANGE_V3_PROBE_CODE}" RANGES_HAS_FCOROUTINES_TS)
   if(RANGES_HAS_FCOROUTINES_TS)
     set(RANGE_V3_COROUTINE_FLAGS "-fcoroutines-ts")
@@ -205,6 +220,21 @@ unset(CMAKE_REQUIRED_FLAGS)
 unset(RANGE_V3_PROBE_CODE)
 if (RANGE_V3_COROUTINE_FLAGS)
   add_compile_options(${RANGE_V3_COROUTINE_FLAGS})
+endif()
+
+# Test for concepts support
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/concepts_test_code.cpp" RANGE_V3_PROBE_CODE)
+if(RANGES_CXX_COMPILER_GCC OR RANGES_CXX_COMPILER_CLANG)
+  set(CMAKE_REQUIRED_FLAGS "-fconcepts ${RANGES_STD_FLAG}")
+  check_cxx_source_compiles("${RANGE_V3_PROBE_CODE}" RANGE_V3_HAS_FCONCEPTS)
+  if(RANGE_V3_HAS_FCONCEPTS)
+    set(RANGE_V3_CONCEPTS_FLAGS "-fconcepts")
+  endif()
+endif()
+unset(CMAKE_REQUIRED_FLAGS)
+unset(RANGE_V3_PROBE_CODE)
+if (RANGE_V3_CONCEPTS_FLAGS)
+  add_compile_options(${RANGE_V3_CONCEPTS_FLAGS})
 endif()
 
 if (RANGES_VERBOSE_BUILD)

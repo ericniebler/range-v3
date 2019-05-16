@@ -11,6 +11,10 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
+module concepts {
+    umbrella "concepts"
+    export *
+}
 module meta {
     umbrella "meta"
     export *
@@ -18,4 +22,5 @@ module meta {
 module range_v3 {
     umbrella "range"
     export *
+    exclude header "range/v3/utility/legacy_concepts.hpp"
 }

@@ -14,17 +14,25 @@
 #include <range/v3/view/intersperse.hpp>
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/view/reverse.hpp>
-#include <range/v3/to_container.hpp>
+#include <range/v3/range/conversion.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+#ifdef RANGES_WORKAROUND_MSVC_790554
 template<std::size_t N>
-ranges::iterator_range<char const*> c_str(char const (&sz)[N])
+auto c_str(char const (&sz)[N])
+{
+    return ranges::subrange<char const*>{&sz[0], &sz[N-1]};
+}
+#else // ^^^ workaround / no workaround vvv
+template<std::size_t N>
+ranges::subrange<char const*> c_str(char const (&sz)[N])
 {
     return {&sz[0], &sz[N-1]};
 }
+#endif // RANGES_WORKAROUND_MSVC_790554
 
-ranges::delimit_view<ranges::iterator_range<char const *, ranges::unreachable>, char>
+ranges::delimit_view<ranges::subrange<char const *, ranges::unreachable_sentinel_t>, char>
 c_str_(char const *sz)
 {
     return ranges::view::delimit(sz, '\0');
@@ -36,60 +44,60 @@ int main()
 
     {
         auto r0 = view::intersperse(c_str("abcde"), ',');
-        models<concepts::BoundedRange>(r0);
+        models<BoundedRangeConcept>(r0);
         CHECK((r0.end() - r0.begin()) == 9);
         CHECK(std::string(r0) == "a,b,c,d,e");
         CHECK(r0.size() == 9u);
 
         auto r1 = view::intersperse(c_str(""), ',');
-        models<concepts::BoundedRange>(r1);
+        models<BoundedRangeConcept>(r1);
         CHECK(std::string(r1) == "");
         CHECK(r1.size() == 0u);
 
         auto r2 = view::intersperse(c_str("a"), ',');
-        models<concepts::BoundedRange>(r2);
+        models<BoundedRangeConcept>(r2);
         CHECK(std::string(r2) == "a");
         CHECK(r2.size() == 1u);
 
         auto r3 = view::intersperse(c_str("ab"), ',');
-        models<concepts::BoundedRange>(r3);
+        models<BoundedRangeConcept>(r3);
         CHECK(std::string(r3) == "a,b");
         CHECK(r3.size() == 3u);
     }
 
     {
         auto r0 = view::intersperse(c_str("abcde"), ',') | view::reverse;
-        models<concepts::BoundedRange>(r0);
+        models<BoundedRangeConcept>(r0);
         CHECK(std::string(r0) == "e,d,c,b,a");
 
         auto r1 = view::intersperse(c_str(""), ',') | view::reverse;
-        models<concepts::BoundedRange>(r1);
+        models<BoundedRangeConcept>(r1);
         CHECK(std::string(r1) == "");
 
         auto r2 = view::intersperse(c_str("a"), ',') | view::reverse;
-        models<concepts::BoundedRange>(r2);
+        models<BoundedRangeConcept>(r2);
         CHECK(std::string(r2) == "a");
 
         auto r3 = view::intersperse(c_str("ab"), ',') | view::reverse;
-        models<concepts::BoundedRange>(r3);
+        models<BoundedRangeConcept>(r3);
         CHECK(std::string(r3) == "b,a");
     }
 
     {
         auto r0 = view::intersperse(c_str_("abcde"), ',');
-        models_not<concepts::BoundedRange>(r0);
+        models_not<BoundedRangeConcept>(r0);
         CHECK(std::string(r0) == "a,b,c,d,e");
 
         auto r1 = view::intersperse(c_str_(""), ',');
-        models_not<concepts::BoundedRange>(r1);
+        models_not<BoundedRangeConcept>(r1);
         CHECK(std::string(r1) == "");
 
         auto r2 = view::intersperse(c_str_("a"), ',');
-        models_not<concepts::BoundedRange>(r2);
+        models_not<BoundedRangeConcept>(r2);
         CHECK(std::string(r2) == "a");
 
         auto r3 = view::intersperse(c_str_("ab"), ',');
-        models_not<concepts::BoundedRange>(r3);
+        models_not<BoundedRangeConcept>(r3);
         CHECK(std::string(r3) == "a,b");
     }
 

@@ -24,6 +24,7 @@
 
 #include <memory>
 #include <utility>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/partition.hpp>
 #include "../simple_test.hpp"
@@ -114,30 +115,30 @@ namespace
         // check mixed
         int ia[] = {1, 2, 3, 4, 5, 6, 7, 8 ,9};
         const unsigned sa = sizeof(ia)/sizeof(ia[0]);
-        Iter r = ranges::partition(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia + sa))), is_odd());
+        Iter r = ranges::partition(::as_lvalue(ranges::make_subrange(Iter(ia), Sent(ia + sa))), is_odd());
         CHECK(base(r) == ia + 5);
         for (int* i = ia; i < base(r); ++i)
             CHECK(is_odd()(*i));
         for (int* i = base(r); i < ia+sa; ++i)
             CHECK(!is_odd()(*i));
         // check empty
-        r = ranges::partition(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia))), is_odd());
+        r = ranges::partition(::as_lvalue(ranges::make_subrange(Iter(ia), Sent(ia))), is_odd());
         CHECK(base(r) == ia);
         // check all false
         for (unsigned i = 0; i < sa; ++i)
             ia[i] = 2*i;
-        r = ranges::partition(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), is_odd());
+        r = ranges::partition(::as_lvalue(ranges::make_subrange(Iter(ia), Sent(ia+sa))), is_odd());
         CHECK(base(r) == ia);
         // check all true
         for (unsigned i = 0; i < sa; ++i)
             ia[i] = 2*i+1;
-        r = ranges::partition(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), is_odd());
+        r = ranges::partition(::as_lvalue(ranges::make_subrange(Iter(ia), Sent(ia+sa))), is_odd());
         CHECK(base(r) == ia+sa);
         // check all true but last
         for (unsigned i = 0; i < sa; ++i)
             ia[i] = 2*i+1;
         ia[sa-1] = 10;
-        r = ranges::partition(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), is_odd());
+        r = ranges::partition(::as_lvalue(ranges::make_subrange(Iter(ia), Sent(ia+sa))), is_odd());
         CHECK(base(r) == ia+sa-1);
         for (int* i = ia; i < base(r); ++i)
             CHECK(is_odd()(*i));
@@ -147,7 +148,7 @@ namespace
         for (unsigned i = 0; i < sa; ++i)
             ia[i] = 2*i+1;
         ia[0] = 10;
-        r = ranges::partition(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), is_odd());
+        r = ranges::partition(::as_lvalue(ranges::make_subrange(Iter(ia), Sent(ia+sa))), is_odd());
         CHECK(base(r) == ia+sa-1);
         for (int* i = ia; i < base(r); ++i)
             CHECK(is_odd()(*i));
@@ -157,7 +158,7 @@ namespace
         for (unsigned i = 0; i < sa; ++i)
             ia[i] = 2*i;
         ia[sa-1] = 11;
-        r = ranges::partition(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), is_odd());
+        r = ranges::partition(::as_lvalue(ranges::make_subrange(Iter(ia), Sent(ia+sa))), is_odd());
         CHECK(base(r) == ia+1);
         for (int* i = ia; i < base(r); ++i)
             CHECK(is_odd()(*i));
@@ -167,7 +168,7 @@ namespace
         for (unsigned i = 0; i < sa; ++i)
             ia[i] = 2*i;
         ia[0] = 11;
-        r = ranges::partition(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), is_odd());
+        r = ranges::partition(::as_lvalue(ranges::make_subrange(Iter(ia), Sent(ia+sa))), is_odd());
         CHECK(base(r) == ia+1);
         for (int* i = ia; i < base(r); ++i)
             CHECK(is_odd()(*i));
@@ -210,12 +211,13 @@ int main()
         CHECK(!is_odd()(i->i));
 
     // Test rvalue range
-    auto r2 = ranges::partition(ranges::view::all(ia), is_odd(), &S::i);
-    CHECK(r2.get_unsafe() == ia + 5);
-    for (S* i = ia; i < r2.get_unsafe(); ++i)
-        CHECK(is_odd()(i->i));
-    for (S* i = r2.get_unsafe(); i < ia+sa; ++i)
-        CHECK(!is_odd()(i->i));
+    auto r2 = ranges::partition(std::move(ia), is_odd(), &S::i);
+#ifndef RANGES_WORKAROUND_MSVC_573728
+    CHECK(::is_dangling(r2));
+#endif // RANGES_WORKAROUND_MSVC_573728
+    std::vector<S> vec(ranges::begin(ia), ranges::end(ia));
+    auto r3 = ranges::partition(std::move(vec), is_odd(), &S::i);
+    CHECK(::is_dangling(r3));
 
     return ::test_result();
 }

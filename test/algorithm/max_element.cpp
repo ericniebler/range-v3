@@ -47,7 +47,7 @@ namespace
         else
             CHECK(i == last);
 
-        auto rng = ranges::make_iterator_range(first, last);
+        auto rng = ::MakeTestRange(first, last);
         i = ranges::max_element(rng);
         if (first != last)
         {
@@ -58,13 +58,7 @@ namespace
             CHECK(i == last);
 
         auto j = ranges::max_element(std::move(rng));
-        if (first != last)
-        {
-            for (Iter k = first; k != last; ++k)
-                CHECK(!(*j.get_unsafe() < *k));
-        }
-        else
-            CHECK(j.get_unsafe() == last);
+        CHECK(::is_dangling(j));
     }
 
     template<class Iter, class Sent = Iter>
@@ -102,7 +96,7 @@ namespace
         else
             CHECK(i == last);
 
-        auto rng = ranges::make_iterator_range(first, last);
+        auto rng = ::MakeTestRange(first, last);
         i = ranges::max_element(rng, std::greater<int>());
         if (first != last)
         {
@@ -113,13 +107,7 @@ namespace
             CHECK(i == last);
 
         auto res = ranges::max_element(std::move(rng), std::greater<int>());
-        if (first != last)
-        {
-            for (Iter j = first; j != last; ++j)
-                CHECK(!std::greater<int>()(*res.get_unsafe(), *j));
-        }
-        else
-            CHECK(res.get_unsafe() == last);
+        CHECK(::is_dangling(res));
     }
 
     template<class Iter, class Sent = Iter>

@@ -14,81 +14,103 @@
 #define RANGES_V3_VIEW_COUNTED_HPP
 
 #include <utility>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/view_interface.hpp>
-#include <range/v3/iterator_range.hpp>
-#include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/counted_iterator.hpp>
+#include <range/v3/view/interface.hpp>
+#include <range/v3/iterator/traits.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/counted_iterator.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/subrange.hpp>
+#include <range/v3/iterator/default_sentinel.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-views
+    /// @{
+    template<typename I>
+    struct counted_view
+      : view_interface<counted_view<I>, finite>
     {
-        /// \addtogroup group-views
-        /// @{
-        template<typename I>
-        struct counted_view
-          : view_interface<counted_view<I>>
-        {
-        private:
-            friend range_access;
-            using size_type_ = size_type_t<I>;
-            I it_;
-            difference_type_t<I> n_;
+    private:
+        friend range_access;
+        I it_;
+        iter_difference_t<I> n_;
 
-        public:
-            counted_view() = default;
-            counted_view(I it, difference_type_t<I> n)
-              : it_(it), n_(n)
+    public:
+        counted_view() = default;
+        counted_view(I it, iter_difference_t<I> n)
+          : it_(it), n_(n)
+        {
+            RANGES_EXPECT(0 <= n_);
+        }
+        counted_iterator<I> begin() const
+        {
+            return make_counted_iterator(it_, n_);
+        }
+        default_sentinel_t end() const
+        {
+            return {};
+        }
+        auto size() const
+        {
+            return static_cast<detail::iter_size_t<I>>(n_);
+        }
+    };
+
+    namespace view
+    {
+        struct cpp20_counted_fn
+        {
+            template<typename I>
+            auto operator()(I it, iter_difference_t<I> n) const ->
+                CPP_ret(subrange<counted_iterator<I>, default_sentinel_t>)(
+                    requires Iterator<I> && (!RandomAccessIterator<I>))
             {
-                RANGES_EXPECT(0 <= n_);
+                return {make_counted_iterator(std::move(it), n), default_sentinel};
             }
-            counted_iterator<I> begin() const
+            template<typename I>
+            auto operator()(I it, iter_difference_t<I> n) const ->
+                CPP_ret(subrange<I>)(
+                    requires RandomAccessIterator<I>)
             {
-                return make_counted_iterator(it_, n_);
-            }
-            default_sentinel end() const
-            {
-                return {};
-            }
-            size_type_ size() const
-            {
-                return static_cast<size_type_>(n_);
+                return {it, it + n};
             }
         };
 
+        struct counted_fn
+        {
+            template<typename I>
+            auto operator()(I it, iter_difference_t<I> n) const ->
+                CPP_ret(counted_view<I>)(
+                    requires Iterator<I> && (!RandomAccessIterator<I>))
+            {
+                return {std::move(it), n};
+            }
+            template<typename I>
+            auto operator()(I it, iter_difference_t<I> n) const ->
+                CPP_ret(subrange<I>)(
+                    requires RandomAccessIterator<I>)
+            {
+                return {it, it + n};
+            }
+        };
+
+        /// \relates counted_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(counted_fn, counted)
+    }
+
+    namespace cpp20
+    {
         namespace view
         {
-            struct counted_fn
-            {
-                template<typename I,
-                    CONCEPT_REQUIRES_(Iterator<I>())>
-                counted_view<I> operator()(I it, difference_type_t<I> n) const
-                {
-                    return {std::move(it), n};
-                }
-                // TODO Once we support contiguous iterators, we can generalize this.
-                // (Note: it's not possible for RandomAccessIterators in general because
-                // of cyclic iterators.
-                template<typename T>
-                iterator_range<T*> operator()(T *t, std::ptrdiff_t n) const
-                {
-                    return {t, t + n};
-                }
-            };
-
-            /// \relates counted_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(counted_fn, counted)
+            RANGES_INLINE_VARIABLE(ranges::view::cpp20_counted_fn, counted)
         }
-        /// @}
     }
+    /// @}
 }
 
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::counted_view)
+#include <range/v3/detail/satisfy_boost_range.hpp>
+RANGES_SATISFY_BOOST_RANGE(::ranges::counted_view)
 
 #endif

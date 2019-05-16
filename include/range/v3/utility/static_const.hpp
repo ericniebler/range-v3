@@ -13,25 +13,20 @@
 #ifndef RANGES_V3_UTILITY_STATIC_CONST_HPP
 #define RANGES_V3_UTILITY_STATIC_CONST_HPP
 
-#include <range/v3/range_fwd.hpp>
-
 namespace ranges
 {
-    inline namespace v3
+    /// \ingroup group-utility
+
+    template<typename T>
+    struct static_const
     {
-        /// \ingroup group-utility
+        static constexpr T value {};
+    };
 
-        template<typename T>
-        struct static_const
-        {
-            static constexpr T value {};
-        };
-
-        /// \ingroup group-utility
-        /// \sa `static_const`
-        template<typename T>
-        constexpr T static_const<T>::value;
-    }
+    /// \ingroup group-utility
+    /// \sa `static_const`
+    template<typename T>
+    constexpr T static_const<T>::value;
 }
 
 #endif

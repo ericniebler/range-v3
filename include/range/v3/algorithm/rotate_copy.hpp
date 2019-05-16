@@ -15,53 +15,58 @@
 
 #include <functional>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/algorithm/copy.hpp>
+#include <range/v3/algorithm/result_types.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    template<typename I, typename O>
+    using rotate_copy_result = detail::in_out_result<I, O>;
+
+    struct rotate_copy_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct rotate_copy_fn
+        template<typename I, typename S, typename O, typename P = identity>
+        auto operator()(I begin, I middle, S end, O out) const ->
+            CPP_ret(rotate_copy_result<I, O>)(
+                requires ForwardIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
         {
-            template<typename I, typename S, typename O, typename P = ident,
-                CONCEPT_REQUIRES_(ForwardIterator<I>() && Sentinel<S, I>() && WeaklyIncrementable<O>() &&
-                    IndirectlyCopyable<I, O>())>
-            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, I middle, S end, O out) const
-            {
-                auto res = copy(middle, std::move(end), std::move(out));
-                return {
-                    std::move(res.first),
-                    copy(std::move(begin), middle, std::move(res.second)).second
-                };
-            }
+            auto res = ranges::copy(middle, std::move(end), std::move(out));
+            return {
+                std::move(res.in),
+                ranges::copy(std::move(begin), middle, std::move(res.out)).out
+            };
+        }
 
-            template<typename Rng, typename O, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Range<Rng>() && WeaklyIncrementable<O>() &&
-                    IndirectlyCopyable<I, O>())>
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
-            operator()(Rng &&rng, I middle, O out) const
-            {
-                return (*this)(begin(rng), std::move(middle), end(rng), std::move(out));
-            }
-        };
+        template<typename Rng, typename O, typename P = identity>
+        auto operator()(Rng &&rng, iterator_t<Rng> middle, O out) const ->
+            CPP_ret(rotate_copy_result<safe_iterator_t<Rng>, O>)(
+                requires Range<Rng> && WeaklyIncrementable<O> &&
+                    IndirectlyCopyable<iterator_t<Rng>, O>)
+        {
+            return (*this)(begin(rng), std::move(middle), end(rng), std::move(out));
+        }
+    };
 
-        /// \sa `rotate_copy_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<rotate_copy_fn>, rotate_copy)
-        /// @}
-    } // namespace v3
+    /// \sa `rotate_copy_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(rotate_copy_fn, rotate_copy)
+
+    namespace cpp20
+    {
+        using ranges::rotate_copy_result;
+        using ranges::rotate_copy;
+    }
+    /// @}
 } // namespace ranges
 
 #endif // include guard

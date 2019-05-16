@@ -29,14 +29,22 @@ using namespace ranges;
 
 namespace
 {
+    namespace ebo_test
+    {
+        struct empty1 {};
+        struct empty2 {};
+        struct refines : empty1, empty2 {};
+    }
+    constexpr bool broken_ebo = sizeof(ebo_test::refines) > sizeof(ebo_test::empty1);
+
     constexpr auto N = 7;
     constexpr auto K = 3;
-    CONCEPT_ASSERT(K < N);
+    CPP_assert(K < N);
 
     template<typename Adapted>
     void test_size(Adapted& a, std::true_type)
     {
-        ::models<concepts::SizedRange>(a);
+        ::models<SizedRangeConcept>(a);
         CHECK(size(a), unsigned(N - K + 1));
     }
     template<typename Adapted>
@@ -44,38 +52,41 @@ namespace
     {}
 
     template<typename Adapted>
-    void test_bounded(Adapted& a, std::true_type)
+    void test_common(Adapted& a, std::true_type)
     {
-        ::models<concepts::BoundedRange>(a);
+        ::models<BoundedRangeConcept>(a);
     }
     // template<typename Adapted>
-    // void test_bounded(Adapted&, std::false_type)
+    // void test_common(Adapted&, std::false_type)
     // {}
 
     template<typename Adapted>
     void test_prev(Adapted& a, iterator_t<Adapted> const& it, std::true_type)
     {
-        ::models<concepts::BidirectionalRange>(a);
+        ::models<BidirectionalRangeConcept>(a);
         ::check_equal(*ranges::prev(it, 3), view::iota(N - K - 2, N - 2));
     }
     template<typename Adapted>
     void test_prev(Adapted&, iterator_t<Adapted> const&, std::false_type)
     {}
 
-    template<typename Rng,
-        bool = RandomAccessRange<Rng>() || (BidirectionalRange<Rng>() && BoundedRange<Rng>())>
-    struct size_compare
+    template<typename Rng, bool>
+    struct size_compare_
     {
         iterator_t<Rng> iter1_;
         iterator_t<Rng> iter2_;
-        range_difference_type_t<Rng> dist_;
+        range_difference_t<Rng> dist_;
     };
     template<typename Rng>
-    struct size_compare<Rng, true>
+    struct size_compare_<Rng, true>
     {
         iterator_t<Rng> iter1_;
-        range_difference_type_t<Rng> dist_;
+        range_difference_t<Rng> dist_;
     };
+
+    template<typename Rng>
+    using size_compare =
+        size_compare_<Rng, RandomAccessRange<Rng> || (BidirectionalRange<Rng> && CommonRange<Rng>)>;
 
     template<typename Base>
     void test_finite()
@@ -83,14 +94,19 @@ namespace
         Base v = view::iota(0,N);
         auto rng = v | view::sliding(K);
         using Adapted = decltype(rng);
-        test_size(rng, SizedRange<Base>());
+        test_size(rng, meta::bool_<SizedRange<Base>>{});
 
-        CONCEPT_ASSERT(Same<
-            meta::_t<iterator_concept<iterator_t<Base>>>,
-            meta::_t<iterator_concept<iterator_t<Adapted>>>>());
+        using IterTagOfBase =
+            meta::if_c<ContiguousIterator<iterator_t<Base>>,
+                ranges::detail::random_access_iterator_tag_,
+                iterator_tag_of<iterator_t<Base>>>;
+
+        CPP_assert(Same<
+            IterTagOfBase,
+            iterator_tag_of<iterator_t<Adapted>>>);
 
         auto it = ranges::begin(rng);
-        test_bounded(rng, BoundedRange<Base>());
+        test_common(rng, meta::bool_<CommonRange<Base>>{});
 
         for (auto i = 0; i <= N - K; ++i)
         {
@@ -98,8 +114,12 @@ namespace
         }
         CHECK(it == ranges::end(rng));
 
-        test_prev(rng, it, BidirectionalRange<Base>());
-        CHECK(sizeof(it) == sizeof(size_compare<Base>));
+        test_prev(rng, it, meta::bool_<BidirectionalRange<Base>>{});
+
+        if (!broken_ebo)
+        {
+            CHECK(sizeof(it) == sizeof(size_compare<Base>));
+        }
     }
 }
 
@@ -135,9 +155,9 @@ int main()
     {
         // An infinite, cyclic range with cycle length == 1
         auto rng = view::repeat(5) | view::sliding(K);
-        ::models<concepts::RandomAccessRange>(rng);
+        ::models<RandomAccessRangeConcept>(rng);
         auto it = rng.begin();
-        CONCEPT_ASSERT(RandomAccessIterator<decltype(it)>());
+        CPP_assert(RandomAccessIterator<decltype(it)>);
 #if defined(__GNUC__) && !defined(__clang__) && \
     ((__GNUC__ == 6 && __GNUC_MINOR__ < 3) || __GNUC__ < 6)
         // Avoid https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78047
@@ -174,9 +194,9 @@ int main()
     {
         // An infinite, cyclic range with cycle length == K
         auto rng = view::iota(0, K) | view::cycle | view::sliding(K);
-        ::models<concepts::RandomAccessRange>(rng);
+        ::models<RandomAccessRangeConcept>(rng);
         auto it = rng.begin();
-        CONCEPT_ASSERT(RandomAccessIterator<decltype(it)>());
+        CPP_assert(RandomAccessIterator<decltype(it)>);
         for (auto i = 0; i < 42; ++i)
         {
             ::check_equal(*it++, {0,1,2});
@@ -192,7 +212,7 @@ int main()
         auto rng = view::iota(0,7) | view::cycle | view::sliding(K);
         //[0,1,2],[1,2,3],[2,3,4],[3,4,5],[4,5,6],[5,6,0],[6,0,1],...
         auto it = rng.begin();
-        CONCEPT_ASSERT(RandomAccessIterator<decltype(it)>());
+        CPP_assert(RandomAccessIterator<decltype(it)>);
         ::check_equal(*it, {0,1,2});
         ::check_equal(*next(it, 2), {2,3,4});
         ::check_equal(*next(it,16), {2,3,4});

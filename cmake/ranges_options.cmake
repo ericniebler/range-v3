@@ -6,7 +6,7 @@
 
 include(CMakeDependentOption)
 
-set(RANGES_CXX_STD 11 CACHE STRING "C++ standard version.")
+set(RANGES_CXX_STD 14 CACHE STRING "C++ standard version.")
 option(RANGES_BUILD_CALENDAR_EXAMPLE "Builds the calendar example." ON)
 option(RANGES_ASAN "Run the tests using AddressSanitizer." OFF)
 option(RANGES_MSAN "Run the tests using MemorySanitizer." OFF)
@@ -16,6 +16,15 @@ option(RANGES_MODULES "Enables use of Clang modules (experimental)." OFF)
 option(RANGES_NATIVE "Enables -march/-mtune=native." ON)
 option(RANGES_VERBOSE_BUILD "Enables debug output from CMake." OFF)
 option(RANGES_LLVM_POLLY "Enables LLVM Polly." OFF)
+option(RANGES_PREFER_REAL_CONCEPTS
+  "Use real concepts instead of emulation if the compiler supports it"
+  ON)
+option(RANGES_DEEP_STL_INTEGRATION
+  "Hijacks the primary std::iterator_traits template to emulate the C++20 std::ranges:: behavior."
+  OFF)
+option(RANGE_V3_HEADER_CHECKS
+  "Build the Range-v3 header checks and integrate with ctest"
+  OFF)
 set(RANGES_INLINE_THRESHOLD -1 CACHE STRING "Force a specific inlining threshold.")
 
 # Enable verbose configure when passing -Wdev to CMake
@@ -30,10 +39,6 @@ endif()
 
 CMAKE_DEPENDENT_OPTION(RANGE_V3_TESTS
   "Build the Range-v3 tests and integrate with ctest"
-  ON "${is_standalone}" OFF)
-
-CMAKE_DEPENDENT_OPTION(RANGE_V3_HEADER_CHECKS
-  "Build the Range-v3 header checks and integrate with ctest"
   ON "${is_standalone}" OFF)
 
 CMAKE_DEPENDENT_OPTION(RANGE_V3_EXAMPLES

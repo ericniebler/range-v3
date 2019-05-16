@@ -11,21 +11,16 @@
 // Project home: https://github.com/ericniebler/range-v3
 
 #include <memory>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/functional/not_fn.hpp>
 #include <range/v3/view/filter.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
-// GCC 4.8 is extremely confused about && and const&& qualifiers. Luckily they
-// are rare - we'll simply break them.
-#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5 && __GNUC_MINOR__ < 9
-#define GCC_4_8_WORKAROUND 1
-#endif
-
-CONCEPT_ASSERT(ranges::Constructible<ranges::reference_wrapper<int>, int&>());
-CONCEPT_ASSERT(!ranges::Constructible<ranges::reference_wrapper<int>, int&&>());
-CONCEPT_ASSERT(!ranges::Constructible<ranges::reference_wrapper<int &&>, int&>());
-CONCEPT_ASSERT(ranges::Constructible<ranges::reference_wrapper<int &&>, int&&>());
+CPP_assert(ranges::Constructible<ranges::reference_wrapper<int>, int&>);
+CPP_assert(!ranges::Constructible<ranges::reference_wrapper<int>, int&&>);
+CPP_assert(!ranges::Constructible<ranges::reference_wrapper<int &&>, int&>);
+CPP_assert(ranges::Constructible<ranges::reference_wrapper<int &&>, int&&>);
 
 namespace
 {
@@ -95,7 +90,7 @@ namespace
     struct A {
         int i = 13;
         constexpr int f() const noexcept { return 42; }
-        RANGES_CXX14_CONSTEXPR int g(int i) { return 2 * i; }
+        constexpr /*c++14*/ int g(int i) { return 2 * i; }
     };
 
     constexpr int f() noexcept { return 13; }
@@ -168,8 +163,8 @@ namespace
             CHECK(a.i == 0);
             ranges::invoke(&A::i, &a) = 1;
             CHECK(a.i == 1);
-            CONCEPT_ASSERT(ranges::Same<decltype(ranges::invoke(&A::i, ca)), const int&>());
-            CONCEPT_ASSERT(ranges::Same<decltype(ranges::invoke(&A::i, &ca)), const int&>());
+            CPP_assert(ranges::Same<decltype(ranges::invoke(&A::i, ca)), const int&>);
+            CPP_assert(ranges::Same<decltype(ranges::invoke(&A::i, &ca)), const int&>);
         }
 
         {
@@ -229,28 +224,9 @@ int main()
         CHECK(last_call == k);
     }
     {
-#ifdef GCC_4_8_WORKAROUND
-        constexpr auto k = kind::lvalue;
-#else
         constexpr auto k = kind::rvalue;
-#endif
         using F = fn<k>;
         auto f = ranges::not_fn(F{});
-        CHECK(std::move(f)() == true); // xvalue
-        CHECK(last_call == k);
-
-        CHECK(decltype(f){}() == true); // prvalue
-        CHECK(last_call == k);
-    }
-
-    {
-#ifdef GCC_4_8_WORKAROUND
-        constexpr auto k = kind::const_lvalue;
-#else
-        constexpr auto k = kind::const_rvalue;
-#endif
-        using F = fn<k>;
-        auto const f = ranges::not_fn(F{});
         CHECK(std::move(f)() == true); // xvalue
         CHECK(last_call == k);
 
@@ -261,12 +237,12 @@ int main()
 #ifdef _WIN32
     {
         // Ensure that Invocable accepts pointers to functions with non-default calling conventions.
-        CONCEPT_ASSERT(ranges::Invocable<void(__cdecl*)()>());
-        CONCEPT_ASSERT(ranges::Invocable<void(__stdcall*)()>());
-        CONCEPT_ASSERT(ranges::Invocable<void(__fastcall*)()>());
-        CONCEPT_ASSERT(ranges::Invocable<void(__thiscall*)()>());
+        CPP_assert(ranges::Invocable<void(__cdecl*)()>);
+        CPP_assert(ranges::Invocable<void(__stdcall*)()>);
+        CPP_assert(ranges::Invocable<void(__fastcall*)()>);
+        CPP_assert(ranges::Invocable<void(__thiscall*)()>);
 #ifndef __MINGW32__
-        CONCEPT_ASSERT(ranges::Invocable<void(__vectorcall*)()>());
+        CPP_assert(ranges::Invocable<void(__vectorcall*)()>);
 #endif
     }
 #endif // _WIN32

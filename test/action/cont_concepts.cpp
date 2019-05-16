@@ -12,6 +12,7 @@
 #include <memory>
 #include <range/v3/core.hpp>
 #include <range/v3/action/concepts.hpp>
+#include <range/v3/view/ref.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -20,24 +21,23 @@ int main()
     using namespace ranges;
 
     int rgi[6];
-    ::models<concepts::Range>(rgi);
-    ::models_not<concepts::SemiContainer>(rgi);
+    ::models<RangeConcept>(rgi);
+    ::models_not<SemiContainerConcept>(rgi);
 
     std::array<int, 6> a;
-    ::models<concepts::SemiContainer>(a);
-    ::models_not<concepts::Container>(a);
+    ::models<SemiContainerConcept>(a);
+    ::models_not<ContainerConcept>(a);
 
     std::vector<int> v;
-    ::models<concepts::Container>(v);
+    ::models<ContainerConcept>(v);
 
     std::vector<std::unique_ptr<int>> v2;
-    ::models<concepts::Container>(v2);
+    ::models<ContainerConcept>(v2);
 
-    ::models<concepts::LvalueContainerLike>(v2);
-    ::models_not<concepts::LvalueContainerLike>(std::move(v2));
+    ::models<LvalueContainerLikeConcept>(v2);
+    ::models_not<LvalueContainerLikeConcept>(std::move(v2));
 
-    ::models<concepts::LvalueContainerLike>(ranges::ref(v2));
-    ::models<concepts::LvalueContainerLike>(std::ref(v2));
+    ::models<LvalueContainerLikeConcept>(view::ref(v2));
 
     return ::test_result();
 }

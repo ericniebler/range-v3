@@ -11,6 +11,7 @@
 //
 
 #include <vector>
+#include <range/v3/utility/copy.hpp>
 #include <range/v3/view/exclusive_scan.hpp>
 #include "../test_utils.hpp"
 
@@ -25,9 +26,9 @@ int main()
             auto rng = rgi | view::exclusive_scan(0);
             has_type<int &>(*begin(rgi));
             has_type<int>(*begin(rng));
-            models<concepts::SizedView>(aux::copy(rng));
-            models<concepts::ForwardView>(aux::copy(rng));
-            models_not<concepts::BidirectionalView>(aux::copy(rng));
+            models<SizedViewConcept>(aux::copy(rng));
+            models<ForwardViewConcept>(aux::copy(rng));
+            models_not<BidirectionalViewConcept>(aux::copy(rng));
             ::check_equal(rng, {0, 1, 3, 6, 10, 15, 21, 28, 36, 45});
         }
 
@@ -35,8 +36,8 @@ int main()
             int cnt = 0;
             auto mutable_rng = view::exclusive_scan(rgi, 0, [cnt](int i, int j) mutable {return i + j + cnt++;});
             ::check_equal(mutable_rng, {0, 1, 4, 9, 16, 25, 36, 49, 64, 81});
-            CONCEPT_ASSERT(View<decltype(mutable_rng)>());
-            CONCEPT_ASSERT(!View<decltype(mutable_rng) const>());
+            CPP_assert(View<decltype(mutable_rng)>);
+            CPP_assert(!View<decltype(mutable_rng) const>);
         }
     }
 
@@ -44,9 +45,9 @@ int main()
         std::vector<int> rgi;
         auto rng = rgi | view::exclusive_scan(0);
         has_type<int>(*begin(rng));
-        models<concepts::SizedView>(aux::copy(rng));
-        models<concepts::ForwardView>(aux::copy(rng));
-        models_not<concepts::BidirectionalView>(aux::copy(rng));
+        models<SizedViewConcept>(aux::copy(rng));
+        models<ForwardViewConcept>(aux::copy(rng));
+        models_not<BidirectionalViewConcept>(aux::copy(rng));
         CHECK(empty(rng));
     }
 

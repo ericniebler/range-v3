@@ -32,7 +32,7 @@ int main()
     CHECK(is_sorted(v));
     CHECK(!is_sorted(v2));
     CHECK(size(v2) == size(v));
-    ::models<concepts::Same>(v, v2);
+    ::models<SameConcept>(v, v2);
     CHECK(!equal(v, v2));
 
     // "Ints" view vs. shuffled and sorted
@@ -57,7 +57,7 @@ int main()
 
     // Create and shuffle container reference
     v = view::ints(0,100);
-    auto ref = std::ref(v);
+    auto ref = view::ref(v);
     ref |= action::shuffle(gen);
     CHECK(!is_sorted(v));
 

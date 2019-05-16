@@ -15,8 +15,6 @@ rv3_add_test(example.for_each_assoc for_each_assoc for_each_assoc.cpp)
 rv3_add_test(example.is_sorted is_sorted is_sorted.cpp)
 rv3_add_test(example.find find find.cpp)
 
-# rv3_add_test(example.fibonacci fibonacci fibonacci.cpp)
-
 # Guarded with a variable because the calendar example causes gcc to puke.
 if(RANGES_BUILD_CALENDAR_EXAMPLE)
     set(Boost_USE_STATIC_LIBS        ON)

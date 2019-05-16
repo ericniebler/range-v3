@@ -26,7 +26,7 @@
 
 #include <stdexcept>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/algorithm/fill_n.hpp>
 #include <range/v3/algorithm/swap_ranges.hpp>
 #include <range/v3/algorithm/equal.hpp>
@@ -55,135 +55,135 @@ namespace test {
 
         value_type elems_[N > 0 ? N : 1];
 
-        RANGES_CXX14_CONSTEXPR void fill(const value_type& u)
+        constexpr /*c++14*/ void fill(const value_type& u)
         {
             ranges::fill_n(elems_, N, u);
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         void swap(array& a) noexcept(ranges::is_nothrow_swappable<T>::value)
         {
             ranges::swap_ranges(elems_, elems_ + N, a.elems_);
         }
          // iterators:
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         iterator begin() noexcept
         {
             return iterator(elems_);
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         const_iterator begin() const noexcept
         {
             return const_iterator(elems_);
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         iterator end() noexcept
         {
             return iterator(elems_ + N);
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         const_iterator end() const noexcept
         {
             return const_iterator(elems_ + N);
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         reverse_iterator rbegin() noexcept
         {
             return reverse_iterator(end());
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         const_reverse_iterator rbegin() const noexcept
         {
             return const_reverse_iterator(end());
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         reverse_iterator rend() noexcept
         {
             return reverse_iterator(begin());
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         const_reverse_iterator rend() const noexcept
         {
             return const_reverse_iterator(begin());
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         const_iterator cbegin() const noexcept
         {
             return begin();
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         const_iterator cend() const noexcept
         {
             return end();
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         const_reverse_iterator crbegin() const noexcept
         {
             return rbegin();
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         const_reverse_iterator crend() const noexcept
         {
             return rend();
         }
         // capacity:
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         size_type size() const noexcept
         {
             return N;
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         size_type max_size() const noexcept
         {
             return N;
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         bool empty() const noexcept
         {
             return N == 0;
         }
          // element access:
-        RANGES_CXX14_CONSTEXPR reference operator[](size_type n)
+        constexpr /*c++14*/ reference operator[](size_type n)
         {
             return elems_[n];
         }
-        RANGES_CXX14_CONSTEXPR const_reference operator[](size_type n) const
+        constexpr /*c++14*/ const_reference operator[](size_type n) const
         {
             return elems_[n];
         }
-        RANGES_CXX14_CONSTEXPR reference at(size_type n)
+        constexpr /*c++14*/ reference at(size_type n)
         {
             if (n >= N)
                 throw std::out_of_range("array::at");
             return elems_[n];
         }
-        RANGES_CXX14_CONSTEXPR const_reference at(size_type n) const
+        constexpr /*c++14*/ const_reference at(size_type n) const
         {
             if (n >= N)
                 throw std::out_of_range("array::at");
             return elems_[n];
         }
-        RANGES_CXX14_CONSTEXPR reference front()
+        constexpr /*c++14*/ reference front()
         {
             return elems_[0];
         }
-        RANGES_CXX14_CONSTEXPR const_reference front() const
+        constexpr /*c++14*/ const_reference front() const
         {
             return elems_[0];
         }
-        RANGES_CXX14_CONSTEXPR reference back()
+        constexpr /*c++14*/ reference back()
         {
             return elems_[N > 0 ? N-1 : 0];
         }
-        RANGES_CXX14_CONSTEXPR const_reference back() const
+        constexpr /*c++14*/ const_reference back() const
         {
             return elems_[N > 0 ? N-1 : 0];
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         value_type* data() noexcept
         {
             return elems_;
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         const value_type* data() const noexcept
         {
             return elems_;
@@ -191,35 +191,35 @@ namespace test {
     };
 
     template<class T, size_t N>
-    RANGES_CXX14_CONSTEXPR
+    constexpr /*c++14*/
     bool
     operator==(const array<T, N>& x, const array<T, N>& y)
     {
         return ranges::equal(x.elems_, x.elems_ + N, y.elems_);
     }
     template<class T, size_t N>
-    RANGES_CXX14_CONSTEXPR
+    constexpr /*c++14*/
     bool
     operator!=(const array<T, N>& x, const array<T, N>& y)
     {
         return !(x == y);
     }
     template<class T, size_t N>
-    RANGES_CXX14_CONSTEXPR
+    constexpr /*c++14*/
     bool
     operator<(const array<T, N>& x, const array<T, N>& y)
     {
         return ranges::lexicographical_compare(x.elems_, x.elems_ + N, y.elems_, y.elems_ + N);
     }
     template<class T, size_t N>
-    RANGES_CXX14_CONSTEXPR
+    constexpr /*c++14*/
     bool
     operator>(const array<T, N>& x, const array<T, N>& y)
     {
         return y < x;
     }
     template<class T, size_t N>
-    RANGES_CXX14_CONSTEXPR
+    constexpr /*c++14*/
     bool
     operator<=(const array<T, N>& x, const array<T, N>& y)
     {
@@ -227,7 +227,7 @@ namespace test {
     }
 
     template<class T, size_t N>
-    RANGES_CXX14_CONSTEXPR
+    constexpr /*c++14*/
     bool
     operator>=(const array<T, N>& x, const array<T, N>& y)
     {
@@ -235,7 +235,7 @@ namespace test {
     }
 
     template<class T, size_t N>
-    RANGES_CXX14_CONSTEXPR
+    constexpr /*c++14*/
     auto swap(array<T, N>& x, array<T, N>& y)
     noexcept(ranges::is_nothrow_swappable<T>::value)
     -> typename std::enable_if<ranges::is_swappable<T>::value, void>::type
@@ -244,7 +244,7 @@ namespace test {
     }
 
     template<size_t I, class T, size_t N>
-    RANGES_CXX14_CONSTEXPR
+    constexpr /*c++14*/
     T& get(array<T, N>& a) noexcept
     {
         static_assert(I < N, "Index out of bounds in ranges::get<> (ranges::array)");
@@ -252,7 +252,7 @@ namespace test {
     }
 
     template<size_t I, class T, size_t N>
-    RANGES_CXX14_CONSTEXPR
+    constexpr /*c++14*/
     const T& get(const array<T, N>& a) noexcept
     {
         static_assert(I < N, "Index out of bounds in ranges::get<> (const ranges::array)");
@@ -260,15 +260,15 @@ namespace test {
     }
 
     template<size_t I, class T, size_t N>
-    RANGES_CXX14_CONSTEXPR
-    T&& get(array<T, N>&& a) noexcept
+    constexpr /*c++14*/
+    T && get(array<T, N>&& a) noexcept
     {
         static_assert(I < N, "Index out of bounds in ranges::get<> (ranges::array &&)");
         return std::move(a.elems_[I]);
     }
 
     template<class T, std::size_t N>
-    RANGES_CXX14_CONSTEXPR void swap(array<T, N>& a, array<T, N>& b) {
+    constexpr /*c++14*/ void swap(array<T, N>& a, array<T, N>& b) {
         for(std::size_t i = 0; i != N; ++i) {
             auto tmp = std::move(a[i]);
             a[i] = std::move(b[i]);

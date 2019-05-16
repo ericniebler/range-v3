@@ -74,7 +74,7 @@ namespace
       // rng test:
       auto rng3 = [](int* b1, int l1, int* b2, int i)
       {
-        return ranges::inner_product(ranges::make_iterator_range(Iter1(b1), Sent1(b1+l1)), Iter2(b2), i);
+        return ranges::inner_product(ranges::make_subrange(Iter1(b1), Sent1(b1+l1)), Iter2(b2), i);
       };
       CHECK(rng3(a, 0, b, 0) == 0);
       CHECK(rng3(a, 0, b, 10)  == 10);
@@ -87,8 +87,8 @@ namespace
 
       auto rng4 = [](int* b1, int l1, int* b2, int i)
       {
-        return ranges::inner_product(ranges::make_iterator_range(Iter1(b1), Sent1(b1+l1)),
-                                    ranges::make_iterator_range(Iter2(b2), Iter2(b2+l1)), i);
+        return ranges::inner_product(ranges::make_subrange(Iter1(b1), Sent1(b1+l1)),
+                                    ranges::make_subrange(Iter2(b2), Iter2(b2+l1)), i);
       };
       CHECK(rng4(a, 0, b, 0) == 0);
       CHECK(rng4(a, 0, b, 10)  == 10);
@@ -102,8 +102,8 @@ namespace
       // rng + bops:
       auto bops = [](int* b1, int l1, int* b2, int i)
       {
-        return ranges::inner_product(ranges::make_iterator_range(Iter1(b1), Sent1(b1+l1)),
-                                    ranges::make_iterator_range(Iter2(b2), Iter2(b2+l1)), i,
+        return ranges::inner_product(ranges::make_subrange(Iter1(b1), Sent1(b1+l1)),
+                                    ranges::make_subrange(Iter2(b2), Iter2(b2+l1)), i,
                                     std::multiplies<int>(), std::plus<int>());
       };
       CHECK(bops(a, 0, b, 1) == 1);
@@ -149,9 +149,6 @@ int main()
     test<const int*, random_access_iterator<const int*> >();
     test<const int*, const int*>();
 
-    // Test initializer lists:
-    CHECK(ranges::inner_product({1,2,3}, {4,5,6}, 0) == 32);
-
     // test projections:
     {
       S a[] = {{1}, {2}, {3}, {4}, {5}, {6}};
@@ -165,8 +162,8 @@ int main()
       // rng + bops:
       auto bops = [&](S* b1, int l1, S* b2, int i)
       {
-        return ranges::inner_product(ranges::make_iterator_range(Iter1(b1), Sent1(b1+l1)),
-                                     ranges::make_iterator_range(Iter2(b2), Iter2(b2+l1)), i,
+        return ranges::inner_product(ranges::make_subrange(Iter1(b1), Sent1(b1+l1)),
+                                     ranges::make_subrange(Iter2(b2), Iter2(b2+l1)), i,
                                      std::multiplies<int>(), std::plus<int>(),
                                      &S::i, &S::i);
       };

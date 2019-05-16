@@ -1,14 +1,12 @@
 range-v3
 ========
 
-Range library for C++11/14/17. This code is the basis of [a formal proposal](https://ericniebler.github.io/std/wg21/D4128.html) to add range support to the C++ standard library.
+Range library for C++14/17. This code was the basis of [a formal proposal](https://ericniebler.github.io/std/wg21/D4128.html) to add range support to the C++ standard library. That proposal evolved through a Technical Specification, and finally into [P0896R4 "The One Ranges Proposal"](https://wg21.link/p0896r4) which was merged into the C++20 working drafts in November 2018.
 
 About:
 ------
 
 Why does C++ need another range library? Simply put, the existing solutions haven't kept up with the rapid evolution of C++. Range v3 is a library for the future C++. Not only does it work well with today's C++ -- move semantics, lambdas, automatically deduced types and all -- it also anticipates tomorrow's C++ with Concepts.
-
-Range v3 forms the basis of a proposal to add range support to the standard library ([N4128: Ranges for the Standard Library](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4128.html)). It also will be the reference implementation for an upcoming Technical Specification. These are the first steps toward turning ranges into an international standard.
 
 Documentation:
 --------------
@@ -55,6 +53,9 @@ The code is known to work on the following compilers:
 - clang 3.6.2 (or later)
 - GCC 4.9.1 (or later) (C++14 support requires GCC 5.2; C++14 "extended constexpr" support is poor before 6.1.)
 - Clang/LLVM 6 (or later) on Windows (older versions may work - we haven't tested.)
+- Visual Studio 2019 Preview 4 (or later) on Windows, with some caveats due to range-v3's strict conformance requirements:
+  - range-v3 needs `/std:c++17 /permissive-`
+  - range-v3 needs a fully conforming preprocessor, so `/experimental:preprocesor` is necessary. Note that the conforming preprocessor diagnoses `C5105` "macro expansion producing 'defined' has undefined behavior" in some of the Windows SDK headers, so you'll probably want to suppress that warning with `/wd5105`.
 
 [ Note: We've "retired" support for Clang/C2 with the VS2015 toolset (i.e., the `v140_clang_c2` toolset) which Microsoft no longer supports for C++ use. We no longer have CI runs, but haven't gone out of our way to break anything, so it will likely continue to work. ]
 
@@ -228,7 +229,7 @@ Release Notes:
     * `Movable`
     * `Assignable`
   - The `View` concept is no longer satisfied by reference types.
-  - The syntax for defining a concept has changed slightly. See [utility/iterator_concepts.hpp](https://github.com/ericniebler/range-v3/blob/master/include/range/v3/utility/iterator_concepts.hpp) for examples.
+  - The syntax for defining a concept has changed slightly. See [iterator/concepts.hpp](https://github.com/ericniebler/range-v3/blob/master/include/range/v3/iterator/concepts.hpp) for examples.
 * **0.1.1**
   Small tweak to `Writable` concept to fix #537.
 * **0.1.0**

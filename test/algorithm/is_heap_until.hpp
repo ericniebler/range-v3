@@ -25,6 +25,7 @@
 // Implementation based on the code in libc++
 //   http://http://libcxx.llvm.org/
 
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
 #include "../simple_test.hpp"
@@ -1057,8 +1058,13 @@ int main()
         .check([&](S *r){ CHECK(r == i185+1); });
 
     // Test rvalue range
-    auto res = ranges::is_heap_until(ranges::view::all(i185), std::greater<int>(), &S::i);
-    CHECK(res.get_unsafe() == i185+1);
+#ifndef RANGES_WORKAROUND_MSVC_573728
+    auto res0 = ranges::is_heap_until(std::move(i185), std::greater<int>(), &S::i);
+    CHECK(::is_dangling(res0));
+#endif // RANGES_WORKAROUND_MSVC_573728
+    std::vector<S> vec(ranges::begin(i185), ranges::end(i185));
+    auto res1 = ranges::is_heap_until(std::move(vec), std::greater<int>(), &S::i);
+    CHECK(::is_dangling(res1));
 
     return ::test_result();
 }

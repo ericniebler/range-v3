@@ -25,6 +25,7 @@
 // Implementation based on the code in libc++
 //   http://http://libcxx.llvm.org/
 
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/unique.hpp>
 #include "../simple_test.hpp"
@@ -55,9 +56,9 @@ struct range_call
 
     template<class B, class E, class... Args>
     auto operator()(B &&It, E &&e, Args &&... args) const
-     -> ranges::iterator_t<decltype(ranges::make_iterator_range(begin_t{It}, sentinel_t{e}))>
+     -> ranges::iterator_t<decltype(ranges::make_subrange(begin_t{It}, sentinel_t{e}))>
     {
-        auto rng = ranges::make_iterator_range(begin_t{It}, sentinel_t{e});
+        auto rng = ranges::make_subrange(begin_t{It}, sentinel_t{e});
         return ranges::unique(rng, std::forward<Args>(args)...);
     }
 };
@@ -151,7 +152,25 @@ int main()
     {
         int a[] = {0, 1, 1, 1, 2, 2, 2};
         auto r = ranges::unique(ranges::view::all(a));
-        CHECK(r.get_unsafe() == a + 3);
+        CHECK(r == a + 3);
+        CHECK(a[0] == 0);
+        CHECK(a[1] == 1);
+        CHECK(a[2] == 2);
+    }
+    {
+        int a[] = {0, 1, 1, 1, 2, 2, 2};
+        auto r = ranges::unique(std::move(a));
+#ifndef RANGES_WORKAROUND_MSVC_573728
+        CHECK(::is_dangling(r));
+#endif // RANGES_WORKAROUND_MSVC_573728
+        CHECK(a[0] == 0);
+        CHECK(a[1] == 1);
+        CHECK(a[2] == 2);
+    }
+    {
+        std::vector<int> a{0, 1, 1, 1, 2, 2, 2};
+        auto r = ranges::unique(std::move(a));
+        CHECK(::is_dangling(r));
         CHECK(a[0] == 0);
         CHECK(a[1] == 1);
         CHECK(a[2] == 2);

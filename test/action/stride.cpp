@@ -26,7 +26,7 @@ int main()
 
     auto v2 = v | copy | action::stride(10);
     CHECK(size(v2) == 10u);
-    ::models<concepts::Same>(v, v2);
+    ::models<SameConcept>(v, v2);
     ::check_equal(v2, {0,10,20,30,40,50,60,70,80,90});
 
     v2 = v2 | move | action::stride(4);

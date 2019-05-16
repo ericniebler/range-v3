@@ -17,8 +17,10 @@
 #include <range/v3/algorithm/set_algorithm.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/utility/common_type.hpp>
-#include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
+#include <range/v3/iterator/move_iterators.hpp>
+#include <range/v3/functional/identity.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/drop_while.hpp>
@@ -51,15 +53,15 @@ int main()
     {
         auto res = view::set_symmetric_difference(i1_finite, i2_finite);
 
-        models<concepts::ForwardView>(aux::copy(res));
-        models_not<concepts::RandomAccessView>(aux::copy(res));
-        models_not<concepts::BoundedView>(aux::copy(res));
+        models<ForwardViewConcept>(aux::copy(res));
+        models_not<RandomAccessViewConcept>(aux::copy(res));
+        models_not<BoundedViewConcept>(aux::copy(res));
 
         using R = decltype(res);
 
-        CONCEPT_ASSERT(Same<range_value_type_t<R>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<R>, int&>());
-        CONCEPT_ASSERT(Same<decltype(iter_move(begin(res))), int&&>());
+        CPP_assert(Same<range_value_t<R>, int>);
+        CPP_assert(Same<range_reference_t<R>, int&>);
+        CPP_assert(Same<decltype(iter_move(begin(res))), int&&>);
 
         static_assert(range_cardinality<R>::value == ranges::finite, "Cardinality of symmetric difference of finite ranges should be finite!");
 
@@ -80,23 +82,23 @@ int main()
     {
         auto res = view::set_symmetric_difference(i1_infinite, i2_infinite);
 
-        models<concepts::ForwardView>(aux::copy(res));
-        models_not<concepts::RandomAccessView>(aux::copy(res));
-        models_not<concepts::BoundedView>(aux::copy(res));
+        models<ForwardViewConcept>(aux::copy(res));
+        models_not<RandomAccessViewConcept>(aux::copy(res));
+        models_not<BoundedViewConcept>(aux::copy(res));
 
         using R = decltype(res);
 
-        CONCEPT_ASSERT(Same<range_value_type_t<R>,
-                            common_type_t<range_value_type_t<decltype(i1_infinite)>,
-                                          range_value_type_t<decltype(i2_infinite)>>>());
-        CONCEPT_ASSERT(Same<range_reference_t<R>,
+        CPP_assert(Same<range_value_t<R>,
+                            common_type_t<range_value_t<decltype(i1_infinite)>,
+                                          range_value_t<decltype(i2_infinite)>>>);
+        CPP_assert(Same<range_reference_t<R>,
                             common_reference_t<range_reference_t<decltype(i1_infinite)>,
                                                range_reference_t<decltype(i2_infinite)>>
-                           >());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>,
+                           >);
+        CPP_assert(Same<range_rvalue_reference_t<R>,
                             common_reference_t<range_rvalue_reference_t<decltype(i1_infinite)>,
                                                range_rvalue_reference_t<decltype(i2_infinite)>>
-                           >());
+                           >);
 
         static_assert(range_cardinality<R>::value == ranges::unknown, "Cardinality of symmetric difference between infinite ranges should be unknown!");
 
@@ -112,15 +114,15 @@ int main()
     {
         auto res1 = view::set_symmetric_difference(i1_finite, i2_infinite);
 
-        models<concepts::ForwardView>(aux::copy(res1));
-        models_not<concepts::RandomAccessView>(aux::copy(res1));
-        models_not<concepts::BoundedView>(aux::copy(res1));
+        models<ForwardViewConcept>(aux::copy(res1));
+        models_not<RandomAccessViewConcept>(aux::copy(res1));
+        models_not<BoundedViewConcept>(aux::copy(res1));
 
         using R1 = decltype(res1);
 
-        CONCEPT_ASSERT(Same<range_value_type_t<R1>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<R1>, int>()); // our infinite range does not give out references
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R1>, int>());
+        CPP_assert(Same<range_value_t<R1>, int>);
+        CPP_assert(Same<range_reference_t<R1>, int>); // our infinite range does not give out references
+        CPP_assert(Same<range_rvalue_reference_t<R1>, int>);
 
         static_assert(range_cardinality<R1>::value == ranges::infinite, "Cardinality of symmetric difference between a finite and an infinite range should be infinite!");
 
@@ -129,15 +131,15 @@ int main()
         // now swap the operands:
         auto res2 = view::set_symmetric_difference(i2_infinite, i1_finite);
 
-        models<concepts::ForwardView>(aux::copy(res2));
-        models_not<concepts::RandomAccessView>(aux::copy(res2));
-        models_not<concepts::BoundedView>(aux::copy(res2));
+        models<ForwardViewConcept>(aux::copy(res2));
+        models_not<RandomAccessViewConcept>(aux::copy(res2));
+        models_not<BoundedViewConcept>(aux::copy(res2));
 
         using R2 = decltype(res2);
 
-        CONCEPT_ASSERT(Same<range_value_type_t<R2>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<R2>, int>()); // our infinite range does not give out references
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, int>());
+        CPP_assert(Same<range_value_t<R2>, int>);
+        CPP_assert(Same<range_reference_t<R2>, int>); // our infinite range does not give out references
+        CPP_assert(Same<range_rvalue_reference_t<R2>, int>);
 
         static_assert(range_cardinality<R2>::value == ranges::infinite, "Cardinality of symmetric difference between a finite and an infinite range should be infinite!");
 
@@ -172,15 +174,15 @@ int main()
     {
         auto res1 = view::set_symmetric_difference(view::const_(i1_finite), view::const_(i2_finite));
         using R1 = decltype(res1);
-        CONCEPT_ASSERT(Same<range_value_type_t<R1>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<R1>, const int&>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R1>, const int&&>());
+        CPP_assert(Same<range_value_t<R1>, int>);
+        CPP_assert(Same<range_reference_t<R1>, const int&>);
+        CPP_assert(Same<range_rvalue_reference_t<R1>, const int&&>);
 
         auto res2 = view::set_symmetric_difference(view::const_(i1_finite), i2_finite);
         using R2 = decltype(res2);
-        CONCEPT_ASSERT(Same<range_value_type_t<R2>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<R2>, const int&>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, const int&&>());
+        CPP_assert(Same<range_value_t<R2>, int>);
+        CPP_assert(Same<range_reference_t<R2>, const int&>);
+        CPP_assert(Same<range_rvalue_reference_t<R2>, const int&&>);
     }
 
     // test different orderings
@@ -215,9 +217,9 @@ int main()
     // sets with different element types, custom orderings
     {
         auto res = view::set_symmetric_difference(b_finite, d_finite, [](const B& a, const D& b){ return a.val < b.val; });
-        CONCEPT_ASSERT(Same<range_value_type_t<decltype(res)>, B>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res)>, B&>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res)>, B&&>());
+        CPP_assert(Same<range_value_t<decltype(res)>, B>);
+        CPP_assert(Same<range_reference_t<decltype(res)>, B&>);
+        CPP_assert(Same<range_rvalue_reference_t<decltype(res)>, B&&>);
         ::check_equal(res, {B{-20}, B{-10}, B{0}, B{1}, B{2}, B{3}, B{3}, B{4}, B{8}, B{20}});
         auto it = begin(res);
         CHECK(&*it == &*begin(b_finite));
@@ -228,30 +230,30 @@ int main()
     // projections
     {
         auto res1 = view::set_symmetric_difference(b_finite, d_finite,
-                                                   ordered_less(),
+                                                   less(),
                                                    &B::val,
                                                    &D::val
                                                   );
-        CONCEPT_ASSERT(Same<range_value_type_t<decltype(res1)>, B>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res1)>, B&>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res1)>, B&&>());
+        CPP_assert(Same<range_value_t<decltype(res1)>, B>);
+        CPP_assert(Same<range_reference_t<decltype(res1)>, B&>);
+        CPP_assert(Same<range_rvalue_reference_t<decltype(res1)>, B&&>);
         ::check_equal(res1, {B{-20}, B{-10}, B{0}, B{1}, B{2}, B{3}, B{3}, B{4}, B{8}, B{20}});
 
         auto res2 = view::set_symmetric_difference(view::ints(-2, 10), b_finite,
-                                                   ordered_less(),
-                                                   ident(),
+                                                   less(),
+                                                   identity(),
                                                    [](const B& x){ return x.val; }
                                                   );
-        CONCEPT_ASSERT(Same<range_value_type_t<decltype(res2)>, B>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res2)>, B>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res2)>, B>());
+        CPP_assert(Same<range_value_t<decltype(res2)>, B>);
+        CPP_assert(Same<range_reference_t<decltype(res2)>, B>);
+        CPP_assert(Same<range_rvalue_reference_t<decltype(res2)>, B>);
         ::check_equal(res2, {B{-20}, B{-10}, B{-2}, B{-1}, B{0}, B{2}, B{3}, B{4}, B{5}, B{7}, B{9}, B{20}});
     }
 
     // move
     {
-        auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","b","c","x","x"});
-        auto v1 = to_<std::vector<MoveOnlyString>>({"b","x","y","z"});
+        auto v0 = to<std::vector<MoveOnlyString>>({"a","b","b","c","x","x"});
+        auto v1 = to<std::vector<MoveOnlyString>>({"b","x","y","z"});
         auto res = view::set_symmetric_difference(v0, v1, [](const MoveOnlyString& a, const MoveOnlyString& b){return a<b;});
 
         std::vector<MoveOnlyString> expected;
@@ -261,8 +263,8 @@ int main()
         ::check_equal(v1, {"b","x","",""});
         ::check_equal(v0, {"","b","","","x",""});
 
-        auto v0_greedy = to_<std::vector<MoveOnlyString>>({"a","b","b","c","x","x"});
-        auto v1_greedy = to_<std::vector<MoveOnlyString>>({"b","x","y","z"});
+        auto v0_greedy = to<std::vector<MoveOnlyString>>({"a","b","b","c","x","x"});
+        auto v1_greedy = to<std::vector<MoveOnlyString>>({"b","x","y","z"});
         std::vector<MoveOnlyString> expected_greedy;
         set_symmetric_difference(v0_greedy, v1_greedy,
                                  move_into(back_inserter(expected_greedy)),
@@ -273,9 +275,9 @@ int main()
 
         using R = decltype(res);
 
-        CONCEPT_ASSERT(Same<range_value_type_t<R>, MoveOnlyString>());
-        CONCEPT_ASSERT(Same<range_reference_t<R>, MoveOnlyString &>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, MoveOnlyString &&>());
+        CPP_assert(Same<range_value_t<R>, MoveOnlyString>);
+        CPP_assert(Same<range_reference_t<R>, MoveOnlyString &>);
+        CPP_assert(Same<range_rvalue_reference_t<R>, MoveOnlyString &&>);
     }
 
     // WARNING: set_symmetric_difference between two infinite ranges can create infinite loops!

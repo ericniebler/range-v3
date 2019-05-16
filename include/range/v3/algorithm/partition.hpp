@@ -23,33 +23,52 @@
 
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct partition_fn
     {
-        /// \ingroup group-concepts
-        template<typename I, typename C, typename P = ident>
-        using Partitionable = meta::strict_and<
-            ForwardIterator<I>,
-            Permutable<I>,
-            IndirectPredicate<C, projected<I, P>>>;
-
-        /// \addtogroup group-algorithms
-        /// @{
-        struct partition_fn
+    private:
+        template<typename I, typename S, typename C, typename P>
+        static I impl(I begin, S end, C pred, P proj, detail::forward_iterator_tag_)
         {
-        private:
-            template<typename I, typename S, typename C, typename P>
-            static I impl(I begin, S end, C pred, P proj, concepts::ForwardIterator*)
+            while(true)
+            {
+                if(begin == end)
+                    return begin;
+                if(!invoke(pred, invoke(proj, *begin)))
+                    break;
+                ++begin;
+            }
+            for(I p = begin; ++p != end;)
+            {
+                if(invoke(pred, invoke(proj, *p)))
+                {
+                    ranges::iter_swap(begin, p);
+                    ++begin;
+                }
+            }
+            return begin;
+        }
+
+        template<typename I, typename S, typename C, typename P>
+        static I impl(I begin, S end_, C pred, P proj, detail::bidirectional_iterator_tag_)
+        {
+            I end = ranges::next(begin, end_);
+            while(true)
             {
                 while(true)
                 {
@@ -59,64 +78,46 @@ namespace ranges
                         break;
                     ++begin;
                 }
-                for(I p = begin; ++p != end;)
+                do
                 {
-                    if(invoke(pred, invoke(proj, *p)))
-                    {
-                        ranges::iter_swap(begin, p);
-                        ++begin;
-                    }
-                }
-                return begin;
+                    if(begin == --end)
+                        return begin;
+                } while(!invoke(pred, invoke(proj, *end)));
+                ranges::iter_swap(begin, end);
+                ++begin;
             }
+        }
+    public:
+        template<typename I, typename S, typename C, typename P = identity>
+        auto operator()(I begin, S end, C pred, P proj = P{}) const ->
+            CPP_ret(I)(
+                requires Permutable<I> && Sentinel<S, I> &&
+                    IndirectUnaryPredicate<C, projected<I, P>>)
+        {
+            return partition_fn::impl(std::move(begin), std::move(end), std::move(pred),
+                std::move(proj), iterator_tag_of<I>());
+        }
 
-            template<typename I, typename S, typename C, typename P>
-            static I impl(I begin, S end_, C pred, P proj, concepts::BidirectionalIterator*)
-            {
-                I end = ranges::next(begin, end_);
-                while(true)
-                {
-                    while(true)
-                    {
-                        if(begin == end)
-                            return begin;
-                        if(!invoke(pred, invoke(proj, *begin)))
-                            break;
-                        ++begin;
-                    }
-                    do
-                    {
-                        if(begin == --end)
-                            return begin;
-                    } while(!invoke(pred, invoke(proj, *end)));
-                    ranges::iter_swap(begin, end);
-                    ++begin;
-                }
-            }
-        public:
-            template<typename I, typename S, typename C, typename P = ident,
-                CONCEPT_REQUIRES_(Partitionable<I, C, P>() && Sentinel<S, I>())>
-            I operator()(I begin, S end, C pred, P proj = P{}) const
-            {
-                return partition_fn::impl(std::move(begin), std::move(end), std::move(pred),
-                    std::move(proj), iterator_concept<I>());
-            }
+        template<typename Rng, typename C, typename P = identity>
+        auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
+            CPP_ret(safe_iterator_t<Rng>)(
+                requires ForwardRange<Rng> && Permutable<iterator_t<Rng>> &&
+                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+        {
+            return partition_fn::impl(begin(rng), end(rng), std::move(pred),
+                std::move(proj), iterator_tag_of<iterator_t<Rng>>());
+        }
+    };
 
-            template<typename Rng, typename C, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Partitionable<I, C, P>() && Range<Rng>())>
-            safe_iterator_t<Rng> operator()(Rng &&rng, C pred, P proj = P{}) const
-            {
-                return partition_fn::impl(begin(rng), end(rng), std::move(pred),
-                    std::move(proj), iterator_concept<I>());
-            }
-        };
+    /// \sa `partition_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(partition_fn, partition)
 
-        /// \sa `partition_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<partition_fn>, partition)
-        /// @}
-    } // namespace v3
+    namespace cpp20
+    {
+        using ranges::partition;
+    }
+    /// @}
 } // namespace ranges
 
 #endif // include guard

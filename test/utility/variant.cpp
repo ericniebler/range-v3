@@ -12,6 +12,7 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <range/v3/functional/overload.hpp>
 #include <range/v3/utility/variant.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -79,7 +80,7 @@ int main()
         int i = 42;
         std::string s = "hello world";
         variant<int&, std::string&> v{emplaced_index<0>, i};
-        CONCEPT_ASSERT(!DefaultConstructible<variant<int&, std::string&>>());
+        CPP_assert(!DefaultConstructible<variant<int&, std::string&>>);
         CHECK(v.index() == 0u);
         CHECK(get<0>(v) == 42);
         CHECK(&get<0>(v) == &i);

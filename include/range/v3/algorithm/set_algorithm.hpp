@@ -21,272 +21,305 @@
 #ifndef RANGES_V3_ALGORITHM_SET_ALGORITHM_HPP
 #define RANGES_V3_ALGORITHM_SET_ALGORITHM_HPP
 
-#include <tuple>
 #include <utility>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/algorithm/copy.hpp>
+#include <range/v3/algorithm/result_types.hpp>
+#include <range/v3/functional/comparisons.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
-#include <range/v3/utility/tagged_tuple.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct includes_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct includes_fn
+        template<typename I1, typename S1, typename I2, typename S2, typename C = less,
+            typename P1 = identity, typename P2 = identity>
+        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
+                P2 proj2 = P2{}) const ->
+            CPP_ret(bool)(
+                requires InputIterator<I1> && Sentinel<S1, I1> &&
+                    InputIterator<I2> && Sentinel<S2, I2> &&
+                    IndirectStrictWeakOrder<C, projected<I1, P1>, projected<I2, P2>>)
         {
-            template<typename I1, typename S1, typename I2, typename S2,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(Comparable<I1, I2, C, P1, P2>() &&
-                    Sentinel<S1, I1>() && Sentinel<S2, I2>())>
-            bool operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
-                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
+            for(; begin2 != end2; ++begin1)
             {
-                for(; begin2 != end2; ++begin1)
+                if(begin1 == end1 || invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
+                    return false;
+                if(!invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
+                    ++begin2;
+            }
+            return true;
+        }
+
+        template<typename Rng1, typename Rng2, typename C = less, typename P1 = identity,
+            typename P2 = identity>
+        auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
+                P2 proj2 = P2{}) const ->
+            CPP_ret(bool)(
+                requires InputRange<Rng1> && InputRange<Rng2> &&
+                    IndirectStrictWeakOrder<C, projected<iterator_t<Rng1>, P1>,
+                                               projected<iterator_t<Rng2>, P2>>)
+        {
+            return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
+                std::move(proj1), std::move(proj2));
+        }
+    };
+
+    /// \sa `includes_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(includes_fn, includes)
+
+    namespace cpp20
+    {
+        using ranges::includes;
+    }
+
+    template<typename I1, typename I2, typename O>
+    using set_union_result = detail::in1_in2_out_result<I1, I2, O>;
+
+    struct set_union_fn
+    {
+        template<typename I1, typename S1, typename I2, typename S2, typename O,
+            typename C = less, typename P1 = identity, typename P2 = identity>
+        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
+                P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
+            CPP_ret(set_union_result<I1, I2, O>)(
+                requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
+                    Mergeable<I1, I2, O, C, P1, P2>)
+        {
+            for(; begin1 != end1; ++out)
+            {
+                if(begin2 == end2)
                 {
-                    if(begin1 == end1 || invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
-                        return false;
+                    auto tmp = ranges::copy(begin1, end1, out);
+                    return {tmp.in, begin2, tmp.out};
+                }
+                if(invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
+                {
+                    *out = *begin2;
+                    ++begin2;
+                }
+                else
+                {
+                    *out = *begin1;
                     if(!invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
                         ++begin2;
+                    ++begin1;
                 }
-                return true;
             }
+            auto tmp = ranges::copy(begin2, end2, out);
+            return {begin1, tmp.in, tmp.out};
+        }
 
-            template<typename Rng1, typename Rng2, typename C = ordered_less,
-                typename P1 = ident, typename P2 = ident,
-                typename I1 = iterator_t<Rng1>,
-                typename I2 = iterator_t<Rng2>,
-                CONCEPT_REQUIRES_(Comparable<I1, I2, C, P1, P2>() &&
-                    Range<Rng1>() && Range<Rng2>())>
-            bool operator()(Rng1 && rng1, Rng2 && rng2,
-                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
-            {
-                return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
-                    std::move(proj1), std::move(proj2));
-            }
-        };
-
-        /// \sa `includes_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<includes_fn>, includes)
-
-        struct set_union_fn
+        template<typename Rng1, typename Rng2, typename O, typename C = less,
+            typename P1 = identity, typename P2 = identity>
+        auto operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
+                P2 proj2 = P2{}) const ->
+            CPP_ret(set_union_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>, O>)(
+                requires Range<Rng1> && Range<Rng2> &&
+                    Mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         {
-            template<typename I1, typename S1, typename I2, typename S2, typename O,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Sentinel<S1, I1>() && Sentinel<S2, I2>())>
-            tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)>
-            operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
-                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
+            return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
+                std::move(pred), std::move(proj1), std::move(proj2));
+        }
+    };
+
+    /// \sa `set_union_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(set_union_fn, set_union)
+
+    namespace cpp20
+    {
+        using ranges::set_union_result;
+        using ranges::set_union;
+    }
+
+    struct set_intersection_fn
+    {
+        template<typename I1, typename S1, typename I2, typename S2, typename O,
+            typename C = less, typename P1 = identity, typename P2 = identity>
+        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
+                P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
+            CPP_ret(O)(
+                requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
+                    Mergeable<I1, I2, O, C, P1, P2>)
+        {
+            while(begin1 != end1 && begin2 != end2)
             {
-                for(; begin1 != end1; ++out)
+                if(invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
+                    ++begin1;
+                else
                 {
-                    if(begin2 == end2)
+                    if(!invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
                     {
-                        auto tmp = copy(begin1, end1, out);
-                        return make_tagged_tuple<tag::in1, tag::in2, tag::out>(tmp.first, begin2,
-                            tmp.second);
+                        *out = *begin1;
+                        ++out;
+                        ++begin1;
                     }
+                    ++begin2;
+                }
+            }
+            return out;
+        }
+
+        template<typename Rng1, typename Rng2, typename O, typename C = less,
+            typename P1 = identity, typename P2 = identity>
+        auto operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
+                P2 proj2 = P2{}) const ->
+            CPP_ret(O)(
+                requires Range<Rng1> && Range<Rng2> &&
+                    Mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
+        {
+            return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
+                std::move(pred), std::move(proj1), std::move(proj2));
+        }
+    };
+
+    /// \sa `set_intersection_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(set_intersection_fn, set_intersection)
+
+    namespace cpp20
+    {
+        using ranges::set_intersection;
+    }
+
+    template<typename I, typename O>
+    using set_difference_result = detail::in1_out_result<I, O>;
+
+    struct set_difference_fn
+    {
+        template<typename I1, typename S1, typename I2, typename S2, typename O,
+            typename C = less, typename P1 = identity, typename P2 = identity>
+        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
+                P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
+            CPP_ret(set_difference_result<I1, O>)(
+                requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
+                    Mergeable<I1, I2, O, C, P1, P2>)
+        {
+            while(begin1 != end1)
+            {
+                if(begin2 == end2)
+                {
+                    auto tmp = ranges::copy(begin1, end1, out);
+                    return {tmp.in, tmp.out};
+                }
+                if(invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
+                {
+                    *out = *begin1;
+                    ++out;
+                    ++begin1;
+                }
+                else
+                {
+                    if(!invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
+                        ++begin1;
+                    ++begin2;
+                }
+            }
+            return {begin1, out};
+        }
+
+        template<typename Rng1, typename Rng2, typename O, typename C = less,
+            typename P1 = identity, typename P2 = identity>
+        auto operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
+                P2 proj2 = P2{}) const ->
+            CPP_ret(set_difference_result<safe_iterator_t<Rng1>, O>)(
+                requires Range<Rng1> && Range<Rng2> &&
+                    Mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
+        {
+            return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
+                std::move(pred), std::move(proj1), std::move(proj2));
+        }
+    };
+
+    /// \sa `set_difference_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(set_difference_fn, set_difference)
+
+    namespace cpp20
+    {
+        using ranges::set_difference_result;
+        using ranges::set_difference;
+    }
+
+    template<typename I1, typename I2, typename O>
+    using set_symmetric_difference_result = detail::in1_in2_out_result<I1, I2, O>;
+
+    struct set_symmetric_difference_fn
+    {
+        template<typename I1, typename S1, typename I2, typename S2, typename O,
+            typename C = less, typename P1 = identity, typename P2 = identity>
+        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
+                P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
+            CPP_ret(set_symmetric_difference_result<I1, I2, O>)(
+                requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
+                    Mergeable<I1, I2, O, C, P1, P2>)
+        {
+            while(begin1 != end1)
+            {
+                if(begin2 == end2)
+                {
+                    auto tmp = ranges::copy(begin1, end1, out);
+                    return {tmp.in, begin2, tmp.out};
+                }
+                if(invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
+                {
+                    *out = *begin1;
+                    ++out;
+                    ++begin1;
+                }
+                else
+                {
                     if(invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
                     {
                         *out = *begin2;
-                        ++begin2;
-                    }
-                    else
-                    {
-                        *out = *begin1;
-                        if(!invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
-                            ++begin2;
-                        ++begin1;
-                    }
-                }
-                auto tmp = copy(begin2, end2, out);
-                return make_tagged_tuple<tag::in1, tag::in2, tag::out>(begin1, tmp.first,
-                    tmp.second);
-            }
-
-            template<typename Rng1, typename Rng2, typename O,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                typename I1 = iterator_t<Rng1>,
-                typename I2 = iterator_t<Rng2>,
-                CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Range<Rng1>() && Range<Rng2>())>
-            tagged_tuple<tag::in1(safe_iterator_t<Rng1>), tag::in2(safe_iterator_t<Rng2>), tag::out(O)>
-            operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
-                P2 proj2 = P2{}) const
-            {
-                return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
-                    std::move(pred), std::move(proj1), std::move(proj2));
-            }
-        };
-
-        /// \sa `set_union_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<set_union_fn>, set_union)
-
-        struct set_intersection_fn
-        {
-            template<typename I1, typename S1, typename I2, typename S2, typename O,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Sentinel<S1, I1>() && Sentinel<S2, I2>())>
-            O operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
-                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
-            {
-                while(begin1 != end1 && begin2 != end2)
-                {
-                    if(invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
-                        ++begin1;
-                    else
-                    {
-                        if(!invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
-                        {
-                            *out = *begin1;
-                            ++out;
-                            ++begin1;
-                        }
-                        ++begin2;
-                    }
-                }
-                return out;
-            }
-
-            template<typename Rng1, typename Rng2, typename O,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                typename I1 = iterator_t<Rng1>,
-                typename I2 = iterator_t<Rng2>,
-                CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Range<Rng1>() && Range<Rng2>())>
-            O operator()(Rng1 && rng1, Rng2 && rng2, O out,
-                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
-            {
-                return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
-                    std::move(pred), std::move(proj1), std::move(proj2));
-            }
-        };
-
-        /// \sa `set_intersection_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<set_intersection_fn>,
-                               set_intersection)
-
-        struct set_difference_fn
-        {
-            template<typename I1, typename S1, typename I2, typename S2, typename O,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Sentinel<S1, I1>() && Sentinel<S2, I2>())>
-            tagged_pair<tag::in1(I1), tag::out(O)> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
-                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
-            {
-                while(begin1 != end1)
-                {
-                    if(begin2 == end2)
-                        return copy(begin1, end1, out);
-                    if(invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
-                    {
-                        *out = *begin1;
                         ++out;
-                        ++begin1;
                     }
                     else
-                    {
-                        if(!invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
-                            ++begin1;
-                        ++begin2;
-                    }
+                        ++begin1;
+                    ++begin2;
                 }
-                return {begin1, out};
             }
+            auto tmp = ranges::copy(begin2, end2, out);
+            return {begin1, tmp.in, tmp.out};
+        }
 
-            template<typename Rng1, typename Rng2, typename O,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                typename I1 = iterator_t<Rng1>,
-                typename I2 = iterator_t<Rng2>,
-                CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Range<Rng1>() && Range<Rng2>())>
-            tagged_pair<tag::in1(safe_iterator_t<Rng1>), tag::out(O)> operator()(Rng1 &&rng1, Rng2 && rng2, O out,
-                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
-            {
-                return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
-                    std::move(pred), std::move(proj1), std::move(proj2));
-            }
-        };
-
-        /// \sa `set_difference_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<set_difference_fn>,
-                               set_difference)
-
-        struct set_symmetric_difference_fn
+        template<typename Rng1, typename Rng2, typename O, typename C = less,
+            typename P1 = identity, typename P2 = identity>
+        auto operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
+                P2 proj2 = P2{}) const ->
+            CPP_ret(set_symmetric_difference_result<safe_iterator_t<Rng1>,
+                                                    safe_iterator_t<Rng2>,
+                                                    O>)(
+                requires Range<Rng1> && Range<Rng2> &&
+                    Mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         {
-            template<typename I1, typename S1, typename I2, typename S2, typename O,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Sentinel<S1, I1>() && Sentinel<S2, I2>())>
-            tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
-                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
-            {
-                while(begin1 != end1)
-                {
-                    if(begin2 == end2)
-                    {
-                        auto tmp = copy(begin1, end1, out);
-                        return tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)>{tmp.first, begin2, tmp.second};
-                    }
-                    if(invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
-                    {
-                        *out = *begin1;
-                        ++out;
-                        ++begin1;
-                    }
-                    else
-                    {
-                        if(invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
-                        {
-                            *out = *begin2;
-                            ++out;
-                        }
-                        else
-                            ++begin1;
-                        ++begin2;
-                    }
-                }
-                auto tmp = copy(begin2, end2, out);
-                return tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)>{begin1, tmp.first, tmp.second};
-            }
+            return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
+                std::move(pred), std::move(proj1), std::move(proj2));
+        }
+    };
 
-            template<typename Rng1, typename Rng2, typename O,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                typename I1 = iterator_t<Rng1>,
-                typename I2 = iterator_t<Rng2>,
-                CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Range<Rng1>() && Range<Rng2>())>
-            tagged_tuple<tag::in1(safe_iterator_t<Rng1>), tag::in2(safe_iterator_t<Rng2>), tag::out(O)>
-            operator()(Rng1 &&rng1, Rng2 &&rng2, O out,
-                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
-            {
-                return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
-                    std::move(pred), std::move(proj1), std::move(proj2));
-            }
-        };
+    /// \sa `set_symmetric_difference_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(set_symmetric_difference_fn, set_symmetric_difference)
 
-        /// \sa `set_symmetric_difference_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<set_symmetric_difference_fn>,
-                               set_symmetric_difference)
-        /// @}
-    } // namespace v3
+    namespace cpp20
+    {
+        using ranges::set_symmetric_difference_result;
+        using ranges::set_symmetric_difference;
+    }
+    /// @}
 } // namespace ranges
 
 #endif // include guard

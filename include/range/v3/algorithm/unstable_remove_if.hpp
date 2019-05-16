@@ -14,64 +14,67 @@
 #ifndef RANGES_V3_ALGORITHM_UNSTABLE_REMOVE_IF_HPP
 #define RANGES_V3_ALGORITHM_UNSTABLE_REMOVE_IF_HPP
 
-#include <meta/meta.hpp>
-#include <range/v3/range_concepts.hpp>
+#include <functional>
+#include <utility>
+#include <concepts/concepts.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/algorithm/find_if.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/reverse_iterator.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/utility/move.hpp>
+#include <range/v3/utility/static_const.hpp>
 
-/**
- * unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case]
- * Each erased element overwritten (moved in) with last one. Those, unstable_remove loose elements order.
- */
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+
+    /// unstable_remove have O(1) complexity for each element remove, unlike remove O(n)
+    /// [for worst case]. Each erased element overwritten (moved in) with last one.
+    /// unstable_remove_if does not preserve relative element order.
+    struct unstable_remove_if_fn
     {
-        /// \ingroup group-concepts
-        template<typename I, typename S, typename C, typename P = ident>
-        using UnstableRemovableIf = meta::strict_and<
-                ForwardIterator<I>, BidirectionalIterator<S>,
-                IndirectPredicate<C, projected<I, P>>,
-                IndirectPredicate<C, projected<S, P>>,
-                Permutable<I>, Permutable<S>>;
-
-        /// \addtogroup group-algorithms
-        /// @{
-        struct unstable_remove_if_fn
+        template<typename I, typename C, typename P = identity>
+        auto operator()(I first, I last, C pred, P proj = {}) const ->
+            CPP_ret(I)(
+                requires BidirectionalIterator<I> && Permutable<I> &&
+                    IndirectUnaryPredicate<C, projected<I, P>>)
         {
-            template <typename I, typename S, typename C, typename P = ident,
-                    CONCEPT_REQUIRES_(UnstableRemovableIf<I, S, C, P>())>
-            I operator()(I first, S last, C pred, P proj = {}) const
+            while(true)
             {
-                while(true)
-                {
-                    first = find_if(std::move(first), last, pred, proj);
-                    last  = find_if_not(
-                            make_reverse_iterator(std::move(last)),
-                            make_reverse_iterator(first),
-                            pred, proj).base();
-                    if (first == last) return first;
-                    *first = iter_move(--last);
+                first = find_if(std::move(first), last, std::ref(pred), std::ref(proj));
+                last = find_if_not(
+                    make_reverse_iterator(std::move(last)),
+                    make_reverse_iterator(first),
+                    std::ref(pred), std::ref(proj)).base();
+                if(first == last)
+                    return first;
+                *first = iter_move(--last);
 
-                    // discussion here: https://github.com/ericniebler/range-v3/issues/988
-                    ++first;
-                }
+                // discussion here: https://github.com/ericniebler/range-v3/issues/988
+                ++first;
             }
+        }
 
-            template<typename Rng, typename C, typename P = ident,
-                    typename I = iterator_t<Rng>, typename S = sentinel_t<Rng>,
-                    CONCEPT_REQUIRES_(UnstableRemovableIf<I, S, C, P>())>
-            safe_iterator_t<Rng> operator()(Rng &&rng, C pred, P proj = P{}) const
-            {
-                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
-            }
-        };
+        template<typename Rng, typename C, typename P = identity>
+        auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
+            CPP_ret(safe_iterator_t<Rng>)(
+                requires BidirectionalRange<Rng> && CommonRange<Rng> &&
+                    Permutable<iterator_t<Rng>> &&
+                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+        {
+            return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
+        }
+    };
 
-        /// \sa `remove_if_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<unstable_remove_if_fn>, unstable_remove_if)
-        /// @}
-    }
+    /// \sa `unstable_remove_if_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(unstable_remove_if_fn, unstable_remove_if)
+    /// @}
 }
 
-#endif // include guard
+#endif // RANGES_V3_ALGORITHM_UNSTABLE_REMOVE_IF_HPP

@@ -15,50 +15,53 @@
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct count_if_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct count_if_fn
+        template<typename I, typename S, typename R, typename P = identity>
+        auto operator()(I begin, S end, R pred, P proj = P{}) const ->
+            CPP_ret(iter_difference_t<I>)(
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    IndirectUnaryPredicate<R, projected<I, P>>)
         {
-            template<typename I, typename S, typename R, typename P = ident,
-                CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
-                    IndirectPredicate<R, projected<I, P> >())>
-            difference_type_t<I>
-            operator()(I begin, S end, R pred, P proj = P{}) const
-            {
-                difference_type_t<I> n = 0;
-                for(; begin != end; ++begin)
-                    if(invoke(pred, invoke(proj, *begin)))
-                        ++n;
-                return n;
-            }
+            iter_difference_t<I> n = 0;
+            for(; begin != end; ++begin)
+                if(invoke(pred, invoke(proj, *begin)))
+                    ++n;
+            return n;
+        }
 
-            template<typename Rng, typename R, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(InputRange<Rng>() && IndirectPredicate<R, projected<I, P> >())>
-            difference_type_t<I>
-            operator()(Rng &&rng, R pred, P proj = P{}) const
-            {
-                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
-            }
-        };
+        template<typename Rng, typename R, typename P = identity>
+        auto operator()(Rng &&rng, R pred, P proj = P{}) const ->
+            CPP_ret(iter_difference_t<iterator_t<Rng>>)(
+                requires InputRange<Rng> &&
+                    IndirectUnaryPredicate<R, projected<iterator_t<Rng>, P>>)
+        {
+            return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
+        }
+    };
 
-        /// \sa `count_if_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<count_if_fn>, count_if)
-        /// @}
-    } // namespace v3
+    /// \sa `count_if_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(count_if_fn, count_if)
+
+    namespace cpp20
+    {
+        using ranges::count_if;
+    }
+    /// @}
 } // namespace ranges
 
 #endif // include guard

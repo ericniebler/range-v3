@@ -15,54 +15,56 @@
 
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct replace_fn
     {
-        /// \ingroup group-concepts
-        template<typename I, typename T0, typename T1, typename P = ident>
-        using Replaceable = meta::strict_and<
-            InputIterator<I>,
-            IndirectRelation<equal_to, projected<I, P>, T0 const *>,
-            Writable<I, T1 const &>>;
-
-        /// \addtogroup group-algorithms
-        /// @{
-        struct replace_fn
+        template<typename I, typename S, typename T1, typename T2, typename P = identity>
+        auto operator()(I begin, S end, T1 const &old_value, T2 const &new_value,
+                P proj = {}) const ->
+            CPP_ret(I)(
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    Writable<I, T2 const &> &&
+                    IndirectRelation<equal_to, projected<I, P>, T1 const *>)
         {
-            template<typename I, typename S, typename T0, typename T1, typename P = ident,
-                CONCEPT_REQUIRES_(Replaceable<I, T0, T1, P>() && Sentinel<S, I>())>
-            I operator()(I begin, S end, T0 const & old_value, T1 const & new_value, P proj = {}) const
-            {
-                for(; begin != end; ++begin)
-                    if(invoke(proj, *begin) == old_value)
-                        *begin = new_value;
-                return begin;
-            }
+            for(; begin != end; ++begin)
+                if(invoke(proj, *begin) == old_value)
+                    *begin = new_value;
+            return begin;
+        }
 
-            template<typename Rng, typename T0, typename T1, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Replaceable<I, T0, T1, P>() && Range<Rng>())>
-            safe_iterator_t<Rng>
-            operator()(Rng &&rng, T0 const & old_value, T1 const & new_value, P proj = {}) const
-            {
-                return (*this)(begin(rng), end(rng), old_value, new_value, std::move(proj));
-            }
-        };
+        template<typename Rng, typename T1, typename T2, typename P = identity>
+        auto operator()(Rng &&rng, T1 const &old_value, T2 const &new_value, P proj = {}) const ->
+            CPP_ret(safe_iterator_t<Rng>)(
+                requires InputRange<Rng> &&
+                    Writable<iterator_t<Rng>, T2 const &> &&
+                    IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>)
+        {
+            return (*this)(begin(rng), end(rng), old_value, new_value, std::move(proj));
+        }
+    };
 
-        /// \sa `replace_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<replace_fn>, replace)
-        /// @}
-    } // namespace v3
+    /// \sa `replace_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(replace_fn, replace)
+
+    namespace cpp20
+    {
+        using ranges::replace;
+    }
+    /// @}
 } // namespace ranges
 
 #endif // include guard

@@ -261,20 +261,6 @@ int main()
         CHECK((res - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, res, ir, ir+sr, std::less<int>(), &U::k) == false);
     }
-
-    // Test initializer lists
-    {
-        U ic[20];
-        int ir[] = {2, 4, 4};
-        static const int sr = sizeof(ir)/sizeof(ir[0]);
-
-        U * res = ranges::set_intersection(
-            {S{1}, S{2}, S{2}, S{3}, S{3}, S{3}, S{4}, S{4}, S{4}, S{4}},
-            {T{2}, T{4}, T{4}, T{6}},
-            ic, std::less<int>(), &S::i, &T::j);
-        CHECK((res - ic) == sr);
-        CHECK(ranges::lexicographical_compare(ic, res, ir, ir+sr, std::less<int>(), &U::k) == false);
-    }
 #endif
 
     return ::test_result();

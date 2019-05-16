@@ -16,53 +16,60 @@
 #ifndef RANGES_V3_ALGORITHM_IS_SORTED_HPP
 #define RANGES_V3_ALGORITHM_IS_SORTED_HPP
 
+#include <utility>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/algorithm/is_sorted_until.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/functional/comparisons.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/iterator/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct is_sorted_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct is_sorted_fn
+        /// \brief template function \c is_sorted_fn::operator()
+        ///
+        /// range-based version of the \c is_sorted std algorithm
+        ///
+        /// Works on ForwardRanges
+        ///
+        /// \pre `Rng` is a model of the `ForwardRange` concept
+        /// \pre `I` is a model of the `ForwardIterator` concept
+        /// \pre `S` and `I` model the `Sentinel<S, I>` concept
+        /// \pre `R` and `projected<I, P>` model the `IndirectStrictWeakOrder<R, projected<I, P>>` concept
+        ///
+        template<typename I, typename S, typename R = less, typename P = identity>
+        auto operator()(I begin, S end, R rel = R{}, P proj = P{}) const ->
+            CPP_ret(bool)(
+                requires ForwardIterator<I> && Sentinel<S, I> &&
+                    IndirectStrictWeakOrder<R, projected<I, P>>)
         {
-            /// \brief template function \c is_sorted_fn::operator()
-            ///
-            /// range-based version of the \c is_sorted std algorithm
-            ///
-            /// Works on ForwardRanges
-            ///
-            /// \pre `Rng` is a model of the `ForwardRange` concept
-            /// \pre `I` is a model of the `ForwardIterator` concept
-            /// \pre `S` and `I` model the `Sentinel<S, I>` concept
-            /// \pre `R` and `projected<I, P>` model the `IndirectRelation<R, projected<I, P>>` concept
-            ///
-            template<typename I, typename S, typename R = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(ForwardIterator<I>() && Sentinel<S, I>() &&
-                       IndirectRelation<R, projected<I, P>>())>
-            bool operator()(I begin, S end, R rel = R{}, P proj = P{}) const
-            {
-                return is_sorted_until(std::move(begin), end, std::move(rel),
-                                       std::move(proj)) == end;
-            }
+            return is_sorted_until(std::move(begin), end, std::move(rel),
+                                   std::move(proj)) == end;
+        }
 
-            template<typename Rng, typename R = ordered_less, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(ForwardRange<Rng>() &&
-                    IndirectRelation<R, projected<I, P>>())>
-            bool operator()(Rng &&rng, R rel = R{}, P proj = P{}) const
-            {
-                return (*this)(begin(rng), end(rng), std::move(rel), std::move(proj));
-            }
-        };
+        template<typename Rng, typename R = less, typename P = identity>
+        auto operator()(Rng &&rng, R rel = R{}, P proj = P{}) const ->
+            CPP_ret(bool)(
+                requires ForwardRange<Rng> &&
+                    IndirectStrictWeakOrder<R, projected<iterator_t<Rng>, P>>)
+        {
+            return (*this)(begin(rng), end(rng), std::move(rel), std::move(proj));
+        }
+    };
 
-        /// \sa `is_sorted_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<is_sorted_fn>, is_sorted)
-        /// @}
-    } // namespace v3
+    /// \sa `is_sorted_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(is_sorted_fn, is_sorted)
+
+    namespace cpp20
+    {
+        using ranges::is_sorted;
+    }
+    /// @}
 } // namespace ranges
 
 #endif // include guard

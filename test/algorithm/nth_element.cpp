@@ -46,10 +46,10 @@ namespace
         CHECK(ranges::nth_element(array.get(), array.get()+M, array.get()+N) == array.get()+N);
         CHECK((unsigned)array[M] == M);
         std::shuffle(array.get(), array.get()+N, gen);
-        CHECK(ranges::nth_element(::as_lvalue(ranges::make_iterator_range(array.get(), array.get()+N)), array.get()+M) == array.get()+N);
+        CHECK(ranges::nth_element(::as_lvalue(ranges::make_subrange(array.get(), array.get()+N)), array.get()+M) == array.get()+N);
         CHECK((unsigned)array[M] == M);
         std::shuffle(array.get(), array.get()+N, gen);
-        CHECK(ranges::nth_element(ranges::make_iterator_range(array.get(), array.get()+N), array.get()+M).get_unsafe() == array.get()+N);
+        CHECK(ranges::nth_element(ranges::make_subrange(array.get(), array.get()+N), array.get()+M) == array.get()+N);
         CHECK((unsigned)array[M] == M);
         ranges::nth_element(array.get(), array.get()+N, array.get()+N); // begin, end, end
     }

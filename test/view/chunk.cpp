@@ -38,11 +38,11 @@ namespace
         auto make_range = [&]{ return debug_input_view<int const>{ints} | view::chunk(K); };
         auto rng = make_range();
         using Rng = decltype(rng);
-        CONCEPT_ASSERT(InputView<Rng>());
-        CONCEPT_ASSERT(!ForwardRange<Rng>());
-        CONCEPT_ASSERT(SizedRange<Rng>());
+        CPP_assert(InputView<Rng>);
+        CPP_assert(!ForwardRange<Rng>);
+        CPP_assert(SizedRange<Rng>);
         CHECK(ranges::size(rng) == (N + K - 1) / K);
-        CONCEPT_ASSERT(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>());
+        CPP_assert(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>);
         CHECK((ranges::end(rng) - ranges::begin(rng)) == int((N + K - 1) / K));
 
         rng = make_range();
@@ -82,8 +82,8 @@ int main()
 {
     std::vector<int> v = view::iota(0,11);
     auto rng1 = v | view::chunk(3);
-    ::models<concepts::RandomAccessRange>(rng1);
-    ::models<concepts::SizedRange>(rng1);
+    ::models<RandomAccessRangeConcept>(rng1);
+    ::models<SizedRangeConcept>(rng1);
     auto it1 = ranges::begin(rng1);
     ::check_equal(*it1++, {0,1,2});
     ::check_equal(*it1++, {3,4,5});
@@ -96,9 +96,9 @@ int main()
 
     std::forward_list<int> l = view::iota(0,11);
     auto rng2 = l | view::chunk(3);
-    ::models<concepts::ForwardRange>(rng2);
-    ::models_not<concepts::BidirectionalRange>(rng2);
-    ::models_not<concepts::SizedRange>(rng2);
+    ::models<ForwardRangeConcept>(rng2);
+    ::models_not<BidirectionalRangeConcept>(rng2);
+    ::models_not<SizedRangeConcept>(rng2);
     auto it2 = ranges::begin(rng2);
     ::check_equal(*it2++, {0,1,2});
     ::check_equal(*it2++, {3,4,5});
@@ -110,9 +110,9 @@ int main()
     {
         // An infinite, cyclic range with cycle length == 1
         auto fives = view::repeat(5);
-        ::models<concepts::RandomAccessRange>(fives);
+        ::models<RandomAccessRangeConcept>(fives);
         auto rng = fives | view::chunk(3);
-        ::models<concepts::RandomAccessRange>(rng);
+        ::models<RandomAccessRangeConcept>(rng);
         auto it = rng.begin();
         auto it2 = next(it,3);
         CHECK((it2 - it) == 3);
@@ -126,7 +126,7 @@ int main()
         auto cyc = ints | view::cycle;
         //[0,1],[2,0],[1,2],[0,1],[2,0],[1,2],
         auto rng = cyc | view::chunk(2);
-        ::models<concepts::RandomAccessRange>(rng);
+        ::models<RandomAccessRangeConcept>(rng);
         auto it = rng.begin();
         auto it2 = next(it,2);
         ::check_equal(*it, {0,1});
@@ -147,7 +147,7 @@ int main()
         auto cyc = ints | view::cycle;
         //[0,1,2,0],[1,2,0,1],[2,0,1,2],...
         auto rng = cyc | view::chunk(4);
-        ::models<concepts::RandomAccessRange>(rng);
+        ::models<RandomAccessRangeConcept>(rng);
         auto it = rng.begin();
         auto it2 = next(it,2);
         ::check_equal(*it, {0,1,2,0});
@@ -168,7 +168,7 @@ int main()
         int const ints[] = {0,1,2,3,4,5,6,7,8,9};
         auto cyc = ints | view::cycle;
         auto rng = cyc | view::chunk(3);
-        ::models<concepts::RandomAccessRange>(rng);
+        ::models<RandomAccessRangeConcept>(rng);
         //[0,1,2],[3,4,5],[6,7,8],[9,0,1],[2,3,4],...
         auto it = rng.begin();
         auto it2 = next(it,2);
@@ -197,8 +197,8 @@ int main()
         // Regression test for #567
         std::vector<std::vector<int>> data{{1, 2, 3}, {4, 5, 6}};
         auto rng = data | view::join | view::chunk(2);
-        ::models<concepts::InputRange>(rng);
-        CONCEPT_ASSERT(InputRange<range_reference_t<decltype(rng)>>());
+        ::models<InputRangeConcept>(rng);
+        CPP_assert(InputRange<range_reference_t<decltype(rng)>>);
         int const expected[][2] = {{1, 2}, {3, 4}, {5, 6}};
         ::check_equal(rng, expected);
     }

@@ -23,56 +23,55 @@
 
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct is_partitioned_fn
     {
-        /// \ingroup group-concepts
-        template<typename I, typename C, typename P = ident>
-        using IsPartitionedable = meta::strict_and<
-            InputIterator<I>,
-            IndirectPredicate<C, projected<I, P>>>;
-
-        /// \addtogroup group-algorithms
-        /// @{
-        struct is_partitioned_fn
+        template<typename I, typename S, typename C, typename P = identity>
+        auto operator()(I begin, S end, C pred, P proj = P{}) const ->
+            CPP_ret(bool)(
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    IndirectUnaryPredicate<C, projected<I, P>>)
         {
-            template<typename I, typename S, typename C, typename P = ident,
-                CONCEPT_REQUIRES_(IsPartitionedable<I, C, P>() && Sentinel<S, I>())>
-            bool operator()(I begin, S end, C pred, P proj = P{}) const
-            {
-                for(; begin != end; ++begin)
-                    if(!invoke(pred, invoke(proj, *begin)))
-                        break;
-                for(; begin != end; ++begin)
-                    if(invoke(pred, invoke(proj, *begin)))
-                        return false;
-                return true;
-            }
+            for(; begin != end; ++begin)
+                if(!invoke(pred, invoke(proj, *begin)))
+                    break;
+            for(; begin != end; ++begin)
+                if(invoke(pred, invoke(proj, *begin)))
+                    return false;
+            return true;
+        }
 
-            template<typename Rng, typename C, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(IsPartitionedable<I, C, P>() && Range<Rng>())>
-            bool operator()(Rng &&rng, C pred, P proj = P{}) const
-            {
-                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
-            }
-        };
+        template<typename Rng, typename C, typename P = identity>
+        auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
+            CPP_ret(bool)(
+                requires InputRange<Rng> &&
+                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+        {
+            return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
+        }
+    };
 
-        /// \sa `is_partitioned_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<is_partitioned_fn>,
-                               is_partitioned)
-        /// @}
-    } // namespace v3
+    /// \sa `is_partitioned_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(is_partitioned_fn, is_partitioned)
+
+    namespace cpp20
+    {
+        using ranges::is_partitioned;
+    }
+    /// @}
 } // namespace ranges
 
 #endif // include guard

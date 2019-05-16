@@ -30,74 +30,71 @@
 
 #include <tuple>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/distance.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/algorithm/copy_n.hpp>
+#include <range/v3/functional/comparisons.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_tuple.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    namespace aux
     {
-        namespace aux
+        template<typename I0, typename I1, typename O>
+        using merge_n_result = detail::in1_in2_out_result<I0, I1, O>;
+
+        struct merge_n_fn
         {
-            struct merge_n_fn
+            template<typename I0, typename I1, typename O, typename C = less,
+                typename P0 = identity, typename P1 = identity>
+            auto operator()(I0 begin0, iter_difference_t<I0> n0, I1 begin1,
+                    iter_difference_t<I1> n1, O out, C r = C{}, P0 p0 = P0{}, P1 p1 = P1{}) const ->
+                CPP_ret(merge_n_result<I0, I1, O>)(
+                    requires Mergeable<I0, I1, O, C, P0, P1>)
             {
-                template<typename I0, typename I1, typename O, typename C = ordered_less,
-                    typename P0 = ident, typename P1 = ident,
-                    CONCEPT_REQUIRES_(
-                        Mergeable<I0, I1, O, C, P0, P1>()
-                    )>
-                tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>
-                operator()(I0 begin0, difference_type_t<I0> n0,
-                           I1 begin1, difference_type_t<I1> n1,
-                           O out, C r = C{}, P0 p0 = P0{}, P1 p1 = P1{}) const
+                using T = merge_n_result<I0, I1, O>;
+                auto n0orig = n0;
+                auto n1orig = n1;
+                auto b0 = uncounted(begin0);
+                auto b1 = uncounted(begin1);
+                while(true)
                 {
-                    using T = tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>;
-                    auto n0orig = n0;
-                    auto n1orig = n1;
-                    auto b0 = uncounted(begin0);
-                    auto b1 = uncounted(begin1);
-                    while(true)
+                    if(0 == n0)
                     {
-                        if(0 == n0)
-                        {
-                            auto res = copy_n(b1, n1, out);
-                            begin0 = recounted(begin0, b0, n0orig);
-                            begin1 = recounted(begin1, res.first, n1orig);
-                            return T{begin0, begin1, res.second};
-                        }
-                        if(0 == n1)
-                        {
-                            auto res = copy_n(b0, n0, out);
-                            begin0 = recounted(begin0, res.first, n0orig);
-                            begin1 = recounted(begin1, b1, n1orig);
-                            return T{begin0, begin1, res.second};
-                        }
-                        if(invoke(r, invoke(p1, *b1), invoke(p0, *b0)))
-                        {
-                            *out = *b1;
-                            ++b1; ++out; --n1;
-                        }
-                        else
-                        {
-                            *out = *b0;
-                            ++b0; ++out; --n0;
-                        }
+                        auto res = copy_n(b1, n1, out);
+                        begin0 = recounted(begin0, b0, n0orig);
+                        begin1 = recounted(begin1, res.in, n1orig);
+                        return T{begin0, begin1, res.out};
+                    }
+                    if(0 == n1)
+                    {
+                        auto res = copy_n(b0, n0, out);
+                        begin0 = recounted(begin0, res.in, n0orig);
+                        begin1 = recounted(begin1, b1, n1orig);
+                        return T{begin0, begin1, res.out};
+                    }
+                    if(invoke(r, invoke(p1, *b1), invoke(p0, *b0)))
+                    {
+                        *out = *b1;
+                        ++b1; ++out; --n1;
+                    }
+                    else
+                    {
+                        *out = *b0;
+                        ++b0; ++out; --n0;
                     }
                 }
-            };
+            }
+        };
 
-            RANGES_INLINE_VARIABLE(merge_n_fn, merge_n)
-        }
-    } // namespace v3
+        RANGES_INLINE_VARIABLE(merge_n_fn, merge_n)
+    }
 } // namespace ranges
 
 #endif // include guard

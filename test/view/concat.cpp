@@ -29,7 +29,7 @@ int main()
     std::vector<std::string> his_face{"this", "is", "his", "face"};
     std::vector<std::string> another_mess{"another", "fine", "mess"};
     auto joined = view::concat(his_face, another_mess);
-    ::models<concepts::RandomAccessView>(aux::copy(joined));
+    ::models<RandomAccessViewConcept>(aux::copy(joined));
     static_assert(std::is_same<range_reference_t<decltype(joined)>, std::string &>::value, "");
     CHECK(joined.size() == 7u);
     CHECK((joined.end() - joined.begin()) == 7);
@@ -75,7 +75,7 @@ int main()
     {
         const std::array<int, 3> a{{0, 1, 2}};
         const std::array<int, 2> b{{3, 4}};
-        CHECK(equal(view::concat(a, b), {0, 1, 2, 3, 4}));
+        check_equal(view::concat(a, b), {0, 1, 2, 3, 4});
 
         auto odd = [](int i) { return i % 2 != 0; };
         auto even_filter = ranges::view::remove_if(odd);
@@ -83,7 +83,7 @@ int main()
         auto f_rng0 = a | even_filter;
         auto f_rng1 = b | even_filter;
 
-        CHECK(equal(view::concat(f_rng0, f_rng1), {0, 2, 4}));
+        check_equal(view::concat(f_rng0, f_rng1), {0, 2, 4});
     }
 
     // Regression test for http://github.com/ericniebler/range-v3/issues/395.

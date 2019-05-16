@@ -20,6 +20,7 @@
 //===----------------------------------------------------------------------===//
 
 #include <range/v3/algorithm/max.hpp>
+#include <range/v3/view/subrange.hpp>
 #include <memory>
 #include <numeric>
 #include <random>
@@ -39,7 +40,7 @@ namespace
     test_iter(Iter first, Sent last)
     {
         RANGES_ENSURE(first != last);
-        auto rng = ranges::make_iterator_range(first, last);
+        auto rng = ranges::make_subrange(first, last);
         auto v = ranges::max(rng);
         for (Iter i = first; i != last; ++i)
             CHECK(!(v < *i));
@@ -72,7 +73,7 @@ namespace
     test_iter_comp(Iter first, Sent last)
     {
         RANGES_ENSURE(first != last);
-        auto rng = ranges::make_iterator_range(first, last);
+        auto rng = ranges::make_subrange(first, last);
         auto comp = std::greater<int>();
         auto v = ranges::max(rng, comp);
         for (Iter i = first; i != last; ++i)
@@ -133,6 +134,9 @@ int main()
     S s[] = {S{1},S{2},S{3},S{4},S{40},S{5},S{6},S{7},S{8},S{9}};
     S v = ranges::max(s, std::less<int>{}, &S::i);
     CHECK(v.i == 40);
+
+    // Works with initializer_lists? (Regression test for #1004)
+    CHECK(ranges::max({4,3,1,2,6,5}) == 6);
 
     return test_result();
 }

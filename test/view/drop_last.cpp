@@ -27,18 +27,20 @@
 using namespace ranges;
 
 template<class Rng>
-class view_non_const_only
-    : public view_adaptor<view_non_const_only<Rng>, Rng>
+struct view_non_const_only
+  : view_adaptor<view_non_const_only<Rng>, Rng>
 {
-    friend ranges::range_access;
+private:
+    friend range_access;
 
-    ranges::adaptor_base begin_adaptor() { return {}; }
-    ranges::adaptor_base end_adaptor()   { return {}; }
+    adaptor_base begin_adaptor() { return {}; }
+    adaptor_base end_adaptor()   { return {}; }
 public:
     using view_non_const_only::view_adaptor::view_adaptor;
 
-    CONCEPT_REQUIRES(SizedRange<Rng>())
-    std::size_t size()
+    CPP_member
+    auto CPP_fun(size)() (
+        requires SizedRange<Rng>)
     {
         return ranges::size(this->base());
     }
@@ -49,7 +51,6 @@ view_non_const_only<view::all_t<Rng>> non_const_only(Rng &&rng)
 {
     return view_non_const_only<view::all_t<Rng>>{view::all(static_cast<Rng&&>(rng))};
 }
-
 
 template<class Rng>
 void test_range(Rng&& src)
@@ -95,11 +96,12 @@ void random_acccess_test()
 {
     using Src = std::vector<int>;
     static_assert(
-        ranges::RandomAccessRange<Src>().value
+        ranges::RandomAccessRange<Src>
         , "Must be exactly RA.");
     static_assert(
         std::is_same<
-            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, detail::drop_last_view::mode::bidi>
+            drop_last_view<view::all_t<Src&>>,
+            drop_last_view<view::all_t<Src&>, detail::drop_last_view::mode_bidi>
         >::value
         , "Must have correct view.");
 
@@ -115,15 +117,16 @@ void bidirectional_test()
 {
     using Src = std::list<int>;
     static_assert(
-        !ranges::RandomAccessRange<Src>().value &&
-        ranges::BidirectionalRange<Src>().value
+        !ranges::RandomAccessRange<Src> &&
+        ranges::BidirectionalRange<Src>
         , "Must be exactly bidirectional.");
     static_assert(
         std::is_same<
-            /* mode::sized for max_pefrormance profile.
-             * mode::bidi  for compatible profile.
+            /* mode_sized for max_performance profile.
+             * mode_bidi  for compatible profile.
              * See aux::drop_last::get_mode */
-            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, detail::drop_last_view::mode::bidi>
+            drop_last_view<view::all_t<Src&>>,
+            drop_last_view<view::all_t<Src&>, detail::drop_last_view::mode_bidi>
         >::value
         , "Must have correct view.");
 
@@ -139,12 +142,13 @@ void forward_test()
 {
     using Src = std::forward_list<int>;
     static_assert(
-        !ranges::BidirectionalRange<Src>().value &&
-        ranges::ForwardRange<Src>().value
+        !ranges::BidirectionalRange<Src> &&
+        ranges::ForwardRange<Src>
         , "Must be exactly forward.");
     static_assert(
         std::is_same<
-            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, detail::drop_last_view::mode::forward>
+            drop_last_view<view::all_t<Src&>>,
+            drop_last_view<view::all_t<Src&>, detail::drop_last_view::mode_forward>
         >::value
         , "Must have correct view.");
 
@@ -162,13 +166,14 @@ void sized_test()
     auto src  = view::generate_n([i]() mutable -> int { return ++i;}, 4);
     using Src = decltype(src);
     static_assert(
-        !ranges::ForwardRange<Src>().value &&
-        ranges::InputRange<Src>().value
+        !ranges::ForwardRange<Src> &&
+        ranges::InputRange<Src>
         , "Must be exactly input.");
 
     static_assert(
         std::is_same<
-            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, detail::drop_last_view::mode::sized>
+            drop_last_view<view::all_t<Src>>,
+            drop_last_view<view::all_t<Src>, detail::drop_last_view::mode_sized>
         >::value
         , "Must have correct view.");
 

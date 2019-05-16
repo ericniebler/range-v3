@@ -17,25 +17,13 @@
 
 namespace view = ranges::view;
 
-
-struct MoveOnlyFunction
-{
-    MoveOnlyString str_;
-    int i_;
-
-    char operator()()
-    {
-        return str_.sz_[i_++];
-    }
-};
-
 int main()
 {
     // Test for constant generator functions
     {
         int i = 0, j = 1;
         auto fib = view::generate([&]()->int{int tmp = i; i += j; std::swap(i, j); return tmp;});
-        CONCEPT_ASSERT(ranges::InputView<decltype(fib)>());
+        CPP_assert(ranges::InputView<decltype(fib)>);
         check_equal(fib | view::take_exactly(10), {0,1,1,2,3,5,8,13,21,34});
     }
 
@@ -43,18 +31,11 @@ int main()
     {
         int i = 0, j = 1;
         auto fib = view::generate([=]()mutable->int{int tmp = i; i += j; std::swap(i, j); return tmp;});
-        CONCEPT_ASSERT(ranges::InputView<decltype(fib)>());
+        CPP_assert(ranges::InputView<decltype(fib)>);
         check_equal(fib | view::take_exactly(10), {0,1,1,2,3,5,8,13,21,34});
         // The generator cannot be called when it's const-qualified, so "fib const"
         // does not model View.
-        CONCEPT_ASSERT(!ranges::View<decltype(fib) const>());
-    }
-
-    // Test for move-only generator functions
-    {
-        auto rng = view::generate(MoveOnlyFunction{"Hello, world!", 0}) | view::take_exactly(5);
-        CONCEPT_ASSERT(ranges::InputView<decltype(rng)>());
-        check_equal(rng, {'H', 'e', 'l', 'l', 'o'});
+        CPP_assert(!ranges::View<decltype(fib) const>);
     }
 
     // Test for generator functions that return move-only types
@@ -67,7 +48,7 @@ int main()
         CHECK(bool(*i == MoveOnlyString{"hi"}));
         CHECK(bool(*rng.begin() == MoveOnlyString{"hi"}));
         CHECK(bool(*rng.begin() == MoveOnlyString{"hi"}));
-        CONCEPT_ASSERT(ranges::InputView<decltype(rng)>());
+        CPP_assert(ranges::InputView<decltype(rng)>);
         check_equal(rng, {MoveOnlyString{"hi"}, MoveOnlyString{"ii"}});
         static_assert(std::is_same<ranges::range_reference_t<decltype(rng)>, MoveOnlyString &&>::value, "");
     }

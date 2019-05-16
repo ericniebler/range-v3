@@ -37,9 +37,10 @@ int main()
   CHECK(!ranges::all_of(one_even, even));
   CHECK(!ranges::all_of(none_even, even));
 
-  CHECK(ranges::all_of({0, 2, 4, 6}, [](int n) { return n % 2 == 0; }));
-  CHECK(!ranges::all_of({1, 3, 4, 7}, [](int n) { return n % 2 == 0; }));
-  CHECK(!ranges::all_of({1, 3, 5, 7}, [](int n) { return n % 2 == 0; }));
+  using ILI = std::initializer_list<int>;
+  CHECK(ranges::all_of(ILI{0, 2, 4, 6}, [](int n) { return n % 2 == 0; }));
+  CHECK(!ranges::all_of(ILI{1, 3, 4, 7}, [](int n) { return n % 2 == 0; }));
+  CHECK(!ranges::all_of(ILI{1, 3, 5, 7}, [](int n) { return n % 2 == 0; }));
 
   std::vector<S> all_true { true, true, true };
   std::vector<S> one_true { false, false, true };
@@ -52,9 +53,10 @@ int main()
   CHECK(!ranges::all_of(one_true, &S::p));
   CHECK(!ranges::all_of(none_true, &S::p));
 
-  CHECK(ranges::all_of({S(true), S(true), S(true)}, &S::p));
-  CHECK(!ranges::all_of({S(false), S(true), S(false)}, &S::p));
-  CHECK(!ranges::all_of({S(false), S(false), S(false)}, &S::p));
+  using ILS = std::initializer_list<S>;
+  CHECK(ranges::all_of(ILS{S(true), S(true), S(true)}, &S::p));
+  CHECK(!ranges::all_of(ILS{S(false), S(true), S(false)}, &S::p));
+  CHECK(!ranges::all_of(ILS{S(false), S(false), S(false)}, &S::p));
 
   return ::test_result();
 }

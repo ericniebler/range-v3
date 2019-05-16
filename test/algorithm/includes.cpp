@@ -149,15 +149,5 @@ int main()
         CHECK(ranges::includes(ia, id, std::less<int>(), &S::i, &T::j));
     }
 
-    // Test initializer list
-    {
-        CHECK(ranges::includes(
-            {S{1}, S{2}, S{2}, S{3}, S{3}, S{3}, S{4}, S{4}, S{4}, S{4}},
-            {T{3}, T{3}, T{3}},
-            std::less<int>(),
-            &S::i, &T::j
-        ));
-    }
-
     return ::test_result();
 }

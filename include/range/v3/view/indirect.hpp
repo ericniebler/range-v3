@@ -18,130 +18,120 @@
 #include <type_traits>
 #include <utility>
 #include <meta/meta.hpp>
-#include <range/v3/begin_end.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/view_adaptor.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/view/adaptor.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-views
+    /// @{
+    template<typename Rng>
+    struct indirect_view
+      : view_adaptor<indirect_view<Rng>, Rng>
     {
-        /// \addtogroup group-views
-        /// @{
-        template<typename Rng>
-        struct indirect_view
-          : view_adaptor<indirect_view<Rng>, Rng>
+    private:
+        friend range_access;
+
+        template<bool IsConst>
+        struct adaptor
+          : adaptor_base
         {
-        private:
-            friend range_access;
+            friend adaptor<!IsConst>;
+            using CRng = meta::const_if_c<IsConst, Rng>;
 
-            template<bool IsConst>
-            struct adaptor
-              : adaptor_base
-            {
-                friend adaptor<true>;
-                using CRng = meta::const_if_c<IsConst, Rng>;
-
-                adaptor() = default;
-                template<bool Other,
-                    CONCEPT_REQUIRES_(IsConst && !Other)>
-                constexpr adaptor(adaptor<Other>) noexcept
-                {}
-
-                constexpr auto read(iterator_t<CRng> const &it) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    **it
-                )
-                constexpr auto iter_move(iterator_t<CRng> const &it) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    ranges::iter_move(*it)
-                )
-            };
-
-            CONCEPT_REQUIRES(!simple_view<Rng>())
-            RANGES_CXX14_CONSTEXPR adaptor<false> begin_adaptor() noexcept
-            {
-                return {};
-            }
-            CONCEPT_REQUIRES(Range<Rng const>())
-            constexpr adaptor<true> begin_adaptor() const noexcept
-            {
-                return {};
-            }
-
-            CONCEPT_REQUIRES(!simple_view<Rng>())
-            RANGES_CXX14_CONSTEXPR adaptor<false> end_adaptor() noexcept
-            {
-                return {};
-            }
-            CONCEPT_REQUIRES(Range<Rng const>())
-            constexpr adaptor<true> end_adaptor() const noexcept
-            {
-                return {};
-            }
-        public:
-            indirect_view() = default;
-            explicit constexpr indirect_view(Rng rng)
-              : indirect_view::view_adaptor{detail::move(rng)}
+            adaptor() = default;
+            CPP_template(bool Other)(
+                requires IsConst && (!Other))
+            constexpr adaptor(adaptor<Other>) noexcept
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng const>())
-            constexpr range_size_type_t<Rng> size() const
+
+            constexpr auto CPP_auto_fun(read)(iterator_t<CRng> const &it) (const)
+            (
+                return **it
+            )
+            constexpr auto CPP_auto_fun(iter_move)(iterator_t<CRng> const &it) (const)
+            (
+                return ranges::iter_move(*it)
+            )
+        };
+
+        CPP_member
+        constexpr /*c++14*/ auto begin_adaptor() noexcept ->
+            CPP_ret(adaptor<false>)(
+                requires (!simple_view<Rng>()))
+        {
+            return {};
+        }
+        CPP_member
+        constexpr auto begin_adaptor() const noexcept ->
+            CPP_ret(adaptor<true>)(
+                requires Range<Rng const>)
+        {
+            return {};
+        }
+
+        CPP_member
+        constexpr /*c++14*/ auto end_adaptor() noexcept ->
+            CPP_ret(adaptor<false>)(
+                requires (!simple_view<Rng>()))
+        {
+            return {};
+        }
+        CPP_member
+        constexpr auto end_adaptor() const noexcept ->
+            CPP_ret(adaptor<true>)(
+                requires Range<Rng const>)
+        {
+            return {};
+        }
+    public:
+        indirect_view() = default;
+        explicit constexpr indirect_view(Rng rng)
+          : indirect_view::view_adaptor{detail::move(rng)}
+        {}
+        CPP_member
+        constexpr auto CPP_fun(size)() (const
+            requires SizedRange<Rng const>)
+        {
+            return ranges::size(this->base());
+        }
+        CPP_member
+        constexpr /*c++14*/ auto CPP_fun(size)() (
+            requires SizedRange<Rng>)
+        {
+            return ranges::size(this->base());
+        }
+    };
+
+    namespace view
+    {
+        struct indirect_fn
+        {
+            template<typename Rng>
+            constexpr auto CPP_fun(operator())(Rng &&rng) (const
+                requires ViewableRange<Rng> && InputRange<Rng> &&
+                    // We shouldn't need to strip references to test if something
+                    // is readable. https://github.com/ericniebler/stl2/issues/594
+                    //Readable<range_reference_t<Rng>>)
+                    ((bool) Readable<range_value_t<Rng>>)) // Cast to bool needed for GCC (???)
             {
-                return ranges::size(this->base());
-            }
-            CONCEPT_REQUIRES(!SizedRange<Rng const>() && SizedRange<Rng>())
-            RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size()
-            {
-                return ranges::size(this->base());
+                return indirect_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
         };
 
-        namespace view
-        {
-            struct indirect_fn
-            {
-                template<typename Rng>
-                using Constraint = meta::and_<
-                    InputRange<Rng>,
-                    Readable<range_value_type_t<Rng>>>;
-
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(Constraint<Rng>())>
-                constexpr auto operator()(Rng &&rng) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    indirect_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))}
-                )
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(!Constraint<Rng>())>
-                void operator()(Rng &&) const
-                {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
-                        "The argument to view::indirect must be a model of the InputRange "
-                        "concept");
-                    CONCEPT_ASSERT_MSG(Readable<range_value_type_t<Rng>>(),
-                        "The value type of the range passed to view::indirect must be a model "
-                        "of the Readable concept.");
-                }
-            #endif
-            };
-
-            /// \relates indirect_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(view<indirect_fn>, indirect)
-        }
-        /// @}
+        /// \relates indirect_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(view<indirect_fn>, indirect)
     }
+    /// @}
 }
 
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::indirect_view)
+#include <range/v3/detail/satisfy_boost_range.hpp>
+RANGES_SATISFY_BOOST_RANGE(::ranges::indirect_view)
 
 #endif

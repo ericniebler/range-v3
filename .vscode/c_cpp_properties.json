@@ -28,8 +28,10 @@
                 "/System/Library/Frameworks",
                 "/Library/Frameworks"
             ],
+            "compilerPath": "/Users/eniebler/llvm-install/bin/clang++",
             "cStandard": "c11",
-            "cppStandard": "c++17"
+            "cppStandard": "c++11",
+            "configurationProvider": "vector-of-bool.cmake-tools"
         },
         {
             "name": "Linux",
@@ -50,7 +52,7 @@
                 "databaseFilename": ""
             },
             "cStandard": "c11",
-            "cppStandard": "c++17"
+            "cppStandard": "c++11"
         },
         {
             "name": "Win32",
@@ -70,7 +72,7 @@
                 "databaseFilename": ""
             },
             "cStandard": "c11",
-            "cppStandard": "c++17"
+            "cppStandard": "c++11"
         }
     ],
     "version": 4

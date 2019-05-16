@@ -31,7 +31,7 @@
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/zip.hpp>
 #include <range/v3/view/transform.hpp>
-#include <range/v3/to_container.hpp>
+#include <range/v3/range/conversion.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -65,7 +65,7 @@ namespace
     void
     test_sort_helper(RI f, RI l)
     {
-        using value_type = ranges::value_type_t<RI>;
+        using value_type = ranges::iter_value_t<RI>;
         auto sort = make_testable_1<false>(ranges::sort);
         if (f != l)
         {
@@ -223,9 +223,9 @@ namespace
             return a.i_ >= b.i_;
         }
     };
-    CONCEPT_ASSERT(ranges::DefaultConstructible<Int>());
-    CONCEPT_ASSERT(ranges::Movable<Int>());
-    CONCEPT_ASSERT(ranges::TotallyOrdered<Int>());
+    CPP_assert(ranges::DefaultConstructible<Int>);
+    CPP_assert(ranges::Movable<Int>);
+    CPP_assert(ranges::StrictTotallyOrdered<Int>);
 }
 
 int main()
@@ -288,7 +288,21 @@ int main()
             v[i].i = (int)v.size() - i - 1;
             v[i].j = i;
         }
-        CHECK(ranges::sort(ranges::view::all(v), std::less<int>{}, &S::i).get_unsafe() == v.end());
+        CHECK(ranges::sort(ranges::view::all(v), std::less<int>{}, &S::i) == v.end());
+        for(int i = 0; (std::size_t)i < v.size(); ++i)
+        {
+            CHECK(v[i].i == i);
+            CHECK((std::size_t)v[i].j == v.size() - i - 1);
+        }
+    }
+    {
+        std::vector<S> v(1000, S{});
+        for(int i = 0; (std::size_t)i < v.size(); ++i)
+        {
+            v[i].i = (int)v.size() - i - 1;
+            v[i].j = i;
+        }
+        CHECK(::is_dangling(ranges::sort(std::move(v), std::less<int>{}, &S::i)));
         for(int i = 0; (std::size_t)i < v.size(); ++i)
         {
             CHECK(v[i].i == i);
@@ -303,7 +317,7 @@ int main()
             view::for_each(view::ints(1,6) | view::reverse, [](int i){
                 return ranges::yield_from(view::repeat_n(i,i));
             });
-        auto v1 = ranges::to_<std::vector<Int>>(
+        auto v1 = ranges::to<std::vector<Int>>(
             {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
         auto rng = view::zip(v0, v1);
         ::check_equal(v0,{5,5,5,5,5,4,4,4,4,3,3,3,2,2,1});

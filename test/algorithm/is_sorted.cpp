@@ -57,10 +57,10 @@ struct range_call
 
     template<class B, class E, class... Args>
     auto operator()(B &&b, E &&e, Args &&... args)
-     -> decltype(ranges::is_sorted(ranges::make_iterator_range(begin_t{b}, sentinel_t{e}),
+     -> decltype(ranges::is_sorted(ranges::make_subrange(begin_t{b}, sentinel_t{e}),
                                    std::forward<Args>(args)...))
     {
-        return ranges::is_sorted(ranges::make_iterator_range(begin_t{b}, sentinel_t{e}),
+        return ranges::is_sorted(ranges::make_subrange(begin_t{b}, sentinel_t{e}),
                                  std::forward<Args>(args)...);
     }
 };
@@ -382,12 +382,6 @@ int main()
     test<range_call<bidirectional_iterator<const int *>>>();
     test<range_call<random_access_iterator<const int *>>>();
     test<range_call<const int *>>();
-
-    /// Initializer list test:
-    {
-        CHECK(ranges::is_sorted({0,1,2,3,4,5,6,7,8,9,10}));
-        CHECK(!ranges::is_sorted({0,1,2,3,5,4,6,7,8,9,10}));
-    }
 
     /// Projection test:
     {

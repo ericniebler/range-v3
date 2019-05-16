@@ -15,54 +15,55 @@
 
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct replace_if_fn
     {
-        /// \ingroup group-concepts
-        template<typename I, typename C, typename T, typename P = ident>
-        using ReplaceIfable = meta::strict_and<
-            InputIterator<I>,
-            IndirectPredicate<C, projected<I, P>>,
-            Writable<I, T const &>>;
-
-        /// \addtogroup group-algorithms
-        /// @{
-        struct replace_if_fn
+        template<typename I, typename S, typename C, typename T, typename P = identity>
+        auto operator()(I begin, S end, C pred, T const &new_value, P proj = P{}) const ->
+            CPP_ret(I)(
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    IndirectUnaryPredicate<C, projected<I, P>> &&
+                    Writable<I, T const &>)
         {
-            template<typename I, typename S, typename C, typename T, typename P = ident,
-                CONCEPT_REQUIRES_(ReplaceIfable<I, C, T, P>() && Sentinel<S, I>())>
-            I operator()(I begin, S end, C pred, T const & new_value, P proj = P{}) const
-            {
-                for(; begin != end; ++begin)
-                    if(invoke(pred, invoke(proj, *begin)))
-                        *begin = new_value;
-                return begin;
-            }
+            for(; begin != end; ++begin)
+                if(invoke(pred, invoke(proj, *begin)))
+                    *begin = new_value;
+            return begin;
+        }
 
-            template<typename Rng, typename C, typename T, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(ReplaceIfable<I, C, T, P>() && Range<Rng>())>
-            safe_iterator_t<Rng>
-            operator()(Rng &&rng, C pred, T const & new_value, P proj = P{}) const
-            {
-                return (*this)(begin(rng), end(rng), std::move(pred), new_value, std::move(proj));
-            }
-        };
+        template<typename Rng, typename C, typename T, typename P = identity>
+        auto operator()(Rng &&rng, C pred, T const &new_value, P proj = P{}) const ->
+            CPP_ret(safe_iterator_t<Rng>)(
+                requires InputRange<Rng> &&
+                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>> &&
+                    Writable<iterator_t<Rng>, T const &>)
+        {
+            return (*this)(begin(rng), end(rng), std::move(pred), new_value, std::move(proj));
+        }
+    };
 
-        /// \sa `replace_if_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<replace_if_fn>, replace_if)
-        /// @}
-    } // namespace v3
+    /// \sa `replace_if_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(replace_if_fn, replace_if)
+
+    namespace cpp20
+    {
+        using ranges::replace_if;
+    }
+    /// @}
 } // namespace ranges
 
 #endif // include guard

@@ -51,7 +51,9 @@ test_range()
 {
     int ia[] = {0, 1, 1, 1, 4, 2, 2, 4, 2};
     constexpr auto sa = ranges::size(ia);
-    Iter r = ranges::adjacent_remove_if(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), ranges::equal_to{});
+    Iter r = ranges::adjacent_remove_if(
+        ranges::make_subrange(Iter(ia), Sent(ia+sa)),
+        ranges::equal_to{});
     CHECK(base(r) == ia + sa-3);
     CHECK(ia[0] == 0);
     CHECK(ia[1] == 1);
@@ -63,7 +65,10 @@ test_range()
 
 struct pred
 {
-    bool operator()(const std::unique_ptr<int>& i, const std::unique_ptr<int>& j) {return *i == 2 && *j == 3;}
+    bool operator()(const std::unique_ptr<int> &i, const std::unique_ptr<int> &j)
+    {
+        return *i == 2 && *j == 3;
+    }
 };
 
 template<class Iter, class Sent = Iter>
@@ -107,7 +112,7 @@ test_range_rvalue()
     ia[6].reset(new int(3));
     ia[7].reset(new int(4));
     ia[8].reset(new int(2));
-    Iter r = ranges::adjacent_remove_if(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), pred());
+    Iter r = ranges::adjacent_remove_if(ranges::make_subrange(Iter(ia), Sent(ia+sa)), pred());
     CHECK(base(r) == ia + sa-2);
     CHECK(*ia[0] == 0);
     CHECK(*ia[1] == 1);
@@ -175,23 +180,17 @@ int main()
         S ia[] = {S{0}, S{1}, S{1}, S{2}, S{3}, S{5}, S{8}, S{13}, S{21}};
         constexpr auto sa = ranges::size(ia);
         using namespace std::placeholders;
-        auto r = ranges::adjacent_remove_if(ranges::view::all(ia), [](int x, int y) noexcept { return (x + y) % 2 == 0; }, &S::i);
-        CHECK(r.get_unsafe() == ia + sa-3);
+        auto r = ranges::adjacent_remove_if(
+            ranges::view::all(ia),
+            [](int x, int y) noexcept { return (x + y) % 2 == 0; },
+            &S::i);
+        CHECK(r == ia + sa-3);
         CHECK(ia[0].i == 0);
         CHECK(ia[1].i == 1);
         CHECK(ia[2].i == 2);
         CHECK(ia[3].i == 5);
         CHECK(ia[4].i == 8);
         CHECK(ia[5].i == 21);
-
-        // Some tests for sanitizing an algorithm result
-        static_assert(std::is_same<decltype(r), ranges::dangling<S *>>::value, "");
-        auto r2 = ranges::sanitize(r);
-        static_assert(std::is_same<decltype(r2), ranges::dangling<>>::value, "");
-        auto r3 = ranges::sanitize(const_cast<decltype(r) const &>(r));
-        static_assert(std::is_same<decltype(r3), ranges::dangling<>>::value, "");
-        auto r4 = ranges::sanitize(std::move(r));
-        static_assert(std::is_same<decltype(r4), ranges::dangling<>>::value, "");
     }
 
     return ::test_result();

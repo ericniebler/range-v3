@@ -30,43 +30,37 @@
 
 #include <tuple>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/aux_/merge_n_with_buffer.hpp>
+#include <range/v3/functional/comparisons.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    namespace aux
     {
-        namespace aux
+        struct sort_n_with_buffer_fn
         {
-            struct sort_n_with_buffer_fn
+            template<typename I, typename B, typename C = less, typename P = identity>
+            auto operator()(I begin, iter_difference_t<I> n, B buff, C r = C{}, P p = P{}) const ->
+                CPP_ret(I)(
+                    requires Same<iter_common_reference_t<I>, iter_common_reference_t<B>> &&
+                        IndirectlyCopyable<I, B> && Mergeable<B, I, I, C, P, P>)
             {
-                template<typename I, typename B, typename C = ordered_less, typename P = ident,
-                    typename VI = iter_common_reference_t<I>,
-                    typename VB = iter_common_reference_t<B>,
-                    CONCEPT_REQUIRES_(
-                        Same<VI, VB>() &&
-                        IndirectlyCopyable<I, B>() &&
-                        Mergeable<B, I, I, C, P, P>()
-                    )>
-                I operator()(I begin, difference_type_t<I> n, B buff, C r = C{}, P p = P{}) const
-                {
-                    auto half = n / 2;
-                    if(0 == half)
-                        return next(begin, n);
-                    I m = (*this)(begin, half, buff, r, p);
-                          (*this)(m, n - half, buff, r, p);
-                    return merge_n_with_buffer(begin, half, m, n - half, buff, r, p);
-                }
-            };
+                auto half = n / 2;
+                if(0 == half)
+                    return next(begin, n);
+                I m = (*this)(begin, half, buff, r, p);
+                      (*this)(m, n - half, buff, r, p);
+                return merge_n_with_buffer(begin, half, m, n - half, buff, r, p);
+            }
+        };
 
-            RANGES_INLINE_VARIABLE(sort_n_with_buffer_fn, sort_n_with_buffer)
-        } // namespace aux
-    } // namespace v3
+        RANGES_INLINE_VARIABLE(sort_n_with_buffer_fn, sort_n_with_buffer)
+    } // namespace aux
 } // namespace ranges
 
 #endif // include guard

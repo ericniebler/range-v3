@@ -17,51 +17,42 @@
 #include <type_traits>
 #include <utility>
 #include <meta/meta.hpp>
-#include <range/v3/view/view.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-views
+    /// @{
+    namespace view
     {
-        /// \addtogroup group-views
-        /// @{
-        namespace view
+        struct addressof_fn
         {
-            struct addressof_fn
+        private:
+            struct take_address
             {
-            private:
-                struct pred
+                template<typename V>
+                constexpr V *operator()(V &value) const noexcept
                 {
-                    template<class V>
-                    constexpr V *operator()(V &value) const noexcept
-                    {
-                        return std::addressof(value);
-                    }
-                };
-
-            public:
-                template<typename Rng>
-                using Constraint = meta::and_<
-                    InputRange<Rng>,
-                    std::is_lvalue_reference<range_reference_t<Rng>>>;
-
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(Constraint<Rng>())>
-                RANGES_CXX14_CONSTEXPR
-                auto operator()(Rng &&rng) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    transform(all(static_cast<Rng &&>(rng)), pred{})
-                )
+                    return std::addressof(value);
+                }
             };
+        public:
+            CPP_template(typename Rng)(
+                requires ViewableRange<Rng> && InputRange<Rng> &&
+                    std::is_lvalue_reference<range_reference_t<Rng>>::value)
+            constexpr /*c++14*/ auto operator()(Rng &&rng) const
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                transform(all(static_cast<Rng &&>(rng)), take_address{})
+            )
+        };
 
-            /// \relates remove_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(view<addressof_fn>, addressof)
-        }
-        /// @}
+        /// \relates addressof_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(view<addressof_fn>, addressof)
     }
+    /// @}
 }
 
-#endif //RANGES_V3_VIEW_ADDRESSOF_HPP
+#endif // RANGES_V3_VIEW_ADDRESSOF_HPP
