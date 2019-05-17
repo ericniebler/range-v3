@@ -775,7 +775,7 @@ provides, and a blurb about how each is intended to be used.
 <DT>\link ranges::view::transform_fn `view::transform`\endlink</DT>
   <DD>Given a source range and a unary function, return a new range where each result element is the result of applying the unary function to a source element.</DD>
 <DT>\link ranges::view::trim_fn `view::trim`\endlink</DT>
-  <DD>Remove elements from the front and back of a bidirectional range that satisfy a unary predicate.</DD>
+  <DD>Given a source bidirectional range and a unary predicate, return a new range without the front and back elements that satisfy the predicate.</DD>
 <DT>\link ranges::view::unbounded_fn `view::unbounded`\endlink</DT>
   <DD>Given an iterator, return an infinite range that begins at that position.</DD>
 <DT>\link ranges::view::unique_fn `view::unique`\endlink</DT>
