@@ -387,7 +387,7 @@ namespace ranges
             any_cursor() = default;
             template<typename Rng>
             explicit CPP_ctor(any_cursor)(Rng &&rng)(
-                requires (not ranges::defer::Same<detail::decay_t<Rng>, any_cursor>) &&
+                requires (!ranges::defer::Same<detail::decay_t<Rng>, any_cursor>) &&
                     ranges::defer::ForwardRange<Rng> &&
                     defer::AnyCompatibleRange<Rng, Ref>)
               : ptr_{detail::make_unique<impl_t<Rng>>(begin(rng))}
@@ -518,7 +518,7 @@ namespace ranges
         any_view() = default;
         template<typename Rng>
         CPP_ctor(any_view)(Rng &&rng)(
-            requires (not defer::Same<detail::decay_t<Rng>, any_view>) &&
+            requires (!defer::Same<detail::decay_t<Rng>, any_view>) &&
                 defer::InputRange<Rng> &&
                 detail::defer::AnyCompatibleRange<Rng, Ref>)
           : any_view(static_cast<Rng &&>(rng),
@@ -577,7 +577,7 @@ namespace ranges
         any_view() = default;
         template<typename Rng>
         CPP_ctor(any_view)(Rng &&rng)(
-            requires (not defer::Same<detail::decay_t<Rng>, any_view>) &&
+            requires (!defer::Same<detail::decay_t<Rng>, any_view>) &&
                 defer::InputRange<Rng> &&
                 detail::defer::AnyCompatibleRange<Rng, Ref>)
           : ptr_{std::make_shared<impl_t<Rng>>(view::all(static_cast<Rng &&>(rng)))}

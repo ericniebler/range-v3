@@ -169,7 +169,7 @@ namespace ranges
         template<typename I2 = I>
         auto operator++(int) ->
             CPP_ret(decltype(std::declval<I2 &>()++))(
-                requires (not ForwardIterator<I2>))
+                requires (!ForwardIterator<I2>))
         {
             return ranges::get<0>(data_)++;
         }
@@ -177,7 +177,7 @@ namespace ranges
         CPP_member
         auto operator++(int) ->
             CPP_ret(decltype(std::declval<I &>()++))(
-                requires (not ForwardIterator<I>))
+                requires (!ForwardIterator<I>))
         {
             return ranges::get<0>(data_)++;
         }

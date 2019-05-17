@@ -35,7 +35,7 @@ namespace ranges
             friend action_access;
             template<typename Fun>
             static auto CPP_fun(bind)(take_while_fn take_while, Fun fun)(
-                requires (not Range<Fun>))
+                requires (!Range<Fun>))
             {
                 return std::bind(take_while, std::placeholders::_1, std::move(fun));
             }

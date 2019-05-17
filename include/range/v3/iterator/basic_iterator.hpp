@@ -601,7 +601,7 @@ namespace ranges
         CPP_member
         constexpr /*c++14*/ auto operator*() noexcept ->
             CPP_ret(basic_iterator &)(
-                requires (not detail::HasCursorNext<Cur>))
+                requires (!detail::HasCursorNext<Cur>))
         {
             return *this;
         }
@@ -621,7 +621,7 @@ namespace ranges
         constexpr auto operator->() const
         noexcept(noexcept(*std::declval<basic_iterator const &>())) ->
             CPP_ret(meta::_t<std::add_pointer<const_reference_t>>)(
-                requires (not detail::HasCursorArrow<C>) &&
+                requires (!detail::HasCursorArrow<C>) &&
                     detail::ReadableCursor<C> &&
                     std::is_lvalue_reference<const_reference_t>::value &&
                     Same<typename detail::iterator_associated_types_base<C>::value_type,
@@ -641,7 +641,7 @@ namespace ranges
         CPP_member
         constexpr /*c++14*/ auto operator++() noexcept ->
             CPP_ret(basic_iterator &)(
-                requires (not detail::HasCursorNext<Cur>))
+                requires (!detail::HasCursorNext<Cur>))
         {
             return *this;
         }

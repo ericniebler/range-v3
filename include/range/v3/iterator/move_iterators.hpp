@@ -70,7 +70,7 @@ namespace ranges
         CPP_member
         auto operator++(int) ->
             CPP_ret(void)(
-                requires (not ForwardIterator<I>))
+                requires (!ForwardIterator<I>))
         {
             ++current_;
         }

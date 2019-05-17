@@ -20,7 +20,7 @@
 #include <range/v3/range_fwd.hpp>
 
 // Sadly, this is necessary because of:
-//  - std::common_type is not SFINAE-friendly, and
+//  - std::common_type is !SFINAE-friendly, and
 //  - The specification of std::common_type makes it impossibly
 //    difficult to specialize on user-defined types without spamming
 //    out a bajillion copies to handle all combinations of cv and ref
