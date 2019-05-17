@@ -6,7 +6,7 @@ User Manual       {#mainpage}
 \section tutorial-preface Preface
 
 --------------------------------------------
-Range library for C++11/14/17. This code is the basis of [a formal proposal](https://ericniebler.github.io/std/wg21/D4128.html) to add range support to the
+Range library for C++14/17/20. This code is the basis of [a formal proposal](https://ericniebler.github.io/std/wg21/D4128.html) to add range support to the
 C++ standard library.
 
 **Development Status:**
@@ -14,6 +14,9 @@ C++ standard library.
 This code is fairly stable, well-tested, and suitable for casual use, although
 currently lacking documentation. No promise is made about support or long-term
 stability. This code *will* evolve without regard to backwards compatibility.
+
+A notable exception is anything found within the `ranges::cpp20` namespace.
+Those components will change rarely or (preferably) never at all.
 
 \subsection tutorial-installation Installation
 
@@ -26,12 +29,7 @@ compile with Range-v3, you can either `#%include` the entire library:
 #include <range/v3/all.hpp>
 ~~~~~~~
 
-Or you can `#%include` only the core, and then the individual headers you want:
-
-~~~~~~~{.cpp}
-#include <range/v3/core.hpp>
-#include <range/v3/....
-~~~~~~~
+Or you can `#%include` just the individual headers you want.
 
 \subsection tutorial-license License
 
@@ -47,13 +45,13 @@ file and the CREDITS file for the licensing and acknowledgements.
 The code is known to work on the following compilers:
 
 - clang 3.6.2
-- GCC 4.9.1
+- GCC 5.0.2
 - MSVC VS2017 15.9 (`_MSC_VER >= 1916`), with `/std:c++17 /permissive-`
 
 \section tutorial-quick-start Quick Start
 
 --------------------------------------------
-Range v3 is a generic library that augments the existing standard library with
+Range-v3 is a generic library that augments the existing standard library with
 facilities for working with *ranges*. A range can be loosely thought of a pair
 of iterators, although they need not be implemented that way. Bundling begin/end
 iterators into a single object brings several benefits.
@@ -77,7 +75,7 @@ with
     ranges::sort( v );
 ~~~~~~~
 
-Range v3 contains a full implementation of all the standard algorithms with
+Range-v3 contains a full implementation of all the standard algorithms with
 range-based overloads for convenience.
 
 ### Composability
@@ -175,7 +173,7 @@ Same as above, but with function-call syntax instead of pipe syntax:
 
 ## Create Custom Ranges
 
-Range v3 provides a utility for easily creating your own range types, called
+Range-v3 provides a utility for easily creating your own range types, called
 \link ranges::view_facade `ranges::view_facade`\endlink. The code below uses
 `view_facade` to create a range that traverses a null-terminated string:
 
@@ -227,7 +225,7 @@ strings, as below:
 ## Adapting Ranges
 
 Often, a new range type is most easily expressed by adapting an existing range
-type. That's the case for many of the range views provided by the Range v3
+type. That's the case for many of the range views provided by the Range-v3
 library; for example, the `view::remove_if` and `view::transform` views. These
 are rich types with many moving parts, but thanks to a helper class called
 \link ranges::view_adaptor `ranges::view_adaptor`\endlink, they aren't hard
@@ -500,7 +498,7 @@ If you will not "override" `begin_adaptor()` or/and `end_adaptor()` in your view
 
 ## Create Custom Iterators
 
-Here is an example of Range v3 compatible RandomAccess proxy iterator.
+Here is an example of Range-v3 compatible RandomAccess proxy iterator.
 The iterator returns a key/value pair, like the `zip` view.
 
 ~~~~~~~{.cpp}
@@ -602,7 +600,7 @@ For more information, see [http://wg21.link/P0186#basic-iterators-iterators.basi
 
 ## Constrain Functions with Concepts
 
-The Range v3 library makes heavy use of concepts to constrain functions, control
+The Range-v3 library makes heavy use of concepts to constrain functions, control
 overloading, and check type constraints at compile-time. It achieves this with
 the help of a Concepts Lite emulation layer that works on any
 standard-conforming C++11 compiler. The library provides many useful concepts,
@@ -639,18 +637,15 @@ back to using `std::enable_if`.
 
 ## Range-v3 and the Future
 
-Range-v3 forms the basis for a proposal to add ranges to the standard library
-([N4128](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4128.html)),
-and is also be the basis for a Technical Specification on Ranges. The Technical
-Specification contains many of Range v3's concept definitions (translated into
-the actual syntax of C++20 Concepts) in addition to constrained versions of the
-STL algorithms overloaded both for iterator/sentinel pairs and for ranges. The
-Ranges TS has already been sent to ISO for publication.
+Range-v3 formed the basis for the
+[Technical Specification on Ranges](https://www.iso.org/standard/70910.html),
+which has since been merged into the working draft of C++20.
 
-The views and actions, as well as various utilities, have not yet been reviewed
-by the committee, although the basic direction has already passed an initial
-review. A proposal to add a subset of the views to the Ranges TS is in the early
-stages.
+In addition, a subset of range-v3's views are also a part of the C++20 working
+draft, with more slated for eventual inclusion in future versions of C++.
+
+The actions, as well as various utilities, have not yet been reviewed by the
+Committee, although the basic direction has already passed an initial review.
 
 \section range-views Range Views
 
@@ -662,7 +657,7 @@ only doing work when the answer is requested, and *purely functional*, without
 mutating the original data. This makes it easier to reason about your code,
 especially when writing concurrent programs.
 
-Below is a list of the lazy range combinators, or *views*, that Range v3
+Below is a list of the lazy range combinators, or *views*, that Range-v3
 provides, and a blurb about how each is intended to be used.
 
 <DL>
@@ -792,7 +787,7 @@ provides, and a blurb about how each is intended to be used.
 
 --------------------------------------------
 
-Below is a list of the eager range combinators, or *actions*, that Range v3 provides, and a blurb about how each is intended to be used.
+Below is a list of the eager range combinators, or *actions*, that Range-v3 provides, and a blurb about how each is intended to be used.
 
 <DL>
 <DT>\link ranges::action::drop_fn `action::drop`\endlink</DT>
