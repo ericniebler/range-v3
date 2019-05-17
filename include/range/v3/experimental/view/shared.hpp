@@ -70,7 +70,7 @@ namespace ranges
             public:
 #ifndef RANGES_DOXYGEN_INVOKED
                 CPP_template(typename Rng)(
-                    requires (not Range<Rng>))
+                    requires (!Range<Rng>))
                 void operator()(std::shared_ptr<Rng>) const
                 {
                     CPP_assert_msg(Range<Rng>,
@@ -88,7 +88,7 @@ namespace ranges
 
 #ifndef RANGES_DOXYGEN_INVOKED
                 CPP_template(typename Rng)(
-                    requires (not Range<Rng>) || View<Rng> || std::is_reference<Rng>::value)
+                    requires (!Range<Rng>) || View<Rng> || std::is_reference<Rng>::value)
                 void operator()(Rng &&) const
                 {
                     CPP_assert_msg(Range<Rng>,

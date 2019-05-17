@@ -719,12 +719,12 @@ namespace __gnu_debug
     template<typename I1, typename I2, typename Seq>
     auto operator-(_Safe_iterator<I1, Seq> const &, _Safe_iterator<I2, Seq> const &) ->
         CPP_ret(void)(
-            requires (not ::ranges::SizedSentinel<I1, I2>)) = delete;
+            requires (!::ranges::SizedSentinel<I1, I2>)) = delete;
 
     template<typename I1, typename Seq>
     auto operator-(_Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &) ->
         CPP_ret(void)(
-            requires (not ::ranges::SizedSentinel<I1, I1>))= delete;
+            requires (!::ranges::SizedSentinel<I1, I1>))= delete;
 }
 #endif
 

@@ -332,8 +332,16 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #define CPP_PP_DEF_IMPL(REQUIRES, ...)                                          \
     CPP_PP_CAT(                                                                 \
+        CPP_PP_DEF_IMPL_IS_PAREN_,                                              \
+        CPP_PP_IS_PAREN(REQUIRES))(REQUIRES)                                    \
+    /**/
+#define CPP_PP_DEF_IMPL_IS_PAREN_0(REQUIRES)                                    \
+    CPP_PP_CAT(                                                                 \
         CPP_PP_DEF_IMPL_,                                                       \
         CPP_PP_CHECK(CPP_PP_CAT(CPP_PP_REQUIRES_PROBE_, REQUIRES)))             \
+    /**/
+#define CPP_PP_DEF_IMPL_IS_PAREN_1(REQUIRES)                                    \
+    CPP_PP_DEF_IMPL_0                                                           \
     /**/
 #define CPP_PP_DEF_DECL_template(...)                                           \
     template(__VA_ARGS__),                                                      \
@@ -870,7 +878,7 @@ namespace concepts
         (
             template(typename A, typename B)
             concept NotSameAs_,
-                not Same<detail::remove_cvref_t<A>, detail::remove_cvref_t<B>>
+                (!Same<detail::remove_cvref_t<A>, detail::remove_cvref_t<B>>)
         );
 
         // Workaround bug in the Standard Library:

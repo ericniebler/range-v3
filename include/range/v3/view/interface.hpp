@@ -160,7 +160,7 @@ namespace ranges
             noexcept(noexcept(bool(ranges::begin(std::declval<D<True> const &>()) ==
                 ranges::end(std::declval<D<True> const &>())))) ->
             CPP_ret(bool)(
-                requires True && (not detail::has_fixed_size_(Cardinality)) &&
+                requires True && (!detail::has_fixed_size_(Cardinality)) &&
                     ForwardRange<D<True> const>)
         {
             return bool(ranges::begin(derived()) == ranges::end(derived()));

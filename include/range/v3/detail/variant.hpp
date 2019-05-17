@@ -103,7 +103,7 @@ namespace ranges
         template<typename I, typename S, typename O>
         auto uninitialized_copy(I first, S last, O out) ->
             CPP_ret(O)(
-                requires (not SizedSentinel<S, I>))
+                requires (!SizedSentinel<S, I>))
         {
             for(; first != last; ++first, ++out)
                 ::new((void *) std::addressof(*out)) iter_value_t<O>(*first);

@@ -36,7 +36,7 @@ namespace ranges
             friend action_access;
             template<typename C, typename P = identity>
             static auto CPP_fun(bind)(unique_fn unique, C pred, P proj = P{})(
-                requires (not Range<C>))
+                requires (!Range<C>))
             {
                 return std::bind(unique, std::placeholders::_1, protect(std::move(pred)),
                     protect(std::move(proj)));

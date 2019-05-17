@@ -173,7 +173,7 @@ namespace ranges
         CPP_member
         constexpr /*c++14*/ auto end_adaptor() noexcept ->
             CPP_ret(sentinel_adaptor<false>)(
-                requires (not CommonRange<Rng>) || SinglePass<iterator_t<Rng>>)
+                requires (!CommonRange<Rng>) || SinglePass<iterator_t<Rng>>)
         {
             return {};
         }

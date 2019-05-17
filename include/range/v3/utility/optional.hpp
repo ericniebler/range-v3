@@ -522,7 +522,7 @@ namespace ranges
 
         template<typename U = T>
         constexpr CPP_ctor(optional)(U &&v)(
-            requires (not defer::Same<detail::decay_t<U>, in_place_t>) &&
+            requires (!defer::Same<detail::decay_t<U>, in_place_t>) &&
                 (!defer::Same<detail::decay_t<U>, optional>) &&
                 defer::Constructible<T, U> &&
                 defer::ConvertibleTo<U, T>)
@@ -530,7 +530,7 @@ namespace ranges
         {}
         template<typename U = T>
         explicit constexpr CPP_ctor(optional)(U &&v)(
-            requires (not defer::Same<detail::decay_t<U>, in_place_t>) &&
+            requires (!defer::Same<detail::decay_t<U>, in_place_t>) &&
                 (!defer::Same<detail::decay_t<U>, optional>) &&
                 defer::Constructible<T, U> &&
                 (!defer::ConvertibleTo<U, T>))
@@ -591,7 +591,7 @@ namespace ranges
             noexcept(std::is_nothrow_constructible<T, U>::value &&
                 std::is_nothrow_assignable<T &, U>::value) ->
             CPP_ret(optional &)(
-                requires (not defer::Same<optional, detail::decay_t<U>>) &&
+                requires (!defer::Same<optional, detail::decay_t<U>>) &&
                     (!(defer::Satisfies<T, std::is_scalar> && defer::Same<T, detail::decay_t<U>>)) &&
                     defer::Constructible<T, U> &&
                     defer::Assignable<T &, U>)

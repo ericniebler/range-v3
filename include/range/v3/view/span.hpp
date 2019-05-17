@@ -160,7 +160,7 @@ namespace ranges
         {}
 
         CPP_template(typename Rng)(
-            requires (not defer::Same<span, uncvref_t<Rng>>) &&
+            requires (!defer::Same<span, uncvref_t<Rng>>) &&
                 defer::SpanCompatibleRange<Rng, T> &&
                 defer::SpanDynamicConversion<Rng, N>)
         constexpr span(Rng &&rng)
@@ -169,7 +169,7 @@ namespace ranges
         {}
 
         CPP_template(typename Rng)(
-            requires (not defer::Same<span, uncvref_t<Rng>>) &&
+            requires (!defer::Same<span, uncvref_t<Rng>>) &&
                 defer::SpanCompatibleRange<Rng, T> &&
                 defer::SpanStaticConversion<Rng, N>)
         constexpr span(Rng &&rng)

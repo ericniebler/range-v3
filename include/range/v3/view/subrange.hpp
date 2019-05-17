@@ -48,10 +48,10 @@ namespace ranges
                 // A conversion is a slicing conversion if the source and the destination
                 // are both pointers, and if the pointed-to types differ after removing
                 // cv qualifiers.
-                not (std::is_pointer<decay_t<From>>::value &&
+                (!(std::is_pointer<decay_t<From>>::value &&
                     std::is_pointer<decay_t<To>>::value &&
                     NotSameAs_<meta::_t<std::remove_pointer<decay_t<From>>>,
-                               meta::_t<std::remove_pointer<decay_t<To>>>>)
+                               meta::_t<std::remove_pointer<decay_t<To>>>>))
         );
         CPP_def
         (
@@ -91,7 +91,7 @@ namespace ranges
         (
             template(typename T)
             concept PairLike_,
-                not std::is_reference<T>::value &&
+                (!std::is_reference<T>::value) &&
                 (defer::GetFirstAndSecond_<T> &&
                  defer::PairLikeGCCBugs_<T>)
         );
@@ -119,7 +119,7 @@ namespace ranges
         (
             template(typename T, typename U, typename V)
             concept PairLikeConvertibleFrom_,
-                not Range<T> &&
+                (!Range<T>) &&
                 Constructible<T, U, V> &&
                 (ranges::defer::True<pair_like<uncvref_t<T>>::value> &&
                  defer::PairLikeConvertibleFromGCCBugs_<T, U, V>)
@@ -134,8 +134,8 @@ namespace ranges
         );
 
         template<typename S, typename I>
-        constexpr auto is_sized_sentinel_() noexcept
-            -> CPP_ret(bool)(
+        constexpr auto is_sized_sentinel_() noexcept ->
+            CPP_ret(bool)(
                 requires Sentinel<S, I>)
         {
             return (bool) SizedSentinel<S, I>;
@@ -217,8 +217,8 @@ namespace ranges
     {
         CPP_assert(Iterator<I>);
         CPP_assert(Sentinel<S, I>);
-        CPP_assert(K == subrange_kind::sized || not SizedSentinel<S, I>);
-        CPP_assert(K != subrange_kind::sized || not Same<S, unreachable_sentinel_t>);
+        CPP_assert(K == subrange_kind::sized || !SizedSentinel<S, I>);
+        CPP_assert(K != subrange_kind::sized || !Same<S, unreachable_sentinel_t>);
 
         using size_type = detail::iter_size_t<I>;
         using iterator = I;

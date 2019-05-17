@@ -87,7 +87,7 @@ namespace ranges
 
         template<typename T, typename... Args>
         auto make_unique(Args &&... args) -> CPP_ret(std::unique_ptr<T>)(
-            requires (not std::is_array<T>::value))
+            requires (!std::is_array<T>::value))
         {
             return std::unique_ptr<T>{new T(static_cast<Args &&>(args)...)};
         }
@@ -137,7 +137,7 @@ namespace ranges
         CPP_member
         auto operator++(int) ->
             CPP_ret(void)(
-                requires (not ForwardIterator<O>))
+                requires (!ForwardIterator<O>))
         {
             ++out_;
         }

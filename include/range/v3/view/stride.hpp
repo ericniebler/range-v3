@@ -134,7 +134,7 @@ namespace ranges
 
         // stride_view const models Range if Rng const models Range, and
         // either (1) Rng is sized, so we can pre-calculate offset_, or (2)
-        // Rng is not Bidirectional, so it does not need offset_.
+        // Rng is !Bidirectional, so it does not need offset_.
 #ifdef RANGES_WORKAROUND_MSVC_711347
         static constexpr bool const_iterable = Range<Rng const> &&
             (SizedRange<Rng const> || !BidirectionalRange<Rng const>);
