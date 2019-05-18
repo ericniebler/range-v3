@@ -35,7 +35,7 @@ namespace ranges
         struct null_pipe
         {
             template<typename Rng>
-            void operator()(Rng &&) const
+            constexpr void operator()(Rng &&) const
             {}
         };
 
@@ -43,7 +43,7 @@ namespace ranges
         {
             // clang-format off
             template<typename I>
-            constexpr auto CPP_auto_fun(operator())(I &&i)(const)
+            constexpr auto CPP_auto_fun(operator())(I &&i) (const)
             (
                 return *(I &&) i
             )
@@ -121,7 +121,7 @@ namespace ranges
 
             // Piping requires range arguments or lvalue containers.
             template<typename Rng, typename Vw>
-            static auto CPP_fun(pipe)(Rng && rng, Vw && v)( //
+            static constexpr auto CPP_fun(pipe)(Rng &&rng, Vw &&v)( //
                 requires ViewableRange<Rng> && Invocable<View &, Rng>)
             {
                 return v.view_(static_cast<Rng &&>(rng));
@@ -137,7 +137,7 @@ namespace ranges
 
             // Calling directly requires a ViewableRange.
             template<typename Rng, typename... Rest>
-            auto operator()(Rng && rng, Rest &&... rest) const
+            constexpr auto operator()(Rng && rng, Rest &&... rest) const
                 -> CPP_ret(invoke_result_t<View const &, Rng, Rest...>)( //
                     requires ViewableRange<Rng> && Invocable<View const &, Rng, Rest...>)
             {
@@ -147,7 +147,7 @@ namespace ranges
             // Currying overload.
             // clang-format off
             template<typename... Ts, typename V = View>
-            auto CPP_auto_fun(operator())(Ts &&... ts)(const)
+            constexpr auto CPP_auto_fun(operator())(Ts &&... ts)(const)
             (
                 return make_view(
                     view_access::impl<V>::bind(view_, static_cast<Ts &&>(ts)...))

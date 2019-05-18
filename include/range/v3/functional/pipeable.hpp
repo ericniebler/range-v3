@@ -32,7 +32,7 @@ namespace ranges
           : Bind
           , pipeable<pipeable_binder<Bind>>
         {
-            pipeable_binder(Bind bind)
+            constexpr pipeable_binder(Bind bind)
               : Bind(static_cast<Bind &&>(bind))
             {}
         };
@@ -44,7 +44,7 @@ namespace ranges
             Pipe1 pipe1_;
             // clang-format off
             template<typename Arg>
-            auto CPP_auto_fun(operator())(Arg &&arg) (const)
+            constexpr auto CPP_auto_fun(operator())(Arg &&arg) (const)
             (
                 return static_cast<Arg &&>(arg) | pipe0_ | pipe1_
             )
@@ -56,7 +56,7 @@ namespace ranges
     struct make_pipeable_fn
     {
         template<typename Fun>
-        detail::pipeable_binder<Fun> operator()(Fun fun) const
+        constexpr detail::pipeable_binder<Fun> operator()(Fun fun) const
         {
             return {static_cast<Fun &&>(fun)};
         }
@@ -102,20 +102,17 @@ namespace ranges
     struct pipeable_base
     {
         // Evaluate the pipe with an argument
-        template<typename Arg, typename Pipe>
-        friend auto operator|(Arg && arg, Pipe pipe) -> CPP_ret(
-            decltype(pipeable_access::impl<Pipe>::pipe(std::declval<Arg>(),
-                                                       std::declval<Pipe &>())))( //
-            requires(!is_pipeable_v<Arg>) && is_pipeable_v<Pipe>)
+        CPP_template(typename Arg, typename Pipe)
+             (requires (!is_pipeable_v<Arg>) && is_pipeable_v<Pipe>)
+        constexpr friend auto operator|(Arg &&arg, Pipe pipe)
         {
             return pipeable_access::impl<Pipe>::pipe(static_cast<Arg &&>(arg), pipe);
         }
 
         // Compose two pipes
-        template<typename Pipe0, typename Pipe1>
-        friend auto operator|(Pipe0 pipe0, Pipe1 pipe1) -> CPP_ret(decltype(
-            make_pipeable(std::declval<detail::composed_pipe<Pipe0, Pipe1>>())))( //
-            requires is_pipeable_v<Pipe0> && is_pipeable_v<Pipe1>)
+        CPP_template(typename Pipe0, typename Pipe1)
+            (requires is_pipeable_v<Pipe0> && is_pipeable_v<Pipe1>)
+        constexpr friend auto operator|(Pipe0 pipe0, Pipe1 pipe1)
         {
             return make_pipeable(detail::composed_pipe<Pipe0, Pipe1>{pipe0, pipe1});
         }
@@ -130,7 +127,7 @@ namespace ranges
         // operator
         // clang-format off
         template<typename Arg, typename Pipe>
-        static auto CPP_auto_fun(pipe)(Arg &&arg, Pipe p)
+        constexpr static auto CPP_auto_fun(pipe)(Arg &&arg, Pipe p)
         (
             return p(static_cast<Arg &&>(arg))
         )
