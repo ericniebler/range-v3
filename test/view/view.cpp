@@ -28,14 +28,13 @@ public:
         return drop_view<view::all_t<Rng>>(view::all(static_cast<Rng &&>(rng)), n);
     }
 };
-RANGES_INLINE_VARIABLE(view::view<my_drop_fn>, my_drop);
+RANGES_INLINE_VARIABLE(view::view<my_drop_fn>, my_drop)
 
 /// #https://github.com/ericniebler/range-v3/issues/1169
 void constexpr_test_1169(){
 #if RANGES_CXX_CONSTEXPR >= RANGES_CXX_CONSTEXPR_LAMBDAS
     constexpr auto const drop1 = my_drop(1);
     constexpr auto const drop3 = drop1 | my_drop(2);
-    CHECK(std::is_literal_type<decltype(drop3)>::value);
 
     std::vector<int> vec = {1,2,3,4};
     check_equal(vec | drop3, {4});
