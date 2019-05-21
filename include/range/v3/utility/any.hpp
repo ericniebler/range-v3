@@ -160,7 +160,7 @@ namespace ranges
             ptr_.swap(that.ptr_);
         }
 
-#if !defined(RANGES_WORKAROUND_MSVC_589046) || defined(RANGES_DOXYGEN_INVOKED)
+#if !RANGES_BROKEN_CPO_LOOKUP
         friend void swap(any &x, any &y) noexcept
         {
             x.swap(y);
@@ -168,10 +168,10 @@ namespace ranges
 #endif
     };
 
-#if defined(RANGES_WORKAROUND_MSVC_589046) && !defined(RANGES_DOXYGEN_INVOKED)
+#if RANGES_BROKEN_CPO_LOOKUP
     namespace _any_
     {
-        void swap(any &x, any &y) noexcept
+        inline void swap(any &x, any &y) noexcept
         {
             x.swap(y);
         }

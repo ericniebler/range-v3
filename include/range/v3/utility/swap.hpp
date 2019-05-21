@@ -38,7 +38,7 @@ namespace ranges
 
     /// \ingroup group-utility
     /// \relates concepts::adl_swap_detail::swap_fn
-    RANGES_DEFINE_CPO(decltype(concepts::swap), swap)
+    RANGES_DEFINE_CPO(uncvref_t<decltype(concepts::swap)>, swap)
 
     namespace cpp20
     {
