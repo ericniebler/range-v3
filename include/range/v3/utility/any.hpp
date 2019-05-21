@@ -171,7 +171,7 @@ namespace ranges
 #if RANGES_BROKEN_CPO_LOOKUP
     namespace _any_
     {
-        void swap(any &x, any &y) noexcept
+        inline void swap(any &x, any &y) noexcept
         {
             x.swap(y);
         }
