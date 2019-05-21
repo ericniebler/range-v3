@@ -262,6 +262,11 @@ namespace ranges
         struct priority_tag<0>
         {};
 
+        template<typename T>
+        RANGES_INLINE_VAR constexpr bool is_trivial_v =
+            std::is_trivially_copyable_v<T> &&
+            std::is_trivially_default_constructible_v<T>;
+
     #if defined(__clang__) && !defined(_LIBCPP_VERSION)
         template<typename T, typename... Args>
         using is_trivially_constructible =
