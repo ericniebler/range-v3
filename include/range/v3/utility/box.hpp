@@ -133,7 +133,7 @@ namespace ranges
         // MSVC pukes passing non-constant-expression objects to constexpr
         // functions, so do not coalesce.
         template<typename T, typename = meta::if_<
-            meta::strict_and<std::is_empty<T>, detail::is_trivial_v<T>>>>
+            meta::strict_and<std::is_empty<T>, detail::is_trivial<T>>>>
         constexpr box_compress box_compression_(int)
         {
             return box_compress::coalesce;
