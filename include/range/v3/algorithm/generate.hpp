@@ -44,7 +44,7 @@ namespace ranges
             return {detail::move(begin), detail::move(fun)};
         }
 
-        template<typename Rng, typename F, typename O = iterator_t<Rng>>
+        template<typename Rng, typename F>
         auto operator()(Rng &&rng, F fun) const ->
             CPP_ret(generate_result<safe_iterator_t<Rng>, F>)(
                 requires Invocable<F&> && OutputRange<Rng, invoke_result_t<F &>>)
