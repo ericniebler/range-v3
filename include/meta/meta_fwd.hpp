@@ -158,8 +158,7 @@
 #endif
 
 #if (defined(__cpp_lib_type_trait_variable_templates) && \
-    __cpp_lib_type_trait_variable_templates > 0) || \
-    META_CXX_VER >= META_CXX_STD_17
+    __cpp_lib_type_trait_variable_templates > 0)
 #define META_CXX_TRAIT_VARIABLE_TEMPLATES 1
 #else
 #define META_CXX_TRAIT_VARIABLE_TEMPLATES 0

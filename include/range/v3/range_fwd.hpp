@@ -262,6 +262,16 @@ namespace ranges
         struct priority_tag<0>
         {};
 
+        template<typename T>
+        using is_trivial = meta::bool_<
+#if META_CXX_TRAIT_VARIABLE_TEMPLATES
+            std::is_trivially_copyable_v<T> &&
+            std::is_trivially_default_constructible_v<T>>;
+#else
+            std::is_trivially_copyable<T>::value &&
+            std::is_trivially_default_constructible<T>::value>;
+#endif
+
     #if defined(__clang__) && !defined(_LIBCPP_VERSION)
         template<typename T, typename... Args>
         using is_trivially_constructible =
