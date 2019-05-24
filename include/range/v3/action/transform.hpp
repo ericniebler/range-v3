@@ -15,12 +15,13 @@
 #define RANGES_V3_ACTION_TRANSFORM_HPP
 
 #include <functional>
-#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/algorithm/transform.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -34,17 +35,21 @@ namespace ranges
         private:
             friend action_access;
             template<typename F, typename P = identity>
-            static auto CPP_fun(bind)(transform_fn transform, F fun, P proj = P{})(
-                requires (!Range<F>))
+            static auto CPP_fun(bind)(transform_fn transform, F fun, P proj = P{})( //
+                requires(!Range<F>))
             {
-                return std::bind(transform, std::placeholders::_1, protect(std::move(fun)),
-                    protect(std::move(proj)));
+                return std::bind(transform,
+                                 std::placeholders::_1,
+                                 protect(std::move(fun)),
+                                 protect(std::move(proj)));
             }
+
         public:
-            CPP_template(typename Rng, typename F, typename P = identity)(
-                requires InputRange<Rng> && CopyConstructible<F> &&
-                    Writable<iterator_t<Rng>, indirect_result_t<F&, projected<iterator_t<Rng>, P>>>)
-            Rng operator()(Rng &&rng, F fun, P proj = P{}) const
+            template<typename Rng, typename F, typename P = identity>
+            auto operator()(Rng &&rng, F fun, P proj = P{}) const -> CPP_ret(Rng)( //
+                requires InputRange<Rng> &&CopyConstructible<F>
+                    &&Writable<iterator_t<Rng>,
+                               indirect_result_t<F &, projected<iterator_t<Rng>, P>>>)
             {
                 ranges::transform(rng, begin(rng), std::move(fun), std::move(proj));
                 return static_cast<Rng &&>(rng);

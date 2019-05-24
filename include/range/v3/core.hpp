@@ -14,21 +14,20 @@
 #ifndef RANGES_V3_CORE_HPP
 #define RANGES_V3_CORE_HPP
 
+#include <range/v3/iterator/common_iterator.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
+#include <range/v3/range/conversion.hpp>
 #include <range/v3/range/operations.hpp>
 #include <range/v3/range/primitives.hpp>
-#include <range/v3/view/facade.hpp>
-#include <range/v3/view/adaptor.hpp>
-#include <range/v3/view/interface.hpp>
-#include <range/v3/range_for.hpp>
-#include <range/v3/view/istream.hpp>
-#include <range/v3/view/getlines.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range/primitives.hpp>
-#include <range/v3/range/conversion.hpp>
-#include <range/v3/iterator/common_iterator.hpp>
+#include <range/v3/range_for.hpp>
+#include <range/v3/view/adaptor.hpp>
+#include <range/v3/view/facade.hpp>
+#include <range/v3/view/getlines.hpp>
+#include <range/v3/view/interface.hpp>
+#include <range/v3/view/istream.hpp>
 #include <range/v3/view/subrange.hpp>
 
 #endif

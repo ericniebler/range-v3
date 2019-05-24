@@ -14,7 +14,8 @@
 #define RANGES_V3_TO_CONTAINER_HPP
 
 #include <range/v3/detail/config.hpp>
-RANGES_DEPRECATED_HEADER("This header is deprecated. Please #include <range/v3/range/conversion.hpp> instead.")
+RANGES_DEPRECATED_HEADER(
+    "This header is deprecated. Please #include <range/v3/range/conversion.hpp> instead.")
 
 #include <range/v3/range/conversion.hpp>
 

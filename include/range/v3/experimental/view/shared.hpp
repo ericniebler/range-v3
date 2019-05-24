@@ -15,7 +15,9 @@
 
 #include <memory>
 #include <type_traits>
+
 #include <meta/meta.hpp>
+
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
@@ -27,8 +29,7 @@ namespace ranges
     {
         template<typename Rng>
         struct shared_view
-          : view_interface<shared_view<Rng>,
-            range_cardinality<Rng>::value>
+          : view_interface<shared_view<Rng>, range_cardinality<Rng>::value>
         {
         private:
             // shared storage
@@ -52,9 +53,7 @@ namespace ranges
                 return ranges::end(*rng_ptr_);
             }
 
-            CPP_member
-            auto CPP_fun(size)() (const
-                requires SizedRange<Rng>)
+            CPP_member auto CPP_fun(size)()(const requires SizedRange<Rng>)
             {
                 return ranges::size(*rng_ptr_);
             }
@@ -68,40 +67,12 @@ namespace ranges
             struct shared_fn : pipeable<shared_fn>
             {
             public:
-#ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng)(
-                    requires (!Range<Rng>))
-                void operator()(std::shared_ptr<Rng>) const
-                {
-                    CPP_assert_msg(Range<Rng>,
-                        "The object on which view::shared operates must be "
-                        "a model of the Range concept.");
-                }
-#endif
-
-                CPP_template(typename Rng)(
-                    requires Range<Rng> && (!View<Rng>) && (!std::is_reference<Rng>::value))
-                shared_view<Rng> operator()(Rng &&t) const
+                template<typename Rng>
+                auto operator()(Rng &&t) const -> CPP_ret(shared_view<Rng>)( //
+                    requires Range<Rng> && (!View<Rng>)&&(!std::is_reference<Rng>::value))
                 {
                     return shared_view<Rng>{std::move(t)};
                 }
-
-#ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng)(
-                    requires (!Range<Rng>) || View<Rng> || std::is_reference<Rng>::value)
-                void operator()(Rng &&) const
-                {
-                    CPP_assert_msg(Range<Rng>,
-                        "The object on which view::shared operates must be "
-                        "a model of the Range concept.");
-                    CPP_assert_msg(!View<Rng>,
-                        "view::shared cannot be constructed from a view. "
-                        "Please copy the original view instead.");
-                    CPP_assert_msg(!std::is_reference<Rng>::value,
-                        "view::shared needs an rvalue to build a shared "
-                        "object.");
-                }
-#endif
             };
 
             /// \relates all_fn
@@ -109,8 +80,7 @@ namespace ranges
             RANGES_INLINE_VARIABLE(shared_fn, shared)
 
             template<typename Rng>
-            using shared_t =
-                detail::decay_t<decltype(shared(std::declval<Rng>()))>;
+            using shared_t = detail::decay_t<decltype(shared(std::declval<Rng>()))>;
 
         } // namespace view
         /// @}

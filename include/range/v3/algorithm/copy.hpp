@@ -13,16 +13,17 @@
 #ifndef RANGES_V3_ALGORITHM_COPY_HPP
 #define RANGES_V3_ALGORITHM_COPY_HPP
 
-#include <utility>
 #include <functional>
-#include <range/v3/range_fwd.hpp>
+#include <utility>
+
 #include <range/v3/algorithm/result_types.hpp>
-#include <range/v3/iterator/traits.hpp>
 #include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/access.hpp>
-#include <range/v3/range/dangling.hpp>
 #include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/copy.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -36,10 +37,10 @@ namespace ranges
     struct cpp20_copy_fn
     {
         template<typename I, typename S, typename O>
-        constexpr /*c++14*/ auto operator()(I begin, S end, O out) const ->
-            CPP_ret(copy_result<I, O>)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
+        constexpr auto operator()(I begin, S end, O out) const
+            -> CPP_ret(copy_result<I, O>)( //
+                requires InputIterator<I> &&Sentinel<S, I> &&WeaklyIncrementable<O>
+                    &&IndirectlyCopyable<I, O>)
         {
             for(; begin != end; ++begin, ++out)
                 *out = *begin;
@@ -47,10 +48,10 @@ namespace ranges
         }
 
         template<typename Rng, typename O>
-        constexpr /*c++14*/ auto operator()(Rng &&rng, O out) const ->
-            CPP_ret(copy_result<safe_iterator_t<Rng>, O>)(
-                requires InputRange<Rng> && WeaklyIncrementable<O> &&
-                    IndirectlyCopyable<iterator_t<Rng>, O>)
+        constexpr auto operator()(Rng &&rng, O out) const
+            -> CPP_ret(copy_result<safe_iterator_t<Rng>, O>)( //
+                requires InputRange<Rng> &&WeaklyIncrementable<O>
+                    &&IndirectlyCopyable<iterator_t<Rng>, O>)
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }

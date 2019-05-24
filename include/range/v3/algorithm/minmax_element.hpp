@@ -16,17 +16,17 @@
 #ifndef RANGES_V3_ALGORITHM_MINMAX_ELEMENT_HPP
 #define RANGES_V3_ALGORITHM_MINMAX_ELEMENT_HPP
 
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/dangling.hpp>
-#include <range/v3/range/traits.hpp>
 #include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -39,10 +39,10 @@ namespace ranges
     struct minmax_element_fn
     {
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(minmax_element_result<I>)(
-                requires ForwardIterator<I> && Sentinel<S, I> &&
-                    IndirectStrictWeakOrder<C, projected<I, P>>)
+        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const
+            -> CPP_ret(minmax_element_result<I>)( //
+                requires ForwardIterator<I> &&Sentinel<S, I>
+                    &&IndirectStrictWeakOrder<C, projected<I, P>>)
         {
             minmax_element_result<I> result{begin, begin};
             if(begin == end || ++begin == end)
@@ -84,10 +84,10 @@ namespace ranges
         }
 
         template<typename Rng, typename C = less, typename P = identity>
-        auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(minmax_element_result<safe_iterator_t<Rng>>)(
-                requires ForwardRange<Rng> &&
-                    IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>>)
+        auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            -> CPP_ret(minmax_element_result<safe_iterator_t<Rng>>)( //
+                requires ForwardRange<Rng>
+                    &&IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
@@ -99,8 +99,8 @@ namespace ranges
 
     namespace cpp20
     {
-        using ranges::minmax_element_result;
         using ranges::minmax_element;
+        using ranges::minmax_element_result;
     }
     /// @}
 } // namespace ranges

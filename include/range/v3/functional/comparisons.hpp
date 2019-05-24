@@ -15,6 +15,7 @@
 #define RANGES_V3_FUNCTIONAL_COMPARISONS_HPP
 
 #include <concepts/concepts.hpp>
+
 #include <range/v3/range_fwd.hpp>
 
 namespace ranges
@@ -24,9 +25,8 @@ namespace ranges
     struct equal_to
     {
         template<typename T, typename U>
-        constexpr auto operator()(T &&t, U &&u) const ->
-            CPP_ret(bool)(
-                requires EqualityComparableWith<T, U>)
+        constexpr auto operator()(T &&t, U &&u) const -> CPP_ret(bool)( //
+            requires EqualityComparableWith<T, U>)
         {
             return (T &&) t == (U &&) u;
         }
@@ -36,9 +36,8 @@ namespace ranges
     struct not_equal_to
     {
         template<typename T, typename U>
-        constexpr auto operator()(T &&t, U &&u) const ->
-            CPP_ret(bool)(
-                requires EqualityComparableWith<T, U>)
+        constexpr auto operator()(T &&t, U &&u) const -> CPP_ret(bool)( //
+            requires EqualityComparableWith<T, U>)
         {
             return !equal_to{}((T &&) t, (U &&) u);
         }
@@ -48,9 +47,8 @@ namespace ranges
     struct less
     {
         template<typename T, typename U>
-        constexpr auto operator()(T &&t, U &&u) const ->
-            CPP_ret(bool)(
-                requires StrictTotallyOrderedWith<T, U>)
+        constexpr auto operator()(T &&t, U &&u) const -> CPP_ret(bool)( //
+            requires StrictTotallyOrderedWith<T, U>)
         {
             return (T &&) t < (U &&) u;
         }
@@ -60,9 +58,8 @@ namespace ranges
     struct less_equal
     {
         template<typename T, typename U>
-        constexpr auto operator()(T &&t, U &&u) const ->
-            CPP_ret(bool)(
-                requires StrictTotallyOrderedWith<T, U>)
+        constexpr auto operator()(T &&t, U &&u) const -> CPP_ret(bool)( //
+            requires StrictTotallyOrderedWith<T, U>)
         {
             return !less{}((U &&) u, (T &&) t);
         }
@@ -72,9 +69,8 @@ namespace ranges
     struct greater_equal
     {
         template<typename T, typename U>
-        constexpr auto operator()(T &&t, U &&u) const ->
-            CPP_ret(bool)(
-                requires StrictTotallyOrderedWith<T, U>)
+        constexpr auto operator()(T &&t, U &&u) const -> CPP_ret(bool)( //
+            requires StrictTotallyOrderedWith<T, U>)
         {
             return !less{}((T &&) t, (U &&) u);
         }
@@ -84,27 +80,25 @@ namespace ranges
     struct greater
     {
         template<typename T, typename U>
-        constexpr auto operator()(T &&t, U &&u) const ->
-            CPP_ret(bool)(
-                requires StrictTotallyOrderedWith<T, U>)
+        constexpr auto operator()(T &&t, U &&u) const -> CPP_ret(bool)( //
+            requires StrictTotallyOrderedWith<T, U>)
         {
             return less{}((U &&) u, (T &&) t);
         }
         using is_transparent = void;
     };
 
-    using ordered_less
-        RANGES_DEPRECATED("Repace uses of ranges::ordered_less with ranges::less") =
-            less;
+    using ordered_less RANGES_DEPRECATED(
+        "Repace uses of ranges::ordered_less with ranges::less") = less;
 
     namespace cpp20
     {
         using ranges::equal_to;
-        using ranges::not_equal_to;
-        using ranges::less;
-        using ranges::less_equal;
         using ranges::greater;
         using ranges::greater_equal;
+        using ranges::less;
+        using ranges::less_equal;
+        using ranges::not_equal_to;
     }
     /// @}
 }

@@ -14,11 +14,13 @@
 #define RANGES_V3_UTILITY_CONCEPTS_HPP
 
 #include <range/v3/detail/config.hpp>
-RANGES_DEPRECATED_HEADER("This header is deprecated. Please #include <concepts/concepts.hpp> instead.")
+RANGES_DEPRECATED_HEADER(
+    "This header is deprecated. Please #include <concepts/concepts.hpp> instead.")
+
+#include <concepts/concepts.hpp>
 
 #include <range/v3/range_fwd.hpp>
-#include <concepts/concepts.hpp>
-#include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/common_type.hpp>
+#include <range/v3/utility/swap.hpp>
 
 #endif

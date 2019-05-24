@@ -44,7 +44,7 @@ namespace ranges
       , private detail::empty_view_base
     {
         static_assert(std::is_object<T>::value,
-            "The template parameter to empty_view must be an object type.");
+                      "The template parameter to empty_view must be an object type.");
         empty_view() = default;
         constexpr static T *begin() noexcept
         {
@@ -62,7 +62,8 @@ namespace ranges
         {
             return nullptr;
         }
-        RANGES_DEPRECATED("Replace view::empty<T>() with view::empty<>. "
+        RANGES_DEPRECATED(
+            "Replace view::empty<T>() with view::empty<>. "
             "It is now a variable template.")
         empty_view operator()() const
         {
@@ -73,7 +74,7 @@ namespace ranges
     namespace view
     {
         template<typename T>
-        RANGES_INLINE_VAR constexpr empty_view<T> empty {};
+        RANGES_INLINE_VAR constexpr empty_view<T> empty{};
     }
 
     namespace cpp20
@@ -82,9 +83,9 @@ namespace ranges
         {
             using ranges::view::empty;
         }
-        CPP_template(typename T)(
-            requires std::is_object<T>::value)
-        using empty_view = ranges::empty_view<T>;
+        CPP_template(typename T)(              //
+            requires std::is_object<T>::value) //
+            using empty_view = ranges::empty_view<T>;
     }
 }
 

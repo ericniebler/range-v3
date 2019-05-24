@@ -14,17 +14,19 @@
 #define RANGES_V3_ALGORITHM_FIND_END_HPP
 
 #include <utility>
+
 #include <meta/meta.hpp>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/traits.hpp>
+
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
-#include <range/v3/iterator/traits.hpp>
 #include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/subrange.hpp>
 
@@ -34,25 +36,22 @@ namespace ranges
     namespace detail
     {
         template<typename I, typename S>
-        auto next_to_if(I i, S s, std::true_type) ->
-            CPP_ret(I)(
-                requires InputIterator<I> && Sentinel<S, I>)
+        auto next_to_if(I i, S s, std::true_type) -> CPP_ret(I)( //
+            requires InputIterator<I> &&Sentinel<S, I>)
         {
             return ranges::next(i, s);
         }
 
         template<typename I, typename S>
-        auto next_to_if(I, S s, std::false_type) ->
-            CPP_ret(S)(
-                requires InputIterator<I> && Sentinel<S, I>)
+        auto next_to_if(I, S s, std::false_type) -> CPP_ret(S)( //
+            requires InputIterator<I> &&Sentinel<S, I>)
         {
             return s;
         }
 
         template<bool B, typename I, typename S>
-        auto next_to_if(I i, S s) ->
-            CPP_ret(meta::if_c<B, I, S>)(
-                requires InputIterator<I> && Sentinel<S, I>)
+        auto next_to_if(I i, S s) -> CPP_ret(meta::if_c<B, I, S>)( //
+            requires InputIterator<I> &&Sentinel<S, I>)
         {
             return detail::next_to_if(std::move(i), std::move(s), meta::bool_<B>{});
         }
@@ -64,10 +63,11 @@ namespace ranges
     struct find_end_fn
     {
     private:
-        template<typename I1, typename S1, typename I2, typename S2, typename R, typename P>
-        static subrange<I1>
-        impl(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred, P proj,
-             detail::forward_iterator_tag_, detail::forward_iterator_tag_)
+        template<typename I1, typename S1, typename I2, typename S2, typename R,
+                 typename P>
+        static subrange<I1> impl(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred, P proj,
+                                 detail::forward_iterator_tag_,
+                                 detail::forward_iterator_tag_)
         {
             bool found = false;
             I1 res_begin, res_end;
@@ -81,8 +81,7 @@ namespace ranges
                 while(true)
                 {
                     if(begin1 == end1)
-                        return {(found ? res_begin : begin1),
-                                (found ? res_end : begin1)};
+                        return {(found ? res_begin : begin1), (found ? res_end : begin1)};
                     if(invoke(pred, invoke(proj, *begin1), *begin2))
                         break;
                     ++begin1;
@@ -99,8 +98,7 @@ namespace ranges
                         break;
                     }
                     if(++tmp1 == end1)
-                        return {(found ? res_begin : tmp1),
-                                (found ? res_end : tmp1)};
+                        return {(found ? res_begin : tmp1), (found ? res_end : tmp1)};
                     if(!invoke(pred, invoke(proj, *tmp1), *tmp2))
                     {
                         ++begin1;
@@ -111,20 +109,20 @@ namespace ranges
         }
 
         template<typename I1, typename I2, typename R, typename P>
-        static subrange<I1>
-        impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
-             detail::bidirectional_iterator_tag_, detail::bidirectional_iterator_tag_)
+        static subrange<I1> impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
+                                 detail::bidirectional_iterator_tag_,
+                                 detail::bidirectional_iterator_tag_)
         {
             // modeled after search algorithm (in reverse)
             if(begin2 == end2)
-                return {end1, end1};  // Everything matches an empty sequence
+                return {end1, end1}; // Everything matches an empty sequence
             I1 l1 = end1;
             I2 l2 = end2;
             --l2;
             while(true)
             {
-                // Find end element in sequence 1 that matches *(end2-1), with a mininum of loop
-                // checks
+                // Find end element in sequence 1 that matches *(end2-1), with a mininum
+                // of loop checks
                 do
                     // return {end1,end1} if no element matches *begin2
                     if(begin1 == l1)
@@ -141,25 +139,27 @@ namespace ranges
                     // Otherwise if source exhausted, pattern not found
                     else if(m1 == begin1)
                         return {end1, end1};
-                    // if there is a mismatch, restart with a new l1
-                    // else there is a match, check next elements
+                // if there is a mismatch, restart with a new l1
+                // else there is a match, check next elements
                 while(invoke(pred, invoke(proj, *--m1), *--m2));
             }
         }
 
         template<typename I1, typename I2, typename R, typename P>
-        static subrange<I1>
-        impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
-             detail::random_access_iterator_tag_, detail::random_access_iterator_tag_)
+        static subrange<I1> impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
+                                 detail::random_access_iterator_tag_,
+                                 detail::random_access_iterator_tag_)
         {
-            // Take advantage of knowing source and pattern lengths.  Stop short when source is smaller than pattern
+            // Take advantage of knowing source and pattern lengths.  Stop short when
+            // source is smaller than pattern
             auto len2 = end2 - begin2;
             if(len2 == 0)
                 return {end1, end1};
             auto len1 = end1 - begin1;
             if(len1 < len2)
                 return {end1, end1};
-            I1 const start = begin1 + (len2 - 1);  // End of pattern match can't go before here
+            I1 const start =
+                begin1 + (len2 - 1); // End of pattern match can't go before here
             I1 l1 = end1;
             I2 l2 = end2;
             --l2;
@@ -180,29 +180,37 @@ namespace ranges
         }
 
     public:
-        template<typename I1, typename S1, typename I2, typename S2, typename R = equal_to,
-            typename P = identity>
-        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{}, P proj = P{}) const ->
-            CPP_ret(subrange<I1>)(
-                requires ForwardIterator<I1> && Sentinel<S1, I1> && ForwardIterator<I2> &&
-                    Sentinel<S2, I2> && IndirectRelation<R, projected<I1, P>, I2>)
+        template<typename I1, typename S1, typename I2, typename S2,
+                 typename R = equal_to, typename P = identity>
+        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{},
+                        P proj = P{}) const -> CPP_ret(subrange<I1>)( //
+            requires ForwardIterator<I1> &&Sentinel<S1, I1> &&ForwardIterator<I2>
+                &&Sentinel<S2, I2> &&IndirectRelation<R, projected<I1, P>, I2>)
         {
             constexpr bool Bidi = BidirectionalIterator<I1> && BidirectionalIterator<I2>;
-            return find_end_fn::impl(
-                begin1, detail::next_to_if<Bidi>(begin1, end1),
-                begin2, detail::next_to_if<Bidi>(begin2, end2),
-                std::move(pred), std::move(proj),
-                iterator_tag_of<I1>(), iterator_tag_of<I2>());
+            return find_end_fn::impl(begin1,
+                                     detail::next_to_if<Bidi>(begin1, end1),
+                                     begin2,
+                                     detail::next_to_if<Bidi>(begin2, end2),
+                                     std::move(pred),
+                                     std::move(proj),
+                                     iterator_tag_of<I1>(),
+                                     iterator_tag_of<I2>());
         }
 
-        template<typename Rng1, typename Rng2, typename R = equal_to, typename P = identity>
-        auto operator()(Rng1 &&rng1, Rng2 &&rng2, R pred = R{}, P proj = P{}) const ->
-            CPP_ret(safe_subrange_t<Rng1>)(
-                requires ForwardRange<Rng1> && ForwardRange<Rng2> &&
+        template<typename Rng1, typename Rng2, typename R = equal_to,
+                 typename P = identity>
+        auto operator()(Rng1 &&rng1, Rng2 &&rng2, R pred = R{}, P proj = P{}) const
+            -> CPP_ret(safe_subrange_t<Rng1>)( //
+                requires ForwardRange<Rng1> &&ForwardRange<Rng2> &&
                     IndirectRelation<R, projected<iterator_t<Rng1>, P>, iterator_t<Rng2>>)
         {
-            return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
-                std::move(proj));
+            return (*this)(begin(rng1),
+                           end(rng1),
+                           begin(rng2),
+                           end(rng2),
+                           std::move(pred),
+                           std::move(proj));
         }
     };
 

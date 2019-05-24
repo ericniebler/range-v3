@@ -15,16 +15,17 @@
 #define RANGES_V3_ALGORITHM_MINMAX_HPP
 
 #include <initializer_list>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/traits.hpp>
+
 #include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -37,8 +38,9 @@ namespace ranges
     struct minmax_fn
     {
         template<typename T, typename C = less, typename P = identity>
-        constexpr auto operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(minmax_result<T const &>)(
+        constexpr auto operator()(T const &a, T const &b, C pred = C{},
+                                  P proj = P{}) const
+            -> CPP_ret(minmax_result<T const &>)( //
                 requires IndirectStrictWeakOrder<C, projected<T const *, P>>)
         {
             using R = minmax_result<T const &>;
@@ -46,11 +48,11 @@ namespace ranges
         }
 
         template<typename Rng, typename C = less, typename P = identity>
-        constexpr /*c++14*/ auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(minmax_result<range_value_t<Rng>>)(
-                requires InputRange<Rng> &&
-                    IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>> &&
-                    IndirectlyCopyableStorable<iterator_t<Rng>, range_value_t<Rng> *>)
+        constexpr auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            -> CPP_ret(minmax_result<range_value_t<Rng>>)( //
+                requires InputRange<Rng>
+                    &&IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>> &&
+                        IndirectlyCopyableStorable<iterator_t<Rng>, range_value_t<Rng> *>)
         {
             using R = minmax_result<range_value_t<Rng>>;
             auto begin = ranges::begin(rng);
@@ -60,11 +62,11 @@ namespace ranges
             if(++begin != end)
             {
                 {
-                    auto && tmp = *begin;
+                    auto &&tmp = *begin;
                     if(invoke(pred, invoke(proj, tmp), invoke(proj, result.min)))
-                        result.min = (decltype(tmp) &&) tmp;
+                        result.min = (decltype(tmp) &&)tmp;
                     else
-                        result.max = (decltype(tmp) &&) tmp;
+                        result.max = (decltype(tmp) &&)tmp;
                 }
                 while(++begin != end)
                 {
@@ -73,16 +75,17 @@ namespace ranges
                     {
                         if(invoke(pred, invoke(proj, tmp1), invoke(proj, result.min)))
                             result.min = std::move(tmp1);
-                        else if(!invoke(pred, invoke(proj, tmp1), invoke(proj, result.max)))
+                        else if(!invoke(
+                                    pred, invoke(proj, tmp1), invoke(proj, result.max)))
                             result.max = std::move(tmp1);
                         break;
                     }
 
-                    auto && tmp2 = *begin;
+                    auto &&tmp2 = *begin;
                     if(invoke(pred, invoke(proj, tmp2), invoke(proj, tmp1)))
                     {
                         if(invoke(pred, invoke(proj, tmp2), invoke(proj, result.min)))
-                            result.min = (decltype(tmp2) &&) tmp2;
+                            result.min = (decltype(tmp2) &&)tmp2;
                         if(!invoke(pred, invoke(proj, tmp1), invoke(proj, result.max)))
                             result.max = std::move(tmp1);
                     }
@@ -91,7 +94,7 @@ namespace ranges
                         if(invoke(pred, invoke(proj, tmp1), invoke(proj, result.min)))
                             result.min = std::move(tmp1);
                         if(!invoke(pred, invoke(proj, tmp2), invoke(proj, result.max)))
-                            result.max = (decltype(tmp2) &&) tmp2;
+                            result.max = (decltype(tmp2) &&)tmp2;
                     }
                 }
             }
@@ -99,10 +102,9 @@ namespace ranges
         }
 
         template<typename T, typename C = less, typename P = identity>
-        constexpr /*c++14*/ auto operator()(std::initializer_list<T> const &&rng, C pred = C{},
-                P proj = P{}) const ->
-            CPP_ret(minmax_result<T>)(
-                requires Copyable<T> && IndirectStrictWeakOrder<C, projected<T const *, P>>)
+        constexpr auto operator()(std::initializer_list<T> const &&rng, C pred = C{},
+                                  P proj = P{}) const -> CPP_ret(minmax_result<T>)( //
+            requires Copyable<T> &&IndirectStrictWeakOrder<C, projected<T const *, P>>)
         {
             return (*this)(rng, std::move(pred), std::move(proj));
         }
@@ -114,8 +116,8 @@ namespace ranges
 
     namespace cpp20
     {
-        using ranges::minmax_result;
         using ranges::minmax;
+        using ranges::minmax_result;
     }
     /// @}
 } // namespace ranges

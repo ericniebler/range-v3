@@ -16,8 +16,11 @@
 
 #include <functional>
 #include <type_traits>
+
 #include <meta/meta.hpp>
+
 #include <concepts/concepts.hpp>
+
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -26,10 +29,9 @@ namespace ranges
     /// \addtogroup group-functional
     /// @{
     template<typename T,
-        typename U = meta::if_<
-            std::is_lvalue_reference<T>,
-            std::reference_wrapper<meta::_t<std::remove_reference<T>>>,
-            T &&>>
+             typename U = meta::if_<
+                 std::is_lvalue_reference<T>,
+                 std::reference_wrapper<meta::_t<std::remove_reference<T>>>, T &&>>
     U bind_forward(meta::_t<std::remove_reference<T>> &t) noexcept
     {
         return static_cast<U>(t);
@@ -45,10 +47,8 @@ namespace ranges
 
     template<typename T>
     struct bind_element
-      : meta::if_c<
-            RANGES_IS_SAME(detail::decay_t<T>, T),
-            meta::id<T>,
-            bind_element<detail::decay_t<T>>>
+      : meta::if_c<RANGES_IS_SAME(detail::decay_t<T>, T), meta::id<T>,
+                   bind_element<detail::decay_t<T>>>
     {};
 
     template<typename T>
@@ -71,11 +71,13 @@ namespace ranges
     {
     private:
         Bind bind_;
+
     public:
         protector() = default;
         protector(Bind b)
-            : bind_(std::move(b))
+          : bind_(std::move(b))
         {}
+        // clang-format off
         template<typename...Ts>
         auto CPP_auto_fun(operator())(Ts &&...ts)
         (
@@ -87,22 +89,21 @@ namespace ranges
         (
             return bind_(static_cast<Ts &&>(ts)...)
         )
+        // clang-format on
     };
 
     struct protect_fn
     {
         template<typename F>
-        auto operator()(F &&f) const ->
-            CPP_ret(protector<uncvref_t<F>>)(
-                requires std::is_bind_expression<uncvref_t<F>>::value)
+        auto operator()(F &&f) const -> CPP_ret(protector<uncvref_t<F>>)( //
+            requires std::is_bind_expression<uncvref_t<F>>::value)
         {
             return {static_cast<F &&>(f)};
         }
         /// \overload
         template<typename F>
-        auto operator()(F &&f) const ->
-            CPP_ret(F)(
-                requires (!std::is_bind_expression<uncvref_t<F>>::value))
+        auto operator()(F &&f) const -> CPP_ret(F)( //
+            requires(!std::is_bind_expression<uncvref_t<F>>::value))
         {
             return static_cast<F &&>(f);
         }

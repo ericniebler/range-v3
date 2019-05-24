@@ -8,25 +8,27 @@
 
 #include <memory>
 #include <type_traits>
+
 #include <meta/meta.hpp>
+
 #include <range/v3/detail/config.hpp>
 
 namespace ranges
 {
     template<typename Target, typename Source>
-    auto polymorphic_downcast(Source *x) noexcept ->
-        meta::if_<std::is_pointer<Target>,
-            decltype((static_cast<Target>(x), dynamic_cast<Target>(x)))>
+    auto polymorphic_downcast(Source *x) noexcept
+        -> meta::if_<std::is_pointer<Target>,
+                     decltype((static_cast<Target>(x), dynamic_cast<Target>(x)))>
     {
         auto result = static_cast<Target>(x);
         RANGES_ASSERT(dynamic_cast<Target>(x) == result);
         return result;
     }
     template<typename Target, typename Source>
-    auto polymorphic_downcast(Source &&x) noexcept ->
-        meta::if_<std::is_reference<Target>,
-            decltype((static_cast<Target>(std::declval<Source>()),
-                dynamic_cast<Target>(std::declval<Source>())))>
+    auto polymorphic_downcast(Source &&x) noexcept
+        -> meta::if_<std::is_reference<Target>,
+                     decltype((static_cast<Target>(std::declval<Source>()),
+                               dynamic_cast<Target>(std::declval<Source>())))>
     {
         auto &&result = static_cast<Target>(static_cast<Source &&>(x));
 #ifndef NDEBUG
@@ -37,4 +39,4 @@ namespace ranges
     }
 }
 
-#endif  // RANGES_V3_UTILITY_POLYMORPHIC_CAST_HPP
+#endif // RANGES_V3_UTILITY_POLYMORPHIC_CAST_HPP

@@ -14,44 +14,42 @@
 #ifndef RANGES_V3_VIEW_CONST_HPP
 #define RANGES_V3_VIEW_CONST_HPP
 
-#include <utility>
 #include <type_traits>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/range/primitives.hpp>
+#include <utility>
+
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
-#include <range/v3/view/adaptor.hpp>
-#include <range/v3/utility/move.hpp>
+#include <range/v3/range/primitives.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/common_type.hpp>
+#include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/view/view.hpp>
+#include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
     /// \addtogroup group-views
     /// @{
     template<typename Rng>
-    struct const_view
-      : view_adaptor<const_view<Rng>, Rng>
+    struct const_view : view_adaptor<const_view<Rng>, Rng>
     {
     private:
         friend range_access;
         template<bool Const>
-        struct adaptor
-          : adaptor_base
+        struct adaptor : adaptor_base
         {
             using CRng = meta::const_if_c<Const, Rng>;
-            using value_ =
-                range_value_t<CRng>;
+            using value_ = range_value_t<CRng>;
             using reference_ =
                 common_reference_t<value_ const &&, range_reference_t<CRng>>;
             using rvalue_reference_ =
                 common_reference_t<value_ const &&, range_rvalue_reference_t<CRng>>;
             adaptor() = default;
-            CPP_template(bool Other)(
-                requires Const && (!Other))
-            constexpr adaptor(adaptor<Other>)
+            CPP_template(bool Other)(       //
+                requires Const && (!Other)) //
+                constexpr adaptor(adaptor<Other>)
             {}
             reference_ read(iterator_t<CRng> const &it) const
             {
@@ -67,8 +65,7 @@ namespace ranges
         {
             return {};
         }
-        CPP_member
-        auto begin_adaptor() const -> CPP_ret(adaptor<true>)(
+        CPP_member auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
             requires Range<Rng const>)
         {
             return {};
@@ -77,26 +74,22 @@ namespace ranges
         {
             return {};
         }
-        CPP_member
-        auto end_adaptor() const -> CPP_ret(adaptor<true>)(
+        CPP_member auto end_adaptor() const -> CPP_ret(adaptor<true>)( //
             requires Range<Rng const>)
         {
             return {};
         }
+
     public:
         const_view() = default;
         explicit const_view(Rng rng)
           : const_view::view_adaptor{std::move(rng)}
         {}
-        CPP_member
-        constexpr /*c++14*/ auto CPP_fun(size)() (
-            requires SizedRange<Rng>)
+        CPP_member constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             return ranges::size(this->base());
         }
-        CPP_member
-        constexpr auto CPP_fun(size)() (const
-            requires SizedRange<Rng const>)
+        CPP_member constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             return ranges::size(this->base());
         }
@@ -107,9 +100,8 @@ namespace ranges
         struct const_fn
         {
             template<typename Rng>
-            auto operator()(Rng &&rng) const ->
-                CPP_ret(const_view<all_t<Rng>>)(
-                    requires ViewableRange<Rng> && InputRange<Rng>)
+            auto operator()(Rng &&rng) const -> CPP_ret(const_view<all_t<Rng>>)( //
+                requires ViewableRange<Rng> &&InputRange<Rng>)
             {
                 return const_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

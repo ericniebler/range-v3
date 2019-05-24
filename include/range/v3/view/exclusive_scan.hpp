@@ -15,11 +15,12 @@
 #define RANGE_V3_VIEW_EXCLUSIVE_SCAN_HPP
 
 #include <concepts/concepts.hpp>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/view/adaptor.hpp>
+
 #include <range/v3/functional/arithmetic.hpp>
 #include <range/v3/functional/bind.hpp>
 #include <range/v3/functional/invoke.hpp>
+#include <range/v3/range_fwd.hpp>
+#include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -27,6 +28,7 @@ namespace ranges
     /// \cond
     namespace detail
     {
+        // clang-format off
         CPP_def
         (
             template(typename Rng, typename T, typename Fun)
@@ -41,9 +43,11 @@ namespace ranges
                 Invocable<Fun &, T, range_reference_t<Rng>> &&
                 ExclusiveScanConstraint3<Rng, T, Fun>
         );
+        // clang-format on
     }
     /// \endcond
 
+    // clang-format off
     CPP_def
     (
         template(typename Rng, typename T, typename Fun)
@@ -52,12 +56,12 @@ namespace ranges
             CopyConstructible<T> &&
             detail::ExclusiveScanConstraint2<Rng, T, Fun>
     );
+    // clang-format on
 
     /// \addtogroup group-views
     /// @{
     template<typename Rng, typename T, typename Fun>
-    struct exclusive_scan_view
-      : view_adaptor<exclusive_scan_view<Rng, T, Fun>, Rng>
+    struct exclusive_scan_view : view_adaptor<exclusive_scan_view<Rng, T, Fun>, Rng>
     {
     private:
         friend range_access;
@@ -78,6 +82,7 @@ namespace ranges
             semiregular_t<T> sum_;
             exclusive_scan_view_t *rng_;
 
+            // clang-format off
             auto CPP_auto_fun(move_or_copy_init)(std::false_type)
             (
                 return (rng_->init_)
@@ -88,15 +93,15 @@ namespace ranges
             (
                 return std::move(rng_->init_)
             )
-        public:
-            using single_pass = exclusive_scan_view::single_pass;
+                // clang-format on
+                public : using single_pass = exclusive_scan_view::single_pass;
             adaptor() = default;
             adaptor(exclusive_scan_view_t &rng)
               : rng_(&rng)
             {}
-            CPP_template(bool Other)(
-                requires IsConst && (!Other))
-            adaptor(adaptor<Other> that)
+            CPP_template(bool Other)(         //
+                requires IsConst && (!Other)) //
+                adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
             iterator_t<CRng> begin(exclusive_scan_view_t &)
@@ -125,15 +130,13 @@ namespace ranges
         {
             return {*this};
         }
-        CPP_member
-        auto begin_adaptor() const -> CPP_ret(adaptor<true>)(
+        CPP_member auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
             requires ExclusiveScanConstraint<Rng const, T, Fun const>)
         {
             return {*this};
         }
-        CPP_member
-        auto end_adaptor() const ->
-            CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)(
+        CPP_member auto end_adaptor() const
+            -> CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)( //
                 requires ExclusiveScanConstraint<Rng const, T, Fun const>)
         {
             return {*this};
@@ -146,15 +149,11 @@ namespace ranges
           , init_(std::move(init))
           , fun_(std::move(fun))
         {}
-        CPP_member
-        auto CPP_fun(size)() (const
-            requires SizedRange<Rng const>)
+        CPP_member auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             return ranges::size(this->base());
         }
-        CPP_member
-        auto CPP_fun(size)() (
-            requires SizedRange<Rng>)
+        CPP_member auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             return ranges::size(this->base());
         }
@@ -169,13 +168,16 @@ namespace ranges
             template<typename T, typename Fun = plus>
             static auto bind(exclusive_scan_fn exclusive_scan, T init, Fun fun = {})
             {
-                return make_pipeable(std::bind(exclusive_scan, std::placeholders::_1,
-                    std::move(init), protect(std::move(fun))));
+                return make_pipeable(std::bind(exclusive_scan,
+                                               std::placeholders::_1,
+                                               std::move(init),
+                                               protect(std::move(fun))));
             }
+
         public:
             template<typename Rng, typename T, typename Fun = plus>
-            auto operator()(Rng &&rng, T init, Fun fun = Fun{}) const ->
-                CPP_ret(exclusive_scan_view<all_t<Rng>, T, Fun>)(
+            auto operator()(Rng &&rng, T init, Fun fun = Fun{}) const
+                -> CPP_ret(exclusive_scan_view<all_t<Rng>, T, Fun>)( //
                     requires ExclusiveScanConstraint<Rng, T, Fun>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(init), std::move(fun)};
@@ -188,4 +190,4 @@ namespace ranges
     }
     /// @}
 }
-#endif //RANGE_V3_VIEW_EXCLUSIVE_SCAN_HPP
+#endif // RANGE_V3_VIEW_EXCLUSIVE_SCAN_HPP

@@ -1,4 +1,4 @@
- /// \file
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-present
@@ -19,8 +19,9 @@
 
 namespace ranges
 {
-       /// \ingroup group-utility
-    struct in_place_t {};
+    /// \ingroup group-utility
+    struct in_place_t
+    {};
     RANGES_INLINE_VARIABLE(in_place_t, in_place)
 }
 

@@ -25,7 +25,9 @@
 #include <memory>
 #include <type_traits>
 #include <utility>
+
 #include <meta/meta.hpp>
+
 #include <range/v3/detail/config.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
@@ -37,25 +39,28 @@ namespace ranges
     namespace detail
     {
         template<typename T>
-        std::pair<T *, std::ptrdiff_t> get_temporary_buffer_impl(std::size_t count) noexcept
+        std::pair<T *, std::ptrdiff_t> get_temporary_buffer_impl(
+            std::size_t count) noexcept
         {
             RANGES_EXPECT(count >= 0);
             std::size_t n = static_cast<std::size_t>(count);
-            if (n > PTRDIFF_MAX / sizeof(T))
+            if(n > PTRDIFF_MAX / sizeof(T))
                 n = PTRDIFF_MAX / sizeof(T);
 
             void *ptr = nullptr;
-            for (; ptr == nullptr && n > 0; n /= 2)
+            for(; ptr == nullptr && n > 0; n /= 2)
             {
 #if RANGES_CXX_ALIGNED_NEW < RANGES_CXX_ALIGNED_NEW_17
                 static_assert(alignof(T) <= alignof(std::max_align_t),
-                    "Sorry: over-aligned types are supported only with C++17.");
-#else // RANGES_CXX_ALIGNED_NEW
-                if RANGES_CONSTEXPR_IF (alignof(T) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
-                    ptr = ::operator new(sizeof(T) * n, std::align_val_t{alignof(T)}, std::nothrow);
+                              "Sorry: over-aligned types are supported only with C++17.");
+#else  // RANGES_CXX_ALIGNED_NEW
+                if
+                    RANGES_CONSTEXPR_IF(alignof(T) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+                ptr = ::operator new(
+                    sizeof(T) * n, std::align_val_t{alignof(T)}, std::nothrow);
                 else
 #endif // RANGES_CXX_ALIGNED_NEW
-                    ptr = ::operator new(sizeof(T) * n, std::nothrow);
+                ptr = ::operator new(sizeof(T) * n, std::nothrow);
             }
 
             return {static_cast<T *>(ptr), static_cast<std::ptrdiff_t>(n)};
@@ -75,19 +80,20 @@ namespace ranges
             {
 #if RANGES_CXX_ALIGNED_NEW < RANGES_CXX_ALIGNED_NEW_17
                 static_assert(alignof(T) <= alignof(std::max_align_t),
-                    "Sorry: over-aligned types are supported only with C++17.");
-#else // RANGES_CXX_ALIGNED_NEW
-                if RANGES_CONSTEXPR_IF (alignof(T) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
-                    ::operator delete(p, std::align_val_t{alignof(T)});
+                              "Sorry: over-aligned types are supported only with C++17.");
+#else  // RANGES_CXX_ALIGNED_NEW
+                if
+                    RANGES_CONSTEXPR_IF(alignof(T) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+                ::operator delete(p, std::align_val_t{alignof(T)});
                 else
 #endif // RANGES_CXX_ALIGNED_NEW
-                    ::operator delete(p);
+                ::operator delete(p);
             }
         };
 
         template<typename T, typename... Args>
-        auto make_unique(Args &&... args) -> CPP_ret(std::unique_ptr<T>)(
-            requires (!std::is_array<T>::value))
+        auto make_unique(Args &&... args) -> CPP_ret(std::unique_ptr<T>)( //
+            requires(!std::is_array<T>::value))
         {
             return std::unique_ptr<T>{new T(static_cast<Args &&>(args)...)};
         }
@@ -103,6 +109,7 @@ namespace ranges
         CPP_assert(OutputIterator<O, Val>);
         CPP_assert(std::is_lvalue_reference<iter_reference_t<O>>());
         O out_;
+
     public:
         using difference_type = iter_difference_t<O>;
         raw_storage_iterator() = default;
@@ -113,20 +120,16 @@ namespace ranges
         {
             return *this;
         }
-        CPP_member
-        auto operator=(Val const & val) ->
-            CPP_ret(raw_storage_iterator &)(
-                requires CopyConstructible<Val>)
+        CPP_member auto operator=(Val const &val) -> CPP_ret(raw_storage_iterator &)( //
+            requires CopyConstructible<Val>)
         {
-            ::new((void*) std::addressof(*out_)) Val(val);
+            ::new((void *)std::addressof(*out_)) Val(val);
             return *this;
         }
-        CPP_member
-        auto operator=(Val &&val) ->
-            CPP_ret(raw_storage_iterator &)(
-                requires MoveConstructible<Val>)
+        CPP_member auto operator=(Val &&val) -> CPP_ret(raw_storage_iterator &)( //
+            requires MoveConstructible<Val>)
         {
-            ::new((void*) std::addressof(*out_)) Val(std::move(val));
+            ::new((void *)std::addressof(*out_)) Val(std::move(val));
             return *this;
         }
         raw_storage_iterator &operator++()
@@ -134,17 +137,13 @@ namespace ranges
             ++out_;
             return *this;
         }
-        CPP_member
-        auto operator++(int) ->
-            CPP_ret(void)(
-                requires (!ForwardIterator<O>))
+        CPP_member auto operator++(int) -> CPP_ret(void)( //
+            requires(!ForwardIterator<O>))
         {
             ++out_;
         }
-        CPP_member
-        auto operator++(int) ->
-            CPP_ret(raw_storage_iterator)(
-                requires ForwardIterator<O>)
+        CPP_member auto operator++(int) -> CPP_ret(raw_storage_iterator)( //
+            requires ForwardIterator<O>)
         {
             auto tmp = *this;
             ++out_;
@@ -162,6 +161,7 @@ namespace ranges
     private:
         CPP_assert(Iterator<I>);
         mutable I *i_ = nullptr;
+
     public:
         using difference_type = iter_difference_t<I>;
         iterator_wrapper() = default;
@@ -179,11 +179,14 @@ namespace ranges
         iterator_wrapper(I &i)
           : i_(std::addressof(i))
         {}
-        auto CPP_auto_fun(operator*)() (const)
+        // clang-format off
+        auto CPP_auto_fun(operator*)()(const)
         (
             return **i_
         )
-        iterator_wrapper &operator++()
+            // clang-format on
+            iterator_wrapper &
+            operator++()
         {
             ++*i_;
             return *this;
@@ -199,19 +202,15 @@ namespace ranges
     };
 
     template<typename I>
-    auto iter_ref(I &i) ->
-        CPP_ret(iterator_wrapper<I>)(
-            requires Iterator<I>)
+    auto iter_ref(I &i) -> CPP_ret(iterator_wrapper<I>)( //
+        requires Iterator<I>)
     {
         return i;
     }
 
     template<typename I>
     struct readable_traits<iterator_wrapper<I>>
-      : meta::if_c<
-            (bool) InputIterator<I>,
-            readable_traits<I>,
-            meta::nil_>
+      : meta::if_c<(bool)InputIterator<I>, readable_traits<I>, meta::nil_>
     {};
 
     template<typename Val>
@@ -220,9 +219,11 @@ namespace ranges
     private:
         Val *begin_;
         raw_storage_iterator<Val *, Val> rsi_;
+
     public:
         explicit raw_buffer(Val *begin)
-          : begin_(begin), rsi_(begin)
+          : begin_(begin)
+          , rsi_(begin)
         {}
         raw_buffer(raw_buffer &&) = default;
         raw_buffer(raw_buffer const &) = delete;

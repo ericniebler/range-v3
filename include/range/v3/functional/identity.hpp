@@ -30,9 +30,8 @@ namespace ranges
     };
 
     /// \cond
-    using ident
-        RANGES_DEPRECATED("Repace uses of ranges::ident with ranges::identity") =
-            identity;
+    using ident RANGES_DEPRECATED("Repace uses of ranges::ident with ranges::identity") =
+        identity;
     /// \endcond
 
     namespace cpp20

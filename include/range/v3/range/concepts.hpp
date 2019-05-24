@@ -14,35 +14,48 @@
 #ifndef RANGES_V3_RANGE_CONCEPTS_HPP
 #define RANGES_V3_RANGE_CONCEPTS_HPP
 
-#include <utility>
-#include <type_traits>
 #include <initializer_list>
+#include <type_traits>
+#include <utility>
+
 #include <meta/meta.hpp>
+
 #include <concepts/concepts.hpp>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/range/traits.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/primitives.hpp>
+
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/primitives.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range_fwd.hpp>
 
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
 // Non-portable forward declarations of standard containers
 RANGES_BEGIN_NAMESPACE_STD
-RANGES_BEGIN_NAMESPACE_CONTAINER
-    template<typename Key, typename Compare /*= less<Key>*/, typename Alloc /*= allocator<Key>*/>
-    class set;
+    RANGES_BEGIN_NAMESPACE_CONTAINER
+        template<typename Key,
+                 typename Compare /*= less<Key>*/,
+                 typename Alloc /*= allocator<Key>*/>
+        class set;
 
-    template<typename Key, typename Compare /*= less<Key>*/, typename Alloc /*= allocator<Key>*/>
-    class multiset;
+        template<typename Key,
+                 typename Compare /*= less<Key>*/,
+                 typename Alloc /*= allocator<Key>*/>
+        class multiset;
 
-    template<typename Key, typename Hash /*= hash<Key>*/, typename Pred /*= equal_to<Key>*/, typename Alloc /*= allocator<Key>*/>
-    class unordered_set;
+        template<typename Key,
+                 typename Hash /*= hash<Key>*/,
+                 typename Pred /*= equal_to<Key>*/,
+                 typename Alloc /*= allocator<Key>*/>
+        class unordered_set;
 
-    template<typename Key, typename Hash /*= hash<Key>*/, typename Pred /*= equal_to<Key>*/, typename Alloc /*= allocator<Key>*/>
-    class unordered_multiset;
-RANGES_END_NAMESPACE_CONTAINER
+        template<typename Key,
+                 typename Hash /*= hash<Key>*/,
+                 typename Pred /*= equal_to<Key>*/,
+                 typename Alloc /*= allocator<Key>*/>
+        class unordered_multiset;
+    RANGES_END_NAMESPACE_CONTAINER
 RANGES_END_NAMESPACE_STD
 #else
 #include <set>
@@ -59,6 +72,7 @@ namespace ranges
     ///
 
     /// \cond
+    // clang-format off
     CPP_def
     (
         template(typename T)
@@ -160,12 +174,13 @@ namespace ranges
         concept RandomAccessRange,
             BidirectionalRange<T> && RandomAccessRange_<T>
     );
+    // clang-format on
 
     /// \cond
     namespace detail
     {
         template<typename Rng>
-        using data_t = decltype(ranges::data(std::declval<Rng&>()));
+        using data_t = decltype(ranges::data(std::declval<Rng &>()));
 
         template<typename Rng>
         using element_t = meta::_t<std::remove_pointer<data_t<Rng>>>;
@@ -174,6 +189,7 @@ namespace ranges
 
     /// \cond
     // Needed to work around a bug in GCC
+    // clang-format off
     CPP_def
     (
         template(typename T)
@@ -228,6 +244,7 @@ namespace ranges
             detail::IntegerLike_<range_size_t<T>> &&
             !disable_sized_range<uncvref_t<T>>
     );
+    // clang-format on
 
     /// \cond
     namespace detail
@@ -237,12 +254,11 @@ namespace ranges
             bool result_;
 
             template<typename T>
-            static constexpr auto test(T const *) -> CPP_ret(bool)(
-                requires Range<T> && Range<T const>)
+            static constexpr auto test(T const *) -> CPP_ret(bool)( //
+                requires Range<T> &&Range<T const>)
             {
-                return RANGES_IS_SAME(
-                    iter_reference_t<iterator_t<T>>,
-                    iter_reference_t<iterator_t<T const>>);
+                return RANGES_IS_SAME(iter_reference_t<iterator_t<T>>,
+                                      iter_reference_t<iterator_t<T const>>);
             }
             static constexpr auto test(void const *) -> bool
             {
@@ -281,12 +297,14 @@ namespace ranges
             return false;
         }
         template<typename Key, typename Hash, typename Pred, typename Alloc>
-        constexpr bool enable_view_impl_(std::unordered_set<Key, Hash, Pred, Alloc> const *)
+        constexpr bool enable_view_impl_(
+            std::unordered_set<Key, Hash, Pred, Alloc> const *)
         {
             return false;
         }
         template<typename Key, typename Hash, typename Pred, typename Alloc>
-        constexpr bool enable_view_impl_(std::unordered_multiset<Key, Hash, Pred, Alloc> const *)
+        constexpr bool enable_view_impl_(
+            std::unordered_multiset<Key, Hash, Pred, Alloc> const *)
         {
             return false;
         }
@@ -318,6 +336,7 @@ namespace ranges
     /// View concepts below
     ///
 
+    // clang-format off
     CPP_def
     (
         template(typename T)
@@ -404,27 +423,26 @@ namespace ranges
             Range<T> &&
             (ForwardingRange_<T> || View<detail::decay_t<T>>)
     );
+    // clang-format on
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // range_tag
     using range_tag = ::concepts::tag<RangeConcept>;
     using input_range_tag = ::concepts::tag<InputRangeConcept, range_tag>;
     using forward_range_tag = ::concepts::tag<ForwardRangeConcept, input_range_tag>;
-    using bidirectional_range_tag = ::concepts::tag<BidirectionalRangeConcept, forward_range_tag>;
-    using random_access_range_tag = ::concepts::tag<RandomAccessRangeConcept, bidirectional_range_tag>;
-    using contiguous_range_tag = ::concepts::tag<ContiguousRangeConcept, random_access_range_tag>;
+    using bidirectional_range_tag =
+        ::concepts::tag<BidirectionalRangeConcept, forward_range_tag>;
+    using random_access_range_tag =
+        ::concepts::tag<RandomAccessRangeConcept, bidirectional_range_tag>;
+    using contiguous_range_tag =
+        ::concepts::tag<ContiguousRangeConcept, random_access_range_tag>;
 
     template<typename T>
     using range_tag_of =
-        ::concepts::tag_of<
-            meta::list<
-                ContiguousRangeConcept,
-                RandomAccessRangeConcept,
-                BidirectionalRangeConcept,
-                ForwardRangeConcept,
-                InputRangeConcept,
-                RangeConcept>,
-            T>;
+        ::concepts::tag_of<meta::list<ContiguousRangeConcept, RandomAccessRangeConcept,
+                                      BidirectionalRangeConcept, ForwardRangeConcept,
+                                      InputRangeConcept, RangeConcept>,
+                           T>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // common_range_tag_of
@@ -432,11 +450,7 @@ namespace ranges
 
     template<typename T>
     using common_range_tag_of =
-        ::concepts::tag_of<
-            meta::list<
-                CommonRangeConcept,
-                RangeConcept>,
-            T>;
+        ::concepts::tag_of<meta::list<CommonRangeConcept, RangeConcept>, T>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // sized_range_concept
@@ -444,11 +458,7 @@ namespace ranges
 
     template<typename T>
     using sized_range_tag_of =
-        ::concepts::tag_of<
-            meta::list<
-                SizedRangeConcept,
-                RangeConcept>,
-            T>;
+        ::concepts::tag_of<meta::list<SizedRangeConcept, RangeConcept>, T>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // common_view_tag_of
@@ -457,12 +467,7 @@ namespace ranges
 
     template<typename T>
     using common_view_tag_of =
-        ::concepts::tag_of<
-            meta::list<
-                CommonViewConcept,
-                ViewConcept,
-                RangeConcept>,
-            T>;
+        ::concepts::tag_of<meta::list<CommonViewConcept, ViewConcept, RangeConcept>, T>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // sized_view_tag_of
@@ -470,37 +475,27 @@ namespace ranges
 
     template<typename T>
     using sized_view_tag_of =
-        ::concepts::tag_of<
-            meta::list<
-                SizedViewConcept,
-                ViewConcept,
-                RangeConcept>,
-            T>;
+        ::concepts::tag_of<meta::list<SizedViewConcept, ViewConcept, RangeConcept>, T>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // view_concept
     template<typename T>
-    using view_tag_of =
-        ::concepts::tag_of<
-            meta::list<
-                ViewConcept,
-                RangeConcept>,
-            T>;
+    using view_tag_of = ::concepts::tag_of<meta::list<ViewConcept, RangeConcept>, T>;
 
     namespace cpp20
     {
         using ranges::Range;
         using ranges::SizedRange;
         // Specialize this is namespace ranges::
-        using ranges::enable_view;
-        using ranges::View;
-        using ranges::OutputRange;
-        using ranges::InputRange;
-        using ranges::ForwardRange;
         using ranges::BidirectionalRange;
-        using ranges::RandomAccessRange;
-        using ranges::ContiguousRange;
         using ranges::CommonRange;
+        using ranges::ContiguousRange;
+        using ranges::enable_view;
+        using ranges::ForwardRange;
+        using ranges::InputRange;
+        using ranges::OutputRange;
+        using ranges::RandomAccessRange;
+        using ranges::View;
         using ranges::ViewableRange;
     }
     /// @}

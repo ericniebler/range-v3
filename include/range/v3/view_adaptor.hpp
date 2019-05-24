@@ -13,7 +13,8 @@
 #define RANGES_V3_OLD_VIEW_ADAPTOR_HPP
 
 #include <range/v3/detail/config.hpp>
-RANGES_DEPRECATED_HEADER("This header is deprecated. Please #include <range/v3/view/adaptor.hpp> instead.")
+RANGES_DEPRECATED_HEADER(
+    "This header is deprecated. Please #include <range/v3/view/adaptor.hpp> instead.")
 
 #include <range/v3/view/adaptor.hpp>
 

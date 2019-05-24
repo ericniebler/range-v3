@@ -49,14 +49,17 @@
 #include <initializer_list>
 #include <new>
 #include <random>
+
 #include <meta/meta.hpp>
-#include <range/v3/range_fwd.hpp>
+
+#include <concepts/concepts.hpp>
+
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/generate.hpp>
-#include <concepts/concepts.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/functional/reference_wrapper.hpp>
 #include <range/v3/iterator/concepts.hpp>
+#include <range/v3/range_fwd.hpp>
 
 #if !RANGES_CXX_THREAD_LOCAL
 #include <mutex>
@@ -69,6 +72,7 @@ namespace ranges
 {
     /// \addtogroup group-numerics
     /// @{
+    // clang-format off
     CPP_def
     (
         template(typename Gen)
@@ -84,6 +88,7 @@ namespace ranges
             UnsignedIntegral<invoke_result_t<Gen&>> &&
             uncvref_t<Gen>::min() < uncvref_t<Gen>::max()
     );
+    // clang-format on
     /// @}
 
     /// \cond
@@ -108,12 +113,13 @@ namespace ranges
             }
 
             template<typename I>
-            constexpr auto fast_exp(I x, I power, I result = I{1}) ->
-                CPP_ret(I)(
-                    requires UnsignedIntegral<I>)
+            constexpr auto fast_exp(I x, I power, I result = I{1}) -> CPP_ret(I)( //
+                requires UnsignedIntegral<I>)
             {
-                return power == I{0} ? result
-                    : randutils::fast_exp(x * x, power >> 1, result * (power & I{1} ? x : 1));
+                return power == I{0}
+                           ? result
+                           : randutils::fast_exp(
+                                 x * x, power >> 1, result * (power & I{1} ? x : 1));
             }
 
             //////////////////////////////////////////////////////////////////////////////
@@ -123,68 +129,70 @@ namespace ranges
             //////////////////////////////////////////////////////////////////////////////
 
             /*
-            * seed_seq_fe implements a fixed-entropy seed sequence; it conforms to all
-            * the requirements of a Seed Sequence concept.
-            *
-            * seed_seq_fe<N> implements a seed sequence which seeds based on a store of
-            * N * 32 bits of entropy.  Typically, it would be initialized with N or more
-            * integers.
-            *
-            * seed_seq_fe128 and seed_seq_fe256 are provided as convenience typedefs for
-            * 128- and 256-bit entropy stores respectively.  These variants outperform
-            * std::seed_seq, while being better mixing the bits it is provided as entropy.
-            * In almost all common use cases, they serve as better drop-in replacements
-            * for seed_seq.
-            *
-            * Technical details
-            *
-            * Assuming it constructed with M seed integers as input, it exhibits the
-            * following properties
-            *
-            * * Diffusion/Avalanche:  A single-bit change in any of the M inputs has a
-            *   50% chance of flipping every bit in the bitstream produced by generate.
-            *   Initializing the N-word entropy store with M words requires O(N * M)
-            *   time precisely because of the avalanche requirements.  Once constructed,
-            *   calls to generate are linear in the number of words generated.
-            *
-            * * Bias freedom/Bijection: If M == N, the state of the entropy store is a
-            *   bijection from the M inputs (i.e., no states occur twice, none are
-            *   omitted). If M > N the number of times each state can occur is the same
-            *   (each state occurs 2**(32*(M-N)) times, where ** is the power function).
-            *   If M < N, some states cannot occur (bias) but no state occurs more
-            *   than once (it's impossible to avoid bias if M < N; ideally N should not
-            *   be chosen so that it is more than M).
-            *
-            *   Likewise, the generate function has similar properties (with the entropy
-            *   store as the input data).  If more outputs are requested than there is
-            *   entropy, some outputs cannot occur.  For example, the Mersenne Twister
-            *   will request 624 outputs, to initialize its 19937-bit state, which is
-            *   much larger than a 128-bit or 256-bit entropy pool.  But in practice,
-            *   limiting the Mersenne Twister to 2**128 possible initializations gives
-            *   us enough initializations to give a unique initialization to trillions
-            *   of computers for billions of years.  If you really have 624 words of
-            *   *real* high-quality entropy you want to use, you probably don't need
-            *   an entropy mixer like this class at all.  But if you *really* want to,
-            *   nothing is stopping you from creating a randutils::seed_seq_fe<624>.
-            *
-            * * As a consequence of the above properties, if all parts of the provided
-            *   seed data are kept constant except one, and the remaining part is varied
-            *   through K different states, K different output sequences will be produced.
-            *
-            * * Also, because the amount of entropy stored is fixed, this class never
-            *   performs dynamic allocation and is free of the possibility of generating
-            *   an exception.
-            *
-            * Ideas used to implement this code include hashing, a simple PCG generator
-            * based on an MCG base with an XorShift output function and permutation
-            * functions on tuples.
-            *
-            * More detail at
-            *     http://www.pcg-random.org/posts/developing-a-seed_seq-alternative.html
-            */
+             * seed_seq_fe implements a fixed-entropy seed sequence; it conforms to all
+             * the requirements of a Seed Sequence concept.
+             *
+             * seed_seq_fe<N> implements a seed sequence which seeds based on a store of
+             * N * 32 bits of entropy.  Typically, it would be initialized with N or more
+             * integers.
+             *
+             * seed_seq_fe128 and seed_seq_fe256 are provided as convenience typedefs for
+             * 128- and 256-bit entropy stores respectively.  These variants outperform
+             * std::seed_seq, while being better mixing the bits it is provided as
+             * entropy. In almost all common use cases, they serve as better drop-in
+             * replacements for seed_seq.
+             *
+             * Technical details
+             *
+             * Assuming it constructed with M seed integers as input, it exhibits the
+             * following properties
+             *
+             * * Diffusion/Avalanche:  A single-bit change in any of the M inputs has a
+             *   50% chance of flipping every bit in the bitstream produced by generate.
+             *   Initializing the N-word entropy store with M words requires O(N * M)
+             *   time precisely because of the avalanche requirements.  Once constructed,
+             *   calls to generate are linear in the number of words generated.
+             *
+             * * Bias freedom/Bijection: If M == N, the state of the entropy store is a
+             *   bijection from the M inputs (i.e., no states occur twice, none are
+             *   omitted). If M > N the number of times each state can occur is the same
+             *   (each state occurs 2**(32*(M-N)) times, where ** is the power function).
+             *   If M < N, some states cannot occur (bias) but no state occurs more
+             *   than once (it's impossible to avoid bias if M < N; ideally N should not
+             *   be chosen so that it is more than M).
+             *
+             *   Likewise, the generate function has similar properties (with the entropy
+             *   store as the input data).  If more outputs are requested than there is
+             *   entropy, some outputs cannot occur.  For example, the Mersenne Twister
+             *   will request 624 outputs, to initialize its 19937-bit state, which is
+             *   much larger than a 128-bit or 256-bit entropy pool.  But in practice,
+             *   limiting the Mersenne Twister to 2**128 possible initializations gives
+             *   us enough initializations to give a unique initialization to trillions
+             *   of computers for billions of years.  If you really have 624 words of
+             *   *real* high-quality entropy you want to use, you probably don't need
+             *   an entropy mixer like this class at all.  But if you *really* want to,
+             *   nothing is stopping you from creating a randutils::seed_seq_fe<624>.
+             *
+             * * As a consequence of the above properties, if all parts of the provided
+             *   seed data are kept constant except one, and the remaining part is varied
+             *   through K different states, K different output sequences will be
+             * produced.
+             *
+             * * Also, because the amount of entropy stored is fixed, this class never
+             *   performs dynamic allocation and is free of the possibility of generating
+             *   an exception.
+             *
+             * Ideas used to implement this code include hashing, a simple PCG generator
+             * based on an MCG base with an XorShift output function and permutation
+             * functions on tuples.
+             *
+             * More detail at
+             *     http://www.pcg-random.org/posts/developing-a-seed_seq-alternative.html
+             */
 
             template<std::size_t count, typename IntRep = std::uint32_t>
-            struct seed_seq_fe {
+            struct seed_seq_fe
+            {
             public:
                 CPP_assert(UnsignedIntegral<IntRep>);
                 typedef IntRep result_type;
@@ -200,38 +208,37 @@ namespace ranges
 
                 static constexpr std::uint32_t MIX_MULT_L = 0xca01f9dd;
                 static constexpr std::uint32_t MIX_MULT_R = 0x4973f715;
-                static constexpr std::uint32_t XSHIFT = sizeof(IntRep)*8/2;
+                static constexpr std::uint32_t XSHIFT = sizeof(IntRep) * 8 / 2;
 
                 std::array<IntRep, count> mixer_;
 
                 template<typename I, typename S>
-                auto mix_entropy(I begin, S end) ->
-                    CPP_ret(void)(
-                        requires InputIterator<I> && Sentinel<S, I> &&
-                            ConvertibleTo<iter_reference_t<I>, IntRep>)
+                auto mix_entropy(I begin, S end) -> CPP_ret(void)( //
+                    requires InputIterator<I>&& Sentinel<S, I>&&
+                        ConvertibleTo<iter_reference_t<I>, IntRep>)
                 {
                     auto hash_const = INIT_A;
-                    auto hash = [&](IntRep value) RANGES_INTENDED_MODULAR_ARITHMETIC
-                    {
+                    auto hash = [&](IntRep value) RANGES_INTENDED_MODULAR_ARITHMETIC {
                         value ^= hash_const;
                         hash_const *= MULT_A;
                         value *= hash_const;
                         value ^= value >> XSHIFT;
                         return value;
                     };
-                    auto mix = [](IntRep x, IntRep y) RANGES_INTENDED_MODULAR_ARITHMETIC
-                    {
-                        IntRep result = MIX_MULT_L*x - MIX_MULT_R*y;
+                    auto mix = [](IntRep x, IntRep y) RANGES_INTENDED_MODULAR_ARITHMETIC {
+                        IntRep result = MIX_MULT_L * x - MIX_MULT_R * y;
                         result ^= result >> XSHIFT;
                         return result;
                     };
 
                     for(auto& elem : mixer_)
                     {
-                        if(begin != end) {
+                        if(begin != end)
+                        {
                             elem = hash(static_cast<IntRep>(*begin));
                             ++begin;
-                        } else
+                        }
+                        else
                             elem = hash(IntRep{0});
                     }
                     for(auto& src : mixer_)
@@ -244,19 +251,19 @@ namespace ranges
                 }
 
             public:
-                seed_seq_fe(const seed_seq_fe&)    = delete;
+                seed_seq_fe(const seed_seq_fe&) = delete;
                 void operator=(const seed_seq_fe&) = delete;
 
                 template<typename T>
-                CPP_ctor(seed_seq_fe)(std::initializer_list<T> init)(
+                CPP_ctor(seed_seq_fe)(std::initializer_list<T> init)( //
                     requires ConvertibleTo<T const&, IntRep>)
                 {
                     seed(init.begin(), init.end());
                 }
 
                 template<typename I, typename S>
-                CPP_ctor(seed_seq_fe)(I begin, S end)(
-                    requires InputIterator<I> && Sentinel<S, I> &&
+                CPP_ctor(seed_seq_fe)(I begin, S end)( //
+                    requires InputIterator<I>&& Sentinel<S, I>&&
                         ConvertibleTo<iter_reference_t<I>, IntRep>)
                 {
                     seed(begin, end);
@@ -264,14 +271,14 @@ namespace ranges
 
                 // generating functions
                 template<typename I, typename S>
-                RANGES_INTENDED_MODULAR_ARITHMETIC
-                auto generate(I first, S const last) const ->
-                    CPP_ret(void)(
-                        requires RandomAccessIterator<I> && Sentinel<S, I>)
+                RANGES_INTENDED_MODULAR_ARITHMETIC auto generate(I first,
+                                                                 S const last) const
+                    -> CPP_ret(void)( //
+                        requires RandomAccessIterator<I>&& Sentinel<S, I>)
                 {
                     auto src_begin = mixer_.begin();
-                    auto src_end   = mixer_.end();
-                    auto src       = src_begin;
+                    auto src_end = mixer_.end();
+                    auto src = src_begin;
                     auto hash_const = INIT_B;
                     for(; first != last; ++first)
                     {
@@ -292,23 +299,27 @@ namespace ranges
                 }
 
                 template<typename O>
-                RANGES_INTENDED_MODULAR_ARITHMETIC
-                auto param(O dest) const ->
-                    CPP_ret(void)(
-                        requires WeaklyIncrementable<O> &&
+                RANGES_INTENDED_MODULAR_ARITHMETIC auto param(O dest) const
+                    -> CPP_ret(void)( //
+                        requires WeaklyIncrementable<O>&&
                             IndirectlyCopyable<decltype(mixer_.begin()), O>)
                 {
                     constexpr IntRep INV_A = randutils::fast_exp(MULT_A, IntRep(-1));
-                    constexpr IntRep MIX_INV_L = randutils::fast_exp(MIX_MULT_L, IntRep(-1));
+                    constexpr IntRep MIX_INV_L =
+                        randutils::fast_exp(MIX_MULT_L, IntRep(-1));
 
                     auto mixer_copy = mixer_;
                     for(std::size_t round = 0; round < mix_rounds; ++round)
                     {
                         // Advance to the final value.  We'll backtrack from that.
-                        auto hash_const = INIT_A*randutils::fast_exp(MULT_A, IntRep(count * count));
+                        auto hash_const =
+                            INIT_A * randutils::fast_exp(MULT_A, IntRep(count * count));
 
-                        for(auto src = mixer_copy.rbegin(); src != mixer_copy.rend(); ++src)
-                            for(auto dest = mixer_copy.rbegin(); dest != mixer_copy.rend(); ++dest)
+                        for(auto src = mixer_copy.rbegin(); src != mixer_copy.rend();
+                            ++src)
+                            for(auto dest = mixer_copy.rbegin();
+                                dest != mixer_copy.rend();
+                                ++dest)
                                 if(src != dest)
                                 {
                                     IntRep revhashed = *src;
@@ -319,7 +330,7 @@ namespace ranges
                                     revhashed ^= revhashed >> XSHIFT;
                                     IntRep unmixed = *dest;
                                     unmixed ^= unmixed >> XSHIFT;
-                                    unmixed += MIX_MULT_R*revhashed;
+                                    unmixed += MIX_MULT_R * revhashed;
                                     unmixed *= MIX_INV_L;
                                     *dest = unmixed;
                                 }
@@ -338,9 +349,8 @@ namespace ranges
                 }
 
                 template<typename I, typename S>
-                auto seed(I begin, S end) ->
-                    CPP_ret(void)(
-                    requires InputIterator<I> && Sentinel<S, I> &&
+                auto seed(I begin, S end) -> CPP_ret(void)( //
+                    requires InputIterator<I>&& Sentinel<S, I>&&
                         ConvertibleTo<iter_reference_t<I>, IntRep>)
                 {
                     mix_entropy(begin, end);
@@ -367,32 +377,33 @@ namespace ranges
             //////////////////////////////////////////////////////////////////////////////
 
             /*
-            * randutils::auto_seeded
-            *
-            *   Extends a seed sequence class with a nondeterministic default constructor.
-            *   Uses a variety of local sources of entropy to portably initialize any
-            *   seed sequence to a good default state.
-            *
-            *   In normal use, it's accessed via one of the following type aliases, which
-            *   use seed_seq_fe128 and seed_seq_fe256 above.
-            *
-            *       randutils::auto_seed_128
-            *       randutils::auto_seed_256
-            *
-            *   It's discussed in detail at
-            *       http://www.pcg-random.org/posts/simple-portable-cpp-seed-entropy.html
-            *   and its motivation (why you can't just use std::random_device) here
-            *       http://www.pcg-random.org/posts/cpps-random_device.html
-            */
+             * randutils::auto_seeded
+             *
+             *   Extends a seed sequence class with a nondeterministic default
+             * constructor. Uses a variety of local sources of entropy to portably
+             * initialize any seed sequence to a good default state.
+             *
+             *   In normal use, it's accessed via one of the following type aliases, which
+             *   use seed_seq_fe128 and seed_seq_fe256 above.
+             *
+             *       randutils::auto_seed_128
+             *       randutils::auto_seed_256
+             *
+             *   It's discussed in detail at
+             *       http://www.pcg-random.org/posts/simple-portable-cpp-seed-entropy.html
+             *   and its motivation (why you can't just use std::random_device) here
+             *       http://www.pcg-random.org/posts/cpps-random_device.html
+             */
 
             template<typename SeedSeq>
-            struct auto_seeded : public SeedSeq {
+            struct auto_seeded : public SeedSeq
+            {
                 auto_seeded()
-                    : auto_seeded(randutils::get_entropy())
+                  : auto_seeded(randutils::get_entropy())
                 {}
                 template<std::size_t N>
                 auto_seeded(std::array<std::uint32_t, N> const& seeds)
-                    : SeedSeq(seeds.begin(), seeds.end())
+                  : SeedSeq(seeds.begin(), seeds.end())
                 {}
                 using SeedSeq::SeedSeq;
 
@@ -411,14 +422,14 @@ namespace ranges
         }
 
         using default_URNG = meta::if_c<(sizeof(void*) >= sizeof(long long)),
-            std::mt19937_64, std::mt19937>;
+                                        std::mt19937_64, std::mt19937>;
 
 #if !RANGES_CXX_THREAD_LOCAL
         template<typename URNG>
-        class sync_URNG
-          : private URNG
+        class sync_URNG : private URNG
         {
             mutable std::mutex mtx_;
+
         public:
             using URNG::URNG;
             sync_URNG() = default;
@@ -426,10 +437,10 @@ namespace ranges
             result_type operator()()
             {
                 std::lock_guard<std::mutex> guard{mtx_};
-                return static_cast<URNG &>(*this)();
+                return static_cast<URNG&>(*this)();
             }
-            using URNG::min;
             using URNG::max;
+            using URNG::min;
         };
         using default_random_engine = sync_URNG<default_URNG>;
 #else
@@ -439,23 +450,23 @@ namespace ranges
         template<typename T = void>
         default_random_engine& get_random_engine()
         {
-            using Seeder = meta::if_c<
-                (sizeof(default_URNG) > 16),
-                randutils::auto_seed_256,
-                randutils::auto_seed_128>;
+            using Seeder = meta::if_c<(sizeof(default_URNG) > 16),
+                                      randutils::auto_seed_256,
+                                      randutils::auto_seed_128>;
 
 #if RANGES_CXX_THREAD_LOCAL >= RANGES_CXX_THREAD_LOCAL_11
             static thread_local default_random_engine engine{Seeder{}.base()};
 
 #elif RANGES_CXX_THREAD_LOCAL
             static __thread bool initialized = false;
-            static __thread meta::_t<std::aligned_storage<
-                sizeof(default_random_engine),
-                alignof(default_random_engine)>> storage;
+            static __thread meta::_t<std::aligned_storage<sizeof(default_random_engine),
+                                                          alignof(default_random_engine)>>
+                storage;
 
             if(!initialized)
             {
-                ::new(static_cast<void*>(&storage)) default_random_engine{Seeder{}.base()};
+                ::new(static_cast<void*>(&storage))
+                    default_random_engine{Seeder{}.base()};
                 initialized = true;
             }
             auto& engine = reinterpret_cast<default_random_engine&>(storage);

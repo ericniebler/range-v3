@@ -14,17 +14,18 @@
 #define RANGES_V3_ALGORITHM_PARTIAL_SORT_HPP
 
 #include <functional>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/dangling.hpp>
-#include <range/v3/range/traits.hpp>
+
 #include <range/v3/algorithm/heap_algorithm.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -34,9 +35,9 @@ namespace ranges
     struct partial_sort_fn
     {
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
-                requires Sortable<I, C, P> && RandomAccessIterator<I> && Sentinel<S, I>)
+        auto operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const
+            -> CPP_ret(I)( //
+                requires Sortable<I, C, P> &&RandomAccessIterator<I> &&Sentinel<S, I>)
         {
             make_heap(begin, middle, std::ref(pred), std::ref(proj));
             auto const len = middle - begin;
@@ -46,7 +47,8 @@ namespace ranges
                 if(invoke(pred, invoke(proj, *i), invoke(proj, *begin)))
                 {
                     iter_swap(i, begin);
-                    detail::sift_down_n(begin, len, begin, std::ref(pred), std::ref(proj));
+                    detail::sift_down_n(
+                        begin, len, begin, std::ref(pred), std::ref(proj));
                 }
             }
             sort_heap(begin, middle, std::ref(pred), std::ref(proj));
@@ -55,12 +57,14 @@ namespace ranges
 
         template<typename Rng, typename C = less, typename P = identity>
         auto operator()(Rng &&rng, iterator_t<Rng> middle, C pred = C{},
-                P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
-                requires Sortable<iterator_t<Rng>, C, P> && RandomAccessRange<Rng>)
+                        P proj = P{}) const -> CPP_ret(safe_iterator_t<Rng>)( //
+            requires Sortable<iterator_t<Rng>, C, P> &&RandomAccessRange<Rng>)
         {
-            return (*this)(begin(rng), std::move(middle), end(rng), std::move(pred),
-                std::move(proj));
+            return (*this)(begin(rng),
+                           std::move(middle),
+                           end(rng),
+                           std::move(pred),
+                           std::move(proj));
         }
     };
 

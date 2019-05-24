@@ -13,8 +13,8 @@
 
 #include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/numeric/adjacent_difference.hpp>
-#include <range/v3/numeric/iota.hpp>
 #include <range/v3/numeric/inner_product.hpp>
+#include <range/v3/numeric/iota.hpp>
 #include <range/v3/numeric/partial_sum.hpp>
 
 #endif

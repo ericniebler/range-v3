@@ -22,9 +22,7 @@ namespace ranges
     struct plus
     {
         template<typename T, typename U>
-        constexpr
-        auto operator()(T &&t, U &&u) const ->
-            decltype((T &&) t + (U &&) u)
+        constexpr auto operator()(T &&t, U &&u) const -> decltype((T &&) t + (U &&) u)
         {
             return (T &&) t + (U &&) u;
         }
@@ -34,9 +32,7 @@ namespace ranges
     struct minus
     {
         template<typename T, typename U>
-        constexpr
-        auto operator()(T &&t, U &&u) const ->
-            decltype((T &&) t - (U &&) u)
+        constexpr auto operator()(T &&t, U &&u) const -> decltype((T &&) t - (U &&) u)
         {
             return (T &&) t - (U &&) u;
         }
@@ -46,9 +42,7 @@ namespace ranges
     struct multiplies
     {
         template<typename T, typename U>
-        constexpr
-        auto operator()(T &&t, U &&u) const ->
-            decltype((T &&) t * (U &&) u)
+        constexpr auto operator()(T &&t, U &&u) const -> decltype((T &&) t * (U &&) u)
         {
             return (T &&) t * (U &&) u;
         }
@@ -58,8 +52,7 @@ namespace ranges
     struct bitwise_or
     {
         template<typename T, typename U>
-        constexpr auto operator()(T &&t, U &&u) const ->
-            decltype((T &&) t | (U &&) u)
+        constexpr auto operator()(T &&t, U &&u) const -> decltype((T &&) t | (U &&) u)
         {
             return (T &&) t | (U &&) u;
         }
@@ -69,29 +62,29 @@ namespace ranges
     template<typename T>
     struct convert_to
     {
+        // clang-format off
         template<typename U>
-        constexpr auto CPP_auto_fun(operator())(U &&u) (const)
+        constexpr auto CPP_auto_fun(operator())(U &&u)(const)
         (
             return static_cast<T>((U &&) u)
         )
+        // clang-format on
     };
 
     template<typename T>
     struct coerce
     {
-        constexpr T & operator()(T & t) const
+        constexpr T &operator()(T &t) const
         {
             return t;
         }
         /// \overload
-        constexpr
-        T const & operator()(T const & t) const
+        constexpr T const &operator()(T const &t) const
         {
             return t;
         }
         /// \overload
-        constexpr
-        T operator()(T &&t) const
+        constexpr T operator()(T &&t) const
         {
             return (T &&) t;
         }
@@ -99,18 +92,15 @@ namespace ranges
     };
 
     template<typename T>
-    struct coerce<T const>
-      : coerce<T>
+    struct coerce<T const> : coerce<T>
     {};
 
     template<typename T>
-    struct coerce<T &>
-      : coerce<T>
+    struct coerce<T &> : coerce<T>
     {};
 
     template<typename T>
-    struct coerce<T &&>
-      : coerce<T>
+    struct coerce<T &&> : coerce<T>
     {};
     /// @}
 }

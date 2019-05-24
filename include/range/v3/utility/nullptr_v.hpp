@@ -14,7 +14,8 @@
 #define RANGES_V3_UTILITY_NULLPTR_V_HPP
 
 #include <range/v3/detail/config.hpp>
-RANGES_DEPRECATED_HEADER("This header is deprecated and will be removed from a future version of range-v3.")
+RANGES_DEPRECATED_HEADER(
+    "This header is deprecated and will be removed from a future version of range-v3.")
 
 namespace ranges
 {
@@ -25,11 +26,11 @@ namespace ranges
         return nullptr;
     }
 
-    #if RANGES_CXX_VARIABLE_TEMPLATES
+#if RANGES_CXX_VARIABLE_TEMPLATES
     /// \ingroup group-utility
     template<typename T>
     constexpr T *nullptr_v = nullptr;
-    #endif
+#endif
 }
 
 #endif

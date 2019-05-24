@@ -14,20 +14,22 @@
 #define RANGES_V3_NUMERIC_ACCUMULATE_HPP
 
 #include <meta/meta.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/traits.hpp>
-#include <range/v3/range/concepts.hpp>
+
 #include <range/v3/functional/arithmetic.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
-#include <range/v3/iterator/traits.hpp>
 #include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
     /// \addtogroup group-numerics
     /// @{
+    // clang-format off
     CPP_def
     (
         template(typename I, typename T, typename Op = plus, typename P = identity)
@@ -36,24 +38,28 @@ namespace ranges
             IndirectBinaryInvocable_<Op, T *, projected<I, P>> &&
             Assignable<T&, indirect_result_t<Op &, T *, projected<I, P>>>
     );
+    // clang-format on
 
     struct accumulate_fn
     {
-        CPP_template(typename I, typename S, typename T, typename Op = plus, typename P = identity)(
-            requires Sentinel<S, I> && Accumulateable<I, T, Op, P>)
-        T operator()(I begin, S end, T init, Op op = Op{}, P proj = P{}) const
+        template<typename I, typename S, typename T, typename Op = plus,
+                 typename P = identity>
+        auto operator()(I begin, S end, T init, Op op = Op{}, P proj = P{}) const
+            -> CPP_ret(T)( //
+                requires Sentinel<S, I> &&Accumulateable<I, T, Op, P>)
         {
             for(; begin != end; ++begin)
                 init = invoke(op, init, invoke(proj, *begin));
             return init;
         }
 
-        CPP_template(typename Rng, typename T, typename Op = plus, typename P = identity)(
-            requires Range<Rng> && Accumulateable<iterator_t<Rng>, T, Op, P>)
-        T operator()(Rng &&rng, T init, Op op = Op{}, P proj = P{}) const
+        template<typename Rng, typename T, typename Op = plus, typename P = identity>
+        auto operator()(Rng &&rng, T init, Op op = Op{}, P proj = P{}) const
+            -> CPP_ret(T)( //
+                requires Range<Rng> &&Accumulateable<iterator_t<Rng>, T, Op, P>)
         {
-            return (*this)(begin(rng), end(rng), std::move(init), std::move(op),
-                std::move(proj));
+            return (*this)(
+                begin(rng), end(rng), std::move(init), std::move(op), std::move(proj));
         }
     };
 

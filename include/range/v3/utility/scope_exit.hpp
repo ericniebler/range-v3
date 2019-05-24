@@ -16,6 +16,7 @@
 #include <functional>
 #include <type_traits>
 #include <utility>
+
 #include <meta/meta.hpp>
 
 namespace ranges
@@ -50,21 +51,22 @@ namespace ranges
         scope_exit(Fun &&fun, std::true_type) noexcept
           : fun_(std::move(fun))
         {}
+
     public:
-        explicit scope_exit(Fun const &fun)
-            noexcept(noexcept(scope_exit(fun, nothrow_copy_t{})))
+        explicit scope_exit(Fun const &fun) noexcept(
+            noexcept(scope_exit(fun, nothrow_copy_t{})))
           : scope_exit(fun, nothrow_copy_t{})
         {}
 
-        explicit scope_exit(Fun &&fun)
-            noexcept(noexcept(scope_exit(std::move(fun), nothrow_move_t{})))
+        explicit scope_exit(Fun &&fun) noexcept(noexcept(scope_exit(std::move(fun),
+                                                                    nothrow_move_t{})))
           : scope_exit(std::move(fun), nothrow_move_t{})
         {}
 
         scope_exit(scope_exit const &) = delete;
 
-        scope_exit(scope_exit &&that)
-            noexcept(std::is_nothrow_move_constructible<Fun>::value)
+        scope_exit(scope_exit &&that) noexcept(
+            std::is_nothrow_move_constructible<Fun>::value)
           : scope_exit(std::move((that.dismiss(), that)).fun_)
         {}
 
@@ -80,10 +82,9 @@ namespace ranges
         }
     };
 
-    template<typename Fun,
-        typename ScopeExit = scope_exit<meta::_t<std::decay<Fun>>>>
-    ScopeExit make_scope_exit(Fun &&fun)
-        noexcept(noexcept(ScopeExit(ScopeExit((Fun &&) fun))))
+    template<typename Fun, typename ScopeExit = scope_exit<meta::_t<std::decay<Fun>>>>
+    ScopeExit make_scope_exit(Fun &&fun) noexcept(noexcept(ScopeExit(ScopeExit((Fun &&)
+                                                                                   fun))))
     {
         return ScopeExit((Fun &&) fun);
     }

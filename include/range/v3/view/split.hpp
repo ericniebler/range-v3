@@ -14,19 +14,21 @@
 #ifndef RANGES_V3_VIEW_SPLIT_HPP
 #define RANGES_V3_VIEW_SPLIT_HPP
 
-#include <utility>
 #include <type_traits>
+#include <utility>
+
 #include <meta/meta.hpp>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/traits.hpp>
-#include <range/v3/range/concepts.hpp>
+
 #include <range/v3/algorithm/mismatch.hpp>
+#include <range/v3/iterator/default_sentinel.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/view/view.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/single.hpp>
-#include <range/v3/iterator/default_sentinel.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -36,6 +38,7 @@ namespace ranges
     /// \cond
     namespace detail
     {
+        // clang-format off
         CPP_def
         (
             template(typename R)
@@ -46,15 +49,17 @@ namespace ranges
                     std::remove_reference_t<R>::size()>> &&
                 (std::remove_reference_t<R>::size() <= 1)
         );
+        // clang-format on
     } // namespace detail
 
     template<typename V, typename Pattern>
 #if CPP_CXX_CONCEPTS
-        requires InputRange<V> && ForwardRange<Pattern> && View<V> && View<Pattern> &&
-            IndirectlyComparable<iterator_t<V>, iterator_t<Pattern>, ranges::equal_to> &&
-            (ForwardRange<V> || detail::tiny_range<Pattern>)
+        requires InputRange<V> &&ForwardRange<Pattern> &&View<V> &&View<Pattern>
+            &&IndirectlyComparable<iterator_t<V>, iterator_t<Pattern>,
+                                   ranges::equal_to> &&
+        (ForwardRange<V> || detail::tiny_range<Pattern>)
 #endif
-    struct split_view;
+            struct split_view;
 
     namespace detail
     {
@@ -96,8 +101,7 @@ namespace ranges
         };
 
         template<typename It>
-        using split_view_base =
-            meta::invoke<here_or_there_<!ForwardIterator<It>>, It>;
+        using split_view_base = meta::invoke<here_or_there_<!ForwardIterator<It>>, It>;
 
         template<typename JoinView, bool Const>
         struct split_outer_iterator;
@@ -115,8 +119,14 @@ namespace ranges
                 typename std::iterator_traits<iterator_t<Base>>::iterator_category;
             Outer i_ = Outer();
             bool incremented_ = false;
-            constexpr decltype(auto) current_() noexcept { return i_.current_(); }
-            constexpr decltype(auto) current_() const noexcept { return i_.current_(); }
+            constexpr decltype(auto) current_() noexcept
+            {
+                return i_.current_();
+            }
+            constexpr decltype(auto) current_() const noexcept
+            {
+                return i_.current_();
+            }
             constexpr bool done_() const
             {
                 auto cur = current_();
@@ -125,7 +135,7 @@ namespace ranges
                     return true;
                 auto pcur = ranges::begin(i_.parent_->pattern_);
                 auto pend = ranges::end(i_.parent_->pattern_);
-                if (pcur == pend)
+                if(pcur == pend)
                     return incremented_;
                 do
                 {
@@ -133,7 +143,7 @@ namespace ranges
                         return false;
                     if(++pcur == pend)
                         return true;
-                } while (++cur != end);
+                } while(++cur != end);
                 return false;
             }
 #if RANGES_CXX_IF_CONSTEXPR < RANGES_CXX_IF_CONSTEXPR_17
@@ -143,8 +153,9 @@ namespace ranges
             }
             constexpr void pre_inc(std::false_type) // Input
             {
-                if RANGES_CONSTEXPR_IF (Pattern::size() != 0)
-                    ++current_();
+                if
+                    RANGES_CONSTEXPR_IF(Pattern::size() != 0)
+                ++current_();
             }
             constexpr split_inner_iterator post_inc(std::true_type) // Forward
             {
@@ -160,13 +171,11 @@ namespace ranges
         public:
             using iterator_concept = typename Outer::iterator_concept;
             using iterator_category =
-                if_then_t<
-                    DerivedFrom<BaseIterCategory, std::forward_iterator_tag>,
-                    std::forward_iterator_tag,
-                    std::input_iterator_tag>;
+                if_then_t<DerivedFrom<BaseIterCategory, std::forward_iterator_tag>,
+                          std::forward_iterator_tag, std::input_iterator_tag>;
             using value_type = range_value_t<Base>;
             using difference_type = range_difference_t<Base>;
-            using reference = range_reference_t<Base>; // Not to spec
+            using reference = range_reference_t<Base>;        // Not to spec
             using pointer = iter_pointer_t<iterator_t<Base>>; // Not to spec
 
             split_inner_iterator() = default;
@@ -184,8 +193,8 @@ namespace ranges
             {
                 incremented_ = true;
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-                if constexpr (!ForwardRange<Base>)
-                    if constexpr (Pattern::size() == 0)
+                if constexpr(!ForwardRange<Base>)
+                    if constexpr(Pattern::size() == 0)
                         return *this;
                 ++current_();
 #else
@@ -197,7 +206,7 @@ namespace ranges
             constexpr decltype(auto) operator++(int)
             {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-                if constexpr (ForwardRange<V>)
+                if constexpr(ForwardRange<V>)
                 {
                     auto tmp = *this;
                     ++*this;
@@ -210,18 +219,16 @@ namespace ranges
 #endif
             }
 
-            CPP_broken_friend_member
-            friend constexpr
-            auto operator==(split_inner_iterator const &x, split_inner_iterator const &y) ->
-                CPP_broken_friend_ret(bool)(
+            CPP_broken_friend_member friend constexpr auto operator==(
+                split_inner_iterator const &x, split_inner_iterator const &y)
+                -> CPP_broken_friend_ret(bool)( //
                     requires ForwardRange<Base>)
             {
                 return x.i_.curr_ == y.i_.curr_;
             }
-            CPP_broken_friend_member
-            friend constexpr
-            auto operator!=(split_inner_iterator const &x, split_inner_iterator const &y) ->
-                CPP_broken_friend_ret(bool)(
+            CPP_broken_friend_member friend constexpr auto operator!=(
+                split_inner_iterator const &x, split_inner_iterator const &y)
+                -> CPP_broken_friend_ret(bool)( //
                     requires ForwardRange<Base>)
             {
                 return x.i_.curr_ != y.i_.curr_;
@@ -229,45 +236,49 @@ namespace ranges
 #ifdef RANGES_WORKAROUND_MSVC_756601
             template<typename = void>
 #endif // RANGES_WORKAROUND_MSVC_756601
-            friend constexpr bool operator==(split_inner_iterator const &x, default_sentinel_t)
+            friend constexpr bool operator==(split_inner_iterator const &x,
+                                             default_sentinel_t)
             {
                 return x.done_();
             }
 #ifdef RANGES_WORKAROUND_MSVC_756601
             template<typename = void>
 #endif // RANGES_WORKAROUND_MSVC_756601
-            friend constexpr bool operator==(default_sentinel_t, split_inner_iterator const &x)
+            friend constexpr bool operator==(default_sentinel_t,
+                                             split_inner_iterator const &x)
             {
                 return x.done_();
             }
 #ifdef RANGES_WORKAROUND_MSVC_756601
             template<typename = void>
 #endif // RANGES_WORKAROUND_MSVC_756601
-            friend constexpr bool operator!=(split_inner_iterator const &x, default_sentinel_t)
+            friend constexpr bool operator!=(split_inner_iterator const &x,
+                                             default_sentinel_t)
             {
                 return !x.done_();
             }
 #ifdef RANGES_WORKAROUND_MSVC_756601
             template<typename = void>
 #endif // RANGES_WORKAROUND_MSVC_756601
-            friend constexpr bool operator!=(default_sentinel_t, split_inner_iterator const &x)
+            friend constexpr bool operator!=(default_sentinel_t,
+                                             split_inner_iterator const &x)
             {
                 return !x.done_();
             }
 #ifdef RANGES_WORKAROUND_MSVC_756601
             template<typename = void>
 #endif // RANGES_WORKAROUND_MSVC_756601
-            friend constexpr
-            decltype(auto) iter_move(split_inner_iterator const &i)
-                noexcept(noexcept(ranges::iter_move(i.current_())))
+            friend constexpr decltype(auto) iter_move(
+                split_inner_iterator const
+                    &i) noexcept(noexcept(ranges::iter_move(i.current_())))
             {
                 return ranges::iter_move(i.current_());
             }
-            CPP_broken_friend_member
-            friend constexpr
-            auto iter_swap(split_inner_iterator const &x, split_inner_iterator const &y)
-                noexcept(noexcept(ranges::iter_swap(x.current_(), y.current_()))) ->
-                CPP_broken_friend_ret(void)(
+            CPP_broken_friend_member friend constexpr auto iter_swap(
+                split_inner_iterator const &x,
+                split_inner_iterator const
+                    &y) noexcept(noexcept(ranges::iter_swap(x.current_(), y.current_())))
+                -> CPP_broken_friend_ret(void)( //
                     requires IndirectlySwappable<iterator_t<Base>>)
             {
                 ranges::iter_swap(x.current_(), y.current_());
@@ -291,7 +302,7 @@ namespace ranges
             using Base = meta::const_if_c<Const, V>;
             using Current = split_outer_iterator_base<iterator_t<Base>>;
 
-            Parent* parent_ = nullptr;
+            Parent *parent_ = nullptr;
             constexpr decltype(auto) current_() noexcept
             {
                 return parent_->current_(*this);
@@ -318,21 +329,22 @@ namespace ranges
 #endif
 
         public:
-            using iterator_concept = if_then_t<
-                ForwardRange<Base>,
-                std::forward_iterator_tag,
-                std::input_iterator_tag>;
+            using iterator_concept =
+                if_then_t<ForwardRange<Base>, std::forward_iterator_tag,
+                          std::input_iterator_tag>;
             using iterator_category = std::input_iterator_tag;
             struct value_type
             {
             private:
                 split_outer_iterator i_ = split_outer_iterator();
+
             public:
                 value_type() = default;
                 constexpr explicit value_type(split_outer_iterator i)
                   : i_(std::move(i))
                 {}
-                constexpr split_inner_iterator<split_view<V, Pattern>, Const> begin() const
+                constexpr split_inner_iterator<split_view<V, Pattern>, Const> begin()
+                    const
                 {
                     return split_inner_iterator<split_view<V, Pattern>, Const>(i_);
                 }
@@ -347,24 +359,24 @@ namespace ranges
 
             split_outer_iterator() = default;
 
-            CPP_member
-            constexpr explicit CPP_ctor(split_outer_iterator)(Parent &parent)(
-                requires (!ForwardRange<Base>))
+            CPP_member constexpr explicit CPP_ctor(split_outer_iterator)(
+                Parent &parent)( //
+                requires(!ForwardRange<Base>))
               : parent_(&parent)
             {}
 
-            CPP_member
-            constexpr CPP_ctor(split_outer_iterator)(Parent &parent, iterator_t<Base> current)(
+            CPP_member constexpr CPP_ctor(split_outer_iterator)(
+                Parent &parent, iterator_t<Base> current)( //
                 requires ForwardRange<Base>)
               : Current{std::move(current)}
               , parent_(&parent)
             {}
 
-            CPP_template(bool Other)(
+            CPP_template(bool Other)( //
                 requires Const && (!Other) &&
-                    ConvertibleTo<iterator_t<V>, iterator_t<Base>>)
-            constexpr split_outer_iterator(
-                split_outer_iterator<split_view<V, Pattern>, Other> i)
+                ConvertibleTo<iterator_t<V>, iterator_t<Base>>) //
+                constexpr split_outer_iterator(
+                    split_outer_iterator<split_view<V, Pattern>, Other> i)
               : Current{std::move(i.curr_)}
               , parent_(i.parent_)
             {}
@@ -384,22 +396,23 @@ namespace ranges
                 auto const pend = ranges::end(parent_->pattern_);
                 if(pbegin == pend)
                     ++current;
-                else do
-                {
-                    const auto ret = ranges::mismatch(current, end, pbegin, pend);
-                    if(ret.in2 == pend)
+                else
+                    do
                     {
-                        current = ret.in1; // The pattern matched; skip it
-                        break;
-                    }
-                } while(++current != end);
+                        const auto ret = ranges::mismatch(current, end, pbegin, pend);
+                        if(ret.in2 == pend)
+                        {
+                            current = ret.in1; // The pattern matched; skip it
+                            break;
+                        }
+                    } while(++current != end);
                 return *this;
             }
 
             constexpr decltype(auto) operator++(int)
             {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-                if constexpr (ForwardRange<Base>)
+                if constexpr(ForwardRange<Base>)
                 {
                     auto tmp = *this;
                     ++*this;
@@ -412,18 +425,16 @@ namespace ranges
 #endif
             }
 
-            CPP_broken_friend_member
-            friend constexpr
-            auto operator==(split_outer_iterator const &x, split_outer_iterator const &y) ->
-                CPP_broken_friend_ret(bool)(
+            CPP_broken_friend_member friend constexpr auto operator==(
+                split_outer_iterator const &x, split_outer_iterator const &y)
+                -> CPP_broken_friend_ret(bool)( //
                     requires ForwardRange<Base>)
             {
                 return x.curr_ == y.curr_;
             }
-            CPP_broken_friend_member
-            friend constexpr
-            auto operator!=(split_outer_iterator const &x, split_outer_iterator const &y) ->
-                CPP_broken_friend_ret(bool)(
+            CPP_broken_friend_member friend constexpr auto operator!=(
+                split_outer_iterator const &x, split_outer_iterator const &y)
+                -> CPP_broken_friend_ret(bool)( //
                     requires ForwardRange<Base>)
             {
                 return x.curr_ != y.curr_;
@@ -431,28 +442,32 @@ namespace ranges
 #ifdef RANGES_WORKAROUND_MSVC_756601
             template<typename = void>
 #endif // RANGES_WORKAROUND_MSVC_756601
-            friend constexpr bool operator==(split_outer_iterator const &x, default_sentinel_t)
+            friend constexpr bool operator==(split_outer_iterator const &x,
+                                             default_sentinel_t)
             {
                 return x.current_() == ranges::end(x.base_());
             }
 #ifdef RANGES_WORKAROUND_MSVC_756601
             template<typename = void>
 #endif // RANGES_WORKAROUND_MSVC_756601
-            friend constexpr bool operator==(default_sentinel_t, split_outer_iterator const &x)
+            friend constexpr bool operator==(default_sentinel_t,
+                                             split_outer_iterator const &x)
             {
                 return x.current_() == ranges::end(x.base_());
             }
 #ifdef RANGES_WORKAROUND_MSVC_756601
             template<typename = void>
 #endif // RANGES_WORKAROUND_MSVC_756601
-            friend constexpr bool operator!=(split_outer_iterator const &x, default_sentinel_t)
+            friend constexpr bool operator!=(split_outer_iterator const &x,
+                                             default_sentinel_t)
             {
                 return x.current_() != ranges::end(x.base_());
             }
 #ifdef RANGES_WORKAROUND_MSVC_756601
             template<typename = void>
 #endif // RANGES_WORKAROUND_MSVC_756601
-            friend constexpr bool operator!=(default_sentinel_t, split_outer_iterator const &x)
+            friend constexpr bool operator!=(default_sentinel_t,
+                                             split_outer_iterator const &x)
             {
                 return x.current_() != ranges::end(x.base_());
             }
@@ -462,14 +477,13 @@ namespace ranges
 
     template<typename V, typename Pattern>
 #if CPP_CXX_CONCEPTS
-        requires InputRange<V> && ForwardRange<Pattern> && View<V> && View<Pattern> &&
-            IndirectlyComparable<iterator_t<V>, iterator_t<Pattern>, ranges::equal_to> &&
-            (ForwardRange<V> || detail::tiny_range<Pattern>)
+        requires InputRange<V> &&ForwardRange<Pattern> &&View<V> &&View<Pattern>
+            &&IndirectlyComparable<iterator_t<V>, iterator_t<Pattern>,
+                                   ranges::equal_to> &&
+        (ForwardRange<V> || detail::tiny_range<Pattern>)
 #endif
-    struct RANGES_EMPTY_BASES split_view
-      : view_interface<
-            split_view<V, Pattern>,
-            is_finite<V>::value ? finite : unknown>
+            struct RANGES_EMPTY_BASES split_view
+      : view_interface<split_view<V, Pattern>, is_finite<V>::value ? finite : unknown>
       , private detail::split_view_base<iterator_t<V>>
     {
     private:
@@ -512,8 +526,7 @@ namespace ranges
           , pattern_((Pattern &&) pattern)
         {}
 
-        CPP_member
-        constexpr CPP_ctor(split_view)(V base, range_value_t<V> e) (
+        CPP_member constexpr CPP_ctor(split_view)(V base, range_value_t<V> e)(
             requires Constructible<Pattern, range_value_t<V>>)
           : base_(std::move(base))
           , pattern_(e)
@@ -527,7 +540,7 @@ namespace ranges
         constexpr auto begin()
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-            if constexpr (ForwardRange<V>)
+            if constexpr(ForwardRange<V>)
                 return outer_iterator<simple_view<V>()>{*this, ranges::begin(base_)};
             else
             {
@@ -538,44 +551,42 @@ namespace ranges
             return begin_(meta::bool_<ForwardRange<V>>{});
 #endif
         }
-        CPP_member
-        constexpr auto begin() const -> CPP_ret(outer_iterator<true>)(
-            requires ForwardRange<V> && ForwardRange<const V>)
+        CPP_member constexpr auto begin() const -> CPP_ret(outer_iterator<true>)( //
+            requires ForwardRange<V> &&ForwardRange<const V>)
         {
             return {*this, ranges::begin(base_)};
         }
-        CPP_member
-        constexpr auto end() -> CPP_ret(outer_iterator<simple_view<V>()>)(
-            requires ForwardRange<V> && CommonRange<V>)
+        CPP_member constexpr auto end() -> CPP_ret(outer_iterator<simple_view<V>()>)( //
+            requires ForwardRange<V> &&CommonRange<V>)
         {
             return outer_iterator<simple_view<V>()>{*this, ranges::end(base_)};
         }
         constexpr auto end() const
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-            if constexpr (ForwardRange<V> && ForwardRange<const V> && CommonRange<const V>)
+            if constexpr(ForwardRange<V> && ForwardRange<const V> && CommonRange<const V>)
                 return outer_iterator<true>{*this, ranges::end(base_)};
             else
                 return default_sentinel;
 #else
-            return end_(meta::bool_<ForwardRange<V> && ForwardRange<const V> &&
-                CommonRange<const V>>{});
+            return end_(meta::bool_ < ForwardRange<V> && ForwardRange<const V> &&
+                        CommonRange<const V>> {});
 #endif
         }
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename R, typename P)(
-        requires InputRange<R> && ForwardRange<P> && ViewableRange<R> && ViewableRange<P> &&
-            IndirectlyComparable<iterator_t<R>, iterator_t<P>, ranges::equal_to> &&
-            (ForwardRange<R> || detail::tiny_range<P>))
-    split_view(R &&, P &&) ->
-        split_view<view::all_t<R>, view::all_t<P>>;
+    CPP_template(typename R, typename P)( //
+        requires InputRange<R> &&ForwardRange<P> &&ViewableRange<R> &&ViewableRange<P>
+            &&IndirectlyComparable<iterator_t<R>, iterator_t<P>, ranges::equal_to> &&
+        (ForwardRange<R> || detail::tiny_range<P>)) //
+        split_view(R &&, P &&)
+            ->split_view<view::all_t<R>, view::all_t<P>>;
 
-    CPP_template(typename R)(
-        requires InputRange<R>)
-    split_view(R &&, range_value_t<R>) ->
-        split_view<view::all_t<R>, single_view<range_value_t<R>>>;
+    CPP_template(typename R)(   //
+        requires InputRange<R>) //
+        split_view(R &&, range_value_t<R>)
+            ->split_view<view::all_t<R>, single_view<range_value_t<R>>>;
 #endif
 
     namespace view
@@ -587,26 +598,27 @@ namespace ranges
             template<typename T>
             static auto bind(split_fn split, T &&t)
             {
-                return make_pipeable(std::bind(split, std::placeholders::_1,
-                    bind_forward<T>(t)));
+                return make_pipeable(
+                    std::bind(split, std::placeholders::_1, bind_forward<T>(t)));
             }
+
         public:
             template<typename Rng>
-            constexpr auto operator()(Rng &&rng, range_value_t<Rng> val) const ->
-                CPP_ret(split_view<all_t<Rng>, single_view<range_value_t<Rng>>>)(
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        IndirectlyComparable<iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>)
+            constexpr auto operator()(Rng &&rng, range_value_t<Rng> val) const
+                -> CPP_ret(split_view<all_t<Rng>, single_view<range_value_t<Rng>>>)( //
+                    requires ViewableRange<Rng> &&InputRange<Rng> &&IndirectlyComparable<
+                        iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>)
             {
                 return {all(static_cast<Rng &&>(rng)), single(std::move(val))};
             }
 
             template<typename Rng, typename Pattern>
-            constexpr auto operator()(Rng &&rng, Pattern &&pattern) const ->
-                CPP_ret(split_view<all_t<Rng>, all_t<Pattern>>)(
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        ViewableRange<Pattern> && ForwardRange<Pattern> &&
-                        IndirectlyComparable<iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
-                        (ForwardRange<Rng> || detail::tiny_range<Pattern>))
+            constexpr auto operator()(Rng &&rng, Pattern &&pattern) const
+                -> CPP_ret(split_view<all_t<Rng>, all_t<Pattern>>)( //
+                    requires ViewableRange<Rng> &&InputRange<Rng> &&ViewableRange<Pattern>
+                        &&ForwardRange<Pattern> &&IndirectlyComparable<
+                            iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
+                    (ForwardRange<Rng> || detail::tiny_range<Pattern>))
             {
                 return {all((Rng &&) rng), all((Pattern &&) pattern)};
             }
@@ -623,11 +635,12 @@ namespace ranges
         {
             using ranges::view::split;
         }
-        CPP_template(typename Rng, typename Pattern)(
-            requires InputRange<Rng> && ForwardRange<Pattern> && View<Rng> && View<Pattern> &&
-                IndirectlyComparable<iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
-                (ForwardRange<Rng> || ranges::detail::tiny_range<Pattern>))
-        using split_view = ranges::split_view<Rng, Pattern>;
+        CPP_template(typename Rng, typename Pattern)( //
+            requires InputRange<Rng> &&ForwardRange<Pattern> &&View<Rng> &&View<Pattern>
+                &&IndirectlyComparable<iterator_t<Rng>, iterator_t<Pattern>,
+                                       ranges::equal_to> &&
+            (ForwardRange<Rng> || ranges::detail::tiny_range<Pattern>)) using split_view =
+            ranges::split_view<Rng, Pattern>;
     }
 
     /// @}

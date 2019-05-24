@@ -15,12 +15,13 @@
 #define RANGES_V3_VIEW_REPEAT_N_HPP
 
 #include <utility>
-#include <range/v3/range_fwd.hpp>
+
+#include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range/concepts.hpp>
-#include <range/v3/view/facade.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/iterator/default_sentinel.hpp>
+#include <range/v3/view/facade.hpp>
 
 namespace ranges
 {
@@ -35,8 +36,7 @@ namespace ranges
     //  - The element is immutable, so there is no potential for incorrect
     //    semantics.
     template<typename Val>
-    struct repeat_n_view
-      : view_facade<repeat_n_view<Val>, finite>
+    struct repeat_n_view : view_facade<repeat_n_view<Val>, finite>
     {
     private:
         friend range_access;
@@ -48,10 +48,12 @@ namespace ranges
         private:
             Val const *value_;
             std::ptrdiff_t n_;
+
         public:
             cursor() = default;
             cursor(Val const &value, std::ptrdiff_t n)
-              : value_(std::addressof(value)), n_(n)
+              : value_(std::addressof(value))
+              , n_(n)
             {}
             Val const &read() const
             {
@@ -87,10 +89,12 @@ namespace ranges
         {
             return {value_, n_};
         }
+
     public:
         repeat_n_view() = default;
         constexpr repeat_n_view(Val value, std::ptrdiff_t n)
-          : value_(detail::move(value)), n_((RANGES_EXPECT(0 <= n), n))
+          : value_(detail::move(value))
+          , n_((RANGES_EXPECT(0 <= n), n))
         {}
         constexpr std::size_t size() const
         {
@@ -103,8 +107,8 @@ namespace ranges
         struct repeat_n_fn
         {
             template<typename Val>
-            auto operator()(Val value, std::ptrdiff_t n) const ->
-                CPP_ret(repeat_n_view<Val>)(
+            auto operator()(Val value, std::ptrdiff_t n) const
+                -> CPP_ret(repeat_n_view<Val>)( //
                     requires CopyConstructible<Val>)
             {
                 return repeat_n_view<Val>{std::move(value), n};

@@ -15,10 +15,12 @@
 #define RANGES_V3_RANGE_DANGLING_HPP
 
 #include <utility>
+
 #include <concepts/concepts.hpp>
+
+#include <range/v3/range/concepts.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/range/concepts.hpp>
 
 namespace ranges
 {
@@ -30,7 +32,7 @@ namespace ranges
         dangling() = default;
         /// Implicit converting constructor; ignores argument
         template<typename T>
-        constexpr CPP_ctor(dangling)(T &&)(
+        constexpr CPP_ctor(dangling)(T &&)( //
             requires NotSameAs_<T, dangling>)
         {}
     };
@@ -38,15 +40,14 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        CPP_template(class R, class U)(
-            requires Range<R>)
-        using maybe_dangling_ = if_then_t<ForwardingRange_<R>, U, dangling>;
+        CPP_template(class R, class U)( //
+            requires Range<R>)          //
+            using maybe_dangling_ = if_then_t<ForwardingRange_<R>, U, dangling>;
     }
     /// \endcond
 
     template<typename Rng>
-    using safe_iterator_t =
-        detail::maybe_dangling_<Rng, iterator_t<Rng>>;
+    using safe_iterator_t = detail::maybe_dangling_<Rng, iterator_t<Rng>>;
 
     /// \cond
     struct _sanitize_fn
@@ -58,8 +59,8 @@ namespace ranges
         }
     };
 
-    using sanitize_fn RANGES_DEPRECATED("The sanitize function is unneeded and deprecated.") =
-        _sanitize_fn;
+    using sanitize_fn RANGES_DEPRECATED(
+        "The sanitize function is unneeded and deprecated.") = _sanitize_fn;
 
     namespace
     {

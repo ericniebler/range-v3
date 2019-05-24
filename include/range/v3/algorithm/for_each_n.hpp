@@ -15,15 +15,16 @@
 #define RANGES_V3_ALGORITHM_FOR_EACH_N_HPP
 
 #include <functional>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/range/traits.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/dangling.hpp>
+
 #include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
-#include <range/v3/iterator/traits.hpp>
 #include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -33,9 +34,9 @@ namespace ranges
     struct for_each_n_fn
     {
         template<typename I, typename F, typename P = identity>
-        auto operator()(I begin, iter_difference_t<I> n, F fun, P proj = P{}) const ->
-            CPP_ret(I)(
-                requires InputIterator<I> && IndirectUnaryInvocable<F, projected<I, P>>)
+        auto operator()(I begin, iter_difference_t<I> n, F fun, P proj = P{}) const
+            -> CPP_ret(I)( //
+                requires InputIterator<I> &&IndirectUnaryInvocable<F, projected<I, P>>)
         {
             RANGES_EXPECT(0 <= n);
             auto norig = n;
@@ -46,12 +47,12 @@ namespace ranges
         }
 
         template<typename Rng, typename F, typename P = identity>
-        auto operator()(Rng &&rng, range_difference_t<Rng> n, F fun, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
-                requires InputRange<Rng> &&
-                    IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
+        auto operator()(Rng &&rng, range_difference_t<Rng> n, F fun, P proj = P{}) const
+            -> CPP_ret(safe_iterator_t<Rng>)( //
+                requires InputRange<Rng>
+                    &&IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
         {
-            if (SizedRange<Rng>)
+            if(SizedRange<Rng>)
                 RANGES_EXPECT(n <= distance(rng));
 
             return (*this)(begin(rng), n, detail::move(fun), detail::move(proj));

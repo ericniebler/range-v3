@@ -29,13 +29,14 @@
 #define RANGES_V3_ALGORITHM_AUX_SORT_N_WITH_BUFFER_HPP
 
 #include <tuple>
-#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/aux_/merge_n_with_buffer.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/traits.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -45,16 +46,16 @@ namespace ranges
         struct sort_n_with_buffer_fn
         {
             template<typename I, typename B, typename C = less, typename P = identity>
-            auto operator()(I begin, iter_difference_t<I> n, B buff, C r = C{}, P p = P{}) const ->
-                CPP_ret(I)(
-                    requires Same<iter_common_reference_t<I>, iter_common_reference_t<B>> &&
-                        IndirectlyCopyable<I, B> && Mergeable<B, I, I, C, P, P>)
+            auto operator()(I begin, iter_difference_t<I> n, B buff, C r = C{},
+                            P p = P{}) const -> CPP_ret(I)( //
+                requires Same<iter_common_reference_t<I>, iter_common_reference_t<B>>&&
+                    IndirectlyCopyable<I, B>&& Mergeable<B, I, I, C, P, P>)
             {
                 auto half = n / 2;
                 if(0 == half)
                     return next(begin, n);
                 I m = (*this)(begin, half, buff, r, p);
-                      (*this)(m, n - half, buff, r, p);
+                (*this)(m, n - half, buff, r, p);
                 return merge_n_with_buffer(begin, half, m, n - half, buff, r, p);
             }
         };

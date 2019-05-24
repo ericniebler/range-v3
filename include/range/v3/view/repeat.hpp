@@ -15,12 +15,13 @@
 #define RANGES_V3_VIEW_REPEAT_HPP
 
 #include <utility>
-#include <range/v3/range_fwd.hpp>
+
+#include <range/v3/iterator/unreachable_sentinel.hpp>
 #include <range/v3/range/concepts.hpp>
-#include <range/v3/view/facade.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/iterator/unreachable_sentinel.hpp>
+#include <range/v3/view/facade.hpp>
 
 namespace ranges
 {
@@ -35,8 +36,7 @@ namespace ranges
     //  - The element is immutable, so there is no potential for incorrect
     //    semantics.
     template<typename Val>
-    struct repeat_view
-      : view_facade<repeat_view<Val>, infinite>
+    struct repeat_view : view_facade<repeat_view<Val>, infinite>
     {
     private:
         semiregular_t<Val> value_;
@@ -47,6 +47,7 @@ namespace ranges
         private:
             Val const *value_;
             std::ptrdiff_t n_ = 0;
+
         public:
             cursor() = default;
             explicit cursor(Val const &value)
@@ -85,6 +86,7 @@ namespace ranges
         {
             return unreachable;
         }
+
     public:
         repeat_view() = default;
         constexpr explicit repeat_view(Val value)
@@ -97,9 +99,8 @@ namespace ranges
         struct repeat_fn
         {
             template<typename Val>
-            auto operator()(Val value) const ->
-                CPP_ret(repeat_view<Val>)(
-                    requires CopyConstructible<Val>)
+            auto operator()(Val value) const -> CPP_ret(repeat_view<Val>)( //
+                requires CopyConstructible<Val>)
             {
                 return repeat_view<Val>{std::move(value)};
             }

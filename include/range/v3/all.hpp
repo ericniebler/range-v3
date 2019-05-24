@@ -14,9 +14,9 @@
 #ifndef RANGES_V3_ALL_HPP
 #define RANGES_V3_ALL_HPP
 
-#include <range/v3/core.hpp>
 #include <range/v3/action.hpp>
 #include <range/v3/algorithm.hpp>
+#include <range/v3/core.hpp>
 #include <range/v3/functional.hpp>
 #include <range/v3/iterator.hpp>
 #include <range/v3/numeric.hpp>

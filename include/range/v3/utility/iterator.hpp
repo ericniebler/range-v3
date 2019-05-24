@@ -14,17 +14,17 @@
 #define RANGES_V3_UTILITY_ITERATOR_HPP
 
 #include <range/v3/detail/config.hpp>
-RANGES_DEPRECATED_HEADER(R"(This header is deprecated. Please include one of the following depending on your need:
+RANGES_DEPRECATED_HEADER(
+    R"(This header is deprecated. Please include one of the following depending on your need:
     <range/v3/iterator/operations.hpp>,
     <range/v3/iterator/insert_iterators.hpp>,
     <range/v3/iterator/move_iterators.hpp>,
     <range/v3/iterator/reverse_iterator.hpp>,
     <range/v3/iterator/stream_iterators.hpp>)")
 
-#include <range/v3/iterator/operations.hpp>
-
 #include <range/v3/iterator/insert_iterators.hpp>
 #include <range/v3/iterator/move_iterators.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/reverse_iterator.hpp>
 #include <range/v3/iterator/stream_iterators.hpp>
 

@@ -14,14 +14,14 @@
 #ifndef RANGES_V3_UTILITY_VARIANT_HPP
 #define RANGES_V3_UTILITY_VARIANT_HPP
 
-#include <range/v3/detail/variant.hpp>
-#include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/copy.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/primitives.hpp>
-#include <range/v3/iterator/operations.hpp>
+#include <range/v3/algorithm/move.hpp>
+#include <range/v3/detail/variant.hpp>
 #include <range/v3/iterator/move_iterators.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/primitives.hpp>
 
 namespace ranges
 {
@@ -40,33 +40,34 @@ namespace ranges
             void fill_default_(T *p, std::true_type)
             {
                 for(; p != ranges::end(data_); ++p)
-                    ::new((void *) p) T{};
+                    ::new((void *)p) T{};
             }
             void fill_default_(T *p, std::false_type)
             {
                 RANGES_EXPECT(p == ranges::end(data_));
             }
+
         public:
-            CPP_member
-            constexpr CPP_ctor(indexed_datum)(meta::nil_ = {})(requires DefaultConstructible<T>)
+            CPP_member constexpr CPP_ctor(indexed_datum)(meta::nil_ = {})(
+                requires DefaultConstructible<T>)
               : data_{}
             {}
-            CPP_member
-            CPP_ctor(indexed_datum)(indexed_datum &&that)(requires MoveConstructible<T>)
+            CPP_member CPP_ctor(indexed_datum)(indexed_datum &&that)(
+                requires MoveConstructible<T>)
             {
                 std::uninitialized_copy_n(make_move_iterator(that.data_), N, data_);
             }
-            CPP_member
-            CPP_ctor(indexed_datum)(indexed_datum const &that)(requires CopyConstructible<T>)
+            CPP_member CPP_ctor(indexed_datum)(indexed_datum const &that)(
+                requires CopyConstructible<T>)
             {
                 std::uninitialized_copy_n(that.data_, N, data_);
             }
             // \pre Requires distance(first, last) <= N
             // \pre Requires DefaultConstructible<T> || distance(first, last) == N
             template<typename I, typename S>
-            CPP_ctor(indexed_datum)(I first, S last)(
-                requires Sentinel<S, I> && InputIterator<I> &&
-                    Constructible<T, iter_reference_t<I>>)
+            CPP_ctor(indexed_datum)(I first, S last)( //
+                requires Sentinel<S, I> &&InputIterator<I>
+                    &&Constructible<T, iter_reference_t<I>>)
             {
                 T *p = detail::uninitialized_copy(first, last, data_);
                 this->fill_default_(p, meta::bool_<DefaultConstructible<T>>{});
@@ -74,21 +75,19 @@ namespace ranges
             // \pre Requires distance(r) <= N
             // \pre Requires DefaultConstructible<T> || distance(r) == N
             template<typename R>
-            explicit CPP_ctor(indexed_datum)(R &&r)(
-                requires InputRange<R> && Constructible<T, range_reference_t<R>>)
+            explicit CPP_ctor(indexed_datum)(R &&r)( //
+                requires InputRange<R> &&Constructible<T, range_reference_t<R>>)
               : indexed_datum{ranges::begin(r), ranges::end(r)}
             {}
-            CPP_member
-            auto operator=(indexed_datum &&that) ->
-                CPP_ret(indexed_datum &)(
+            CPP_member auto operator=(indexed_datum &&that)
+                -> CPP_ret(indexed_datum &)( //
                     requires Assignable<T &, T>)
             {
                 ranges::move(that.data_, data_);
                 return *this;
             }
-            CPP_member
-            auto operator=(indexed_datum const &that) ->
-                CPP_ret(indexed_datum &)(
+            CPP_member auto operator=(indexed_datum const &that)
+                -> CPP_ret(indexed_datum &)( //
                     requires Assignable<T &, T const &>)
             {
                 ranges::copy(that.data_, data_);
@@ -96,23 +95,19 @@ namespace ranges
             }
             // \pre Requires ranges::distance(r) <= N
             template<typename R>
-            auto operator=(R &&r) ->
-                CPP_ret(indexed_datum &)(
-                    requires InputRange<R> &&
-                        Assignable<T &, range_reference_t<R>>)
+            auto operator=(R &&r) -> CPP_ret(indexed_datum &)( //
+                requires InputRange<R> &&Assignable<T &, range_reference_t<R>>)
             {
                 ranges::copy(r, data_);
                 return *this;
             }
-            constexpr /*c++14*/ indexed_element<T[N], Index::value> ref()
+            constexpr indexed_element<T[N], Index::value> ref()
             {
                 return {data_};
             }
-            constexpr indexed_element<T const[N], Index::value> ref() const
-            {
+            constexpr indexed_element<T const [N], Index::value> ref() const {
                 return {data_};
-            }
-            constexpr /*c++14*/ T (&get() noexcept)[N]
+            } constexpr T (&get() noexcept)[N]
             {
                 return data_;
             }

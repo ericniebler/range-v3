@@ -16,15 +16,17 @@
 
 #include <type_traits>
 #include <utility>
+
 #include <meta/meta.hpp>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/range/traits.hpp>
-#include <range/v3/range/primitives.hpp>
-#include <range/v3/view/facade.hpp>
+
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
+#include <range/v3/range/primitives.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/facade.hpp>
 #include <range/v3/view/generate.hpp>
 
 namespace ranges
@@ -32,8 +34,7 @@ namespace ranges
     /// \addtogroup group-views
     /// @{
     template<typename G>
-    struct generate_n_view
-      : view_facade<generate_n_view<G>, finite>
+    struct generate_n_view : view_facade<generate_n_view<G>, finite>
     {
     private:
         friend range_access;
@@ -45,6 +46,7 @@ namespace ranges
         {
         private:
             generate_n_view *rng_;
+
         public:
             cursor() = default;
             explicit cursor(generate_n_view &rng)
@@ -56,10 +58,9 @@ namespace ranges
             }
             result_t &&read() const
             {
-                if (!rng_->val_)
+                if(!rng_->val_)
                     rng_->val_.emplace(rng_->gen_());
-                return static_cast<result_t &&>(
-                    static_cast<result_t &>(*rng_->val_));
+                return static_cast<result_t &&>(static_cast<result_t &>(*rng_->val_));
             }
             void next()
             {
@@ -72,10 +73,12 @@ namespace ranges
         {
             return cursor{*this};
         }
+
     public:
         generate_n_view() = default;
         explicit generate_n_view(G g, std::size_t n)
-          : gen_(std::move(g)), n_(n)
+          : gen_(std::move(g))
+          , n_(n)
         {}
         result_t &cached()
         {
@@ -92,13 +95,13 @@ namespace ranges
         struct generate_n_fn
         {
             template<typename G>
-            auto operator()(G g, std::size_t n) const ->
-                CPP_ret(generate_n_view<G>)(
-                    requires Invocable<G &> &&
-                        CopyConstructible<G> &&
-                        std::is_object<detail::decay_t<invoke_result_t<G &>>>::value &&
-                        Constructible<detail::decay_t<invoke_result_t<G &>>, invoke_result_t<G &>> &&
-                        Assignable<detail::decay_t<invoke_result_t<G &>>&, invoke_result_t<G &>>)
+            auto operator()(G g, std::size_t n) const -> CPP_ret(generate_n_view<G>)( //
+                requires Invocable<G &> &&CopyConstructible<G>
+                    &&std::is_object<detail::decay_t<invoke_result_t<G &>>>::value
+                        &&Constructible<detail::decay_t<invoke_result_t<G &>>,
+                                        invoke_result_t<G &>>
+                            &&Assignable<detail::decay_t<invoke_result_t<G &>> &,
+                                         invoke_result_t<G &>>)
             {
                 return generate_n_view<G>{std::move(g), n};
             }

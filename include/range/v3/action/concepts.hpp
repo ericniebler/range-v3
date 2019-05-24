@@ -15,10 +15,12 @@
 #define RANGES_V3_ACTION_CONCEPTS_HPP
 
 #include <utility>
+
 #include <meta/meta.hpp>
-#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
+#include <range/v3/range_fwd.hpp>
 
 namespace ranges
 {
@@ -39,7 +41,7 @@ namespace ranges
             movable_input_iterator operator++(int);
             bool operator==(movable_input_iterator const &) const;
             bool operator!=(movable_input_iterator const &) const;
-            T && operator*() const;
+            T &&operator*() const;
         };
     }
     /// \endcond
@@ -48,6 +50,7 @@ namespace ranges
     /// @{
 
     // std::array is a SemiContainer, native arrays are not.
+    // clang-format off
     CPP_def
     (
         template(typename T)
@@ -101,44 +104,44 @@ namespace ranges
         concept RandomAccessReservable,
             Reservable<C> && RandomAccessRange<C>
     );
+    // clang-format on
 
     /// \cond
     namespace detail
     {
         template<typename T>
-        auto is_lvalue_container_like(T &) noexcept ->
-            CPP_ret(std::true_type)(
+        auto is_lvalue_container_like(T &) noexcept -> CPP_ret(std::true_type)( //
+            requires Container<T>)
+        {
+            return {};
+        }
+
+        template<typename T>
+        auto is_lvalue_container_like(reference_wrapper<T>) noexcept
+            -> CPP_ret(meta::not_<std::is_rvalue_reference<T>>)( //
                 requires Container<T>)
         {
             return {};
         }
 
         template<typename T>
-        auto is_lvalue_container_like(reference_wrapper<T>) noexcept ->
-          CPP_ret(meta::not_<std::is_rvalue_reference<T>>)(
-              requires Container<T>)
-        {
-            return {};
-        }
-
-        template<typename T>
-        auto is_lvalue_container_like(std::reference_wrapper<T>) noexcept ->
-            CPP_ret(std::true_type)(
+        auto is_lvalue_container_like(std::reference_wrapper<T>) noexcept
+            -> CPP_ret(std::true_type)( //
                 requires Container<T>)
         {
             return {};
         }
 
         template<typename T>
-        auto is_lvalue_container_like(ref_view<T>) noexcept ->
-            CPP_ret(std::true_type)(
-                requires Container<T>)
+        auto is_lvalue_container_like(ref_view<T>) noexcept -> CPP_ret(std::true_type)( //
+            requires Container<T>)
         {
             return {};
         }
     }
     /// \endcond
 
+    // clang-format off
     CPP_def
     (
         template(typename T)
@@ -150,6 +153,7 @@ namespace ranges
             ) &&
             ForwardRange<T>
     );
+    // clang-format on
     /// @}
 }
 

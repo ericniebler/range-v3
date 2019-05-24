@@ -12,21 +12,21 @@
 #ifndef RANGES_V3_VIEW_UNBOUNDED_HPP
 #define RANGES_V3_VIEW_UNBOUNDED_HPP
 
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/view/interface.hpp>
 #include <range/v3/iterator/unreachable_sentinel.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/interface.hpp>
 
 namespace ranges
 {
     /// \addtogroup group-views
     /// @{
     template<typename I>
-    struct unbounded_view
-      : view_interface<unbounded_view<I>, infinite>
+    struct unbounded_view : view_interface<unbounded_view<I>, infinite>
     {
     private:
         I it_;
+
     public:
         unbounded_view() = default;
         constexpr explicit unbounded_view(I it)
@@ -47,9 +47,8 @@ namespace ranges
         struct unbounded_fn
         {
             template<typename I>
-            constexpr auto operator()(I it) const ->
-                CPP_ret(unbounded_view<I>)(
-                    requires InputIterator<I>)
+            constexpr auto operator()(I it) const -> CPP_ret(unbounded_view<I>)( //
+                requires InputIterator<I>)
             {
                 return unbounded_view<I>{detail::move(it)};
             }

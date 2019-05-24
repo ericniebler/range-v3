@@ -15,10 +15,11 @@
 #define RANGES_V3_VIEW_REF_HPP
 
 #include <concepts/concepts.hpp>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/range/traits.hpp>
+
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/view/interface.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -36,26 +37,25 @@ namespace ranges
         {};
 
         template<typename Rng>
-        constexpr iterator_t<Rng> begin(ref_view<Rng> &&rng)
-            noexcept(noexcept(rng.begin()))
+        constexpr iterator_t<Rng> begin(ref_view<Rng> &&rng) noexcept(
+            noexcept(rng.begin()))
         {
             return rng.begin();
         }
         template<typename Rng>
-        constexpr iterator_t<Rng> begin(ref_view<Rng> const &&rng)
-            noexcept(noexcept(rng.begin()))
+        constexpr iterator_t<Rng> begin(ref_view<Rng> const &&rng) noexcept(
+            noexcept(rng.begin()))
         {
             return rng.begin();
         }
         template<typename Rng>
-        constexpr sentinel_t<Rng> end(ref_view<Rng> &&rng)
-            noexcept(noexcept(rng.end()))
+        constexpr sentinel_t<Rng> end(ref_view<Rng> &&rng) noexcept(noexcept(rng.end()))
         {
             return rng.end();
         }
         template<typename Rng>
-        constexpr sentinel_t<Rng> end(ref_view<Rng> const &&rng)
-            noexcept(noexcept(rng.end()))
+        constexpr sentinel_t<Rng> end(ref_view<Rng> const &&rng) noexcept(
+            noexcept(rng.end()))
         {
             return rng.end();
         }
@@ -82,34 +82,28 @@ namespace ranges
         {
             return *rng_;
         }
-        constexpr iterator_t<Rng> begin() const
-            noexcept(noexcept(ranges::begin(*rng_)))
+        constexpr iterator_t<Rng> begin() const noexcept(noexcept(ranges::begin(*rng_)))
         {
             return ranges::begin(*rng_);
         }
-        constexpr sentinel_t<Rng> end() const
-            noexcept(noexcept(ranges::end(*rng_)))
+        constexpr sentinel_t<Rng> end() const noexcept(noexcept(ranges::end(*rng_)))
         {
             return ranges::end(*rng_);
         }
-        CPP_member
-        constexpr auto empty() const
-            noexcept(noexcept(ranges::empty(*rng_))) ->
-            CPP_ret(bool)(
+        CPP_member constexpr auto empty() const noexcept(noexcept(ranges::empty(*rng_)))
+            -> CPP_ret(bool)( //
                 requires detail::CanEmpty<Rng>)
         {
             return ranges::empty(*rng_);
         }
-        CPP_member
-        constexpr auto CPP_fun(size)() (const
-            noexcept(noexcept(ranges::size(*rng_)))
+        CPP_member constexpr auto CPP_fun(size)()(
+            const noexcept(noexcept(ranges::size(*rng_))) //
             requires SizedRange<Rng>)
         {
             return ranges::size(*rng_);
         }
-        CPP_member
-        constexpr auto CPP_fun(data)() (const
-            noexcept(noexcept(ranges::data(*rng_)))
+        CPP_member constexpr auto CPP_fun(data)()(
+            const noexcept(noexcept(ranges::data(*rng_))) //
             requires ContiguousRange<Rng>)
         {
             return ranges::data(*rng_);
@@ -121,8 +115,8 @@ namespace ranges
         struct ref_fn
         {
             template<typename Rng>
-            constexpr auto operator()(Rng &rng) const noexcept ->
-                CPP_ret(ref_view<Rng>)(
+            constexpr auto operator()(Rng &rng) const noexcept
+                -> CPP_ret(ref_view<Rng>)( //
                     requires Range<Rng>)
             {
                 return ref_view<Rng>(rng);
@@ -138,9 +132,9 @@ namespace ranges
 
     namespace cpp20
     {
-        CPP_template(typename Rng)(
-            requires std::is_object<Rng>::value)
-        using ref_view = ranges::ref_view<Rng>;
+        CPP_template(typename Rng)(              //
+            requires std::is_object<Rng>::value) //
+            using ref_view = ranges::ref_view<Rng>;
     }
 }
 

@@ -16,7 +16,7 @@
 
 #include <functional>
 #include <utility>
-#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/functional/identity.hpp>
@@ -26,6 +26,7 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -42,10 +43,10 @@ namespace ranges
         /// \pre `Rng` is a model of the `ForwardRange` concept.
         /// \pre `Pred` is a model of the `BinaryPredicate` concept.
         template<typename I, typename S, typename Pred, typename Proj = identity>
-        auto operator()(I first, S last, Pred pred = {}, Proj proj = {}) const ->
-            CPP_ret(I)(
-                requires Permutable<I> && Sentinel<S, I> &&
-                    IndirectRelation<Pred, projected<I, Proj>>)
+        auto operator()(I first, S last, Pred pred = {}, Proj proj = {}) const
+            -> CPP_ret(I)( //
+                requires Permutable<I> &&Sentinel<S, I>
+                    &&IndirectRelation<Pred, projected<I, Proj>>)
         {
             first = adjacent_find(std::move(first), last, std::ref(pred), std::ref(proj));
             if(first == last)
@@ -68,11 +69,10 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename Pred, typename Proj = identity>
-        auto operator()(Rng &&rng, Pred pred, Proj proj = {}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
-                requires ForwardRange<Rng> &&
-                    IndirectRelation<Pred, projected<iterator_t<Rng>, Proj>> &&
-                    Permutable<iterator_t<Rng>>)
+        auto operator()(Rng &&rng, Pred pred, Proj proj = {}) const
+            -> CPP_ret(safe_iterator_t<Rng>)( //
+                requires ForwardRange<Rng> &&IndirectRelation<
+                    Pred, projected<iterator_t<Rng>, Proj>> &&Permutable<iterator_t<Rng>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

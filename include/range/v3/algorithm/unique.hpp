@@ -17,16 +17,16 @@
 #ifndef RANGES_V3_ALGORITHM_UNIQUE_HPP
 #define RANGES_V3_ALGORITHM_UNIQUE_HPP
 
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/dangling.hpp>
-#include <range/v3/range/traits.hpp>
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/operations.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -45,9 +45,9 @@ namespace ranges
         /// \pre `C` is a model of the `Relation` concept
         ///
         template<typename I, typename S, typename C = equal_to, typename P = identity>
-        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
-                requires Sortable<I, C, P> && Sentinel<S, I>)
+        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const
+            -> CPP_ret(I)( //
+                requires Sortable<I, C, P> &&Sentinel<S, I>)
         {
             begin = adjacent_find(std::move(begin), end, std::ref(pred), std::ref(proj));
 
@@ -62,9 +62,9 @@ namespace ranges
         }
 
         template<typename Rng, typename C = equal_to, typename P = identity>
-        auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
-                requires Sortable<iterator_t<Rng>, C, P> && Range<Rng>)
+        auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            -> CPP_ret(safe_iterator_t<Rng>)( //
+                requires Sortable<iterator_t<Rng>, C, P> &&Range<Rng>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

@@ -15,6 +15,7 @@
 #define RANGES_V3_FUNCTIONAL_CONCEPTS_HPP
 
 #include <concepts/concepts.hpp>
+
 #include <range/v3/functional/invoke.hpp>
 
 namespace ranges
@@ -22,6 +23,7 @@ namespace ranges
     /// \addtogroup group-functional
     /// @{
 
+    // clang-format off
     CPP_def
     (
         template(typename Fun, typename... Args)
@@ -64,12 +66,13 @@ namespace ranges
         concept StrictWeakOrder,
             Relation<R, T, U>
     );
+    // clang-format on
 
     namespace cpp20
     {
         using ranges::Invocable;
-        using ranges::RegularInvocable;
         using ranges::Predicate;
+        using ranges::RegularInvocable;
         using ranges::Relation;
         using ranges::StrictWeakOrder;
     }

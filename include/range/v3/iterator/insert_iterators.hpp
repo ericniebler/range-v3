@@ -15,8 +15,9 @@
 
 #include <cstddef>
 #include <utility>
-#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/operations.hpp>
+#include <range/v3/range_fwd.hpp>
 
 namespace ranges
 {
@@ -54,6 +55,7 @@ namespace ranges
         {
             return *this;
         }
+
     private:
         Container *container_ = nullptr;
     };
@@ -102,6 +104,7 @@ namespace ranges
         {
             return *this;
         }
+
     private:
         Container *container_ = nullptr;
     };
@@ -126,7 +129,8 @@ namespace ranges
 
         constexpr insert_iterator() = default;
         explicit constexpr insert_iterator(Container &x, typename Container::iterator w)
-          : container_(std::addressof(x)), where_(w)
+          : container_(std::addressof(x))
+          , where_(w)
         {}
         insert_iterator &operator=(typename Container::value_type const &value)
         {
@@ -150,15 +154,17 @@ namespace ranges
         {
             return *this;
         }
+
     private:
-        Container* container_ = nullptr;
+        Container *container_ = nullptr;
         typename Container::iterator where_ = typename Container::iterator();
     };
 
     struct inserter_fn
     {
         template<typename Cont>
-        constexpr insert_iterator<Cont> operator()(Cont &cont, typename Cont::iterator where) const
+        constexpr insert_iterator<Cont> operator()(Cont &cont,
+                                                   typename Cont::iterator where) const
         {
             return insert_iterator<Cont>{cont, std::move(where)};
         }
@@ -183,17 +189,17 @@ namespace ranges
 namespace std
 {
     template<typename Container>
-    struct iterator_traits< ::ranges::back_insert_iterator<Container>>
+    struct iterator_traits<::ranges::back_insert_iterator<Container>>
       : ::ranges::detail::std_output_iterator_traits<>
     {};
 
     template<typename Container>
-    struct iterator_traits< ::ranges::front_insert_iterator<Container>>
+    struct iterator_traits<::ranges::front_insert_iterator<Container>>
       : ::ranges::detail::std_output_iterator_traits<>
     {};
 
     template<typename Container>
-    struct iterator_traits< ::ranges::insert_iterator<Container>>
+    struct iterator_traits<::ranges::insert_iterator<Container>>
       : ::ranges::detail::std_output_iterator_traits<>
     {};
 }

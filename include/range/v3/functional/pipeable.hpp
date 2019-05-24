@@ -14,6 +14,7 @@
 #define RANGES_V3_FUNCTIONAL_PIPEABLE_HPP
 
 #include <concepts/concepts.hpp>
+
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -40,11 +41,13 @@ namespace ranges
         {
             Pipe0 pipe0_;
             Pipe1 pipe1_;
+            // clang-format off
             template<typename Arg>
             auto CPP_auto_fun(operator())(Arg &&arg) (const)
             (
                 return static_cast<Arg &&>(arg) | pipe0_ | pipe1_
             )
+            // clang-format on
         };
     }
     /// \endcond
@@ -65,13 +68,16 @@ namespace ranges
     struct pipeable_base;
 
     template<typename T>
-    RANGES_INLINE_VAR constexpr bool is_pipeable_v = std::is_base_of<pipeable_base, T>::value;
+    RANGES_INLINE_VAR constexpr bool is_pipeable_v =
+        std::is_base_of<pipeable_base, T>::value;
 
     template<typename T>
-    RANGES_INLINE_VAR constexpr bool is_pipeable_v<T &> = std::is_base_of<pipeable_base, T>::value;
+    RANGES_INLINE_VAR constexpr bool is_pipeable_v<T &> =
+        std::is_base_of<pipeable_base, T>::value;
 
     template<typename T>
-    RANGES_INLINE_VAR constexpr bool is_pipeable_v<T &&> = std::is_base_of<pipeable_base, T>::value;
+    RANGES_INLINE_VAR constexpr bool is_pipeable_v<T &&> =
+        std::is_base_of<pipeable_base, T>::value;
 
     template<typename T>
     using is_pipeable = meta::bool_<is_pipeable_v<T>>;
@@ -79,15 +85,13 @@ namespace ranges
     struct pipeable_access
     {
         template<typename Pipeable>
-        struct impl_
-          : Pipeable
+        struct impl_ : Pipeable
         {
             using Pipeable::pipe;
         };
 
         template<typename Pipeable>
-        struct impl_<Pipeable &>
-          : impl_<Pipeable>
+        struct impl_<Pipeable &> : impl_<Pipeable>
         {};
 
         template<typename T>
@@ -98,38 +102,38 @@ namespace ranges
     {
         // Evaluate the pipe with an argument
         template<typename Arg, typename Pipe>
-        friend auto operator|(Arg &&arg, Pipe pipe) ->
-            CPP_ret(decltype(pipeable_access::impl<Pipe>::pipe(
-                std::declval<Arg>(), std::declval<Pipe &>())))(
-            requires (!is_pipeable_v<Arg>) && is_pipeable_v<Pipe>)
+        friend auto operator|(Arg &&arg, Pipe pipe)
+            -> CPP_ret(decltype(pipeable_access::impl<Pipe>::pipe(
+                std::declval<Arg>(), std::declval<Pipe &>())))( //
+                requires(!is_pipeable_v<Arg>) && is_pipeable_v<Pipe>)
         {
             return pipeable_access::impl<Pipe>::pipe(static_cast<Arg &&>(arg), pipe);
         }
 
         // Compose two pipes
         template<typename Pipe0, typename Pipe1>
-        friend auto operator|(Pipe0 pipe0, Pipe1 pipe1) ->
-            CPP_ret(decltype(make_pipeable(
-                std::declval<detail::composed_pipe<Pipe0, Pipe1>>())))(
-            requires is_pipeable_v<Pipe0> && is_pipeable_v<Pipe1>)
+        friend auto operator|(Pipe0 pipe0, Pipe1 pipe1) -> CPP_ret(decltype(
+            make_pipeable(std::declval<detail::composed_pipe<Pipe0, Pipe1>>())))( //
+            requires is_pipeable_v<Pipe0> &&is_pipeable_v<Pipe1>)
         {
             return make_pipeable(detail::composed_pipe<Pipe0, Pipe1>{pipe0, pipe1});
         }
     };
 
     template<typename Derived>
-    struct pipeable
-      : pipeable_base
+    struct pipeable : pipeable_base
     {
     private:
         friend pipeable_access;
         // Default Pipe behavior just passes the argument to the pipe's function call
         // operator
+        // clang-format off
         template<typename Arg, typename Pipe>
         static auto CPP_auto_fun(pipe)(Arg &&arg, Pipe p)
         (
             return p(static_cast<Arg &&>(arg))
         )
+        // clang-format on
     };
     /// @}
 }

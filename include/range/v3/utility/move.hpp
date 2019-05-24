@@ -15,7 +15,9 @@
 #define RANGES_V3_UTILITY_MOVE_HPP
 
 #include <type_traits>
+
 #include <meta/meta.hpp>
+
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -24,12 +26,11 @@ namespace ranges
     namespace aux
     {
         /// \ingroup group-utility
-        struct move_fn
-          : move_tag
+        struct move_fn : move_tag
         {
             template<typename T>
-            constexpr auto operator()(T &&t) const noexcept ->
-                meta::_t<std::remove_reference<T>> &&
+            constexpr auto operator()(T &&t) const noexcept
+                -> meta::_t<std::remove_reference<T>> &&
             {
                 return static_cast<meta::_t<std::remove_reference<T>> &&>(t);
             }
@@ -51,10 +52,8 @@ namespace ranges
         /// \sa `move_fn`
         template<typename R>
         using move_t =
-            meta::if_c<
-                std::is_reference<R>::value,
-                meta::_t<std::remove_reference<R>> &&,
-                detail::decay_t<R>>;
+            meta::if_c<std::is_reference<R>::value, meta::_t<std::remove_reference<R>> &&,
+                       detail::decay_t<R>>;
     }
 }
 

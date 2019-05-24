@@ -20,7 +20,7 @@ namespace ranges
     template<typename T>
     struct static_const
     {
-        static constexpr T value {};
+        static constexpr T value{};
     };
 
     /// \ingroup group-utility

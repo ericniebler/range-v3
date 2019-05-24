@@ -15,7 +15,9 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/tagged_pair.hpp>
 
-RANGES_DEPRECATED_HEADER("This file is deprecated. Please discontinue using the tag types defined here and define your own.")
+RANGES_DEPRECATED_HEADER(
+    "This file is deprecated. Please discontinue using the tag types defined here and "
+    "define your own.")
 
 namespace ranges
 {

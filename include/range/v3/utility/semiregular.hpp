@@ -15,8 +15,11 @@
 #define RANGES_V3_UTILITY_SEMIREGULAR_HPP
 
 #include <utility>
+
 #include <meta/meta.hpp>
+
 #include <concepts/concepts.hpp>
+
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/get.hpp>
 #include <range/v3/utility/in_place.hpp>
@@ -31,6 +34,7 @@ namespace ranges
     {
         struct semiregular_get
         {
+            // clang-format off
             template<typename T>
             friend auto CPP_auto_fun(get)(meta::id_t<semiregular<T>> &t)
             (
@@ -46,6 +50,7 @@ namespace ranges
             (
                 return detail::move(t).get()
             )
+            // clang-format on
         };
     }
     /// \endcond
@@ -53,15 +58,15 @@ namespace ranges
     /// \addtogroup group-utility
     /// @{
     template<typename T>
-    struct semiregular
-      : private detail::semiregular_get
+    struct semiregular : private detail::semiregular_get
     {
     private:
-        struct tag {};
+        struct tag
+        {};
         template<typename... Args>
         void construct_from(Args &&... args)
         {
-            new ((void*) std::addressof(data_)) T(static_cast<Args &&>(args)...);
+            new((void *)std::addressof(data_)) T(static_cast<Args &&>(args)...);
             engaged_ = true;
         }
         void move_assign(T &&t, std::true_type)
@@ -82,10 +87,9 @@ namespace ranges
             reset();
             construct_from(t);
         }
-        constexpr semiregular(tag, std::false_type) noexcept
-        {}
-        constexpr semiregular(tag, std::true_type)
-            noexcept(std::is_nothrow_default_constructible<T>::value)
+        constexpr semiregular(tag, std::false_type) noexcept {}
+        constexpr semiregular(tag, std::true_type) noexcept(
+            std::is_nothrow_default_constructible<T>::value)
           : data_{}
           , engaged_(true)
         {}
@@ -102,55 +106,53 @@ namespace ranges
             char ch_{};
             T data_;
         };
-        bool engaged_ {false};
+        bool engaged_{false};
+
     public:
-        constexpr semiregular()
-            noexcept(std::is_nothrow_default_constructible<T>::value ||
-                !std::is_default_constructible<T>::value)
+        constexpr semiregular() noexcept(
+            std::is_nothrow_default_constructible<T>::value ||
+            !std::is_default_constructible<T>::value)
           : semiregular(tag{}, std::is_default_constructible<T>{})
         {}
-        semiregular(semiregular &&that)
-            noexcept(std::is_nothrow_move_constructible<T>::value)
+        semiregular(semiregular &&that) noexcept(
+            std::is_nothrow_move_constructible<T>::value)
         {
-            if (that.engaged_)
+            if(that.engaged_)
                 this->construct_from(detail::move(that.data_));
         }
-        semiregular(semiregular const &that)
-            noexcept(std::is_nothrow_copy_constructible<T>::value)
+        semiregular(semiregular const &that) noexcept(
+            std::is_nothrow_copy_constructible<T>::value)
         {
-            if (that.engaged_)
+            if(that.engaged_)
                 this->construct_from(that.data_);
         }
 #if defined(__cpp_conditional_explicit) && 0 < __cpp_conditional_explicit
         template<typename U>
-        explicit(!ConvertibleTo<U, T>)
-        constexpr CPP_ctor(semiregular)(U &&u)(
-            noexcept(std::is_nothrow_constructible<T, U>::value)
-                requires (!defer::Same<uncvref_t<U>, semiregular>) &&
-                    defer::Constructible<T, U>)
+        explicit(!ConvertibleTo<U, T>) constexpr CPP_ctor(semiregular)(U &&u)( //
+            noexcept(std::is_nothrow_constructible<T, U>::value)               //
+            requires(!defer::Same<uncvref_t<U>, semiregular>) &&
+            defer::Constructible<T, U>)
           : semiregular(in_place, static_cast<U &&>(u))
         {}
 #else
         template<typename U>
-        explicit constexpr CPP_ctor(semiregular)(U &&u)(
-            noexcept(std::is_nothrow_constructible<T, U>::value)
-                requires (!defer::Same<uncvref_t<U>, semiregular>) &&
-                    defer::Constructible<T, U> &&
-                    (!defer::ConvertibleTo<U, T>))
+        explicit constexpr CPP_ctor(semiregular)(U &&u)(         //
+            noexcept(std::is_nothrow_constructible<T, U>::value) //
+            requires(!defer::Same<uncvref_t<U>, semiregular>) &&
+            defer::Constructible<T, U> && (!defer::ConvertibleTo<U, T>))
           : semiregular(in_place, static_cast<U &&>(u))
         {}
         template<typename U>
-        constexpr CPP_ctor(semiregular)(U &&u)(
-            noexcept(std::is_nothrow_constructible<T, U>::value)
-                requires (!defer::Same<uncvref_t<U>, semiregular>) &&
-                    defer::Constructible<T, U> &&
-                    defer::ConvertibleTo<U, T>)
+        constexpr CPP_ctor(semiregular)(U &&u)(                  //
+            noexcept(std::is_nothrow_constructible<T, U>::value) //
+            requires(!defer::Same<uncvref_t<U>, semiregular>) &&
+            defer::Constructible<T, U> && defer::ConvertibleTo<U, T>)
           : semiregular(in_place, static_cast<U &&>(u))
         {}
 #endif
-        CPP_template(typename... Args)(
-            requires Constructible<T, Args...>)
-        constexpr semiregular(in_place_t, Args &&...args)
+        CPP_template(typename... Args)(                        //
+            requires Constructible<T, Args...>)                //
+            constexpr semiregular(in_place_t, Args &&... args) //
             noexcept(std::is_nothrow_constructible<T, Args...>::value)
           : data_(static_cast<Args &&>(args)...)
           , engaged_(true)
@@ -159,94 +161,96 @@ namespace ranges
         {
             reset();
         }
-        semiregular &operator=(semiregular &&that)
-            noexcept(std::is_nothrow_move_constructible<T>::value &&
-                (!std::is_move_assignable<T>::value ||
-                    std::is_nothrow_move_assignable<T>::value))
+        semiregular &operator=(semiregular &&that) noexcept(
+            std::is_nothrow_move_constructible<T>::value &&
+            (!std::is_move_assignable<T>::value ||
+             std::is_nothrow_move_assignable<T>::value))
         {
-            if (engaged_ && that.engaged_)
+            if(engaged_ && that.engaged_)
                 this->move_assign(detail::move(that.data_), std::is_move_assignable<T>());
-            else if (that.engaged_)
+            else if(that.engaged_)
                 this->construct_from(detail::move(that.data_));
-            else if (engaged_)
+            else if(engaged_)
                 this->reset();
             return *this;
         }
-        semiregular &operator=(semiregular const &that)
-            noexcept(std::is_nothrow_copy_constructible<T>::value &&
-                (!std::is_copy_assignable<T>::value ||
-                    std::is_nothrow_copy_assignable<T>::value))
+        semiregular &operator=(semiregular const &that) noexcept(
+            std::is_nothrow_copy_constructible<T>::value &&
+            (!std::is_copy_assignable<T>::value ||
+             std::is_nothrow_copy_assignable<T>::value))
         {
-            if (engaged_ && that.engaged_)
+            if(engaged_ && that.engaged_)
                 this->copy_assign(that.data_, std::is_copy_assignable<T>());
-            else if (that.engaged_)
+            else if(that.engaged_)
                 this->construct_from(that.data_);
-            else if (engaged_)
+            else if(engaged_)
                 this->reset();
             return *this;
         }
-        semiregular &operator=(T t)
-            noexcept(std::is_nothrow_move_constructible<T>::value &&
-                (!std::is_move_assignable<T>::value ||
-                    std::is_nothrow_move_assignable<T>::value))
+        semiregular &operator=(T t) noexcept(
+            std::is_nothrow_move_constructible<T>::value &&
+            (!std::is_move_assignable<T>::value ||
+             std::is_nothrow_move_assignable<T>::value))
         {
-            if (engaged_)
+            if(engaged_)
                 this->move_assign(detail::move(t), std::is_move_assignable<T>());
             else
                 this->construct_from(detail::move(t));
             return *this;
         }
-        constexpr /*c++14*/ T &get() & noexcept
+        constexpr T &get() & noexcept
         {
             return RANGES_ENSURE(engaged_), data_;
         }
-        constexpr T const &get() const & noexcept
+        constexpr T const &get() const &noexcept
         {
             return RANGES_ENSURE(engaged_), data_;
         }
-        constexpr /*c++14*/ T &&get() && noexcept
+        constexpr T &&get() && noexcept
         {
             return RANGES_ENSURE(engaged_), detail::move(data_);
         }
         T const &&get() const && = delete;
-        constexpr /*c++14*/ operator T &() & noexcept
+        constexpr operator T &() & noexcept
         {
             return get();
         }
-        constexpr operator T const &() const & noexcept
+        constexpr operator T const &() const &noexcept
         {
             return get();
         }
-        constexpr /*c++14*/ operator T &&() && noexcept
+        constexpr operator T &&() && noexcept
         {
             return detail::move(get());
         }
         operator T const &&() const && = delete;
-        template<typename...Args>
-        constexpr /*c++14*/ auto CPP_auto_fun(operator())(Args &&...args) (mutable &)
+        // clang-format off
+        template<typename... Args>
+        constexpr auto CPP_auto_fun(operator())(Args &&... args)(mutable &)
         (
             return data_(static_cast<Args &&>(args)...)
         )
-        template<typename...Args>
-        constexpr auto CPP_auto_fun(operator())(Args &&...args) (const &)
+        template<typename... Args>
+        constexpr auto CPP_auto_fun(operator())(Args &&... args)(const &)
         (
             return data_(static_cast<Args &&>(args)...)
         )
 #ifdef RANGES_WORKAROUND_MSVC_786376
-        template<typename...Args, typename U = T>
-        constexpr /*c++14*/ auto CPP_auto_fun(operator())(Args &&...args) (mutable &&)
+        template<typename... Args, typename U = T>
+        constexpr auto CPP_auto_fun(operator())(Args &&... args)(mutable &&)
         (
             return ((U &&) data_)(static_cast<Args &&>(args)...)
         )
-#else // ^^^ workaround / no workaround vvv
-        template<typename...Args>
-        constexpr /*c++14*/ auto CPP_auto_fun(operator())(Args &&...args) (mutable &&)
+#else  // ^^^ workaround / no workaround vvv
+        template<typename... Args>
+        constexpr auto CPP_auto_fun(operator())(Args &&... args)(mutable &&)
         (
             return ((T &&) data_)(static_cast<Args &&>(args)...)
         )
 #endif // RANGES_WORKAROUND_MSVC_786376
-        template<typename...Args>
-        void operator()(Args &&...) const && = delete;
+       // clang-format on
+                template<typename... Args>
+                void operator()(Args &&...) const && = delete;
     };
 
     template<typename T>
@@ -256,8 +260,8 @@ namespace ranges
     {
         semiregular() = default;
         template<typename Arg>
-        CPP_ctor(semiregular)(in_place_t, Arg &arg)(
-            noexcept(true)
+        CPP_ctor(semiregular)(in_place_t, Arg &arg)( //
+            noexcept(true)                           //
             requires Constructible<ranges::reference_wrapper<T &>, Arg &>)
           : ranges::reference_wrapper<T &>(arg)
         {}
@@ -274,8 +278,8 @@ namespace ranges
     {
         semiregular() = default;
         template<typename Arg>
-        CPP_ctor(semiregular)(in_place_t, Arg &&arg)(
-            noexcept(true)
+        CPP_ctor(semiregular)(in_place_t, Arg &&arg)( //
+            noexcept(true)                            //
             requires Constructible<ranges::reference_wrapper<T &&>, Arg>)
           : ranges::reference_wrapper<T &&>(static_cast<Arg &&>(arg))
         {}
@@ -286,15 +290,12 @@ namespace ranges
     };
 
     template<typename T>
-    using semiregular_t =
-        meta::if_c<(bool) Semiregular<T>, T, semiregular<T>>;
+    using semiregular_t = meta::if_c<(bool)Semiregular<T>, T, semiregular<T>>;
 
     template<typename T, bool IsConst = false>
-    using semiregular_ref_or_val_t =
-        meta::if_c<
-            (bool) Semiregular<T>,
-            meta::if_c<IsConst, T, reference_wrapper<T>>,
-            reference_wrapper<meta::if_c<IsConst, semiregular<T> const, semiregular<T>>>>;
+    using semiregular_ref_or_val_t = meta::if_c<
+        (bool)Semiregular<T>, meta::if_c<IsConst, T, reference_wrapper<T>>,
+        reference_wrapper<meta::if_c<IsConst, semiregular<T> const, semiregular<T>>>>;
     /// @}
 }
 

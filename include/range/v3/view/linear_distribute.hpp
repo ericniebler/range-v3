@@ -16,10 +16,11 @@
 #define RANGES_V3_VIEW_LINEAR_DISTRIBUTE_HPP
 
 #include <type_traits>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/view/facade.hpp>
-#include <range/v3/utility/static_const.hpp>
+
 #include <range/v3/iterator/default_sentinel.hpp>
+#include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/facade.hpp>
 
 namespace ranges
 {
@@ -29,10 +30,10 @@ namespace ranges
         /// @{
 
         template<typename T>
-        struct linear_distribute_view
-          : view_facade<linear_distribute_view<T>, finite>
+        struct linear_distribute_view : view_facade<linear_distribute_view<T>, finite>
         {
             CPP_assert(std::is_arithmetic<T>());
+
         private:
             friend range_access;
 
@@ -47,8 +48,7 @@ namespace ranges
             {
                 return n_ == 0;
             }
-            constexpr /*c++14*/
-            bool equal(linear_distribute_view const& other) const noexcept
+            constexpr bool equal(linear_distribute_view const& other) const noexcept
             {
                 bool const eq = n_ == other.n_;
                 RANGES_DIAGNOSTIC_PUSH
@@ -58,7 +58,7 @@ namespace ranges
                 RANGES_DIAGNOSTIC_POP
                 return eq;
             }
-            constexpr /*c++14*/ void next() noexcept
+            constexpr void next() noexcept
             {
                 RANGES_EXPECT(n_ > 0);
                 --n_;
@@ -71,10 +71,13 @@ namespace ranges
                     from_ += (to_ - from_) / T(n_);
                 }
             }
+
         public:
-            constexpr /*c++14*/ linear_distribute_view() = default;
-            constexpr /*c++14*/ linear_distribute_view(T from, T to__, std::ptrdiff_t n) noexcept
-              : from_(from), to_(to__), n_(n)
+            constexpr linear_distribute_view() = default;
+            constexpr linear_distribute_view(T from, T to__, std::ptrdiff_t n) noexcept
+              : from_(from)
+              , to_(to__)
+              , n_(n)
             {
                 RANGES_EXPECT(n_ > 0);
                 RANGES_EXPECT(to_ >= from_);
@@ -94,8 +97,8 @@ namespace ranges
         struct linear_distribute_fn
         {
             template<typename T>
-            constexpr auto CPP_fun(operator())(T from, T to, std::ptrdiff_t n) (const
-                requires std::is_arithmetic<T>::value)
+            constexpr auto CPP_fun(operator())(T from, T to, std::ptrdiff_t n)(
+                const requires std::is_arithmetic<T>::value)
             {
                 return linear_distribute_view<T>{from, to, n};
             }
