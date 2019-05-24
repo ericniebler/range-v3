@@ -20,8 +20,9 @@
 
 #include <concepts/concepts.hpp>
 
-#include <range/v3/iterator/concepts.hpp>
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/iterator/concepts.hpp>
 
 namespace ranges
 {
@@ -168,139 +169,139 @@ namespace ranges
                               : diffmax_t{tag{}, a.neg_, a.val_ >> b.val_};
             }
 
-            constexpr friend diffmax_t& operator+=(diffmax_t& a, diffmax_t b) noexcept
+            constexpr friend diffmax_t & operator+=(diffmax_t & a, diffmax_t b) noexcept
             {
                 return (a = a + b);
             }
-            constexpr friend diffmax_t& operator-=(diffmax_t& a, diffmax_t b) noexcept
+            constexpr friend diffmax_t & operator-=(diffmax_t & a, diffmax_t b) noexcept
             {
                 return (a = a - b);
             }
-            constexpr friend diffmax_t& operator*=(diffmax_t& a, diffmax_t b) noexcept
+            constexpr friend diffmax_t & operator*=(diffmax_t & a, diffmax_t b) noexcept
             {
                 return (a = a * b);
             }
-            constexpr friend diffmax_t& operator/=(diffmax_t& a, diffmax_t b) noexcept
+            constexpr friend diffmax_t & operator/=(diffmax_t & a, diffmax_t b) noexcept
             {
                 return (a = a / b);
             }
-            constexpr friend diffmax_t& operator%=(diffmax_t& a, diffmax_t b) noexcept
+            constexpr friend diffmax_t & operator%=(diffmax_t & a, diffmax_t b) noexcept
             {
                 return (a = a % b);
             }
-            constexpr friend diffmax_t& operator&=(diffmax_t& a, diffmax_t b) noexcept
+            constexpr friend diffmax_t & operator&=(diffmax_t & a, diffmax_t b) noexcept
             {
                 return (a = a & b);
             }
-            constexpr friend diffmax_t& operator|=(diffmax_t& a, diffmax_t b) noexcept
+            constexpr friend diffmax_t & operator|=(diffmax_t & a, diffmax_t b) noexcept
             {
                 return (a = a | b);
             }
-            constexpr friend diffmax_t& operator^=(diffmax_t& a, diffmax_t b) noexcept
+            constexpr friend diffmax_t & operator^=(diffmax_t & a, diffmax_t b) noexcept
             {
                 return (a = a ^ b);
             }
-            constexpr friend diffmax_t& operator<<=(diffmax_t& a, diffmax_t b) noexcept
+            constexpr friend diffmax_t & operator<<=(diffmax_t & a, diffmax_t b) noexcept
             {
                 a = (a << b);
                 return a;
             }
-            constexpr friend diffmax_t& operator>>=(diffmax_t& a, diffmax_t b) noexcept
+            constexpr friend diffmax_t & operator>>=(diffmax_t & a, diffmax_t b) noexcept
             {
                 a = (a >> b);
                 return a;
             }
 
             template<typename T>
-            constexpr friend auto operator+=(T& a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T&)( //
+            constexpr friend auto operator+=(T & a, diffmax_t b) noexcept
+                -> CPP_broken_friend_ret(T &)( //
                     requires Integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} + b));
             }
             template<typename T>
-            constexpr friend auto operator-=(T& a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T&)( //
+            constexpr friend auto operator-=(T & a, diffmax_t b) noexcept
+                -> CPP_broken_friend_ret(T &)( //
                     requires Integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} - b));
             }
             template<typename T>
-            constexpr friend auto operator*=(T& a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T&)( //
+            constexpr friend auto operator*=(T & a, diffmax_t b) noexcept
+                -> CPP_broken_friend_ret(T &)( //
                     requires Integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} * b));
             }
             template<typename T>
-            constexpr friend auto operator/=(T& a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T&)( //
+            constexpr friend auto operator/=(T & a, diffmax_t b) noexcept
+                -> CPP_broken_friend_ret(T &)( //
                     requires Integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} / b));
             }
             template<typename T>
-            constexpr friend auto operator%=(T& a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T&)( //
+            constexpr friend auto operator%=(T & a, diffmax_t b) noexcept
+                -> CPP_broken_friend_ret(T &)( //
                     requires Integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} % b));
             }
             template<typename T>
-            constexpr friend auto operator&=(T& a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T&)( //
+            constexpr friend auto operator&=(T & a, diffmax_t b) noexcept
+                -> CPP_broken_friend_ret(T &)( //
                     requires Integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} & b));
             }
             template<typename T>
-            constexpr friend auto operator|=(T& a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T&)( //
+            constexpr friend auto operator|=(T & a, diffmax_t b) noexcept
+                -> CPP_broken_friend_ret(T &)( //
                     requires Integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} | b));
             }
             template<typename T>
-            constexpr friend auto operator^=(T& a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T&)( //
+            constexpr friend auto operator^=(T & a, diffmax_t b) noexcept
+                -> CPP_broken_friend_ret(T &)( //
                     requires Integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} ^ b));
             }
             template<typename T>
-            constexpr friend auto operator<<=(T& a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T&)( //
+            constexpr friend auto operator<<=(T & a, diffmax_t b) noexcept
+                -> CPP_broken_friend_ret(T &)( //
                     requires Integral<T>)
             {
                 a = static_cast<T>(diffmax_t{a} << b);
                 return a;
             }
             template<typename T>
-            constexpr friend auto operator>>=(T& a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T&)( //
+            constexpr friend auto operator>>=(T & a, diffmax_t b) noexcept
+                -> CPP_broken_friend_ret(T &)( //
                     requires Integral<T>)
             {
                 a = static_cast<T>(diffmax_t{a} >> b);
                 return a;
             }
 
-            constexpr friend diffmax_t& operator++(diffmax_t& a) noexcept
+            constexpr friend diffmax_t & operator++(diffmax_t & a) noexcept
             {
                 a.neg_ = (a.neg_ ? --a.val_ : ++a.val_) && a.neg_;
                 return a;
             }
-            constexpr friend diffmax_t& operator--(diffmax_t& a) noexcept
+            constexpr friend diffmax_t & operator--(diffmax_t & a) noexcept
             {
                 a.neg_ = (a.neg_ ? ++a.val_ : --a.val_) && a.neg_;
                 return a;
             }
-            constexpr friend diffmax_t operator++(diffmax_t& a, int) noexcept
+            constexpr friend diffmax_t operator++(diffmax_t & a, int) noexcept
             {
                 auto tmp = a;
                 ++a;
                 return tmp;
             }
-            constexpr friend diffmax_t operator--(diffmax_t& a, int) noexcept
+            constexpr friend diffmax_t operator--(diffmax_t & a, int) noexcept
             {
                 auto tmp = a;
                 --a;
@@ -324,8 +325,8 @@ namespace ranges
             }
 
             template<typename Ostream>
-            friend auto operator<<(Ostream& sout, diffmax_t a)
-                -> CPP_broken_friend_ret(std::ostream&)( //
+            friend auto operator<<(Ostream & sout, diffmax_t a)
+                -> CPP_broken_friend_ret(std::ostream &)( //
                     requires DerivedFrom<
                         Ostream, std::basic_ostream<typename Ostream::char_type,
                                                     typename Ostream::traits_type>>)

@@ -19,12 +19,13 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/concepts.hpp>
 #include <range/v3/action/push_back.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -42,9 +43,9 @@ namespace ranges
         {
         public:
             template<typename Rng>
-            auto operator()(Rng &&rng) const -> CPP_ret(join_action_value_t_<Rng>)( //
-                requires InputRange<Rng> &&InputRange<range_value_t<Rng>>
-                    &&Semiregular<join_action_value_t_<Rng>>)
+            auto operator()(Rng && rng) const -> CPP_ret(join_action_value_t_<Rng>)( //
+                requires InputRange<Rng> && InputRange<range_value_t<Rng>> &&
+                    Semiregular<join_action_value_t_<Rng>>)
             {
                 join_action_value_t_<Rng> ret;
                 auto end = ranges::end(rng);

@@ -21,12 +21,13 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/arithmetic.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
@@ -78,7 +79,7 @@ namespace ranges
             using Parent = meta::const_if_c<IsConst, partial_sum_view>;
             using Base = meta::const_if_c<IsConst, Rng>;
 
-            Parent *parent_ = nullptr;
+            Parent * parent_ = nullptr;
             RANGES_NO_UNIQUE_ADDRESS iterator_t<Base> current_{};
             RANGES_NO_UNIQUE_ADDRESS semiregular_t<range_value_t<Rng>> sum_;
 
@@ -86,7 +87,7 @@ namespace ranges
             using single_pass = meta::bool_<SinglePass<iterator_t<Base>>>;
 
             cursor() = default;
-            constexpr explicit cursor(Parent &rng)
+            constexpr explicit cursor(Parent & rng)
               : parent_{std::addressof(rng)}
               , current_(ranges::begin(rng.base_))
             {
@@ -97,7 +98,7 @@ namespace ranges
                 requires IsConst && (!Other) &&
                 ConvertibleTo<iterator_t<Rng> const &,
                               iterator_t<Base>>) //
-                constexpr cursor(cursor<Other> const &that)
+                constexpr cursor(cursor<Other> const & that)
               : parent_{that.parent_}
               , current_(that.current_)
               , sum_(that.sum_)
@@ -113,9 +114,9 @@ namespace ranges
                 RANGES_EXPECT(current_ != last);
                 if(++current_ != last)
                 {
-                    auto &sum = static_cast<range_value_t<Rng> &>(sum_);
+                    auto & sum = static_cast<range_value_t<Rng> &>(sum_);
                     using F = meta::const_if_c<IsConst, Fun>;
-                    auto &f = static_cast<F &>(parent_->fun_);
+                    auto & f = static_cast<F &>(parent_->fun_);
                     sum = invoke(f, sum, *current_);
                 }
             }
@@ -123,7 +124,7 @@ namespace ranges
             {
                 return current_ == ranges::end(parent_->base_);
             }
-            CPP_member constexpr bool CPP_fun(equal)(cursor const &that)(
+            CPP_member constexpr bool CPP_fun(equal)(cursor const & that)(
                 const requires EqualityComparable<iterator_t<Base>>)
             {
                 RANGES_EXPECT(parent_ == that.parent_);
@@ -145,8 +146,8 @@ namespace ranges
     public:
         partial_sum_view() = default;
         constexpr partial_sum_view(Rng rng, Fun fun) noexcept(
-            std::is_nothrow_move_constructible<Rng>::value
-                &&std::is_nothrow_move_constructible<Fun>::value)
+            std::is_nothrow_move_constructible<Rng>::value &&
+                std::is_nothrow_move_constructible<Fun>::value)
           : base_(std::move(rng))
           , fun_(std::move(fun))
         {}
@@ -184,7 +185,7 @@ namespace ranges
 
         public:
             template<typename Rng, typename Fun = plus>
-            constexpr auto operator()(Rng &&rng, Fun fun = {}) const
+            constexpr auto operator()(Rng && rng, Fun fun = {}) const
                 -> CPP_ret(partial_sum_view<all_t<Rng>, Fun>)( //
                     requires detail::PartialSumViewable<all_t<Rng>, Fun>)
             {

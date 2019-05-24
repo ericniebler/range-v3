@@ -177,7 +177,7 @@ namespace ranges
             constexpr ignore_t(T &&) noexcept
             {}
             template<typename T>
-            constexpr ignore_t const &operator=(T &&) const noexcept
+            constexpr ignore_t const & operator=(T &&) const noexcept
             {
                 return *this;
             }
@@ -195,7 +195,7 @@ namespace ranges
         struct make_compressed_pair_fn;
 
         template<typename T>
-        constexpr meta::_t<std::remove_reference<T>> &&move(T &&t) noexcept
+        constexpr meta::_t<std::remove_reference<T>> && move(T && t) noexcept
         {
             return static_cast<meta::_t<std::remove_reference<T>> &&>(t);
         }
@@ -203,12 +203,12 @@ namespace ranges
         struct as_const_fn
         {
             template<typename T>
-            constexpr T const &operator()(T &t) const noexcept
+            constexpr T const & operator()(T & t) const noexcept
             {
                 return t;
             }
             template<typename T>
-            constexpr T const &&operator()(T &&t) const noexcept
+            constexpr T const && operator()(T && t) const noexcept
             {
                 return (T &&) t;
             }

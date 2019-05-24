@@ -41,7 +41,7 @@ namespace ranges
         public:
             CPP_assert(ForwardRange<Rng> || SizedRange<Rng>);
             size_tracker() = default;
-            size_tracker(Rng &rng)
+            size_tracker(Rng & rng)
               : size_(ranges::distance(rng))
             {}
             void decrement()
@@ -62,7 +62,7 @@ namespace ranges
             size_tracker() = default;
             size_tracker(Rng &) {}
             void decrement() {}
-            range_difference_t<Rng> get(Rng &rng, iterator_t<Rng> const &it) const
+            range_difference_t<Rng> get(Rng & rng, iterator_t<Rng> const & it) const
             {
                 return ranges::end(rng) - it;
             }
@@ -82,7 +82,7 @@ namespace ranges
         Rng rng_;
         // Mutable is OK here because sample_view is an Input view.
         mutable range_difference_t<Rng> size_;
-        URNG *engine_;
+        URNG * engine_;
 
         template<bool IsConst>
         class cursor
@@ -90,7 +90,7 @@ namespace ranges
             friend cursor<!IsConst>;
 
             using Base = meta::const_if_c<IsConst, Rng>;
-            meta::const_if_c<IsConst, sample_view> *parent_;
+            meta::const_if_c<IsConst, sample_view> * parent_;
             iterator_t<Base> current_;
             RANGES_NO_UNIQUE_ADDRESS detail::size_tracker<Base> size_;
 
@@ -104,7 +104,7 @@ namespace ranges
                 {
                     using Dist = std::uniform_int_distribution<D>;
                     Dist dist{};
-                    URNG &engine = *parent_->engine_;
+                    URNG & engine = *parent_->engine_;
 
                     for(;; ++current_, size_.decrement())
                     {
@@ -123,7 +123,7 @@ namespace ranges
             using difference_type = D;
 
             cursor() = default;
-            explicit cursor(meta::const_if_c<IsConst, sample_view> &rng)
+            explicit cursor(meta::const_if_c<IsConst, sample_view> & rng)
               : parent_(&rng)
               , current_(ranges::begin(rng.rng_))
               , size_{rng.rng_}
@@ -167,7 +167,7 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
-            requires Const &&SizedRange<meta::const_if_c<Const, Rng>> ||
+            requires Const && SizedRange<meta::const_if_c<Const, Rng>> ||
             SizedSentinel<sentinel_t<meta::const_if_c<Const, Rng>>,
                           iterator_t<meta::const_if_c<Const, Rng>>> ||
             ForwardRange<meta::const_if_c<Const, Rng>>)
@@ -178,7 +178,7 @@ namespace ranges
     public:
         sample_view() = default;
 
-        explicit sample_view(Rng rng, D sample_size, URNG &generator)
+        explicit sample_view(Rng rng, D sample_size, URNG & generator)
           : rng_(std::move(rng))
           , size_(sample_size)
           , engine_(std::addressof(generator))
@@ -201,8 +201,8 @@ namespace ranges
             friend view_access;
             template<typename Size, typename URNG = detail::default_random_engine>
             static auto CPP_fun(bind)(sample_fn fn, Size n,
-                                      URNG &urng = detail::get_random_engine())( //
-                requires Integral<Size> &&UniformRandomNumberGenerator<URNG>)
+                                      URNG & urng = detail::get_random_engine())( //
+                requires Integral<Size> && UniformRandomNumberGenerator<URNG>)
             {
                 return make_pipeable(
                     std::bind(fn, std::placeholders::_1, n, bind_forward<URNG &>(urng)));
@@ -210,11 +210,11 @@ namespace ranges
 
         public:
             template<typename Rng, typename URNG = detail::default_random_engine>
-            auto operator()(Rng &&rng, range_difference_t<Rng> sample_size,
-                            URNG &generator = detail::get_random_engine()) const
+            auto operator()(Rng && rng, range_difference_t<Rng> sample_size,
+                            URNG & generator = detail::get_random_engine()) const
                 -> CPP_ret(sample_view<all_t<Rng>, URNG>)( //
-                    requires ViewableRange<Rng> &&InputRange<Rng>
-                        &&UniformRandomNumberGenerator<URNG> &&ConvertibleTo<
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        UniformRandomNumberGenerator<URNG> && ConvertibleTo<
                             invoke_result_t<URNG &>, range_difference_t<Rng>> &&
                     (SizedRange<Rng> || SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>> ||
                      ForwardRange<Rng>))

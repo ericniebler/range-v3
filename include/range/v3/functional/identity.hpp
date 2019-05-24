@@ -22,7 +22,7 @@ namespace ranges
     struct identity
     {
         template<typename T>
-        constexpr T &&operator()(T &&t) const noexcept
+        constexpr T && operator()(T && t) const noexcept
         {
             return (T &&) t;
         }

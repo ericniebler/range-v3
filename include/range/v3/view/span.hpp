@@ -18,6 +18,8 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/equal.hpp>
 #include <range/v3/algorithm/lexicographical_compare.hpp>
 #include <range/v3/iterator/reverse_iterator.hpp>
@@ -25,7 +27,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/view/interface.hpp>
 
 namespace ranges
@@ -44,7 +45,7 @@ namespace ranges
     {
         template<typename To, typename From>
         constexpr auto narrow_cast(From from) noexcept -> CPP_ret(To)( //
-            requires Integral<To> &&Integral<From>)
+            requires Integral<To> && Integral<From>)
         {
             using C = common_type_t<To, From>;
             return RANGES_EXPECT((from > 0) == (static_cast<To>(from) > 0)),
@@ -170,15 +171,15 @@ namespace ranges
         CPP_template(typename Rng)( //
             requires(!defer::Same<span, uncvref_t<Rng>>) &&
             defer::SpanCompatibleRange<Rng, T> && defer::SpanDynamicConversion<Rng, N>) //
-            constexpr span(Rng &&rng) noexcept(noexcept(ranges::data(rng),
-                                                        ranges::size(rng)))
+            constexpr span(Rng && rng) noexcept(noexcept(ranges::data(rng),
+                                                         ranges::size(rng)))
           : span{ranges::data(rng), detail::narrow_cast<index_type>(ranges::size(rng))}
         {}
 
         CPP_template(typename Rng)( //
             requires(!defer::Same<span, uncvref_t<Rng>>) &&
             defer::SpanCompatibleRange<Rng, T> && defer::SpanStaticConversion<Rng, N>) //
-            constexpr span(Rng &&rng) noexcept(noexcept(ranges::data(rng)))
+            constexpr span(Rng && rng) noexcept(noexcept(ranges::data(rng)))
           : span{ranges::data(rng), N}
         {}
 
@@ -303,7 +304,7 @@ namespace ranges
         }
 
         template<typename U, index_type M>
-        auto operator==(span<U, M> const &that) const -> CPP_ret(bool)( //
+        auto operator==(span<U, M> const & that) const -> CPP_ret(bool)( //
             requires EqualityComparableWith<T, U>)
         {
             RANGES_EXPECT(!size() || data());
@@ -311,14 +312,14 @@ namespace ranges
             return ranges::equal(*this, that);
         }
         template<typename U, index_type M>
-        auto operator!=(span<U, M> const &that) const -> CPP_ret(bool)( //
+        auto operator!=(span<U, M> const & that) const -> CPP_ret(bool)( //
             requires EqualityComparableWith<T, U>)
         {
             return !(*this == that);
         }
 
         template<typename U, index_type M>
-        auto operator<(span<U, M> const &that) const -> CPP_ret(bool)( //
+        auto operator<(span<U, M> const & that) const -> CPP_ret(bool)( //
             requires StrictTotallyOrderedWith<T, U>)
         {
             RANGES_EXPECT(!size() || data());
@@ -326,26 +327,26 @@ namespace ranges
             return ranges::lexicographical_compare(*this, that);
         }
         template<typename U, index_type M>
-        auto operator>(span<U, M> const &that) const -> CPP_ret(bool)( //
+        auto operator>(span<U, M> const & that) const -> CPP_ret(bool)( //
             requires StrictTotallyOrderedWith<T, U>)
         {
             return that < *this;
         }
         template<typename U, index_type M>
-        auto operator<=(span<U, M> const &that) const -> CPP_ret(bool)( //
+        auto operator<=(span<U, M> const & that) const -> CPP_ret(bool)( //
             requires StrictTotallyOrderedWith<T, U>)
         {
             return !(that < *this);
         }
         template<typename U, index_type M>
-        auto operator>=(span<U, M> const &that) const -> CPP_ret(bool)( //
+        auto operator>=(span<U, M> const & that) const -> CPP_ret(bool)( //
             requires StrictTotallyOrderedWith<T, U>)
         {
             return !(*this < that);
         }
 
     private:
-        T *data_ = nullptr;
+        T * data_ = nullptr;
     };
 
     template<typename T, detail::span_index_t N>
@@ -354,7 +355,7 @@ namespace ranges
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Rng)(        //
         requires ContiguousRange<Rng>) //
-        span(Rng &&rng)
+        span(Rng && rng)
             ->span<detail::element_t<Rng>, (range_cardinality<Rng>::value < cardinality()
                                                 ? dynamic_extent
                                                 : static_cast<detail::span_index_t>(
@@ -373,20 +374,21 @@ namespace ranges
     }
 
     template<typename ElementType>
-    constexpr span<ElementType> make_span(ElementType *ptr,
+    constexpr span<ElementType> make_span(ElementType * ptr,
                                           detail::span_index_t count) noexcept
     {
         return span<ElementType>{ptr, count};
     }
     template<typename ElementType>
-    constexpr span<ElementType> make_span(ElementType *first, ElementType *last) noexcept
+    constexpr span<ElementType> make_span(ElementType * first,
+                                          ElementType * last) noexcept
     {
         return span<ElementType>{first, last};
     }
     CPP_template(typename Rng)( //
         requires ContiguousRange<Rng> &&
         (range_cardinality<Rng>::value < cardinality())) //
-        constexpr span<detail::element_t<Rng>> make_span(Rng &&rng) noexcept(
+        constexpr span<detail::element_t<Rng>> make_span(Rng && rng) noexcept(
             noexcept(ranges::data(rng), ranges::size(rng)))
     {
         return {ranges::data(rng),
@@ -399,7 +401,7 @@ namespace ranges
             detail::element_t<Rng>,
             static_cast<detail::span_index_t>(
                 range_cardinality<Rng>::
-                    value)> make_span(Rng &&rng) noexcept(noexcept(ranges::data(rng)))
+                    value)> make_span(Rng && rng) noexcept(noexcept(ranges::data(rng)))
     {
         return {ranges::data(rng), range_cardinality<Rng>::value};
     }

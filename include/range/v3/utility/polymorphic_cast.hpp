@@ -16,7 +16,7 @@
 namespace ranges
 {
     template<typename Target, typename Source>
-    auto polymorphic_downcast(Source *x) noexcept
+    auto polymorphic_downcast(Source * x) noexcept
         -> meta::if_<std::is_pointer<Target>,
                      decltype((static_cast<Target>(x), dynamic_cast<Target>(x)))>
     {
@@ -25,14 +25,14 @@ namespace ranges
         return result;
     }
     template<typename Target, typename Source>
-    auto polymorphic_downcast(Source &&x) noexcept
+    auto polymorphic_downcast(Source && x) noexcept
         -> meta::if_<std::is_reference<Target>,
                      decltype((static_cast<Target>(std::declval<Source>()),
                                dynamic_cast<Target>(std::declval<Source>())))>
     {
-        auto &&result = static_cast<Target>(static_cast<Source &&>(x));
+        auto && result = static_cast<Target>(static_cast<Source &&>(x));
 #ifndef NDEBUG
-        auto &&dresult = dynamic_cast<Target>(static_cast<Source &&>(x));
+        auto && dresult = dynamic_cast<Target>(static_cast<Source &&>(x));
         RANGES_ASSERT(std::addressof(dresult) == std::addressof(result));
 #endif
         return static_cast<Target>(result);

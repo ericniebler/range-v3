@@ -20,12 +20,13 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/all.hpp>
@@ -59,7 +60,7 @@ namespace ranges
         struct stride_view_base_ : stride_view_adaptor<Rng>
         {
             stride_view_base_() = default;
-            constexpr stride_view_base_(Rng &&rng, range_difference_t<Rng> const stride)
+            constexpr stride_view_base_(Rng && rng, range_difference_t<Rng> const stride)
               : stride_view_adaptor<Rng>{std::move(rng)}
               , stride_{(RANGES_EXPECT(0 < stride), stride)}
               , offset_{calc_offset(meta::bool_<SizedRange<Rng>>{})}
@@ -102,7 +103,7 @@ namespace ranges
         struct stride_view_base_<Rng, false> : stride_view_adaptor<Rng>
         {
             stride_view_base_() = default;
-            constexpr stride_view_base_(Rng &&rng, range_difference_t<Rng> const stride)
+            constexpr stride_view_base_(Rng && rng, range_difference_t<Rng> const stride)
               : stride_view_adaptor<Rng>{std::move(rng)}
               , stride_{(RANGES_EXPECT(0 < stride), stride)}
             {}
@@ -165,11 +166,11 @@ namespace ranges
         private:
             using CRng = meta::const_if_c<Const, Rng>;
             using stride_view_t = meta::const_if_c<Const, stride_view>;
-            stride_view_t *rng_;
+            stride_view_t * rng_;
 
         public:
             adaptor() = default;
-            constexpr adaptor(stride_view_t &rng) noexcept
+            constexpr adaptor(stride_view_t & rng) noexcept
               : rng_(&rng)
             {}
             CPP_template(bool Other)(       //
@@ -177,7 +178,7 @@ namespace ranges
                 adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
-            constexpr void next(iterator_t<CRng> &it)
+            constexpr void next(iterator_t<CRng> & it)
             {
                 auto const last = ranges::end(rng_->base());
                 RANGES_EXPECT(it != last);
@@ -187,7 +188,7 @@ namespace ranges
                     rng_->set_offset(delta);
                 }
             }
-            CPP_member constexpr auto prev(iterator_t<CRng> &it) -> CPP_ret(void)( //
+            CPP_member constexpr auto prev(iterator_t<CRng> & it) -> CPP_ret(void)( //
                 requires BidirectionalRange<CRng>)
             {
                 RANGES_EXPECT(it != ranges::begin(rng_->base()));
@@ -200,8 +201,8 @@ namespace ranges
                 ranges::advance(it, delta);
             }
             template<typename Other>
-            constexpr auto distance_to(iterator_t<CRng> const &here,
-                                       Other const &there) const
+            constexpr auto distance_to(iterator_t<CRng> const & here,
+                                       Other const & there) const
                 -> CPP_ret(range_difference_t<Rng>)( //
                     requires SizedSentinel<Other, iterator_t<CRng>>)
             {
@@ -212,7 +213,7 @@ namespace ranges
                     delta += rng_->stride_ - 1;
                 return delta / rng_->stride_;
             }
-            CPP_member constexpr auto advance(iterator_t<CRng> &it,
+            CPP_member constexpr auto advance(iterator_t<CRng> & it,
                                               range_difference_t<Rng> n)
                 -> CPP_ret(void)( //
                     requires RandomAccessRange<CRng>)
@@ -321,9 +322,9 @@ namespace ranges
 
         public:
             template<typename Rng>
-            constexpr auto operator()(Rng &&rng, range_difference_t<Rng> step) const
+            constexpr auto operator()(Rng && rng, range_difference_t<Rng> step) const
                 -> CPP_ret(stride_view<all_t<Rng>>)( //
-                    requires ViewableRange<Rng> &&InputRange<Rng>)
+                    requires ViewableRange<Rng> && InputRange<Rng>)
             {
                 return stride_view<all_t<Rng>>{all(static_cast<Rng &&>(rng)), step};
             }

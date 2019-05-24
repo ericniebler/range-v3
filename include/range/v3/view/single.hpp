@@ -17,12 +17,13 @@
 #include <type_traits>
 #include <utility>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -51,10 +52,10 @@ namespace ranges
 
     public:
         single_view() = default;
-        constexpr explicit single_view(T const &t)
+        constexpr explicit single_view(T const & t)
           : value_(t)
         {}
-        constexpr explicit single_view(T &&t)
+        constexpr explicit single_view(T && t)
           : value_(std::move(t))
         {}
         CPP_template(class... Args)(            //
@@ -64,19 +65,19 @@ namespace ranges
                         meta::bool_<(bool)Semiregular<T>>{},
                         static_cast<Args &&>(args)...}
         {}
-        constexpr T *begin() noexcept
+        constexpr T * begin() noexcept
         {
             return data();
         }
-        constexpr T const *begin() const noexcept
+        constexpr T const * begin() const noexcept
         {
             return data();
         }
-        constexpr T *end() noexcept
+        constexpr T * end() noexcept
         {
             return data() + 1;
         }
-        constexpr T const *end() const noexcept
+        constexpr T const * end() const noexcept
         {
             return data() + 1;
         }
@@ -84,11 +85,11 @@ namespace ranges
         {
             return 1u;
         }
-        constexpr T *data() noexcept
+        constexpr T * data() noexcept
         {
             return std::addressof(static_cast<T &>(value_));
         }
-        constexpr T const *data() const noexcept
+        constexpr T const * data() const noexcept
         {
             return std::addressof(static_cast<T const &>(value_));
         }

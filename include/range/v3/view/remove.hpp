@@ -21,10 +21,11 @@
 
 #include <concepts/concepts.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/bind.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/pipeable.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -60,7 +61,7 @@ namespace ranges
             {
                 Value value_;
                 template<typename T>
-                auto operator()(T &&other) const -> CPP_ret(bool)( //
+                auto operator()(T && other) const -> CPP_ret(bool)( //
                     requires EqualityComparableWith<T, Value const &>)
                 {
                     return static_cast<T &&>(other) == value_;
@@ -69,18 +70,19 @@ namespace ranges
 
         public:
             template<typename Rng, typename Value>
-            constexpr auto CPP_fun(operator())(Rng &&rng, Value value)(
-                const requires MoveConstructible<Value> &&ViewableRange<Rng> &&InputRange<
-                    Rng> &&IndirectlyComparable<iterator_t<Rng>, Value const *, equal_to>)
+            constexpr auto CPP_fun(operator())(Rng && rng, Value value)(
+                const requires MoveConstructible<Value> && ViewableRange<Rng> &&
+                    InputRange<Rng> &&
+                        IndirectlyComparable<iterator_t<Rng>, Value const *, equal_to>)
             {
                 return remove_if(static_cast<Rng &&>(rng), pred<Value>{std::move(value)});
             }
 
             template<typename Rng, typename Value, typename Proj>
-            constexpr auto CPP_fun(operator())(Rng &&rng, Value value, Proj proj)(
-                const requires MoveConstructible<Value> &&ViewableRange<Rng> &&
-                    InputRange<Rng> &&IndirectlyComparable<iterator_t<Rng>, Value const *,
-                                                           equal_to, Proj>)
+            constexpr auto CPP_fun(operator())(Rng && rng, Value value, Proj proj)(
+                const requires MoveConstructible<Value> && ViewableRange<Rng> &&
+                    InputRange<Rng> && IndirectlyComparable<
+                        iterator_t<Rng>, Value const *, equal_to, Proj>)
             {
                 return remove_if(static_cast<Rng &&>(rng),
                                  pred<Value>{std::move(value)},

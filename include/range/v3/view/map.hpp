@@ -21,6 +21,7 @@
 #include <concepts/concepts.hpp>
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/view.hpp>
@@ -34,13 +35,13 @@ namespace ranges
     namespace detail
     {
         template<typename T>
-        constexpr T &get_first_second_helper(T &t, std::true_type) noexcept
+        constexpr T & get_first_second_helper(T & t, std::true_type) noexcept
         {
             return t;
         }
 
         template<typename T>
-        constexpr auto get_first_second_helper(T &t, std::false_type) noexcept(
+        constexpr auto get_first_second_helper(T & t, std::false_type) noexcept(
             std::is_nothrow_move_constructible<T>::value) -> CPP_ret(T)( //
             requires MoveConstructible<T>)
         {
@@ -96,9 +97,9 @@ namespace ranges
         struct keys_fn
         {
             template<typename Rng>
-            auto operator()(Rng &&rng) const -> CPP_ret(keys_range_view<all_t<Rng>>)( //
-                requires ViewableRange<Rng> &&InputRange<Rng>
-                    &&detail::PairLike<range_reference_t<Rng>>)
+            auto operator()(Rng && rng) const -> CPP_ret(keys_range_view<all_t<Rng>>)( //
+                requires ViewableRange<Rng> && InputRange<Rng> &&
+                    detail::PairLike<range_reference_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), detail::get_first{}};
             }
@@ -107,9 +108,9 @@ namespace ranges
         struct values_fn
         {
             template<typename Rng>
-            auto operator()(Rng &&rng) const -> CPP_ret(values_view<all_t<Rng>>)( //
-                requires ViewableRange<Rng> &&InputRange<Rng>
-                    &&detail::PairLike<range_reference_t<Rng>>)
+            auto operator()(Rng && rng) const -> CPP_ret(values_view<all_t<Rng>>)( //
+                requires ViewableRange<Rng> && InputRange<Rng> &&
+                    detail::PairLike<range_reference_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), detail::get_second{}};
             }

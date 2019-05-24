@@ -47,7 +47,7 @@ namespace ranges
             if(n > PTRDIFF_MAX / sizeof(T))
                 n = PTRDIFF_MAX / sizeof(T);
 
-            void *ptr = nullptr;
+            void * ptr = nullptr;
             for(; ptr == nullptr && n > 0; n /= 2)
             {
 #if RANGES_CXX_ALIGNED_NEW < RANGES_CXX_ALIGNED_NEW_17
@@ -76,7 +76,7 @@ namespace ranges
         struct return_temporary_buffer
         {
             template<typename T>
-            void operator()(T *p) const
+            void operator()(T * p) const
             {
 #if RANGES_CXX_ALIGNED_NEW < RANGES_CXX_ALIGNED_NEW_17
                 static_assert(alignof(T) <= alignof(std::max_align_t),
@@ -116,23 +116,23 @@ namespace ranges
         explicit raw_storage_iterator(O out)
           : out_(std::move(out))
         {}
-        raw_storage_iterator &operator*() noexcept
+        raw_storage_iterator & operator*() noexcept
         {
             return *this;
         }
-        CPP_member auto operator=(Val const &val) -> CPP_ret(raw_storage_iterator &)( //
+        CPP_member auto operator=(Val const & val) -> CPP_ret(raw_storage_iterator &)( //
             requires CopyConstructible<Val>)
         {
             ::new((void *)std::addressof(*out_)) Val(val);
             return *this;
         }
-        CPP_member auto operator=(Val &&val) -> CPP_ret(raw_storage_iterator &)( //
+        CPP_member auto operator=(Val && val) -> CPP_ret(raw_storage_iterator &)( //
             requires MoveConstructible<Val>)
         {
             ::new((void *)std::addressof(*out_)) Val(std::move(val));
             return *this;
         }
-        raw_storage_iterator &operator++()
+        raw_storage_iterator & operator++()
         {
             ++out_;
             return *this;
@@ -160,23 +160,23 @@ namespace ranges
     {
     private:
         CPP_assert(Iterator<I>);
-        mutable I *i_ = nullptr;
+        mutable I * i_ = nullptr;
 
     public:
         using difference_type = iter_difference_t<I>;
         iterator_wrapper() = default;
-        iterator_wrapper(iterator_wrapper const &that)
+        iterator_wrapper(iterator_wrapper const & that)
           : i_(that.i_)
         {
             that.i_ = nullptr;
         }
-        iterator_wrapper &operator=(iterator_wrapper const &that)
+        iterator_wrapper & operator=(iterator_wrapper const & that)
         {
             i_ = that.i_;
             that.i_ = nullptr;
             return *this;
         }
-        iterator_wrapper(I &i)
+        iterator_wrapper(I & i)
           : i_(std::addressof(i))
         {}
         // clang-format off
@@ -202,7 +202,7 @@ namespace ranges
     };
 
     template<typename I>
-    auto iter_ref(I &i) -> CPP_ret(iterator_wrapper<I>)( //
+    auto iter_ref(I & i) -> CPP_ret(iterator_wrapper<I>)( //
         requires Iterator<I>)
     {
         return i;
@@ -217,11 +217,11 @@ namespace ranges
     struct raw_buffer
     {
     private:
-        Val *begin_;
+        Val * begin_;
         raw_storage_iterator<Val *, Val> rsi_;
 
     public:
-        explicit raw_buffer(Val *begin)
+        explicit raw_buffer(Val * begin)
           : begin_(begin)
           , rsi_(begin)
         {}
@@ -239,7 +239,7 @@ namespace ranges
     };
 
     template<typename Val>
-    raw_buffer<Val> make_raw_buffer(Val *val)
+    raw_buffer<Val> make_raw_buffer(Val * val)
     {
         return raw_buffer<Val>(val);
     }

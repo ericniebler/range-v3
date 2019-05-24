@@ -13,6 +13,8 @@
 
 #include <utility>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/equal.hpp>
 #include <range/v3/algorithm/mismatch.hpp>
 #include <range/v3/functional/comparisons.hpp>
@@ -22,7 +24,6 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -43,8 +44,8 @@ namespace ranges
         constexpr auto operator()(I1 first1, S1 last1, I2 first2, S2 last2,
                                   Comp comp = {}, Proj1 proj1 = {},
                                   Proj2 proj2 = {}) const noexcept -> CPP_ret(bool)( //
-            requires InputIterator<I1>&& Sentinel<S1, I1>&& InputIterator<I2>&&
-                Sentinel<S2, I2>&& IndirectlyComparable<I1, I2, Comp, Proj1, Proj2>)
+            requires InputIterator<I1> && Sentinel<S1, I1> && InputIterator<I2> &&
+                Sentinel<S2, I2> && IndirectlyComparable<I1, I2, Comp, Proj1, Proj2>)
         {
             return mismatch(std::move(first1),
                             std::move(last1),
@@ -58,9 +59,9 @@ namespace ranges
 
         template<typename R1, typename R2, typename Comp = equal_to,
                  typename Proj1 = identity, typename Proj2 = identity>
-        constexpr auto operator()(R1&& r1, R2&& r2, Comp comp = {}, Proj1 proj1 = {},
+        constexpr auto operator()(R1 && r1, R2 && r2, Comp comp = {}, Proj1 proj1 = {},
                                   Proj2 proj2 = {}) const noexcept -> CPP_ret(bool)( //
-            requires InputRange<R1>&& InputRange<R2>&&
+            requires InputRange<R1> && InputRange<R2> &&
                 IndirectlyComparable<iterator_t<R1>, iterator_t<R2>, Comp, Proj1, Proj2>)
         {
             return (*this)( //

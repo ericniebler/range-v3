@@ -18,6 +18,8 @@
 
 #include <concepts/concepts.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/algorithm/unstable_remove_if.hpp>
@@ -26,7 +28,6 @@
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
-#include <range/v3/range_fwd.hpp>
 
 namespace ranges
 {
@@ -50,11 +51,11 @@ namespace ranges
 
         public:
             template<typename Rng, typename C, typename P = identity>
-            auto operator()(Rng &&rng, C pred, P proj = P{}) const -> CPP_ret(Rng)( //
-                requires BidirectionalRange<Rng> &&CommonRange<Rng>
-                    &&Permutable<iterator_t<Rng>>
-                        &&IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>
-                            &&ErasableRange<Rng, iterator_t<Rng>, iterator_t<Rng>>)
+            auto operator()(Rng && rng, C pred, P proj = P{}) const -> CPP_ret(Rng)( //
+                requires BidirectionalRange<Rng> && CommonRange<Rng> &&
+                    Permutable<iterator_t<Rng>> &&
+                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>> &&
+                            ErasableRange<Rng, iterator_t<Rng>, iterator_t<Rng>>)
             {
                 auto it = ranges::unstable_remove_if(ranges::begin(rng),
                                                      ranges::end(rng),

@@ -21,6 +21,7 @@
 #include <concepts/concepts.hpp>
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/utility/get.hpp>
 #include <range/v3/utility/in_place.hpp>
 
@@ -69,20 +70,20 @@ namespace ranges
             new((void *)std::addressof(data_)) T(static_cast<Args &&>(args)...);
             engaged_ = true;
         }
-        void move_assign(T &&t, std::true_type)
+        void move_assign(T && t, std::true_type)
         {
             data_ = detail::move(t);
         }
-        void move_assign(T &&t, std::false_type)
+        void move_assign(T && t, std::false_type)
         {
             reset();
             construct_from(detail::move(t));
         }
-        void copy_assign(T const &t, std::true_type)
+        void copy_assign(T const & t, std::true_type)
         {
             data_ = t;
         }
-        void copy_assign(T &&t, std::false_type)
+        void copy_assign(T && t, std::false_type)
         {
             reset();
             construct_from(t);
@@ -114,13 +115,13 @@ namespace ranges
             !std::is_default_constructible<T>::value)
           : semiregular(tag{}, std::is_default_constructible<T>{})
         {}
-        semiregular(semiregular &&that) noexcept(
+        semiregular(semiregular && that) noexcept(
             std::is_nothrow_move_constructible<T>::value)
         {
             if(that.engaged_)
                 this->construct_from(detail::move(that.data_));
         }
-        semiregular(semiregular const &that) noexcept(
+        semiregular(semiregular const & that) noexcept(
             std::is_nothrow_copy_constructible<T>::value)
         {
             if(that.engaged_)
@@ -128,22 +129,22 @@ namespace ranges
         }
 #if defined(__cpp_conditional_explicit) && 0 < __cpp_conditional_explicit
         template<typename U>
-        explicit(!ConvertibleTo<U, T>) constexpr CPP_ctor(semiregular)(U &&u)( //
-            noexcept(std::is_nothrow_constructible<T, U>::value)               //
+        explicit(!ConvertibleTo<U, T>) constexpr CPP_ctor(semiregular)(U && u)( //
+            noexcept(std::is_nothrow_constructible<T, U>::value)                //
             requires(!defer::Same<uncvref_t<U>, semiregular>) &&
             defer::Constructible<T, U>)
           : semiregular(in_place, static_cast<U &&>(u))
         {}
 #else
         template<typename U>
-        explicit constexpr CPP_ctor(semiregular)(U &&u)(         //
+        explicit constexpr CPP_ctor(semiregular)(U && u)(        //
             noexcept(std::is_nothrow_constructible<T, U>::value) //
             requires(!defer::Same<uncvref_t<U>, semiregular>) &&
             defer::Constructible<T, U> && (!defer::ConvertibleTo<U, T>))
           : semiregular(in_place, static_cast<U &&>(u))
         {}
         template<typename U>
-        constexpr CPP_ctor(semiregular)(U &&u)(                  //
+        constexpr CPP_ctor(semiregular)(U && u)(                 //
             noexcept(std::is_nothrow_constructible<T, U>::value) //
             requires(!defer::Same<uncvref_t<U>, semiregular>) &&
             defer::Constructible<T, U> && defer::ConvertibleTo<U, T>)
@@ -161,7 +162,7 @@ namespace ranges
         {
             reset();
         }
-        semiregular &operator=(semiregular &&that) noexcept(
+        semiregular & operator=(semiregular && that) noexcept(
             std::is_nothrow_move_constructible<T>::value &&
             (!std::is_move_assignable<T>::value ||
              std::is_nothrow_move_assignable<T>::value))
@@ -174,7 +175,7 @@ namespace ranges
                 this->reset();
             return *this;
         }
-        semiregular &operator=(semiregular const &that) noexcept(
+        semiregular & operator=(semiregular const & that) noexcept(
             std::is_nothrow_copy_constructible<T>::value &&
             (!std::is_copy_assignable<T>::value ||
              std::is_nothrow_copy_assignable<T>::value))
@@ -187,7 +188,7 @@ namespace ranges
                 this->reset();
             return *this;
         }
-        semiregular &operator=(T t) noexcept(
+        semiregular & operator=(T t) noexcept(
             std::is_nothrow_move_constructible<T>::value &&
             (!std::is_move_assignable<T>::value ||
              std::is_nothrow_move_assignable<T>::value))
@@ -198,24 +199,24 @@ namespace ranges
                 this->construct_from(detail::move(t));
             return *this;
         }
-        constexpr T &get() & noexcept
+        constexpr T & get() & noexcept
         {
             return RANGES_ENSURE(engaged_), data_;
         }
-        constexpr T const &get() const &noexcept
+        constexpr T const & get() const & noexcept
         {
             return RANGES_ENSURE(engaged_), data_;
         }
-        constexpr T &&get() && noexcept
+        constexpr T && get() && noexcept
         {
             return RANGES_ENSURE(engaged_), detail::move(data_);
         }
-        T const &&get() const && = delete;
+        T const && get() const && = delete;
         constexpr operator T &() & noexcept
         {
             return get();
         }
-        constexpr operator T const &() const &noexcept
+        constexpr operator T const &() const & noexcept
         {
             return get();
         }
@@ -260,8 +261,8 @@ namespace ranges
     {
         semiregular() = default;
         template<typename Arg>
-        CPP_ctor(semiregular)(in_place_t, Arg &arg)( //
-            noexcept(true)                           //
+        CPP_ctor(semiregular)(in_place_t, Arg & arg)( //
+            noexcept(true)                            //
             requires Constructible<ranges::reference_wrapper<T &>, Arg &>)
           : ranges::reference_wrapper<T &>(arg)
         {}
@@ -278,8 +279,8 @@ namespace ranges
     {
         semiregular() = default;
         template<typename Arg>
-        CPP_ctor(semiregular)(in_place_t, Arg &&arg)( //
-            noexcept(true)                            //
+        CPP_ctor(semiregular)(in_place_t, Arg && arg)( //
+            noexcept(true)                             //
             requires Constructible<ranges::reference_wrapper<T &&>, Arg>)
           : ranges::reference_wrapper<T &&>(static_cast<Arg &&>(arg))
         {}

@@ -18,8 +18,9 @@
 
 #include <concepts/concepts.hpp>
 
-#include <range/v3/range/concepts.hpp>
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/range/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -53,7 +54,7 @@ namespace ranges
     struct _sanitize_fn
     {
         template<typename T>
-        constexpr T &&operator()(T &&t) const noexcept
+        constexpr T && operator()(T && t) const noexcept
         {
             return static_cast<T &&>(t);
         }
@@ -65,7 +66,7 @@ namespace ranges
     namespace
     {
         RANGES_DEPRECATED("The sanitize function is unneeded and deprecated.")
-        constexpr auto &sanitize = static_const<_sanitize_fn>::value;
+        constexpr auto & sanitize = static_const<_sanitize_fn>::value;
     }
     /// \endcond
 

@@ -19,6 +19,8 @@
 
 #include <concepts/concepts.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/find_if.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/functional/identity.hpp>
@@ -26,7 +28,6 @@
 #include <range/v3/iterator/reverse_iterator.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -42,8 +43,8 @@ namespace ranges
     {
         template<typename I, typename C, typename P = identity>
         auto operator()(I first, I last, C pred, P proj = {}) const -> CPP_ret(I)( //
-            requires BidirectionalIterator<I> &&Permutable<I>
-                &&IndirectUnaryPredicate<C, projected<I, P>>)
+            requires BidirectionalIterator<I> && Permutable<I> &&
+                IndirectUnaryPredicate<C, projected<I, P>>)
         {
             while(true)
             {
@@ -63,11 +64,11 @@ namespace ranges
         }
 
         template<typename Rng, typename C, typename P = identity>
-        auto operator()(Rng &&rng, C pred, P proj = P{}) const
+        auto operator()(Rng && rng, C pred, P proj = P{}) const
             -> CPP_ret(safe_iterator_t<Rng>)( //
-                requires BidirectionalRange<Rng> &&CommonRange<Rng>
-                    &&Permutable<iterator_t<Rng>>
-                        &&IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+                requires BidirectionalRange<Rng> && CommonRange<Rng> &&
+                    Permutable<iterator_t<Rng>> &&
+                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

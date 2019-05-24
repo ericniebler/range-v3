@@ -23,6 +23,8 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
@@ -32,7 +34,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
 
@@ -93,8 +94,8 @@ namespace ranges
     public:
         template<typename I, typename S, typename C, typename P = identity>
         auto operator()(I begin, S end, C pred, P proj = P{}) const -> CPP_ret(I)( //
-            requires Permutable<I> &&Sentinel<S, I>
-                &&IndirectUnaryPredicate<C, projected<I, P>>)
+            requires Permutable<I> && Sentinel<S, I> &&
+                IndirectUnaryPredicate<C, projected<I, P>>)
         {
             return partition_fn::impl(std::move(begin),
                                       std::move(end),
@@ -104,10 +105,10 @@ namespace ranges
         }
 
         template<typename Rng, typename C, typename P = identity>
-        auto operator()(Rng &&rng, C pred, P proj = P{}) const
+        auto operator()(Rng && rng, C pred, P proj = P{}) const
             -> CPP_ret(safe_iterator_t<Rng>)( //
-                requires ForwardRange<Rng> &&Permutable<iterator_t<Rng>>
-                    &&IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+                requires ForwardRange<Rng> && Permutable<iterator_t<Rng>> &&
+                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
         {
             return partition_fn::impl(begin(rng),
                                       end(rng),

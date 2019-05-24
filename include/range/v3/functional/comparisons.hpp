@@ -25,7 +25,7 @@ namespace ranges
     struct equal_to
     {
         template<typename T, typename U>
-        constexpr auto operator()(T &&t, U &&u) const -> CPP_ret(bool)( //
+        constexpr auto operator()(T && t, U && u) const -> CPP_ret(bool)( //
             requires EqualityComparableWith<T, U>)
         {
             return (T &&) t == (U &&) u;
@@ -36,7 +36,7 @@ namespace ranges
     struct not_equal_to
     {
         template<typename T, typename U>
-        constexpr auto operator()(T &&t, U &&u) const -> CPP_ret(bool)( //
+        constexpr auto operator()(T && t, U && u) const -> CPP_ret(bool)( //
             requires EqualityComparableWith<T, U>)
         {
             return !equal_to{}((T &&) t, (U &&) u);
@@ -47,7 +47,7 @@ namespace ranges
     struct less
     {
         template<typename T, typename U>
-        constexpr auto operator()(T &&t, U &&u) const -> CPP_ret(bool)( //
+        constexpr auto operator()(T && t, U && u) const -> CPP_ret(bool)( //
             requires StrictTotallyOrderedWith<T, U>)
         {
             return (T &&) t < (U &&) u;
@@ -58,7 +58,7 @@ namespace ranges
     struct less_equal
     {
         template<typename T, typename U>
-        constexpr auto operator()(T &&t, U &&u) const -> CPP_ret(bool)( //
+        constexpr auto operator()(T && t, U && u) const -> CPP_ret(bool)( //
             requires StrictTotallyOrderedWith<T, U>)
         {
             return !less{}((U &&) u, (T &&) t);
@@ -69,7 +69,7 @@ namespace ranges
     struct greater_equal
     {
         template<typename T, typename U>
-        constexpr auto operator()(T &&t, U &&u) const -> CPP_ret(bool)( //
+        constexpr auto operator()(T && t, U && u) const -> CPP_ret(bool)( //
             requires StrictTotallyOrderedWith<T, U>)
         {
             return !less{}((T &&) t, (U &&) u);
@@ -80,7 +80,7 @@ namespace ranges
     struct greater
     {
         template<typename T, typename U>
-        constexpr auto operator()(T &&t, U &&u) const -> CPP_ret(bool)( //
+        constexpr auto operator()(T && t, U && u) const -> CPP_ret(bool)( //
             requires StrictTotallyOrderedWith<T, U>)
         {
             return less{}((U &&) u, (T &&) t);

@@ -19,12 +19,13 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/semiregular.hpp>
@@ -56,20 +57,21 @@ namespace ranges
         struct adaptor : adaptor_base
         {
             adaptor() = default;
-            constexpr adaptor(remove_if_view &rng) noexcept
+            constexpr adaptor(remove_if_view & rng) noexcept
               : rng_(&rng)
             {}
-            static constexpr iterator_t<Rng> begin(remove_if_view &rng)
+            static constexpr iterator_t<Rng> begin(remove_if_view & rng)
             {
                 return *rng.begin_;
             }
-            constexpr void next(iterator_t<Rng> &it) const
+            constexpr void next(iterator_t<Rng> & it) const
             {
                 RANGES_ASSERT(it != ranges::end(rng_->base()));
                 rng_->satisfy_forward(++it);
             }
-            CPP_member constexpr auto prev(iterator_t<Rng> &it) const -> CPP_ret(void)( //
-                requires BidirectionalRange<Rng>)
+            CPP_member constexpr auto prev(iterator_t<Rng> & it) const
+                -> CPP_ret(void)( //
+                    requires BidirectionalRange<Rng>)
             {
                 rng_->satisfy_reverse(it);
             }
@@ -77,7 +79,7 @@ namespace ranges
             void distance_to() = delete;
 
         private:
-            remove_if_view *rng_;
+            remove_if_view * rng_;
         };
         constexpr adaptor begin_adaptor()
         {
@@ -98,18 +100,18 @@ namespace ranges
             return {*this};
         }
 
-        constexpr void satisfy_forward(iterator_t<Rng> &it)
+        constexpr void satisfy_forward(iterator_t<Rng> & it)
         {
             auto const last = ranges::end(this->base());
-            auto &pred = this->remove_if_view::box::get();
+            auto & pred = this->remove_if_view::box::get();
             while(it != last && invoke(pred, *it))
                 ++it;
         }
-        constexpr void satisfy_reverse(iterator_t<Rng> &it)
+        constexpr void satisfy_reverse(iterator_t<Rng> & it)
         {
             RANGES_ASSERT(begin_);
-            auto const &first = *begin_;
-            auto &pred = this->remove_if_view::box::get();
+            auto const & first = *begin_;
+            auto & pred = this->remove_if_view::box::get();
             do
             {
                 RANGES_ASSERT(it != first);
@@ -155,19 +157,19 @@ namespace ranges
 
         public:
             template<typename Rng, typename Pred>
-            constexpr auto operator()(Rng &&rng, Pred pred) const
+            constexpr auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(remove_if_view<all_t<Rng>, Pred>)( //
-                    requires ViewableRange<Rng> &&InputRange<Rng>
-                        &&IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
             {
                 return remove_if_view<all_t<Rng>, Pred>{all(static_cast<Rng &&>(rng)),
                                                         std::move(pred)};
             }
             template<typename Rng, typename Pred, typename Proj>
-            constexpr auto operator()(Rng &&rng, Pred pred, Proj proj) const
+            constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
                 -> CPP_ret(remove_if_view<all_t<Rng>, composed<Pred, Proj>>)( //
-                    requires ViewableRange<Rng> &&InputRange<Rng>
-                        &&IndirectUnaryPredicate<Pred, projected<iterator_t<Rng>, Proj>>)
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        IndirectUnaryPredicate<Pred, projected<iterator_t<Rng>, Proj>>)
             {
                 return remove_if_view<all_t<Rng>, composed<Pred, Proj>>{
                     all(static_cast<Rng &&>(rng)),

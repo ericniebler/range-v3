@@ -20,6 +20,8 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/arithmetic.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/iterator/operations.hpp>
@@ -27,7 +29,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/utility/variant.hpp>
@@ -87,7 +88,7 @@ namespace ranges
 
         public:
             sentinel() = default;
-            sentinel(concat_view_t &rng, end_tag)
+            sentinel(concat_view_t & rng, end_tag)
               : end_(end(std::get<cranges - 1>(rng.rngs_)))
             {}
             CPP_template(bool Other)(         //
@@ -107,7 +108,7 @@ namespace ranges
             template<typename T>
             using constify_if = meta::const_if_c<IsConst, T>;
             using concat_view_t = constify_if<concat_view>;
-            concat_view_t *rng_;
+            concat_view_t * rng_;
             variant<iterator_t<constify_if<Rngs>>...> its_;
 
             template<std::size_t N>
@@ -126,7 +127,7 @@ namespace ranges
             }
             struct next_fun
             {
-                cursor *pos;
+                cursor * pos;
                 template<typename I, std::size_t N>
                 auto operator()(indexed_element<I, N> it) const -> CPP_ret(void)( //
                     requires Iterator<I>)
@@ -138,7 +139,7 @@ namespace ranges
             };
             struct prev_fun
             {
-                cursor *pos;
+                cursor * pos;
                 template<typename I>
                 auto operator()(indexed_element<I, 0> it) const -> CPP_ret(void)( //
                     requires BidirectionalIterator<I>)
@@ -152,7 +153,7 @@ namespace ranges
                 {
                     if(it.get() == begin(std::get<N>(pos->rng_->rngs_)))
                     {
-                        auto &&rng = std::get<N - 1>(pos->rng_->rngs_);
+                        auto && rng = std::get<N - 1>(pos->rng_->rngs_);
                         ranges::emplace<N - 1>(
                             pos->its_,
                             ranges::next(ranges::begin(rng), ranges::end(rng)));
@@ -164,7 +165,7 @@ namespace ranges
             };
             struct advance_fwd_fun
             {
-                cursor *pos;
+                cursor * pos;
                 difference_type n;
                 template<typename I>
                 auto operator()(indexed_element<I, cranges - 1> it) const
@@ -190,7 +191,7 @@ namespace ranges
             };
             struct advance_rev_fun
             {
-                cursor *pos;
+                cursor * pos;
                 difference_type n;
                 template<typename I>
                 auto operator()(indexed_element<I, 0> it) const -> CPP_ret(void)( //
@@ -205,7 +206,7 @@ namespace ranges
                     auto begin = ranges::begin(std::get<N>(pos->rng_->rngs_));
                     if(it.get() == begin)
                     {
-                        auto &&rng = std::get<N - 1>(pos->rng_->rngs_);
+                        auto && rng = std::get<N - 1>(pos->rng_->rngs_);
                         ranges::emplace<N - 1>(
                             pos->its_,
                             ranges::next(ranges::begin(rng), ranges::end(rng)));
@@ -226,8 +227,8 @@ namespace ranges
                 RANGES_EXPECT(false);
             }
             template<std::size_t N>
-            static difference_type distance_to_(meta::size_t<N>, cursor const &from,
-                                                cursor const &to)
+            static difference_type distance_to_(meta::size_t<N>, cursor const & from,
+                                                cursor const & to)
             {
                 if(from.its_.index() > N)
                     return cursor::distance_to_(meta::size_t<N + 1>{}, from, to);
@@ -253,13 +254,13 @@ namespace ranges
             using reference = common_reference_t<range_reference_t<constify_if<Rngs>>...>;
             using single_pass = meta::or_c<SinglePass<iterator_t<Rngs>>...>;
             cursor() = default;
-            cursor(concat_view_t &rng, begin_tag)
+            cursor(concat_view_t & rng, begin_tag)
               : rng_(&rng)
               , its_{emplaced_index<0>, begin(std::get<0>(rng.rngs_))}
             {
                 this->satisfy(meta::size_t<0>{});
             }
-            cursor(concat_view_t &rng, end_tag)
+            cursor(concat_view_t & rng, end_tag)
               : rng_(&rng)
               , its_{emplaced_index<cranges - 1>, end(std::get<cranges - 1>(rng.rngs_))}
             {}
@@ -279,12 +280,12 @@ namespace ranges
             {
                 its_.visit_i(next_fun{this});
             }
-            CPP_member auto equal(cursor const &pos) const -> CPP_ret(bool)( //
+            CPP_member auto equal(cursor const & pos) const -> CPP_ret(bool)( //
                 requires EqualityComparable<variant<iterator_t<constify_if<Rngs>>...>>)
             {
                 return its_ == pos.its_;
             }
-            bool equal(sentinel<IsConst> const &pos) const
+            bool equal(sentinel<IsConst> const & pos) const
             {
                 return its_.index() == cranges - 1 &&
                        ranges::get<cranges - 1>(its_) == pos.end_;
@@ -302,7 +303,7 @@ namespace ranges
                 else if(n < 0)
                     its_.visit_i(advance_rev_fun{this, n});
             }
-            CPP_member auto distance_to(cursor const &that) const
+            CPP_member auto distance_to(cursor const & that) const
                 -> CPP_ret(difference_type)( //
                     requires And<SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>...>)
             {
@@ -352,7 +353,7 @@ namespace ranges
             using size_type = common_type_t<range_size_t<Rngs const>...>;
             return tuple_foldl(
                 tuple_transform(rngs_,
-                                [](auto &&r) -> size_type { return ranges::size(r); }),
+                                [](auto && r) -> size_type { return ranges::size(r); }),
                 size_type{0},
                 plus{});
         }
@@ -363,7 +364,7 @@ namespace ranges
             using size_type = common_type_t<range_size_t<Rngs>...>;
             return tuple_foldl(
                 tuple_transform(rngs_,
-                                [](auto &&r) -> size_type { return ranges::size(r); }),
+                                [](auto && r) -> size_type { return ranges::size(r); }),
                 size_type{0},
                 plus{});
         }

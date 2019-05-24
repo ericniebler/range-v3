@@ -23,6 +23,7 @@
 #include <concepts/concepts.hpp>
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -68,22 +69,22 @@ namespace ranges
             }
 
             template<std::size_t I, typename T = meta::at_c<meta::list<Ts...>, I>>
-            friend constexpr T &get(compressed_tuple_ &tuple) noexcept
+            friend constexpr T & get(compressed_tuple_ & tuple) noexcept
             {
                 return static_cast<storage<T, I, Ts...> &>(tuple).get();
             }
             template<std::size_t I, typename T = meta::at_c<meta::list<Ts...>, I>>
-            friend constexpr T const &get(compressed_tuple_ const &tuple) noexcept
+            friend constexpr T const & get(compressed_tuple_ const & tuple) noexcept
             {
                 return static_cast<storage<T, I, Ts...> const &>(tuple).get();
             }
             template<std::size_t I, typename T = meta::at_c<meta::list<Ts...>, I>>
-            friend constexpr T &&get(compressed_tuple_ &&tuple) noexcept
+            friend constexpr T && get(compressed_tuple_ && tuple) noexcept
             {
                 return static_cast<storage<T, I, Ts...> &&>(tuple).get();
             }
             template<std::size_t I, typename T = meta::at_c<meta::list<Ts...>, I>>
-            friend constexpr T const &&get(compressed_tuple_ const &&tuple) noexcept
+            friend constexpr T const && get(compressed_tuple_ const && tuple) noexcept
             {
                 return static_cast<storage<T, I, Ts...> const &&>(tuple).get();
             }
@@ -124,43 +125,44 @@ namespace ranges
 
         compressed_pair() = default;
 
-        CPP_template(typename U, typename V)(                            //
-            requires Constructible<First, U> &&Constructible<Second, V>) //
-            constexpr compressed_pair(U &&u, V &&v) noexcept(noexcept(First((U &&) u)) &&
-                                                             noexcept(Second((V &&) v)))
+        CPP_template(typename U, typename V)(                             //
+            requires Constructible<First, U> && Constructible<Second, V>) //
+            constexpr compressed_pair(U && u,
+                                      V && v) noexcept(noexcept(First((U &&) u)) &&
+                                                       noexcept(Second((V &&) v)))
           : box<First, meta::size_t<0>>{(U &&) u}
           , box<Second, meta::size_t<1>>{(V &&) v}
         {}
 
-        constexpr First &first() &
+        constexpr First & first() &
         {
             return this->box<First, meta::size_t<0>>::get();
         }
-        constexpr First const &first() const &
+        constexpr First const & first() const &
         {
             return this->box<First, meta::size_t<0>>::get();
         }
-        constexpr First &&first() &&
+        constexpr First && first() &&
         {
             return static_cast<First &&>(this->box<First, meta::size_t<0>>::get());
         }
 
-        constexpr Second &second() &
+        constexpr Second & second() &
         {
             return this->box<Second, meta::size_t<1>>::get();
         }
-        constexpr Second const &second() const &
+        constexpr Second const & second() const &
         {
             return this->box<Second, meta::size_t<1>>::get();
         }
-        constexpr Second &&second() &&
+        constexpr Second && second() &&
         {
             return static_cast<Second &&>(this->box<Second, meta::size_t<1>>::get());
         }
 
         CPP_template(typename F, typename S)( //
-            requires ConvertibleTo<First const &, F>
-                &&ConvertibleTo<Second const &, S>) //
+            requires ConvertibleTo<First const &, F> &&
+                ConvertibleTo<Second const &, S>) //
             constexpr
             operator std::pair<F, S>() const
         {

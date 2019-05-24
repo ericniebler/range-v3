@@ -18,9 +18,10 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/range/access.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/semiregular.hpp>
@@ -50,24 +51,25 @@ namespace ranges
         struct adaptor : adaptor_base
         {
         private:
-            adjacent_remove_if_view *rng_;
+            adjacent_remove_if_view * rng_;
 
         public:
             adaptor() = default;
-            constexpr adaptor(adjacent_remove_if_view &rng) noexcept
+            constexpr adaptor(adjacent_remove_if_view & rng) noexcept
               : rng_(&rng)
             {}
-            constexpr static iterator_t<Rng> begin(adjacent_remove_if_view &rng)
+            constexpr static iterator_t<Rng> begin(adjacent_remove_if_view & rng)
             {
                 return *rng.begin_;
             }
-            constexpr void next(iterator_t<Rng> &it) const
+            constexpr void next(iterator_t<Rng> & it) const
             {
                 RANGES_ASSERT(it != ranges::end(rng_->base()));
                 rng_->satisfy_forward(++it);
             }
-            CPP_member constexpr auto prev(iterator_t<Rng> &it) const -> CPP_ret(void)( //
-                requires BidirectionalRange<Rng>)
+            CPP_member constexpr auto prev(iterator_t<Rng> & it) const
+                -> CPP_ret(void)( //
+                    requires BidirectionalRange<Rng>)
             {
                 rng_->satisfy_reverse(it);
             }
@@ -92,18 +94,18 @@ namespace ranges
             return {};
         }
 
-        constexpr void satisfy_forward(iterator_t<Rng> &it)
+        constexpr void satisfy_forward(iterator_t<Rng> & it)
         {
             auto const end = ranges::end(this->base());
             if(it == end)
                 return;
-            auto &pred = this->adjacent_remove_if_view::box::get();
+            auto & pred = this->adjacent_remove_if_view::box::get();
             for(auto next = it; ++next != end && invoke(pred, *it, *next); it = next)
                 ;
         }
-        constexpr void satisfy_reverse(iterator_t<Rng> &it)
+        constexpr void satisfy_reverse(iterator_t<Rng> & it)
         {
-            auto const &first = *begin_;
+            auto const & first = *begin_;
             RANGES_ASSERT(it != first);
             (void)first;
             auto prev = it;
@@ -112,7 +114,7 @@ namespace ranges
             {
                 return;
             }
-            auto &pred = this->adjacent_remove_if_view::box::get();
+            auto & pred = this->adjacent_remove_if_view::box::get();
             for(; invoke(pred, *it, *prev); prev = it, --it)
                 RANGES_ASSERT(it != first);
         }
@@ -144,10 +146,10 @@ namespace ranges
 
         public:
             template<typename Rng, typename Pred>
-            constexpr auto operator()(Rng &&rng, Pred pred) const
+            constexpr auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(adjacent_remove_if_view<all_t<Rng>, Pred>)( //
-                    requires ViewableRange<Rng> &&ForwardRange<Rng>
-                        &&IndirectBinaryPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>)
+                    requires ViewableRange<Rng> && ForwardRange<Rng> &&
+                        IndirectBinaryPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }

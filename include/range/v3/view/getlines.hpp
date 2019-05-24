@@ -17,8 +17,9 @@
 #include <istream>
 #include <string>
 
-#include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
 
@@ -30,7 +31,7 @@ namespace ranges
     {
     private:
         friend range_access;
-        std::istream *sin_;
+        std::istream * sin_;
         std::string str_;
         char delim_;
         struct cursor
@@ -38,18 +39,18 @@ namespace ranges
         private:
             friend range_access;
             using single_pass = std::true_type;
-            getlines_view *rng_ = nullptr;
+            getlines_view * rng_ = nullptr;
 
         public:
             cursor() = default;
-            explicit cursor(getlines_view &rng)
+            explicit cursor(getlines_view & rng)
               : rng_(&rng)
             {}
             void next()
             {
                 rng_->next();
             }
-            std::string &read() const noexcept
+            std::string & read() const noexcept
             {
                 return rng_->str_;
             }
@@ -74,14 +75,14 @@ namespace ranges
 
     public:
         getlines_view() = default;
-        getlines_view(std::istream &sin, char delim = '\n')
+        getlines_view(std::istream & sin, char delim = '\n')
           : sin_(&sin)
           , str_{}
           , delim_(delim)
         {
             this->next(); // prime the pump
         }
-        std::string &cached() noexcept
+        std::string & cached() noexcept
         {
             return str_;
         }
@@ -94,7 +95,7 @@ namespace ranges
 
     struct getlines_fn
     {
-        getlines_view operator()(std::istream &sin, char delim = '\n') const
+        getlines_view operator()(std::istream & sin, char delim = '\n') const
         {
             return getlines_view{sin, delim};
         }

@@ -20,12 +20,13 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/optional.hpp> // for non_propagating_cache
 #include <range/v3/utility/static_const.hpp>
@@ -52,11 +53,11 @@ namespace ranges
         {
             zero() = default;
             constexpr explicit zero(T const &) noexcept {}
-            constexpr zero &operator=(T const &) noexcept
+            constexpr zero & operator=(T const &) noexcept
             {
                 return *this;
             }
-            constexpr zero const &operator=(T const &) const noexcept
+            constexpr zero const & operator=(T const &) const noexcept
             {
                 return *this;
             }
@@ -103,13 +104,13 @@ namespace ranges
             range_difference_t<CRng> n_;
             sentinel_t<CRng> end_;
 
-            constexpr offset_t<Const> const &offset() const
+            constexpr offset_t<Const> const & offset() const
             {
-                offset_t<Const> const &result = this->box<offset_t<Const>>::get();
+                offset_t<Const> const & result = this->box<offset_t<Const>>::get();
                 RANGES_EXPECT(0 <= result && result < n_);
                 return result;
             }
-            constexpr offset_t<Const> &offset()
+            constexpr offset_t<Const> & offset()
             {
                 return const_cast<offset_t<Const> &>(
                     const_cast<adaptor const &>(*this).offset());
@@ -117,7 +118,7 @@ namespace ranges
 
         public:
             adaptor() = default;
-            constexpr adaptor(meta::const_if_c<Const, chunk_view_> &cv)
+            constexpr adaptor(meta::const_if_c<Const, chunk_view_> & cv)
               : box<offset_t<Const>>{0}
               , n_((RANGES_EXPECT(0 < cv.n_), cv.n_))
               , end_(ranges::end(cv.base()))
@@ -129,28 +130,28 @@ namespace ranges
               , n_(that.n_)
               , end_(that.end_)
             {}
-            constexpr auto read(iterator_t<CRng> const &it) const
+            constexpr auto read(iterator_t<CRng> const & it) const
                 -> decltype(view::take(make_subrange(it, end_), n_))
             {
                 RANGES_EXPECT(it != end_);
                 RANGES_EXPECT(0 == offset());
                 return view::take(make_subrange(it, end_), n_);
             }
-            constexpr void next(iterator_t<CRng> &it)
+            constexpr void next(iterator_t<CRng> & it)
             {
                 RANGES_EXPECT(it != end_);
                 RANGES_EXPECT(0 == offset());
                 offset() = ranges::advance(it, n_, end_);
             }
-            CPP_member constexpr auto prev(iterator_t<CRng> &it) -> CPP_ret(void)( //
+            CPP_member constexpr auto prev(iterator_t<CRng> & it) -> CPP_ret(void)( //
                 requires BidirectionalRange<CRng>)
             {
                 ranges::advance(it, -n_ + offset());
                 offset() = 0;
             }
-            CPP_member constexpr auto distance_to(iterator_t<CRng> const &here,
-                                                  iterator_t<CRng> const &there,
-                                                  adaptor const &that) const
+            CPP_member constexpr auto distance_to(iterator_t<CRng> const & here,
+                                                  iterator_t<CRng> const & there,
+                                                  adaptor const & that) const
                 -> CPP_ret(range_difference_t<Rng>)( //
                     requires(detail::can_sized_sentinel_<Rng, Const>()))
             {
@@ -161,7 +162,7 @@ namespace ranges
                 RANGES_ENSURE(0 == delta % n_);
                 return delta / n_;
             }
-            CPP_member constexpr auto advance(iterator_t<CRng> &it,
+            CPP_member constexpr auto advance(iterator_t<CRng> & it,
                                               range_difference_t<Rng> n)
                 -> CPP_ret(void)( //
                     requires RandomAccessRange<CRng>)
@@ -232,11 +233,11 @@ namespace ranges
         range_difference_t<Rng> remainder_;
         mutable iter_cache_t it_cache_;
 
-        constexpr iterator_t<Rng> &it() noexcept
+        constexpr iterator_t<Rng> & it() noexcept
         {
             return *it_cache_;
         }
-        constexpr iterator_t<Rng> const &it() const noexcept
+        constexpr iterator_t<Rng> const & it() const noexcept
         {
             return *it_cache_;
         }
@@ -251,7 +252,7 @@ namespace ranges
 
                 using value_type = range_value_t<Rng>;
 
-                chunk_view_ *rng_ = nullptr;
+                chunk_view_ * rng_ = nullptr;
 
                 constexpr bool done() const noexcept
                 {
@@ -291,7 +292,7 @@ namespace ranges
 
             public:
                 inner_view() = default;
-                constexpr explicit inner_view(chunk_view_ &view) noexcept
+                constexpr explicit inner_view(chunk_view_ & view) noexcept
                   : rng_{&view}
                 {}
                 CPP_member constexpr auto CPP_fun(size)()(
@@ -302,13 +303,13 @@ namespace ranges
                 }
             };
 
-            chunk_view_ *rng_ = nullptr;
+            chunk_view_ * rng_ = nullptr;
 
         public:
             using value_type = inner_view;
 
             outer_cursor() = default;
-            constexpr explicit outer_cursor(chunk_view_ &view) noexcept
+            constexpr explicit outer_cursor(chunk_view_ & view) noexcept
               : rng_{&view}
             {}
             constexpr inner_view read() const
@@ -405,9 +406,9 @@ namespace ranges
 
         public:
             template<typename Rng>
-            auto operator()(Rng &&rng, range_difference_t<Rng> n) const
+            auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> CPP_ret(chunk_view<all_t<Rng>>)( //
-                    requires ViewableRange<Rng> &&InputRange<Rng>)
+                    requires ViewableRange<Rng> && InputRange<Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }

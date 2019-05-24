@@ -25,13 +25,14 @@
 
 #include <concepts/concepts.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/functional/reference_wrapper.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/get.hpp>
 
 namespace ranges
@@ -60,7 +61,7 @@ namespace ranges
     namespace
     {
         template<std::size_t I>
-        constexpr auto &emplaced_index = static_const<emplaced_index_t<I>>::value;
+        constexpr auto & emplaced_index = static_const<emplaced_index_t<I>>::value;
     }
 #else  // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
     template<std::size_t I>
@@ -74,10 +75,10 @@ namespace ranges
 
     struct bad_variant_access : std::logic_error
     {
-        explicit bad_variant_access(std::string const &what_arg)
+        explicit bad_variant_access(std::string const & what_arg)
           : std::logic_error(what_arg)
         {}
-        explicit bad_variant_access(char const *what_arg)
+        explicit bad_variant_access(char const * what_arg)
           : std::logic_error(what_arg)
         {}
     };
@@ -156,11 +157,11 @@ namespace ranges
             {
                 return {datum_};
             }
-            constexpr T &get() noexcept
+            constexpr T & get() noexcept
             {
                 return datum_;
             }
-            constexpr T const &get() const noexcept
+            constexpr T const & get() const noexcept
             {
                 return datum_;
             }
@@ -308,7 +309,7 @@ namespace ranges
             return 0;
         }
         template<typename Data0, typename Data1>
-        std::size_t variant_move_copy_(std::size_t n, Data0 &self, Data1 &&that)
+        std::size_t variant_move_copy_(std::size_t n, Data0 & self, Data1 && that)
         {
             using Head = typename Data0::head_t;
             return 0 == n
@@ -320,7 +321,8 @@ namespace ranges
             return true;
         }
         template<typename Data0, typename Data1>
-        constexpr bool variant_equal_(std::size_t n, Data0 const &self, Data1 const &that)
+        constexpr bool variant_equal_(std::size_t n, Data0 const & self,
+                                      Data1 const & that)
         {
             return n == 0 ? self.head.get() == that.head.get()
                           : variant_equal_(n - 1, self.tail, that.tail);
@@ -331,7 +333,7 @@ namespace ranges
             return (RANGES_EXPECT(false), 0);
         }
         template<typename Data, typename Fun, typename Proj = indexed_element_fn>
-        constexpr int variant_visit_(std::size_t n, Data &self, Fun fun, Proj proj = {})
+        constexpr int variant_visit_(std::size_t n, Data & self, Fun fun, Proj proj = {})
         {
             return 0 == n ? ((void)invoke(fun, invoke(proj, self.head)), 0)
                           : detail::variant_visit_(
@@ -341,7 +343,7 @@ namespace ranges
         struct get_datum_fn
         {
             template<typename T>
-            decltype(auto) operator()(T &&t) const noexcept
+            decltype(auto) operator()(T && t) const noexcept
             {
                 return t.get();
             }
@@ -350,7 +352,7 @@ namespace ranges
         struct indexed_element_fn
         {
             template<typename T>
-            decltype(auto) operator()(T &&t) const noexcept
+            decltype(auto) operator()(T && t) const noexcept
             {
                 return t.ref();
             }
@@ -362,18 +364,18 @@ namespace ranges
         struct variant_core_access
         {
             template<typename... Ts>
-            static constexpr variant_data<Ts...> &data(variant<Ts...> &var) noexcept
+            static constexpr variant_data<Ts...> & data(variant<Ts...> & var) noexcept
             {
                 return var.data_();
             }
             template<typename... Ts>
-            static constexpr variant_data<Ts...> const &data(
-                variant<Ts...> const &var) noexcept
+            static constexpr variant_data<Ts...> const & data(
+                variant<Ts...> const & var) noexcept
             {
                 return var.data_();
             }
             template<typename... Ts>
-            static constexpr variant_data<Ts...> &&data(variant<Ts...> &&var) noexcept
+            static constexpr variant_data<Ts...> && data(variant<Ts...> && var) noexcept
             {
                 return detail::move(var.data_());
             }
@@ -387,7 +389,7 @@ namespace ranges
         struct delete_fn
         {
             template<typename T>
-            void operator()(T const &t) const noexcept
+            void operator()(T const & t) const noexcept
             {
                 t.~T();
             }
@@ -399,7 +401,7 @@ namespace ranges
             std::tuple<Ts...> args_;
 
             template<typename U, std::size_t... Is>
-            void construct_(U &u, meta::index_sequence<Is...>) noexcept(
+            void construct_(U & u, meta::index_sequence<Is...>) noexcept(
                 std::is_nothrow_constructible<U, Ts...>::value)
             {
                 ::new((void *)std::addressof(u))
@@ -418,16 +420,16 @@ namespace ranges
             }
             template<typename U>
             meta::if_<std::is_object<U>> operator()(
-                indexed_datum<U, meta::size_t<N>>
-                    &u) noexcept(std::is_nothrow_constructible<U, Ts...>::value)
+                indexed_datum<U, meta::size_t<N>> &
+                    u) noexcept(std::is_nothrow_constructible<U, Ts...>::value)
             {
                 this->construct_(u.get(), meta::make_index_sequence<sizeof...(Ts)>{});
             }
             template<typename U>
             meta::if_<meta::not_<std::is_object<U>>> operator()(
-                indexed_datum<U, meta::size_t<N>>
-                    &u) noexcept(std::is_nothrow_constructible<detail::decay_t<U>,
-                                                               Ts...>::value)
+                indexed_datum<U, meta::size_t<N>> &
+                    u) noexcept(std::is_nothrow_constructible<detail::decay_t<U>,
+                                                              Ts...>::value)
             {
                 this->construct_(u, meta::make_index_sequence<sizeof...(Ts)>{});
             }
@@ -436,7 +438,7 @@ namespace ranges
         template<typename T, std::size_t N>
         struct get_fn
         {
-            T **t_;
+            T ** t_;
 
             template<typename U, std::size_t M>
             [[noreturn]] meta::if_c<M != N> operator()(indexed_element<U, M>) const
@@ -451,7 +453,7 @@ namespace ranges
             template<typename U>
             void operator()(indexed_element<U &&, N> t) const noexcept
             {
-                U &&u = t.get();
+                U && u = t.get();
                 *t_ = std::addressof(u);
             }
             void operator()(indexed_element<void, N>) const noexcept {}
@@ -460,7 +462,7 @@ namespace ranges
         template<typename Variant, std::size_t N>
         struct emplace_fn
         {
-            Variant *var_;
+            Variant * var_;
             // clang-format off
             template<typename...Ts>
             auto CPP_auto_fun(operator())(Ts &&...ts) (const)
@@ -474,7 +476,7 @@ namespace ranges
         struct variant_visitor
         {
             Fun fun_;
-            Variant *var_;
+            Variant * var_;
 
             // clang-format off
             template<typename U, std::size_t N>
@@ -487,7 +489,7 @@ namespace ranges
 
         template<typename Variant, typename Fun>
         variant_visitor<Fun, Variant> make_variant_visitor(
-            Variant &var,
+            Variant & var,
             Fun fun) noexcept(std::is_nothrow_move_constructible<Fun>::value)
         {
             return {detail::move(fun), &var};
@@ -499,7 +501,7 @@ namespace ranges
         template<typename... To, typename... From>
         struct unique_visitor<variant<To...>, variant<From...>>
         {
-            variant<To...> *var_;
+            variant<To...> * var_;
 
             template<typename T, std::size_t N>
             void operator()(indexed_element<T, N> t) const
@@ -514,7 +516,7 @@ namespace ranges
         };
 
         template<typename T>
-        constexpr T &variant_deref_(T *t) noexcept
+        constexpr T & variant_deref_(T * t) noexcept
         {
             return *t;
         }
@@ -528,12 +530,12 @@ namespace ranges
             template<std::size_t N>
             friend meta::_t<
                 std::add_lvalue_reference<meta::at_c<meta::as_list<Variant>, N>>>
-            get(Variant &var)
+            get(Variant & var)
             {
                 using elem_t = meta::_t<
                     std::remove_reference<meta::at_c<meta::as_list<Variant>, N>>>;
-                elem_t *elem = nullptr;
-                auto &data_var = detail::variant_core_access::data(var);
+                elem_t * elem = nullptr;
+                auto & data_var = detail::variant_core_access::data(var);
                 detail::variant_visit_(
                     var.index(), data_var, detail::get_fn<elem_t, N>{&elem});
                 return detail::variant_deref_(elem);
@@ -541,12 +543,12 @@ namespace ranges
             template<std::size_t N>
             friend meta::_t<
                 std::add_lvalue_reference<meta::at_c<meta::as_list<Variant>, N> const>>
-            get(Variant const &var)
+            get(Variant const & var)
             {
                 using elem_t = meta::_t<
                     std::remove_reference<meta::at_c<meta::as_list<Variant>, N> const>>;
-                elem_t *elem = nullptr;
-                auto &data_var = detail::variant_core_access::data(var);
+                elem_t * elem = nullptr;
+                auto & data_var = detail::variant_core_access::data(var);
                 detail::variant_visit_(
                     var.index(), data_var, detail::get_fn<elem_t, N>{&elem});
                 return detail::variant_deref_(elem);
@@ -554,12 +556,12 @@ namespace ranges
             template<std::size_t N>
             friend meta::_t<
                 std::add_rvalue_reference<meta::at_c<meta::as_list<Variant>, N>>>
-            get(Variant &&var)
+            get(Variant && var)
             {
                 using elem_t = meta::_t<
                     std::remove_reference<meta::at_c<meta::as_list<Variant>, N>>>;
-                elem_t *elem = nullptr;
-                auto &data_var = detail::variant_core_access::data(var);
+                elem_t * elem = nullptr;
+                auto & data_var = detail::variant_core_access::data(var);
                 detail::variant_visit_(
                     var.index(), data_var, detail::get_fn<elem_t, N>{&elem});
                 using res_t = meta::_t<
@@ -617,15 +619,15 @@ namespace ranges
         using add_const_t = meta::if_<std::is_void<T>, void, T const>;
         using unbox_fn = detail::get_datum_fn;
 
-        detail::variant_data<Ts...> &data_() & noexcept
+        detail::variant_data<Ts...> & data_() & noexcept
         {
             return *this;
         }
-        detail::variant_data<Ts...> const &data_() const &noexcept
+        detail::variant_data<Ts...> const & data_() const & noexcept
         {
             return *this;
         }
-        detail::variant_data<Ts...> &&data_() && noexcept
+        detail::variant_data<Ts...> && data_() && noexcept
         {
             return static_cast<detail::variant_data<Ts...> &&>(*this);
         }
@@ -641,7 +643,7 @@ namespace ranges
             }
         }
         template<typename That>
-        void assign_(That &&that)
+        void assign_(That && that)
         {
             if(that.valid())
                 index_ = detail::variant_move_copy_(
@@ -696,12 +698,12 @@ namespace ranges
           : detail::variant_data<Ts...>{meta::size_t<N>{}, meta::nil_{}}
           , index_(N)
         {}
-        variant(variant &&that)
+        variant(variant && that)
           : detail::variant_data<Ts...>{}
           , index_(detail::variant_move_copy_(that.index(), data_(),
                                               std::move(that.data_())))
         {}
-        variant(variant const &that)
+        variant(variant const & that)
           : detail::variant_data<Ts...>{}
           , index_(detail::variant_move_copy_(that.index(), data_(), that.data_()))
         {}
@@ -713,14 +715,14 @@ namespace ranges
           , index_(detail::variant_move_copy_(that.index(), data_(),
                                               std::move(that.data_())))
         {}
-        variant &operator=(variant &&that)
+        variant & operator=(variant && that)
         {
             // TODO do a simple move assign when index()==that.index()
             this->clear_();
             this->assign_(detail::move(that));
             return *this;
         }
-        variant &operator=(variant const &that)
+        variant & operator=(variant const & that)
         {
             // TODO do a simple copy assign when index()==that.index()
             this->clear_();
@@ -801,7 +803,7 @@ namespace ranges
     };
 
     template<typename... Ts, typename... Us>
-    auto operator==(variant<Ts...> const &lhs, variant<Us...> const &rhs)
+    auto operator==(variant<Ts...> const & lhs, variant<Us...> const & rhs)
         -> CPP_ret(bool)( //
             requires And<EqualityComparableWith<Ts, Us>...>)
     {
@@ -813,7 +815,7 @@ namespace ranges
     }
 
     template<typename... Ts, typename... Us>
-    auto operator!=(variant<Ts...> const &lhs, variant<Us...> const &rhs)
+    auto operator!=(variant<Ts...> const & lhs, variant<Us...> const & rhs)
         -> CPP_ret(bool)( //
             requires And<EqualityComparableWith<Ts, Us>...>)
     {
@@ -824,7 +826,7 @@ namespace ranges
     // emplace
     template<std::size_t N, typename... Ts, typename... Args>
     meta::if_c<(bool)Constructible<detail::variant_datum_t<N, Ts...>, Args...>> emplace(
-        variant<Ts...> &var, Args &&... args)
+        variant<Ts...> & var, Args &&... args)
     {
         var.template emplace<N>(static_cast<Args &&>(args)...);
     }
@@ -847,7 +849,7 @@ namespace ranges
     ////////////////////////////////////////////////////////////////////////////////////////////
     // unique_variant
     template<typename... Ts>
-    variant_unique_t<variant<Ts...>> unique_variant(variant<Ts...> const &var)
+    variant_unique_t<variant<Ts...>> unique_variant(variant<Ts...> const & var)
     {
         using From = variant<Ts...>;
         using To = variant_unique_t<From>;

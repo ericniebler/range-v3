@@ -18,13 +18,14 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/counted_iterator.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
@@ -39,14 +40,14 @@ namespace ranges
     namespace detail
     {
         template<typename Rng, typename Int>
-        iterator_t<Rng> pos_at_(Rng &&rng, Int i, input_range_tag, std::true_type)
+        iterator_t<Rng> pos_at_(Rng && rng, Int i, input_range_tag, std::true_type)
         {
             RANGES_EXPECT(0 <= i);
             return next(ranges::begin(rng), i);
         }
 
         template<typename Rng, typename Int>
-        iterator_t<Rng> pos_at_(Rng &&rng, Int i, bidirectional_range_tag,
+        iterator_t<Rng> pos_at_(Rng && rng, Int i, bidirectional_range_tag,
                                 std::false_type)
         {
             if(0 > i)
@@ -62,7 +63,7 @@ namespace ranges
         }
 
         template<typename Rng, typename Int>
-        iterator_t<Rng> pos_at_(Rng &&rng, Int i, input_range_tag, std::false_type)
+        iterator_t<Rng> pos_at_(Rng && rng, Int i, input_range_tag, std::false_type)
         {
             RANGES_EXPECT(i >= 0 || (bool)SizedRange<Rng> || (bool)ForwardRange<Rng>);
             if(0 > i)
@@ -184,14 +185,14 @@ namespace ranges
             friend view_access;
 
             template<typename Rng>
-            static slice_view<all_t<Rng>> impl_(Rng &&rng, range_difference_t<Rng> from,
+            static slice_view<all_t<Rng>> impl_(Rng && rng, range_difference_t<Rng> from,
                                                 range_difference_t<Rng> count,
                                                 input_range_tag, range_tag = {})
             {
                 return {all(static_cast<Rng &&>(rng)), from, count};
             }
             template<typename Rng>
-            static auto impl_(Rng &&rng, range_difference_t<Rng> from,
+            static auto impl_(Rng && rng, range_difference_t<Rng> from,
                               range_difference_t<Rng> count, random_access_range_tag,
                               common_range_tag = {})
                 -> CPP_ret(subrange<iterator_t<Rng>>)( //
@@ -242,8 +243,8 @@ namespace ranges
             // slice(rng, 2, 4)
             template<typename Rng>
             auto CPP_fun(operator())( //
-                Rng &&rng, range_difference_t<Rng> from, range_difference_t<Rng> to)(
-                const requires ViewableRange<Rng> &&InputRange<Rng>)
+                Rng && rng, range_difference_t<Rng> from, range_difference_t<Rng> to)(
+                const requires ViewableRange<Rng> && InputRange<Rng>)
             {
                 RANGES_EXPECT(0 <= from && from <= to);
                 return slice_fn::impl_(
@@ -254,8 +255,8 @@ namespace ranges
             //       doesn't know it's size?
             template<typename Rng>
             auto CPP_fun(operator())( //
-                Rng &&rng, range_difference_t<Rng> from, detail::from_end_of_t<Rng> to)(
-                const requires ViewableRange<Rng> &&InputRange<Rng> &&SizedRange<Rng>)
+                Rng && rng, range_difference_t<Rng> from, detail::from_end_of_t<Rng> to)(
+                const requires ViewableRange<Rng> && InputRange<Rng> && SizedRange<Rng>)
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Can't index from the end of an infinite range!");
@@ -269,7 +270,7 @@ namespace ranges
             // slice(rng, end-4, end-2)
             template<typename Rng>
             auto CPP_fun(operator())( //
-                Rng &&rng, detail::from_end_of_t<Rng> from,
+                Rng && rng, detail::from_end_of_t<Rng> from,
                 detail::from_end_of_t<Rng> to)(const requires ViewableRange<Rng> &&
                                                (ForwardRange<Rng> ||
                                                 (InputRange<Rng> && SizedRange<Rng>)))
@@ -285,15 +286,15 @@ namespace ranges
             }
             // slice(rng, 4, end)
             template<typename Rng>
-            auto CPP_fun(operator())(Rng &&rng, range_difference_t<Rng> from, end_fn)(
-                const requires ViewableRange<Rng> &&InputRange<Rng>)
+            auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> from, end_fn)(
+                const requires ViewableRange<Rng> && InputRange<Rng>)
             {
                 RANGES_EXPECT(0 <= from);
                 return ranges::view::drop_exactly(static_cast<Rng &&>(rng), from);
             }
             // slice(rng, end-4, end)
             template<typename Rng>
-            auto CPP_fun(operator())(Rng &&rng, detail::from_end_of_t<Rng> from,
+            auto CPP_fun(operator())(Rng && rng, detail::from_end_of_t<Rng> from,
                                      end_fn)(const requires ViewableRange<Rng> &&
                                              (ForwardRange<Rng> ||
                                               (InputRange<Rng> && SizedRange<Rng>)))

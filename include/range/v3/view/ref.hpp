@@ -16,10 +16,11 @@
 
 #include <concepts/concepts.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/view/interface.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -37,24 +38,24 @@ namespace ranges
         {};
 
         template<typename Rng>
-        constexpr iterator_t<Rng> begin(ref_view<Rng> &&rng) noexcept(
+        constexpr iterator_t<Rng> begin(ref_view<Rng> && rng) noexcept(
             noexcept(rng.begin()))
         {
             return rng.begin();
         }
         template<typename Rng>
-        constexpr iterator_t<Rng> begin(ref_view<Rng> const &&rng) noexcept(
+        constexpr iterator_t<Rng> begin(ref_view<Rng> const && rng) noexcept(
             noexcept(rng.begin()))
         {
             return rng.begin();
         }
         template<typename Rng>
-        constexpr sentinel_t<Rng> end(ref_view<Rng> &&rng) noexcept(noexcept(rng.end()))
+        constexpr sentinel_t<Rng> end(ref_view<Rng> && rng) noexcept(noexcept(rng.end()))
         {
             return rng.end();
         }
         template<typename Rng>
-        constexpr sentinel_t<Rng> end(ref_view<Rng> const &&rng) noexcept(
+        constexpr sentinel_t<Rng> end(ref_view<Rng> const && rng) noexcept(
             noexcept(rng.end()))
         {
             return rng.end();
@@ -72,13 +73,13 @@ namespace ranges
     private:
         CPP_assert(Range<Rng>);
         static_assert(std::is_object<Rng>::value, "");
-        Rng *rng_ = nullptr; // exposition only
+        Rng * rng_ = nullptr; // exposition only
     public:
         constexpr ref_view() noexcept = default;
-        constexpr ref_view(Rng &rng) noexcept
+        constexpr ref_view(Rng & rng) noexcept
           : rng_(std::addressof(rng))
         {}
-        constexpr Rng &base() const noexcept
+        constexpr Rng & base() const noexcept
         {
             return *rng_;
         }
@@ -115,14 +116,14 @@ namespace ranges
         struct ref_fn
         {
             template<typename Rng>
-            constexpr auto operator()(Rng &rng) const noexcept
+            constexpr auto operator()(Rng & rng) const noexcept
                 -> CPP_ret(ref_view<Rng>)( //
                     requires Range<Rng>)
             {
                 return ref_view<Rng>(rng);
             }
             template<typename Rng>
-            void operator()(Rng const &&rng) const = delete;
+            void operator()(Rng const && rng) const = delete;
         };
 
         /// \relates const_fn

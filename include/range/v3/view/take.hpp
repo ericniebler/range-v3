@@ -16,12 +16,13 @@
 
 #include <type_traits>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/min.hpp>
 #include <range/v3/iterator/counted_iterator.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
@@ -62,28 +63,28 @@ namespace ranges
 #ifdef RANGES_WORKAROUND_MSVC_756601
             template<typename = void>
 #endif // RANGES_WORKAROUND_MSVC_756601
-            friend constexpr bool operator==(sentinel const &x, CI const &y)
+            friend constexpr bool operator==(sentinel const & x, CI const & y)
             {
                 return y.count() == 0 || y.base() == x.end_;
             }
 #ifdef RANGES_WORKAROUND_MSVC_756601
             template<typename = void>
 #endif // RANGES_WORKAROUND_MSVC_756601
-            friend constexpr bool operator==(CI const &y, sentinel const &x)
+            friend constexpr bool operator==(CI const & y, sentinel const & x)
             {
                 return y.count() == 0 || y.base() == x.end_;
             }
 #ifdef RANGES_WORKAROUND_MSVC_756601
             template<typename = void>
 #endif // RANGES_WORKAROUND_MSVC_756601
-            friend constexpr bool operator!=(sentinel const &x, CI const &y)
+            friend constexpr bool operator!=(sentinel const & x, CI const & y)
             {
                 return y.count() != 0 && y.base() != x.end_;
             }
 #ifdef RANGES_WORKAROUND_MSVC_756601
             template<typename = void>
 #endif // RANGES_WORKAROUND_MSVC_756601
-            friend constexpr bool operator!=(CI const &y, sentinel const &x)
+            friend constexpr bool operator!=(CI const & y, sentinel const & x)
             {
                 return y.count() != 0 && y.base() != x.end_;
             }
@@ -91,30 +92,30 @@ namespace ranges
 
 #if RANGES_CXX_IF_CONSTEXPR < RANGES_CXX_IF_CONSTEXPR_17
         template<typename Take>
-        static auto begin_random_access_(Take &take, std::true_type)
+        static auto begin_random_access_(Take & take, std::true_type)
         {
             return ranges::begin(take.base_);
         }
         template<typename Take>
-        static auto begin_random_access_(Take &take, std::false_type)
+        static auto begin_random_access_(Take & take, std::false_type)
         {
             auto s = static_cast<range_difference_t<Rng>>(take.size());
             return make_counted_iterator(ranges::begin(take.base_), s);
         }
         template<typename Take>
-        static auto begin_sized_(Take &take, std::true_type)
+        static auto begin_sized_(Take & take, std::true_type)
         {
             return begin_random_access_(
                 take, meta::bool_<RandomAccessRange<decltype((take.base_))>>{});
         }
         template<typename Take>
-        static auto begin_sized_(Take &take, std::false_type)
+        static auto begin_sized_(Take & take, std::false_type)
         {
             return make_counted_iterator(ranges::begin(take.base_), take.count_);
         }
 
         template<typename Take>
-        static auto end_random_access_(Take &take, std::true_type)
+        static auto end_random_access_(Take & take, std::true_type)
         {
             return ranges::begin(take.base_) +
                    static_cast<range_difference_t<Rng>>(take.size());
@@ -124,7 +125,7 @@ namespace ranges
             return default_sentinel;
         }
         template<typename Take>
-        static auto end_sized_(Take &take, std::true_type, std::false_type) // sized
+        static auto end_sized_(Take & take, std::true_type, std::false_type) // sized
         {
             return end_random_access_(
                 take, meta::bool_<RandomAccessRange<decltype((take.base_))>>{});
@@ -134,11 +135,11 @@ namespace ranges
         {
             return default_sentinel;
         }
-        static auto end_sized_(take_view &take, std::false_type, std::false_type)
+        static auto end_sized_(take_view & take, std::false_type, std::false_type)
         {
             return sentinel<false>{ranges::end(take.base_)};
         }
-        static auto end_sized_(take_view const &take, std::false_type, std::false_type)
+        static auto end_sized_(take_view const & take, std::false_type, std::false_type)
         {
             return sentinel<true>{ranges::end(take.base_)};
         }
@@ -274,7 +275,7 @@ namespace ranges
 
         public:
             template<typename Rng>
-            auto operator()(Rng &&rng, range_difference_t<Rng> n) const
+            auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> CPP_ret(take_view<all_t<Rng>>)( //
                     requires ViewableRange<Rng>)
             {

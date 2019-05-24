@@ -16,8 +16,9 @@
 
 #include <utility>
 
-#include <range/v3/action/insert.hpp>
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/action/insert.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -26,9 +27,10 @@ namespace ranges
     namespace adl_erase_detail
     {
         template<typename Cont, typename I, typename S>
-        auto erase(Cont &&cont, I begin, S end)
-            -> CPP_ret(decltype(unwrap_reference(cont).erase(begin, end)))( //
-                requires LvalueContainerLike<Cont> &&ForwardIterator<I> &&Sentinel<S, I>)
+        auto erase(Cont && cont, I begin,
+                   S end) -> CPP_ret(decltype(unwrap_reference(cont).erase(begin,
+                                                                           end)))( //
+            requires LvalueContainerLike<Cont> && ForwardIterator<I> && Sentinel<S, I>)
         {
             return unwrap_reference(cont).erase(begin, end);
         }
@@ -36,9 +38,9 @@ namespace ranges
         struct erase_fn
         {
             template<typename Rng, typename I, typename S>
-            auto operator()(Rng &&rng, I begin, S end) const
+            auto operator()(Rng && rng, I begin, S end) const
                 -> CPP_ret(decltype(erase((Rng &&) rng, begin, end)))( //
-                    requires Range<Rng> &&ForwardIterator<I> &&Sentinel<S, I>)
+                    requires Range<Rng> && ForwardIterator<I> && Sentinel<S, I>)
             {
                 return erase(static_cast<Rng &&>(rng), begin, end);
             }

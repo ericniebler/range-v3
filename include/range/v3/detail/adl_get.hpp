@@ -29,13 +29,13 @@ namespace ranges
             void get();
 
             template<std::size_t I, typename TupleLike>
-            constexpr auto adl_get(TupleLike &&t) noexcept
+            constexpr auto adl_get(TupleLike && t) noexcept
                 -> decltype(get<I>(static_cast<TupleLike &&>(t)))
             {
                 return get<I>(static_cast<TupleLike &&>(t));
             }
             template<typename T, typename TupleLike>
-            constexpr auto adl_get(TupleLike &&t) noexcept
+            constexpr auto adl_get(TupleLike && t) noexcept
                 -> decltype(get<T>(static_cast<TupleLike &&>(t)))
             {
                 return get<T>(static_cast<TupleLike &&>(t));
@@ -52,13 +52,13 @@ namespace ranges
             forward_tuple_interface() = default;
             using TupleLike::TupleLike;
 #if !defined(__clang__) || __clang_major__ > 3
-            CPP_member constexpr CPP_ctor(forward_tuple_interface)(TupleLike &&base)( //
-                noexcept(std::is_nothrow_move_constructible<TupleLike>::value)        //
+            CPP_member constexpr CPP_ctor(forward_tuple_interface)(TupleLike && base)( //
+                noexcept(std::is_nothrow_move_constructible<TupleLike>::value)         //
                 requires MoveConstructible<TupleLike>)
               : TupleLike(static_cast<TupleLike &&>(base))
             {}
             CPP_member constexpr CPP_ctor(forward_tuple_interface)(
-                TupleLike const &base)(                                        //
+                TupleLike const & base)(                                       //
                 noexcept(std::is_nothrow_copy_constructible<TupleLike>::value) //
                 requires CopyConstructible<TupleLike>)
               : TupleLike(base)
@@ -69,13 +69,13 @@ namespace ranges
             // instantiated too early.
             CPP_template(typename B = TupleLike)( //
                 requires MoveConstructible<B>)    //
-                constexpr forward_tuple_interface(TupleLike &&base) noexcept(
+                constexpr forward_tuple_interface(TupleLike && base) noexcept(
                     std::is_nothrow_move_constructible<TupleLike>::value)
               : TupleLike(static_cast<TupleLike &&>(base))
             {}
             CPP_template(typename B = TupleLike)( //
                 requires CopyConstructible<B>)    //
-                constexpr forward_tuple_interface(TupleLike const &base) noexcept(
+                constexpr forward_tuple_interface(TupleLike const & base) noexcept(
                     std::is_nothrow_copy_constructible<TupleLike>::value)
               : TupleLike(base)
             {}

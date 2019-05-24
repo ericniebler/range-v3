@@ -15,6 +15,8 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
@@ -24,7 +26,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -38,15 +39,15 @@ namespace ranges
     {
         template<typename I, typename S, typename O, typename T1, typename T2,
                  typename P = identity>
-        auto operator()(I begin, S end, O out, T1 const &old_value, T2 const &new_value,
+        auto operator()(I begin, S end, O out, T1 const & old_value, T2 const & new_value,
                         P proj = {}) const -> CPP_ret(replace_copy_result<I, O>)( //
-            requires InputIterator<I> &&Sentinel<S, I> &&OutputIterator<O, T2 const &>
-                &&IndirectlyCopyable<I, O>
-                    &&IndirectRelation<equal_to, projected<I, P>, T1 const *>)
+            requires InputIterator<I> && Sentinel<S, I> &&
+                OutputIterator<O, T2 const &> && IndirectlyCopyable<I, O> &&
+                    IndirectRelation<equal_to, projected<I, P>, T1 const *>)
         {
             for(; begin != end; ++begin, ++out)
             {
-                auto &&x = *begin;
+                auto && x = *begin;
                 if(invoke(proj, x) == old_value)
                     *out = new_value;
                 else
@@ -57,11 +58,11 @@ namespace ranges
 
         template<typename Rng, typename O, typename T1, typename T2,
                  typename P = identity>
-        auto operator()(Rng &&rng, O out, T1 const &old_value, T2 const &new_value,
+        auto operator()(Rng && rng, O out, T1 const & old_value, T2 const & new_value,
                         P proj = {}) const
             -> CPP_ret(replace_copy_result<safe_iterator_t<Rng>, O>)( //
-                requires InputRange<Rng> &&OutputIterator<O, T2 const &>
-                    &&IndirectlyCopyable<iterator_t<Rng>, O> &&IndirectRelation<
+                requires InputRange<Rng> && OutputIterator<O, T2 const &> &&
+                    IndirectlyCopyable<iterator_t<Rng>, O> && IndirectRelation<
                         equal_to, projected<iterator_t<Rng>, P>, T1 const *>)
         {
             return (*this)(begin(rng),

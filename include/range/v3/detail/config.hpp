@@ -36,7 +36,7 @@ namespace ranges
     namespace detail
     {
         template<typename = void>
-        [[noreturn]] void assert_failure(char const *file, int line, char const *msg)
+        [[noreturn]] void assert_failure(char const * file, int line, char const * msg)
         {
             std::fprintf(stderr, "%s(%d): %s\n", file, line, msg);
             std::abort();
@@ -527,10 +527,10 @@ namespace ranges
 #if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17 && \
     !defined(RANGES_DOXYGEN_INVOKED)
 #define RANGES_INLINE_VAR
-#define RANGES_INLINE_VARIABLE(type, name)                          \
-    namespace                                                       \
-    {                                                               \
-        constexpr auto &name = ::ranges::static_const<type>::value; \
+#define RANGES_INLINE_VARIABLE(type, name)                           \
+    namespace                                                        \
+    {                                                                \
+        constexpr auto & name = ::ranges::static_const<type>::value; \
     }
 #else // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
 #define RANGES_INLINE_VAR inline
@@ -544,11 +544,11 @@ namespace ranges
     inline constexpr type name{};     \
     /**/
 #elif RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17
-#define RANGES_DEFINE_CPO(type, name)                               \
-    namespace                                                       \
-    {                                                               \
-        constexpr auto &name = ::ranges::static_const<type>::value; \
-    }                                                               \
+#define RANGES_DEFINE_CPO(type, name)                                \
+    namespace                                                        \
+    {                                                                \
+        constexpr auto & name = ::ranges::static_const<type>::value; \
+    }                                                                \
     /**/
 #else // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
 #define RANGES_DEFINE_CPO(type, name) \

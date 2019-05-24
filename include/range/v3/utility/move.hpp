@@ -19,6 +19,7 @@
 #include <meta/meta.hpp>
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -29,7 +30,7 @@ namespace ranges
         struct move_fn : move_tag
         {
             template<typename T>
-            constexpr auto operator()(T &&t) const noexcept
+            constexpr auto operator()(T && t) const noexcept
                 -> meta::_t<std::remove_reference<T>> &&
             {
                 return static_cast<meta::_t<std::remove_reference<T>> &&>(t);
@@ -38,7 +39,7 @@ namespace ranges
             /// \ingroup group-utility
             /// \sa `move_fn`
             template<typename T>
-            friend constexpr decltype(auto) operator|(T &&t, move_fn move) noexcept
+            friend constexpr decltype(auto) operator|(T && t, move_fn move) noexcept
             {
                 return move(t);
             }

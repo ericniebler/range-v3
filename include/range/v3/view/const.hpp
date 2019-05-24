@@ -17,10 +17,11 @@
 #include <type_traits>
 #include <utility>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/common_type.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -51,11 +52,11 @@ namespace ranges
                 requires Const && (!Other)) //
                 constexpr adaptor(adaptor<Other>)
             {}
-            reference_ read(iterator_t<CRng> const &it) const
+            reference_ read(iterator_t<CRng> const & it) const
             {
                 return *it;
             }
-            rvalue_reference_ iter_move(iterator_t<CRng> const &it) const
+            rvalue_reference_ iter_move(iterator_t<CRng> const & it) const
                 noexcept(noexcept(rvalue_reference_(ranges::iter_move(it))))
             {
                 return ranges::iter_move(it);
@@ -100,8 +101,8 @@ namespace ranges
         struct const_fn
         {
             template<typename Rng>
-            auto operator()(Rng &&rng) const -> CPP_ret(const_view<all_t<Rng>>)( //
-                requires ViewableRange<Rng> &&InputRange<Rng>)
+            auto operator()(Rng && rng) const -> CPP_ret(const_view<all_t<Rng>>)( //
+                requires ViewableRange<Rng> && InputRange<Rng>)
             {
                 return const_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

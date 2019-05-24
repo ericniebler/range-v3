@@ -25,6 +25,7 @@
 #include <concepts/concepts.hpp>
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
@@ -119,7 +120,7 @@ namespace ranges
     namespace detail
     {
         template<typename I, typename O>
-        auto is_indirectly_movable_(I &(*i)(), O &(*o)(), iter_value_t<I> *v = nullptr)
+        auto is_indirectly_movable_(I & (*i)(), O & (*o)(), iter_value_t<I> * v = nullptr)
             -> always_<std::true_type, decltype(iter_value_t<I>(iter_move(i()))),
                        decltype(*v = iter_move(i())),
                        decltype(*o() = (iter_value_t<I> &&) * v),
@@ -128,7 +129,7 @@ namespace ranges
         auto is_indirectly_movable_(...) -> std::false_type;
 
         template<typename I, typename O>
-        auto is_nothrow_indirectly_movable_(iter_value_t<I> *v) -> meta::bool_<
+        auto is_nothrow_indirectly_movable_(iter_value_t<I> * v) -> meta::bool_<
             noexcept(iter_value_t<I>(iter_move(std::declval<I &>()))) &&
             noexcept(*v = iter_move(std::declval<I &>())) &&
             noexcept(*std::declval<O &>() = (iter_value_t<I> &&) * v) &&
@@ -206,7 +207,7 @@ namespace ranges
             // *If* a user-defined iter_swap is found via ADL, call that:
             template<typename T, typename U>
             constexpr detail::enable_if_t<is_adl_indirectly_swappable_v<T, U>> operator()(
-                T &&t, U &&u) const noexcept(noexcept(iter_swap((T &&) t, (U &&) u)))
+                T && t, U && u) const noexcept(noexcept(iter_swap((T &&) t, (U &&) u)))
             {
                 (void)iter_swap((T &&) t, (U &&) u);
             }
@@ -217,7 +218,7 @@ namespace ranges
             constexpr detail::enable_if_t<
                 !is_adl_indirectly_swappable_v<I0, I1> &&
                 is_swappable_with<iter_reference_t<I0>, iter_reference_t<I1>>::value>
-            operator()(I0 &&a, I1 &&b) const noexcept(noexcept(ranges::swap(*a, *b)))
+            operator()(I0 && a, I1 && b) const noexcept(noexcept(ranges::swap(*a, *b)))
             {
                 ranges::swap(*a, *b);
             }
@@ -232,9 +233,9 @@ namespace ranges
                 !is_adl_indirectly_swappable_v<I0, I1> &&
                 !is_swappable_with<iter_reference_t<I0>, iter_reference_t<I1>>::value &&
                 is_indirectly_movable_v<I0, I1> && is_indirectly_movable_v<I1, I0>>
-            operator()(I0 &&a, I1 &&b) const
-                noexcept(is_nothrow_indirectly_movable_v<I0, I1>
-                             &&is_nothrow_indirectly_movable_v<I1, I0>)
+            operator()(I0 && a, I1 && b) const
+                noexcept(is_nothrow_indirectly_movable_v<I0, I1> &&
+                             is_nothrow_indirectly_movable_v<I1, I0>)
             {
                 iter_value_t<I0> v0 = iter_move(a);
                 *a = iter_move(b);
@@ -251,7 +252,7 @@ namespace ranges
     namespace detail
     {
         template<typename T, typename U>
-        auto is_indirectly_swappable_(T &(*t)(), U &(*u)())
+        auto is_indirectly_swappable_(T & (*t)(), U & (*u)())
             -> detail::always_<std::true_type, decltype(iter_swap(t(), u()))>;
         template<typename T, typename U>
         auto is_indirectly_swappable_(...) -> std::false_type;

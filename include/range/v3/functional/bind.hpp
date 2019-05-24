@@ -22,6 +22,7 @@
 #include <concepts/concepts.hpp>
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -32,13 +33,13 @@ namespace ranges
              typename U = meta::if_<
                  std::is_lvalue_reference<T>,
                  std::reference_wrapper<meta::_t<std::remove_reference<T>>>, T &&>>
-    U bind_forward(meta::_t<std::remove_reference<T>> &t) noexcept
+    U bind_forward(meta::_t<std::remove_reference<T>> & t) noexcept
     {
         return static_cast<U>(t);
     }
 
     template<typename T>
-    T &&bind_forward(meta::_t<std::remove_reference<T>> &&t) noexcept
+    T && bind_forward(meta::_t<std::remove_reference<T>> && t) noexcept
     {
         // This is to catch way sketchy stuff like: forward<int const &>(42)
         static_assert(!std::is_lvalue_reference<T>::value, "You didn't just do that!");
@@ -95,14 +96,14 @@ namespace ranges
     struct protect_fn
     {
         template<typename F>
-        auto operator()(F &&f) const -> CPP_ret(protector<uncvref_t<F>>)( //
+        auto operator()(F && f) const -> CPP_ret(protector<uncvref_t<F>>)( //
             requires std::is_bind_expression<uncvref_t<F>>::value)
         {
             return {static_cast<F &&>(f)};
         }
         /// \overload
         template<typename F>
-        auto operator()(F &&f) const -> CPP_ret(F)( //
+        auto operator()(F && f) const -> CPP_ret(F)( //
             requires(!std::is_bind_expression<uncvref_t<F>>::value))
         {
             return static_cast<F &&>(f);

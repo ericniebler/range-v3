@@ -17,12 +17,13 @@
 
 #include <concepts/concepts.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/facade.hpp>
@@ -108,8 +109,8 @@ namespace ranges
         adaptor_base() = default;
         adaptor_base(adaptor_base &&) = default;
         adaptor_base(adaptor_base const &) = default;
-        adaptor_base &operator=(adaptor_base &&) = default;
-        adaptor_base &operator=(adaptor_base const &) = default;
+        adaptor_base & operator=(adaptor_base &&) = default;
+        adaptor_base & operator=(adaptor_base const &) = default;
 
         adaptor_base(detail::ignore_t, detail::ignore_t = {}, detail::ignore_t = {}) {}
         // clang-format off
@@ -125,45 +126,45 @@ namespace ranges
         )
             // clang-format on
             template<typename I>
-            static auto equal(I const &it0, I const &it1) -> CPP_ret(bool)( //
+            static auto equal(I const & it0, I const & it1) -> CPP_ret(bool)( //
                 requires EqualityComparable<I>)
         {
             return it0 == it1;
         }
         template<typename I>
-        static auto read(I const &it, detail::adaptor_base_current_mem_fn = {}) noexcept(
+        static auto read(I const & it, detail::adaptor_base_current_mem_fn = {}) noexcept(
             noexcept(iter_reference_t<I>(*it))) -> CPP_ret(iter_reference_t<I>)( //
             requires Iterator<I>)
         {
             return *it;
         }
         template<typename I>
-        static auto next(I &it) -> CPP_ret(void)( //
+        static auto next(I & it) -> CPP_ret(void)( //
             requires Iterator<I>)
         {
             ++it;
         }
         template<typename I>
-        static auto prev(I &it) -> CPP_ret(void)( //
+        static auto prev(I & it) -> CPP_ret(void)( //
             requires BidirectionalIterator<I>)
         {
             --it;
         }
         template<typename I>
-        static auto advance(I &it, iter_difference_t<I> n) -> CPP_ret(void)( //
+        static auto advance(I & it, iter_difference_t<I> n) -> CPP_ret(void)( //
             requires RandomAccessIterator<I>)
         {
             it += n;
         }
         template<typename I>
-        static auto distance_to(I const &it0, I const &it1)
+        static auto distance_to(I const & it0, I const & it1)
             -> CPP_ret(iter_difference_t<I>)( //
                 requires SizedSentinel<I, I>)
         {
             return it1 - it0;
         }
         template<typename I, typename S>
-        static constexpr auto empty(I const &it, S const &end) -> CPP_ret(bool)( //
+        static constexpr auto empty(I const & it, S const & end) -> CPP_ret(bool)( //
             requires Sentinel<S, I>)
         {
             return it == end;
@@ -195,11 +196,11 @@ namespace ranges
 
     protected:
         // Adaptor accessor
-        Adapt &get()
+        Adapt & get()
         {
             return data_.second();
         }
-        Adapt const &get() const
+        Adapt const & get() const
         {
             return data_.second();
         }
@@ -255,11 +256,11 @@ namespace ranges
 
         protected:
             // Adaptor accessor
-            Adapt &get()
+            Adapt & get()
             {
                 return basic_adaptor_mixin::basic_mixin::get().data_.second();
             }
-            const Adapt &get() const
+            const Adapt & get() const
             {
                 return basic_adaptor_mixin::basic_mixin::get().data_.second();
             }
@@ -295,7 +296,7 @@ namespace ranges
                  typename = decltype(std::declval<A const &>().equal(
                      std::declval<BaseIter const &>(), std::declval<BaseIter const &>(),
                      std::declval<A const &>()))>
-        bool equal_(adaptor_cursor const &that, int) const
+        bool equal_(adaptor_cursor const & that, int) const
         {
             return this->data_.second().equal(
                 this->data_.first(), that.data_.first(), that.data_.second());
@@ -303,12 +304,12 @@ namespace ranges
         template<typename A = Adapt,
                  typename = decltype(std::declval<A const &>().equal(
                      std::declval<BaseIter const &>(), std::declval<BaseIter const &>()))>
-        bool equal_(adaptor_cursor const &that, long) const
+        bool equal_(adaptor_cursor const & that, long) const
         {
             return this->data_.second().equal(this->data_.first(), that.data_.first());
         }
         template<typename C = adaptor_cursor>
-        auto equal(adaptor_cursor const &that) const
+        auto equal(adaptor_cursor const & that) const
             -> decltype(std::declval<C const &>().equal_(that, 42))
         {
             return this->equal_(that, 42);
@@ -317,7 +318,7 @@ namespace ranges
                  typename = decltype(std::declval<A const &>().empty(
                      std::declval<BaseIter const &>(), std::declval<Adapt const &>(),
                      std::declval<S const &>()))>
-        constexpr bool equal_(adaptor_sentinel<S, A> const &that, int) const
+        constexpr bool equal_(adaptor_sentinel<S, A> const & that, int) const
         {
             return that.data_.second().empty(
                 this->data_.first(), this->data_.second(), that.data_.first());
@@ -325,12 +326,12 @@ namespace ranges
         template<typename S, typename A,
                  typename = decltype(std::declval<A const &>().empty(
                      std::declval<BaseIter const &>(), std::declval<S const &>()))>
-        constexpr bool equal_(adaptor_sentinel<S, A> const &that, long) const
+        constexpr bool equal_(adaptor_sentinel<S, A> const & that, long) const
         {
             return that.data_.second().empty(this->data_.first(), that.data_.first());
         }
         template<typename S, typename A>
-        constexpr auto equal(adaptor_sentinel<S, A> const &that) const
+        constexpr auto equal(adaptor_sentinel<S, A> const & that) const
             -> decltype(std::declval<adaptor_cursor const &>().equal_(that, 42))
         {
             return this->equal_(that, 42);
@@ -351,7 +352,7 @@ namespace ranges
                  typename R = decltype(std::declval<A const &>().distance_to(
                      std::declval<BaseIter const &>(), std::declval<BaseIter const &>(),
                      std::declval<A const &>()))>
-        R distance_to_(adaptor_cursor const &that, int) const
+        R distance_to_(adaptor_cursor const & that, int) const
         {
             return this->data_.second().distance_to(
                 this->data_.first(), that.data_.first(), that.data_.second());
@@ -359,13 +360,13 @@ namespace ranges
         template<typename A = Adapt,
                  typename R = decltype(std::declval<A const &>().distance_to(
                      std::declval<BaseIter const &>(), std::declval<BaseIter const &>()))>
-        R distance_to_(adaptor_cursor const &that, long) const
+        R distance_to_(adaptor_cursor const & that, long) const
         {
             return this->data_.second().distance_to(this->data_.first(),
                                                     that.data_.first());
         }
         template<typename C = adaptor_cursor>
-        auto distance_to(adaptor_cursor const &that) const
+        auto distance_to(adaptor_cursor const & that) const
             -> decltype(std::declval<C const &>().distance_to_(that, 42))
         {
             return this->distance_to_(that, 42);
@@ -470,7 +471,7 @@ namespace ranges
         }
 
         template<typename D>
-        static constexpr adaptor_cursor_t<D> begin_cursor_(D &d) noexcept(noexcept(
+        static constexpr adaptor_cursor_t<D> begin_cursor_(D & d) noexcept(noexcept(
             adaptor_cursor_t<D>{std::declval<detail::begin_adaptor_t<D> &>().begin(d),
                                 range_access::begin_adaptor(d)}))
         {
@@ -491,13 +492,13 @@ namespace ranges
             noexcept(noexcept(view_adaptor::begin_cursor_(std::declval<D const &>())))
                 -> CPP_ret(
                     decltype(view_adaptor::begin_cursor_(std::declval<D const &>())))( //
-                    requires Same<D, Derived> &&Range<base_range_t const>)
+                    requires Same<D, Derived> && Range<base_range_t const>)
         {
             return view_adaptor::begin_cursor_(derived());
         }
 
         template<typename D>
-        static constexpr adaptor_sentinel_t<D> end_cursor_(D &d) noexcept(noexcept(
+        static constexpr adaptor_sentinel_t<D> end_cursor_(D & d) noexcept(noexcept(
             adaptor_sentinel_t<D>{std::declval<detail::end_adaptor_t<D> &>().end(d),
                                   range_access::end_adaptor(d)}))
         {
@@ -517,7 +518,7 @@ namespace ranges
         constexpr auto end_cursor() const noexcept(
             noexcept(view_adaptor::end_cursor_(std::declval<D const &>())))
             -> CPP_ret(decltype(view_adaptor::end_cursor_(std::declval<D const &>())))( //
-                requires Same<D, Derived> &&Range<base_range_t const>)
+                requires Same<D, Derived> && Range<base_range_t const>)
         {
             return view_adaptor::end_cursor_(derived());
         }
@@ -529,17 +530,17 @@ namespace ranges
         view_adaptor() = default;
         view_adaptor(view_adaptor &&) = default;
         view_adaptor(view_adaptor const &) = default;
-        view_adaptor &operator=(view_adaptor &&) = default;
-        view_adaptor &operator=(view_adaptor const &) = default;
-        explicit constexpr view_adaptor(BaseRng &&rng)
+        view_adaptor & operator=(view_adaptor &&) = default;
+        view_adaptor & operator=(view_adaptor const &) = default;
+        explicit constexpr view_adaptor(BaseRng && rng)
           : rng_(view::all(static_cast<BaseRng &&>(rng)))
         {}
-        constexpr base_range_t &base() noexcept
+        constexpr base_range_t & base() noexcept
         {
             return rng_;
         }
         /// \overload
-        constexpr base_range_t const &base() const noexcept
+        constexpr base_range_t const & base() const noexcept
         {
             return rng_;
         }

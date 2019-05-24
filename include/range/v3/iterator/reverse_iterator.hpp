@@ -15,9 +15,10 @@
 
 #include <utility>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/basic_iterator.hpp>
 #include <range/v3/iterator/concepts.hpp>
-#include <range/v3/range_fwd.hpp>
 
 namespace ranges
 {
@@ -68,8 +69,9 @@ namespace ranges
                 return it_;
             }
             template<typename J>
-            constexpr auto equal(reverse_cursor<J> const &that) const -> CPP_ret(bool)( //
-                requires Sentinel<J, I>)
+            constexpr auto equal(reverse_cursor<J> const & that) const
+                -> CPP_ret(bool)( //
+                    requires Sentinel<J, I>)
             {
                 return it_ == that.it_;
             }
@@ -87,7 +89,7 @@ namespace ranges
                 it_ -= n;
             }
             template<typename J>
-            constexpr auto distance_to(reverse_cursor<J> const &that) const
+            constexpr auto distance_to(reverse_cursor<J> const & that) const
                 -> CPP_ret(iter_difference_t<I>)( //
                     requires SizedSentinel<J, I>)
             {
@@ -105,8 +107,8 @@ namespace ranges
         public:
             reverse_cursor() = default;
             template<typename U>
-            constexpr                                                 /*c++14*/
-                CPP_ctor(reverse_cursor)(reverse_cursor<U> const &u)( //
+            constexpr                                                  /*c++14*/
+                CPP_ctor(reverse_cursor)(reverse_cursor<U> const & u)( //
                     requires ConvertibleTo<U, I>)
               : it_(u.base())
             {}

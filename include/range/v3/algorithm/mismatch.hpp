@@ -17,6 +17,8 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
@@ -27,7 +29,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -47,8 +48,8 @@ namespace ranges
         auto
         operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
                    P2 proj2 = P2{}) const -> CPP_ret(mismatch_result<I1, I2>)( //
-            requires InputIterator<I1> &&Sentinel<S1, I1> &&InputIterator<I2>
-                &&IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>)
+            requires InputIterator<I1> && Sentinel<S1, I1> && InputIterator<I2> &&
+                IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>)
         {
             for(; begin1 != end1; ++begin1, ++begin2)
                 if(!invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
@@ -59,10 +60,11 @@ namespace ranges
         template<typename I1, typename S1, typename I2, typename S2,
                  typename C = equal_to, typename P1 = identity, typename P2 = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{},
-                        P1 proj1 = P1{},
-                        P2 proj2 = P2{}) const -> CPP_ret(mismatch_result<I1, I2>)( //
-            requires InputIterator<I1> &&Sentinel<S1, I1> &&InputIterator<I2> &&Sentinel<
-                S2, I2> &&IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>)
+                        P1 proj1 = P1{}, P2 proj2 = P2{}) const
+            -> CPP_ret(mismatch_result<I1, I2>)( //
+                requires InputIterator<I1> && Sentinel<S1, I1> && InputIterator<I2> &&
+                    Sentinel<S2, I2> &&
+                        IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>)
         {
             for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
                 if(!invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
@@ -76,12 +78,12 @@ namespace ranges
             "Use the variant of ranges::mismatch that takes an upper bound for "
             "both sequences")
         auto
-        operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, // see below [*]
+        operator()(Rng1 && rng1, I2Ref && begin2, C pred = C{}, // see below [*]
                    P1 proj1 = P1{}, P2 proj2 = P2{}) const
             -> CPP_ret(mismatch_result<safe_iterator_t<Rng1>, uncvref_t<I2Ref>>)( //
-                requires InputRange<Rng1> &&InputIterator<uncvref_t<I2Ref>>
-                    &&IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
-                                       projected<uncvref_t<I2Ref>, P2>>)
+                requires InputRange<Rng1> && InputIterator<uncvref_t<I2Ref>> &&
+                    IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
+                                     projected<uncvref_t<I2Ref>, P2>>)
         {
             RANGES_DIAGNOSTIC_PUSH
             RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
@@ -96,10 +98,10 @@ namespace ranges
 
         template<typename Rng1, typename Rng2, typename C = equal_to,
                  typename P1 = identity, typename P2 = identity>
-        auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
+        auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
                         P2 proj2 = P2{}) const
             -> CPP_ret(mismatch_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>>)( //
-                requires InputRange<Rng1> &&InputRange<Rng2> &&IndirectRelation<
+                requires InputRange<Rng1> && InputRange<Rng2> && IndirectRelation<
                     C, projected<iterator_t<Rng1>, P1>, projected<iterator_t<Rng2>, P2>>)
         {
             return (*this)(begin(rng1),

@@ -44,17 +44,17 @@ namespace ranges
             // clang-format on
 
             template<typename T>
-            T &get(meta::id_t<T> &value) noexcept
+            T & get(meta::id_t<T> & value) noexcept
         {
             return value;
         }
         template<typename T>
-        T const &get(meta::id_t<T> const &value) noexcept
+        T const & get(meta::id_t<T> const & value) noexcept
         {
             return value;
         }
         template<typename T>
-        T &&get(meta::id_t<T> &&value) noexcept
+        T && get(meta::id_t<T> && value) noexcept
         {
             return static_cast<T &&>(value);
         }

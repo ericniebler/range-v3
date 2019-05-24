@@ -18,8 +18,9 @@
 
 #include <meta/meta.hpp>
 
-#include <range/v3/functional/invoke.hpp>
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/generate_n.hpp>
@@ -49,9 +50,9 @@ namespace ranges
 
         public:
             template<typename Rng, typename Fun>
-            auto CPP_fun(operator())(Rng &&rng, Fun fun)(
-                const requires ViewableRange<Rng> &&TransformableRange<Rng, Fun>
-                    &&JoinableRange<transform_view<all_t<Rng>, Fun>>)
+            auto CPP_fun(operator())(Rng && rng, Fun fun)(
+                const requires ViewableRange<Rng> && TransformableRange<Rng, Fun> &&
+                    JoinableRange<transform_view<all_t<Rng>, Fun>>)
             {
                 return join(transform(static_cast<Rng &&>(rng), std::move(fun)));
             }
@@ -120,10 +121,10 @@ namespace ranges
 
     /// \cond
     CPP_template(typename Rng, typename Fun)( //
-        requires ViewableRange<Rng> &&view::TransformableRange<Rng, Fun>
-            &&InputRange<invoke_result_t<Fun &, range_reference_t<Rng>>>) //
+        requires ViewableRange<Rng> && view::TransformableRange<Rng, Fun> &&
+            InputRange<invoke_result_t<Fun &, range_reference_t<Rng>>>) //
         auto
-        operator>>=(Rng &&rng, Fun fun)
+        operator>>=(Rng && rng, Fun fun)
     {
         return view::for_each(static_cast<Rng &&>(rng), std::move(fun));
     }

@@ -20,12 +20,13 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/indirect.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/range/concepts.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/adaptor.hpp>
@@ -62,7 +63,7 @@ namespace ranges
                 sentinel_adaptor(sentinel_adaptor<Other> that)
               : pred_(std::move(that.pred_))
             {}
-            bool empty(iterator_t<CRng> const &it, sentinel_t<CRng> const &end) const
+            bool empty(iterator_t<CRng> const & it, sentinel_t<CRng> const & end) const
             {
                 return it == end || !invoke(pred_, it);
             }
@@ -73,8 +74,8 @@ namespace ranges
         }
         template<bool Const = true>
         auto end_adaptor() const -> CPP_ret(sentinel_adaptor<Const>)( //
-            requires Const &&Range<meta::const_if_c<Const, Rng>>
-                &&Invocable<Pred const &, iterator_t<meta::const_if_c<Const, Rng>>>)
+            requires Const && Range<meta::const_if_c<Const, Rng>> &&
+                Invocable<Pred const &, iterator_t<meta::const_if_c<Const, Rng>>>)
         {
             return {pred_};
         }
@@ -112,10 +113,10 @@ namespace ranges
 
         public:
             template<typename Rng, typename Pred>
-            auto operator()(Rng &&rng, Pred pred) const
+            auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(iter_take_while_view<all_t<Rng>, Pred>)( //
-                    requires ViewableRange<Rng> &&InputRange<Rng>
-                        &&Predicate<Pred &, iterator_t<Rng>> &&CopyConstructible<Pred>)
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        Predicate<Pred &, iterator_t<Rng>> && CopyConstructible<Pred>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
@@ -142,18 +143,18 @@ namespace ranges
 
         public:
             template<typename Rng, typename Pred>
-            auto operator()(Rng &&rng, Pred pred) const
+            auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(take_while_view<all_t<Rng>, Pred>)( //
-                    requires ViewableRange<Rng> &&InputRange<Rng>
-                        &&IndirectUnaryPredicate<Pred &, iterator_t<Rng>>)
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        IndirectUnaryPredicate<Pred &, iterator_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
             template<typename Rng, typename Pred, typename Proj>
-            auto operator()(Rng &&rng, Pred pred, Proj proj) const
+            auto operator()(Rng && rng, Pred pred, Proj proj) const
                 -> CPP_ret(take_while_view<all_t<Rng>, composed<Pred, Proj>>)( //
-                    requires ViewableRange<Rng> &&InputRange<Rng>
-                        &&IndirectUnaryPredicate<composed<Pred, Proj> &, iterator_t<Rng>>)
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        IndirectUnaryPredicate<composed<Pred, Proj> &, iterator_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)),
                         compose(std::move(pred), std::move(proj))};

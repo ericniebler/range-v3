@@ -49,8 +49,8 @@ namespace ranges
         detail::non_propagating_cache<iterator_t<Rng>> end_;
 
     public:
-        CPP_assert(BidirectionalView<Rng> &&IndirectUnaryPredicate<Pred, iterator_t<Rng>>
-                       &&CommonRange<Rng>);
+        CPP_assert(BidirectionalView<Rng> &&
+                       IndirectUnaryPredicate<Pred, iterator_t<Rng>> && CommonRange<Rng>);
 
         trim_view() = default;
         trim_view(Rng rng, Pred pred)
@@ -118,19 +118,19 @@ namespace ranges
 
         public:
             template<typename Rng, typename Pred>
-            auto operator()(Rng &&rng, Pred pred) const
+            auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(trim_view<all_t<Rng>, Pred>)( //
-                    requires ViewableRange<Rng> &&BidirectionalRange<Rng> &&
-                        IndirectUnaryPredicate<Pred, iterator_t<Rng>> &&CommonRange<Rng>)
+                    requires ViewableRange<Rng> && BidirectionalRange<Rng> &&
+                        IndirectUnaryPredicate<Pred, iterator_t<Rng>> && CommonRange<Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
             template<typename Rng, typename Pred, typename Proj>
-            auto operator()(Rng &&rng, Pred pred, Proj proj) const
+            auto operator()(Rng && rng, Pred pred, Proj proj) const
                 -> CPP_ret(trim_view<all_t<Rng>, composed<Pred, Proj>>)( //
-                    requires ViewableRange<Rng> &&BidirectionalRange<Rng>
-                        &&IndirectUnaryPredicate<composed<Pred, Proj>, iterator_t<Rng>>
-                            &&CommonRange<Rng>)
+                    requires ViewableRange<Rng> && BidirectionalRange<Rng> &&
+                        IndirectUnaryPredicate<composed<Pred, Proj>, iterator_t<Rng>> &&
+                            CommonRange<Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)),
                         compose(std::move(pred), std::move(proj))};

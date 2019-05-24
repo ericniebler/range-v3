@@ -46,7 +46,7 @@ namespace ranges
                  typename P = identity>
         auto operator()(I begin, S end, T init, Op op = Op{}, P proj = P{}) const
             -> CPP_ret(T)( //
-                requires Sentinel<S, I> &&Accumulateable<I, T, Op, P>)
+                requires Sentinel<S, I> && Accumulateable<I, T, Op, P>)
         {
             for(; begin != end; ++begin)
                 init = invoke(op, init, invoke(proj, *begin));
@@ -54,9 +54,9 @@ namespace ranges
         }
 
         template<typename Rng, typename T, typename Op = plus, typename P = identity>
-        auto operator()(Rng &&rng, T init, Op op = Op{}, P proj = P{}) const
+        auto operator()(Rng && rng, T init, Op op = Op{}, P proj = P{}) const
             -> CPP_ret(T)( //
-                requires Range<Rng> &&Accumulateable<iterator_t<Rng>, T, Op, P>)
+                requires Range<Rng> && Accumulateable<iterator_t<Rng>, T, Op, P>)
         {
             return (*this)(
                 begin(rng), end(rng), std::move(init), std::move(op), std::move(proj));

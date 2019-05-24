@@ -20,9 +20,10 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/adaptor.hpp>
@@ -106,8 +107,8 @@ namespace ranges
         struct indirect_fn
         {
             template<typename Rng>
-            constexpr auto CPP_fun(operator())(Rng &&rng)(
-                const requires ViewableRange<Rng> &&InputRange<Rng> &&
+            constexpr auto CPP_fun(operator())(Rng && rng)(
+                const requires ViewableRange<Rng> && InputRange<Rng> &&
                 // We shouldn't need to strip references to test if something
                 // is readable. https://github.com/ericniebler/stl2/issues/594
                 // Readable<range_reference_t<Rng>>)

@@ -16,6 +16,8 @@
 #include <functional>
 #include <utility>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/lower_bound.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
@@ -25,7 +27,6 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -41,10 +42,10 @@ namespace ranges
         /// \pre `Rng` is a model of the `Range` concept
         template<typename I, typename S, typename V, typename C = less,
                  typename P = identity>
-        auto operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const
+        auto operator()(I begin, S end, V const & val, C pred = C{}, P proj = P{}) const
             -> CPP_ret(bool)( //
-                requires ForwardIterator<I> &&Sentinel<S, I>
-                    &&IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
+                requires ForwardIterator<I> && Sentinel<S, I> &&
+                    IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
         {
             begin =
                 lower_bound(std::move(begin), end, val, std::ref(pred), std::ref(proj));
@@ -53,7 +54,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename V, typename C = less, typename P = identity>
-        auto operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const
+        auto operator()(Rng && rng, V const & val, C pred = C{}, P proj = P{}) const
             -> CPP_ret(bool)( //
                 requires ForwardRange<Rng> &&
                     IndirectStrictWeakOrder<C, V const *, projected<iterator_t<Rng>, P>>)

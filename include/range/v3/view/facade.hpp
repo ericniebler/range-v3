@@ -20,10 +20,11 @@
 
 #include <concepts/concepts.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/basic_iterator.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/iterator/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/view/interface.hpp>
 
 namespace ranges
@@ -67,7 +68,7 @@ namespace ranges
         struct view_as_cursor : Derived
         {
             view_as_cursor() = default;
-            explicit view_as_cursor(Derived const &derived)
+            explicit view_as_cursor(Derived const & derived)
               : Derived(derived)
             {}
             explicit operator bool() = delete;

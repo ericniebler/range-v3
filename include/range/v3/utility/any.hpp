@@ -23,6 +23,7 @@
 #include <concepts/concepts.hpp>
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/utility/swap.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
@@ -32,7 +33,7 @@ namespace ranges
 {
     struct bad_any_cast : std::bad_cast
     {
-        virtual const char *what() const noexcept override
+        virtual const char * what() const noexcept override
         {
             return "bad any_cast";
         }
@@ -53,10 +54,10 @@ namespace ranges
     meta::if_c<std::is_reference<T>() || Copyable<T>, T> any_cast(any &&);
 
     template<typename T>
-    T *any_cast(any *) noexcept;
+    T * any_cast(any *) noexcept;
 
     template<typename T>
-    T const *any_cast(any const *) noexcept;
+    T const * any_cast(any const *) noexcept;
 
 #if defined(RANGES_WORKAROUND_MSVC_589046) && !defined(RANGES_DOXYGEN_INVOKED)
     namespace _any_
@@ -84,16 +85,16 @@ namespace ranges
             any &&);
 
         template<typename T>
-        friend T *any_cast(any *) noexcept;
+        friend T * any_cast(any *) noexcept;
 
         template<typename T>
-        friend T const *any_cast(any const *) noexcept;
+        friend T const * any_cast(any const *) noexcept;
 
         struct interface
         {
             virtual ~interface() {}
-            virtual interface *clone() const = 0;
-            virtual std::type_info const &type() const noexcept = 0;
+            virtual interface * clone() const = 0;
+            virtual std::type_info const & type() const noexcept = 0;
         };
 
         template<typename T>
@@ -107,19 +108,19 @@ namespace ranges
             impl(T o)
               : obj(std::move(o))
             {}
-            T &get()
+            T & get()
             {
                 return obj;
             }
-            T const &get() const
+            T const & get() const
             {
                 return obj;
             }
-            impl *clone() const override
+            impl * clone() const override
             {
                 return new impl{obj};
             }
-            std::type_info const &type() const noexcept override
+            std::type_info const & type() const noexcept override
             {
                 return typeid(T);
             }
@@ -130,22 +131,22 @@ namespace ranges
     public:
         any() noexcept = default;
         template<typename TRef, typename T = detail::decay_t<TRef>>
-        CPP_ctor(any)(TRef &&t)( //
+        CPP_ctor(any)(TRef && t)( //
             requires Copyable<T> && (!Same<T, any>))
           : ptr_(new impl<T>(static_cast<TRef &&>(t)))
         {}
         any(any &&) noexcept = default;
-        any(any const &that)
+        any(any const & that)
           : ptr_{that.ptr_ ? that.ptr_->clone() : nullptr}
         {}
-        any &operator=(any &&) noexcept = default;
-        any &operator=(any const &that)
+        any & operator=(any &&) noexcept = default;
+        any & operator=(any const & that)
         {
             ptr_.reset(that.ptr_ ? that.ptr_->clone() : nullptr);
             return *this;
         }
         template<typename TRef, typename T = detail::decay_t<TRef>>
-        auto operator=(TRef &&t) -> CPP_ret(any &)( //
+        auto operator=(TRef && t) -> CPP_ret(any &)( //
             requires Copyable<T> && (!Same<T, any>))
         {
             any{static_cast<TRef &&>(t)}.swap(*this);
@@ -159,17 +160,17 @@ namespace ranges
         {
             return !ptr_;
         }
-        std::type_info const &type() const noexcept
+        std::type_info const & type() const noexcept
         {
             return ptr_ ? ptr_->type() : typeid(void);
         }
-        void swap(any &that) noexcept
+        void swap(any & that) noexcept
         {
             ptr_.swap(that.ptr_);
         }
 
 #if !RANGES_BROKEN_CPO_LOOKUP
-        friend void swap(any &x, any &y) noexcept
+        friend void swap(any & x, any & y) noexcept
         {
             x.swap(y);
         }
@@ -179,7 +180,7 @@ namespace ranges
 #if RANGES_BROKEN_CPO_LOOKUP
     namespace _any_
     {
-        inline void swap(any &x, any &y) noexcept
+        inline void swap(any & x, any & y) noexcept
         {
             x.swap(y);
         }
@@ -188,7 +189,7 @@ namespace ranges
 
     /// \throw bad_any_cast
     template<typename T>
-    meta::if_c<std::is_reference<T>() || Copyable<T>, T> any_cast(any &x)
+    meta::if_c<std::is_reference<T>() || Copyable<T>, T> any_cast(any & x)
     {
         if(x.type() != typeid(detail::decay_t<T>))
             throw bad_any_cast{};
@@ -197,7 +198,7 @@ namespace ranges
 
     /// \overload
     template<typename T>
-    meta::if_c<std::is_reference<T>() || Copyable<T>, T> any_cast(any const &x)
+    meta::if_c<std::is_reference<T>() || Copyable<T>, T> any_cast(any const & x)
     {
         if(x.type() != typeid(detail::decay_t<T>))
             throw bad_any_cast{};
@@ -206,7 +207,7 @@ namespace ranges
 
     /// \overload
     template<typename T>
-    meta::if_c<std::is_reference<T>() || Copyable<T>, T> any_cast(any &&x)
+    meta::if_c<std::is_reference<T>() || Copyable<T>, T> any_cast(any && x)
     {
         if(x.type() != typeid(detail::decay_t<T>))
             throw bad_any_cast{};
@@ -215,20 +216,20 @@ namespace ranges
 
     /// \overload
     template<typename T>
-    T *any_cast(any *p) noexcept
+    T * any_cast(any * p) noexcept
     {
         if(p && p->ptr_)
-            if(any::impl<T> *q = dynamic_cast<any::impl<T> *>(p->ptr_.get()))
+            if(any::impl<T> * q = dynamic_cast<any::impl<T> *>(p->ptr_.get()))
                 return &q->get();
         return nullptr;
     }
 
     /// \overload
     template<typename T>
-    T const *any_cast(any const *p) noexcept
+    T const * any_cast(any const * p) noexcept
     {
         if(p && p->ptr_)
-            if(any::impl<T> const *q = dynamic_cast<any::impl<T> const *>(p->ptr_.get()))
+            if(any::impl<T> const * q = dynamic_cast<any::impl<T> const *>(p->ptr_.get()))
                 return &q->get();
         return nullptr;
     }

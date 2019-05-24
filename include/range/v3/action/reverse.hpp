@@ -15,11 +15,12 @@
 #ifndef RANGES_V3_ACTION_REVERSE_HPP
 #define RANGES_V3_ACTION_REVERSE_HPP
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/algorithm/reverse.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -36,8 +37,8 @@ namespace ranges
 
         public:
             template<typename Rng>
-            auto operator()(Rng &&rng) const -> CPP_ret(Rng)( //
-                requires BidirectionalRange<Rng> &&Permutable<iterator_t<Rng>>)
+            auto operator()(Rng && rng) const -> CPP_ret(Rng)( //
+                requires BidirectionalRange<Rng> && Permutable<iterator_t<Rng>>)
             {
                 ranges::reverse(rng);
                 return static_cast<Rng &&>(rng);

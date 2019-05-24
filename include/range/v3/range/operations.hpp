@@ -17,11 +17,12 @@
 
 #include <stdexcept>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -33,9 +34,9 @@ namespace ranges
     {
         /// \return `begin(rng)[n]`
         template<typename Rng>
-        constexpr auto operator()(Rng &&rng, range_difference_t<Rng> n) const
+        constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
             -> CPP_ret(range_reference_t<Rng>)( //
-                requires RandomAccessRange<Rng> &&SizedRange<Rng>)
+                requires RandomAccessRange<Rng> && SizedRange<Rng>)
         {
             // Workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67371 in GCC 5
             check_throw(rng, n);
@@ -44,7 +45,7 @@ namespace ranges
 
     private:
         template<typename Rng>
-        static constexpr void check_throw(Rng &&rng, range_difference_t<Rng> n)
+        static constexpr void check_throw(Rng && rng, range_difference_t<Rng> n)
         {
             (n < 0 || n >= ranges::distance(rng)) ? throw std::out_of_range("ranges::at")
                                                   : void(0);
@@ -64,9 +65,9 @@ namespace ranges
     {
         /// \return `begin(rng)[n]`
         template<typename Rng, typename Int>
-        constexpr auto operator()(Rng &&rng, Int n) const
+        constexpr auto operator()(Rng && rng, Int n) const
             -> CPP_ret(range_reference_t<Rng>)( //
-                requires RandomAccessRange<Rng> &&Integral<Int>)
+                requires RandomAccessRange<Rng> && Integral<Int>)
         {
             using D = range_difference_t<Rng>;
             RANGES_EXPECT(0 <= static_cast<D>(n));
@@ -87,8 +88,8 @@ namespace ranges
     {
         /// \return `*prev(end(rng))`
         template<typename Rng>
-        constexpr auto operator()(Rng &&rng) const -> CPP_ret(range_reference_t<Rng>)( //
-            requires CommonRange<Rng> &&BidirectionalRange<Rng>)
+        constexpr auto operator()(Rng && rng) const -> CPP_ret(range_reference_t<Rng>)( //
+            requires CommonRange<Rng> && BidirectionalRange<Rng>)
         {
             return *prev(end(rng));
         }
@@ -103,7 +104,7 @@ namespace ranges
     {
         /// \return `*begin(rng)`
         template<typename Rng>
-        constexpr auto operator()(Rng &&rng) const -> CPP_ret(range_reference_t<Rng>)( //
+        constexpr auto operator()(Rng && rng) const -> CPP_ret(range_reference_t<Rng>)( //
             requires ForwardRange<Rng>)
         {
             return *begin(rng);

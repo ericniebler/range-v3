@@ -15,12 +15,13 @@
 
 #include <utility>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -30,7 +31,7 @@ namespace ranges
     struct fill_n_fn
     {
         template<typename O, typename V>
-        auto operator()(O begin, iter_difference_t<O> n, V const &val) const
+        auto operator()(O begin, iter_difference_t<O> n, V const & val) const
             -> CPP_ret(O)( //
                 requires OutputIterator<O, V const &>)
         {

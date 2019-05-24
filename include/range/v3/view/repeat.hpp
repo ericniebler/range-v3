@@ -16,9 +16,10 @@
 
 #include <utility>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/unreachable_sentinel.hpp>
 #include <range/v3/range/concepts.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
@@ -45,19 +46,19 @@ namespace ranges
         struct cursor
         {
         private:
-            Val const *value_;
+            Val const * value_;
             std::ptrdiff_t n_ = 0;
 
         public:
             cursor() = default;
-            explicit cursor(Val const &value)
+            explicit cursor(Val const & value)
               : value_(std::addressof(value))
             {}
-            Val const &read() const noexcept
+            Val const & read() const noexcept
             {
                 return *value_;
             }
-            bool equal(cursor const &that) const
+            bool equal(cursor const & that) const
             {
                 return n_ == that.n_;
             }
@@ -73,7 +74,7 @@ namespace ranges
             {
                 n_ += d;
             }
-            std::ptrdiff_t distance_to(cursor const &that) const
+            std::ptrdiff_t distance_to(cursor const & that) const
             {
                 return that.n_ - n_;
             }

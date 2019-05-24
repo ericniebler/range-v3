@@ -19,12 +19,13 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/concepts.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/conversion.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/split.hpp>
 #include <range/v3/view/transform.hpp>
@@ -46,19 +47,19 @@ namespace ranges
             // BUGBUG something is not right with the actions. It should be possible
             // to move a container into a split and have elements moved into the result.
             template<typename Rng>
-            auto operator()(Rng &&rng, range_value_t<Rng> val) const
+            auto operator()(Rng && rng, range_value_t<Rng> val) const
                 -> CPP_ret(std::vector<split_value_t<Rng>>)( //
-                    requires InputRange<Rng> &&IndirectlyComparable<
+                    requires InputRange<Rng> && IndirectlyComparable<
                         iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>)
             {
                 return view::split(rng, std::move(val)) |
                        view::transform(to<split_value_t<Rng>>()) | to_vector;
             }
             template<typename Rng, typename Pattern>
-            auto operator()(Rng &&rng, Pattern &&pattern) const
+            auto operator()(Rng && rng, Pattern && pattern) const
                 -> CPP_ret(std::vector<split_value_t<Rng>>)( //
-                    requires InputRange<Rng> &&ViewableRange<Pattern>
-                        &&ForwardRange<Pattern> &&IndirectlyComparable<
+                    requires InputRange<Rng> && ViewableRange<Pattern> &&
+                        ForwardRange<Pattern> && IndirectlyComparable<
                             iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
                     (ForwardRange<Rng> || detail::tiny_range<Pattern>))
             {

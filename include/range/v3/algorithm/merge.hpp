@@ -31,6 +31,8 @@
 
 #include <tuple>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/functional/comparisons.hpp>
@@ -41,7 +43,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -58,8 +59,8 @@ namespace ranges
         auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, C pred = C{},
                         P0 proj0 = P0{}, P1 proj1 = P1{}) const
             -> CPP_ret(merge_result<I0, I1, O>)( //
-                requires Sentinel<S0, I0> &&Sentinel<S1, I1>
-                    &&Mergeable<I0, I1, O, C, P0, P1>)
+                requires Sentinel<S0, I0> && Sentinel<S1, I1> &&
+                    Mergeable<I0, I1, O, C, P0, P1>)
         {
             for(; begin0 != end0 && begin1 != end1; ++out)
             {
@@ -81,11 +82,11 @@ namespace ranges
 
         template<typename Rng0, typename Rng1, typename O, typename C = less,
                  typename P0 = identity, typename P1 = identity>
-        auto operator()(Rng0 &&rng0, Rng1 &&rng1, O out, C pred = C{}, P0 proj0 = P0{},
+        auto operator()(Rng0 && rng0, Rng1 && rng1, O out, C pred = C{}, P0 proj0 = P0{},
                         P1 proj1 = P1{}) const
             -> CPP_ret(merge_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>, O>)( //
-                requires Range<Rng0> &&Range<Rng1>
-                    &&Mergeable<iterator_t<Rng0>, iterator_t<Rng1>, O, C, P0, P1>)
+                requires Range<Rng0> && Range<Rng1> &&
+                    Mergeable<iterator_t<Rng0>, iterator_t<Rng1>, O, C, P0, P1>)
         {
             return (*this)(begin(rng0),
                            end(rng0),

@@ -40,7 +40,7 @@ namespace ranges
         namespace drop_last_view
         {
             template<typename Rng>
-            range_size_t<Rng> get_size(Rng &rng, range_difference_t<Rng> n_)
+            range_size_t<Rng> get_size(Rng & rng, range_difference_t<Rng> n_)
             {
                 RANGES_EXPECT(n_ >= 0);
                 range_size_t<Rng> const initial_size = ranges::size(rng);
@@ -50,17 +50,17 @@ namespace ranges
             }
 
             template<typename Rng>
-            auto get_end(Rng &rng, range_difference_t<Rng> n, int)
+            auto get_end(Rng & rng, range_difference_t<Rng> n, int)
                 -> CPP_ret(iterator_t<Rng>)( //
-                    requires RandomAccessRange<Rng> &&SizedRange<Rng>)
+                    requires RandomAccessRange<Rng> && SizedRange<Rng>)
             {
                 return begin(rng) + static_cast<range_difference_t<Rng>>(
                                         drop_last_view::get_size(rng, n));
             }
             template<typename Rng>
-            auto get_end(Rng &rng, range_difference_t<Rng> n, long)
+            auto get_end(Rng & rng, range_difference_t<Rng> n, long)
                 -> CPP_ret(iterator_t<Rng>)( //
-                    requires BidirectionalRange<Rng> &&CommonRange<Rng>)
+                    requires BidirectionalRange<Rng> && CommonRange<Rng>)
             {
                 return prev(end(rng), n, begin(rng));
             }
@@ -157,13 +157,13 @@ namespace ranges
         }
         template<typename CRng = Rng const>
         auto begin() const -> CPP_ret(iterator_t<CRng>)( //
-            requires RandomAccessRange<CRng> &&SizedRange<CRng>)
+            requires RandomAccessRange<CRng> && SizedRange<CRng>)
         {
             return ranges::begin(rng_);
         }
         template<typename CRng = Rng const>
         auto end() const -> CPP_ret(iterator_t<CRng>)( //
-            requires RandomAccessRange<CRng> &&SizedRange<CRng>)
+            requires RandomAccessRange<CRng> && SizedRange<CRng>)
         {
             return detail::drop_last_view::get_end(rng_, n_, 0);
         }
@@ -178,11 +178,11 @@ namespace ranges
             return detail::drop_last_view::get_size(rng_, n_);
         }
 
-        Rng &base()
+        Rng & base()
         {
             return rng_;
         }
-        Rng const &base() const
+        Rng const & base() const
         {
             return rng_;
         }
@@ -213,7 +213,7 @@ namespace ranges
             adaptor(iterator_t<Rng> probe_begin)
               : probe_(std::move(probe_begin))
             {}
-            void next(iterator_t<Rng> &it)
+            void next(iterator_t<Rng> & it)
             {
                 ++it;
                 ++probe_;
@@ -223,7 +223,7 @@ namespace ranges
         struct sentinel_adaptor : adaptor_base
         {
             template<typename I, typename S>
-            bool empty(I const &, adaptor const &ia, S const &s) const
+            bool empty(I const &, adaptor const & ia, S const & s) const
             {
                 return ia.probe_ == s;
             }
@@ -305,11 +305,11 @@ namespace ranges
             return detail::drop_last_view::get_size(this->base(), n_);
         }
 
-        Rng &base()
+        Rng & base()
         {
             return rng_;
         }
-        Rng const &base() const
+        Rng const & base() const
         {
             return rng_;
         }
@@ -331,7 +331,7 @@ namespace ranges
 
         public:
             template<typename Rng>
-            auto operator()(Rng &&rng, range_difference_t<Rng> n) const
+            auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> CPP_ret(drop_last_view<all_t<Rng>>)( //
                     requires SizedRange<Rng> || ForwardRange<Rng>)
             {

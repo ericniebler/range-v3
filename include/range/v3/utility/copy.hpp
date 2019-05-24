@@ -17,6 +17,7 @@
 #include <concepts/concepts.hpp>
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -28,7 +29,7 @@ namespace ranges
         struct copy_fn : copy_tag
         {
             template<typename T>
-            constexpr auto operator()(T &&t) const -> CPP_ret(detail::decay_t<T>)( //
+            constexpr auto operator()(T && t) const -> CPP_ret(detail::decay_t<T>)( //
                 requires Constructible<detail::decay_t<T>, T>)
             {
                 return static_cast<T &&>(t);
@@ -37,7 +38,7 @@ namespace ranges
             /// \ingroup group-utility
             /// \sa `copy_fn`
             template<typename T>
-            friend constexpr auto operator|(T &&t, copy_fn)
+            friend constexpr auto operator|(T && t, copy_fn)
                 -> CPP_broken_friend_ret(detail::decay_t<T>)( //
                     requires Constructible<detail::decay_t<T>, T>)
             {

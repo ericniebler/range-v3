@@ -15,9 +15,10 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 
 #ifndef RANGES_DOXYGEN_INVOKED
 namespace boost

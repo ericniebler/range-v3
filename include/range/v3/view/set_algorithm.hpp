@@ -23,6 +23,8 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
@@ -30,7 +32,6 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -71,7 +72,7 @@ namespace ranges
                         ranges::end(rng2_)};
             }
             CPP_member auto begin_cursor() const -> CPP_ret(cursor<true>)( //
-                requires Range<Rng1 const> &&Range<Rng2 const>)
+                requires Range<Rng1 const> && Range<Rng2 const>)
             {
                 return {pred_,
                         proj1_,
@@ -177,7 +178,7 @@ namespace ranges
                 ++it1_;
                 satisfy();
             }
-            CPP_member auto equal(set_difference_cursor const &that) const
+            CPP_member auto equal(set_difference_cursor const & that) const
                 -> CPP_ret(bool)( //
                     requires ForwardRange<Rng1>)
             {
@@ -220,13 +221,13 @@ namespace ranges
         public:
             template<typename Rng1, typename Rng2, typename C = less,
                      typename P1 = identity, typename P2 = identity>
-            auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
+            auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
                             P2 proj2 = P2{}) const
                 -> CPP_ret(set_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)( //
-                    requires ViewableRange<Rng1> &&InputRange<Rng1> &&ViewableRange<Rng2>
-                        &&InputRange<Rng2>
-                            &&IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
-                                               projected<iterator_t<Rng2>, P2>>)
+                    requires ViewableRange<Rng1> && InputRange<Rng1> &&
+                        ViewableRange<Rng2> && InputRange<Rng2> &&
+                            IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
+                                             projected<iterator_t<Rng2>, P2>>)
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),
@@ -328,7 +329,7 @@ namespace ranges
                 ++it2_;
                 satisfy();
             }
-            CPP_member auto equal(set_intersection_cursor const &that) const
+            CPP_member auto equal(set_intersection_cursor const & that) const
                 -> CPP_ret(bool)( //
                     requires ForwardRange<Rng1>)
             {
@@ -371,13 +372,13 @@ namespace ranges
         public:
             template<typename Rng1, typename Rng2, typename C = less,
                      typename P1 = identity, typename P2 = identity>
-            auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
+            auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
                             P2 proj2 = P2{}) const
                 -> CPP_ret(set_intersection_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)( //
-                    requires ViewableRange<Rng1> &&InputRange<Rng1> &&ViewableRange<Rng2>
-                        &&InputRange<Rng2>
-                            &&IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
-                                               projected<iterator_t<Rng2>, P2>>)
+                    requires ViewableRange<Rng1> && InputRange<Rng1> &&
+                        ViewableRange<Rng2> && InputRange<Rng2> &&
+                            IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
+                                             projected<iterator_t<Rng2>, P2>>)
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),
@@ -503,8 +504,9 @@ namespace ranges
                     ++it2_;
                 satisfy();
             }
-            CPP_member auto equal(set_union_cursor const &that) const -> CPP_ret(bool)( //
-                requires ForwardRange<Rng1> &&ForwardRange<Rng2>)
+            CPP_member auto equal(set_union_cursor const & that) const
+                -> CPP_ret(bool)( //
+                    requires ForwardRange<Rng1> && ForwardRange<Rng2>)
             {
                 // does not support comparing iterators from different ranges
                 return (it1_ == that.it1_) && (it2_ == that.it2_);
@@ -547,17 +549,18 @@ namespace ranges
         public:
             template<typename Rng1, typename Rng2, typename C = less,
                      typename P1 = identity, typename P2 = identity>
-            auto operator()(
-                Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
-                P2 proj2 = P2{}) const -> CPP_ret(set_union_view<all_t<Rng1>, all_t<Rng2>,
-                                                                 C, P1, P2>)( //
-                requires ViewableRange<Rng1> &&InputRange<Rng1> &&ViewableRange<Rng2> &&
-                    InputRange<Rng2> &&Common<range_value_t<Rng1>, range_value_t<Rng2>> &&
-                        CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>
-                            &&CommonReference<range_rvalue_reference_t<Rng1>,
-                                              range_rvalue_reference_t<Rng2>>
-                                &&IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
-                                                   projected<iterator_t<Rng2>, P2>>)
+            auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
+                            P2 proj2 = P2{}) const
+                -> CPP_ret(set_union_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)( //
+                    requires ViewableRange<Rng1> && InputRange<Rng1> &&
+                        ViewableRange<Rng2> && InputRange<Rng2> && Common<
+                            range_value_t<Rng1>, range_value_t<Rng2>> &&
+                            CommonReference<range_reference_t<Rng1>,
+                                            range_reference_t<Rng2>> &&
+                                CommonReference<range_rvalue_reference_t<Rng1>,
+                                                range_rvalue_reference_t<Rng2>> &&
+                                    IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
+                                                     projected<iterator_t<Rng2>, P2>>)
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),
@@ -708,9 +711,9 @@ namespace ranges
                         break;
                 }
             }
-            CPP_member auto equal(set_symmetric_difference_cursor const &that) const
+            CPP_member auto equal(set_symmetric_difference_cursor const & that) const
                 -> CPP_ret(bool)( //
-                    requires ForwardRange<R1> &&ForwardRange<R2>)
+                    requires ForwardRange<R1> && ForwardRange<R2>)
             {
                 // does not support comparing iterators from different ranges:
                 return (it1_ == that.it1_) && (it2_ == that.it2_);
@@ -755,18 +758,19 @@ namespace ranges
         public:
             template<typename Rng1, typename Rng2, typename C = less,
                      typename P1 = identity, typename P2 = identity>
-            auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
+            auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
                             P2 proj2 = P2{}) const
                 -> CPP_ret(set_symmetric_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1,
                                                          P2>)( //
-                    requires ViewableRange<Rng1> &&InputRange<Rng1> &&ViewableRange<
-                        Rng2> &&InputRange<Rng2> &&Common<range_value_t<Rng1>,
-                                                          range_value_t<Rng2>> &&
-                        CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>
-                            &&CommonReference<range_rvalue_reference_t<Rng1>,
-                                              range_rvalue_reference_t<Rng2>>
-                                &&IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
-                                                   projected<iterator_t<Rng2>, P2>>)
+                    requires ViewableRange<Rng1> && InputRange<Rng1> &&
+                        ViewableRange<Rng2> && InputRange<Rng2> && Common<
+                            range_value_t<Rng1>, range_value_t<Rng2>> &&
+                            CommonReference<range_reference_t<Rng1>,
+                                            range_reference_t<Rng2>> &&
+                                CommonReference<range_rvalue_reference_t<Rng1>,
+                                                range_rvalue_reference_t<Rng2>> &&
+                                    IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
+                                                     projected<iterator_t<Rng2>, P2>>)
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),

@@ -16,6 +16,8 @@
 #ifndef RANGES_V3_ALGORITHM_IS_SORTED_UNTIL_HPP
 #define RANGES_V3_ALGORITHM_IS_SORTED_UNTIL_HPP
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
@@ -24,7 +26,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -48,8 +49,8 @@ namespace ranges
         template<typename I, typename S, typename R = less, typename P = identity>
         auto operator()(I begin, S end, R pred = R{}, P proj = P{}) const
             -> CPP_ret(I)( //
-                requires ForwardIterator<I> &&Sentinel<S, I>
-                    &&IndirectStrictWeakOrder<R, projected<I, P>>)
+                requires ForwardIterator<I> && Sentinel<S, I> &&
+                    IndirectStrictWeakOrder<R, projected<I, P>>)
         {
             auto i = begin;
             if(begin != end)
@@ -65,10 +66,10 @@ namespace ranges
         }
 
         template<typename Rng, typename R = less, typename P = identity>
-        auto operator()(Rng &&rng, R pred = R{}, P proj = P{}) const
+        auto operator()(Rng && rng, R pred = R{}, P proj = P{}) const
             -> CPP_ret(safe_iterator_t<Rng>)( //
-                requires ForwardRange<Rng>
-                    &&IndirectStrictWeakOrder<R, projected<iterator_t<Rng>, P>>)
+                requires ForwardRange<Rng> &&
+                    IndirectStrictWeakOrder<R, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

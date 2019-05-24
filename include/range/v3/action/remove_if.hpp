@@ -16,12 +16,13 @@
 
 #include <utility>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/algorithm/remove_if.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -48,10 +49,11 @@ namespace ranges
 
         public:
             template<typename Rng, typename C, typename P = identity>
-            auto operator()(Rng &&rng, C pred, P proj = P{}) const -> CPP_ret(Rng)( //
-                requires ForwardRange<Rng> &&ErasableRange<
-                    Rng &, iterator_t<Rng>, iterator_t<Rng>> &&Permutable<iterator_t<Rng>>
-                    &&IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+            auto operator()(Rng && rng, C pred, P proj = P{}) const -> CPP_ret(Rng)( //
+                requires ForwardRange<Rng> &&
+                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>> &&
+                        Permutable<iterator_t<Rng>> &&
+                            IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
             {
                 auto it = ranges::remove_if(rng, std::move(pred), std::move(proj));
                 ranges::erase(rng, it, ranges::end(rng));

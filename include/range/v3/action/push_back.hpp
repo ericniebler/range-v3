@@ -18,10 +18,11 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/insert.hpp>
 #include <range/v3/detail/with_braced_init_args.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -39,7 +40,7 @@ namespace ranges
                            std::declval<Rng>())));
 
         template<typename Cont, typename T>
-        auto push_back(Cont &&cont, T &&t) -> CPP_ret(push_back_t<Cont, T>)( //
+        auto push_back(Cont && cont, T && t) -> CPP_ret(push_back_t<Cont, T>)( //
             requires LvalueContainerLike<Cont> &&
             (!Range<T>)&&Constructible<range_value_t<Cont>, T>)
         {
@@ -47,8 +48,8 @@ namespace ranges
         }
 
         template<typename Cont, typename Rng>
-        auto push_back(Cont &&cont, Rng &&rng) -> CPP_ret(insert_t<Cont, Rng>)( //
-            requires LvalueContainerLike<Cont> &&Range<Rng>)
+        auto push_back(Cont && cont, Rng && rng) -> CPP_ret(insert_t<Cont, Rng>)( //
+            requires LvalueContainerLike<Cont> && Range<Rng>)
         {
             ranges::insert(cont, end(cont), static_cast<Rng &&>(rng));
         }
@@ -72,14 +73,14 @@ namespace ranges
         private:
             friend action::action_access;
             template<typename T>
-            static auto bind(push_back_fn push_back, T &&val)
+            static auto bind(push_back_fn push_back, T && val)
             {
                 return std::bind(push_back, std::placeholders::_1, bind_forward<T>(val));
             }
 
         public:
             template<typename Rng, typename T>
-            auto operator()(Rng &&rng, T &&t) const -> CPP_ret(Rng)( //
+            auto operator()(Rng && rng, T && t) const -> CPP_ret(Rng)( //
                 requires PushBackActionConcept<Rng, T>)
             {
                 push_back(rng, static_cast<T &&>(t));

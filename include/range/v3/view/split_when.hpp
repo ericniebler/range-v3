@@ -19,6 +19,8 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
@@ -26,7 +28,6 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/facade.hpp>
@@ -106,7 +107,7 @@ namespace ranges
             {
                 return cur_ == last_;
             }
-            bool equal(cursor const &that) const
+            bool equal(cursor const & that) const
             {
                 return cur_ == that.cur_;
             }
@@ -134,9 +135,9 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
-            requires Const &&Range<meta::const_if_c<Const, Rng>>
-                &&Invocable<Fun const &, iterator_t<meta::const_if_c<Const, Rng>>,
-                            sentinel_t<meta::const_if_c<Const, Rng>>>)
+            requires Const && Range<meta::const_if_c<Const, Rng>> &&
+                Invocable<Fun const &, iterator_t<meta::const_if_c<Const, Rng>>,
+                          sentinel_t<meta::const_if_c<Const, Rng>>>)
         {
             return {fun_, ranges::begin(rng_), ranges::end(rng_)};
         }
@@ -156,7 +157,7 @@ namespace ranges
         private:
             friend view_access;
             template<typename T>
-            static auto bind(split_when_fn split_when, T &&t)
+            static auto bind(split_when_fn split_when, T && t)
             {
                 return make_pipeable(
                     std::bind(split_when, std::placeholders::_1, bind_forward<T>(t)));
@@ -177,22 +178,22 @@ namespace ranges
 
         public:
             template<typename Rng, typename Fun>
-            auto operator()(Rng &&rng, Fun fun) const -> CPP_ret(
+            auto operator()(Rng && rng, Fun fun) const -> CPP_ret(
                 split_when_view<all_t<Rng>, Fun>)( //
-                requires ViewableRange<Rng> &&ForwardRange<Rng>
-                    &&Invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>>
-                        &&Invocable<Fun &, iterator_t<Rng>, iterator_t<Rng>>
-                            &&CopyConstructible<Fun> &&ConvertibleTo<
+                requires ViewableRange<Rng> && ForwardRange<Rng> &&
+                    Invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> &&
+                        Invocable<Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
+                            CopyConstructible<Fun> && ConvertibleTo<
                                 invoke_result_t<Fun &, iterator_t<Rng>, sentinel_t<Rng>>,
                                 std::pair<bool, iterator_t<Rng>>>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
             template<typename Rng, typename Fun>
-            auto operator()(Rng &&rng, Fun fun) const
+            auto operator()(Rng && rng, Fun fun) const
                 -> CPP_ret(split_when_view<all_t<Rng>, predicate_pred<Fun>>)( //
-                    requires ViewableRange<Rng> &&ForwardRange<Rng> &&Predicate<
-                        Fun const &, range_reference_t<Rng>> &&CopyConstructible<Fun>)
+                    requires ViewableRange<Rng> && ForwardRange<Rng> && Predicate<
+                        Fun const &, range_reference_t<Rng>> && CopyConstructible<Fun>)
             {
                 return {all(static_cast<Rng &&>(rng)),
                         predicate_pred<Fun>{std::move(fun)}};

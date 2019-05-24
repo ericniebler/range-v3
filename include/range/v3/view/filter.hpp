@@ -14,9 +14,10 @@
 #ifndef RANGES_V3_VIEW_FILTER_HPP
 #define RANGES_V3_VIEW_FILTER_HPP
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/not_fn.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/remove_if.hpp>
 
@@ -35,8 +36,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Rng, typename Pred)( //
-        requires InputRange<Rng> &&IndirectUnaryPredicate<Pred, iterator_t<Rng>>
-            &&View<Rng> &&std::is_object<Pred>::value) //
+        requires InputRange<Rng> && IndirectUnaryPredicate<Pred, iterator_t<Rng>> &&
+            View<Rng> && std::is_object<Pred>::value) //
         filter_view(Rng &&, Pred)
             ->filter_view<view::all_t<Rng>, Pred>;
 #endif
@@ -61,10 +62,10 @@ namespace ranges
 
         public:
             template<typename Rng, typename Pred>
-            constexpr auto operator()(Rng &&rng, Pred pred) const
+            constexpr auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(filter_view<all_t<Rng>, Pred>)( //
-                    requires ViewableRange<Rng> &&InputRange<Rng>
-                        &&IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
             {
                 return filter_view<all_t<Rng>, Pred>{all(static_cast<Rng &&>(rng)),
                                                      std::move(pred)};
@@ -92,10 +93,10 @@ namespace ranges
             using cpp20_filter_fn::operator();
 
             template<typename Rng, typename Pred, typename Proj>
-            constexpr auto operator()(Rng &&rng, Pred pred, Proj proj) const
+            constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
                 -> CPP_ret(filter_view<all_t<Rng>, composed<Pred, Proj>>)( //
-                    requires ViewableRange<Rng> &&InputRange<Rng>
-                        &&IndirectUnaryPredicate<Pred, projected<iterator_t<Rng>, Proj>>)
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        IndirectUnaryPredicate<Pred, projected<iterator_t<Rng>, Proj>>)
             {
                 return filter_view<all_t<Rng>, composed<Pred, Proj>>{
                     all(static_cast<Rng &&>(rng)),
@@ -116,8 +117,8 @@ namespace ranges
                                    filter)
         }
         CPP_template(typename V, typename Pred)( //
-            requires InputRange<V> &&IndirectUnaryPredicate<Pred, iterator_t<V>> &&View<V>
-                &&std::is_object<Pred>::value) //
+            requires InputRange<V> && IndirectUnaryPredicate<Pred, iterator_t<V>> &&
+                View<V> && std::is_object<Pred>::value) //
             using filter_view = ranges::filter_view<V, Pred>;
     }
     /// @}

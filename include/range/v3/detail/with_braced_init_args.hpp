@@ -27,7 +27,7 @@ namespace ranges
         struct with_braced_init_args : ImplFn
         {
         private:
-            constexpr ImplFn const &base() const
+            constexpr ImplFn const & base() const
             {
                 return *this;
             }
@@ -36,7 +36,7 @@ namespace ranges
             using ImplFn::operator();
 
             template<typename V0, typename... Args>
-            constexpr auto operator()(std::initializer_list<V0> &&rng0,
+            constexpr auto operator()(std::initializer_list<V0> && rng0,
                                       Args &&... args) const
                 -> invoke_result_t<ImplFn const &, std::initializer_list<V0>, Args...>
             {
@@ -45,7 +45,7 @@ namespace ranges
             }
             /// \overload
             template<typename Rng0, typename V1, typename... Args>
-            constexpr auto operator()(Rng0 &&rng0, std::initializer_list<V1> &&rng1,
+            constexpr auto operator()(Rng0 && rng0, std::initializer_list<V1> && rng1,
                                       Args &&... args) const
                 -> invoke_result_t<ImplFn const &, Rng0, std::initializer_list<V1>,
                                    Args...>
@@ -57,8 +57,8 @@ namespace ranges
             }
             /// \overload
             template<typename V0, typename V1, typename... Args>
-            constexpr auto operator()(std::initializer_list<V0> &&rng0,
-                                      std::initializer_list<V1> &&rng1,
+            constexpr auto operator()(std::initializer_list<V0> && rng0,
+                                      std::initializer_list<V1> && rng1,
                                       Args &&... args) const
                 -> invoke_result_t<ImplFn const &, std::initializer_list<V0>,
                                    std::initializer_list<V1>, Args...>

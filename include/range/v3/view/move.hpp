@@ -17,11 +17,12 @@
 #include <type_traits>
 #include <utility>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/all.hpp>
@@ -46,11 +47,11 @@ namespace ranges
             {}
             using CRng = meta::const_if_c<Const, Rng>;
             using value_type = range_value_t<Rng>;
-            range_rvalue_reference_t<CRng> read(iterator_t<CRng> const &it) const
+            range_rvalue_reference_t<CRng> read(iterator_t<CRng> const & it) const
             {
                 return ranges::iter_move(it);
             }
-            range_rvalue_reference_t<CRng> iter_move(iterator_t<CRng> const &it) const
+            range_rvalue_reference_t<CRng> iter_move(iterator_t<CRng> const & it) const
             {
                 return ranges::iter_move(it);
             }
@@ -94,8 +95,8 @@ namespace ranges
         struct move_fn
         {
             template<typename Rng>
-            auto operator()(Rng &&rng) const -> CPP_ret(move_view<all_t<Rng>>)( //
-                requires ViewableRange<Rng> &&InputRange<Rng>)
+            auto operator()(Rng && rng) const -> CPP_ret(move_view<all_t<Rng>>)( //
+                requires ViewableRange<Rng> && InputRange<Rng>)
             {
                 return move_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

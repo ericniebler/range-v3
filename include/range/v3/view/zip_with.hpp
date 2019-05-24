@@ -22,13 +22,14 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/indirect.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/common_type.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -45,7 +46,7 @@ namespace ranges
         struct equal_to_
         {
             template<typename T, typename U>
-            bool operator()(T const &t, U const &u) const
+            bool operator()(T const & t, U const & u) const
             {
                 return static_cast<bool>(t == u);
             }
@@ -55,7 +56,7 @@ namespace ranges
         struct dec_
         {
             template<typename T>
-            void operator()(T &t) const
+            void operator()(T & t) const
             {
                 --t;
             }
@@ -65,7 +66,7 @@ namespace ranges
         struct inc_
         {
             template<typename T>
-            void operator()(T &t) const
+            void operator()(T & t) const
             {
                 ++t;
             }
@@ -75,8 +76,8 @@ namespace ranges
         struct _advance_
         {
             template<typename I, typename Diff>
-            auto operator()(I &i, Diff n) const -> CPP_ret(void)( //
-                requires Iterator<I> &&IntegerLike_<Diff>)
+            auto operator()(I & i, Diff n) const -> CPP_ret(void)( //
+                requires Iterator<I> && IntegerLike_<Diff>)
             {
                 advance(i, static_cast<iter_difference_t<I>>(n));
             }
@@ -86,7 +87,7 @@ namespace ranges
         struct distance_to_
         {
             template<typename T>
-            constexpr auto operator()(T const &t, T const &u) const -> decltype(u - t)
+            constexpr auto operator()(T const & t, T const & u) const -> decltype(u - t)
             {
                 return u - t;
             }
@@ -96,7 +97,7 @@ namespace ranges
         struct _min_
         {
             template<typename T, typename U>
-            constexpr auto operator()(T const &t, U const &u) const
+            constexpr auto operator()(T const & t, U const & u) const
                 -> decltype(true ? t : u)
             {
                 return u < t ? u : t;
@@ -107,7 +108,7 @@ namespace ranges
         struct _max_
         {
             template<typename T, typename U>
-            constexpr auto operator()(T const &t, U const &u) const
+            constexpr auto operator()(T const & t, U const & u) const
                 -> decltype(true ? u : t)
             {
                 return u < t ? t : u;
@@ -225,7 +226,7 @@ namespace ranges
             {
                 tuple_for_each(its_, detail::inc);
             }
-            CPP_member auto equal(cursor const &that) const -> CPP_ret(bool)( //
+            CPP_member auto equal(cursor const & that) const -> CPP_ret(bool)( //
                 requires And<Sentinel<iterator_t<meta::const_if_c<Const, Rngs>>,
                                       iterator_t<meta::const_if_c<Const, Rngs>>>...>)
             {
@@ -236,7 +237,7 @@ namespace ranges
                                    false,
                                    [](bool a, bool b) { return a || b; });
             }
-            bool equal(sentinel<Const> const &s) const
+            bool equal(sentinel<Const> const & s) const
             {
                 // By returning true if *any* of the iterators are equal, we allow
                 // zipped ranges to be of different lengths, stopping when the first
@@ -256,7 +257,7 @@ namespace ranges
                 using std::placeholders::_1;
                 tuple_for_each(its_, std::bind(detail::advance_, _1, n));
             }
-            CPP_member auto distance_to(cursor const &that) const -> CPP_ret(
+            CPP_member auto distance_to(cursor const & that) const -> CPP_ret(
                 difference_type)( //
                 requires And<SizedSentinel<iterator_t<meta::const_if_c<Const, Rngs>>,
                                            iterator_t<meta::const_if_c<Const, Rngs>>>...>)
@@ -306,15 +307,15 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
-            requires Const &&And<Range<Rngs const>...>
-                &&view::IterZipWithViewConcept<Fun, meta::if_c<Const, Rngs const>...>)
+            requires Const && And<Range<Rngs const>...> &&
+                view::IterZipWithViewConcept<Fun, meta::if_c<Const, Rngs const>...>)
         {
             return {fun_, tuple_transform(rngs_, begin)};
         }
         template<bool Const = true>
         auto end_cursor() const -> CPP_ret(end_cursor_t<Const>)( //
-            requires Const &&And<Range<Rngs const>...>
-                &&view::IterZipWithViewConcept<Fun, meta::if_c<Const, Rngs const>...>)
+            requires Const && And<Range<Rngs const>...> &&
+                view::IterZipWithViewConcept<Fun, meta::if_c<Const, Rngs const>...>)
         {
             return {fun_, tuple_transform(rngs_, end)};
         }
@@ -337,7 +338,7 @@ namespace ranges
                        ? size_type{(
                              std::size_t)range_cardinality<iter_zip_with_view>::value}
                        : tuple_foldl(tuple_transform(rngs_,
-                                                     [](auto &&r) -> size_type {
+                                                     [](auto && r) -> size_type {
                                                          return ranges::size(r);
                                                      }),
                                      (std::numeric_limits<size_type>::max)(),
@@ -367,8 +368,8 @@ namespace ranges
             template<typename... Rngs, typename Fun>
             auto operator()(Fun fun, Rngs &&... rngs) const
                 -> CPP_ret(iter_zip_with_view<Fun, all_t<Rngs>...>)( //
-                    requires And<ViewableRange<Rngs>...>
-                        &&IterZipWithViewConcept<Fun, Rngs...> &&
+                    requires And<ViewableRange<Rngs>...> &&
+                        IterZipWithViewConcept<Fun, Rngs...> &&
                     (sizeof...(Rngs) != 0))
             {
                 return iter_zip_with_view<Fun, all_t<Rngs>...>{
@@ -393,9 +394,9 @@ namespace ranges
             template<typename... Rngs, typename Fun>
             auto operator()(Fun fun, Rngs &&... rngs) const
                 -> CPP_ret(zip_with_view<Fun, all_t<Rngs>...>)( //
-                    requires And<ViewableRange<Rngs>...> &&And<InputRange<Rngs>...>
-                        &&CopyConstructible<Fun>
-                            &&Invocable<Fun &, range_reference_t<Rngs> &&...> &&
+                    requires And<ViewableRange<Rngs>...> && And<InputRange<Rngs>...> &&
+                        CopyConstructible<Fun> &&
+                            Invocable<Fun &, range_reference_t<Rngs> &&...> &&
                     (sizeof...(Rngs) != 0))
             {
                 return zip_with_view<Fun, all_t<Rngs>...>{
@@ -405,7 +406,7 @@ namespace ranges
             template<typename Fun>
             constexpr auto operator()(Fun) const noexcept
                 -> CPP_ret(empty_view<std::tuple<>>)( //
-                    requires CopyConstructible<Fun> &&Invocable<Fun &>)
+                    requires CopyConstructible<Fun> && Invocable<Fun &>)
             {
                 return {};
             }

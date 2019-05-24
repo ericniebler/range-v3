@@ -16,13 +16,14 @@
 
 #include <functional>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/algorithm/sort.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -47,9 +48,9 @@ namespace ranges
 
         public:
             template<typename Rng, typename C = less, typename P = identity>
-            auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
                 -> CPP_ret(Rng)( //
-                    requires ForwardRange<Rng> &&Sortable<iterator_t<Rng>, C, P>)
+                    requires ForwardRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
             {
                 ranges::sort(rng, std::move(pred), std::move(proj));
                 return static_cast<Rng &&>(rng);

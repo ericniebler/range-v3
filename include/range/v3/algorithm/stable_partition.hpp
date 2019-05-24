@@ -27,6 +27,8 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/partition_copy.hpp>
 #include <range/v3/algorithm/rotate.hpp>
@@ -40,7 +42,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/memory.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
@@ -284,8 +285,8 @@ namespace ranges
     public:
         template<typename I, typename S, typename C, typename P = identity>
         auto operator()(I begin, S end, C pred, P proj = P{}) const -> CPP_ret(I)( //
-            requires BidirectionalIterator<I> &&Sentinel<S, I>
-                &&IndirectUnaryPredicate<C, projected<I, P>> &&Permutable<I>)
+            requires BidirectionalIterator<I> && Sentinel<S, I> &&
+                IndirectUnaryPredicate<C, projected<I, P>> && Permutable<I>)
         {
             return stable_partition_fn::impl(std::move(begin),
                                              std::move(end),
@@ -296,10 +297,10 @@ namespace ranges
 
         // BUGBUG Can this be optimized if Rng has O1 size?
         template<typename Rng, typename C, typename P = identity>
-        auto operator()(Rng &&rng, C pred, P proj = P{}) const
+        auto operator()(Rng && rng, C pred, P proj = P{}) const
             -> CPP_ret(safe_iterator_t<Rng>)( //
-                requires BidirectionalRange<Rng> &&IndirectUnaryPredicate<
-                    C, projected<iterator_t<Rng>, P>> &&Permutable<iterator_t<Rng>>)
+                requires BidirectionalRange<Rng> && IndirectUnaryPredicate<
+                    C, projected<iterator_t<Rng>, P>> && Permutable<iterator_t<Rng>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

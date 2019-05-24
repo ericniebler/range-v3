@@ -23,6 +23,8 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
@@ -33,7 +35,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/subrange.hpp>
 
@@ -47,7 +48,7 @@ namespace ranges
         template<typename I1, typename S1, typename D1, typename I2, typename S2,
                  typename D2, typename C, typename P1, typename P2>
         static subrange<I1> sized_impl(I1 const begin1_, S1 end1, D1 const d1_, I2 begin2,
-                                       S2 end2, D2 d2, C &pred, P1 &proj1, P2 &proj2)
+                                       S2 end2, D2 d2, C & pred, P1 & proj1, P2 & proj2)
         {
             D1 d1 = d1_;
             auto begin1 = uncounted(begin1_);
@@ -98,8 +99,8 @@ namespace ranges
 
         template<typename I1, typename S1, typename I2, typename S2, typename C,
                  typename P1, typename P2>
-        static subrange<I1> impl(I1 begin1, S1 end1, I2 begin2, S2 end2, C &pred,
-                                 P1 &proj1, P2 &proj2)
+        static subrange<I1> impl(I1 begin1, S1 end1, I2 begin2, S2 end2, C & pred,
+                                 P1 & proj1, P2 & proj2)
         {
             while(true)
             {
@@ -143,8 +144,8 @@ namespace ranges
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{},
                         P1 proj1 = P1{}, P2 proj2 = P2{}) const
             -> CPP_ret(subrange<I1>)( //
-                requires ForwardIterator<I1> &&Sentinel<S1, I1> &&ForwardIterator<I2>
-                    &&Sentinel<S2, I2> &&IndirectlyComparable<I1, I2, C, P1, P2>)
+                requires ForwardIterator<I1> && Sentinel<S1, I1> && ForwardIterator<I2> &&
+                    Sentinel<S2, I2> && IndirectlyComparable<I1, I2, C, P1, P2>)
         {
             if(begin2 == end2)
                 return {begin1, begin1};
@@ -170,10 +171,10 @@ namespace ranges
 
         template<typename Rng1, typename Rng2, typename C = equal_to,
                  typename P1 = identity, typename P2 = identity>
-        auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
+        auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
                         P2 proj2 = P2{}) const -> CPP_ret(safe_subrange_t<Rng1>)( //
-            requires ForwardRange<Rng1> &&ForwardRange<Rng2>
-                &&IndirectlyComparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
+            requires ForwardRange<Rng1> && ForwardRange<Rng2> &&
+                IndirectlyComparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
         {
             if(empty(rng2))
                 return subrange<iterator_t<Rng1>>{begin(rng1), begin(rng1)};

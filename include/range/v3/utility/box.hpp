@@ -24,6 +24,7 @@
 #include <concepts/concepts.hpp>
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/utility/get.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
@@ -45,18 +46,18 @@ namespace ranges
             requires std::is_default_constructible<T>::value)
           : value{}
         {}
-        constexpr explicit mutable_(T const &t)
+        constexpr explicit mutable_(T const & t)
           : value(t)
         {}
-        constexpr explicit mutable_(T &&t)
+        constexpr explicit mutable_(T && t)
           : value(detail::move(t))
         {}
-        mutable_ const &operator=(T const &t) const
+        mutable_ const & operator=(T const & t) const
         {
             value = t;
             return *this;
         }
-        mutable_ const &operator=(T &&t) const
+        mutable_ const & operator=(T && t) const
         {
             value = detail::move(t);
             return *this;
@@ -72,11 +73,11 @@ namespace ranges
     {
         constant() = default;
         constexpr explicit constant(T const &) {}
-        constant &operator=(T const &)
+        constant & operator=(T const &)
         {
             return *this;
         }
-        constant const &operator=(T const &) const
+        constant const & operator=(T const &) const
         {
             return *this;
         }
@@ -165,33 +166,33 @@ namespace ranges
           : value{}
         {}
         template<typename E>
-        constexpr CPP_ctor(box)(E &&e)(                                //
+        constexpr CPP_ctor(box)(E && e)(                               //
             noexcept(std::is_nothrow_constructible<Element, E>::value) //
             requires(!defer::Same<box, detail::decay_t<E>>) &&
             defer::Constructible<Element, E> && defer::ConvertibleTo<E, Element>)
           : value(static_cast<E &&>(e))
         {}
         template<typename E>
-        constexpr explicit CPP_ctor(box)(E &&e)(                       //
+        constexpr explicit CPP_ctor(box)(E && e)(                      //
             noexcept(std::is_nothrow_constructible<Element, E>::value) //
             requires(!defer::Same<box, detail::decay_t<E>>) &&
             defer::Constructible<Element, E> && (!defer::ConvertibleTo<E, Element>))
           : value(static_cast<E &&>(e))
         {}
 
-        constexpr Element &get() & noexcept
+        constexpr Element & get() & noexcept
         {
             return value;
         }
-        constexpr Element const &get() const &noexcept
+        constexpr Element const & get() const & noexcept
         {
             return value;
         }
-        constexpr Element &&get() && noexcept
+        constexpr Element && get() && noexcept
         {
             return detail::move(value);
         }
-        constexpr Element const &&get() const &&noexcept
+        constexpr Element const && get() const && noexcept
         {
             return detail::move(value);
         }
@@ -207,33 +208,33 @@ namespace ranges
           : Element{}
         {}
         template<typename E>
-        constexpr CPP_ctor(box)(E &&e)(                                //
+        constexpr CPP_ctor(box)(E && e)(                               //
             noexcept(std::is_nothrow_constructible<Element, E>::value) //
             requires(!defer::Same<box, detail::decay_t<E>>) &&
             defer::Constructible<Element, E> && defer::ConvertibleTo<E, Element>)
           : Element(static_cast<E &&>(e))
         {}
         template<typename E>
-        constexpr explicit CPP_ctor(box)(E &&e)(                       //
+        constexpr explicit CPP_ctor(box)(E && e)(                      //
             noexcept(std::is_nothrow_constructible<Element, E>::value) //
             requires(!defer::Same<box, detail::decay_t<E>>) &&
             defer::Constructible<Element, E> && (!defer::ConvertibleTo<E, Element>))
           : Element(static_cast<E &&>(e))
         {}
 
-        constexpr Element &get() & noexcept
+        constexpr Element & get() & noexcept
         {
             return *this;
         }
-        constexpr Element const &get() const &noexcept
+        constexpr Element const & get() const & noexcept
         {
             return *this;
         }
-        constexpr Element &&get() && noexcept
+        constexpr Element && get() && noexcept
         {
             return detail::move(*this);
         }
-        constexpr Element const &&get() const &&noexcept
+        constexpr Element const && get() const && noexcept
         {
             return detail::move(*this);
         }
@@ -259,19 +260,19 @@ namespace ranges
             defer::Constructible<Element, E> && (!defer::ConvertibleTo<E, Element>))
         {}
 
-        constexpr Element &get() & noexcept
+        constexpr Element & get() & noexcept
         {
             return value;
         }
-        constexpr Element const &get() const &noexcept
+        constexpr Element const & get() const & noexcept
         {
             return value;
         }
-        constexpr Element &&get() && noexcept
+        constexpr Element && get() && noexcept
         {
             return detail::move(value);
         }
-        constexpr Element const &&get() const &&noexcept
+        constexpr Element const && get() const && noexcept
         {
             return detail::move(value);
         }
@@ -286,33 +287,34 @@ namespace ranges
         /// \endcond
         // Get by tag type
         template<typename Tag, typename Element, detail::box_compress BC>
-        constexpr Element &get(box<Element, Tag, BC> &b) noexcept
+        constexpr Element & get(box<Element, Tag, BC> & b) noexcept
         {
             return b.get();
         }
         template<typename Tag, typename Element, detail::box_compress BC>
-        constexpr Element const &get(box<Element, Tag, BC> const &b) noexcept
+        constexpr Element const & get(box<Element, Tag, BC> const & b) noexcept
         {
             return b.get();
         }
         template<typename Tag, typename Element, detail::box_compress BC>
-        constexpr Element &&get(box<Element, Tag, BC> &&b) noexcept
+        constexpr Element && get(box<Element, Tag, BC> && b) noexcept
         {
             return detail::move(b).get();
         }
         // Get by index
         template<std::size_t I, typename Element, detail::box_compress BC>
-        constexpr Element &get(box<Element, meta::size_t<I>, BC> &b) noexcept
+        constexpr Element & get(box<Element, meta::size_t<I>, BC> & b) noexcept
         {
             return b.get();
         }
         template<std::size_t I, typename Element, detail::box_compress BC>
-        constexpr Element const &get(box<Element, meta::size_t<I>, BC> const &b) noexcept
+        constexpr Element const & get(
+            box<Element, meta::size_t<I>, BC> const & b) noexcept
         {
             return b.get();
         }
         template<std::size_t I, typename Element, detail::box_compress BC>
-        constexpr Element &&get(box<Element, meta::size_t<I>, BC> &&b) noexcept
+        constexpr Element && get(box<Element, meta::size_t<I>, BC> && b) noexcept
         {
             return detail::move(b).get();
         }

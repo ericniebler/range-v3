@@ -16,6 +16,7 @@
 #include <concepts/concepts.hpp>
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -102,7 +103,7 @@ namespace ranges
     {
         // Evaluate the pipe with an argument
         template<typename Arg, typename Pipe>
-        friend auto operator|(Arg &&arg, Pipe pipe)
+        friend auto operator|(Arg && arg, Pipe pipe)
             -> CPP_ret(decltype(pipeable_access::impl<Pipe>::pipe(
                 std::declval<Arg>(), std::declval<Pipe &>())))( //
                 requires(!is_pipeable_v<Arg>) && is_pipeable_v<Pipe>)
@@ -114,7 +115,7 @@ namespace ranges
         template<typename Pipe0, typename Pipe1>
         friend auto operator|(Pipe0 pipe0, Pipe1 pipe1) -> CPP_ret(decltype(
             make_pipeable(std::declval<detail::composed_pipe<Pipe0, Pipe1>>())))( //
-            requires is_pipeable_v<Pipe0> &&is_pipeable_v<Pipe1>)
+            requires is_pipeable_v<Pipe0> && is_pipeable_v<Pipe1>)
         {
             return make_pipeable(detail::composed_pipe<Pipe0, Pipe1>{pipe0, pipe1});
         }

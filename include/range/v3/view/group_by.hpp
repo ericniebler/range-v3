@@ -19,13 +19,14 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
@@ -93,7 +94,7 @@ namespace ranges
             {
                 return cur_ == last_;
             }
-            bool equal(cursor const &that) const
+            bool equal(cursor const & that) const
             {
                 return cur_ == that.cur_;
             }
@@ -120,7 +121,7 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
-            requires Const &&Range<meta::const_if_c<Const, Rng>> &&Invocable<
+            requires Const && Range<meta::const_if_c<Const, Rng>> && Invocable<
                 Fun const &, range_common_reference_t<meta::const_if_c<Const, Rng>>,
                 range_common_reference_t<meta::const_if_c<Const, Rng>>>)
         {
@@ -150,10 +151,10 @@ namespace ranges
 
         public:
             template<typename Rng, typename Fun>
-            auto operator()(Rng &&rng, Fun fun) const
+            auto operator()(Rng && rng, Fun fun) const
                 -> CPP_ret(group_by_view<all_t<Rng>, Fun>)( //
-                    requires ViewableRange<Rng> &&ForwardRange<Rng>
-                        &&IndirectRelation<Fun, iterator_t<Rng>>)
+                    requires ViewableRange<Rng> && ForwardRange<Rng> &&
+                        IndirectRelation<Fun, iterator_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }

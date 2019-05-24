@@ -16,8 +16,9 @@
 
 #include <istream>
 
-#include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
@@ -31,25 +32,25 @@ namespace ranges
     {
     private:
         friend range_access;
-        std::istream *sin_;
+        std::istream * sin_;
         semiregular_t<Val> obj_;
         struct cursor
         {
         private:
             friend range_access;
             using single_pass = std::true_type;
-            istream_view *rng_ = nullptr;
+            istream_view * rng_ = nullptr;
 
         public:
             cursor() = default;
-            explicit cursor(istream_view &rng)
+            explicit cursor(istream_view & rng)
               : rng_(&rng)
             {}
             void next()
             {
                 rng_->next();
             }
-            Val &read() const noexcept
+            Val & read() const noexcept
             {
                 return rng_->cached();
             }
@@ -74,13 +75,13 @@ namespace ranges
 
     public:
         istream_view() = default;
-        explicit istream_view(std::istream &sin)
+        explicit istream_view(std::istream & sin)
           : sin_(&sin)
           , obj_{}
         {
             next(); // prime the pump
         }
-        Val &cached() noexcept
+        Val & cached() noexcept
         {
             return obj_;
         }
@@ -97,8 +98,8 @@ namespace ranges
     {
         /// \endcond
         template<typename Val>
-        inline auto istream(std::istream &sin) -> CPP_ret(istream_view<Val>)( //
-            requires CopyConstructible<Val> &&DefaultConstructible<Val>)
+        inline auto istream(std::istream & sin) -> CPP_ret(istream_view<Val>)( //
+            requires CopyConstructible<Val> && DefaultConstructible<Val>)
         {
             return istream_view<Val>{sin};
         }

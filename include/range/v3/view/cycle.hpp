@@ -21,13 +21,14 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/unreachable_sentinel.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/get.hpp>
 #include <range/v3/utility/optional.hpp>
@@ -65,7 +66,7 @@ namespace ranges
             using CRng = constify_if<Rng>;
             using iterator = iterator_t<CRng>;
 
-            cycled_view_t *rng_{};
+            cycled_view_t * rng_{};
             iterator it_{};
             std::intmax_t n_ = 0;
 
@@ -76,7 +77,7 @@ namespace ranges
             template<bool CanBeEmpty = false>
             iterator get_end_(std::false_type, meta::bool_<CanBeEmpty> = {}) const
             {
-                auto &end_ = static_cast<cache_t &>(*rng_);
+                auto & end_ = static_cast<cache_t &>(*rng_);
                 RANGES_EXPECT(CanBeEmpty || end_);
                 if(CanBeEmpty && !end_)
                     end_ = ranges::next(it_, ranges::end(rng_->rng_));
@@ -85,14 +86,14 @@ namespace ranges
             void set_end_(std::true_type) const {}
             void set_end_(std::false_type) const
             {
-                auto &end_ = static_cast<cache_t &>(*rng_);
+                auto & end_ = static_cast<cache_t &>(*rng_);
                 if(!end_)
                     end_ = it_;
             }
 
         public:
             cursor() = default;
-            cursor(cycled_view_t &rng)
+            cursor(cycled_view_t & rng)
               : rng_(&rng)
               , it_(ranges::begin(rng.rng_))
             {}
@@ -108,7 +109,7 @@ namespace ranges
                 return *it_
             )
                 // clang-format on
-                CPP_member auto equal(cursor const &pos) const -> CPP_ret(bool)( //
+                CPP_member auto equal(cursor const & pos) const -> CPP_ret(bool)( //
                     requires EqualityComparable<iterator>)
             {
                 RANGES_EXPECT(rng_ == pos.rng_);
@@ -138,7 +139,7 @@ namespace ranges
             }
             template<typename Diff>
             auto advance(Diff n) -> CPP_ret(void)( //
-                requires RandomAccessRange<CRng> &&detail::IntegerLike_<Diff>)
+                requires RandomAccessRange<CRng> && detail::IntegerLike_<Diff>)
             {
                 auto const begin = ranges::begin(rng_->rng_);
                 auto const end = this->get_end_(meta::bool_<(bool)CommonRange<CRng>>{},
@@ -151,7 +152,7 @@ namespace ranges
                 using D = range_difference_t<Rng>;
                 it_ = begin + static_cast<D>(off < 0 ? off + dist : off);
             }
-            CPP_member auto CPP_fun(distance_to)(cursor const &that)(
+            CPP_member auto CPP_fun(distance_to)(cursor const & that)(
                 const requires SizedSentinel<iterator, iterator>)
             {
                 RANGES_EXPECT(that.rng_ == rng_);
@@ -203,8 +204,8 @@ namespace ranges
         {
             /// \pre <tt>!empty(rng)</tt>
             template<typename Rng>
-            auto operator()(Rng &&rng) const -> CPP_ret(cycled_view<all_t<Rng>>)( //
-                requires ViewableRange<Rng> &&ForwardRange<Rng>)
+            auto operator()(Rng && rng) const -> CPP_ret(cycled_view<all_t<Rng>>)( //
+                requires ViewableRange<Rng> && ForwardRange<Rng>)
             {
                 return cycled_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

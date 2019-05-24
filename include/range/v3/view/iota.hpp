@@ -23,9 +23,10 @@
 
 #include <concepts/concepts.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/iterator/diffmax_t.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/view/facade.hpp>
@@ -113,7 +114,7 @@ namespace ranges
         // clang-format on
 
         template<typename I>
-        auto iota_advance_(I &i, iota_difference_t<I> n) -> CPP_ret(void)( //
+        auto iota_advance_(I & i, iota_difference_t<I> n) -> CPP_ret(void)( //
             requires(!UnsignedIntegral<I>))
         {
             // TODO: bounds-check this
@@ -121,7 +122,7 @@ namespace ranges
         }
 
         template<typename Int>
-        auto iota_advance_(Int &i, iota_difference_t<Int> n) -> CPP_ret(void)( //
+        auto iota_advance_(Int & i, iota_difference_t<Int> n) -> CPP_ret(void)( //
             requires UnsignedIntegral<Int>)
         {
             // TODO: bounds-check this
@@ -132,7 +133,7 @@ namespace ranges
         }
 
         template<typename I>
-        auto iota_distance_(I const &i, I const &s) -> CPP_ret(iota_difference_t<I>)( //
+        auto iota_distance_(I const & i, I const & s) -> CPP_ret(iota_difference_t<I>)( //
             requires Advanceable_<I> && (!Integral<I>))
         {
             return static_cast<iota_difference_t<I>>(s - i);
@@ -234,7 +235,7 @@ namespace ranges
             {
                 return done_;
             }
-            CPP_member auto equal(cursor const &that) const -> CPP_ret(bool)( //
+            CPP_member auto equal(cursor const & that) const -> CPP_ret(bool)( //
                 requires EqualityComparable<From>)
             {
                 return that.from_ == from_ && that.done_ == done_;
@@ -260,7 +261,7 @@ namespace ranges
                 else if(n < 0)
                     detail::iota_advance_(from_, n + std::exchange(done_, false));
             }
-            CPP_member auto distance_to(cursor const &that) const
+            CPP_member auto distance_to(cursor const & that) const
                 -> CPP_ret(difference_type)( //
                     requires detail::Advanceable_<From>)
             {
@@ -317,7 +318,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename From, typename To)( //
-        requires WeaklyIncrementable<From> &&Semiregular<To> &&
+        requires WeaklyIncrementable<From> && Semiregular<To> &&
         (!Integral<From> || !Integral<To> ||
          std::is_signed<From>::value == std::is_signed<To>::value)) //
         closed_iota_view(From, To)
@@ -369,11 +370,11 @@ namespace ranges
             {
                 ++from_;
             }
-            bool equal(sentinel const &that) const
+            bool equal(sentinel const & that) const
             {
                 return from_ == that.to_;
             }
-            CPP_member auto equal(cursor const &that) const -> CPP_ret(bool)( //
+            CPP_member auto equal(cursor const & that) const -> CPP_ret(bool)( //
                 requires EqualityComparable<From>)
             {
                 return that.from_ == from_;
@@ -391,14 +392,14 @@ namespace ranges
             // Not to spec: TODO the relational operators will effectively be constrained
             // with Advanceable, but they should be constrained with StrictTotallyOrdered.
             // Reimplement iota_view without view_facade or basic_iterator.
-            CPP_member auto distance_to(cursor const &that) const
+            CPP_member auto distance_to(cursor const & that) const
                 -> CPP_ret(difference_type)( //
                     requires detail::Advanceable_<From>)
             {
                 return detail::iota_distance_(from_, that.from_);
             }
             // Extension: see https://github.com/ericniebler/stl2/issues/613
-            CPP_member auto distance_to(sentinel const &that) const
+            CPP_member auto distance_to(sentinel const & that) const
                 -> CPP_ret(difference_type)( //
                     requires SizedSentinel<To, From>)
             {
@@ -447,7 +448,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename From, typename To)( //
-        requires WeaklyIncrementable<From> &&Semiregular<To> &&
+        requires WeaklyIncrementable<From> && Semiregular<To> &&
         (!Integral<From> || !Integral<To> ||
          std::is_signed<From>::value == std::is_signed<To>::value)) //
         iota_view(From, To)
@@ -466,8 +467,8 @@ namespace ranges
             }
             template<typename From, typename To>
             auto operator()(From from, To to) const -> CPP_ret(iota_view<From, To>)( //
-                requires WeaklyIncrementable<From> &&Semiregular<To>
-                    &&detail::WeaklyEqualityComparableWith_<From, To> &&
+                requires WeaklyIncrementable<From> && Semiregular<To> &&
+                    detail::WeaklyEqualityComparableWith_<From, To> &&
                 (!Integral<From> || !Integral<To> ||
                  std::is_signed<From>::value == std::is_signed<To>::value))
             {
@@ -480,8 +481,8 @@ namespace ranges
             template<typename From, typename To>
             auto operator()(From from, To to) const
                 -> CPP_ret(closed_iota_view<From, To>)( //
-                    requires WeaklyIncrementable<From> &&Semiregular<To>
-                        &&detail::WeaklyEqualityComparableWith_<From, To> &&
+                    requires WeaklyIncrementable<From> && Semiregular<To> &&
+                        detail::WeaklyEqualityComparableWith_<From, To> &&
                     (!Integral<From> || !Integral<To> ||
                      std::is_signed<From>::value == std::is_signed<To>::value))
             {

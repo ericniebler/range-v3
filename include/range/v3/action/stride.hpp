@@ -16,12 +16,13 @@
 
 #include <functional>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -43,11 +44,11 @@ namespace ranges
 
         public:
             template<typename Rng, typename D = range_difference_t<Rng>>
-            auto operator()(Rng &&rng, range_difference_t<Rng> const step) const
+            auto operator()(Rng && rng, range_difference_t<Rng> const step) const
                 -> CPP_ret(Rng)( //
-                    requires ForwardRange<Rng>
-                        &&ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>>
-                            &&Permutable<iterator_t<Rng>>)
+                    requires ForwardRange<Rng> &&
+                        ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
+                            Permutable<iterator_t<Rng>>)
             {
                 using I = iterator_t<Rng>;
                 using S = sentinel_t<Rng>;

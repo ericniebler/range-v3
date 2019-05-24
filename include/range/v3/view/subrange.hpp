@@ -45,7 +45,7 @@ namespace ranges
     namespace detail
     {
         template<std::size_t N, typename T>
-        using tuple_element_fun_t = void (*)(meta::_t<std::tuple_element<N, T>> const&);
+        using tuple_element_fun_t = void (*)(meta::_t<std::tuple_element<N, T>> const &);
 
         // clang-format off
         CPP_def
@@ -171,38 +171,38 @@ namespace ranges
 
         // A temporary subrange can be safely passed to ranges::begin and ranges::end.
         template<typename I, typename S, subrange_kind K>
-        constexpr I begin(subrange<I, S, K>&& r) noexcept(
+        constexpr I begin(subrange<I, S, K> && r) noexcept(
             std::is_nothrow_copy_constructible<I>::value)
         {
             return r.begin();
         }
         template<typename I, typename S, subrange_kind K>
-        constexpr I begin(subrange<I, S, K> const&& r) noexcept(
+        constexpr I begin(subrange<I, S, K> const && r) noexcept(
             std::is_nothrow_copy_constructible<I>::value)
         {
             return r.begin();
         }
         template<typename I, typename S, subrange_kind K>
-        constexpr S end(subrange<I, S, K>&& r) noexcept(
+        constexpr S end(subrange<I, S, K> && r) noexcept(
             std::is_nothrow_copy_constructible<S>::value)
         {
             return r.end();
         }
         template<typename I, typename S, subrange_kind K>
-        constexpr S end(subrange<I, S, K> const&& r) noexcept(
+        constexpr S end(subrange<I, S, K> const && r) noexcept(
             std::is_nothrow_copy_constructible<S>::value)
         {
             return r.end();
         }
 
         template<std::size_t N, typename I, typename S, subrange_kind K>
-        constexpr auto get(subrange<I, S, K> const& r) -> CPP_ret(I)( //
+        constexpr auto get(subrange<I, S, K> const & r) -> CPP_ret(I)( //
             requires(N == 0))
         {
             return r.begin();
         }
         template<std::size_t N, typename I, typename S, subrange_kind K>
-        constexpr auto get(subrange<I, S, K> const& r) -> CPP_ret(S)( //
+        constexpr auto get(subrange<I, S, K> const & r) -> CPP_ret(S)( //
             requires(N == 1))
         {
             return r.end();
@@ -230,17 +230,17 @@ namespace ranges
         subrange() = default;
 
         template<typename I2>
-        constexpr CPP_ctor(subrange)(I2&& i, S s)( //
+        constexpr CPP_ctor(subrange)(I2 && i, S s)( //
             requires detail::ConvertibleToNotSlicing_<I2, I> &&
             (!detail::store_size_<K, S, I>()))
-          : data_{static_cast<I2&&>(i), std::move(s)}
+          : data_{static_cast<I2 &&>(i), std::move(s)}
         {}
 
         template<typename I2>
-        constexpr CPP_ctor(subrange)(I2&& i, S s, size_type n)( //
+        constexpr CPP_ctor(subrange)(I2 && i, S s, size_type n)( //
             requires detail::ConvertibleToNotSlicing_<I2, I> &&
             (detail::store_size_<K, S, I>()))
-          : data_{static_cast<I2&&>(i), std::move(s), n}
+          : data_{static_cast<I2 &&>(i), std::move(s), n}
         {
             if
                 RANGES_CONSTEXPR_IF((bool)RandomAccessIterator<I>)
@@ -251,31 +251,31 @@ namespace ranges
                 }
         }
         template<typename I2>
-        constexpr CPP_ctor(subrange)(I2&& i, S s, size_type n)( //
-            requires detail::ConvertibleToNotSlicing_<I2, I>&& SizedSentinel<S, I>)
-          : data_{static_cast<I2&&>(i), std::move(s)}
+        constexpr CPP_ctor(subrange)(I2 && i, S s, size_type n)( //
+            requires detail::ConvertibleToNotSlicing_<I2, I> && SizedSentinel<S, I>)
+          : data_{static_cast<I2 &&>(i), std::move(s)}
         {
             RANGES_EXPECT(static_cast<size_type>(last_() - first_()) == n);
         }
 
         template<typename R>
-        constexpr CPP_ctor(subrange)(R&& r)(
-            requires defer::NotSameAs_<R, subrange>&& detail::defer::RangeConvertibleTo_<
-                R, I, S>&& defer::True<!detail::store_size_<K, S, I>()>)
+        constexpr CPP_ctor(subrange)(R && r)(
+            requires defer::NotSameAs_<R, subrange> && detail::defer::RangeConvertibleTo_<
+                R, I, S> && defer::True<!detail::store_size_<K, S, I>()>)
           : subrange{ranges::begin(r), ranges::end(r)}
         {}
 
         template<typename R>
-        constexpr CPP_ctor(subrange)(R&& r)(
-            requires defer::NotSameAs_<R, subrange>&&
-                detail::defer::RangeConvertibleTo_<R, I, S>&&
-                    defer::True<detail::store_size_<K, S, I>()>&& defer::SizedRange<R>)
+        constexpr CPP_ctor(subrange)(R && r)(
+            requires defer::NotSameAs_<R, subrange> &&
+                detail::defer::RangeConvertibleTo_<R, I, S> &&
+                    defer::True<detail::store_size_<K, S, I>()> && defer::SizedRange<R>)
           : subrange{ranges::begin(r), ranges::end(r), ranges::size(r)}
         {}
 
         template<typename R>
-        constexpr CPP_ctor(subrange)(R&& r, size_type n)(
-            requires detail::RangeConvertibleTo_<R, I, S>&&
+        constexpr CPP_ctor(subrange)(R && r, size_type n)(
+            requires detail::RangeConvertibleTo_<R, I, S> &&
                 True<K == subrange_kind::sized>)
           : subrange{ranges::begin(r), ranges::end(r), n}
         {
@@ -296,9 +296,9 @@ namespace ranges
         }
 
         CPP_template(typename PairLike)( //
-            requires defer::NotSameAs_<PairLike, subrange>&&
-                detail::defer::PairLikeConvertibleFrom_<PairLike, const I&,
-                                                        const S&>) //
+            requires defer::NotSameAs_<PairLike, subrange> &&
+                detail::defer::PairLikeConvertibleFrom_<PairLike, const I &,
+                                                        const S &>) //
             constexpr
             operator PairLike() const
         {
@@ -341,7 +341,7 @@ namespace ranges
             return tmp;
         }
 
-        constexpr subrange& advance(iter_difference_t<I> n)
+        constexpr subrange & advance(iter_difference_t<I> n)
         {
             set_size_(get_size_() -
                       static_cast<size_type>(n - ranges::advance(first_(), n, last_())));
@@ -353,19 +353,19 @@ namespace ranges
                           std::tuple<I, S>>
             data_;
 
-        constexpr I& first_() noexcept
+        constexpr I & first_() noexcept
         {
             return std::get<0>(data_);
         }
-        constexpr const I& first_() const noexcept
+        constexpr const I & first_() const noexcept
         {
             return std::get<0>(data_);
         }
-        constexpr S& last_() noexcept
+        constexpr S & last_() noexcept
         {
             return std::get<1>(data_);
         }
-        constexpr const S& last_() const noexcept
+        constexpr const S & last_() const noexcept
         {
             return std::get<1>(data_);
         }
@@ -391,8 +391,8 @@ namespace ranges
     template<typename I, typename S>
     subrange(I, S)->subrange<I, S>;
 
-    CPP_template(typename I, typename S)(      //
-        requires Iterator<I>&& Sentinel<S, I>) //
+    CPP_template(typename I, typename S)(       //
+        requires Iterator<I> && Sentinel<S, I>) //
         subrange(I, S, detail::iter_size_t<I>)
             ->subrange<I, S, subrange_kind::sized>;
 
@@ -406,7 +406,7 @@ namespace ranges
 
     CPP_template(typename R)(         //
         requires ForwardingRange_<R>) //
-        subrange(R&&, detail::iter_size_t<iterator_t<R>>)
+        subrange(R &&, detail::iter_size_t<iterator_t<R>>)
             ->subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>;
 #endif
 
@@ -421,12 +421,12 @@ namespace ranges
         template<typename I, typename S>
         constexpr auto operator()(I i, S s, detail::iter_size_t<I> n) const
             -> CPP_ret(subrange<I, S, subrange_kind::sized>)( //
-                requires Iterator<I>&& Sentinel<S, I>)
+                requires Iterator<I> && Sentinel<S, I>)
         {
             return {i, s, n};
         }
         template<typename R>
-        constexpr auto operator()(R&& r) const -> CPP_ret(
+        constexpr auto operator()(R && r) const -> CPP_ret(
             subrange<iterator_t<R>, sentinel_t<R>,
                      (SizedRange<R> || SizedSentinel<sentinel_t<R>, iterator_t<R>>)
                          ? subrange_kind::sized
@@ -436,7 +436,7 @@ namespace ranges
             return {(R &&) r};
         }
         template<typename R>
-        constexpr auto operator()(R&& r, detail::iter_size_t<iterator_t<R>> n) const
+        constexpr auto operator()(R && r, detail::iter_size_t<iterator_t<R>> n) const
             -> CPP_ret(subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>)( //
                 requires ForwardingRange_<R>)
         {
@@ -460,7 +460,7 @@ namespace ranges
                      subrange_kind K =                           //
                      static_cast<subrange_kind>(                 //
                          detail::is_sized_sentinel_<S, I>()))(   //
-            requires Iterator<I>&& Sentinel<S, I> &&             //
+            requires Iterator<I> && Sentinel<S, I> &&            //
             (K == subrange_kind::sized || !SizedSentinel<S, I>)) //
             using subrange = ranges::subrange<I, S>;
 

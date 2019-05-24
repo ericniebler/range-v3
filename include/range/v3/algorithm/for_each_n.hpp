@@ -16,6 +16,8 @@
 
 #include <functional>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
@@ -24,7 +26,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -36,7 +37,7 @@ namespace ranges
         template<typename I, typename F, typename P = identity>
         auto operator()(I begin, iter_difference_t<I> n, F fun, P proj = P{}) const
             -> CPP_ret(I)( //
-                requires InputIterator<I> &&IndirectUnaryInvocable<F, projected<I, P>>)
+                requires InputIterator<I> && IndirectUnaryInvocable<F, projected<I, P>>)
         {
             RANGES_EXPECT(0 <= n);
             auto norig = n;
@@ -47,10 +48,10 @@ namespace ranges
         }
 
         template<typename Rng, typename F, typename P = identity>
-        auto operator()(Rng &&rng, range_difference_t<Rng> n, F fun, P proj = P{}) const
+        auto operator()(Rng && rng, range_difference_t<Rng> n, F fun, P proj = P{}) const
             -> CPP_ret(safe_iterator_t<Rng>)( //
-                requires InputRange<Rng>
-                    &&IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
+                requires InputRange<Rng> &&
+                    IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
         {
             if(SizedRange<Rng>)
                 RANGES_EXPECT(n <= distance(rng));

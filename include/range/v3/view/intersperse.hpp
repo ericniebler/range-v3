@@ -19,12 +19,13 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
@@ -69,7 +70,7 @@ namespace ranges
 
         public:
             cursor_adaptor() = default;
-            explicit constexpr cursor_adaptor(range_value_t<Rng> const &val)
+            explicit constexpr cursor_adaptor(range_value_t<Rng> const & val)
               : val_{val}
             {}
             CPP_template(bool Other)(       //
@@ -79,46 +80,46 @@ namespace ranges
               , val_(std::move(that.val_))
             {}
             template<typename View>
-            constexpr iterator_t<CRng> begin(View &view)
+            constexpr iterator_t<CRng> begin(View & view)
             {
                 auto first = ranges::begin(view.base());
                 toggle_ = first != ranges::end(view.base());
                 return first;
             }
-            constexpr range_value_t<Rng> read(iterator_t<CRng> const &it) const
+            constexpr range_value_t<Rng> read(iterator_t<CRng> const & it) const
             {
                 return toggle_ ? *it : val_;
             }
-            CPP_member constexpr auto equal(iterator_t<CRng> const &it0,
-                                            iterator_t<CRng> const &it1,
-                                            cursor_adaptor const &other) const
+            CPP_member constexpr auto equal(iterator_t<CRng> const & it0,
+                                            iterator_t<CRng> const & it1,
+                                            cursor_adaptor const & other) const
                 -> CPP_ret(bool)( //
                     requires Sentinel<iterator_t<CRng>, iterator_t<CRng>>)
             {
                 return it0 == it1 && toggle_ == other.toggle_;
             }
-            constexpr void next(iterator_t<CRng> &it)
+            constexpr void next(iterator_t<CRng> & it)
             {
                 if(toggle_)
                     ++it;
                 toggle_ = !toggle_;
             }
-            CPP_member constexpr auto prev(iterator_t<CRng> &it) -> CPP_ret(void)( //
+            CPP_member constexpr auto prev(iterator_t<CRng> & it) -> CPP_ret(void)( //
                 requires BidirectionalRange<CRng>)
             {
                 toggle_ = !toggle_;
                 if(toggle_)
                     --it;
             }
-            CPP_member constexpr auto distance_to(iterator_t<CRng> const &it,
-                                                  iterator_t<CRng> const &other_it,
-                                                  cursor_adaptor const &other) const
+            CPP_member constexpr auto distance_to(iterator_t<CRng> const & it,
+                                                  iterator_t<CRng> const & other_it,
+                                                  cursor_adaptor const & other) const
                 -> CPP_ret(range_difference_t<Rng>)( //
                     requires SizedSentinel<iterator_t<CRng>, iterator_t<CRng>>)
             {
                 return (other_it - it) * 2 + (other.toggle_ - toggle_);
             }
-            CPP_member constexpr auto advance(iterator_t<CRng> &it,
+            CPP_member constexpr auto advance(iterator_t<CRng> & it,
                                               range_difference_t<CRng> n)
                 -> CPP_ret(void)( //
                     requires RandomAccessRange<CRng>)
@@ -140,9 +141,9 @@ namespace ranges
                 requires Const && (!Other)) //
                 sentinel_adaptor(sentinel_adaptor<Other>)
             {}
-            static constexpr bool empty(iterator_t<CRng> const &it,
+            static constexpr bool empty(iterator_t<CRng> const & it,
                                         cursor_adaptor<Const> const &,
-                                        sentinel_t<CRng> const &sent)
+                                        sentinel_t<CRng> const & sent)
             {
                 return it == sent;
             }
@@ -170,8 +171,8 @@ namespace ranges
         }
         template<bool Const = true>
         constexpr auto end_adaptor() const -> CPP_ret(cursor_adaptor<Const>)( //
-            requires Const &&Range<meta::const_if_c<Const, Rng>>
-                &&CommonRange<meta::const_if_c<Const, Rng>> &&
+            requires Const && Range<meta::const_if_c<Const, Rng>> &&
+                CommonRange<meta::const_if_c<Const, Rng>> &&
             (!SinglePass<iterator_t<meta::const_if_c<Const, Rng>>>))
         {
             return cursor_adaptor<true>{val_};
@@ -179,7 +180,7 @@ namespace ranges
         template<bool Const = true>
         constexpr auto end_adaptor() const noexcept
             -> CPP_ret(sentinel_adaptor<Const>)( //
-                requires Const &&Range<meta::const_if_c<Const, Rng>> &&
+                requires Const && Range<meta::const_if_c<Const, Rng>> &&
                 (!CommonRange<meta::const_if_c<Const, Rng>> ||
                  SinglePass<iterator_t<meta::const_if_c<Const, Rng>>>))
         {
@@ -205,11 +206,11 @@ namespace ranges
 
         public:
             template<typename Rng>
-            constexpr auto operator()(Rng &&rng, range_value_t<Rng> val) const
+            constexpr auto operator()(Rng && rng, range_value_t<Rng> val) const
                 -> CPP_ret(intersperse_view<all_t<Rng>>)( //
-                    requires ViewableRange<Rng> &&InputRange<Rng>
-                        &&ConvertibleTo<range_reference_t<Rng>, range_value_t<Rng>>
-                            &&Semiregular<range_value_t<Rng>>)
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        ConvertibleTo<range_reference_t<Rng>, range_value_t<Rng>> &&
+                            Semiregular<range_value_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(val)};
             }

@@ -16,10 +16,11 @@
 
 #include <concepts/concepts.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/arithmetic.hpp>
 #include <range/v3/functional/bind.hpp>
 #include <range/v3/functional/invoke.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -80,7 +81,7 @@ namespace ranges
             using exclusive_scan_view_t = meta::const_if_c<IsConst, exclusive_scan_view>;
             using CRng = meta::const_if_c<IsConst, Rng>;
             semiregular_t<T> sum_;
-            exclusive_scan_view_t *rng_;
+            exclusive_scan_view_t * rng_;
 
             // clang-format off
             auto CPP_auto_fun(move_or_copy_init)(std::false_type)
@@ -96,7 +97,7 @@ namespace ranges
                 // clang-format on
                 public : using single_pass = exclusive_scan_view::single_pass;
             adaptor() = default;
-            adaptor(exclusive_scan_view_t &rng)
+            adaptor(exclusive_scan_view_t & rng)
               : rng_(&rng)
             {}
             CPP_template(bool Other)(         //
@@ -113,7 +114,7 @@ namespace ranges
             {
                 return sum_;
             }
-            void next(iterator_t<CRng> &it)
+            void next(iterator_t<CRng> & it)
             {
                 RANGES_EXPECT(it != ranges::end(rng_->base()));
                 sum_ = invoke(rng_->fun_, static_cast<T &&>(std::move(sum_)), *it);
@@ -176,7 +177,7 @@ namespace ranges
 
         public:
             template<typename Rng, typename T, typename Fun = plus>
-            auto operator()(Rng &&rng, T init, Fun fun = Fun{}) const
+            auto operator()(Rng && rng, T init, Fun fun = Fun{}) const
                 -> CPP_ret(exclusive_scan_view<all_t<Rng>, T, Fun>)( //
                     requires ExclusiveScanConstraint<Rng, T, Fun>)
             {

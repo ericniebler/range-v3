@@ -20,8 +20,9 @@
 #include <type_traits>
 #include <utility>
 
-#include <range/v3/iterator/concepts.hpp>
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/iterator/concepts.hpp>
 
 namespace ranges
 {
@@ -37,12 +38,12 @@ namespace ranges
         using ostream_type = std::basic_ostream<Char, Traits>;
 
         constexpr ostream_iterator() = default;
-        ostream_iterator(ostream_type &s, Char const *d = nullptr) noexcept
+        ostream_iterator(ostream_type & s, Char const * d = nullptr) noexcept
           : sout_(&s)
           , delim_(d)
         {}
         template<typename U>
-        auto operator=(U &&value) -> CPP_ret(ostream_iterator &)( //
+        auto operator=(U && value) -> CPP_ret(ostream_iterator &)( //
             requires ConvertibleTo<
                 U, detail::if_then_t<std::is_void<T>::value, U, T> const &>)
         {
@@ -52,22 +53,22 @@ namespace ranges
                 *sout_ << delim_;
             return *this;
         }
-        ostream_iterator &operator*()
+        ostream_iterator & operator*()
         {
             return *this;
         }
-        ostream_iterator &operator++()
+        ostream_iterator & operator++()
         {
             return *this;
         }
-        ostream_iterator &operator++(int)
+        ostream_iterator & operator++(int)
         {
             return *this;
         }
 
     private:
-        ostream_type *sout_;
-        Char const *delim_;
+        ostream_type * sout_;
+        Char const * delim_;
     };
 
     template<typename Delim, typename Char = char,
@@ -81,18 +82,18 @@ namespace ranges
         using ostream_type = std::basic_ostream<Char, Traits>;
 
         constexpr ostream_joiner() = default;
-        ostream_joiner(ostream_type &s, Delim const &d)
+        ostream_joiner(ostream_type & s, Delim const & d)
           : delim_(d)
           , sout_(std::addressof(s))
           , first_(true)
         {}
-        ostream_joiner(ostream_type &s, Delim &&d)
+        ostream_joiner(ostream_type & s, Delim && d)
           : delim_(std::move(d))
           , sout_(std::addressof(s))
           , first_(true)
         {}
         template<typename T>
-        ostream_joiner &operator=(T const &value)
+        ostream_joiner & operator=(T const & value)
         {
             RANGES_EXPECT(sout_);
             if(!first_)
@@ -101,29 +102,29 @@ namespace ranges
             *sout_ << value;
             return *this;
         }
-        ostream_joiner &operator*() noexcept
+        ostream_joiner & operator*() noexcept
         {
             return *this;
         }
-        ostream_joiner &operator++() noexcept
+        ostream_joiner & operator++() noexcept
         {
             return *this;
         }
-        ostream_joiner &operator++(int) noexcept
+        ostream_joiner & operator++(int) noexcept
         {
             return *this;
         }
 
     private:
         Delim delim_;
-        ostream_type *sout_;
+        ostream_type * sout_;
         bool first_;
     };
 
     struct make_ostream_joiner_fn
     {
         template<typename Delim, typename Char, typename Traits>
-        auto operator()(std::basic_ostream<Char, Traits> &s, Delim &&d) const
+        auto operator()(std::basic_ostream<Char, Traits> & s, Delim && d) const
             -> CPP_ret(ostream_joiner<detail::decay_t<Delim>, Char, Traits>)( //
                 requires Semiregular<detail::decay_t<Delim>>)
         {
@@ -145,30 +146,30 @@ namespace ranges
         typedef std::basic_ostream<Char, Traits> ostream_type;
 
         constexpr ostreambuf_iterator() = default;
-        ostreambuf_iterator(ostream_type &s) noexcept
+        ostreambuf_iterator(ostream_type & s) noexcept
           : ostreambuf_iterator(s.rdbuf())
         {}
-        ostreambuf_iterator(streambuf_type *s) noexcept
+        ostreambuf_iterator(streambuf_type * s) noexcept
           : sbuf_(s)
         {
             RANGES_ASSERT(s != nullptr);
         }
-        ostreambuf_iterator &operator=(Char c)
+        ostreambuf_iterator & operator=(Char c)
         {
             RANGES_ASSERT(sbuf_ != nullptr);
             if(!failed_)
                 failed_ = (sbuf_->sputc(c) == Traits::eof());
             return *this;
         }
-        ostreambuf_iterator &operator*()
+        ostreambuf_iterator & operator*()
         {
             return *this;
         }
-        ostreambuf_iterator &operator++()
+        ostreambuf_iterator & operator++()
         {
             return *this;
         }
-        ostreambuf_iterator &operator++(int)
+        ostreambuf_iterator & operator++(int)
         {
             return *this;
         }
@@ -178,7 +179,7 @@ namespace ranges
         }
 
     private:
-        streambuf_type *sbuf_ = nullptr;
+        streambuf_type * sbuf_ = nullptr;
         bool failed_ = false;
     };
 

@@ -15,6 +15,8 @@
 
 #include <utility>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
@@ -22,7 +24,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -37,8 +38,8 @@ namespace ranges
     {
         template<typename I, typename S, typename O>
         auto operator()(I begin, S end, O out) const -> CPP_ret(move_result<I, O>)( //
-            requires InputIterator<I> &&Sentinel<S, I> &&WeaklyIncrementable<O>
-                &&IndirectlyMovable<I, O>)
+            requires InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
+                IndirectlyMovable<I, O>)
         {
             for(; begin != end; ++begin, ++out)
                 *out = iter_move(begin);
@@ -46,10 +47,10 @@ namespace ranges
         }
 
         template<typename Rng, typename O>
-        auto operator()(Rng &&rng, O out) const
+        auto operator()(Rng && rng, O out) const
             -> CPP_ret(move_result<safe_iterator_t<Rng>, O>)( //
-                requires InputRange<Rng> &&WeaklyIncrementable<O>
-                    &&IndirectlyMovable<iterator_t<Rng>, O>)
+                requires InputRange<Rng> && WeaklyIncrementable<O> &&
+                    IndirectlyMovable<iterator_t<Rng>, O>)
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }

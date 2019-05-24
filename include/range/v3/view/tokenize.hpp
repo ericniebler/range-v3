@@ -20,9 +20,10 @@
 #include <utility>
 #include <vector>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/interface.hpp>
@@ -38,7 +39,7 @@ namespace ranges
                        is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
     {
     private:
-        CPP_assert(BidirectionalView<Rng> &&CommonRange<Rng>);
+        CPP_assert(BidirectionalView<Rng> && CommonRange<Rng>);
         CPP_assert(Semiregular<Regex>);
         CPP_assert(Semiregular<SubMatchRange>);
 
@@ -61,7 +62,7 @@ namespace ranges
         {}
         iterator_t<simple_view<Rng>()> begin()
         {
-            meta::const_if_c<simple_view<Rng>(), Rng> &rng = rng_;
+            meta::const_if_c<simple_view<Rng>(), Rng> & rng = rng_;
             return {ranges::begin(rng), ranges::end(rng), rex_, subs_, flags_};
         }
         template<bool Const = true>
@@ -92,7 +93,7 @@ namespace ranges
         {
             template<typename Rng, typename Regex>
             tokenize_view<all_t<Rng>, detail::decay_t<Regex>, int> operator()(
-                Rng &&rng, Regex &&rex, int sub = 0,
+                Rng && rng, Regex && rex, int sub = 0,
                 std::regex_constants::match_flag_type flags =
                     std::regex_constants::match_default) const
             {
@@ -110,7 +111,7 @@ namespace ranges
 
             template<typename Rng, typename Regex>
             tokenize_view<all_t<Rng>, detail::decay_t<Regex>, std::vector<int>>
-            operator()(Rng &&rng, Regex &&rex, std::vector<int> subs,
+            operator()(Rng && rng, Regex && rex, std::vector<int> subs,
                        std::regex_constants::match_flag_type flags =
                            std::regex_constants::match_default) const
             {
@@ -128,7 +129,7 @@ namespace ranges
 
             template<typename Rng, typename Regex>
             tokenize_view<all_t<Rng>, detail::decay_t<Regex>, std::initializer_list<int>>
-            operator()(Rng &&rng, Regex &&rex, std::initializer_list<int> subs,
+            operator()(Rng && rng, Regex && rex, std::initializer_list<int> subs,
                        std::regex_constants::match_flag_type flags =
                            std::regex_constants::match_default) const
             {
@@ -145,7 +146,7 @@ namespace ranges
             }
 
             template<typename Regex>
-            auto operator()(Regex &&rex, int sub = 0,
+            auto operator()(Regex && rex, int sub = 0,
                             std::regex_constants::match_flag_type flags =
                                 std::regex_constants::match_default) const
             {
@@ -157,7 +158,7 @@ namespace ranges
             }
 
             template<typename Regex>
-            auto operator()(Regex &&rex, std::vector<int> subs,
+            auto operator()(Regex && rex, std::vector<int> subs,
                             std::regex_constants::match_flag_type flags =
                                 std::regex_constants::match_default) const
             {
@@ -169,7 +170,7 @@ namespace ranges
             }
 
             template<typename Regex>
-            auto operator()(Regex &&rex, std::initializer_list<int> subs,
+            auto operator()(Regex && rex, std::initializer_list<int> subs,
                             std::regex_constants::match_flag_type flags =
                                 std::regex_constants::match_default) const
             {
@@ -185,7 +186,7 @@ namespace ranges
         struct tokenize_fn : tokenizer_impl_fn
         {
         private:
-            tokenizer_impl_fn const &base() const
+            tokenizer_impl_fn const & base() const
             {
                 return *this;
             }
@@ -199,7 +200,7 @@ namespace ranges
             }
 
             template<typename Arg0, typename... Args>
-            auto operator()(Arg0 &&arg0, std::initializer_list<int> subs,
+            auto operator()(Arg0 && arg0, std::initializer_list<int> subs,
                             Args &&... args) const
                 -> decltype(base()(static_cast<Arg0 &&>(arg0), std::move(subs),
                                    static_cast<Args &&>(args)...))
@@ -210,7 +211,7 @@ namespace ranges
             }
 
             template<typename Arg0, typename Arg1, typename... Args>
-            auto operator()(Arg0 &&arg0, Arg1 &&arg1, std::initializer_list<int> subs,
+            auto operator()(Arg0 && arg0, Arg1 && arg1, std::initializer_list<int> subs,
                             Args &&... args) const
                 -> decltype(base()(static_cast<Arg0 &&>(arg0), static_cast<Arg1 &&>(arg1),
                                    std::move(subs), static_cast<Args &&>(args)...))

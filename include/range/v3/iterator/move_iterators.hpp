@@ -16,10 +16,11 @@
 #include <cstddef>
 #include <utility>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/basic_iterator.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 
 namespace ranges
 {
@@ -44,12 +45,12 @@ namespace ranges
           : current_(i)
         {}
         template<typename O>
-        CPP_ctor(move_iterator)(move_iterator<O> const &i)( //
+        CPP_ctor(move_iterator)(move_iterator<O> const & i)( //
             requires ConvertibleTo<O, I>)
           : current_(i.base())
         {}
         template<typename O>
-        auto operator=(move_iterator<O> const &i) -> CPP_ret(move_iterator &)( //
+        auto operator=(move_iterator<O> const & i) -> CPP_ret(move_iterator &)( //
             requires ConvertibleTo<O, I>)
         {
             current_ = i.base();
@@ -121,42 +122,42 @@ namespace ranges
         }
 
         template<typename I2>
-        friend auto operator==(move_iterator const &x, move_iterator<I2> const &y)
+        friend auto operator==(move_iterator const & x, move_iterator<I2> const & y)
             -> CPP_broken_friend_ret(bool)( //
                 requires EqualityComparableWith<I, I2>)
         {
             return x.base() == y.base();
         }
         template<typename I2>
-        friend auto operator!=(move_iterator const &x, move_iterator<I2> const &y)
+        friend auto operator!=(move_iterator const & x, move_iterator<I2> const & y)
             -> CPP_broken_friend_ret(bool)( //
                 requires EqualityComparableWith<I, I2>)
         {
             return !(x == y);
         }
         template<typename I2>
-        friend auto operator<(move_iterator const &x, move_iterator<I2> const &y)
+        friend auto operator<(move_iterator const & x, move_iterator<I2> const & y)
             -> CPP_broken_friend_ret(bool)( //
                 requires StrictTotallyOrderedWith<I, I2>)
         {
             return x.base() < y.base();
         }
         template<typename I2>
-        friend auto operator<=(move_iterator const &x, move_iterator<I2> const &y)
+        friend auto operator<=(move_iterator const & x, move_iterator<I2> const & y)
             -> CPP_broken_friend_ret(bool)( //
                 requires StrictTotallyOrderedWith<I, I2>)
         {
             return !(y < x);
         }
         template<typename I2>
-        friend auto operator>(move_iterator const &x, move_iterator<I2> const &y)
+        friend auto operator>(move_iterator const & x, move_iterator<I2> const & y)
             -> CPP_broken_friend_ret(bool)( //
                 requires StrictTotallyOrderedWith<I, I2>)
         {
             return y < x;
         }
         template<typename I2>
-        friend auto operator>=(move_iterator const &x, move_iterator<I2> const &y)
+        friend auto operator>=(move_iterator const & x, move_iterator<I2> const & y)
             -> CPP_broken_friend_ret(bool)( //
                 requires StrictTotallyOrderedWith<I, I2>)
         {
@@ -164,14 +165,14 @@ namespace ranges
         }
 
         template<typename I2>
-        friend auto operator-(move_iterator const &x, move_iterator<I2> const &y)
+        friend auto operator-(move_iterator const & x, move_iterator<I2> const & y)
             -> CPP_broken_friend_ret(iter_difference_t<I2>)( //
                 requires SizedSentinel<I, I2>)
         {
             return x.base() - y.base();
         }
         CPP_broken_friend_member friend auto operator+(iter_difference_t<I> n,
-                                                       move_iterator const &x)
+                                                       move_iterator const & x)
             -> CPP_broken_friend_ret(move_iterator)( //
                 requires RandomAccessIterator<I>)
         {
@@ -205,12 +206,12 @@ namespace ranges
           : sent_(detail::move(s))
         {}
         template<typename OS>
-        constexpr explicit CPP_ctor(move_sentinel)(move_sentinel<OS> const &that)( //
+        constexpr explicit CPP_ctor(move_sentinel)(move_sentinel<OS> const & that)( //
             requires ConvertibleTo<OS, S>)
           : sent_(that.base())
         {}
         template<typename OS>
-        auto operator=(move_sentinel<OS> const &that) -> CPP_ret(move_sentinel &)( //
+        auto operator=(move_sentinel<OS> const & that) -> CPP_ret(move_sentinel &)( //
             requires ConvertibleTo<OS, S>)
         {
             sent_ = that.base();
@@ -222,28 +223,28 @@ namespace ranges
         }
 
         template<typename I>
-        friend auto operator==(move_iterator<I> const &i, move_sentinel const &s)
+        friend auto operator==(move_iterator<I> const & i, move_sentinel const & s)
             -> CPP_broken_friend_ret(bool)( //
                 requires Sentinel<S, I>)
         {
             return i.base() == s.base();
         }
         template<typename I>
-        friend auto operator==(move_sentinel const &s, move_iterator<I> const &i)
+        friend auto operator==(move_sentinel const & s, move_iterator<I> const & i)
             -> CPP_broken_friend_ret(bool)( //
                 requires Sentinel<S, I>)
         {
             return s.base() == i.base();
         }
         template<typename I>
-        friend auto operator!=(move_iterator<I> const &i, move_sentinel const &s)
+        friend auto operator!=(move_iterator<I> const & i, move_sentinel const & s)
             -> CPP_broken_friend_ret(bool)( //
                 requires Sentinel<S, I>)
         {
             return i.base() != s.base();
         }
         template<typename I>
-        friend auto operator!=(move_sentinel const &s, move_iterator<I> const &i)
+        friend auto operator!=(move_sentinel const & s, move_iterator<I> const & i)
             -> CPP_broken_friend_ret(bool)( //
                 requires Sentinel<S, I>)
         {
@@ -315,13 +316,14 @@ namespace ranges
                 ++it_;
             }
             template<typename T>
-            auto write(T &&t) noexcept(noexcept(*it_ = std::move(t))) -> CPP_ret(void)( //
-                requires Writable<I, aux::move_t<T>>)
+            auto write(T && t) noexcept(noexcept(*it_ = std::move(t)))
+                -> CPP_ret(void)( //
+                    requires Writable<I, aux::move_t<T>>)
             {
                 *it_ = std::move(t);
             }
             template<typename T>
-            auto write(T &&t) const noexcept(noexcept(*it_ = std::move(t)))
+            auto write(T && t) const noexcept(noexcept(*it_ = std::move(t)))
                 -> CPP_ret(void)( //
                     requires Writable<I, aux::move_t<T>>)
             {
@@ -333,8 +335,9 @@ namespace ranges
             {
                 return *it_;
             }
-            CPP_member auto equal(move_into_cursor const &that) const -> CPP_ret(bool)( //
-                requires InputIterator<I>)
+            CPP_member auto equal(move_into_cursor const & that) const
+                -> CPP_ret(bool)( //
+                    requires InputIterator<I>)
             {
                 return it_ == that.it_;
             }
@@ -348,7 +351,7 @@ namespace ranges
             {
                 it_ += n;
             }
-            CPP_member auto distance_to(move_into_cursor const &that) const
+            CPP_member auto distance_to(move_into_cursor const & that) const
                 -> CPP_ret(iter_difference_t<I>)( //
                     requires SizedSentinel<I, I>)
             {
@@ -357,7 +360,7 @@ namespace ranges
             template<typename II = I const>
             constexpr auto move() const noexcept(has_nothrow_iter_move_v<II>)
                 -> CPP_ret(iter_rvalue_reference_t<II>)( //
-                    requires Same<I const, II> &&Readable<II>)
+                    requires Same<I const, II> && Readable<II>)
             {
                 return iter_move(it_);
             }

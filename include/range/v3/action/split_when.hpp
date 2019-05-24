@@ -19,13 +19,14 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/concepts.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/conversion.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/split_when.hpp>
 #include <range/v3/view/transform.hpp>
@@ -47,12 +48,12 @@ namespace ranges
             // BUGBUG something is not right with the actions. It should be possible
             // to move a container into a split and have elements moved into the result.
             template<typename Rng, typename Fun>
-            auto operator()(Rng &&rng,
+            auto operator()(Rng && rng,
                             Fun fun) const -> CPP_ret(std::vector<split_value_t<Rng>>)( //
-                requires ForwardRange<Rng>
-                    &&Invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>>
-                        &&Invocable<Fun &, iterator_t<Rng>, iterator_t<Rng>>
-                            &&CopyConstructible<Fun> &&ConvertibleTo<
+                requires ForwardRange<Rng> &&
+                    Invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> &&
+                        Invocable<Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
+                            CopyConstructible<Fun> && ConvertibleTo<
                                 invoke_result_t<Fun &, iterator_t<Rng>, sentinel_t<Rng>>,
                                 std::pair<bool, iterator_t<Rng>>>)
             {
@@ -60,10 +61,10 @@ namespace ranges
                        view::transform(to<split_value_t<Rng>>()) | to_vector;
             }
             template<typename Rng, typename Fun>
-            auto operator()(Rng &&rng, Fun fun) const
+            auto operator()(Rng && rng, Fun fun) const
                 -> CPP_ret(std::vector<split_value_t<Rng>>)( //
-                    requires ForwardRange<Rng> &&Predicate<
-                        Fun const &, range_reference_t<Rng>> &&CopyConstructible<Fun>)
+                    requires ForwardRange<Rng> && Predicate<
+                        Fun const &, range_reference_t<Rng>> && CopyConstructible<Fun>)
             {
                 return view::split_when(rng, std::move(fun)) |
                        view::transform(to<split_value_t<Rng>>()) | to_vector;

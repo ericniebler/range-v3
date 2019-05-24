@@ -42,7 +42,7 @@ namespace ranges
         struct as_lvalue_fn
         {
             template<typename T>
-            constexpr T &operator()(T &&t) const noexcept
+            constexpr T & operator()(T && t) const noexcept
             {
                 return t;
             }
@@ -89,20 +89,20 @@ namespace ranges
                  typename P = identity>
         auto operator()(I begin, S1 end, O result, S2 end_result, BOp bop = BOp{},
                         P proj = P{}) const -> CPP_ret(partial_sum_result<I, O>)( //
-            requires Sentinel<S1, I> &&Sentinel<S2, O> &&PartialSummable<I, O, BOp, P>)
+            requires Sentinel<S1, I> && Sentinel<S2, O> && PartialSummable<I, O, BOp, P>)
         {
             using X = projected<projected<I, detail::as_value_type_t<I>>, P>;
             coerce<iter_value_t<I>> val_i;
             coerce<iter_value_t<X>> val_x;
             if(begin != end && result != end_result)
             {
-                auto &&cur1 = val_i(*begin);
+                auto && cur1 = val_i(*begin);
                 iter_value_t<X> t(invoke(proj, cur1));
                 *result = t;
                 for(++begin, ++result; begin != end && result != end_result;
                     ++begin, ++result)
                 {
-                    auto &&cur2 = val_i(*begin);
+                    auto && cur2 = val_i(*begin);
                     t = val_x(invoke(bop, t, invoke(proj, cur2)));
                     *result = t;
                 }
@@ -114,7 +114,7 @@ namespace ranges
                  typename P = identity>
         auto operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(partial_sum_result<I, O>)( //
-                requires Sentinel<S, I> &&PartialSummable<I, O, BOp, P>)
+                requires Sentinel<S, I> && PartialSummable<I, O, BOp, P>)
         {
             return (*this)(std::move(begin),
                            std::move(end),
@@ -126,9 +126,9 @@ namespace ranges
 
         template<typename Rng, typename ORef, typename BOp = plus, typename P = identity,
                  typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>>
-        auto operator()(Rng &&rng, ORef &&result, BOp bop = BOp{}, P proj = P{}) const
+        auto operator()(Rng && rng, ORef && result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(partial_sum_result<safe_iterator_t<Rng>, O>)( //
-                requires Range<Rng> &&PartialSummable<I, O, BOp, P>)
+                requires Range<Rng> && PartialSummable<I, O, BOp, P>)
         {
             return (*this)(begin(rng),
                            end(rng),
@@ -139,10 +139,10 @@ namespace ranges
 
         template<typename Rng, typename ORng, typename BOp = plus, typename P = identity,
                  typename I = iterator_t<Rng>, typename O = iterator_t<ORng>>
-        auto operator()(Rng &&rng, ORng &&result, BOp bop = BOp{}, P proj = P{}) const
+        auto operator()(Rng && rng, ORng && result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(
                 partial_sum_result<safe_iterator_t<Rng>, safe_iterator_t<ORng>>)( //
-                requires Range<Rng> &&Range<ORng> &&PartialSummable<I, O, BOp, P>)
+                requires Range<Rng> && Range<ORng> && PartialSummable<I, O, BOp, P>)
         {
             return (*this)(begin(rng),
                            end(rng),

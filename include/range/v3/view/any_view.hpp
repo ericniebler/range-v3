@@ -19,11 +19,12 @@
 #include <typeinfo>
 #include <utility>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/memory.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/facade.hpp>
@@ -78,17 +79,17 @@ namespace ranges
             ~static_cast<meta::_t<std::underlying_type<category>>>(lhs));
     }
 
-    constexpr category &operator&=(category &lhs, category rhs) noexcept
+    constexpr category & operator&=(category & lhs, category rhs) noexcept
     {
         return (lhs = lhs & rhs);
     }
 
-    constexpr category &operator|=(category &lhs, category rhs) noexcept
+    constexpr category & operator|=(category & lhs, category rhs) noexcept
     {
         return (lhs = lhs | rhs);
     }
 
-    constexpr category &operator^=(category &lhs, category rhs) noexcept
+    constexpr category & operator^=(category & lhs, category rhs) noexcept
     {
         return (lhs = lhs ^ rhs);
     }
@@ -118,7 +119,7 @@ namespace ranges
         {
             any_ref() = default;
             template<typename T>
-            constexpr any_ref(T &obj) noexcept
+            constexpr any_ref(T & obj) noexcept
               : obj_
             {
                 std::addressof(obj)
@@ -131,16 +132,16 @@ namespace ranges
 #endif
             {}
             template<typename T>
-            T &get() const noexcept
+            T & get() const noexcept
             {
                 RANGES_ASSERT(obj_ && info_ && *info_ == typeid(rtti_tag<T>));
                 return *const_cast<T *>(static_cast<T const volatile *>(obj_));
             }
 
         private:
-            void const volatile *obj_ = nullptr;
+            void const volatile * obj_ = nullptr;
 #ifndef NDEBUG
-            std::type_info const *info_ = nullptr;
+            std::type_info const * info_ = nullptr;
 #endif
         };
 
@@ -151,7 +152,7 @@ namespace ranges
             virtual ~cloneable() = default;
             cloneable() = default;
             cloneable(cloneable const &) = delete;
-            cloneable &operator=(cloneable const &) = delete;
+            cloneable & operator=(cloneable const &) = delete;
             virtual std::unique_ptr<cloneable> clone() const = 0;
         };
 
@@ -173,14 +174,14 @@ namespace ranges
 
         public:
             any_view_sentinel_impl() = default;
-            any_view_sentinel_impl(Rng &rng)
+            any_view_sentinel_impl(Rng & rng)
               : box_t(ranges::end(rng))
             {}
-            void init(Rng &rng) noexcept
+            void init(Rng & rng) noexcept
             {
                 box_t::get() = ranges::end(rng);
             }
-            sentinel_t<Rng> const &get(Rng &) const noexcept
+            sentinel_t<Rng> const & get(Rng &) const noexcept
             {
                 return box_t::get();
             }
@@ -193,7 +194,7 @@ namespace ranges
             any_view_sentinel_impl() = default;
             any_view_sentinel_impl(Rng &) noexcept {}
             void init(Rng &) noexcept {}
-            sentinel_t<Rng> get(Rng &rng) const noexcept
+            sentinel_t<Rng> get(Rng & rng) const noexcept
             {
                 return ranges::end(rng);
             }
@@ -220,7 +221,7 @@ namespace ranges
             using single_pass = std::true_type;
 
             any_input_cursor() = default;
-            constexpr any_input_cursor(any_input_view_interface<Ref> &view) noexcept
+            constexpr any_input_cursor(any_input_view_interface<Ref> & view) noexcept
               : view_{std::addressof(view)}
             {}
             Ref read() const
@@ -241,7 +242,7 @@ namespace ranges
             }
 
         private:
-            any_input_view_interface<Ref> *view_ = nullptr;
+            any_input_view_interface<Ref> * view_ = nullptr;
         };
 
         template<typename Rng, typename Ref, bool Sized = false>
@@ -256,7 +257,7 @@ namespace ranges
               : rng_{std::move(rng_)}
             {}
             any_input_view_impl(any_input_view_impl const &) = delete;
-            any_input_view_impl &operator=(any_input_view_impl const &) = delete;
+            any_input_view_impl & operator=(any_input_view_impl const &) = delete;
 
         private:
             using sentinel_box_t = any_view_sentinel_impl<Rng>;
@@ -347,9 +348,9 @@ namespace ranges
             {
                 return *it_;
             }
-            bool equal(Forward const &that_) const override
+            bool equal(Forward const & that_) const override
             {
-                auto &that = polymorphic_downcast<any_cursor_impl const &>(that_);
+                auto & that = polymorphic_downcast<any_cursor_impl const &>(that_);
                 return that.it_ == it_;
             }
             void next() override
@@ -370,9 +371,9 @@ namespace ranges
                 it_ += n;
             }
             std::ptrdiff_t distance_to(
-                any_cursor_interface<Ref, Cat> const &that_) const // override-ish
+                any_cursor_interface<Ref, Cat> const & that_) const // override-ish
             {
-                auto &that = polymorphic_downcast<any_cursor_impl const &>(that_);
+                auto & that = polymorphic_downcast<any_cursor_impl const &>(that_);
                 return static_cast<std::ptrdiff_t>(that.it_ - it_);
             }
         };
@@ -389,7 +390,7 @@ namespace ranges
         struct any_sentinel
         {
             any_sentinel() = default;
-            constexpr explicit any_sentinel(fully_erased_view &view) noexcept
+            constexpr explicit any_sentinel(fully_erased_view & view) noexcept
               : view_{&view}
             {}
 
@@ -397,7 +398,7 @@ namespace ranges
             template<typename, category>
             friend struct any_cursor;
 
-            fully_erased_view *view_ = nullptr;
+            fully_erased_view * view_ = nullptr;
         };
 
         template<typename Ref, category Cat>
@@ -414,17 +415,17 @@ namespace ranges
         public:
             any_cursor() = default;
             template<typename Rng>
-            explicit CPP_ctor(any_cursor)(Rng &&rng)( //
+            explicit CPP_ctor(any_cursor)(Rng && rng)( //
                 requires(!ranges::defer::Same<detail::decay_t<Rng>, any_cursor>) &&
                 ranges::defer::ForwardRange<Rng> && defer::AnyCompatibleRange<Rng, Ref>)
               : ptr_{detail::make_unique<impl_t<Rng>>(begin(rng))}
             {}
             any_cursor(any_cursor &&) = default;
-            any_cursor(any_cursor const &that)
+            any_cursor(any_cursor const & that)
               : ptr_{that.ptr_ ? that.ptr_->clone() : nullptr}
             {}
-            any_cursor &operator=(any_cursor &&) = default;
-            any_cursor &operator=(any_cursor const &that)
+            any_cursor & operator=(any_cursor &&) = default;
+            any_cursor & operator=(any_cursor const & that)
             {
                 ptr_ = (that.ptr_ ? that.ptr_->clone() : nullptr);
                 return *this;
@@ -434,12 +435,12 @@ namespace ranges
                 RANGES_EXPECT(ptr_);
                 return ptr_->read();
             }
-            bool equal(any_cursor const &that) const
+            bool equal(any_cursor const & that) const
             {
                 RANGES_EXPECT(!ptr_ == !that.ptr_);
                 return !ptr_ || ptr_->equal(*that.ptr_);
             }
-            bool equal(any_sentinel const &that) const
+            bool equal(any_sentinel const & that) const
             {
                 RANGES_EXPECT(!ptr_ == !that.view_);
                 return !ptr_ || that.view_->at_end(ptr_->iter());
@@ -461,7 +462,7 @@ namespace ranges
                 RANGES_EXPECT(ptr_);
                 ptr_->advance(n);
             }
-            CPP_member auto distance_to(any_cursor const &that) const
+            CPP_member auto distance_to(any_cursor const & that) const
                 -> CPP_ret(std::ptrdiff_t)( //
                     requires(category::random_access == (Cat & category::random_access)))
             {
@@ -515,7 +516,7 @@ namespace ranges
             }
             bool at_end(any_ref it_) override
             {
-                auto &it = it_.get<iterator_t<Rng> const>();
+                auto & it = it_.get<iterator_t<Rng> const>();
                 return it == sentinel_box_t::get(range_box_t::get());
             }
             std::unique_ptr<any_cloneable_view_interface<Ref, Cat>> clone() const override
@@ -542,18 +543,18 @@ namespace ranges
 
         any_view() = default;
         template<typename Rng>
-        CPP_ctor(any_view)(Rng &&rng)( //
+        CPP_ctor(any_view)(Rng && rng)( //
             requires(!defer::Same<detail::decay_t<Rng>, any_view>) &&
             defer::InputRange<Rng> && detail::defer::AnyCompatibleRange<Rng, Ref>)
           : any_view(static_cast<Rng &&>(rng),
                      meta::bool_<(get_categories<Rng>() & Cat) == Cat>{})
         {}
         any_view(any_view &&) = default;
-        any_view(any_view const &that)
+        any_view(any_view const & that)
           : ptr_{that.ptr_ ? that.ptr_->clone() : nullptr}
         {}
-        any_view &operator=(any_view &&) = default;
-        any_view &operator=(any_view const &that)
+        any_view & operator=(any_view &&) = default;
+        any_view & operator=(any_view const & that)
         {
             ptr_ = (that.ptr_ ? that.ptr_->clone() : nullptr);
             return *this;
@@ -569,7 +570,7 @@ namespace ranges
         template<typename Rng>
         using impl_t = detail::any_view_impl<view::all_t<Rng>, Ref, Cat>;
         template<typename Rng>
-        any_view(Rng &&rng, std::true_type)
+        any_view(Rng && rng, std::true_type)
           : ptr_{detail::make_unique<impl_t<Rng>>(view::all(static_cast<Rng &&>(rng)))}
         {}
         template<typename Rng>
@@ -602,7 +603,7 @@ namespace ranges
 
         any_view() = default;
         template<typename Rng>
-        CPP_ctor(any_view)(Rng &&rng)( //
+        CPP_ctor(any_view)(Rng && rng)( //
             requires(!defer::Same<detail::decay_t<Rng>, any_view>) &&
             defer::InputRange<Rng> && detail::defer::AnyCompatibleRange<Rng, Ref>)
           : ptr_{std::make_shared<impl_t<Rng>>(view::all(static_cast<Rng &&>(rng)))}

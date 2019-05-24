@@ -15,13 +15,14 @@
 
 #include <type_traits>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/common_iterator.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/interface.hpp>
@@ -74,14 +75,14 @@ namespace ranges
         template<bool Const = true>
         auto end_(std::false_type) const
             -> CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)( //
-                requires Const &&Range<meta::const_if_c<Const, Rng>>)
+                requires Const && Range<meta::const_if_c<Const, Rng>>)
         {
             return ranges::end(rng_);
         }
         template<bool Const = true>
         auto end_(std::true_type) const
             -> CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)( //
-                requires Const &&Range<meta::const_if_c<Const, Rng>>)
+                requires Const && Range<meta::const_if_c<Const, Rng>>)
         {
             return ranges::begin(rng_) + ranges::distance(rng_);
         }
@@ -144,7 +145,7 @@ namespace ranges
         struct cpp20_common_fn
         {
             template<typename Rng>
-            auto operator()(Rng &&rng) const -> CPP_ret(common_view<all_t<Rng>>)( //
+            auto operator()(Rng && rng) const -> CPP_ret(common_view<all_t<Rng>>)( //
                 requires ViewableRange<Rng> && (!CommonRange<Rng>))
             {
                 return common_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
@@ -154,7 +155,7 @@ namespace ranges
         struct common_fn
         {
             template<typename Rng>
-            auto operator()(Rng &&rng) const -> CPP_ret(common_view<all_t<Rng>>)( //
+            auto operator()(Rng && rng) const -> CPP_ret(common_view<all_t<Rng>>)( //
                 requires ViewableRange<Rng>)
             {
                 return common_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
@@ -182,7 +183,7 @@ namespace ranges
             RANGES_DEPRECATED(
                 "The name view::bounded is deprecated. "
                 "Please use view::common instead.")
-            RANGES_INLINE_VAR constexpr auto &bounded = common;
+            RANGES_INLINE_VAR constexpr auto & bounded = common;
         }
 
         template<typename Rng>

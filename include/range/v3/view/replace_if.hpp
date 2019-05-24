@@ -21,8 +21,9 @@
 
 #include <concepts/concepts.hpp>
 
-#include <range/v3/functional/invoke.hpp>
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -53,53 +54,53 @@ namespace ranges
 
             template<typename I>
             [[noreturn]] common_type_t<decay_t<unwrap_reference_t<Val const &>>,
-                                       iter_value_t<I>>
-                &operator()(copy_tag, I const &) const
+                                       iter_value_t<I>> &
+            operator()(copy_tag, I const &) const
             {
                 RANGES_EXPECT(false);
             }
 
             template<typename I>
-            auto operator()(I const &i)
+            auto operator()(I const & i)
                 -> CPP_ret(common_reference_t<unwrap_reference_t<Val const &>,
                                               iter_reference_t<I>>)( //
                     requires(!Invocable<Pred const &, iter_reference_t<I>>))
             {
-                auto &&x = *i;
+                auto && x = *i;
                 if(invoke(first(), (decltype(x) &&)x))
                     return unwrap_reference(second());
                 return (decltype(x) &&)x;
             }
             template<typename I>
-            auto operator()(I const &i) const
+            auto operator()(I const & i) const
                 -> CPP_ret(common_reference_t<unwrap_reference_t<Val const &>,
                                               iter_reference_t<I>>)( //
                     requires Invocable<Pred const &, iter_reference_t<I>>)
             {
-                auto &&x = *i;
+                auto && x = *i;
                 if(invoke(first(), (decltype(x) &&)x))
                     return unwrap_reference(second());
                 return (decltype(x) &&)x;
             }
 
             template<typename I>
-            auto operator()(move_tag, I const &i)
+            auto operator()(move_tag, I const & i)
                 -> CPP_ret(common_reference_t<unwrap_reference_t<Val const &>,
                                               iter_rvalue_reference_t<I>>)( //
                     requires(!Invocable<Pred const &, iter_rvalue_reference_t<I>>))
             {
-                auto &&x = iter_move(i);
+                auto && x = iter_move(i);
                 if(invoke(first(), (decltype(x) &&)x))
                     return unwrap_reference(second());
                 return (decltype(x) &&)x;
             }
             template<typename I>
-            auto operator()(move_tag, I const &i) const
+            auto operator()(move_tag, I const & i) const
                 -> CPP_ret(common_reference_t<unwrap_reference_t<Val const &>,
                                               iter_rvalue_reference_t<I>>)( //
                     requires Invocable<Pred const &, iter_rvalue_reference_t<I>>)
             {
-                auto &&x = iter_move(i);
+                auto && x = iter_move(i);
                 if(invoke(first(), (decltype(x) &&)x))
                     return unwrap_reference(second());
                 return (decltype(x) &&)x;
@@ -127,16 +128,16 @@ namespace ranges
 
         public:
             template<typename Rng, typename Pred, typename Val>
-            auto operator()(Rng &&rng, Pred pred, Val new_value) const
+            auto operator()(Rng && rng, Pred pred, Val new_value) const
                 -> CPP_ret(replace_if_view<all_t<Rng>, Pred, Val>)( //
-                    requires ViewableRange<Rng> &&InputRange<Rng>
-                        &&IndirectUnaryPredicate<Pred, iterator_t<Rng>>
-                            &&Common<detail::decay_t<unwrap_reference_t<Val const &>>,
-                                     range_value_t<Rng>>
-                                &&CommonReference<unwrap_reference_t<Val const &>,
-                                                  range_reference_t<Rng>>
-                                    &&CommonReference<unwrap_reference_t<Val const &>,
-                                                      range_rvalue_reference_t<Rng>>)
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        IndirectUnaryPredicate<Pred, iterator_t<Rng>> &&
+                            Common<detail::decay_t<unwrap_reference_t<Val const &>>,
+                                   range_value_t<Rng>> &&
+                                CommonReference<unwrap_reference_t<Val const &>,
+                                                range_reference_t<Rng>> &&
+                                    CommonReference<unwrap_reference_t<Val const &>,
+                                                    range_rvalue_reference_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)),
                         {std::move(pred), std::move(new_value)}};

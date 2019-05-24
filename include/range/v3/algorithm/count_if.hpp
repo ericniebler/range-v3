@@ -15,6 +15,8 @@
 
 #include <utility>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
@@ -22,7 +24,6 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -34,8 +35,8 @@ namespace ranges
         template<typename I, typename S, typename R, typename P = identity>
         auto operator()(I begin, S end, R pred, P proj = P{}) const
             -> CPP_ret(iter_difference_t<I>)( //
-                requires InputIterator<I> &&Sentinel<S, I>
-                    &&IndirectUnaryPredicate<R, projected<I, P>>)
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    IndirectUnaryPredicate<R, projected<I, P>>)
         {
             iter_difference_t<I> n = 0;
             for(; begin != end; ++begin)
@@ -45,10 +46,10 @@ namespace ranges
         }
 
         template<typename Rng, typename R, typename P = identity>
-        auto operator()(Rng &&rng, R pred, P proj = P{}) const
+        auto operator()(Rng && rng, R pred, P proj = P{}) const
             -> CPP_ret(iter_difference_t<iterator_t<Rng>>)( //
-                requires InputRange<Rng>
-                    &&IndirectUnaryPredicate<R, projected<iterator_t<Rng>, P>>)
+                requires InputRange<Rng> &&
+                    IndirectUnaryPredicate<R, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

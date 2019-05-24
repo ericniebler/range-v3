@@ -15,6 +15,8 @@
 
 #include <functional>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
@@ -24,7 +26,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -39,8 +40,8 @@ namespace ranges
         template<typename I, typename S, typename F, typename P = identity>
         auto operator()(I begin, S end, F fun, P proj = P{}) const
             -> CPP_ret(for_each_result<I, F>)( //
-                requires InputIterator<I> &&Sentinel<S, I>
-                    &&IndirectUnaryInvocable<F, projected<I, P>>)
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    IndirectUnaryInvocable<F, projected<I, P>>)
         {
             for(; begin != end; ++begin)
             {
@@ -50,10 +51,10 @@ namespace ranges
         }
 
         template<typename Rng, typename F, typename P = identity>
-        auto operator()(Rng &&rng, F fun, P proj = P{}) const
+        auto operator()(Rng && rng, F fun, P proj = P{}) const
             -> CPP_ret(for_each_result<safe_iterator_t<Rng>, F>)( //
-                requires InputRange<Rng>
-                    &&IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
+                requires InputRange<Rng> &&
+                    IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
         {
             return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in,
                     detail::move(fun)};

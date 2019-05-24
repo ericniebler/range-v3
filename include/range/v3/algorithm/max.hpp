@@ -16,6 +16,8 @@
 
 #include <initializer_list>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
@@ -24,7 +26,6 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -34,7 +35,7 @@ namespace ranges
     struct max_fn
     {
         template<typename T, typename C = less, typename P = identity>
-        constexpr auto operator()(T const &a, T const &b, C pred = C{},
+        constexpr auto operator()(T const & a, T const & b, C pred = C{},
                                   P proj = P{}) const -> CPP_ret(T const &)( //
             requires IndirectStrictWeakOrder<C, projected<T const *, P>>)
         {
@@ -42,10 +43,10 @@ namespace ranges
         }
 
         template<typename Rng, typename C = less, typename P = identity>
-        constexpr auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+        constexpr auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
             -> CPP_ret(range_value_t<Rng>)( //
-                requires InputRange<Rng>
-                    &&IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>> &&
+                requires InputRange<Rng> &&
+                    IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>> &&
                         IndirectlyCopyableStorable<iterator_t<Rng>, range_value_t<Rng> *>)
         {
             auto begin = ranges::begin(rng);
@@ -54,7 +55,7 @@ namespace ranges
             range_value_t<Rng> result = *begin;
             while(++begin != end)
             {
-                auto &&tmp = *begin;
+                auto && tmp = *begin;
                 if(invoke(pred, invoke(proj, result), invoke(proj, tmp)))
                     result = (decltype(tmp) &&)tmp;
             }
@@ -62,9 +63,9 @@ namespace ranges
         }
 
         template<typename T, typename C = less, typename P = identity>
-        constexpr auto operator()(std::initializer_list<T> const &&rng, C pred = C{},
+        constexpr auto operator()(std::initializer_list<T> const && rng, C pred = C{},
                                   P proj = P{}) const -> CPP_ret(T)( //
-            requires Copyable<T> &&IndirectStrictWeakOrder<C, projected<T const *, P>>)
+            requires Copyable<T> && IndirectStrictWeakOrder<C, projected<T const *, P>>)
         {
             return (*this)(rng, std::move(pred), std::move(proj));
         }

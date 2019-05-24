@@ -19,11 +19,12 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
@@ -45,18 +46,18 @@ namespace ranges
         struct cursor
         {
         private:
-            generate_n_view *rng_;
+            generate_n_view * rng_;
 
         public:
             cursor() = default;
-            explicit cursor(generate_n_view &rng)
+            explicit cursor(generate_n_view & rng)
               : rng_(&rng)
             {}
             bool equal(default_sentinel_t) const
             {
                 return 0 == rng_->n_;
             }
-            result_t &&read() const
+            result_t && read() const
             {
                 if(!rng_->val_)
                     rng_->val_.emplace(rng_->gen_());
@@ -80,7 +81,7 @@ namespace ranges
           : gen_(std::move(g))
           , n_(n)
         {}
-        result_t &cached()
+        result_t & cached()
         {
             return *val_;
         }
@@ -96,12 +97,12 @@ namespace ranges
         {
             template<typename G>
             auto operator()(G g, std::size_t n) const -> CPP_ret(generate_n_view<G>)( //
-                requires Invocable<G &> &&CopyConstructible<G>
-                    &&std::is_object<detail::decay_t<invoke_result_t<G &>>>::value
-                        &&Constructible<detail::decay_t<invoke_result_t<G &>>,
-                                        invoke_result_t<G &>>
-                            &&Assignable<detail::decay_t<invoke_result_t<G &>> &,
-                                         invoke_result_t<G &>>)
+                requires Invocable<G &> && CopyConstructible<G> &&
+                    std::is_object<detail::decay_t<invoke_result_t<G &>>>::value &&
+                        Constructible<detail::decay_t<invoke_result_t<G &>>,
+                                      invoke_result_t<G &>> &&
+                            Assignable<detail::decay_t<invoke_result_t<G &>> &,
+                                       invoke_result_t<G &>>)
             {
                 return generate_n_view<G>{std::move(g), n};
             }

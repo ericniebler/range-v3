@@ -17,6 +17,8 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
@@ -27,7 +29,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -43,14 +44,14 @@ namespace ranges
                  typename P = identity>
         auto operator()(I begin, S end, O0 o0, O1 o1, C pred, P proj = P{}) const
             -> CPP_ret(partition_copy_result<I, O0, O1>)( //
-                requires InputIterator<I> &&Sentinel<S, I> &&WeaklyIncrementable<O0>
-                    &&WeaklyIncrementable<O1> &&IndirectlyCopyable<I, O0>
-                        &&IndirectlyCopyable<I, O1>
-                            &&IndirectUnaryPredicate<C, projected<I, P>>)
+                requires InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O0> &&
+                    WeaklyIncrementable<O1> && IndirectlyCopyable<I, O0> &&
+                        IndirectlyCopyable<I, O1> &&
+                            IndirectUnaryPredicate<C, projected<I, P>>)
         {
             for(; begin != end; ++begin)
             {
-                auto &&x = *begin;
+                auto && x = *begin;
                 if(invoke(pred, invoke(proj, x)))
                 {
                     *o0 = (decltype(x) &&)x;
@@ -67,12 +68,12 @@ namespace ranges
 
         template<typename Rng, typename O0, typename O1, typename C,
                  typename P = identity>
-        auto operator()(Rng &&rng, O0 o0, O1 o1, C pred, P proj = P{}) const
+        auto operator()(Rng && rng, O0 o0, O1 o1, C pred, P proj = P{}) const
             -> CPP_ret(partition_copy_result<safe_iterator_t<Rng>, O0, O1>)( //
-                requires InputRange<Rng> &&WeaklyIncrementable<O0>
-                    &&WeaklyIncrementable<O1> &&IndirectlyCopyable<iterator_t<Rng>, O0>
-                        &&IndirectlyCopyable<iterator_t<Rng>, O1>
-                            &&IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+                requires InputRange<Rng> && WeaklyIncrementable<O0> &&
+                    WeaklyIncrementable<O1> && IndirectlyCopyable<iterator_t<Rng>, O0> &&
+                        IndirectlyCopyable<iterator_t<Rng>, O1> &&
+                            IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng),
                            end(rng),

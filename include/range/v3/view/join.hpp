@@ -19,12 +19,13 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
 #include <range/v3/range_for.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/variant.hpp>
 #include <range/v3/view/all.hpp>
@@ -78,11 +79,11 @@ namespace ranges
         {
             view::all_t<Inner> inner_ = view::all_t<Inner>();
 
-            constexpr view::all_t<Inner> &update_inner_(Inner &&inner)
+            constexpr view::all_t<Inner> & update_inner_(Inner && inner)
             {
                 return (inner_ = view::all(static_cast<Inner &&>(inner)));
             }
-            constexpr view::all_t<Inner> &get_inner_(ignore_t) noexcept
+            constexpr view::all_t<Inner> & get_inner_(ignore_t) noexcept
             {
                 return inner_;
             }
@@ -92,12 +93,12 @@ namespace ranges
         {
             // Intentionally promote xvalues to lvalues here:
             template<typename Inner>
-            static constexpr Inner &update_inner_(Inner &&inner) noexcept
+            static constexpr Inner & update_inner_(Inner && inner) noexcept
             {
                 return inner;
             }
             template<typename OuterIt>
-            static constexpr decltype(auto) get_inner_(OuterIt &&outer_it)
+            static constexpr decltype(auto) get_inner_(OuterIt && outer_it)
             {
                 return *outer_it;
             }
@@ -159,7 +160,7 @@ namespace ranges
             SizedRange<range_reference_t<Rng>>)
         {
             range_size_t<range_reference_t<Rng>> n = 0;
-            RANGES_FOR(auto &&inner, outer_)
+            RANGES_FOR(auto && inner, outer_)
                 n += ranges::size(inner);
             return n;
         }
@@ -182,7 +183,7 @@ namespace ranges
             using CInner = range_reference_t<COuter>;
             using ref_is_glvalue = std::is_reference<CInner>;
 
-            Parent *rng_ = nullptr;
+            Parent * rng_ = nullptr;
             iterator_t<COuter> outer_it_{};
             iterator_t<CInner> inner_it_{};
 
@@ -190,7 +191,7 @@ namespace ranges
             {
                 for(; outer_it_ != ranges::end(rng_->outer_); ++outer_it_)
                 {
-                    auto &inner = rng_->update_inner_(*outer_it_);
+                    auto & inner = rng_->update_inner_(*outer_it_);
                     inner_it_ = ranges::begin(inner);
                     if(inner_it_ != ranges::end(inner))
                         return;
@@ -206,7 +207,7 @@ namespace ranges
                             SinglePass<iterator_t<CInner>> || !ref_is_glvalue::value>;
             cursor() = default;
             template<typename BeginOrEnd>
-            constexpr cursor(Parent &rng, BeginOrEnd begin_or_end)
+            constexpr cursor(Parent & rng, BeginOrEnd begin_or_end)
               : rng_{&rng}
               , outer_it_(begin_or_end(rng.outer_))
             {
@@ -231,15 +232,16 @@ namespace ranges
             {
                 return outer_it_ == ranges::end(rng_->outer_);
             }
-            CPP_member constexpr auto equal(cursor const &that) const -> CPP_ret(bool)( //
-                requires ref_is_glvalue::value &&EqualityComparable<iterator_t<COuter>>
-                    &&EqualityComparable<iterator_t<CInner>>)
+            CPP_member constexpr auto equal(cursor const & that) const
+                -> CPP_ret(bool)( //
+                    requires ref_is_glvalue::value && EqualityComparable<
+                        iterator_t<COuter>> && EqualityComparable<iterator_t<CInner>>)
             {
                 return outer_it_ == that.outer_it_ && inner_it_ == that.inner_it_;
             }
             constexpr void next()
             {
-                auto &&inner_rng = rng_->get_inner_(outer_it_);
+                auto && inner_rng = rng_->get_inner_(outer_it_);
                 if(++inner_it_ == ranges::end(inner_rng))
                 {
                     ++outer_it_;
@@ -247,9 +249,9 @@ namespace ranges
                 }
             }
             CPP_member constexpr auto prev() -> CPP_ret(void)( //
-                requires ref_is_glvalue::value &&BidirectionalRange<COuter>
-                    &&BidirectionalRange<CInner>
-                        &&CommonRange<CInner>) // ericniebler/stl2#606
+                requires ref_is_glvalue::value && BidirectionalRange<COuter> &&
+                    BidirectionalRange<CInner> &&
+                        CommonRange<CInner>) // ericniebler/stl2#606
             {
                 if(outer_it_ == ranges::end(rng_->outer_))
                     inner_it_ = ranges::end(*--outer_it_);
@@ -274,7 +276,7 @@ namespace ranges
         }
         struct end_cursor_fn
         {
-            constexpr auto operator()(join_view &this_, std::true_type) const
+            constexpr auto operator()(join_view & this_, std::true_type) const
             {
                 return cursor<use_const_always()>{this_, ranges::end};
             }
@@ -285,7 +287,7 @@ namespace ranges
         };
         struct cend_cursor_fn
         {
-            constexpr auto operator()(join_view const &this_, std::true_type) const
+            constexpr auto operator()(join_view const & this_, std::true_type) const
             {
                 return cursor<true>{this_, ranges::end};
             }
@@ -302,7 +304,7 @@ namespace ranges
 
         template<bool Const = true>
         constexpr auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
-            requires Const &&InputRange<meta::const_if_c<Const, Rng>> &&
+            requires Const && InputRange<meta::const_if_c<Const, Rng>> &&
                 std::is_reference<range_reference_t<meta::const_if_c<Const, Rng>>>::value)
         {
             return {*this, ranges::begin};
@@ -319,7 +321,7 @@ namespace ranges
 
         template<bool Const = true>
         constexpr auto CPP_fun(end_cursor)()(
-            const requires Const &&InputRange<meta::const_if_c<Const, Rng>> &&
+            const requires Const && InputRange<meta::const_if_c<Const, Rng>> &&
                 std::is_reference<range_reference_t<meta::const_if_c<Const, Rng>>>::value)
         {
             using CRng = meta::const_if_c<Const, Rng>;
@@ -360,7 +362,7 @@ namespace ranges
             SizedRange<range_reference_t<Rng>> && SizedRange<ValRng>)
         {
             range_size_t<range_reference_t<Rng>> n = 0;
-            RANGES_FOR(auto &&inner, outer_)
+            RANGES_FOR(auto && inner, outer_)
                 n += ranges::size(inner);
             return n + (range_cardinality<Rng>::value == 0
                             ? 0
@@ -378,7 +380,7 @@ namespace ranges
 
         class cursor
         {
-            join_with_view *rng_ = nullptr;
+            join_with_view * rng_ = nullptr;
             iterator_t<Outer> outer_it_{};
             variant<iterator_t<ValRng>, iterator_t<Inner>> cur_{};
 
@@ -412,7 +414,7 @@ namespace ranges
                                                         range_rvalue_reference_t<ValRng>>;
             using single_pass = std::true_type;
             cursor() = default;
-            cursor(join_with_view &rng)
+            cursor(join_with_view & rng)
               : rng_{&rng}
               , outer_it_(ranges::begin(rng.outer_))
             {
@@ -432,13 +434,13 @@ namespace ranges
                 // visit(cur_, [](auto& it){ ++it; });
                 if(cur_.index() == 0)
                 {
-                    auto &it = ranges::get<0>(cur_);
+                    auto & it = ranges::get<0>(cur_);
                     RANGES_ASSERT(it != ranges::end(rng_->val_));
                     ++it;
                 }
                 else
                 {
-                    auto &it = ranges::get<1>(cur_);
+                    auto & it = ranges::get<1>(cur_);
                     RANGES_ASSERT(it != ranges::end(rng_->inner_));
                     ++it;
                 }
@@ -507,7 +509,7 @@ namespace ranges
         struct cpp20_join_fn
         {
             template<typename Rng>
-            auto operator()(Rng &&rng) const -> CPP_ret(join_view<all_t<Rng>>)( //
+            auto operator()(Rng && rng) const -> CPP_ret(join_view<all_t<Rng>>)( //
                 requires JoinableRange<Rng>)
             {
                 return join_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
@@ -519,7 +521,7 @@ namespace ranges
         private:
             friend view_access;
             template<typename T>
-            static auto CPP_fun(bind)(join_fn join, T &&t)( //
+            static auto CPP_fun(bind)(join_fn join, T && t)( //
                 requires(!JoinableRange<T>))
             {
                 return make_pipeable(
@@ -532,7 +534,7 @@ namespace ranges
             using cpp20_join_fn::operator();
 
             template<typename Rng>
-            auto operator()(Rng &&rng, inner_value_t<Rng> v) const
+            auto operator()(Rng && rng, inner_value_t<Rng> v) const
                 -> CPP_ret(join_with_view<all_t<Rng>,
                                           single_view<inner_value_t<Rng>>>)( //
                     requires JoinableWithRange<Rng, single_view<inner_value_t<Rng>>>)
@@ -540,7 +542,7 @@ namespace ranges
                 return {all(static_cast<Rng &&>(rng)), single(std::move(v))};
             }
             template<typename Rng, typename ValRng>
-            auto operator()(Rng &&rng, ValRng &&val) const
+            auto operator()(Rng && rng, ValRng && val) const
                 -> CPP_ret(join_with_view<all_t<Rng>, all_t<ValRng>>)( //
                     requires JoinableWithRange<Rng, ValRng>)
             {
@@ -573,8 +575,8 @@ namespace ranges
             RANGES_INLINE_VARIABLE(ranges::view::view<ranges::view::cpp20_join_fn>, join)
         }
         CPP_template(typename Rng)( //
-            requires InputRange<Rng> &&View<Rng>
-                &&InputRange<iter_reference_t<iterator_t<Rng>>> &&
+            requires InputRange<Rng> && View<Rng> &&
+                InputRange<iter_reference_t<iterator_t<Rng>>> &&
             (std::is_reference<iter_reference_t<iterator_t<Rng>>>::value ||
              View<iter_value_t<iterator_t<Rng>>>)) //
             using join_view = ranges::join_view<Rng>;

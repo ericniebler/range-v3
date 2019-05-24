@@ -21,9 +21,10 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
-#include <range/v3/range_fwd.hpp>
 
 namespace ranges
 {
@@ -32,7 +33,7 @@ namespace ranges
     {
         template<typename I, typename S>
         using common_iterator_impl_t =
-            enable_if_t<(bool)(Iterator<I> &&Sentinel<S, I>), common_iterator<I, S>>;
+            enable_if_t<(bool)(Iterator<I> && Sentinel<S, I>), common_iterator<I, S>>;
     }
     /// \endcond
 

@@ -17,10 +17,11 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/ref.hpp>
 #include <range/v3/view/subrange.hpp>
@@ -36,7 +37,7 @@ namespace ranges
         private:
             /// If it's a view already, pass it though.
             template<typename T>
-            static auto from_range_(T &&t, std::true_type, detail::ignore_t,
+            static auto from_range_(T && t, std::true_type, detail::ignore_t,
                                     detail::ignore_t)
             {
                 return static_cast<T &&>(t);
@@ -45,7 +46,7 @@ namespace ranges
             /// If it is container-like, turn it into a view, being careful
             /// to preserve the Sized-ness of the range.
             template<typename T>
-            static auto from_range_(T &&t, std::false_type, std::true_type,
+            static auto from_range_(T && t, std::false_type, std::true_type,
                                     detail::ignore_t)
             {
                 return ranges::view::ref(t);
@@ -54,7 +55,7 @@ namespace ranges
             /// Not a view and not an lvalue? If it's a ForwardingRange_, then
             /// return a subrange holding the range's begin/end.
             template<typename T>
-            static auto from_range_(T &&t, std::false_type, std::false_type,
+            static auto from_range_(T && t, std::false_type, std::false_type,
                                     std::true_type)
             {
                 return make_subrange(static_cast<T &&>(t));
@@ -62,7 +63,7 @@ namespace ranges
 
         public:
             template<typename T>
-            auto CPP_fun(operator())(T &&t)(const requires ViewableRange<T>)
+            auto CPP_fun(operator())(T && t)(const requires ViewableRange<T>)
             {
                 return all_fn::from_range_(static_cast<T &&>(t),
                                            meta::bool_<View<uncvref_t<T>>>{},
@@ -94,10 +95,10 @@ namespace ranges
         CPP_assert(View<Rng>);
 
         identity_adaptor() = default;
-        constexpr explicit identity_adaptor(Rng const &rng)
+        constexpr explicit identity_adaptor(Rng const & rng)
           : Rng(rng)
         {}
-        constexpr explicit identity_adaptor(Rng &&rng)
+        constexpr explicit identity_adaptor(Rng && rng)
           : Rng(detail::move(rng))
         {}
     };

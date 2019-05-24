@@ -15,6 +15,7 @@
 #define RANGES_V3_UTILITY_IN_PLACE_HPP
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges

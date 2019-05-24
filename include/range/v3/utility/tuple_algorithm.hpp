@@ -22,9 +22,10 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/detail/adl_get.hpp>
 #include <range/v3/functional/invoke.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -150,7 +151,7 @@ namespace ranges
     {
     private:
         template<typename Tup, typename Fun, std::size_t... Is>
-        static void impl(Tup &&tup, Fun &fun, meta::index_sequence<Is...>)
+        static void impl(Tup && tup, Fun & fun, meta::index_sequence<Is...>)
         {
             (void)std::initializer_list<int>{
                 ((void)fun(detail::adl_get<Is>(static_cast<Tup &&>(tup))), 42)...};
@@ -158,7 +159,7 @@ namespace ranges
 
     public:
         template<typename Tup, typename Fun>
-        Fun operator()(Tup &&tup, Fun fun) const
+        Fun operator()(Tup && tup, Fun fun) const
         {
             tuple_for_each_fn::impl(
                 static_cast<Tup &&>(tup), fun, tuple_indices_t<Tup>{});

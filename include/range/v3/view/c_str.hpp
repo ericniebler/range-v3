@@ -15,8 +15,9 @@
 
 #include <type_traits>
 
-#include <range/v3/iterator/unreachable_sentinel.hpp>
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/iterator/unreachable_sentinel.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/view/subrange.hpp>
@@ -69,7 +70,7 @@ namespace ranges
 
             // Null-terminated
             template<typename Char>
-            auto operator()(Char *sz) const volatile
+            auto operator()(Char * sz) const volatile
                 -> CPP_ret(ranges::delimit_view<
                            ranges::subrange<Char *, ranges::unreachable_sentinel_t>,
                            meta::_t<std::remove_cv<Char>>>)( //

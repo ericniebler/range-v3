@@ -22,13 +22,14 @@
 
 #include <concepts/concepts.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
 // Non-portable forward declarations of standard containers
@@ -255,7 +256,7 @@ namespace ranges
 
             template<typename T>
             static constexpr auto test(T const *) -> CPP_ret(bool)( //
-                requires Range<T> &&Range<T const>)
+                requires Range<T> && Range<T const>)
             {
                 return RANGES_IS_SAME(iter_reference_t<iterator_t<T>>,
                                       iter_reference_t<iterator_t<T const>>);
@@ -265,7 +266,7 @@ namespace ranges
                 return true;
             }
             template<typename T>
-            constexpr enable_view_helper_(T const *p)
+            constexpr enable_view_helper_(T const * p)
               : result_(enable_view_helper_::test(p))
             {}
         };
@@ -315,7 +316,7 @@ namespace ranges
         //     return false;
         // }
         template<typename T>
-        constexpr T const *nullptr_(int)
+        constexpr T const * nullptr_(int)
         {
             return nullptr;
         }

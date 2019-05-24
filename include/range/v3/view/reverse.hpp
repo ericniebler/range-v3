@@ -19,12 +19,13 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/reverse_iterator.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/get.hpp>
 #include <range/v3/utility/optional.hpp>
@@ -54,7 +55,7 @@ namespace ranges
         {
             using cache_t =
                 detail::non_propagating_cache<iterator_t<Rng>, reverse_view<Rng>>;
-            auto &end_ = static_cast<cache_t &>(*this);
+            auto & end_ = static_cast<cache_t &>(*this);
             if(!end_)
                 end_ = ranges::next(ranges::begin(rng_), ranges::end(rng_));
             return make_reverse_iterator(*end_);
@@ -76,7 +77,7 @@ namespace ranges
         template<bool Const = true>
         constexpr auto begin() const
             -> CPP_ret(reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>>)( //
-                requires Const &&CommonRange<meta::const_if_c<Const, Rng>>)
+                requires Const && CommonRange<meta::const_if_c<Const, Rng>>)
         {
             return make_reverse_iterator(ranges::end(rng_));
         }
@@ -87,7 +88,7 @@ namespace ranges
         template<bool Const = true>
         constexpr auto end() const
             -> CPP_ret(reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>>)( //
-                requires Const &&CommonRange<meta::const_if_c<Const, Rng>>)
+                requires Const && CommonRange<meta::const_if_c<Const, Rng>>)
         {
             return make_reverse_iterator(ranges::begin(rng_));
         }
@@ -125,9 +126,9 @@ namespace ranges
         struct reverse_fn
         {
             template<typename Rng>
-            constexpr auto operator()(Rng &&rng) const
+            constexpr auto operator()(Rng && rng) const
                 -> CPP_ret(reverse_view<all_t<Rng>>)( //
-                    requires ViewableRange<Rng> &&BidirectionalRange<Rng>)
+                    requires ViewableRange<Rng> && BidirectionalRange<Rng>)
             {
                 return reverse_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -144,8 +145,8 @@ namespace ranges
         {
             using ranges::view::reverse;
         }
-        CPP_template(typename Rng)(                       //
-            requires View<Rng> &&BidirectionalRange<Rng>) //
+        CPP_template(typename Rng)(                        //
+            requires View<Rng> && BidirectionalRange<Rng>) //
             using reverse_view = ranges::reverse_view<Rng>;
     }
     /// @}

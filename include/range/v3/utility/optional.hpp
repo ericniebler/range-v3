@@ -33,7 +33,7 @@ namespace ranges
 
     struct bad_optional_access : std::exception
     {
-        virtual const char *what() const noexcept override
+        virtual const char * what() const noexcept override
         {
             return "bad optional access";
         }
@@ -62,7 +62,7 @@ namespace ranges
     /// \endcond
     namespace
     {
-        constexpr auto &nullopt = detail::nullopt_holder<void>::nullopt;
+        constexpr auto & nullopt = detail::nullopt_holder<void>::nullopt;
     }
 #endif
 
@@ -152,8 +152,8 @@ namespace ranges
                 {}
                 optional_storage(optional_storage const &) = default;
                 optional_storage(optional_storage &&) = default;
-                optional_storage &operator=(optional_storage const &) = default;
-                optional_storage &operator=(optional_storage &&) = default;
+                optional_storage & operator=(optional_storage const &) = default;
+                optional_storage & operator=(optional_storage &&) = default;
 
                 void reset() noexcept
                 {
@@ -175,34 +175,34 @@ namespace ranges
                 {
                     return engaged_;
                 }
-                constexpr T &operator*() & noexcept
+                constexpr T & operator*() & noexcept
                 {
                     return RANGES_EXPECT(engaged_), data_;
                 }
-                constexpr T const &operator*() const &noexcept
+                constexpr T const & operator*() const & noexcept
                 {
                     return RANGES_EXPECT(engaged_), data_;
                 }
-                constexpr T &&operator*() && noexcept
+                constexpr T && operator*() && noexcept
                 {
                     return RANGES_EXPECT(engaged_), detail::move(data_);
                 }
-                constexpr T const &&operator*() const &&noexcept
+                constexpr T const && operator*() const && noexcept
                 {
                     return RANGES_EXPECT(engaged_), detail::move(data_);
                 }
-                constexpr T *operator->() noexcept
+                constexpr T * operator->() noexcept
                 {
                     return RANGES_EXPECT(engaged_), std::addressof(data_);
                 }
-                constexpr T const *operator->() const noexcept
+                constexpr T const * operator->() const noexcept
                 {
                     return RANGES_EXPECT(engaged_), std::addressof(data_);
                 }
-                CPP_member constexpr auto swap(optional_base &that) noexcept(
-                    std::is_nothrow_move_constructible<T>::value
-                        &&is_nothrow_swappable<T>::value) -> CPP_ret(void)( //
-                    requires MoveConstructible<T> &&Swappable<T>)
+                CPP_member constexpr auto swap(optional_base & that) noexcept(
+                    std::is_nothrow_move_constructible<T>::value &&
+                        is_nothrow_swappable<T>::value) -> CPP_ret(void)( //
+                    requires MoveConstructible<T> && Swappable<T>)
                 {
                     constexpr bool can_swap_trivially =
                         !::concepts::adl_swap_detail::is_adl_swappable_v<T> &&
@@ -225,9 +225,9 @@ namespace ranges
                     return data_;
                 }
                 template<typename U>
-                constexpr void assign_from(U &&that) noexcept(
+                constexpr void assign_from(U && that) noexcept(
                     std::is_nothrow_constructible<T, decltype(*static_cast<U &&>(that))>::
-                        value &&std::is_nothrow_assignable<
+                        value && std::is_nothrow_assignable<
                             T &, decltype(*static_cast<U &&>(that))>::value)
                 {
                     if(!that.has_value())
@@ -243,14 +243,14 @@ namespace ranges
                 }
 
             private:
-                constexpr void swap_(std::true_type, optional_base &that) noexcept
+                constexpr void swap_(std::true_type, optional_base & that) noexcept
                 {
                     ranges::swap(static_cast<optional_storage<T> &>(*this),
                                  static_cast<optional_storage<T> &>(that));
                 }
-                constexpr void swap_(std::false_type, optional_base &that) noexcept(
-                    std::is_nothrow_move_constructible<T>::value
-                        &&is_nothrow_swappable<T>::value)
+                constexpr void swap_(std::false_type, optional_base & that) noexcept(
+                    std::is_nothrow_move_constructible<T>::value &&
+                        is_nothrow_swappable<T>::value)
                 {
                     if(that.engaged_ == engaged_)
                     {
@@ -259,8 +259,8 @@ namespace ranges
                     }
                     else
                     {
-                        auto &src = engaged_ ? *this : that;
-                        auto &dst = engaged_ ? that : *this;
+                        auto & src = engaged_ ? *this : that;
+                        auto & dst = engaged_ ? that : *this;
                         dst.construct_from(detail::move(src.data_));
                         src.reset();
                     }
@@ -275,8 +275,8 @@ namespace ranges
             {
                 optional_base() = default;
                 template<typename Arg>
-                constexpr explicit CPP_ctor(optional_base)(in_place_t, Arg &&arg)( //
-                    noexcept(true)                                                 //
+                constexpr explicit CPP_ctor(optional_base)(in_place_t, Arg && arg)( //
+                    noexcept(true)                                                  //
                     requires Constructible<T &, Arg>)
                   : ptr_(std::addressof(arg))
                 {}
@@ -284,11 +284,11 @@ namespace ranges
                 {
                     return ptr_;
                 }
-                constexpr T &operator*() const noexcept
+                constexpr T & operator*() const noexcept
                 {
                     return RANGES_EXPECT(ptr_), *ptr_;
                 }
-                constexpr T *operator->() const noexcept
+                constexpr T * operator->() const noexcept
                 {
                     return RANGES_EXPECT(ptr_), ptr_;
                 }
@@ -296,7 +296,7 @@ namespace ranges
                 {
                     ptr_ = nullptr;
                 }
-                CPP_member constexpr auto swap(optional_base &that) noexcept(
+                CPP_member constexpr auto swap(optional_base & that) noexcept(
                     is_nothrow_swappable<T>::value) -> CPP_ret(void)( //
                     requires Swappable<T>)
                 {
@@ -308,7 +308,7 @@ namespace ranges
 
             protected:
                 template<typename U>
-                constexpr auto construct_from(U &&ref) noexcept -> CPP_ret(T &)( //
+                constexpr auto construct_from(U && ref) noexcept -> CPP_ret(T &)( //
                     requires ConvertibleTo<U &, T &>)
                 {
                     RANGES_EXPECT(!ptr_);
@@ -316,7 +316,7 @@ namespace ranges
                     return *ptr_;
                 }
                 template<typename U>
-                constexpr void assign_from(U &&that)
+                constexpr void assign_from(U && that)
                 {
                     if(ptr_ && that.ptr_)
                         *ptr_ = *that.ptr_;
@@ -325,22 +325,22 @@ namespace ranges
                 }
 
             private:
-                T *ptr_ = nullptr;
+                T * ptr_ = nullptr;
             };
 
             template<typename T>
             struct optional_copy : optional_base<T>
             {
                 optional_copy() = default;
-                optional_copy(optional_copy const &that) noexcept(
+                optional_copy(optional_copy const & that) noexcept(
                     std::is_nothrow_copy_constructible<T>::value)
                 {
                     if(that.has_value())
                         this->construct_from(*that);
                 }
                 optional_copy(optional_copy &&) = default;
-                optional_copy &operator=(optional_copy const &) = default;
-                optional_copy &operator=(optional_copy &&) = default;
+                optional_copy & operator=(optional_copy const &) = default;
+                optional_copy & operator=(optional_copy &&) = default;
 
                 using optional_base<T>::optional_base;
             };
@@ -356,14 +356,14 @@ namespace ranges
             {
                 optional_move() = default;
                 optional_move(optional_move const &) = default;
-                optional_move(optional_move &&that) noexcept(
+                optional_move(optional_move && that) noexcept(
                     std::is_nothrow_move_constructible<T>::value)
                 {
                     if(that.has_value())
                         this->construct_from(std::move(*that));
                 }
-                optional_move &operator=(optional_move const &) = default;
-                optional_move &operator=(optional_move &&) = default;
+                optional_move & operator=(optional_move const &) = default;
+                optional_move & operator=(optional_move &&) = default;
 
                 using copy_construct_layer<T>::copy_construct_layer;
             };
@@ -380,15 +380,15 @@ namespace ranges
                 optional_copy_assign() = default;
                 optional_copy_assign(optional_copy_assign const &) = default;
                 optional_copy_assign(optional_copy_assign &&) = default;
-                optional_copy_assign &operator=(
-                    optional_copy_assign const
-                        &that) noexcept(std::is_nothrow_copy_constructible<T>::value
-                                            &&std::is_nothrow_copy_assignable<T>::value)
+                optional_copy_assign & operator=(
+                    optional_copy_assign const &
+                        that) noexcept(std::is_nothrow_copy_constructible<T>::value &&
+                                           std::is_nothrow_copy_assignable<T>::value)
                 {
                     this->assign_from(that);
                     return *this;
                 }
-                optional_copy_assign &operator=(optional_copy_assign &&) = default;
+                optional_copy_assign & operator=(optional_copy_assign &&) = default;
 
                 using move_construct_layer<T>::move_construct_layer;
             };
@@ -399,8 +399,8 @@ namespace ranges
                 deleted_copy_assign() = default;
                 deleted_copy_assign(deleted_copy_assign const &) = default;
                 deleted_copy_assign(deleted_copy_assign &&) = default;
-                deleted_copy_assign &operator=(deleted_copy_assign const &) = delete;
-                deleted_copy_assign &operator=(deleted_copy_assign &&) = default;
+                deleted_copy_assign & operator=(deleted_copy_assign const &) = delete;
+                deleted_copy_assign & operator=(deleted_copy_assign &&) = default;
 
                 using move_construct_layer<T>::move_construct_layer;
             };
@@ -420,10 +420,10 @@ namespace ranges
                 optional_move_assign() = default;
                 optional_move_assign(optional_move_assign const &) = default;
                 optional_move_assign(optional_move_assign &&) = default;
-                optional_move_assign &operator=(optional_move_assign const &) = default;
-                optional_move_assign &operator=(optional_move_assign &&that) noexcept(
-                    std::is_nothrow_move_constructible<T>::value
-                        &&std::is_nothrow_move_assignable<T>::value)
+                optional_move_assign & operator=(optional_move_assign const &) = default;
+                optional_move_assign & operator=(optional_move_assign && that) noexcept(
+                    std::is_nothrow_move_constructible<T>::value &&
+                        std::is_nothrow_move_assignable<T>::value)
                 {
                     this->assign_from(std::move(that));
                     return *this;
@@ -438,8 +438,8 @@ namespace ranges
                 deleted_move_assign() = default;
                 deleted_move_assign(deleted_move_assign const &) = default;
                 deleted_move_assign(deleted_move_assign &&) = default;
-                deleted_move_assign &operator=(deleted_move_assign const &) = default;
-                deleted_move_assign &operator=(deleted_move_assign &&) = delete;
+                deleted_move_assign & operator=(deleted_move_assign const &) = default;
+                deleted_move_assign & operator=(deleted_move_assign &&) = delete;
 
                 using copy_assign_layer<T>::copy_assign_layer;
             };
@@ -519,14 +519,14 @@ namespace ranges
         {}
 
         template<typename U = T>
-        constexpr CPP_ctor(optional)(U &&v)( //
+        constexpr CPP_ctor(optional)(U && v)( //
             requires(!defer::Same<detail::decay_t<U>, in_place_t>) &&
             (!defer::Same<detail::decay_t<U>, optional>)&&defer::Constructible<T, U> &&
             defer::ConvertibleTo<U, T>)
           : base_t(in_place, static_cast<U &&>(v))
         {}
         template<typename U = T>
-        explicit constexpr CPP_ctor(optional)(U &&v)( //
+        explicit constexpr CPP_ctor(optional)(U && v)( //
             requires(!defer::Same<detail::decay_t<U>, in_place_t>) &&
             (!defer::Same<detail::decay_t<U>, optional>)&&defer::Constructible<T, U> &&
             (!defer::ConvertibleTo<U, T>))
@@ -534,16 +534,16 @@ namespace ranges
         {}
 
         template<typename U>
-        CPP_ctor(optional)(optional<U> const &that)( //
-            requires OptionalShouldConvert<U, T> &&Constructible<T, U const &>
-                &&ConvertibleTo<U const &, T>)
+        CPP_ctor(optional)(optional<U> const & that)( //
+            requires OptionalShouldConvert<U, T> && Constructible<T, U const &> &&
+                ConvertibleTo<U const &, T>)
         {
             if(that.has_value())
                 base_t::construct_from(*that);
         }
         template<typename U>
-        explicit CPP_ctor(optional)(optional<U> const &that)( //
-            requires OptionalShouldConvert<U, T> &&Constructible<T, U const &> &&
+        explicit CPP_ctor(optional)(optional<U> const & that)( //
+            requires OptionalShouldConvert<U, T> && Constructible<T, U const &> &&
             (!ConvertibleTo<U const &, T>))
         {
             if(that.has_value())
@@ -551,35 +551,35 @@ namespace ranges
         }
 
         template<typename U>
-        CPP_ctor(optional)(optional<U> &&that)( //
-            requires OptionalShouldConvert<U, T> &&Constructible<T, U>
-                &&ConvertibleTo<U, T>)
+        CPP_ctor(optional)(optional<U> && that)( //
+            requires OptionalShouldConvert<U, T> && Constructible<T, U> &&
+                ConvertibleTo<U, T>)
         {
             if(that.has_value())
                 base_t::construct_from(detail::move(*that));
         }
         template<typename U>
-        explicit CPP_ctor(optional)(optional<U> &&that)( //
-            requires OptionalShouldConvert<U, T> &&Constructible<T, U> &&
+        explicit CPP_ctor(optional)(optional<U> && that)( //
+            requires OptionalShouldConvert<U, T> && Constructible<T, U> &&
             (!ConvertibleTo<U, T>))
         {
             if(that.has_value())
                 base_t::construct_from(detail::move(*that));
         }
 
-        constexpr optional &operator=(nullopt_t) noexcept
+        constexpr optional & operator=(nullopt_t) noexcept
         {
             reset();
             return *this;
         }
 
-        optional &operator=(optional const &) = default;
-        optional &operator=(optional &&) = default;
+        optional & operator=(optional const &) = default;
+        optional & operator=(optional &&) = default;
 
         template<typename U = T>
-        constexpr auto operator=(U &&u) noexcept(
-            std::is_nothrow_constructible<T, U>::value
-                &&std::is_nothrow_assignable<T &, U>::value) -> CPP_ret(optional &)( //
+        constexpr auto operator=(U && u) noexcept(
+            std::is_nothrow_constructible<T, U>::value &&
+                std::is_nothrow_assignable<T &, U>::value) -> CPP_ret(optional &)( //
             requires(!defer::Same<optional, detail::decay_t<U>>) &&
             (!(defer::Satisfies<T, std::is_scalar> &&
                defer::Same<T, detail::decay_t<U>>)) &&
@@ -593,18 +593,18 @@ namespace ranges
         }
 
         template<typename U>
-        constexpr auto operator=(optional<U> const &that) -> CPP_ret(optional &)( //
-            requires OptionalShouldConvertAssign<U, T> &&Constructible<T, const U &>
-                &&Assignable<T &, const U &>)
+        constexpr auto operator=(optional<U> const & that) -> CPP_ret(optional &)( //
+            requires OptionalShouldConvertAssign<U, T> && Constructible<T, const U &> &&
+                Assignable<T &, const U &>)
         {
             base_t::assign_from(that);
             return *this;
         }
 
         template<typename U>
-        constexpr auto operator=(optional<U> &&that) -> CPP_ret(optional &)( //
-            requires OptionalShouldConvertAssign<U, T> &&Constructible<T, U>
-                &&Assignable<T &, U>)
+        constexpr auto operator=(optional<U> && that) -> CPP_ret(optional &)( //
+            requires OptionalShouldConvertAssign<U, T> && Constructible<T, U> &&
+                Assignable<T &, U>)
         {
             base_t::assign_from(std::move(that));
             return *this;
@@ -638,34 +638,34 @@ namespace ranges
         }
         using base_t::has_value;
 
-        constexpr T const &value() const &
+        constexpr T const & value() const &
         {
             return (has_value() || detail::throw_bad_optional_access()), **this;
         }
-        constexpr T &value() &
+        constexpr T & value() &
         {
             return (has_value() || detail::throw_bad_optional_access()), **this;
         }
-        constexpr T const &&value() const &&
+        constexpr T const && value() const &&
         {
             return (has_value() || detail::throw_bad_optional_access()),
                    detail::move(**this);
         }
-        constexpr T &&value() &&
+        constexpr T && value() &&
         {
             return (has_value() || detail::throw_bad_optional_access()),
                    detail::move(**this);
         }
 
-        CPP_template(typename U)(                                //
-            requires CopyConstructible<T> &&ConvertibleTo<U, T>) //
-            constexpr T value_or(U &&u) const &
+        CPP_template(typename U)(                                 //
+            requires CopyConstructible<T> && ConvertibleTo<U, T>) //
+            constexpr T value_or(U && u) const &
         {
             return has_value() ? **this : static_cast<T>((U &&) u);
         }
-        CPP_template(typename U)(                                //
-            requires MoveConstructible<T> &&ConvertibleTo<U, T>) //
-            constexpr T value_or(U &&u) &&
+        CPP_template(typename U)(                                 //
+            requires MoveConstructible<T> && ConvertibleTo<U, T>) //
+            constexpr T value_or(U && u) &&
         {
             return has_value() ? detail::move(**this) : static_cast<T>((U &&) u);
         }
@@ -686,44 +686,48 @@ namespace ranges
             // Relational operators [optional.relops]
             template<typename T, typename U>
             constexpr auto operator==(
-                optional<T> const &x,
-                optional<U> const &y) noexcept(noexcept(convert_bool(*x == *y)))
+                optional<T> const & x,
+                optional<U> const & y) noexcept(noexcept(convert_bool(*x == *y)))
                 -> decltype(convert_bool(*x == *y))
             {
                 return x.has_value() == y.has_value() && (!x || convert_bool(*x == *y));
             }
             template<typename T, typename U>
             constexpr auto operator!=(
-                optional<T> const &x,
-                optional<U> const &y) noexcept(noexcept(convert_bool(*x != *y)))
+                optional<T> const & x,
+                optional<U> const & y) noexcept(noexcept(convert_bool(*x != *y)))
                 -> decltype(convert_bool(*x != *y))
             {
                 return x.has_value() != y.has_value() || (x && convert_bool(*x != *y));
             }
             template<typename T, typename U>
-            constexpr auto operator<(optional<T> const &x, optional<U> const &y) noexcept(
-                noexcept(convert_bool(*x < *y))) -> decltype(convert_bool(*x < *y))
+            constexpr auto operator<(
+                optional<T> const & x,
+                optional<U> const & y) noexcept(noexcept(convert_bool(*x < *y)))
+                -> decltype(convert_bool(*x < *y))
             {
                 return y && (!x || convert_bool(*x < *y));
             }
             template<typename T, typename U>
-            constexpr auto operator>(optional<T> const &x, optional<U> const &y) noexcept(
-                noexcept(convert_bool(*x > *y))) -> decltype(convert_bool(*x > *y))
+            constexpr auto operator>(
+                optional<T> const & x,
+                optional<U> const & y) noexcept(noexcept(convert_bool(*x > *y)))
+                -> decltype(convert_bool(*x > *y))
             {
                 return x && (!y || convert_bool(*x > *y));
             }
             template<typename T, typename U>
             constexpr auto operator<=(
-                optional<T> const &x,
-                optional<U> const &y) noexcept(noexcept(convert_bool(*x <= *y)))
+                optional<T> const & x,
+                optional<U> const & y) noexcept(noexcept(convert_bool(*x <= *y)))
                 -> decltype(convert_bool(*x <= *y))
             {
                 return !x || (y && convert_bool(*x <= *y));
             }
             template<typename T, typename U>
             constexpr auto operator>=(
-                optional<T> const &x,
-                optional<U> const &y) noexcept(noexcept(convert_bool(*x >= *y)))
+                optional<T> const & x,
+                optional<U> const & y) noexcept(noexcept(convert_bool(*x >= *y)))
                 -> decltype(convert_bool(*x >= *y))
             {
                 return !y || (x && convert_bool(*x >= *y));
@@ -731,22 +735,22 @@ namespace ranges
 
             // Comparisons with nullopt [optional.nullops]
             template<typename T>
-            constexpr bool operator==(optional<T> const &x, nullopt_t) noexcept
+            constexpr bool operator==(optional<T> const & x, nullopt_t) noexcept
             {
                 return !x;
             }
             template<typename T>
-            constexpr bool operator==(nullopt_t, optional<T> const &x) noexcept
+            constexpr bool operator==(nullopt_t, optional<T> const & x) noexcept
             {
                 return !x;
             }
             template<typename T>
-            constexpr bool operator!=(optional<T> const &x, nullopt_t) noexcept
+            constexpr bool operator!=(optional<T> const & x, nullopt_t) noexcept
             {
                 return !!x;
             }
             template<typename T>
-            constexpr bool operator!=(nullopt_t, optional<T> const &x) noexcept
+            constexpr bool operator!=(nullopt_t, optional<T> const & x) noexcept
             {
                 return !!x;
             }
@@ -756,12 +760,12 @@ namespace ranges
                 return false;
             }
             template<typename T>
-            constexpr bool operator<(nullopt_t, optional<T> const &x) noexcept
+            constexpr bool operator<(nullopt_t, optional<T> const & x) noexcept
             {
                 return !!x;
             }
             template<typename T>
-            constexpr bool operator>(optional<T> const &x, nullopt_t) noexcept
+            constexpr bool operator>(optional<T> const & x, nullopt_t) noexcept
             {
                 return !!x;
             }
@@ -771,7 +775,7 @@ namespace ranges
                 return false;
             }
             template<typename T>
-            constexpr bool operator<=(optional<T> const &x, nullopt_t) noexcept
+            constexpr bool operator<=(optional<T> const & x, nullopt_t) noexcept
             {
                 return !x;
             }
@@ -786,82 +790,82 @@ namespace ranges
                 return true;
             }
             template<typename T>
-            constexpr bool operator>=(nullopt_t, optional<T> const &x) noexcept
+            constexpr bool operator>=(nullopt_t, optional<T> const & x) noexcept
             {
                 return !x;
             }
 
             // Comparisons with T [optional.comp_with_t]
             template<typename T, typename U>
-            constexpr auto operator==(optional<T> const &x, U const &y) noexcept(
+            constexpr auto operator==(optional<T> const & x, U const & y) noexcept(
                 noexcept(convert_bool(*x == y))) -> decltype(convert_bool(*x == y))
             {
                 return x && convert_bool(*x == y);
             }
             template<typename T, typename U>
-            constexpr auto operator==(T const &x, optional<U> const &y) noexcept(
+            constexpr auto operator==(T const & x, optional<U> const & y) noexcept(
                 noexcept(convert_bool(x == *y))) -> decltype(convert_bool(x == *y))
             {
                 return y && convert_bool(x == *y);
             }
             template<typename T, typename U>
-            constexpr auto operator!=(optional<T> const &x, U const &y) noexcept(
+            constexpr auto operator!=(optional<T> const & x, U const & y) noexcept(
                 noexcept(convert_bool(*x != y))) -> decltype(convert_bool(*x != y))
             {
                 return !x || convert_bool(*x != y);
             }
             template<typename T, typename U>
-            constexpr auto operator!=(T const &x, optional<U> const &y) noexcept(
+            constexpr auto operator!=(T const & x, optional<U> const & y) noexcept(
                 noexcept(convert_bool(x != *y))) -> decltype(convert_bool(x != *y))
             {
                 return !y || convert_bool(x != *y);
             }
             template<typename T, typename U>
-            constexpr auto operator<(optional<T> const &x,
-                                     U const &y) noexcept(noexcept(convert_bool(*x < y)))
+            constexpr auto operator<(optional<T> const & x,
+                                     U const & y) noexcept(noexcept(convert_bool(*x < y)))
                 -> decltype(convert_bool(*x < y))
             {
                 return !x || convert_bool(*x < y);
             }
             template<typename T, typename U>
-            constexpr auto operator<(T const &x, optional<U> const &y) noexcept(
+            constexpr auto operator<(T const & x, optional<U> const & y) noexcept(
                 noexcept(convert_bool(x < *y))) -> decltype(convert_bool(x < *y))
             {
                 return y && convert_bool(x < *y);
             }
             template<typename T, typename U>
-            constexpr auto operator>(optional<T> const &x,
-                                     U const &y) noexcept(noexcept(convert_bool(*x > y)))
+            constexpr auto operator>(optional<T> const & x,
+                                     U const & y) noexcept(noexcept(convert_bool(*x > y)))
                 -> decltype(convert_bool(*x > y))
             {
                 return x && convert_bool(*x > y);
             }
             template<typename T, typename U>
-            constexpr auto operator>(T const &x, optional<U> const &y) noexcept(
+            constexpr auto operator>(T const & x, optional<U> const & y) noexcept(
                 noexcept(convert_bool(x > *y))) -> decltype(convert_bool(x > *y))
             {
                 return !y || convert_bool(x > *y);
             }
             template<typename T, typename U>
-            constexpr auto operator<=(optional<T> const &x, U const &y) noexcept(
+            constexpr auto operator<=(optional<T> const & x, U const & y) noexcept(
                 noexcept(convert_bool(*x <= y))) -> decltype(convert_bool(*x <= y))
             {
                 return !x || convert_bool(*x <= y);
             }
             template<typename T, typename U>
-            constexpr auto operator<=(T const &x, optional<U> const &y) noexcept(
+            constexpr auto operator<=(T const & x, optional<U> const & y) noexcept(
                 noexcept(convert_bool(x <= *y))) -> decltype(convert_bool(x <= *y))
             {
                 return y && convert_bool(x <= *y);
             }
             template<typename T, typename U>
-            constexpr auto operator>=(optional<T> const &x, U const &y) noexcept(
+            constexpr auto operator>=(optional<T> const & x, U const & y) noexcept(
                 noexcept(convert_bool(*x >= y))) -> decltype(convert_bool(*x >= y))
             {
                 return x && convert_bool(*x >= y);
             }
             template<typename T, typename U>
-            constexpr auto operator>=(T const &x, optional<U> const &y) noexcept(
+            constexpr auto operator>=(T const & x, optional<U> const & y) noexcept(
                 noexcept(convert_bool(x >= *y))) -> decltype(convert_bool(x >= *y))
             {
                 return !y || convert_bool(x >= *y);
@@ -908,19 +912,19 @@ namespace ranges
             constexpr non_propagating_cache(non_propagating_cache const &) noexcept
               : optional<T>{}
             {}
-            constexpr non_propagating_cache(non_propagating_cache &&that) noexcept
+            constexpr non_propagating_cache(non_propagating_cache && that) noexcept
               : optional<T>{}
             {
                 that.optional<T>::reset();
             }
-            constexpr non_propagating_cache &operator=(
+            constexpr non_propagating_cache & operator=(
                 non_propagating_cache const &) noexcept
             {
                 optional<T>::reset();
                 return *this;
             }
-            constexpr non_propagating_cache &operator=(
-                non_propagating_cache &&that) noexcept
+            constexpr non_propagating_cache & operator=(
+                non_propagating_cache && that) noexcept
             {
                 that.optional<T>::reset();
                 optional<T>::reset();

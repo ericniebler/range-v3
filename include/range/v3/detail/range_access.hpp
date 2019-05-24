@@ -22,8 +22,9 @@
 
 #include <concepts/concepts.hpp>
 
-#include <range/v3/iterator/concepts.hpp>
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/iterator/concepts.hpp>
 
 namespace ranges
 {
@@ -193,17 +194,17 @@ namespace ranges
 #endif // RANGES_WORKAROUND_CWG_1554
 
         template<typename Cur>
-        static constexpr Cur &pos(basic_iterator<Cur> &it) noexcept
+        static constexpr Cur & pos(basic_iterator<Cur> & it) noexcept
         {
             return it.pos();
         }
         template<typename Cur>
-        static constexpr Cur const &pos(basic_iterator<Cur> const &it) noexcept
+        static constexpr Cur const & pos(basic_iterator<Cur> const & it) noexcept
         {
             return it.pos();
         }
         template<typename Cur>
-        static constexpr Cur &&pos(basic_iterator<Cur> &&it) noexcept
+        static constexpr Cur && pos(basic_iterator<Cur> && it) noexcept
         {
             return detail::move(it.pos());
         }

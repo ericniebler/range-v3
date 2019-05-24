@@ -17,8 +17,9 @@
 
 #include <type_traits>
 
-#include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
 
@@ -48,7 +49,7 @@ namespace ranges
             {
                 return n_ == 0;
             }
-            constexpr bool equal(linear_distribute_view const& other) const noexcept
+            constexpr bool equal(linear_distribute_view const & other) const noexcept
             {
                 bool const eq = n_ == other.n_;
                 RANGES_DIAGNOSTIC_PUSH

@@ -15,6 +15,8 @@
 
 #include <utility>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
@@ -24,7 +26,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -43,9 +44,9 @@ namespace ranges
         constexpr auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, R pred = R{},
                                   P0 proj0 = P0{}, P1 proj1 = P1{}) const
             -> CPP_ret(I0)( //
-                requires InputIterator<I0> &&Sentinel<S0, I0> &&ForwardIterator<I1>
-                    &&Sentinel<S1, I1>
-                        &&IndirectRelation<R, projected<I0, P0>, projected<I1, P1>>)
+                requires InputIterator<I0> && Sentinel<S0, I0> && ForwardIterator<I1> &&
+                    Sentinel<S1, I1> &&
+                        IndirectRelation<R, projected<I0, P0>, projected<I1, P1>>)
         {
             for(; begin0 != end0; ++begin0)
                 for(auto tmp = begin1; tmp != end1; ++tmp)
@@ -56,10 +57,10 @@ namespace ranges
 
         template<typename Rng0, typename Rng1, typename R = equal_to,
                  typename P0 = identity, typename P1 = identity>
-        constexpr auto operator()(Rng0 &&rng0, Rng1 &&rng1, R pred = R{}, P0 proj0 = P0{},
-                                  P1 proj1 = P1{}) const
+        constexpr auto operator()(Rng0 && rng0, Rng1 && rng1, R pred = R{},
+                                  P0 proj0 = P0{}, P1 proj1 = P1{}) const
             -> CPP_ret(safe_iterator_t<Rng0>)( //
-                requires InputRange<Rng0> &&ForwardRange<Rng1> &&IndirectRelation<
+                requires InputRange<Rng0> && ForwardRange<Rng1> && IndirectRelation<
                     R, projected<iterator_t<Rng0>, P0>, projected<iterator_t<Rng1>, P1>>)
         {
             return (*this)(begin(rng0),

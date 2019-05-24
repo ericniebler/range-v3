@@ -61,8 +61,8 @@ namespace ranges
         auto operator()(I begin, S end, O result, S2 end_result, BOp bop = BOp{},
                         P proj = P{}) const
             -> CPP_ret(adjacent_difference_result<I, O>)( //
-                requires Sentinel<S, I> &&Sentinel<S2, O>
-                    &&AdjacentDifferentiable<I, O, BOp, P>)
+                requires Sentinel<S, I> && Sentinel<S2, O> &&
+                    AdjacentDifferentiable<I, O, BOp, P>)
         {
             // BUGBUG think about the use of coerce here.
             using V = iter_value_t<I>;
@@ -89,7 +89,7 @@ namespace ranges
                  typename P = identity>
         auto operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(adjacent_difference_result<I, O>)( //
-                requires Sentinel<S, I> &&AdjacentDifferentiable<I, O, BOp, P>)
+                requires Sentinel<S, I> && AdjacentDifferentiable<I, O, BOp, P>)
         {
             return (*this)(std::move(begin),
                            std::move(end),
@@ -101,9 +101,9 @@ namespace ranges
 
         template<typename Rng, typename ORef, typename BOp = minus, typename P = identity,
                  typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>>
-        auto operator()(Rng &&rng, ORef &&result, BOp bop = BOp{}, P proj = P{}) const
+        auto operator()(Rng && rng, ORef && result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(adjacent_difference_result<safe_iterator_t<Rng>, O>)( //
-                requires Range<Rng> &&AdjacentDifferentiable<I, O, BOp, P>)
+                requires Range<Rng> && AdjacentDifferentiable<I, O, BOp, P>)
         {
             return (*this)(begin(rng),
                            end(rng),
@@ -114,10 +114,11 @@ namespace ranges
 
         template<typename Rng, typename ORng, typename BOp = minus, typename P = identity,
                  typename I = iterator_t<Rng>, typename O = iterator_t<ORng>>
-        auto operator()(Rng &&rng, ORng &&result, BOp bop = BOp{}, P proj = P{}) const
+        auto operator()(Rng && rng, ORng && result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(adjacent_difference_result<safe_iterator_t<Rng>,
                                                   safe_iterator_t<ORng>>)( //
-                requires Range<Rng> &&Range<ORng> &&AdjacentDifferentiable<I, O, BOp, P>)
+                requires Range<Rng> && Range<ORng> &&
+                    AdjacentDifferentiable<I, O, BOp, P>)
         {
             return (*this)(begin(rng),
                            end(rng),

@@ -17,9 +17,10 @@
 
 #include <concepts/concepts.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/concepts.hpp>
 #include <range/v3/functional/invoke.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -30,7 +31,7 @@ namespace ranges
     struct logical_negate
     {
     private:
-        CPP_assert(Same<FD, detail::decay_t<FD>> &&MoveConstructible<FD>);
+        CPP_assert(Same<FD, detail::decay_t<FD>> && MoveConstructible<FD>);
         FD pred_;
 
     public:
@@ -39,7 +40,7 @@ namespace ranges
             requires DefaultConstructible<FD>)
         {}
         template<typename T>
-        explicit constexpr CPP_ctor(logical_negate)(T &&pred)( //
+        explicit constexpr CPP_ctor(logical_negate)(T && pred)( //
             requires(!defer::Same<detail::decay_t<T>, logical_negate>) &&
             defer::Constructible<FD, T>)
           : pred_(static_cast<T &&>(pred))
@@ -70,10 +71,10 @@ namespace ranges
     struct not_fn_fn
     {
         template<typename Pred>
-        constexpr auto operator()(Pred &&pred) const
+        constexpr auto operator()(Pred && pred) const
             -> CPP_ret(logical_negate<detail::decay_t<Pred>>)( //
-                requires MoveConstructible<detail::decay_t<Pred>>
-                    &&Constructible<detail::decay_t<Pred>, Pred>)
+                requires MoveConstructible<detail::decay_t<Pred>> &&
+                    Constructible<detail::decay_t<Pred>, Pred>)
         {
             return logical_negate<detail::decay_t<Pred>>{(Pred &&) pred};
         }

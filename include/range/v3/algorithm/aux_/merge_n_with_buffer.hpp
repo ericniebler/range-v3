@@ -30,13 +30,14 @@
 
 #include <tuple>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/aux_/merge_n.hpp>
 #include <range/v3/algorithm/copy_n.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -49,8 +50,8 @@ namespace ranges
             auto operator()(I begin0, iter_difference_t<I> n0, I begin1,
                             iter_difference_t<I> n1, B buff, C r = C{},
                             P p = P{}) const -> CPP_ret(I)( //
-                requires Same<iter_common_reference_t<I>, iter_common_reference_t<B>>&&
-                    IndirectlyCopyable<I, B>&& Mergeable<B, I, I, C, P, P>)
+                requires Same<iter_common_reference_t<I>, iter_common_reference_t<B>> &&
+                    IndirectlyCopyable<I, B> && Mergeable<B, I, I, C, P, P>)
             {
                 copy_n(begin0, n0, buff);
                 return merge_n(buff, n0, begin1, n1, begin0, r, p, p).out;

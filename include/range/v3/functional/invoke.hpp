@@ -22,6 +22,7 @@
 #include <concepts/concepts.hpp>
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/utility/static_const.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
@@ -45,7 +46,7 @@ namespace ranges
     namespace detail
     {
         template<typename U>
-        U& can_reference_(U&&);
+        U & can_reference_(U &&);
 
         // clang-format off
         CPP_def
@@ -81,26 +82,26 @@ namespace ranges
     {
     private:
         template<class, class T1>
-        constexpr static decltype(auto) CPP_fun(coerce)(T1&& t1, long)( //
-            noexcept(noexcept(*static_cast<T1&&>(t1)))                  //
+        constexpr static decltype(auto) CPP_fun(coerce)(T1 && t1, long)( //
+            noexcept(noexcept(*static_cast<T1 &&>(t1)))                  //
             requires detail::Dereferenceable_<T1>)
         {
-            return *static_cast<T1&&>(t1);
+            return *static_cast<T1 &&>(t1);
         }
 
         template<class T, class T1>
-        constexpr static auto coerce(T1&& t1, int) noexcept -> CPP_ret(T1&&)( //
+        constexpr static auto coerce(T1 && t1, int) noexcept -> CPP_ret(T1 &&)( //
             requires DerivedFrom<detail::decay_t<T1>, T>)
         {
-            return static_cast<T1&&>(t1);
+            return static_cast<T1 &&>(t1);
         }
 
         template<class, class T1>
-        constexpr static decltype(auto) CPP_fun(coerce)(T1&& t1, int)(
+        constexpr static decltype(auto) CPP_fun(coerce)(T1 && t1, int)(
             noexcept(true) //
             requires detail::is_reference_wrapper_v<detail::decay_t<T1>>)
         {
-            return static_cast<T1&&>(t1).get();
+            return static_cast<T1 &&>(t1).get();
         }
 
     public:

@@ -30,6 +30,8 @@
 
 #include <tuple>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/copy_n.hpp>
 #include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/functional/comparisons.hpp>
@@ -40,7 +42,6 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges

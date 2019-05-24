@@ -16,12 +16,13 @@
 
 #include <functional>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -43,9 +44,10 @@ namespace ranges
 
         public:
             template<typename Rng, typename Fun>
-            auto operator()(Rng &&rng, Fun fun) const -> CPP_ret(Rng)( //
-                requires ForwardRange<Rng> &&IndirectUnaryPredicate<Fun, iterator_t<Rng>>
-                    &&ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
+            auto operator()(Rng && rng, Fun fun) const -> CPP_ret(Rng)( //
+                requires ForwardRange<Rng> &&
+                    IndirectUnaryPredicate<Fun, iterator_t<Rng>> &&
+                        ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
             {
                 ranges::action::erase(
                     rng, begin(rng), find_if_not(begin(rng), end(rng), std::move(fun)));

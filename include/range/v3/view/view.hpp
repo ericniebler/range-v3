@@ -19,11 +19,12 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/concepts.hpp>
 #include <range/v3/functional/pipeable.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -120,8 +121,8 @@ namespace ranges
 
             // Piping requires range arguments or lvalue containers.
             template<typename Rng, typename Vw>
-            static auto CPP_fun(pipe)(Rng &&rng, Vw &&v)( //
-                requires ViewableRange<Rng> &&Invocable<View &, Rng>)
+            static auto CPP_fun(pipe)(Rng && rng, Vw && v)( //
+                requires ViewableRange<Rng> && Invocable<View &, Rng>)
             {
                 return v.view_(static_cast<Rng &&>(rng));
             }
@@ -136,9 +137,9 @@ namespace ranges
 
             // Calling directly requires a ViewableRange.
             template<typename Rng, typename... Rest>
-            auto operator()(Rng &&rng, Rest &&... rest) const
+            auto operator()(Rng && rng, Rest &&... rest) const
                 -> CPP_ret(invoke_result_t<View const &, Rng, Rest...>)( //
-                    requires ViewableRange<Rng> &&Invocable<View const &, Rng, Rest...>)
+                    requires ViewableRange<Rng> && Invocable<View const &, Rng, Rest...>)
             {
                 return view_(static_cast<Rng &&>(rng), static_cast<Rest &&>(rest)...);
             }

@@ -16,13 +16,14 @@
 
 #include <utility>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/algorithm/adjacent_remove_if.hpp>
 #include <range/v3/functional/bind.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -48,12 +49,12 @@ namespace ranges
 
         public:
             template<typename Rng, typename Pred, typename Proj = identity>
-            auto operator()(Rng &&rng, Pred pred, Proj proj = {}) const
+            auto operator()(Rng && rng, Pred pred, Proj proj = {}) const
                 -> CPP_ret(Rng)( //
-                    requires ForwardRange<Rng>
-                        &&ErasableRange<Rng, iterator_t<Rng>, sentinel_t<Rng>>
-                            &&IndirectRelation<Pred, projected<iterator_t<Rng>, Proj>>
-                                &&Permutable<iterator_t<Rng>>)
+                    requires ForwardRange<Rng> &&
+                        ErasableRange<Rng, iterator_t<Rng>, sentinel_t<Rng>> &&
+                            IndirectRelation<Pred, projected<iterator_t<Rng>, Proj>> &&
+                                Permutable<iterator_t<Rng>>)
             {
                 auto i = adjacent_remove_if(rng, std::move(pred), std::move(proj));
                 erase(rng, std::move(i), end(rng));

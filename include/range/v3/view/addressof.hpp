@@ -34,7 +34,7 @@ namespace ranges
             struct take_address
             {
                 template<typename V>
-                constexpr V *operator()(V &value) const noexcept
+                constexpr V * operator()(V & value) const noexcept
                 {
                     return std::addressof(value);
                 }
@@ -42,9 +42,9 @@ namespace ranges
 
         public:
             CPP_template(typename Rng)(                                      //
-                requires ViewableRange<Rng> &&InputRange<Rng> &&             //
+                requires ViewableRange<Rng> && InputRange<Rng> &&            //
                     std::is_lvalue_reference<range_reference_t<Rng>>::value) //
-                constexpr auto CPP_auto_fun(operator())(Rng &&rng)(const)(
+                constexpr auto CPP_auto_fun(operator())(Rng && rng)(const)(
                     return transform(all(static_cast<Rng &&>(rng)), take_address{}))
         };
 

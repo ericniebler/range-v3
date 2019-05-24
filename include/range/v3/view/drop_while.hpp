@@ -19,11 +19,12 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -95,18 +96,18 @@ namespace ranges
 
         public:
             template<typename Rng, typename Pred>
-            auto operator()(Rng &&rng, Pred pred) const
+            auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(drop_while_view<all_t<Rng>, Pred>)( //
-                    requires ViewableRange<Rng> &&InputRange<Rng>
-                        &&IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
             template<typename Rng, typename Pred, typename Proj>
-            auto operator()(Rng &&rng, Pred pred, Proj proj) const
+            auto operator()(Rng && rng, Pred pred, Proj proj) const
                 -> CPP_ret(drop_while_view<all_t<Rng>, composed<Pred, Proj>>)( //
-                    requires ViewableRange<Rng> &&InputRange<Rng>
-                        &&IndirectUnaryPredicate<composed<Pred, Proj>, iterator_t<Rng>>)
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        IndirectUnaryPredicate<composed<Pred, Proj>, iterator_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)),
                         compose(std::move(pred), std::move(proj))};

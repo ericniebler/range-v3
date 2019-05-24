@@ -25,9 +25,10 @@
 
 #include <concepts/concepts.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/swap.hpp>
@@ -92,8 +93,8 @@ namespace ranges
             {};
 
             template<typename Promise>
-            void swap(experimental::coroutine_owner<Promise> &x,
-                      experimental::coroutine_owner<Promise> &y) noexcept
+            void swap(experimental::coroutine_owner<Promise> & x,
+                      experimental::coroutine_owner<Promise> & y) noexcept
             {
                 x.swap(y);
             }
@@ -120,11 +121,11 @@ namespace ranges
             explicit constexpr coroutine_owner(base_t coro) noexcept
               : base_t(coro)
             {}
-            coroutine_owner(coroutine_owner &&that) noexcept
+            coroutine_owner(coroutine_owner && that) noexcept
               : base_t(ranges::exchange(that.base(), {}))
               , copied_(that.copied_.load(std::memory_order_relaxed))
             {}
-            coroutine_owner(coroutine_owner const &that) noexcept
+            coroutine_owner(coroutine_owner const & that) noexcept
               : base_t(that.handle())
               , copied_(that.handle() != nullptr)
             {
@@ -141,7 +142,7 @@ namespace ranges
                                        1, std::memory_order_acq_rel)))
                     base().destroy();
             }
-            coroutine_owner &operator=(coroutine_owner that) noexcept
+            coroutine_owner & operator=(coroutine_owner that) noexcept
             {
                 swap(that);
                 return *this;
@@ -154,7 +155,7 @@ namespace ranges
             {
                 detail::resume(handle());
             }
-            void swap(coroutine_owner &that) noexcept
+            void swap(coroutine_owner & that) noexcept
             {
                 bool tmp = copied_.load(std::memory_order_relaxed);
                 copied_.store(that.copied_.load(std::memory_order_relaxed),
@@ -170,7 +171,7 @@ namespace ranges
         private:
             std::atomic<bool> copied_{false};
 
-            base_t &base() noexcept
+            base_t & base() noexcept
             {
                 return *this;
             }
@@ -188,7 +189,7 @@ namespace ranges
             CPP_assert(std::is_reference<Reference>::value ||
                        CopyConstructible<Reference>);
 
-            generator_promise *get_return_object() noexcept
+            generator_promise * get_return_object() noexcept
             {
                 return this;
             }
@@ -207,11 +208,11 @@ namespace ranges
                 RANGES_EXPECT(except_);
             }
             template<typename Arg>
-            auto yield_value(Arg &&arg) noexcept(
+            auto yield_value(Arg && arg) noexcept(
                 std::is_nothrow_assignable<semiregular_t<Reference> &, Arg>::value)
                 -> CPP_ret(std::experimental::suspend_always)( //
-                    requires ConvertibleTo<Arg, Reference>
-                        &&std::is_assignable<semiregular_t<Reference> &, Arg>::value)
+                    requires ConvertibleTo<Arg, Reference> &&
+                        std::is_assignable<semiregular_t<Reference> &, Arg>::value)
             {
                 ref_ = std::forward<Arg>(arg);
                 return {};
@@ -236,7 +237,7 @@ namespace ranges
         template<typename Reference>
         struct sized_generator_promise : generator_promise<Reference>
         {
-            sized_generator_promise *get_return_object() noexcept
+            sized_generator_promise * get_return_object() noexcept
             {
                 return this;
             }
@@ -276,7 +277,7 @@ namespace ranges
             using promise_type = detail::generator_promise<Reference>;
 
             constexpr generator() noexcept = default;
-            generator(promise_type *p)
+            generator(promise_type * p)
               : coro_{handle::from_promise(*p)}
             {
                 RANGES_EXPECT(coro_);
@@ -301,7 +302,7 @@ namespace ranges
                     RANGES_EXPECT(coro_);
                     if(coro_.done())
                     {
-                        auto &e = coro_.promise().except_;
+                        auto & e = coro_.promise().except_;
                         if(e)
                             std::rethrow_exception(std::move(e));
                         return true;
@@ -336,7 +337,7 @@ namespace ranges
             using handle = std::experimental::coroutine_handle<promise_type>;
 
             constexpr sized_generator() noexcept = default;
-            sized_generator(promise_type *p)
+            sized_generator(promise_type * p)
               : generator<Reference, Value>{p}
             {}
             generator_size_t size() const noexcept
@@ -347,7 +348,7 @@ namespace ranges
         private:
             using generator<Reference, Value>::coro_;
 
-            promise_type const &promise() const noexcept
+            promise_type const & promise() const noexcept
             {
                 RANGES_EXPECT(coro_);
                 return static_cast<promise_type const &>(coro_.promise());

@@ -39,7 +39,7 @@ namespace ranges
             shared_view() = default;
 
             // construct from a range rvalue
-            explicit shared_view(Rng &&t)
+            explicit shared_view(Rng && t)
               : rng_ptr_{std::make_shared<Rng>(std::move(t))}
             {}
 
@@ -68,7 +68,7 @@ namespace ranges
             {
             public:
                 template<typename Rng>
-                auto operator()(Rng &&t) const -> CPP_ret(shared_view<Rng>)( //
+                auto operator()(Rng && t) const -> CPP_ret(shared_view<Rng>)( //
                     requires Range<Rng> && (!View<Rng>)&&(!std::is_reference<Rng>::value))
                 {
                     return shared_view<Rng>{std::move(t)};

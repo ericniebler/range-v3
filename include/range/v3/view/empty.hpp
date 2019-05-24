@@ -15,6 +15,7 @@
 #define RANGES_V3_VIEW_EMPTY_HPP
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/view/interface.hpp>
 
 namespace ranges
@@ -25,12 +26,12 @@ namespace ranges
         struct empty_view_base
         {
             template<typename T>
-            friend constexpr T *begin(empty_view<T>) noexcept
+            friend constexpr T * begin(empty_view<T>) noexcept
             {
                 return nullptr;
             }
             template<typename T>
-            friend constexpr T *end(empty_view<T>) noexcept
+            friend constexpr T * end(empty_view<T>) noexcept
             {
                 return nullptr;
             }
@@ -46,11 +47,11 @@ namespace ranges
         static_assert(std::is_object<T>::value,
                       "The template parameter to empty_view must be an object type.");
         empty_view() = default;
-        constexpr static T *begin() noexcept
+        constexpr static T * begin() noexcept
         {
             return nullptr;
         }
-        constexpr static T *end() noexcept
+        constexpr static T * end() noexcept
         {
             return nullptr;
         }
@@ -58,7 +59,7 @@ namespace ranges
         {
             return 0u;
         }
-        static constexpr T *data() noexcept
+        static constexpr T * data() noexcept
         {
             return nullptr;
         }

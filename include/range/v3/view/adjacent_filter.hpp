@@ -18,10 +18,11 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/range/access.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/adaptor.hpp>
@@ -62,11 +63,11 @@ namespace ranges
             friend struct adaptor<!Const>;
             using CRng = meta::const_if_c<Const, Rng>;
             using Parent = meta::const_if_c<Const, adjacent_filter_view>;
-            Parent *rng_;
+            Parent * rng_;
 
         public:
             adaptor() = default;
-            constexpr adaptor(Parent &rng) noexcept
+            constexpr adaptor(Parent & rng) noexcept
               : rng_(&rng)
             {}
             CPP_template(bool Other)(       //
@@ -74,21 +75,21 @@ namespace ranges
                 constexpr adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
-            constexpr void next(iterator_t<CRng> &it) const
+            constexpr void next(iterator_t<CRng> & it) const
             {
                 auto const last = ranges::end(rng_->base());
-                auto &pred = rng_->adjacent_filter_view::box::get();
+                auto & pred = rng_->adjacent_filter_view::box::get();
                 RANGES_EXPECT(it != last);
                 for(auto prev = it; ++it != last; prev = it)
                     if(invoke(pred, *prev, *it))
                         break;
             }
-            CPP_member constexpr auto prev(iterator_t<CRng> &it) const
+            CPP_member constexpr auto prev(iterator_t<CRng> & it) const
                 -> CPP_ret(void)( //
                     requires BidirectionalRange<CRng>)
             {
                 auto const first = ranges::begin(rng_->base());
-                auto &pred = rng_->adjacent_filter_view::box::get();
+                auto & pred = rng_->adjacent_filter_view::box::get();
                 RANGES_EXPECT(it != first);
                 --it;
                 while(it != first)
@@ -145,7 +146,7 @@ namespace ranges
 
         public:
             template<typename Rng, typename Pred>
-            constexpr auto operator()(Rng &&rng, Pred pred) const
+            constexpr auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(adjacent_filter_view<all_t<Rng>, Pred>)( //
                     requires detail::AdjacentFilter<Rng, Pred>)
             {

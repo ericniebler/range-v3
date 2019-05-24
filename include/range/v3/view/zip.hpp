@@ -19,9 +19,10 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/common_tuple.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/empty.hpp>
@@ -70,30 +71,30 @@ namespace ranges
             template<typename It1, typename It2>
             [[noreturn]] auto operator()(copy_tag, It1, It2) const
                 -> CPP_ret(std::pair<iter_value_t<It1>, iter_value_t<It2>>)( //
-                    requires Readable<It1> &&Readable<It2>)
+                    requires Readable<It1> && Readable<It2>)
             {
                 RANGES_EXPECT(false);
             }
 
             // pair reference
             template<typename It1, typename It2>
-            auto operator()(It1 const &it1, It2 const &it2) const noexcept(
+            auto operator()(It1 const & it1, It2 const & it2) const noexcept(
                 noexcept(iter_reference_t<It1>(*it1)) &&
                 noexcept(iter_reference_t<It2>(*it2)))
                 -> CPP_ret(common_pair<iter_reference_t<It1>, iter_reference_t<It2>>)( //
-                    requires Readable<It1> &&Readable<It2>)
+                    requires Readable<It1> && Readable<It2>)
             {
                 return {*it1, *it2};
             }
 
             // pair rvalue reference
             template<typename It1, typename It2>
-            auto operator()(move_tag, It1 const &it1, It2 const &it2) const
+            auto operator()(move_tag, It1 const & it1, It2 const & it2) const
                 noexcept(noexcept(iter_rvalue_reference_t<It1>(iter_move(it1))) &&
                          noexcept(iter_rvalue_reference_t<It2>(iter_move(it2))))
                     -> CPP_ret(common_pair<iter_rvalue_reference_t<It1>,
                                            iter_rvalue_reference_t<It2>>)( //
-                        requires Readable<It1> &&Readable<It2>)
+                        requires Readable<It1> && Readable<It2>)
             {
                 return {iter_move(it1), iter_move(it2)};
             }
@@ -123,7 +124,7 @@ namespace ranges
             template<typename... Rngs>
             auto operator()(Rngs &&... rngs) const
                 -> CPP_ret(zip_view<all_t<Rngs>...>)( //
-                    requires And<ViewableRange<Rngs>...> &&And<InputRange<Rngs>...> &&
+                    requires And<ViewableRange<Rngs>...> && And<InputRange<Rngs>...> &&
                     (sizeof...(Rngs) != 0))
             {
                 return zip_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};

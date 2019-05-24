@@ -17,12 +17,13 @@
 #include <type_traits>
 #include <utility>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/interface.hpp>
@@ -64,7 +65,7 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin() const -> CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)( //
-            requires Const &&Range<meta::const_if_c<Const, Rng>>)
+            requires Const && Range<meta::const_if_c<Const, Rng>>)
         {
             return next(ranges::begin(rng_), 1, ranges::end(rng_));
         }
@@ -74,7 +75,7 @@ namespace ranges
         }
         template<bool Const = true>
         auto end() const -> CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)( //
-            requires Const &&Range<meta::const_if_c<Const, Rng>>)
+            requires Const && Range<meta::const_if_c<Const, Rng>>)
         {
             return ranges::end(rng_);
         }
@@ -103,10 +104,10 @@ namespace ranges
         struct tail_fn
         {
             template<typename Rng>
-            auto operator()(Rng &&rng) const
+            auto operator()(Rng && rng) const
                 -> CPP_ret(meta::if_c<range_cardinality<Rng>::value == 0, all_t<Rng>,
                                       tail_view<all_t<Rng>>>)( //
-                    requires ViewableRange<Rng> &&InputRange<Rng>)
+                    requires ViewableRange<Rng> && InputRange<Rng>)
             {
                 return all(static_cast<Rng &&>(rng));
             }

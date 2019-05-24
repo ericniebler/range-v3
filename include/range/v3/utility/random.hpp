@@ -54,12 +54,13 @@
 
 #include <concepts/concepts.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/generate.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/functional/reference_wrapper.hpp>
 #include <range/v3/iterator/concepts.hpp>
-#include <range/v3/range_fwd.hpp>
 
 #if !RANGES_CXX_THREAD_LOCAL
 #include <mutex>
@@ -214,7 +215,7 @@ namespace ranges
 
                 template<typename I, typename S>
                 auto mix_entropy(I begin, S end) -> CPP_ret(void)( //
-                    requires InputIterator<I>&& Sentinel<S, I>&&
+                    requires InputIterator<I> && Sentinel<S, I> &&
                         ConvertibleTo<iter_reference_t<I>, IntRep>)
                 {
                     auto hash_const = INIT_A;
@@ -231,7 +232,7 @@ namespace ranges
                         return result;
                     };
 
-                    for(auto& elem : mixer_)
+                    for(auto & elem : mixer_)
                     {
                         if(begin != end)
                         {
@@ -241,29 +242,29 @@ namespace ranges
                         else
                             elem = hash(IntRep{0});
                     }
-                    for(auto& src : mixer_)
-                        for(auto& dest : mixer_)
+                    for(auto & src : mixer_)
+                        for(auto & dest : mixer_)
                             if(&src != &dest)
                                 dest = mix(dest, hash(src));
                     for(; begin != end; ++begin)
-                        for(auto& dest : mixer_)
+                        for(auto & dest : mixer_)
                             dest = mix(dest, hash(static_cast<IntRep>(*begin)));
                 }
 
             public:
-                seed_seq_fe(const seed_seq_fe&) = delete;
-                void operator=(const seed_seq_fe&) = delete;
+                seed_seq_fe(const seed_seq_fe &) = delete;
+                void operator=(const seed_seq_fe &) = delete;
 
                 template<typename T>
                 CPP_ctor(seed_seq_fe)(std::initializer_list<T> init)( //
-                    requires ConvertibleTo<T const&, IntRep>)
+                    requires ConvertibleTo<T const &, IntRep>)
                 {
                     seed(init.begin(), init.end());
                 }
 
                 template<typename I, typename S>
                 CPP_ctor(seed_seq_fe)(I begin, S end)( //
-                    requires InputIterator<I>&& Sentinel<S, I>&&
+                    requires InputIterator<I> && Sentinel<S, I> &&
                         ConvertibleTo<iter_reference_t<I>, IntRep>)
                 {
                     seed(begin, end);
@@ -274,7 +275,7 @@ namespace ranges
                 RANGES_INTENDED_MODULAR_ARITHMETIC auto generate(I first,
                                                                  S const last) const
                     -> CPP_ret(void)( //
-                        requires RandomAccessIterator<I>&& Sentinel<S, I>)
+                        requires RandomAccessIterator<I> && Sentinel<S, I>)
                 {
                     auto src_begin = mixer_.begin();
                     auto src_end = mixer_.end();
@@ -301,7 +302,7 @@ namespace ranges
                 template<typename O>
                 RANGES_INTENDED_MODULAR_ARITHMETIC auto param(O dest) const
                     -> CPP_ret(void)( //
-                        requires WeaklyIncrementable<O>&&
+                        requires WeaklyIncrementable<O> &&
                             IndirectlyCopyable<decltype(mixer_.begin()), O>)
                 {
                     constexpr IntRep INV_A = randutils::fast_exp(MULT_A, IntRep(-1));
@@ -350,7 +351,7 @@ namespace ranges
 
                 template<typename I, typename S>
                 auto seed(I begin, S end) -> CPP_ret(void)( //
-                    requires InputIterator<I>&& Sentinel<S, I>&&
+                    requires InputIterator<I> && Sentinel<S, I> &&
                         ConvertibleTo<iter_reference_t<I>, IntRep>)
                 {
                     mix_entropy(begin, end);
@@ -360,7 +361,7 @@ namespace ranges
                         stir();
                 }
 
-                seed_seq_fe& stir()
+                seed_seq_fe & stir()
                 {
                     mix_entropy(mixer_.begin(), mixer_.end());
                     return *this;
@@ -402,16 +403,16 @@ namespace ranges
                   : auto_seeded(randutils::get_entropy())
                 {}
                 template<std::size_t N>
-                auto_seeded(std::array<std::uint32_t, N> const& seeds)
+                auto_seeded(std::array<std::uint32_t, N> const & seeds)
                   : SeedSeq(seeds.begin(), seeds.end())
                 {}
                 using SeedSeq::SeedSeq;
 
-                const SeedSeq& base() const
+                const SeedSeq & base() const
                 {
                     return *this;
                 }
-                SeedSeq& base()
+                SeedSeq & base()
                 {
                     return *this;
                 }
@@ -421,7 +422,7 @@ namespace ranges
             using auto_seed_256 = auto_seeded<seed_seq_fe256>;
         }
 
-        using default_URNG = meta::if_c<(sizeof(void*) >= sizeof(long long)),
+        using default_URNG = meta::if_c<(sizeof(void *) >= sizeof(long long)),
                                         std::mt19937_64, std::mt19937>;
 
 #if !RANGES_CXX_THREAD_LOCAL
@@ -437,7 +438,7 @@ namespace ranges
             result_type operator()()
             {
                 std::lock_guard<std::mutex> guard{mtx_};
-                return static_cast<URNG&>(*this)();
+                return static_cast<URNG &>(*this)();
             }
             using URNG::max;
             using URNG::min;
@@ -448,7 +449,7 @@ namespace ranges
 #endif
 
         template<typename T = void>
-        default_random_engine& get_random_engine()
+        default_random_engine & get_random_engine()
         {
             using Seeder = meta::if_c<(sizeof(default_URNG) > 16),
                                       randutils::auto_seed_256,
@@ -465,11 +466,11 @@ namespace ranges
 
             if(!initialized)
             {
-                ::new(static_cast<void*>(&storage))
+                ::new(static_cast<void *>(&storage))
                     default_random_engine{Seeder{}.base()};
                 initialized = true;
             }
-            auto& engine = reinterpret_cast<default_random_engine&>(storage);
+            auto & engine = reinterpret_cast<default_random_engine &>(storage);
 #else
             static default_random_engine engine{Seeder{}.base()};
 #endif // RANGES_CXX_THREAD_LOCAL

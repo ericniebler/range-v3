@@ -21,7 +21,7 @@ namespace ranges
 {
     /// \ingroup group-utility
     template<typename T>
-    constexpr T *_nullptr_v()
+    constexpr T * _nullptr_v()
     {
         return nullptr;
     }
@@ -29,7 +29,7 @@ namespace ranges
 #if RANGES_CXX_VARIABLE_TEMPLATES
     /// \ingroup group-utility
     template<typename T>
-    constexpr T *nullptr_v = nullptr;
+    constexpr T * nullptr_v = nullptr;
 #endif
 }
 

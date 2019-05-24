@@ -18,9 +18,10 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range_fwd.hpp>
 
 namespace ranges
 {
@@ -37,11 +38,11 @@ namespace ranges
             using reference = T &&;
 
             movable_input_iterator() = default;
-            movable_input_iterator &operator++();
+            movable_input_iterator & operator++();
             movable_input_iterator operator++(int);
             bool operator==(movable_input_iterator const &) const;
             bool operator!=(movable_input_iterator const &) const;
-            T &&operator*() const;
+            T && operator*() const;
         };
     }
     /// \endcond

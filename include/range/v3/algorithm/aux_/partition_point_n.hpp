@@ -14,10 +14,11 @@
 #ifndef RANGES_V3_ALGORITHM_AUX_PARTITION_POINT_N_HPP
 #define RANGES_V3_ALGORITHM_AUX_PARTITION_POINT_N_HPP
 
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/operations.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -29,7 +30,7 @@ namespace ranges
             template<typename I, typename C, typename P = identity>
             auto operator()(I begin, iter_difference_t<I> d, C pred,
                             P proj = P{}) const -> CPP_ret(I)( //
-                requires ForwardIterator<I>&& IndirectUnaryPredicate<C, projected<I, P>>)
+                requires ForwardIterator<I> && IndirectUnaryPredicate<C, projected<I, P>>)
             {
                 if(0 < d)
                 {

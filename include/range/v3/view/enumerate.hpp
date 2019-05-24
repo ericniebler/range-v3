@@ -50,7 +50,7 @@ namespace ranges
                 {
                     ++index_;
                 }
-                bool equal(cursor const &that) const
+                bool equal(cursor const & that) const
                 {
                     return that.index_ == index_;
                 }
@@ -62,7 +62,7 @@ namespace ranges
                 {
                     index_ += static_cast<Size>(n);
                 }
-                Diff distance_to(cursor const &that) const
+                Diff distance_to(cursor const & that) const
                 {
                     return static_cast<Diff>(static_cast<Diff>(that.index_) -
                                              static_cast<Diff>(index_));
@@ -94,7 +94,7 @@ namespace ranges
         struct enumerate_fn
         {
             template<typename Rng>
-            auto CPP_fun(operator())(Rng &&rng)(const requires ViewableRange<Rng>)
+            auto CPP_fun(operator())(Rng && rng)(const requires ViewableRange<Rng>)
             {
                 using D = range_difference_t<Rng>;
                 using S = detail::iter_size_t<iterator_t<Rng>>;
