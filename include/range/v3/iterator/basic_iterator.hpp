@@ -26,6 +26,7 @@
 #include <range/v3/detail/range_access.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
+#include <range/v3/utility/addressof.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/semiregular.hpp>
@@ -588,7 +589,7 @@ namespace ranges
                     Same<typename detail::iterator_associated_types_base<C>::value_type,
                          uncvref_t<const_reference_t>>)
         {
-            return std::addressof(**this);
+            return detail::addressof(**this);
         }
 
         CPP_member

@@ -20,6 +20,7 @@
 
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/range/access.hpp>
+#include <range/v3/utility/addressof.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -176,13 +177,13 @@ namespace ranges
             static constexpr auto impl_(R && r, detail::priority_tag<0>) noexcept(
                 noexcept(ranges::begin((R &&) r) == ranges::end((R &&) r)
                              ? nullptr
-                             : std::addressof(*ranges::begin((R &&) r))))
-                -> CPP_ret(decltype(std::addressof(*ranges::begin((R &&) r))))( //
+                             : detail::addressof(*ranges::begin((R &&) r))))
+                -> CPP_ret(decltype(detail::addressof(*ranges::begin((R &&) r))))( //
                     requires ContiguousIterator<_begin_::_t<R>>)
             {
                 return ranges::begin((R &&) r) == ranges::end((R &&) r)
                            ? nullptr
-                           : std::addressof(*ranges::begin((R &&) r));
+                           : detail::addressof(*ranges::begin((R &&) r));
             }
 
         public:

@@ -23,6 +23,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/view/interface.hpp>
 #include <range/v3/view/view.hpp>
+#include <range/v3/utility/addressof.hpp>
 
 RANGES_DISABLE_WARNINGS
 
@@ -77,7 +78,7 @@ namespace ranges
     public:
         constexpr ref_view() noexcept = default;
         constexpr ref_view(Rng & rng) noexcept
-          : rng_(std::addressof(rng))
+          : rng_(detail::addressof(rng))
         {}
         constexpr Rng & base() const noexcept
         {

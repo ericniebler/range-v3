@@ -23,6 +23,7 @@
 
 #include <range/v3/detail/config.hpp>
 #include <range/v3/utility/in_place.hpp>
+#include <range/v3/utility/addressof.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
 
@@ -189,11 +190,11 @@ namespace ranges
                 }
                 constexpr T * operator->() noexcept
                 {
-                    return RANGES_EXPECT(engaged_), std::addressof(data_);
+                    return RANGES_EXPECT(engaged_), detail::addressof(data_);
                 }
                 constexpr T const * operator->() const noexcept
                 {
-                    return RANGES_EXPECT(engaged_), std::addressof(data_);
+                    return RANGES_EXPECT(engaged_), detail::addressof(data_);
                 }
                 CPP_member
                 constexpr auto swap(optional_base & that) noexcept(
@@ -233,7 +234,7 @@ namespace ranges
                         data_ = *static_cast<U &&>(that);
                     else
                     {
-                        auto const address = static_cast<void *>(std::addressof(data_));
+                        auto const address = static_cast<void *>(detail::addressof(data_));
                         ::new(address) T(*static_cast<U &&>(that));
                         engaged_ = true;
                     }
@@ -275,7 +276,7 @@ namespace ranges
                 constexpr explicit CPP_ctor(optional_base)(in_place_t, Arg && arg)( //
                     noexcept(true)                                                  //
                     requires Constructible<T &, Arg>)
-                  : ptr_(std::addressof(arg))
+                  : ptr_(detail::addressof(arg))
                 {}
                 constexpr bool has_value() const noexcept
                 {
@@ -310,7 +311,7 @@ namespace ranges
                     requires ConvertibleTo<U &, T &>)
                 {
                     RANGES_EXPECT(!ptr_);
-                    ptr_ = std::addressof(ref);
+                    ptr_ = detail::addressof(ref);
                     return *ptr_;
                 }
                 template<typename U>

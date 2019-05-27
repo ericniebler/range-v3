@@ -19,6 +19,7 @@
 #include <range/v3/range_fwd.hpp>
 
 #include <range/v3/iterator/operations.hpp>
+#include <range/v3/utility/addressof.hpp>
 
 namespace ranges
 {
@@ -32,7 +33,7 @@ namespace ranges
 
         constexpr back_insert_iterator() = default;
         explicit constexpr back_insert_iterator(Container & x)
-          : container_(std::addressof(x))
+          : container_(detail::addressof(x))
         {}
         back_insert_iterator & operator=(typename Container::value_type const & value)
         {
@@ -81,7 +82,7 @@ namespace ranges
 
         constexpr front_insert_iterator() = default;
         explicit constexpr front_insert_iterator(Container & x)
-          : container_(std::addressof(x))
+          : container_(detail::addressof(x))
         {}
         front_insert_iterator & operator=(typename Container::value_type const & value)
         {
@@ -130,7 +131,7 @@ namespace ranges
 
         constexpr insert_iterator() = default;
         explicit constexpr insert_iterator(Container & x, typename Container::iterator w)
-          : container_(std::addressof(x))
+          : container_(detail::addressof(x))
           , where_(w)
         {}
         insert_iterator & operator=(typename Container::value_type const & value)

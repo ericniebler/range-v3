@@ -22,6 +22,7 @@
 
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/functional/pipeable.hpp>
+#include <range/v3/utility/addressof.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -38,7 +39,7 @@ namespace ranges
             T * t_ = nullptr;
             constexpr reference_wrapper_() = default;
             constexpr reference_wrapper_(T & t) noexcept
-              : t_(std::addressof(t))
+              : t_(detail::addressof(t))
             {}
             constexpr reference_wrapper_(T &&) = delete;
             constexpr T & get() const noexcept
@@ -57,7 +58,7 @@ namespace ranges
             T * t_ = nullptr;
             constexpr reference_wrapper_() = default;
             constexpr reference_wrapper_(T && t) noexcept
-              : t_(std::addressof(t))
+              : t_(detail::addressof(t))
             {}
             constexpr T && get() const noexcept
             {
