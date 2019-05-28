@@ -315,6 +315,12 @@ namespace ranges
         }
     };
 
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+    template <typename Rng>
+    drop_last_view(Rng &&, range_difference_t<Rng>) ->
+        drop_last_view<view::all_t<Rng>>;
+#endif
+
     namespace view
     {
         struct drop_last_fn

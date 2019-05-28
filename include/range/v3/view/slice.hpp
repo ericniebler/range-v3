@@ -170,6 +170,12 @@ namespace ranges
         using detail::slice_view_<Rng, (bool) RandomAccessRange<Rng>>::slice_view_;
     };
 
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+    template <typename Rng>
+    slice_view(Rng &&, range_difference_t<Rng>, range_difference_t<Rng>) ->
+        slice_view<view::all_t<Rng>>;
+#endif
+
     namespace view
     {
         struct slice_fn

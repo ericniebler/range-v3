@@ -132,6 +132,12 @@ namespace ranges
         {}
     };
 
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+    CPP_template(typename Rng, typename Fun)(
+        requires CopyConstructible<Fun>)
+    group_by_view(Rng&&, Fun) -> group_by_view<view::all_t<Rng>, Fun>;
+#endif
+
     namespace view
     {
         struct group_by_fn

@@ -131,6 +131,12 @@ namespace ranges
         detail::non_propagating_cache<iterator_t<Rng>> begin_;
     };
 
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+    CPP_template(typename Rng, typename Fun)(
+        requires CopyConstructible<Rng>)
+    adjacent_remove_if_view(Rng&&, Fun) -> adjacent_remove_if_view<view::all_t<Rng>, Fun>;
+#endif
+
     namespace view
     {
         struct adjacent_remove_if_fn

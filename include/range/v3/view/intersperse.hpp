@@ -199,6 +199,11 @@ namespace ranges
         range_value_t<Rng> val_;
     };
 
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+    template <typename Rng>
+    intersperse_view(Rng &&, range_value_t<Rng>) -> intersperse_view<view::all_t<Rng>>;
+#endif
+
     namespace view
     {
         struct intersperse_fn

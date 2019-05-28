@@ -362,6 +362,12 @@ namespace ranges
         {}
     };
 
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+    CPP_template(typename Fun, typename... Rng)(
+        requires CopyConstructible<Fun>)
+    zip_with_view(Fun, Rng&&...) -> zip_with_view<Fun, view::all_t<Rng>...>;
+#endif
+
     namespace view
     {
         struct iter_zip_with_fn

@@ -113,6 +113,11 @@ namespace ranges
         {}
     };
 
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+    template <typename... Rng>
+    zip_view(Rng&&...) -> zip_view<view::all_t<Rng>...>;
+#endif
+
     namespace view
     {
         struct zip_fn

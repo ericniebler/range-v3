@@ -95,6 +95,11 @@ namespace ranges
         }
     };
 
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+    template <typename Rng>
+    move_view(Rng &&) -> move_view<view::all_t<Rng>>;
+#endif
+
     namespace view
     {
         struct move_fn
