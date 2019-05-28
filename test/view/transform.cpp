@@ -191,5 +191,13 @@ int main()
         ::check_equal(rng, {T{"a","x"}, T{"b","y"}, T{"c","z"}});
     }
 
+    {
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+        std::vector vi = {1, 2, 3};
+        ranges::transform_view times_ten{ vi, [](int i) { return i * 10; } };
+        ::check_equal(times_ten, {10, 20, 30});
+#endif
+    }
+
     return test_result();
 }
