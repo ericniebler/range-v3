@@ -69,7 +69,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Rng, typename Fun)(
-        requires ViewableRange<Rng>)
+        requires CopyConstructible<Fun>)
     drop_while_view(Rng&&, Fun) -> drop_while_view<view::all_t<Rng>, Fun>;
 #endif
 
