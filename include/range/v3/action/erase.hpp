@@ -27,10 +27,10 @@ namespace ranges
     namespace adl_erase_detail
     {
         template<typename Cont, typename I, typename S>
-        auto erase(Cont && cont, I begin,
-                   S end) -> CPP_ret(decltype(unwrap_reference(cont).erase(begin,
-                                                                           end)))( //
-            requires LvalueContainerLike<Cont> && ForwardIterator<I> && Sentinel<S, I>)
+        auto erase(Cont && cont, I begin, S end)                            //
+            -> CPP_ret(decltype(unwrap_reference(cont).erase(begin, end)))( //
+                requires LvalueContainerLike<Cont> && ForwardIterator<I> &&
+                    Sentinel<S, I>)
         {
             return unwrap_reference(cont).erase(begin, end);
         }

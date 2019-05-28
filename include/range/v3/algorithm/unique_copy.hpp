@@ -137,13 +137,13 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename O, typename C = equal_to, typename P = identity>
-        auto operator()(Rng && rng, O out, C pred = C{}, P proj = P{}) const -> CPP_ret(
-            unique_copy_result<safe_iterator_t<Rng>, O>)( //
-            requires Range<Rng> && InputIterator<iterator_t<Rng>> &&
-                IndirectRelation<C, projected<iterator_t<Rng>, P>> &&
-                    WeaklyIncrementable<O> && IndirectlyCopyable<iterator_t<Rng>, O> &&
-            (ForwardIterator<iterator_t<Rng>> || ForwardIterator<O> ||
-             IndirectlyCopyableStorable<iterator_t<Rng>, O>))
+        auto operator()(Rng && rng, O out, C pred = C{}, P proj = P{}) const //
+            -> CPP_ret(unique_copy_result<safe_iterator_t<Rng>, O>)(         //
+                requires Range<Rng> && InputIterator<iterator_t<Rng>> && IndirectRelation<
+                    C, projected<iterator_t<Rng>, P>> && WeaklyIncrementable<O> &&
+                    IndirectlyCopyable<iterator_t<Rng>, O> &&
+                (ForwardIterator<iterator_t<Rng>> || ForwardIterator<O> ||
+                 IndirectlyCopyableStorable<iterator_t<Rng>, O>))
         {
             return unique_copy_fn::impl(begin(rng),
                                         end(rng),

@@ -231,10 +231,10 @@ namespace ranges
         }
         template<typename I1, typename S1, typename I2, typename S2>
         auto iter_swap(common_iterator<I1, S1> const & x,
-                       common_iterator<I2, S2> const &
-                           y) noexcept(is_nothrow_indirectly_swappable<I1, I2>::value)
-            -> CPP_broken_friend_ret(void)( //
-                requires IndirectlySwappable<I1, I2>)
+                       common_iterator<I2, S2> const & y) //
+            noexcept(is_nothrow_indirectly_swappable<I1, I2>::value)
+                -> CPP_broken_friend_ret(void)( //
+                    requires IndirectlySwappable<I1, I2>)
         {
             return ranges::iter_swap(ranges::get<0>(detail::cidata(x)),
                                      ranges::get<0>(detail::cidata(y)));
@@ -282,10 +282,11 @@ namespace ranges
     }
 
     template<typename I1, typename I2, typename S1, typename S2>
-    auto operator-(
-        common_iterator<I1, S1> const & x,
-        common_iterator<I2, S2> const & y) -> CPP_ret(iter_difference_t<I2>)( //
-        requires SizedSentinel<I1, I2> && SizedSentinel<S1, I2> && SizedSentinel<S2, I1>)
+    auto operator-(common_iterator<I1, S1> const & x,
+                   common_iterator<I2, S2> const & y) //
+        -> CPP_ret(iter_difference_t<I2>)(            //
+            requires SizedSentinel<I1, I2> && SizedSentinel<S1, I2> &&
+                SizedSentinel<S2, I1>)
     {
         return detail::cidata(x).index() == 1u
                    ? (detail::cidata(y).index() == 1u

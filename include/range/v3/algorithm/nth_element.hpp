@@ -119,18 +119,19 @@ namespace ranges
                 difference_type len = end - begin;
                 switch(len)
                 {
-                    case 0:
-                    case 1:
-                        return end_orig;
-                    case 2:
-                        if(invoke(pred, invoke(proj, *--end), invoke(proj, *begin)))
-                            ranges::iter_swap(begin, end);
-                        return end_orig;
-                    case 3: {
-                        I m = begin;
-                        detail::sort3(begin, ++m, --end, pred, proj);
-                        return end_orig;
-                    }
+                case 0:
+                case 1:
+                    return end_orig;
+                case 2:
+                    if(invoke(pred, invoke(proj, *--end), invoke(proj, *begin)))
+                        ranges::iter_swap(begin, end);
+                    return end_orig;
+                case 3:
+                {
+                    I m = begin;
+                    detail::sort3(begin, ++m, --end, pred, proj);
+                    return end_orig;
+                }
                 }
                 if(len <= limit)
                 {

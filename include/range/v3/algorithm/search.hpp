@@ -149,17 +149,18 @@ namespace ranges
         {
             if(begin2 == end2)
                 return {begin1, begin1};
-            if
-                RANGES_CONSTEXPR_IF(SizedSentinel<S1, I1> && SizedSentinel<S2, I2>)
-            return search_fn::sized_impl(std::move(begin1),
-                                         std::move(end1),
-                                         distance(begin1, end1),
-                                         std::move(begin2),
-                                         std::move(end2),
-                                         distance(begin2, end2),
-                                         pred,
-                                         proj1,
-                                         proj2);
+            // clang-format off
+            if RANGES_CONSTEXPR_IF(SizedSentinel<S1, I1> && SizedSentinel<S2, I2>)
+                return search_fn::sized_impl(std::move(begin1),
+                                             std::move(end1),
+                                             distance(begin1, end1),
+                                             std::move(begin2),
+                                             std::move(end2),
+                                             distance(begin2, end2),
+                                             pred,
+                                             proj1,
+                                             proj2);
+            // clang-format on
             else return search_fn::impl(std::move(begin1),
                                         std::move(end1),
                                         std::move(begin2),
@@ -172,23 +173,25 @@ namespace ranges
         template<typename Rng1, typename Rng2, typename C = equal_to,
                  typename P1 = identity, typename P2 = identity>
         auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
-                        P2 proj2 = P2{}) const -> CPP_ret(safe_subrange_t<Rng1>)( //
-            requires ForwardRange<Rng1> && ForwardRange<Rng2> &&
-                IndirectlyComparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
+                        P2 proj2 = P2{}) const //
+            -> CPP_ret(safe_subrange_t<Rng1>)( //
+                requires ForwardRange<Rng1> && ForwardRange<Rng2> &&
+                    IndirectlyComparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
         {
             if(empty(rng2))
                 return subrange<iterator_t<Rng1>>{begin(rng1), begin(rng1)};
-            if
-                RANGES_CONSTEXPR_IF(SizedRange<Rng1> && SizedRange<Rng2>)
-            return search_fn::sized_impl(begin(rng1),
-                                         end(rng1),
-                                         distance(rng1),
-                                         begin(rng2),
-                                         end(rng2),
-                                         distance(rng2),
-                                         pred,
-                                         proj1,
-                                         proj2);
+            // clang-format off
+            if RANGES_CONSTEXPR_IF(SizedRange<Rng1> && SizedRange<Rng2>)
+                return search_fn::sized_impl(begin(rng1),
+                                             end(rng1),
+                                             distance(rng1),
+                                             begin(rng2),
+                                             end(rng2),
+                                             distance(rng2),
+                                             pred,
+                                             proj1,
+                                             proj2);
+            // clang-format on
             else return search_fn::impl(
                 begin(rng1), end(rng1), begin(rng2), end(rng2), pred, proj1, proj2);
         }

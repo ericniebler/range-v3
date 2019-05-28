@@ -16,9 +16,10 @@
 #define RANGES_V3_ITERATOR_ACCESS_HPP
 
 #include <iterator>
-#include <std/detail/associated_types.hpp>
 #include <type_traits>
 #include <utility>
+
+#include <std/detail/associated_types.hpp>
 
 #include <meta/meta.hpp>
 
@@ -171,9 +172,8 @@ namespace ranges
 
         // Q: Then why is it OK to "re"-define swap for pairs and tuples of references?
         // A: Because as defined above, swapping an rvalue tuple of references has the
-        // same
-        //    semantics as swapping an lvalue tuple of references. Rather than reseat the
-        //    references, assignment happens *through* the references.
+        //    same semantics as swapping an lvalue tuple of references. Rather than
+        //    reseat the references, assignment happens *through* the references.
 
         // Q: But I have an iterator whose operator* returns an rvalue
         //    std::reference_wrapper<T>. How do I make it model IndirectlySwappable?

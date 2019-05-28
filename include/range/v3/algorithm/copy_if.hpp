@@ -39,10 +39,11 @@ namespace ranges
     struct copy_if_fn
     {
         template<typename I, typename S, typename O, typename F, typename P = identity>
-        auto operator()(I begin, S end, O out, F pred,
-                        P proj = P{}) const -> CPP_ret(copy_if_result<I, O>)( //
-            requires InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
-                IndirectUnaryPredicate<F, projected<I, P>> && IndirectlyCopyable<I, O>)
+        auto operator()(I begin, S end, O out, F pred, P proj = P{}) const //
+            -> CPP_ret(copy_if_result<I, O>)(                              //
+                requires InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
+                    IndirectUnaryPredicate<F, projected<I, P>> &&
+                        IndirectlyCopyable<I, O>)
         {
             for(; begin != end; ++begin)
             {

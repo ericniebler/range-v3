@@ -161,10 +161,8 @@ namespace ranges
             using typename cursor_traits<Cur>::rvalue_reference_t_;
             static_assert((bool)CommonReference<value_t_ &, reference_t_>,
                           "Your readable and writable cursor must have a value type and "
-                          "a reference "
-                          "type that share a common reference type. See the "
-                          "ranges::common_reference "
-                          "type trait.");
+                          "a reference type that share a common reference type. See the "
+                          "ranges::common_reference type trait.");
             // BUGBUG make these private:
         public:
             constexpr reference_t_ read_() const noexcept(
@@ -514,10 +512,9 @@ namespace ranges
         using typename assoc_types_::difference_type;
         constexpr basic_iterator() = default;
         template<typename OtherCur>
-        constexpr                                                    /*c++14*/
-            CPP_ctor(basic_iterator)(basic_iterator<OtherCur> that)( //
-                requires(!Same<OtherCur, Cur>) && ConvertibleTo<OtherCur, Cur> &&
-                Constructible<mixin_t, OtherCur>)
+        constexpr CPP_ctor(basic_iterator)(basic_iterator<OtherCur> that)( //
+            requires(!Same<OtherCur, Cur>) && ConvertibleTo<OtherCur, Cur> &&
+            Constructible<mixin_t, OtherCur>)
           : base_t{std::move(that.pos())}
         {}
         // Mix in any additional constructors provided by the mixin
@@ -605,8 +602,7 @@ namespace ranges
         // Attempt to satisfy the C++17 iterator requirements by returning a
         // proxy from postfix increment:
         template<typename A = assoc_types_, typename V = typename A::value_type>
-        constexpr auto post_increment_(std::true_type,
-                                       int)
+        constexpr auto post_increment_(std::true_type, int) //
             -> CPP_ret(detail::postfix_increment_proxy<V>)( //
                 requires Constructible<V, typename A::reference> && MoveConstructible<V>)
         {

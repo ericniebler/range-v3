@@ -47,7 +47,9 @@ namespace ranges
             return (invoke(a, (Ts &&) ts...), invoke(b))
         )
             // clang-format on
-            public : composed() = default;
+            public
+          : //
+            composed() = default;
         composed(Second second, First first)
           : first_(std::move(first))
           , second_(std::move(second))

@@ -312,9 +312,8 @@ namespace ranges
         private:
             friend view_access;
             template<typename Difference>
-            constexpr                                                         /*c++14*/
-                static auto CPP_fun(bind)(stride_fn stride, Difference step)( //
-                    requires Integral<Difference>)
+            constexpr static auto CPP_fun(bind)(stride_fn stride, Difference step)( //
+                requires Integral<Difference>)
             {
                 return make_pipeable(
                     std::bind(stride, std::placeholders::_1, std::move(step)));

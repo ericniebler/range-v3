@@ -50,13 +50,14 @@ namespace ranges
             requires ForwardIterator<I> && Sentinel<S, I> &&
                 IndirectUnaryPredicate<C, projected<I, P>>)
         {
-            if
-                RANGES_CONSTEXPR_IF(SizedSentinel<S, I>)
-                {
-                    auto len = distance(begin, std::move(end));
-                    return aux::partition_point_n(
-                        std::move(begin), len, std::move(pred), std::move(proj));
-                }
+            // clang-format off
+            if RANGES_CONSTEXPR_IF(SizedSentinel<S, I>)
+            {
+                auto len = distance(begin, std::move(end));
+                return aux::partition_point_n(
+                    std::move(begin), len, std::move(pred), std::move(proj));
+            }
+            // clang-format on
 
             // Probe exponentially for either end-of-range or an iterator
             // that is past the partition point (i.e., does not satisfy pred).
@@ -82,18 +83,15 @@ namespace ranges
                 requires ForwardRange<Rng> &&
                     IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
         {
-            if
-                RANGES_CONSTEXPR_IF(SizedRange<Rng>)
-                {
-                    auto len = distance(rng);
-                    return aux::partition_point_n(
-                        begin(rng), len, std::move(pred), std::move(proj));
-                }
-            return (*this)( //
-                begin(rng),
-                end(rng),
-                std::move(pred),
-                std::move(proj));
+            // clang-format off
+            if RANGES_CONSTEXPR_IF(SizedRange<Rng>)
+            {
+                auto len = distance(rng);
+                return aux::partition_point_n(
+                    begin(rng), len, std::move(pred), std::move(proj));
+            }
+            // clang-format on
+            return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
     };
 

@@ -67,7 +67,8 @@ namespace ranges
     /// \endcond
 
     CPP_template_def(typename I)( //
-        requires Iterator<I>) struct counted_iterator
+        requires Iterator<I>)     //
+        struct counted_iterator
       : _counted_iterator_::contiguous_iterator_concept_base<(bool)ContiguousIterator<I>>
     {
     private:
@@ -247,12 +248,11 @@ namespace ranges
             return ranges::iter_move(i.current_);
         }
         template<typename I2, typename S2>
-        friend constexpr auto iter_swap(
-            counted_iterator const & x,
-            counted_iterator<I2> const &
-                y) noexcept(is_nothrow_indirectly_swappable<I, I2>::value)
-            -> CPP_broken_friend_ret(void)( //
-                requires IndirectlySwappable<I2, I>)
+        friend constexpr auto iter_swap(counted_iterator const & x,
+                                        counted_iterator<I2> const & y) //
+            noexcept(is_nothrow_indirectly_swappable<I, I2>::value)
+                -> CPP_broken_friend_ret(void)( //
+                    requires IndirectlySwappable<I2, I>)
         {
             return ranges::iter_swap(x.current_, _counted_iterator_::access::current(y));
         }

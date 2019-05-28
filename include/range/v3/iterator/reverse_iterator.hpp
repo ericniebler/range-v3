@@ -107,9 +107,8 @@ namespace ranges
         public:
             reverse_cursor() = default;
             template<typename U>
-            constexpr                                                  /*c++14*/
-                CPP_ctor(reverse_cursor)(reverse_cursor<U> const & u)( //
-                    requires ConvertibleTo<U, I>)
+            constexpr CPP_ctor(reverse_cursor)(reverse_cursor<U> const & u)( //
+                requires ConvertibleTo<U, I>)
               : it_(u.base())
             {}
         };

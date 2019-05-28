@@ -695,20 +695,20 @@ namespace ranges
             {
                 switch(state)
                 {
-                    case state_t::FIRST:
-                        ++it1_;
-                        satisfy();
-                        break;
-                    case state_t::ONLY_FIRST:
-                        ++it1_;
-                        break;
-                    case state_t::SECOND:
-                        ++it2_;
-                        satisfy();
-                        break;
-                    case state_t::ONLY_SECOND:
-                        ++it2_;
-                        break;
+                case state_t::FIRST:
+                    ++it1_;
+                    satisfy();
+                    break;
+                case state_t::ONLY_FIRST:
+                    ++it1_;
+                    break;
+                case state_t::SECOND:
+                    ++it2_;
+                    satisfy();
+                    break;
+                case state_t::ONLY_SECOND:
+                    ++it2_;
+                    break;
                 }
             }
             CPP_member auto equal(set_symmetric_difference_cursor const & that) const
