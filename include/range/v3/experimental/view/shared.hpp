@@ -53,7 +53,8 @@ namespace ranges
                 return ranges::end(*rng_ptr_);
             }
 
-            CPP_member auto CPP_fun(size)()(const requires SizedRange<Rng>)
+            CPP_member
+            auto CPP_fun(size)()(const requires SizedRange<Rng>)
             {
                 return ranges::size(*rng_ptr_);
             }

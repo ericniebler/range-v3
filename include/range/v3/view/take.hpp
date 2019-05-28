@@ -157,7 +157,8 @@ namespace ranges
             return base_;
         }
 
-        CPP_member constexpr auto CPP_fun(begin)()(requires(!simple_view<Rng>()))
+        CPP_member
+        constexpr auto CPP_fun(begin)()(requires(!simple_view<Rng>()))
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(SizedRange<Rng>)
@@ -165,9 +166,8 @@ namespace ranges
                     return ranges::begin(base_);
                 else
                 {
-#if defined(__cpp_concepts) && \
-    __cpp_concepts <=          \
-        201507 // cannot always delegate to size() member on GCC with ConceptsTS
+                    // cannot always delegate to size() member on GCC with ConceptsTS
+#if defined(__cpp_concepts) && __cpp_concepts <= 201507
                     auto s = ranges::min(
                         static_cast<range_difference_t<Rng>>(count_),
                         static_cast<range_difference_t<Rng>>(ranges::size(base_)));
@@ -183,7 +183,8 @@ namespace ranges
 #endif
         }
 
-        CPP_member constexpr auto CPP_fun(begin)()(const requires Range<Rng const>)
+        CPP_member
+        constexpr auto CPP_fun(begin)()(const requires Range<Rng const>)
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(SizedRange<Rng const>)
@@ -201,7 +202,8 @@ namespace ranges
 #endif
         }
 
-        CPP_member constexpr auto CPP_fun(end)()(requires(!simple_view<Rng>()))
+        CPP_member
+        constexpr auto CPP_fun(end)()(requires(!simple_view<Rng>()))
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(SizedRange<Rng>)
@@ -220,7 +222,8 @@ namespace ranges
 #endif
         }
 
-        CPP_member constexpr auto CPP_fun(end)()(const requires Range<Rng const>)
+        CPP_member
+        constexpr auto CPP_fun(end)()(const requires Range<Rng const>)
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(SizedRange<Rng const>)
@@ -240,12 +243,14 @@ namespace ranges
 #endif
         }
 
-        CPP_member constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             auto n = ranges::size(base_);
             return ranges::min(n, static_cast<decltype(n)>(count_));
         }
-        CPP_member constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             auto n = ranges::size(base_);
             return ranges::min(n, static_cast<decltype(n)>(count_));

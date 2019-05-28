@@ -143,15 +143,17 @@ namespace ranges
                 RANGES_EXPECT(0 == offset());
                 offset() = ranges::advance(it, n_, end_);
             }
-            CPP_member constexpr auto prev(iterator_t<CRng> & it) -> CPP_ret(void)( //
+            CPP_member
+            constexpr auto prev(iterator_t<CRng> & it) -> CPP_ret(void)( //
                 requires BidirectionalRange<CRng>)
             {
                 ranges::advance(it, -n_ + offset());
                 offset() = 0;
             }
-            CPP_member constexpr auto distance_to(iterator_t<CRng> const & here,
-                                                  iterator_t<CRng> const & there,
-                                                  adaptor const & that) const
+            CPP_member
+            constexpr auto distance_to(iterator_t<CRng> const & here,
+                                       iterator_t<CRng> const & there,
+                                       adaptor const & that) const
                 -> CPP_ret(range_difference_t<Rng>)( //
                     requires(detail::can_sized_sentinel_<Rng, Const>()))
             {
@@ -162,10 +164,10 @@ namespace ranges
                 RANGES_ENSURE(0 == delta % n_);
                 return delta / n_;
             }
-            CPP_member constexpr auto advance(iterator_t<CRng> & it,
-                                              range_difference_t<Rng> n)
-                -> CPP_ret(void)( //
-                    requires RandomAccessRange<CRng>)
+            CPP_member
+            constexpr auto advance(iterator_t<CRng> & it,
+                                   range_difference_t<Rng> n) -> CPP_ret(void)( //
+                requires RandomAccessRange<CRng>)
             {
                 using Limits = std::numeric_limits<range_difference_t<CRng>>;
                 if(0 < n)
@@ -189,7 +191,8 @@ namespace ranges
         {
             return adaptor<simple_view<Rng>()>{*this};
         }
-        CPP_member constexpr auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
+        CPP_member
+        constexpr auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
             requires ForwardRange<Rng const>)
         {
             return adaptor<true>{*this};
@@ -207,11 +210,13 @@ namespace ranges
           : chunk_view_::view_adaptor(detail::move(rng))
           , n_((RANGES_EXPECT(0 < n), n))
         {}
-        CPP_member constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             return size_(ranges::size(this->base()));
         }
-        CPP_member constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             return size_(ranges::size(this->base()));
         }
@@ -281,7 +286,8 @@ namespace ranges
                     if(rng_->remainder_ != 0 && rng_->it() == ranges::end(rng_->base_))
                         rng_->remainder_ = 0;
                 }
-                CPP_member constexpr auto distance_to(default_sentinel_t) const
+                CPP_member
+                constexpr auto distance_to(default_sentinel_t) const
                     -> CPP_ret(range_difference_t<Rng>)( //
                         requires SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>)
                 {
@@ -295,7 +301,8 @@ namespace ranges
                 constexpr explicit inner_view(chunk_view_ & view) noexcept
                   : rng_{&view}
                 {}
-                CPP_member constexpr auto CPP_fun(size)()(
+                CPP_member
+                constexpr auto CPP_fun(size)()(
                     requires SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>)
                 {
                     using size_type = detail::iter_size_t<iterator_t<Rng>>;
@@ -332,7 +339,8 @@ namespace ranges
                 ranges::advance(rng_->it(), rng_->remainder_, ranges::end(rng_->base_));
                 rng_->remainder_ = rng_->n_;
             }
-            CPP_member constexpr auto distance_to(default_sentinel_t) const
+            CPP_member
+            constexpr auto distance_to(default_sentinel_t) const
                 -> CPP_ret(range_difference_t<Rng>)( //
                     requires SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>)
             {
@@ -368,11 +376,13 @@ namespace ranges
           , remainder_(n)
           , it_cache_{nullopt}
         {}
-        CPP_member constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             return size_(ranges::size(base_));
         }
-        CPP_member constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             return size_(ranges::size(base_));
         }

@@ -72,50 +72,59 @@ namespace ranges
             ++current_;
             return *this;
         }
-        CPP_member auto operator++(int) -> CPP_ret(void)( //
+        CPP_member
+        auto operator++(int) -> CPP_ret(void)( //
             requires(!ForwardIterator<I>))
         {
             ++current_;
         }
-        CPP_member auto operator++(int) -> CPP_ret(move_iterator)( //
+        CPP_member
+        auto operator++(int) -> CPP_ret(move_iterator)( //
             requires ForwardIterator<I>)
         {
             return move_iterator(current_++);
         }
-        CPP_member auto operator--() -> CPP_ret(move_iterator &)( //
+        CPP_member
+        auto operator--() -> CPP_ret(move_iterator &)( //
             requires ForwardIterator<I>)
         {
             --current_;
             return *this;
         }
-        CPP_member auto operator--(int) -> CPP_ret(move_iterator)( //
+        CPP_member
+        auto operator--(int) -> CPP_ret(move_iterator)( //
             requires BidirectionalIterator<I>)
         {
             return move_iterator(current_--);
         }
-        CPP_member auto operator+(difference_type n) const -> CPP_ret(move_iterator)( //
+        CPP_member
+        auto operator+(difference_type n) const -> CPP_ret(move_iterator)( //
             requires RandomAccessIterator<I>)
         {
             return move_iterator(current_ + n);
         }
-        CPP_member auto operator+=(difference_type n) -> CPP_ret(move_iterator &)( //
+        CPP_member
+        auto operator+=(difference_type n) -> CPP_ret(move_iterator &)( //
             requires RandomAccessIterator<I>)
         {
             current_ += n;
             return *this;
         }
-        CPP_member auto operator-(difference_type n) const -> CPP_ret(move_iterator)( //
+        CPP_member
+        auto operator-(difference_type n) const -> CPP_ret(move_iterator)( //
             requires RandomAccessIterator<I>)
         {
             return move_iterator(current_ - n);
         }
-        CPP_member auto operator-=(difference_type n) -> CPP_ret(move_iterator &)( //
+        CPP_member
+        auto operator-=(difference_type n) -> CPP_ret(move_iterator &)( //
             requires RandomAccessIterator<I>)
         {
             current_ -= n;
             return *this;
         }
-        CPP_member auto operator[](difference_type n) const -> CPP_ret(reference)( //
+        CPP_member
+        auto operator[](difference_type n) const -> CPP_ret(reference)( //
             requires RandomAccessIterator<I>)
         {
             return iter_move(current_ + n);
@@ -171,8 +180,9 @@ namespace ranges
         {
             return x.base() - y.base();
         }
-        CPP_broken_friend_member friend auto operator+(iter_difference_t<I> n,
-                                                       move_iterator const & x)
+        CPP_broken_friend_member
+        friend auto operator+(iter_difference_t<I> n,
+                              move_iterator const & x)
             -> CPP_broken_friend_ret(move_iterator)( //
                 requires RandomAccessIterator<I>)
         {
@@ -329,29 +339,33 @@ namespace ranges
             {
                 *it_ = std::move(t);
             }
-            CPP_member auto read() const noexcept(noexcept(*std::declval<I const &>()))
+            CPP_member
+            auto read() const noexcept(noexcept(*std::declval<I const &>()))
                 -> CPP_ret(iter_reference_t<I>)( //
                     requires Readable<I>)
             {
                 return *it_;
             }
-            CPP_member auto equal(move_into_cursor const & that) const
-                -> CPP_ret(bool)( //
-                    requires InputIterator<I>)
+            CPP_member
+            auto equal(move_into_cursor const & that) const -> CPP_ret(bool)( //
+                requires InputIterator<I>)
             {
                 return it_ == that.it_;
             }
-            CPP_member auto prev() -> CPP_ret(void)( //
+            CPP_member
+            auto prev() -> CPP_ret(void)( //
                 requires BidirectionalIterator<I>)
             {
                 --it_;
             }
-            CPP_member auto advance(iter_difference_t<I> n) -> CPP_ret(void)( //
+            CPP_member
+            auto advance(iter_difference_t<I> n) -> CPP_ret(void)( //
                 requires RandomAccessIterator<I>)
             {
                 it_ += n;
             }
-            CPP_member auto distance_to(move_into_cursor const & that) const
+            CPP_member
+            auto distance_to(move_into_cursor const & that) const
                 -> CPP_ret(iter_difference_t<I>)( //
                     requires SizedSentinel<I, I>)
             {

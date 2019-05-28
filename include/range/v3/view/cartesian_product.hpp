@@ -231,33 +231,31 @@ namespace ranges
                 auto n_div = n / my_size;
                 auto n_mod = n % my_size;
 
-                if
-                    RANGES_CONSTEXPR_IF(N != 1)
+                if(RANGES_CONSTEXPR_IF(N != 1))
+                {
+                    if(n_mod < 0)
                     {
-                        if(n_mod < 0)
-                        {
-                            n_mod += my_size;
-                            --n_div;
-                        }
-                        advance_(meta::size_t<N - 1>{}, n_div);
+                        n_mod += my_size;
+                        --n_div;
                     }
+                    advance_(meta::size_t<N - 1>{}, n_div);
+                }
                 RANGES_EXPECT(0 <= n_mod && n_mod < my_size);
 
-                if
-                    RANGES_CONSTEXPR_IF(N == 1)
+                if(RANGES_CONSTEXPR_IF(N == 1))
+                {
+                    if(n_div > 0)
                     {
-                        if(n_div > 0)
-                        {
-                            RANGES_EXPECT(n_div == 1);
-                            RANGES_EXPECT(n_mod == 0);
-                            n_mod = my_size;
-                        }
-                        else if(n_div < 0)
-                        {
-                            RANGES_EXPECT(n_div == -1);
-                            RANGES_EXPECT(n_mod == 0);
-                        }
+                        RANGES_EXPECT(n_div == 1);
+                        RANGES_EXPECT(n_mod == 0);
+                        n_mod = my_size;
                     }
+                    else if(n_div < 0)
+                    {
+                        RANGES_EXPECT(n_div == -1);
+                        RANGES_EXPECT(n_mod == 0);
+                    }
+                }
 
                 using D = iter_difference_t<decltype(first)>;
                 i = first + static_cast<D>(n_mod);
@@ -332,12 +330,14 @@ namespace ranges
             {
                 return equal_(that, meta::size_t<sizeof...(Views)>{});
             }
-            CPP_member auto prev() -> CPP_ret(void)( //
+            CPP_member
+            auto prev() -> CPP_ret(void)( //
                 requires CartesianProductViewCanBidi<IsConst, Views...>)
             {
                 prev_(meta::size_t<sizeof...(Views)>{});
             }
-            CPP_member auto CPP_fun(distance_to)(cursor const & that)(
+            CPP_member
+            auto CPP_fun(distance_to)(cursor const & that)(
                 const requires CartesianProductViewCanDistance<IsConst, Views...>)
             {
                 return distance_(that, meta::size_t<sizeof...(Views)>{});
@@ -354,22 +354,26 @@ namespace ranges
         {
             return cursor<false>{begin_tag{}, *this};
         }
-        CPP_member auto begin_cursor() const -> CPP_ret(cursor<true>)( //
+        CPP_member
+        auto begin_cursor() const -> CPP_ret(cursor<true>)( //
             requires CartesianProductViewCanConst<Views...>)
         {
             return cursor<true>{begin_tag{}, *this};
         }
-        CPP_member auto end_cursor() -> CPP_ret(cursor<false>)( //
+        CPP_member
+        auto end_cursor() -> CPP_ret(cursor<false>)( //
             requires CartesianProductViewCanBidi<std::false_type, Views...>)
         {
             return cursor<false>{end_tag{}, *this};
         }
-        CPP_member auto end_cursor() const -> CPP_ret(cursor<true>)( //
+        CPP_member
+        auto end_cursor() const -> CPP_ret(cursor<true>)( //
             requires CartesianProductViewCanBidi<std::true_type, Views...>)
         {
             return cursor<true>{end_tag{}, *this};
         }
-        CPP_member auto end_cursor() const -> CPP_ret(default_sentinel_t)( //
+        CPP_member
+        auto end_cursor() const -> CPP_ret(default_sentinel_t)( //
             requires(!CartesianProductViewCanBidi<std::true_type, Views...>))
         {
             return {};
@@ -386,16 +390,16 @@ namespace ranges
         {
             return std::size_t{my_cardinality};
         }
-        CPP_member auto CPP_fun(size)()(
-            const //
-            requires(my_cardinality < 0) &&
-            CartesianProductViewCanSize<std::true_type, Views...>)
+        CPP_member
+        auto CPP_fun(size)()(const //
+                             requires(my_cardinality < 0) &&
+                             CartesianProductViewCanSize<std::true_type, Views...>)
         {
             return tuple_foldl(views_, std::uintmax_t{1}, detail::cartesian_size_fn{});
         }
-        CPP_member auto CPP_fun(size)()(
-            requires(my_cardinality < 0) &&
-            CartesianProductViewCanSize<std::false_type, Views...>)
+        CPP_member
+        auto CPP_fun(size)()(requires(my_cardinality < 0) &&
+                             CartesianProductViewCanSize<std::false_type, Views...>)
         {
             return tuple_foldl(views_, std::uintmax_t{1}, detail::cartesian_size_fn{});
         }

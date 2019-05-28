@@ -235,12 +235,14 @@ namespace ranges
             {
                 return done_;
             }
-            CPP_member auto equal(cursor const & that) const -> CPP_ret(bool)( //
+            CPP_member
+            auto equal(cursor const & that) const -> CPP_ret(bool)( //
                 requires EqualityComparable<From>)
             {
                 return that.from_ == from_ && that.done_ == done_;
             }
-            CPP_member auto prev() -> CPP_ret(void)( //
+            CPP_member
+            auto prev() -> CPP_ret(void)( //
                 requires detail::Decrementable_<From>)
             {
                 if(done_)
@@ -248,7 +250,8 @@ namespace ranges
                 else
                     --from_;
             }
-            CPP_member auto advance(difference_type n) -> CPP_ret(void)( //
+            CPP_member
+            auto advance(difference_type n) -> CPP_ret(void)( //
                 requires detail::Advanceable_<From>)
             {
                 if(n > 0)
@@ -261,17 +264,17 @@ namespace ranges
                 else if(n < 0)
                     detail::iota_advance_(from_, n + std::exchange(done_, false));
             }
-            CPP_member auto distance_to(cursor const & that) const
-                -> CPP_ret(difference_type)( //
-                    requires detail::Advanceable_<From>)
+            CPP_member
+            auto distance_to(cursor const & that) const -> CPP_ret(difference_type)( //
+                requires detail::Advanceable_<From>)
             {
                 using D = difference_type;
                 return static_cast<D>(detail::iota_distance_(from_, that.from_)) +
                        ((D)that.done_ - (D)done_);
             }
-            CPP_member auto distance_to(default_sentinel_t) const
-                -> CPP_ret(difference_type)( //
-                    requires SizedSentinel<To, From>)
+            CPP_member
+            auto distance_to(default_sentinel_t) const -> CPP_ret(difference_type)( //
+                requires SizedSentinel<To, From>)
             {
                 return difference_type(to_ - from_) + !done_;
             }
@@ -289,12 +292,14 @@ namespace ranges
         {
             return {from_, to_};
         }
-        CPP_member auto end_cursor() const -> CPP_ret(cursor)( //
+        CPP_member
+        auto end_cursor() const -> CPP_ret(cursor)( //
             requires Same<From, To>)
         {
             return {to_, to_, true};
         }
-        CPP_member auto end_cursor() const -> CPP_ret(default_sentinel_t)( //
+        CPP_member
+        auto end_cursor() const -> CPP_ret(default_sentinel_t)( //
             requires(!Same<From, To>))
         {
             return {};
@@ -374,17 +379,20 @@ namespace ranges
             {
                 return from_ == that.to_;
             }
-            CPP_member auto equal(cursor const & that) const -> CPP_ret(bool)( //
+            CPP_member
+            auto equal(cursor const & that) const -> CPP_ret(bool)( //
                 requires EqualityComparable<From>)
             {
                 return that.from_ == from_;
             }
-            CPP_member auto prev() -> CPP_ret(void)( //
+            CPP_member
+            auto prev() -> CPP_ret(void)( //
                 requires detail::Decrementable_<From>)
             {
                 --from_;
             }
-            CPP_member auto advance(difference_type n) -> CPP_ret(void)( //
+            CPP_member
+            auto advance(difference_type n) -> CPP_ret(void)( //
                 requires detail::Advanceable_<From>)
             {
                 detail::iota_advance_(from_, n);
@@ -392,16 +400,16 @@ namespace ranges
             // Not to spec: TODO the relational operators will effectively be constrained
             // with Advanceable, but they should be constrained with StrictTotallyOrdered.
             // Reimplement iota_view without view_facade or basic_iterator.
-            CPP_member auto distance_to(cursor const & that) const
-                -> CPP_ret(difference_type)( //
-                    requires detail::Advanceable_<From>)
+            CPP_member
+            auto distance_to(cursor const & that) const -> CPP_ret(difference_type)( //
+                requires detail::Advanceable_<From>)
             {
                 return detail::iota_distance_(from_, that.from_);
             }
             // Extension: see https://github.com/ericniebler/stl2/issues/613
-            CPP_member auto distance_to(sentinel const & that) const
-                -> CPP_ret(difference_type)( //
-                    requires SizedSentinel<To, From>)
+            CPP_member
+            auto distance_to(sentinel const & that) const -> CPP_ret(difference_type)( //
+                requires SizedSentinel<To, From>)
             {
                 return that.to_ - from_;
             }
@@ -417,13 +425,13 @@ namespace ranges
             return cursor{from_};
         }
         // Not to spec: see https://github.com/ericniebler/stl2/issues/615
-        CPP_member auto CPP_fun(end_cursor)()(
-            const requires(Same<To, unreachable_sentinel_t>))
+        CPP_member
+        auto CPP_fun(end_cursor)()(const requires(Same<To, unreachable_sentinel_t>))
         {
             return unreachable;
         }
-        CPP_member auto CPP_fun(end_cursor)()(
-            const requires(!Same<To, unreachable_sentinel_t>))
+        CPP_member
+        auto CPP_fun(end_cursor)()(const requires(!Same<To, unreachable_sentinel_t>))
         {
             return detail::if_then_t<Same<From, To>, cursor, sentinel>{to_};
         }

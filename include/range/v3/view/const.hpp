@@ -66,7 +66,8 @@ namespace ranges
         {
             return {};
         }
-        CPP_member auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
+        CPP_member
+        auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
             requires Range<Rng const>)
         {
             return {};
@@ -75,7 +76,8 @@ namespace ranges
         {
             return {};
         }
-        CPP_member auto end_adaptor() const -> CPP_ret(adaptor<true>)( //
+        CPP_member
+        auto end_adaptor() const -> CPP_ret(adaptor<true>)( //
             requires Range<Rng const>)
         {
             return {};
@@ -86,11 +88,13 @@ namespace ranges
         explicit const_view(Rng rng)
           : const_view::view_adaptor{std::move(rng)}
         {}
-        CPP_member constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             return ranges::size(this->base());
         }
-        CPP_member constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             return ranges::size(this->base());
         }

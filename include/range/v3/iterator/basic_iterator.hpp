@@ -39,18 +39,21 @@ namespace ranges
     template<typename T>
     struct basic_mixin : private box<T>
     {
-        CPP_member constexpr CPP_ctor(basic_mixin)()(                 //
+        CPP_member
+        constexpr CPP_ctor(basic_mixin)()(                            //
             noexcept(std::is_nothrow_default_constructible<T>::value) //
             requires DefaultConstructible<T>)
           : box<T>{}
         {}
-        CPP_member explicit constexpr CPP_ctor(basic_mixin)(T && t)( //
-            noexcept(std::is_nothrow_move_constructible<T>::value)   //
+        CPP_member
+        explicit constexpr CPP_ctor(basic_mixin)(T && t)(          //
+            noexcept(std::is_nothrow_move_constructible<T>::value) //
             requires MoveConstructible<T>)
           : box<T>(detail::move(t))
         {}
-        CPP_member explicit constexpr CPP_ctor(basic_mixin)(T const & t)( //
-            noexcept(std::is_nothrow_copy_constructible<T>::value)        //
+        CPP_member
+        explicit constexpr CPP_ctor(basic_mixin)(T const & t)(     //
+            noexcept(std::is_nothrow_copy_constructible<T>::value) //
             requires CopyConstructible<T>)
           : box<T>(t)
         {}
@@ -188,26 +191,30 @@ namespace ranges
             constexpr explicit basic_proxy_reference_(Cur & cur) noexcept
               : cur_(&cur)
             {}
-            CPP_member constexpr auto operator=(basic_proxy_reference_ && that)
+            CPP_member
+            constexpr auto operator=(basic_proxy_reference_ && that)
                 -> CPP_ret(basic_proxy_reference_ &)( //
                     requires ReadableCursor<Cur>)
             {
                 return *this = that;
             }
-            CPP_member constexpr auto operator=(basic_proxy_reference_ const & that)
+            CPP_member
+            constexpr auto operator=(basic_proxy_reference_ const & that)
                 -> CPP_ret(basic_proxy_reference_ &)( //
                     requires ReadableCursor<Cur>)
             {
                 this->write_(that.read_());
                 return *this;
             }
-            CPP_member constexpr auto operator=(basic_proxy_reference_ && that) const
+            CPP_member
+            constexpr auto operator=(basic_proxy_reference_ && that) const
                 -> CPP_ret(basic_proxy_reference_ const &)( //
                     requires ReadableCursor<Cur>)
             {
                 return *this = that;
             }
-            CPP_member constexpr auto operator=(basic_proxy_reference_ const & that) const
+            CPP_member
+            constexpr auto operator=(basic_proxy_reference_ const & that) const
                 -> CPP_ret(basic_proxy_reference_ const &)( //
                     requires ReadableCursor<Cur>)
             {
@@ -529,7 +536,8 @@ namespace ranges
             return *this;
         }
 
-        CPP_member constexpr auto operator*() const
+        CPP_member
+        constexpr auto operator*() const
             noexcept(noexcept(range_access::read(std::declval<Cur const &>())))
                 -> CPP_ret(const_reference_t)( //
                     requires detail::ReadableCursor<Cur> &&
@@ -537,13 +545,15 @@ namespace ranges
         {
             return range_access::read(pos());
         }
-        CPP_member constexpr auto operator*() noexcept(noexcept(iter_reference_t{
+        CPP_member
+        constexpr auto operator*() noexcept(noexcept(iter_reference_t{
             std::declval<Cur &>()})) -> CPP_ret(iter_reference_t)( //
             requires detail::HasCursorNext<Cur> && detail::is_writable_cursor<Cur>::value)
         {
             return iter_reference_t{pos()};
         }
-        CPP_member constexpr auto operator*() const
+        CPP_member
+        constexpr auto operator*() const
             noexcept(noexcept(const_reference_t{std::declval<Cur const &>()}))
                 -> CPP_ret(const_reference_t)( //
                     requires detail::HasCursorNext<Cur> &&
@@ -551,7 +561,8 @@ namespace ranges
         {
             return const_reference_t{pos()};
         }
-        CPP_member constexpr auto operator*() noexcept -> CPP_ret(basic_iterator &)( //
+        CPP_member
+        constexpr auto operator*() noexcept -> CPP_ret(basic_iterator &)( //
             requires(!detail::HasCursorNext<Cur>))
         {
             return *this;
@@ -580,13 +591,15 @@ namespace ranges
             return std::addressof(**this);
         }
 
-        CPP_member constexpr auto operator++() -> CPP_ret(basic_iterator &)( //
+        CPP_member
+        constexpr auto operator++() -> CPP_ret(basic_iterator &)( //
             requires detail::HasCursorNext<Cur>)
         {
             range_access::next(pos());
             return *this;
         }
-        CPP_member constexpr auto operator++() noexcept -> CPP_ret(basic_iterator &)( //
+        CPP_member
+        constexpr auto operator++() noexcept -> CPP_ret(basic_iterator &)( //
             requires(!detail::HasCursorNext<Cur>))
         {
             return *this;
@@ -616,7 +629,8 @@ namespace ranges
         }
 
     public:
-        CPP_member constexpr auto operator++(int)
+        CPP_member
+        constexpr auto operator++(int)
         {
             return this->post_increment_(
                 meta::bool_<RANGES_IS_SAME(detail::input_cursor_tag,
@@ -624,34 +638,37 @@ namespace ranges
                 0);
         }
 
-        CPP_member constexpr auto operator--() -> CPP_ret(basic_iterator &)( //
+        CPP_member
+        constexpr auto operator--() -> CPP_ret(basic_iterator &)( //
             requires detail::BidirectionalCursor<Cur>)
         {
             range_access::prev(pos());
             return *this;
         }
-        CPP_member constexpr auto operator--(int) -> CPP_ret(basic_iterator)( //
+        CPP_member
+        constexpr auto operator--(int) -> CPP_ret(basic_iterator)( //
             requires detail::BidirectionalCursor<Cur>)
         {
             basic_iterator tmp(*this);
             --*this;
             return tmp;
         }
-        CPP_member constexpr auto operator+=(difference_type n)
-            -> CPP_ret(basic_iterator &)( //
-                requires detail::RandomAccessCursor<Cur>)
+        CPP_member
+        constexpr auto operator+=(difference_type n) -> CPP_ret(basic_iterator &)( //
+            requires detail::RandomAccessCursor<Cur>)
         {
             range_access::advance(pos(), n);
             return *this;
         }
-        CPP_member constexpr auto operator-=(difference_type n)
-            -> CPP_ret(basic_iterator &)( //
-                requires detail::RandomAccessCursor<Cur>)
+        CPP_member
+        constexpr auto operator-=(difference_type n) -> CPP_ret(basic_iterator &)( //
+            requires detail::RandomAccessCursor<Cur>)
         {
             range_access::advance(pos(), (difference_type)-n);
             return *this;
         }
-        CPP_member constexpr auto operator[](difference_type n) const
+        CPP_member
+        constexpr auto operator[](difference_type n) const
             -> CPP_ret(const_reference_t)( //
                 requires detail::RandomAccessCursor<Cur>)
         {

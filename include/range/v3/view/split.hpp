@@ -154,9 +154,8 @@ namespace ranges
             }
             constexpr void pre_inc(std::false_type) // Input
             {
-                if
-                    RANGES_CONSTEXPR_IF(Pattern::size() != 0)
-                ++current_();
+                if(Pattern::size() != 0)
+                    ++current_();
             }
             constexpr split_inner_iterator post_inc(std::true_type) // Forward
             {
@@ -220,15 +219,17 @@ namespace ranges
 #endif
             }
 
-            CPP_broken_friend_member friend constexpr auto operator==(
-                split_inner_iterator const & x, split_inner_iterator const & y)
+            CPP_broken_friend_member
+            friend constexpr auto operator==(split_inner_iterator const & x,
+                                             split_inner_iterator const & y)
                 -> CPP_broken_friend_ret(bool)( //
                     requires ForwardRange<Base>)
             {
                 return x.i_.curr_ == y.i_.curr_;
             }
-            CPP_broken_friend_member friend constexpr auto operator!=(
-                split_inner_iterator const & x, split_inner_iterator const & y)
+            CPP_broken_friend_member
+            friend constexpr auto operator!=(split_inner_iterator const & x,
+                                             split_inner_iterator const & y)
                 -> CPP_broken_friend_ret(bool)( //
                     requires ForwardRange<Base>)
             {
@@ -275,7 +276,8 @@ namespace ranges
             {
                 return ranges::iter_move(i.current_());
             }
-            CPP_broken_friend_member friend constexpr auto iter_swap(
+            CPP_broken_friend_member
+            friend constexpr auto iter_swap(
                 split_inner_iterator const & x,
                 split_inner_iterator const &
                     y) noexcept(noexcept(ranges::iter_swap(x.current_(), y.current_())))
@@ -360,14 +362,15 @@ namespace ranges
 
             split_outer_iterator() = default;
 
-            CPP_member constexpr explicit CPP_ctor(split_outer_iterator)(
-                Parent & parent)( //
+            CPP_member
+            constexpr explicit CPP_ctor(split_outer_iterator)(Parent & parent)( //
                 requires(!ForwardRange<Base>))
               : parent_(&parent)
             {}
 
-            CPP_member constexpr CPP_ctor(split_outer_iterator)(
-                Parent & parent, iterator_t<Base> current)( //
+            CPP_member
+            constexpr CPP_ctor(split_outer_iterator)(Parent & parent,
+                                                     iterator_t<Base> current)( //
                 requires ForwardRange<Base>)
               : Current{std::move(current)}
               , parent_(&parent)
@@ -426,15 +429,17 @@ namespace ranges
 #endif
             }
 
-            CPP_broken_friend_member friend constexpr auto operator==(
-                split_outer_iterator const & x, split_outer_iterator const & y)
+            CPP_broken_friend_member
+            friend constexpr auto operator==(split_outer_iterator const & x,
+                                             split_outer_iterator const & y)
                 -> CPP_broken_friend_ret(bool)( //
                     requires ForwardRange<Base>)
             {
                 return x.curr_ == y.curr_;
             }
-            CPP_broken_friend_member friend constexpr auto operator!=(
-                split_outer_iterator const & x, split_outer_iterator const & y)
+            CPP_broken_friend_member
+            friend constexpr auto operator!=(split_outer_iterator const & x,
+                                             split_outer_iterator const & y)
                 -> CPP_broken_friend_ret(bool)( //
                     requires ForwardRange<Base>)
             {
@@ -527,7 +532,8 @@ namespace ranges
           , pattern_((Pattern &&) pattern)
         {}
 
-        CPP_member constexpr CPP_ctor(split_view)(V base, range_value_t<V> e)(
+        CPP_member
+        constexpr CPP_ctor(split_view)(V base, range_value_t<V> e)(
             requires Constructible<Pattern, range_value_t<V>>)
           : base_(std::move(base))
           , pattern_(e)
@@ -552,12 +558,14 @@ namespace ranges
             return begin_(meta::bool_<ForwardRange<V>>{});
 #endif
         }
-        CPP_member constexpr auto begin() const -> CPP_ret(outer_iterator<true>)( //
+        CPP_member
+        constexpr auto begin() const -> CPP_ret(outer_iterator<true>)( //
             requires ForwardRange<V> && ForwardRange<const V>)
         {
             return {*this, ranges::begin(base_)};
         }
-        CPP_member constexpr auto end() -> CPP_ret(outer_iterator<simple_view<V>()>)( //
+        CPP_member
+        constexpr auto end() -> CPP_ret(outer_iterator<simple_view<V>()>)( //
             requires ForwardRange<V> && CommonRange<V>)
         {
             return outer_iterator<simple_view<V>()>{*this, ranges::end(base_)};

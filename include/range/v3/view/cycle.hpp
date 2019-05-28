@@ -109,8 +109,9 @@ namespace ranges
                 return *it_
             )
                 // clang-format on
-                CPP_member auto equal(cursor const & pos) const -> CPP_ret(bool)( //
-                    requires EqualityComparable<iterator>)
+                CPP_member
+            auto equal(cursor const & pos) const -> CPP_ret(bool)( //
+                requires EqualityComparable<iterator>)
             {
                 RANGES_EXPECT(rng_ == pos.rng_);
                 return n_ == pos.n_ && it_ == pos.it_;
@@ -126,7 +127,8 @@ namespace ranges
                     it_ = ranges::begin(rng_->rng_);
                 }
             }
-            CPP_member auto prev() -> CPP_ret(void)( //
+            CPP_member
+            auto prev() -> CPP_ret(void)( //
                 requires BidirectionalRange<CRng>)
             {
                 if(it_ == ranges::begin(rng_->rng_))
@@ -152,7 +154,8 @@ namespace ranges
                 using D = range_difference_t<Rng>;
                 it_ = begin + static_cast<D>(off < 0 ? off + dist : off);
             }
-            CPP_member auto CPP_fun(distance_to)(cursor const & that)(
+            CPP_member
+            auto CPP_fun(distance_to)(cursor const & that)(
                 const requires SizedSentinel<iterator, iterator>)
             {
                 RANGES_EXPECT(that.rng_ == rng_);
@@ -164,12 +167,14 @@ namespace ranges
             }
         };
 
-        CPP_member auto begin_cursor() -> CPP_ret(cursor<false>)( //
+        CPP_member
+        auto begin_cursor() -> CPP_ret(cursor<false>)( //
             requires(!simple_view<Rng>() || !CommonRange<Rng const>))
         {
             return {*this};
         }
-        CPP_member auto begin_cursor() const -> CPP_ret(cursor<true>)( //
+        CPP_member
+        auto begin_cursor() const -> CPP_ret(cursor<true>)( //
             requires CommonRange<Rng const>)
         {
             return {*this};

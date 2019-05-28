@@ -160,16 +160,17 @@ namespace ranges
         constexpr auto operator++(int) -> CPP_ret(decltype(std::declval<I2 &>()++))( //
             requires(!ForwardIterator<I2>))
 #else  // ^^^ workaround ^^^ / vvv no workaround vvv
-        CPP_member constexpr auto operator++(int)
-            -> CPP_ret(decltype(std::declval<I &>()++))( //
-                requires(!ForwardIterator<I>))
+        CPP_member
+        constexpr auto operator++(int) -> CPP_ret(decltype(std::declval<I &>()++))( //
+            requires(!ForwardIterator<I>))
 #endif // RANGES_WORKAROUND_MSVC_677925
         {
             RANGES_EXPECT(cnt_ > 0);
             return post_increment_(std::is_void<decltype(current_++)>());
         }
 
-        CPP_member constexpr auto operator++(int) -> CPP_ret(counted_iterator)( //
+        CPP_member
+        constexpr auto operator++(int) -> CPP_ret(counted_iterator)( //
             requires ForwardIterator<I>)
         {
             auto tmp(*this);
@@ -177,7 +178,8 @@ namespace ranges
             return tmp;
         }
 
-        CPP_member constexpr auto operator--() -> CPP_ret(counted_iterator &)( //
+        CPP_member
+        constexpr auto operator--() -> CPP_ret(counted_iterator &)( //
             requires BidirectionalIterator<I>)
         {
             --current_;
@@ -185,7 +187,8 @@ namespace ranges
             return *this;
         }
 
-        CPP_member constexpr auto operator--(int) -> CPP_ret(counted_iterator)( //
+        CPP_member
+        constexpr auto operator--(int) -> CPP_ret(counted_iterator)( //
             requires BidirectionalIterator<I>)
         {
             auto tmp(*this);
@@ -193,9 +196,9 @@ namespace ranges
             return tmp;
         }
 
-        CPP_member constexpr auto operator+=(difference_type n)
-            -> CPP_ret(counted_iterator &)( //
-                requires RandomAccessIterator<I>)
+        CPP_member
+        constexpr auto operator+=(difference_type n) -> CPP_ret(counted_iterator &)( //
+            requires RandomAccessIterator<I>)
         {
             RANGES_EXPECT(cnt_ >= n);
             current_ += n;
@@ -203,18 +206,18 @@ namespace ranges
             return *this;
         }
 
-        CPP_member constexpr auto operator+(difference_type n) const
-            -> CPP_ret(counted_iterator)( //
-                requires RandomAccessIterator<I>)
+        CPP_member
+        constexpr auto operator+(difference_type n) const -> CPP_ret(counted_iterator)( //
+            requires RandomAccessIterator<I>)
         {
             auto tmp(*this);
             tmp += n;
             return tmp;
         }
 
-        CPP_member constexpr auto operator-=(difference_type n)
-            -> CPP_ret(counted_iterator &)( //
-                requires RandomAccessIterator<I>)
+        CPP_member
+        constexpr auto operator-=(difference_type n) -> CPP_ret(counted_iterator &)( //
+            requires RandomAccessIterator<I>)
         {
             RANGES_EXPECT(cnt_ >= -n);
             current_ -= n;
@@ -222,16 +225,17 @@ namespace ranges
             return *this;
         }
 
-        CPP_member constexpr auto operator-(difference_type n) const
-            -> CPP_ret(counted_iterator)( //
-                requires RandomAccessIterator<I>)
+        CPP_member
+        constexpr auto operator-(difference_type n) const -> CPP_ret(counted_iterator)( //
+            requires RandomAccessIterator<I>)
         {
             auto tmp(*this);
             tmp -= n;
             return tmp;
         }
 
-        CPP_member constexpr auto operator[](difference_type n) const
+        CPP_member
+        constexpr auto operator[](difference_type n) const
             -> CPP_ret(iter_reference_t<I>)( //
                 requires RandomAccessIterator<I>)
         {
@@ -240,8 +244,9 @@ namespace ranges
         }
 
 #if !RANGES_BROKEN_CPO_LOOKUP
-        CPP_broken_friend_member friend constexpr auto iter_move(
-            counted_iterator const & i) noexcept(detail::has_nothrow_iter_move_v<I>)
+        CPP_broken_friend_member
+        friend constexpr auto iter_move(counted_iterator const & i) noexcept(
+            detail::has_nothrow_iter_move_v<I>)
             -> CPP_broken_friend_ret(iter_rvalue_reference_t<I>)( //
                 requires InputIterator<I>)
         {

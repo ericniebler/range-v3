@@ -137,8 +137,7 @@ namespace ranges
         {
             if(count <= 0)
                 return {begin, begin};
-            // clang-format off
-            if RANGES_CONSTEXPR_IF(SizedSentinel<S, I>)
+            if(RANGES_CONSTEXPR_IF(SizedSentinel<S, I>))
                 return search_n_fn::sized_impl(std::move(begin),
                                                std::move(end),
                                                distance(begin, end),
@@ -146,9 +145,9 @@ namespace ranges
                                                val,
                                                pred,
                                                proj);
-            // clang-format on
-            else return search_n_fn::impl(
-                std::move(begin), std::move(end), count, val, pred, proj);
+            else
+                return search_n_fn::impl(
+                    std::move(begin), std::move(end), count, val, pred, proj);
         }
 
         template<typename Rng, typename V, typename C = equal_to, typename P = identity>
@@ -160,12 +159,11 @@ namespace ranges
         {
             if(count <= 0)
                 return subrange<iterator_t<Rng>>{begin(rng), begin(rng)};
-            // clang-format off
-            if RANGES_CONSTEXPR_IF(SizedRange<Rng>)
+            if(RANGES_CONSTEXPR_IF(SizedRange<Rng>))
                 return search_n_fn::sized_impl(
                     begin(rng), end(rng), distance(rng), count, val, pred, proj);
-            // clang-format on
-            else return search_n_fn::impl(begin(rng), end(rng), count, val, pred, proj);
+            else
+                return search_n_fn::impl(begin(rng), end(rng), count, val, pred, proj);
         }
     };
 

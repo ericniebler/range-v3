@@ -92,11 +92,13 @@ namespace ranges
         {
             return make_reverse_iterator(ranges::begin(rng_));
         }
-        CPP_member constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             return ranges::size(rng_);
         }
-        CPP_member constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             return ranges::size(rng_);
         }

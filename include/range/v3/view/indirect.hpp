@@ -63,26 +63,28 @@ namespace ranges
             // clang-format on
         };
 
-        CPP_member constexpr auto begin_adaptor() noexcept -> CPP_ret(adaptor<false>)( //
+        CPP_member
+        constexpr auto begin_adaptor() noexcept -> CPP_ret(adaptor<false>)( //
             requires(!simple_view<Rng>()))
         {
             return {};
         }
-        CPP_member constexpr auto begin_adaptor() const noexcept
-            -> CPP_ret(adaptor<true>)( //
-                requires Range<Rng const>)
+        CPP_member
+        constexpr auto begin_adaptor() const noexcept -> CPP_ret(adaptor<true>)( //
+            requires Range<Rng const>)
         {
             return {};
         }
 
-        CPP_member constexpr auto end_adaptor() noexcept -> CPP_ret(adaptor<false>)( //
+        CPP_member
+        constexpr auto end_adaptor() noexcept -> CPP_ret(adaptor<false>)( //
             requires(!simple_view<Rng>()))
         {
             return {};
         }
-        CPP_member constexpr auto end_adaptor() const noexcept
-            -> CPP_ret(adaptor<true>)( //
-                requires Range<Rng const>)
+        CPP_member
+        constexpr auto end_adaptor() const noexcept -> CPP_ret(adaptor<true>)( //
+            requires Range<Rng const>)
         {
             return {};
         }
@@ -92,11 +94,13 @@ namespace ranges
         explicit constexpr indirect_view(Rng rng)
           : indirect_view::view_adaptor{detail::move(rng)}
         {}
-        CPP_member constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             return ranges::size(this->base());
         }
-        CPP_member constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             return ranges::size(this->base());
         }

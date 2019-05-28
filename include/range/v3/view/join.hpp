@@ -148,16 +148,18 @@ namespace ranges
           : outer_(view::all(std::move(rng)))
         {}
         // Not to spec
-        CPP_member static constexpr auto size() -> CPP_ret(std::size_t)( //
+        CPP_member
+        static constexpr auto size() -> CPP_ret(std::size_t)( //
             requires(detail::join_cardinality<Rng>() >= 0))
         {
             return static_cast<std::size_t>(detail::join_cardinality<Rng>());
         }
         // Not to spec
-        CPP_member constexpr auto CPP_fun(size)()(
-            requires(detail::join_cardinality<Rng>() < 0) &&
-            (range_cardinality<Rng>::value >= 0) && ForwardRange<Rng> &&
-            SizedRange<range_reference_t<Rng>>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(requires(detail::join_cardinality<Rng>() < 0) &&
+                                       (range_cardinality<Rng>::value >= 0) &&
+                                       ForwardRange<Rng> &&
+                                       SizedRange<range_reference_t<Rng>>)
         {
             range_size_t<range_reference_t<Rng>> n = 0;
             RANGES_FOR(auto && inner, outer_)
@@ -196,9 +198,8 @@ namespace ranges
                     if(inner_it_ != ranges::end(inner))
                         return;
                 }
-                if
-                    RANGES_CONSTEXPR_IF(ref_is_glvalue::value)
-                inner_it_ = iterator_t<CInner>();
+                if(RANGES_CONSTEXPR_IF(ref_is_glvalue::value))
+                    inner_it_ = iterator_t<CInner>();
             }
 
         public:
@@ -223,7 +224,8 @@ namespace ranges
               , outer_it_(std::move(that.outer_it_))
               , inner_it_(std::move(that.inner_it_))
             {}
-            CPP_member constexpr auto arrow() -> CPP_ret(iterator_t<CInner>)( //
+            CPP_member
+            constexpr auto arrow() -> CPP_ret(iterator_t<CInner>)( //
                 requires detail::HasArrow_<iterator_t<CInner>>)
             {
                 return inner_it_;
@@ -232,10 +234,10 @@ namespace ranges
             {
                 return outer_it_ == ranges::end(rng_->outer_);
             }
-            CPP_member constexpr auto equal(cursor const & that) const
-                -> CPP_ret(bool)( //
-                    requires ref_is_glvalue::value && EqualityComparable<
-                        iterator_t<COuter>> && EqualityComparable<iterator_t<CInner>>)
+            CPP_member
+            constexpr auto equal(cursor const & that) const -> CPP_ret(bool)( //
+                requires ref_is_glvalue::value && EqualityComparable<
+                    iterator_t<COuter>> && EqualityComparable<iterator_t<CInner>>)
             {
                 return outer_it_ == that.outer_it_ && inner_it_ == that.inner_it_;
             }
@@ -248,7 +250,8 @@ namespace ranges
                     satisfy();
                 }
             }
-            CPP_member constexpr auto prev() -> CPP_ret(void)( //
+            CPP_member
+            constexpr auto prev() -> CPP_ret(void)( //
                 requires ref_is_glvalue::value && BidirectionalRange<COuter> &&
                     BidirectionalRange<CInner> &&
                         CommonRange<CInner>) // ericniebler/stl2#606
@@ -351,15 +354,17 @@ namespace ranges
           : outer_(view::all(std::move(rng)))
           , val_(view::all(std::move(val)))
         {}
-        CPP_member static constexpr auto size() -> CPP_ret(std::size_t)( //
+        CPP_member
+        static constexpr auto size() -> CPP_ret(std::size_t)( //
             requires(detail::join_cardinality<Rng, ValRng>() >= 0))
         {
             return static_cast<std::size_t>(detail::join_cardinality<Rng, ValRng>());
         }
-        CPP_member auto CPP_fun(size)()(
-            const requires(detail::join_cardinality<Rng, ValRng>() < 0) &&
-            (range_cardinality<Rng>::value >= 0) && ForwardRange<Rng> &&
-            SizedRange<range_reference_t<Rng>> && SizedRange<ValRng>)
+        CPP_member
+        auto CPP_fun(size)()(const requires(detail::join_cardinality<Rng, ValRng>() <
+                                            0) &&
+                             (range_cardinality<Rng>::value >= 0) && ForwardRange<Rng> &&
+                             SizedRange<range_reference_t<Rng>> && SizedRange<ValRng>)
         {
             range_size_t<range_reference_t<Rng>> n = 0;
             RANGES_FOR(auto && inner, outer_)

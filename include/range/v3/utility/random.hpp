@@ -177,7 +177,7 @@ namespace ranges
              * * As a consequence of the above properties, if all parts of the provided
              *   seed data are kept constant except one, and the remaining part is varied
              *   through K different states, K different output sequences will be
-             * produced.
+             *   produced.
              *
              * * Also, because the amount of entropy stored is fixed, this class never
              *   performs dynamic allocation and is free of the possibility of generating

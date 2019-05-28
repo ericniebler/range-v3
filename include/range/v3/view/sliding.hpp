@@ -82,7 +82,8 @@ namespace ranges
             {
                 ++it_;
             }
-            CPP_member auto prev() -> CPP_ret(void)(requires BidirectionalRange<Rng>)
+            CPP_member
+            auto prev() -> CPP_ret(void)(requires BidirectionalRange<Rng>)
             {
                 --it_;
             }
@@ -120,13 +121,15 @@ namespace ranges
             {
                 RANGES_ASSERT(0 < n_);
             }
-            CPP_member auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+            CPP_member
+            auto CPP_fun(size)()(const requires SizedRange<Rng const>)
             {
                 auto const count = ranges::size(this->base());
                 auto const n = static_cast<range_size_t<Rng const>>(n_);
                 return count < n ? 0 : count - n + 1;
             }
-            CPP_member auto CPP_fun(size)()(requires SizedRange<Rng>)
+            CPP_member
+            auto CPP_fun(size)()(requires SizedRange<Rng>)
             {
                 auto const count = ranges::size(this->base());
                 auto const n = static_cast<range_size_t<Rng>>(n_);
@@ -199,13 +202,15 @@ namespace ranges
                 ++it;
                 base_t::next();
             }
-            CPP_member auto prev(iterator_t<Rng> & it) -> CPP_ret(void)( //
+            CPP_member
+            auto prev(iterator_t<Rng> & it) -> CPP_ret(void)( //
                 requires BidirectionalRange<Rng>)
             {
                 base_t::prev();
                 --it;
             }
-            CPP_member auto advance(iterator_t<Rng> & it, range_difference_t<Rng> n)
+            CPP_member
+            auto advance(iterator_t<Rng> & it, range_difference_t<Rng> n)
                 -> CPP_ret(void)( //
                     requires RandomAccessRange<Rng>)
             {
@@ -320,7 +325,8 @@ namespace ranges
         {
             return {this->n_};
         }
-        CPP_member auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
+        CPP_member
+        auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
             requires Range<Rng const>)
         {
             return {this->n_};
@@ -329,7 +335,8 @@ namespace ranges
         {
             return {this->n_};
         }
-        CPP_member auto end_adaptor() const -> CPP_ret(adaptor<true>)( //
+        CPP_member
+        auto end_adaptor() const -> CPP_ret(adaptor<true>)( //
             requires Range<Rng const>)
         {
             return {this->n_};

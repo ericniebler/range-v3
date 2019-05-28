@@ -42,14 +42,12 @@ namespace ranges
                 requires ForwardIterator<I> && Sentinel<S, I> &&
                     IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
         {
-            // clang-format off
-            if RANGES_CONSTEXPR_IF(SizedSentinel<S, I>)
+            if(RANGES_CONSTEXPR_IF(SizedSentinel<S, I>))
             {
                 auto const len = distance(begin, end);
                 return aux::equal_range_n(
                     std::move(begin), len, val, std::move(pred), std::move(proj));
             }
-            // clang-format on
 
             // Probe exponentially for either end-of-range, an iterator that
             // is past the equal range (i.e., denotes an element greater
@@ -101,14 +99,12 @@ namespace ranges
                 requires ForwardRange<Rng> &&
                     IndirectStrictWeakOrder<C, V const *, projected<iterator_t<Rng>, P>>)
         {
-            // clang-format off
-            if RANGES_CONSTEXPR_IF(SizedRange<Rng>)
+            if(RANGES_CONSTEXPR_IF(SizedRange<Rng>))
             {
                 auto const len = distance(rng);
                 return aux::equal_range_n(
                     begin(rng), len, val, std::move(pred), std::move(proj));
             }
-            // clang-format on
 
             return (*this)(begin(rng), end(rng), val, std::move(pred), std::move(proj));
         }

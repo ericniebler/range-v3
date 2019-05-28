@@ -91,21 +91,22 @@ namespace ranges
         {
             return ranges::end(*rng_);
         }
-        CPP_member constexpr auto empty() const noexcept(noexcept(ranges::empty(*rng_)))
+        CPP_member
+        constexpr auto empty() const noexcept(noexcept(ranges::empty(*rng_)))
             -> CPP_ret(bool)( //
                 requires detail::CanEmpty<Rng>)
         {
             return ranges::empty(*rng_);
         }
-        CPP_member constexpr auto CPP_fun(size)()(
-            const noexcept(noexcept(ranges::size(*rng_))) //
-            requires SizedRange<Rng>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(const noexcept(noexcept(ranges::size(*rng_))) //
+                                       requires SizedRange<Rng>)
         {
             return ranges::size(*rng_);
         }
-        CPP_member constexpr auto CPP_fun(data)()(
-            const noexcept(noexcept(ranges::data(*rng_))) //
-            requires ContiguousRange<Rng>)
+        CPP_member
+        constexpr auto CPP_fun(data)()(const noexcept(noexcept(ranges::data(*rng_))) //
+                                       requires ContiguousRange<Rng>)
         {
             return ranges::data(*rng_);
         }

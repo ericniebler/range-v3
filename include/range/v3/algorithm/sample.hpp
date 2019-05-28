@@ -78,18 +78,16 @@ namespace ranges
                     IndirectlyCopyable<I, O> && UniformRandomNumberGenerator<Gen> &&
                 (RandomAccessIterator<O> || ForwardIterator<I> || SizedSentinel<S, I>))
         {
-            // clang-format off
-            if RANGES_CONSTEXPR_IF(ForwardIterator<I> || SizedSentinel<S, I>)
+            if(RANGES_CONSTEXPR_IF(ForwardIterator<I> || SizedSentinel<S, I>))
             {
                 auto const k = distance(first, last);
                 return sample_fn::sized_impl(std::move(first),
-                                                std::move(last),
-                                                k,
-                                                std::move(out),
-                                                n,
-                                                static_cast<Gen &&>(gen));
+                                             std::move(last),
+                                             k,
+                                             std::move(out),
+                                             n,
+                                             static_cast<Gen &&>(gen));
             }
-            // clang-format on
             else
             {
                 // out is random-access here; calls to advance(out,n) and
@@ -134,18 +132,16 @@ namespace ranges
                  SizedRange<ORng>)&&(RandomAccessIterator<iterator_t<ORng>> ||
                                      ForwardIterator<I> || SizedSentinel<S, I>))
         {
-            // clang-format off
-            if RANGES_CONSTEXPR_IF(ForwardIterator<I> || SizedSentinel<S, I>)
+            if(RANGES_CONSTEXPR_IF(ForwardIterator<I> || SizedSentinel<S, I>))
             {
                 auto k = distance(first, last);
                 return sample_fn::sized_impl(std::move(first),
-                                                std::move(last),
-                                                k,
-                                                begin(out),
-                                                distance(out),
-                                                static_cast<Gen &&>(gen));
+                                             std::move(last),
+                                             k,
+                                             begin(out),
+                                             distance(out),
+                                             static_cast<Gen &&>(gen));
             }
-            // clang-format on
             else
             {
                 return (*this)(std::move(first),
@@ -164,17 +160,15 @@ namespace ranges
                     iterator_t<Rng>, O> && UniformRandomNumberGenerator<Gen> &&
                 (RandomAccessIterator<O> || ForwardRange<Rng> || SizedRange<Rng>))
         {
-            // clang-format off
-            if RANGES_CONSTEXPR_IF(ForwardRange<Rng> || SizedRange<Rng>)
+            if(RANGES_CONSTEXPR_IF(ForwardRange<Rng> || SizedRange<Rng>))
             {
                 return sample_fn::sized_impl(begin(rng),
-                                                end(rng),
-                                                distance(rng),
-                                                std::move(out),
-                                                n,
-                                                static_cast<Gen &&>(gen));
+                                             end(rng),
+                                             distance(rng),
+                                             std::move(out),
+                                             n,
+                                             static_cast<Gen &&>(gen));
             }
-            // clang-format on
             else
             {
                 return (*this)(
@@ -193,17 +187,15 @@ namespace ranges
                 (RandomAccessIterator<iterator_t<ORng>> || ForwardRange<IRng> ||
                  SizedRange<IRng>)&&(ForwardRange<ORng> || SizedRange<ORng>))
         {
-            // clang-format off
-            if RANGES_CONSTEXPR_IF(ForwardRange<IRng> || SizedRange<IRng>)
+            if(RANGES_CONSTEXPR_IF(ForwardRange<IRng> || SizedRange<IRng>))
             {
                 return sample_fn::sized_impl(begin(rng),
-                                                end(rng),
-                                                distance(rng),
-                                                begin(out),
-                                                distance(out),
-                                                static_cast<Gen &&>(gen));
+                                             end(rng),
+                                             distance(rng),
+                                             begin(out),
+                                             distance(out),
+                                             static_cast<Gen &&>(gen));
             }
-            // clang-format on
             else
             {
                 return (*this)(begin(rng),

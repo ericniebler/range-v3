@@ -54,10 +54,9 @@ namespace ranges
                 static_assert(alignof(T) <= alignof(std::max_align_t),
                               "Sorry: over-aligned types are supported only with C++17.");
 #else  // RANGES_CXX_ALIGNED_NEW
-                if
-                    RANGES_CONSTEXPR_IF(alignof(T) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
-                ptr = ::operator new(
-                    sizeof(T) * n, std::align_val_t{alignof(T)}, std::nothrow);
+                if(RANGES_CONSTEXPR_IF(alignof(T) > __STDCPP_DEFAULT_NEW_ALIGNMENT__))
+                    ptr = ::operator new(
+                        sizeof(T) * n, std::align_val_t{alignof(T)}, std::nothrow);
                 else
 #endif // RANGES_CXX_ALIGNED_NEW
                 ptr = ::operator new(sizeof(T) * n, std::nothrow);
@@ -82,9 +81,8 @@ namespace ranges
                 static_assert(alignof(T) <= alignof(std::max_align_t),
                               "Sorry: over-aligned types are supported only with C++17.");
 #else  // RANGES_CXX_ALIGNED_NEW
-                if
-                    RANGES_CONSTEXPR_IF(alignof(T) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
-                ::operator delete(p, std::align_val_t{alignof(T)});
+                if(RANGES_CONSTEXPR_IF(alignof(T) > __STDCPP_DEFAULT_NEW_ALIGNMENT__))
+                    ::operator delete(p, std::align_val_t{alignof(T)});
                 else
 #endif // RANGES_CXX_ALIGNED_NEW
                 ::operator delete(p);
@@ -120,13 +118,15 @@ namespace ranges
         {
             return *this;
         }
-        CPP_member auto operator=(Val const & val) -> CPP_ret(raw_storage_iterator &)( //
+        CPP_member
+        auto operator=(Val const & val) -> CPP_ret(raw_storage_iterator &)( //
             requires CopyConstructible<Val>)
         {
             ::new((void *)std::addressof(*out_)) Val(val);
             return *this;
         }
-        CPP_member auto operator=(Val && val) -> CPP_ret(raw_storage_iterator &)( //
+        CPP_member
+        auto operator=(Val && val) -> CPP_ret(raw_storage_iterator &)( //
             requires MoveConstructible<Val>)
         {
             ::new((void *)std::addressof(*out_)) Val(std::move(val));
@@ -137,12 +137,14 @@ namespace ranges
             ++out_;
             return *this;
         }
-        CPP_member auto operator++(int) -> CPP_ret(void)( //
+        CPP_member
+        auto operator++(int) -> CPP_ret(void)( //
             requires(!ForwardIterator<O>))
         {
             ++out_;
         }
-        CPP_member auto operator++(int) -> CPP_ret(raw_storage_iterator)( //
+        CPP_member
+        auto operator++(int) -> CPP_ret(raw_storage_iterator)( //
             requires ForwardIterator<O>)
         {
             auto tmp = *this;

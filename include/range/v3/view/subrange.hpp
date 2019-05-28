@@ -242,13 +242,12 @@ namespace ranges
             (detail::store_size_<K, S, I>()))
           : data_{static_cast<I2 &&>(i), std::move(s), n}
         {
-            if
-                RANGES_CONSTEXPR_IF((bool)RandomAccessIterator<I>)
-                {
-                    using D = iter_difference_t<I>;
-                    RANGES_EXPECT(n <= (size_type)std::numeric_limits<D>::max());
-                    RANGES_EXPECT(ranges::next(first_(), (D)n) == last_());
-                }
+            if(RANGES_CONSTEXPR_IF((bool)RandomAccessIterator<I>))
+            {
+                using D = iter_difference_t<I>;
+                RANGES_EXPECT(n <= (size_type)std::numeric_limits<D>::max());
+                RANGES_EXPECT(ranges::next(first_(), (D)n) == last_());
+            }
         }
         template<typename I2>
         constexpr CPP_ctor(subrange)(I2 && i, S s, size_type n)( //
@@ -279,11 +278,10 @@ namespace ranges
                 True<K == subrange_kind::sized>)
           : subrange{ranges::begin(r), ranges::end(r), n}
         {
-            if
-                RANGES_CONSTEXPR_IF((bool)SizedRange<R>)
-                {
-                    RANGES_EXPECT(n == ranges::size(r));
-                }
+            if(RANGES_CONSTEXPR_IF((bool)SizedRange<R>))
+            {
+                RANGES_EXPECT(n == ranges::size(r));
+            }
         }
 
         /// Implicit conversion to something that looks like a container.
@@ -318,7 +316,8 @@ namespace ranges
             return first_() == last_();
         }
 
-        CPP_member constexpr auto size() const -> CPP_ret(size_type)( //
+        CPP_member
+        constexpr auto size() const -> CPP_ret(size_type)( //
             requires(K == subrange_kind::sized))
         {
             return get_size_();
@@ -332,7 +331,8 @@ namespace ranges
             return tmp;
         }
 
-        CPP_member RANGES_NODISCARD constexpr auto prev(iter_difference_t<I> n = 1) const
+        CPP_member
+        RANGES_NODISCARD constexpr auto prev(iter_difference_t<I> n = 1) const
             -> CPP_ret(subrange)( //
                 requires BidirectionalIterator<I>)
         {
@@ -369,18 +369,21 @@ namespace ranges
         {
             return std::get<1>(data_);
         }
-        CPP_member constexpr auto get_size_() const -> CPP_ret(size_type)( //
+        CPP_member
+        constexpr auto get_size_() const -> CPP_ret(size_type)( //
             requires SizedSentinel<S, I>)
         {
             return static_cast<size_type>(last_() - first_());
         }
-        CPP_member constexpr auto get_size_() const noexcept -> CPP_ret(size_type)( //
+        CPP_member
+        constexpr auto get_size_() const noexcept -> CPP_ret(size_type)( //
             requires(detail::store_size_<K, S, I>()))
         {
             return std::get<2>(data_);
         }
         static constexpr void set_size_(...) noexcept {}
-        CPP_member constexpr auto set_size_(size_type n) noexcept -> CPP_ret(void)( //
+        CPP_member
+        constexpr auto set_size_(size_type n) noexcept -> CPP_ret(void)( //
             requires(detail::store_size_<K, S, I>()))
         {
             std::get<2>(data_) = n;

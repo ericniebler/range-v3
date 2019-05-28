@@ -35,7 +35,8 @@ namespace ranges
         FD pred_;
 
     public:
-        CPP_member constexpr CPP_ctor(logical_negate)()(               //
+        CPP_member
+        constexpr CPP_ctor(logical_negate)()(                          //
             noexcept(std::is_nothrow_default_constructible<FD>::value) //
             requires DefaultConstructible<FD>)
         {}

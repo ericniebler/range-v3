@@ -152,7 +152,8 @@ namespace ranges
         {
             return *ranges::get<0>(data_);
         }
-        CPP_member auto operator*() const
+        CPP_member
+        auto operator*() const
             noexcept(noexcept(iter_reference_t<I>(*std::declval<I const &>())))
                 -> CPP_ret(iter_reference_t<I>)( //
                     requires Readable<I const>)
@@ -182,13 +183,15 @@ namespace ranges
             return ranges::get<0>(data_)++;
         }
 #else  // ^^^ workaround ^^^ / vvv no workaround vvv
-        CPP_member auto operator++(int) -> CPP_ret(decltype(std::declval<I &>()++))( //
+        CPP_member
+        auto operator++(int) -> CPP_ret(decltype(std::declval<I &>()++))( //
             requires(!ForwardIterator<I>))
         {
             return ranges::get<0>(data_)++;
         }
 #endif // RANGES_WORKAROUND_MSVC_677925
-        CPP_member auto operator++(int) -> CPP_ret(common_iterator)( //
+        CPP_member
+        auto operator++(int) -> CPP_ret(common_iterator)( //
             requires ForwardIterator<I>)
         {
             return common_iterator(ranges::get<0>(data_)++);
@@ -393,17 +396,20 @@ namespace ranges
             {
                 return it_ == that.it_;
             }
-            CPP_member auto prev() -> CPP_ret(void)( //
+            CPP_member
+            auto prev() -> CPP_ret(void)( //
                 requires BidirectionalIterator<I>)
             {
                 --it_;
             }
-            CPP_member auto advance(std::ptrdiff_t n) -> CPP_ret(void)( //
+            CPP_member
+            auto advance(std::ptrdiff_t n) -> CPP_ret(void)( //
                 requires RandomAccessIterator<I>)
             {
                 it_ += static_cast<iter_difference_t<I>>(n);
             }
-            CPP_member auto distance_to(cpp17_iterator_cursor const & that)
+            CPP_member
+            auto distance_to(cpp17_iterator_cursor const & that)
                 -> CPP_ret(std::ptrdiff_t)( //
                     requires RandomAccessIterator<I>)
             {

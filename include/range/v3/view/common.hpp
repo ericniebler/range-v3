@@ -106,7 +106,8 @@ namespace ranges
             return detail::common_view_iterator_t<Rng>{
                 end_(meta::bool_<detail::RA_and_Sized<Rng>>{})};
         }
-        CPP_member auto CPP_fun(size)()(requires SizedRange<Rng>)
+        CPP_member
+        auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             return ranges::size(rng_);
         }
@@ -127,7 +128,8 @@ namespace ranges
             return detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>{
                 end_(meta::bool_<detail::RA_and_Sized<meta::const_if_c<Const, Rng>>>{})};
         }
-        CPP_member auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        CPP_member
+        auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             return ranges::size(rng_);
         }

@@ -53,9 +53,8 @@ namespace ranges
             if(0 > i)
             {
                 // If it's not common and we know the size, faster to count from the front
-                if
-                    RANGES_CONSTEXPR_IF(SizedRange<Rng> && !CommonRange<Rng>)
-                return next(ranges::begin(rng), distance(rng) + i);
+                if(RANGES_CONSTEXPR_IF(SizedRange<Rng> && !CommonRange<Rng>))
+                    return next(ranges::begin(rng), distance(rng) + i);
                 // Otherwise, probably faster to count from the back.
                 return next(ranges::next(ranges::begin(rng), ranges::end(rng)), i);
             }

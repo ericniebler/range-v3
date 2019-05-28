@@ -123,7 +123,8 @@ namespace ranges
         view_interface & operator=(view_interface &&) = default;
         view_interface & operator=(view_interface const &) = default;
         // A few ways of testing whether a range can be empty:
-        CPP_member constexpr auto empty() const noexcept -> CPP_ret(bool)( //
+        CPP_member
+        constexpr auto empty() const noexcept -> CPP_ret(bool)( //
             requires(detail::has_fixed_size_(Cardinality)))
         {
             return Cardinality == 0;

@@ -108,7 +108,8 @@ namespace ranges
 
     public:
         // Construction
-        CPP_member CPP_ctor(common_tuple)()( //
+        CPP_member
+        CPP_ctor(common_tuple)()( //
             noexcept(meta::and_c<
                      std::is_nothrow_default_constructible<Ts>::value...>::value) //
             requires DefaultConstructible<std::tuple<Ts...>>)
@@ -313,7 +314,8 @@ namespace ranges
 
     public:
         // Construction
-        CPP_member CPP_ctor(common_pair)()( //
+        CPP_member
+        CPP_ctor(common_pair)()( //
             noexcept(std::is_nothrow_default_constructible<F>::value &&
                          std::is_nothrow_default_constructible<S>::value) //
             requires DefaultConstructible<F> && DefaultConstructible<S>)

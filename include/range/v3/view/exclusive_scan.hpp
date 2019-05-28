@@ -131,12 +131,14 @@ namespace ranges
         {
             return {*this};
         }
-        CPP_member auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
+        CPP_member
+        auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
             requires ExclusiveScanConstraint<Rng const, T, Fun const>)
         {
             return {*this};
         }
-        CPP_member auto end_adaptor() const
+        CPP_member
+        auto end_adaptor() const
             -> CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)( //
                 requires ExclusiveScanConstraint<Rng const, T, Fun const>)
         {
@@ -150,11 +152,13 @@ namespace ranges
           , init_(std::move(init))
           , fun_(std::move(fun))
         {}
-        CPP_member auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        CPP_member
+        auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             return ranges::size(this->base());
         }
-        CPP_member auto CPP_fun(size)()(requires SizedRange<Rng>)
+        CPP_member
+        auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             return ranges::size(this->base());
         }

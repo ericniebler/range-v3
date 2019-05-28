@@ -99,11 +99,13 @@ namespace ranges
         {
             return ranges::end(rng_);
         }
-        CPP_member auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        CPP_member
+        auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             return ranges::size(rng_) - static_cast<range_size_t<Rng const>>(n_);
         }
-        CPP_member auto CPP_fun(size)()(requires SizedRange<Rng>)
+        CPP_member
+        auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             return ranges::size(rng_) - static_cast<range_size_t<Rng>>(n_);
         }

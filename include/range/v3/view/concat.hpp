@@ -280,7 +280,8 @@ namespace ranges
             {
                 its_.visit_i(next_fun{this});
             }
-            CPP_member auto equal(cursor const & pos) const -> CPP_ret(bool)( //
+            CPP_member
+            auto equal(cursor const & pos) const -> CPP_ret(bool)( //
                 requires EqualityComparable<variant<iterator_t<constify_if<Rngs>>...>>)
             {
                 return its_ == pos.its_;
@@ -290,12 +291,14 @@ namespace ranges
                 return its_.index() == cranges - 1 &&
                        ranges::get<cranges - 1>(its_) == pos.end_;
             }
-            CPP_member auto prev() -> CPP_ret(void)( //
+            CPP_member
+            auto prev() -> CPP_ret(void)( //
                 requires And<BidirectionalRange<Rngs>...>)
             {
                 its_.visit_i(prev_fun{this});
             }
-            CPP_member auto advance(difference_type n) -> CPP_ret(void)( //
+            CPP_member
+            auto advance(difference_type n) -> CPP_ret(void)( //
                 requires And<RandomAccessRange<Rngs>...>)
             {
                 if(n > 0)
@@ -303,9 +306,9 @@ namespace ranges
                 else if(n < 0)
                     its_.visit_i(advance_rev_fun{this, n});
             }
-            CPP_member auto distance_to(cursor const & that) const
-                -> CPP_ret(difference_type)( //
-                    requires And<SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>...>)
+            CPP_member
+            auto distance_to(cursor const & that) const -> CPP_ret(difference_type)( //
+                requires And<SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>...>)
             {
                 if(its_.index() <= that.its_.index())
                     return cursor::distance_to_(meta::size_t<0>{}, *this, that);
@@ -323,12 +326,14 @@ namespace ranges
         {
             return {*this, end_tag{}};
         }
-        CPP_member auto begin_cursor() const -> CPP_ret(cursor<true>)( //
+        CPP_member
+        auto begin_cursor() const -> CPP_ret(cursor<true>)( //
             requires And<Range<Rngs const>...>)
         {
             return {*this, begin_tag{}};
         }
-        CPP_member auto end_cursor() const -> CPP_ret(
+        CPP_member
+        auto end_cursor() const -> CPP_ret(
             meta::if_<meta::and_c<(bool)CommonRange<Rngs const>...>, cursor<true>,
                       sentinel<true>>)( //
             requires And<Range<Rngs const>...>)
@@ -341,12 +346,14 @@ namespace ranges
         explicit concat_view(Rngs... rngs)
           : rngs_{std::move(rngs)...}
         {}
-        CPP_member constexpr auto size() const -> CPP_ret(std::size_t)( //
+        CPP_member
+        constexpr auto size() const -> CPP_ret(std::size_t)( //
             requires(detail::concat_cardinality<Rngs...>::value >= 0))
         {
             return static_cast<std::size_t>(detail::concat_cardinality<Rngs...>::value);
         }
-        CPP_member constexpr auto CPP_fun(size)()(
+        CPP_member
+        constexpr auto CPP_fun(size)()(
             const requires(detail::concat_cardinality<Rngs...>::value < 0) &&
             And<SizedRange<Rngs const>...>)
         {
@@ -357,7 +364,8 @@ namespace ranges
                 size_type{0},
                 plus{});
         }
-        CPP_member constexpr auto CPP_fun(size)()(
+        CPP_member
+        constexpr auto CPP_fun(size)()(
             requires(detail::concat_cardinality<Rngs...>::value < 0) &&
             And<SizedRange<Rngs>...>)
         {

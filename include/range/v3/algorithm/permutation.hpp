@@ -150,21 +150,19 @@ namespace ranges
             requires ForwardIterator<I1> && Sentinel<S1, I1> && ForwardIterator<I2> &&
                 Sentinel<S2, I2> && IndirectlyComparable<I1, I2, C, P1, P2>)
         {
-            // clang-format off
-            if RANGES_CONSTEXPR_IF(SizedSentinel<S1, I1> && SizedSentinel<S2, I2>)
+            if(RANGES_CONSTEXPR_IF(SizedSentinel<S1, I1> && SizedSentinel<S2, I2>))
             {
                 RANGES_DIAGNOSTIC_PUSH
                 RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
                 return distance(begin1, end1) == distance(begin2, end2) &&
-                        (*this)(std::move(begin1),
-                                std::move(end1),
-                                std::move(begin2),
-                                std::move(pred),
-                                std::move(proj1),
-                                std::move(proj2));
+                       (*this)(std::move(begin1),
+                               std::move(end1),
+                               std::move(begin2),
+                               std::move(pred),
+                               std::move(proj1),
+                               std::move(proj2));
                 RANGES_DIAGNOSTIC_POP
             }
-            // clang-format on
             return is_permutation_fn::four_iter_impl(std::move(begin1),
                                                      std::move(end1),
                                                      std::move(begin2),
@@ -203,20 +201,18 @@ namespace ranges
             requires ForwardRange<Rng1> && ForwardRange<Rng2> &&
                 IndirectlyComparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
         {
-            // clang-format off
-            if RANGES_CONSTEXPR_IF(SizedRange<Rng1> && SizedRange<Rng2>)
+            if(RANGES_CONSTEXPR_IF(SizedRange<Rng1> && SizedRange<Rng2>))
             {
                 RANGES_DIAGNOSTIC_PUSH
                 RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
                 return distance(rng1) == distance(rng2) && (*this)(begin(rng1),
-                                                                    end(rng1),
-                                                                    begin(rng2),
-                                                                    std::move(pred),
-                                                                    std::move(proj1),
-                                                                    std::move(proj2));
+                                                                   end(rng1),
+                                                                   begin(rng2),
+                                                                   std::move(pred),
+                                                                   std::move(proj1),
+                                                                   std::move(proj2));
                 RANGES_DIAGNOSTIC_POP
             }
-            // clang-format on
             return is_permutation_fn::four_iter_impl(begin(rng1),
                                                      end(rng1),
                                                      begin(rng2),

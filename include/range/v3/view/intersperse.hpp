@@ -46,12 +46,14 @@ namespace ranges
           : intersperse_view::view_adaptor{detail::move(rng)}
           , val_(detail::move(val))
         {}
-        CPP_member constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             auto const n = ranges::size(this->base());
             return n ? n * 2 - 1 : 0;
         }
-        CPP_member constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             auto const n = ranges::size(this->base());
             return n ? n * 2 - 1 : 0;
@@ -90,11 +92,11 @@ namespace ranges
             {
                 return toggle_ ? *it : val_;
             }
-            CPP_member constexpr auto equal(iterator_t<CRng> const & it0,
-                                            iterator_t<CRng> const & it1,
-                                            cursor_adaptor const & other) const
-                -> CPP_ret(bool)( //
-                    requires Sentinel<iterator_t<CRng>, iterator_t<CRng>>)
+            CPP_member
+            constexpr auto equal(iterator_t<CRng> const & it0,
+                                 iterator_t<CRng> const & it1,
+                                 cursor_adaptor const & other) const -> CPP_ret(bool)( //
+                requires Sentinel<iterator_t<CRng>, iterator_t<CRng>>)
             {
                 return it0 == it1 && toggle_ == other.toggle_;
             }
@@ -104,25 +106,27 @@ namespace ranges
                     ++it;
                 toggle_ = !toggle_;
             }
-            CPP_member constexpr auto prev(iterator_t<CRng> & it) -> CPP_ret(void)( //
+            CPP_member
+            constexpr auto prev(iterator_t<CRng> & it) -> CPP_ret(void)( //
                 requires BidirectionalRange<CRng>)
             {
                 toggle_ = !toggle_;
                 if(toggle_)
                     --it;
             }
-            CPP_member constexpr auto distance_to(iterator_t<CRng> const & it,
-                                                  iterator_t<CRng> const & other_it,
-                                                  cursor_adaptor const & other) const
+            CPP_member
+            constexpr auto distance_to(iterator_t<CRng> const & it,
+                                       iterator_t<CRng> const & other_it,
+                                       cursor_adaptor const & other) const
                 -> CPP_ret(range_difference_t<Rng>)( //
                     requires SizedSentinel<iterator_t<CRng>, iterator_t<CRng>>)
             {
                 return (other_it - it) * 2 + (other.toggle_ - toggle_);
             }
-            CPP_member constexpr auto advance(iterator_t<CRng> & it,
-                                              range_difference_t<CRng> n)
-                -> CPP_ret(void)( //
-                    requires RandomAccessRange<CRng>)
+            CPP_member
+            constexpr auto advance(iterator_t<CRng> & it,
+                                   range_difference_t<CRng> n) -> CPP_ret(void)( //
+                requires RandomAccessRange<CRng>)
             {
                 ranges::advance(it, n >= 0 ? (n + toggle_) / 2 : (n - !toggle_) / 2);
                 if(n % 2 != 0)
@@ -152,20 +156,21 @@ namespace ranges
         {
             return cursor_adaptor<false>{val_};
         }
-        CPP_member constexpr auto begin_adaptor() const
-            -> CPP_ret(cursor_adaptor<true>)( //
-                requires Range<Rng const>)
+        CPP_member
+        constexpr auto begin_adaptor() const -> CPP_ret(cursor_adaptor<true>)( //
+            requires Range<Rng const>)
         {
             return cursor_adaptor<true>{val_};
         }
-        CPP_member constexpr auto end_adaptor() -> CPP_ret(cursor_adaptor<false>)( //
+        CPP_member
+        constexpr auto end_adaptor() -> CPP_ret(cursor_adaptor<false>)( //
             requires CommonRange<Rng> && (!SinglePass<iterator_t<Rng>>))
         {
             return cursor_adaptor<false>{val_};
         }
-        CPP_member constexpr auto end_adaptor() noexcept
-            -> CPP_ret(sentinel_adaptor<false>)( //
-                requires(!CommonRange<Rng>) || SinglePass<iterator_t<Rng>>)
+        CPP_member
+        constexpr auto end_adaptor() noexcept -> CPP_ret(sentinel_adaptor<false>)( //
+            requires(!CommonRange<Rng>) || SinglePass<iterator_t<Rng>>)
         {
             return {};
         }

@@ -168,11 +168,13 @@ namespace ranges
           : iter_transform_view::view_adaptor{std::move(rng)}
           , fun_(std::move(fun))
         {}
-        CPP_member constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             return ranges::size(this->base());
         }
-        CPP_member constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             return ranges::size(this->base());
         }
@@ -276,7 +278,8 @@ namespace ranges
                 ++it1_;
                 ++it2_;
             }
-            CPP_member auto equal(cursor const & that) const -> CPP_ret(bool)( //
+            CPP_member
+            auto equal(cursor const & that) const -> CPP_ret(bool)( //
                 requires ForwardRange<Rng1> && ForwardRange<Rng2>)
             {
                 // By returning true if *any* of the iterators are equal, we allow
@@ -291,22 +294,24 @@ namespace ranges
                 // one reaches the end.
                 return it1_ == s.end1_ || it2_ == s.end2_;
             }
-            CPP_member auto prev() -> CPP_ret(void)( //
+            CPP_member
+            auto prev() -> CPP_ret(void)( //
                 requires BidirectionalRange<R1> && BidirectionalRange<R2>)
             {
                 --it1_;
                 --it2_;
             }
-            CPP_member auto advance(difference_type n) -> CPP_ret(void)( //
+            CPP_member
+            auto advance(difference_type n) -> CPP_ret(void)( //
                 requires RandomAccessRange<R1> && RandomAccessRange<R2>)
             {
                 ranges::advance(it1_, n);
                 ranges::advance(it2_, n);
             }
-            CPP_member auto distance_to(cursor const & that) const
-                -> CPP_ret(difference_type)( //
-                    requires SizedSentinel<iterator_t<R1>, iterator_t<R1>> &&
-                        SizedSentinel<iterator_t<R2>, iterator_t<R2>>)
+            CPP_member
+            auto distance_to(cursor const & that) const -> CPP_ret(difference_type)( //
+                requires SizedSentinel<iterator_t<R1>, iterator_t<R1>> &&
+                    SizedSentinel<iterator_t<R2>, iterator_t<R2>>)
             {
                 // Return the smallest distance (in magnitude) of any of the iterator
                 // pairs. This is to accommodate zippers of sequences of different length.
@@ -375,7 +380,8 @@ namespace ranges
           , rng1_(std::move(rng1))
           , rng2_(std::move(rng2))
         {}
-        CPP_member static constexpr auto size() -> CPP_ret(std::size_t)( //
+        CPP_member
+        static constexpr auto size() -> CPP_ret(std::size_t)( //
             requires(my_cardinality >= 0))
         {
             return static_cast<std::size_t>(my_cardinality);

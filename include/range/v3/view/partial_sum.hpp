@@ -124,7 +124,8 @@ namespace ranges
             {
                 return current_ == ranges::end(parent_->base_);
             }
-            CPP_member constexpr bool CPP_fun(equal)(cursor const & that)(
+            CPP_member
+            constexpr bool CPP_fun(equal)(cursor const & that)(
                 const requires EqualityComparable<iterator_t<Base>>)
             {
                 RANGES_EXPECT(parent_ == that.parent_);
@@ -151,11 +152,13 @@ namespace ranges
           : base_(std::move(rng))
           , fun_(std::move(fun))
         {}
-        CPP_member constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             return ranges::size(base_);
         }
-        CPP_member constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             return ranges::size(base_);
         }

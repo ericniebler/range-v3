@@ -48,16 +48,18 @@ namespace ranges
             }
 
         public:
-            CPP_member constexpr CPP_ctor(indexed_datum)(meta::nil_ = {})(
+            CPP_member
+            constexpr CPP_ctor(indexed_datum)(meta::nil_ = {})(
                 requires DefaultConstructible<T>)
               : data_{}
             {}
-            CPP_member CPP_ctor(indexed_datum)(indexed_datum && that)(
-                requires MoveConstructible<T>)
+            CPP_member
+            CPP_ctor(indexed_datum)(indexed_datum && that)(requires MoveConstructible<T>)
             {
                 std::uninitialized_copy_n(make_move_iterator(that.data_), N, data_);
             }
-            CPP_member CPP_ctor(indexed_datum)(indexed_datum const & that)(
+            CPP_member
+            CPP_ctor(indexed_datum)(indexed_datum const & that)(
                 requires CopyConstructible<T>)
             {
                 std::uninitialized_copy_n(that.data_, N, data_);
@@ -79,16 +81,16 @@ namespace ranges
                 requires InputRange<R> && Constructible<T, range_reference_t<R>>)
               : indexed_datum{ranges::begin(r), ranges::end(r)}
             {}
-            CPP_member auto operator=(indexed_datum && that)
-                -> CPP_ret(indexed_datum &)( //
-                    requires Assignable<T &, T>)
+            CPP_member
+            auto operator=(indexed_datum && that) -> CPP_ret(indexed_datum &)( //
+                requires Assignable<T &, T>)
             {
                 ranges::move(that.data_, data_);
                 return *this;
             }
-            CPP_member auto operator=(indexed_datum const & that)
-                -> CPP_ret(indexed_datum &)( //
-                    requires Assignable<T &, T const &>)
+            CPP_member
+            auto operator=(indexed_datum const & that) -> CPP_ret(indexed_datum &)( //
+                requires Assignable<T &, T const &>)
             {
                 ranges::copy(that.data_, data_);
                 return *this;

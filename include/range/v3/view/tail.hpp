@@ -79,14 +79,16 @@ namespace ranges
         {
             return ranges::end(rng_);
         }
-        CPP_member constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             using size_type = range_size_t<Rng>;
             return range_cardinality<Rng>::value >= 0
                        ? detail::prev_or_zero_((size_type)range_cardinality<Rng>::value)
                        : detail::prev_or_zero_(ranges::size(rng_));
         }
-        CPP_member constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             using size_type = range_size_t<Rng>;
             return range_cardinality<Rng>::value >= 0

@@ -131,7 +131,8 @@ namespace ranges
             T datum_;
 
         public:
-            CPP_member constexpr CPP_ctor(indexed_datum)()(               //
+            CPP_member
+            constexpr CPP_ctor(indexed_datum)()(                          //
                 noexcept(std::is_nothrow_default_constructible<T>::value) //
                 requires DefaultConstructible<T>)
               : datum_{}
@@ -666,7 +667,8 @@ namespace ranges
         }
 
     public:
-        CPP_member constexpr CPP_ctor(variant)()(                              //
+        CPP_member
+        constexpr CPP_ctor(variant)()(                                         //
             noexcept(std::is_nothrow_default_constructible<datum_t<0>>::value) //
             requires DefaultConstructible<datum_t<0>>)
           : variant{emplaced_index<0>}

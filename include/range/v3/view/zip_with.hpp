@@ -226,7 +226,8 @@ namespace ranges
             {
                 tuple_for_each(its_, detail::inc);
             }
-            CPP_member auto equal(cursor const & that) const -> CPP_ret(bool)( //
+            CPP_member
+            auto equal(cursor const & that) const -> CPP_ret(bool)( //
                 requires And<Sentinel<iterator_t<meta::const_if_c<Const, Rngs>>,
                                       iterator_t<meta::const_if_c<Const, Rngs>>>...>)
             {
@@ -246,19 +247,21 @@ namespace ranges
                                    false,
                                    [](bool a, bool b) { return a || b; });
             }
-            CPP_member auto prev() -> CPP_ret(void)( //
+            CPP_member
+            auto prev() -> CPP_ret(void)( //
                 requires And<BidirectionalRange<meta::const_if_c<Const, Rngs>>...>)
             {
                 tuple_for_each(its_, detail::dec);
             }
-            CPP_member auto advance(difference_type n) -> CPP_ret(void)( //
+            CPP_member
+            auto advance(difference_type n) -> CPP_ret(void)( //
                 requires And<RandomAccessRange<meta::const_if_c<Const, Rngs>>...>)
             {
                 using std::placeholders::_1;
                 tuple_for_each(its_, std::bind(detail::advance_, _1, n));
             }
-            CPP_member auto distance_to(cursor const & that) const -> CPP_ret(
-                difference_type)( //
+            CPP_member
+            auto distance_to(cursor const & that) const -> CPP_ret(difference_type)( //
                 requires And<SizedSentinel<iterator_t<meta::const_if_c<Const, Rngs>>,
                                            iterator_t<meta::const_if_c<Const, Rngs>>>...>)
             {
@@ -330,8 +333,8 @@ namespace ranges
           : fun_(std::move(fun))
           , rngs_{std::move(rngs)...}
         {}
-        CPP_member constexpr auto CPP_fun(size)()(
-            const requires And<SizedRange<Rngs const>...>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(const requires And<SizedRange<Rngs const>...>)
         {
             using size_type = common_type_t<range_size_t<Rngs const>...>;
             return range_cardinality<iter_zip_with_view>::value >= 0

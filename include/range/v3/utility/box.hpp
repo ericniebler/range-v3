@@ -42,7 +42,8 @@ namespace ranges
     {
         mutable T value;
 
-        CPP_member constexpr CPP_ctor(mutable_)()( //
+        CPP_member
+        constexpr CPP_ctor(mutable_)()( //
             requires std::is_default_constructible<T>::value)
           : value{}
         {}
@@ -160,7 +161,8 @@ namespace ranges
         Element value;
 
     public:
-        CPP_member constexpr CPP_ctor(box)()(                               //
+        CPP_member
+        constexpr CPP_ctor(box)()(                                          //
             noexcept(std::is_nothrow_default_constructible<Element>::value) //
             requires std::is_default_constructible<Element>::value)
           : value{}
@@ -202,7 +204,8 @@ namespace ranges
     class box<Element, Tag, detail::box_compress::ebo> : Element
     {
     public:
-        CPP_member constexpr CPP_ctor(box)()(                               //
+        CPP_member
+        constexpr CPP_ctor(box)()(                                          //
             noexcept(std::is_nothrow_default_constructible<Element>::value) //
             requires std::is_default_constructible<Element>::value)
           : Element{}

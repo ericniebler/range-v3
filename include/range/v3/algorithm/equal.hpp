@@ -72,11 +72,9 @@ namespace ranges
                 requires InputIterator<I0> && Sentinel<S0, I0> && InputIterator<I1> &&
                     Sentinel<S1, I1> && IndirectlyComparable<I0, I1, C, P0, P1>)
         {
-            // clang-format off
-            if RANGES_CONSTEXPR_IF(SizedSentinel<S0, I0> && SizedSentinel<S1, I1>)
+            if(RANGES_CONSTEXPR_IF(SizedSentinel<S0, I0> && SizedSentinel<S1, I1>))
                 if(distance(begin0, end0) != distance(begin1, end1))
                     return false;
-            // clang-format on
             return this->nocheck(std::move(begin0),
                                  std::move(end0),
                                  std::move(begin1),
@@ -116,11 +114,9 @@ namespace ranges
                 requires InputRange<Rng0> && InputRange<Rng1> &&
                     IndirectlyComparable<iterator_t<Rng0>, iterator_t<Rng1>, C, P0, P1>)
         {
-            // clang-format off
-            if RANGES_CONSTEXPR_IF(SizedRange<Rng0> && SizedRange<Rng1>)
+            if(RANGES_CONSTEXPR_IF(SizedRange<Rng0> && SizedRange<Rng1>))
                 if(distance(rng0) != distance(rng1))
                     return false;
-            // clang-format on
             return this->nocheck(begin(rng0),
                                  end(rng0),
                                  begin(rng1),

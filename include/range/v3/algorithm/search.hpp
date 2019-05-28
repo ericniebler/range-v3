@@ -149,8 +149,7 @@ namespace ranges
         {
             if(begin2 == end2)
                 return {begin1, begin1};
-            // clang-format off
-            if RANGES_CONSTEXPR_IF(SizedSentinel<S1, I1> && SizedSentinel<S2, I2>)
+            if(RANGES_CONSTEXPR_IF(SizedSentinel<S1, I1> && SizedSentinel<S2, I2>))
                 return search_fn::sized_impl(std::move(begin1),
                                              std::move(end1),
                                              distance(begin1, end1),
@@ -160,14 +159,14 @@ namespace ranges
                                              pred,
                                              proj1,
                                              proj2);
-            // clang-format on
-            else return search_fn::impl(std::move(begin1),
-                                        std::move(end1),
-                                        std::move(begin2),
-                                        std::move(end2),
-                                        pred,
-                                        proj1,
-                                        proj2);
+            else
+                return search_fn::impl(std::move(begin1),
+                                       std::move(end1),
+                                       std::move(begin2),
+                                       std::move(end2),
+                                       pred,
+                                       proj1,
+                                       proj2);
         }
 
         template<typename Rng1, typename Rng2, typename C = equal_to,
@@ -180,8 +179,7 @@ namespace ranges
         {
             if(empty(rng2))
                 return subrange<iterator_t<Rng1>>{begin(rng1), begin(rng1)};
-            // clang-format off
-            if RANGES_CONSTEXPR_IF(SizedRange<Rng1> && SizedRange<Rng2>)
+            if(RANGES_CONSTEXPR_IF(SizedRange<Rng1> && SizedRange<Rng2>))
                 return search_fn::sized_impl(begin(rng1),
                                              end(rng1),
                                              distance(rng1),
@@ -191,9 +189,9 @@ namespace ranges
                                              pred,
                                              proj1,
                                              proj2);
-            // clang-format on
-            else return search_fn::impl(
-                begin(rng1), end(rng1), begin(rng2), end(rng2), pred, proj1, proj2);
+            else
+                return search_fn::impl(
+                    begin(rng1), end(rng1), begin(rng2), end(rng2), pred, proj1, proj2);
         }
     };
 

@@ -188,7 +188,8 @@ namespace ranges
                     rng_->set_offset(delta);
                 }
             }
-            CPP_member constexpr auto prev(iterator_t<CRng> & it) -> CPP_ret(void)( //
+            CPP_member
+            constexpr auto prev(iterator_t<CRng> & it) -> CPP_ret(void)( //
                 requires BidirectionalRange<CRng>)
             {
                 RANGES_EXPECT(it != ranges::begin(rng_->base()));
@@ -213,10 +214,10 @@ namespace ranges
                     delta += rng_->stride_ - 1;
                 return delta / rng_->stride_;
             }
-            CPP_member constexpr auto advance(iterator_t<CRng> & it,
-                                              range_difference_t<Rng> n)
-                -> CPP_ret(void)( //
-                    requires RandomAccessRange<CRng>)
+            CPP_member
+            constexpr auto advance(iterator_t<CRng> & it,
+                                   range_difference_t<Rng> n) -> CPP_ret(void)( //
+                requires RandomAccessRange<CRng>)
             {
                 if(0 == n)
                     return;
@@ -253,7 +254,8 @@ namespace ranges
         {
             return adaptor<false>{*this};
         }
-        CPP_member constexpr auto begin_adaptor() const noexcept ->
+        CPP_member
+        constexpr auto begin_adaptor() const noexcept ->
 #ifdef RANGES_WORKAROUND_MSVC_711347
             CPP_ret(adaptor<true>)(requires const_iterable)
 #else  // ^^^ workaround / no workaround vvv
@@ -272,7 +274,8 @@ namespace ranges
         {
             return {*this};
         }
-        CPP_member constexpr auto end_adaptor() const noexcept ->
+        CPP_member
+        constexpr auto end_adaptor() const noexcept ->
 #ifdef RANGES_WORKAROUND_MSVC_711347
             CPP_ret(meta::if_c<can_bound<true>, adaptor<true>, adaptor_base>)( //
                 requires const_iterable)
@@ -289,14 +292,16 @@ namespace ranges
         constexpr stride_view(Rng rng, range_difference_t<Rng> const stride)
           : detail::stride_view_base<Rng>{std::move(rng), stride}
         {}
-        CPP_member constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             using size_type = range_size_t<Rng>;
             auto const n = ranges::size(this->base());
             return (n + static_cast<size_type>(this->stride_) - 1) /
                    static_cast<size_type>(this->stride_);
         }
-        CPP_member constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        CPP_member
+        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             using size_type = range_size_t<Rng const>;
             auto const n = ranges::size(this->base());
