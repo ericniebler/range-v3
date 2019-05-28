@@ -15,6 +15,7 @@
 #define RANGES_V3_ALGORITHM_AUX_LOWER_BOUND_N_HPP
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/aux_/partition_point_n.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
@@ -31,8 +32,8 @@ namespace ranges
         template<typename Pred, typename Val>
         struct lower_bound_predicate
         {
-            Pred& pred_;
-            Val& val_;
+            Pred & pred_;
+            Val & val_;
 
             template<typename T>
             bool operator()(T && t) const
@@ -42,8 +43,8 @@ namespace ranges
         };
 
         template<typename Pred, typename Val>
-        lower_bound_predicate<Pred, Val>
-        make_lower_bound_predicate(Pred& pred, Val& val)
+        lower_bound_predicate<Pred, Val> make_lower_bound_predicate(Pred & pred,
+                                                                    Val & val)
         {
             return {pred, val};
         }
@@ -55,14 +56,15 @@ namespace ranges
         struct lower_bound_n_fn
         {
             template<typename I, typename V, typename C = less, typename P = identity>
-            auto operator()(I begin, iter_difference_t<I> d, V const &val, C pred = C{},
-                    P proj = P{}) const ->
-                CPP_ret(I)(
-                    requires ForwardIterator<I> &&
-                        IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
+            auto operator()(I begin, iter_difference_t<I> d, V const & val, C pred = C{},
+                            P proj = P{}) const -> CPP_ret(I)( //
+                requires ForwardIterator<I> &&
+                    IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
             {
-                return partition_point_n(std::move(begin), d,
-                    detail::make_lower_bound_predicate(pred, val), std::move(proj));
+                return partition_point_n(std::move(begin),
+                                         d,
+                                         detail::make_lower_bound_predicate(pred, val),
+                                         std::move(proj));
             }
         };
 

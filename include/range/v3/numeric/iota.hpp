@@ -13,11 +13,11 @@
 #ifndef RANGES_V3_NUMERIC_IOTA_HPP
 #define RANGES_V3_NUMERIC_IOTA_HPP
 
+#include <range/v3/iterator/concepts.hpp>
 #include <range/v3/range/access.hpp>
-#include <range/v3/range/traits.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
-#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -26,19 +26,19 @@ namespace ranges
     /// @{
     struct iota_fn
     {
-        CPP_template(typename O, typename S, typename T)(
+        template<typename O, typename S, typename T>
+        auto operator()(O begin, S end, T val) const -> CPP_ret(O)( //
             requires OutputIterator<O, T const &> && Sentinel<S, O> &&
                 WeaklyIncrementable<T>)
-        O operator()(O begin, S end, T val) const
         {
             for(; begin != end; ++begin, ++val)
                 *begin = detail::as_const(val);
             return begin;
         }
 
-        CPP_template(typename Rng, typename T)(
+        template<typename Rng, typename T>
+        auto operator()(Rng && rng, T val) const -> CPP_ret(safe_iterator_t<Rng>)( //
             requires OutputRange<Rng, T const &> && WeaklyIncrementable<T>)
-        safe_iterator_t<Rng> operator()(Rng &&rng, T val) const
         {
             return (*this)(begin(rng), end(rng), detail::move(val));
         }

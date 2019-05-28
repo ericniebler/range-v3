@@ -15,13 +15,15 @@
 #define RANGES_V3_RANGE_FWD_HPP
 
 #include <climits>
-#include <utility>
 #include <iterator>
 #include <type_traits>
+#include <utility>
+
 #include <meta/meta.hpp>
+
 #include <range/v3/detail/config.hpp>
-#include <range/v3/version.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/version.hpp>
 
 /// \defgroup group-iterator Iterator
 /// Iterator functionality
@@ -55,17 +57,15 @@ namespace ranges
     /// \cond
 // GCC either fails to accept an attribute on a namespace, or else
 // it ignores the deprecation attribute. Frustrating.
-#if (RANGES_CXX_VER < RANGES_CXX_STD_17 || \
-    defined(__GNUC__) && !defined(__clang__))
+#if(RANGES_CXX_VER < RANGES_CXX_STD_17 || defined(__GNUC__) && !defined(__clang__))
     inline namespace v3
     {
         using namespace ranges;
     }
 #else
-    inline namespace
-        RANGES_DEPRECATED("The name ranges::v3 namespace is deprecated. "
-                          "Please discontinue using it.")
-        v3
+    inline namespace RANGES_DEPRECATED(
+        "The name ranges::v3 namespace is deprecated. "
+        "Please discontinue using it.") v3
     {
         using namespace ranges;
     }
@@ -86,9 +86,9 @@ namespace ranges
     struct result_of;
 
     template<typename Sig>
-    using result_of_t RANGES_DEPRECATED("ranges::result_of_t is deprecated. "
-                                        "Please use ranges::invoke_result_t") =
-        meta::_t<result_of<Sig>>;
+    using result_of_t RANGES_DEPRECATED(
+        "ranges::result_of_t is deprecated. "
+        "Please use ranges::invoke_result_t") = meta::_t<result_of<Sig>>;
     /// \endcond
 
     template<typename...>
@@ -104,7 +104,7 @@ namespace ranges
     template<typename First, typename Second>
     struct composed;
 
-    template<typename ...Fns>
+    template<typename... Fns>
     struct overloaded;
 
     namespace action
@@ -153,16 +153,15 @@ namespace ranges
     }
 
     template<typename T>
-    using difference_type
-        RANGES_DEPRECATED("ranges::difference_type<T>::type is deprecated. Use "
-            "ranges::incrementable_traits<T>::difference_type instead.") =
+    using difference_type RANGES_DEPRECATED(
+        "ranges::difference_type<T>::type is deprecated. Use "
+        "ranges::incrementable_traits<T>::difference_type instead.") =
         detail::difference_type_<T>;
 
     template<typename T>
-    using value_type
-        RANGES_DEPRECATED("ranges::value_type<T>::type is deprecated. Use "
-            "ranges::readable_traits<T>::value_type instead.") =
-        detail::value_type_<T>;
+    using value_type RANGES_DEPRECATED(
+        "ranges::value_type<T>::type is deprecated. Use "
+        "ranges::readable_traits<T>::value_type instead.") = detail::value_type_<T>;
 
     template<typename T>
     struct size_type;
@@ -178,7 +177,7 @@ namespace ranges
             constexpr ignore_t(T &&) noexcept
             {}
             template<typename T>
-            constexpr ignore_t const &operator=(T &&) const noexcept
+            constexpr ignore_t const & operator=(T &&) const noexcept
             {
                 return *this;
             }
@@ -187,7 +186,7 @@ namespace ranges
         struct value_init
         {
             template<typename T>
-            operator T () const
+            operator T() const
             {
                 return T{};
             }
@@ -196,8 +195,7 @@ namespace ranges
         struct make_compressed_pair_fn;
 
         template<typename T>
-        constexpr meta::_t<std::remove_reference<T>> &&
-        move(T &&t) noexcept
+        constexpr meta::_t<std::remove_reference<T>> && move(T && t) noexcept
         {
             return static_cast<meta::_t<std::remove_reference<T>> &&>(t);
         }
@@ -205,12 +203,12 @@ namespace ranges
         struct as_const_fn
         {
             template<typename T>
-            constexpr T const &operator()(T &t) const noexcept
+            constexpr T const & operator()(T & t) const noexcept
             {
                 return t;
             }
             template<typename T>
-            constexpr T const &&operator()(T &&t) const noexcept
+            constexpr T const && operator()(T && t) const noexcept
             {
                 return (T &&) t;
             }
@@ -229,8 +227,7 @@ namespace ranges
             meta::_t<std::add_lvalue_reference<meta::_t<std::remove_const<R>>>>;
 
         template<typename T, typename R = meta::_t<std::remove_reference<T>>>
-        using as_cref_t =
-            meta::_t<std::add_lvalue_reference<R const>>;
+        using as_cref_t = meta::_t<std::add_lvalue_reference<R const>>;
 
         struct get_first;
         struct get_second;
@@ -247,15 +244,14 @@ namespace ranges
         template<typename Int>
         struct from_end_;
 
-        template<typename ...Ts>
+        template<typename... Ts>
         constexpr int ignore_unused(Ts &&...)
         {
             return 42;
         }
 
         template<int I>
-        struct priority_tag
-          : priority_tag<I - 1>
+        struct priority_tag : priority_tag<I - 1>
         {};
 
         template<>
@@ -272,53 +268,45 @@ namespace ranges
             std::is_trivially_default_constructible<T>::value>;
 #endif
 
-    #if defined(__clang__) && !defined(_LIBCPP_VERSION)
+#if defined(__clang__) && !defined(_LIBCPP_VERSION)
         template<typename T, typename... Args>
         using is_trivially_constructible =
             meta::bool_<__is_trivially_constructible(T, Args...)>;
         template<typename T>
-        using is_trivially_default_constructible =
-            is_trivially_constructible<T>;
+        using is_trivially_default_constructible = is_trivially_constructible<T>;
         template<typename T>
-        using is_trivially_copy_constructible =
-            is_trivially_constructible<T, T const &>;
+        using is_trivially_copy_constructible = is_trivially_constructible<T, T const &>;
         template<typename T>
-        using is_trivially_move_constructible =
-            is_trivially_constructible<T, T>;
+        using is_trivially_move_constructible = is_trivially_constructible<T, T>;
         template<typename T, typename U>
-        using is_trivially_assignable =
-            meta::bool_<__is_trivially_assignable(T, U)>;
+        using is_trivially_assignable = meta::bool_<__is_trivially_assignable(T, U)>;
         template<typename T>
-        using is_trivially_copy_assignable =
-            is_trivially_assignable<T &, T const &>;
+        using is_trivially_copy_assignable = is_trivially_assignable<T &, T const &>;
         template<typename T>
-        using is_trivially_move_assignable =
-            is_trivially_assignable<T &, T>;
+        using is_trivially_move_assignable = is_trivially_assignable<T &, T>;
         template<typename T>
-        using is_trivially_copyable =
-            meta::bool_<__is_trivially_copyable(T)>;
-    #else
+        using is_trivially_copyable = meta::bool_<__is_trivially_copyable(T)>;
+#else
         template<typename T>
-        using is_trivially_default_constructible =
-            std::is_trivially_constructible<T>;
-        using std::is_trivially_copy_constructible;
-        using std::is_trivially_move_constructible;
+        using is_trivially_default_constructible = std::is_trivially_constructible<T>;
         using std::is_trivially_copy_assignable;
-        using std::is_trivially_move_assignable;
+        using std::is_trivially_copy_constructible;
         using std::is_trivially_copyable;
-    #endif
+        using std::is_trivially_move_assignable;
+        using std::is_trivially_move_constructible;
+#endif
 
-    #if RANGES_CXX_LIB_IS_FINAL > 0
-    # if defined(__clang__) && !defined(_LIBCPP_VERSION)
+#if RANGES_CXX_LIB_IS_FINAL > 0
+#if defined(__clang__) && !defined(_LIBCPP_VERSION)
         template<typename T>
         using is_final = meta::bool_<__is_final(T)>;
-    # else
+#else
         using std::is_final;
-    # endif
-    #else
+#endif
+#else
         template<typename T>
         using is_final = std::false_type;
-    #endif
+#endif
 
         // Work around libc++'s buggy std::is_function
         // Function types here:
@@ -326,12 +314,12 @@ namespace ranges
         char (&is_function_impl_(priority_tag<0>))[1];
 
         // Array types here:
-        template<typename T, typename = decltype((*(T*)0)[0])>
+        template<typename T, typename = decltype((*(T *)0)[0])>
         char (&is_function_impl_(priority_tag<1>))[2];
 
         // Anything that can be returned from a function here (including
         // void and reference types):
-        template<typename T, typename = T(*)()>
+        template<typename T, typename = T (*)()>
         char (&is_function_impl_(priority_tag<2>))[3];
 
         // Classes and unions (including abstract types) here:
@@ -367,14 +355,17 @@ namespace ranges
     }
     /// \endcond
 
-    struct begin_tag {};
-    struct end_tag {};
-    struct copy_tag {};
-    struct move_tag {};
+    struct begin_tag
+    {};
+    struct end_tag
+    {};
+    struct copy_tag
+    {};
+    struct move_tag
+    {};
 
     template<typename T>
-    using uncvref_t =
-        meta::_t<std::remove_cv<meta::_t<std::remove_reference<T>>>>;
+    using uncvref_t = meta::_t<std::remove_cv<meta::_t<std::remove_reference<T>>>>;
 
     struct not_equal_to;
     struct equal_to;
@@ -415,8 +406,7 @@ namespace ranges
     template<typename Derived, cardinality C = finite>
     struct view_facade;
 
-    template<typename Derived,
-             typename BaseRng,
+    template<typename Derived, typename BaseRng,
              cardinality C = range_cardinality<BaseRng>::value>
     struct view_adaptor;
 
@@ -503,10 +493,9 @@ namespace ranges
     struct move_iterator;
 
     template<typename I>
-    using move_into_iterator =
-        basic_iterator<detail::move_into_cursor<I>>;
+    using move_into_iterator = basic_iterator<detail::move_into_cursor<I>>;
 
-    template<typename Rng, bool = (bool) is_infinite<Rng>()>
+    template<typename Rng, bool = (bool)is_infinite<Rng>()>
     struct RANGES_EMPTY_BASES cycled_view;
 
     namespace view
@@ -517,7 +506,8 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        template<typename I> struct reverse_cursor;
+        template<typename I>
+        struct reverse_cursor;
     }
     /// \endcond
 
@@ -573,7 +563,7 @@ namespace ranges
         struct join_fn;
     }
 
-    template<typename...Rngs>
+    template<typename... Rngs>
     struct concat_view;
 
     namespace view
@@ -668,7 +658,7 @@ namespace ranges
         struct is_random_access_common_;
 
         template<typename Rng,
-            bool IsRandomAccessBounded = is_random_access_common_<Rng>::value>
+                 bool IsRandomAccessBounded = is_random_access_common_<Rng>::value>
         struct take_exactly_view_;
     }
     /// \endcond
@@ -762,13 +752,13 @@ namespace ranges
         struct values_fn;
     }
 
-    template<typename Fun, typename...Rngs>
+    template<typename Fun, typename... Rngs>
     struct iter_zip_with_view;
 
-    template<typename Fun, typename ...Rngs>
+    template<typename Fun, typename... Rngs>
     struct zip_with_view;
 
-    template<typename ...Rngs>
+    template<typename... Rngs>
     struct zip_view;
 
     namespace view
@@ -787,9 +777,11 @@ namespace concepts
     inline namespace defs
     {
         namespace lazy
-        {}
+        {
+        }
         namespace defer
-        {}
+        {
+        }
     }
 }
 

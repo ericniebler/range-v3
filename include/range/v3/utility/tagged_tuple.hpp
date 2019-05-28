@@ -14,7 +14,9 @@
 #define RANGES_V3_UTILITY_TAGGED_TUPLE_HPP
 
 #include <tuple>
+
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/utility/tagged_pair.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
@@ -26,10 +28,9 @@ namespace ranges
     using tagged_tuple RANGES_DEPRECATED("ranges::tagged_tuple is deprecated.") =
         tagged<std::tuple<detail::tag_elem<Ts>...>, detail::tag_spec<Ts>...>;
 
-    template<typename...Tags, typename...Ts>
+    template<typename... Tags, typename... Ts>
     RANGES_DEPRECATED("ranges::make_tagged_tuple is deprecated.")
-    constexpr tagged_tuple<Tags(bind_element_t<Ts>)...>
-    make_tagged_tuple(Ts &&... ts)
+    constexpr tagged_tuple<Tags(bind_element_t<Ts>)...> make_tagged_tuple(Ts &&... ts)
     {
         return tagged_tuple<Tags(bind_element_t<Ts>)...>{static_cast<Ts &&>(ts)...};
     }

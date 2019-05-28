@@ -16,9 +16,13 @@
 
 #include <type_traits>
 #include <utility>
+
 #include <meta/meta.hpp>
+
 #include <concepts/concepts.hpp>
+
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/bind.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/pipeable.hpp>
@@ -43,12 +47,13 @@ namespace ranges
                     std::bind(remove, std::placeholders::_1, std::move(value)));
             }
             template<typename Value, typename Proj>
-            static auto CPP_fun(bind)(remove_fn remove, Value value, Proj proj)(
-                requires (!Range<Value>))
+            static auto CPP_fun(bind)(remove_fn remove, Value value, Proj proj)( //
+                requires(!Range<Value>))
             {
-                return make_pipeable(
-                    std::bind(remove, std::placeholders::_1, std::move(value),
-                        protect(std::move(proj))));
+                return make_pipeable(std::bind(remove,
+                                               std::placeholders::_1,
+                                               std::move(value),
+                                               protect(std::move(proj))));
             }
 
             template<typename Value>
@@ -56,31 +61,32 @@ namespace ranges
             {
                 Value value_;
                 template<typename T>
-                auto operator()(T &&other) const ->
-                    CPP_ret(bool)(
-                        requires EqualityComparableWith<T, Value const &>)
+                auto operator()(T && other) const -> CPP_ret(bool)( //
+                    requires EqualityComparableWith<T, Value const &>)
                 {
                     return static_cast<T &&>(other) == value_;
                 }
             };
+
         public:
             template<typename Rng, typename Value>
-            constexpr /*c++14*/
-            auto CPP_fun(operator())(Rng&& rng, Value value) (const
-                requires MoveConstructible<Value> && ViewableRange<Rng> && InputRange<Rng> &&
-                    IndirectlyComparable<iterator_t<Rng>, Value const *, equal_to>)
+            constexpr auto CPP_fun(operator())(Rng && rng, Value value)(
+                const requires MoveConstructible<Value> && ViewableRange<Rng> &&
+                    InputRange<Rng> &&
+                        IndirectlyComparable<iterator_t<Rng>, Value const *, equal_to>)
             {
-                return remove_if(static_cast<Rng&&>(rng), pred<Value>{std::move(value)});
+                return remove_if(static_cast<Rng &&>(rng), pred<Value>{std::move(value)});
             }
 
             template<typename Rng, typename Value, typename Proj>
-            constexpr /*c++14*/
-            auto CPP_fun(operator())(Rng&& rng, Value value, Proj proj) (const
-                requires MoveConstructible<Value> && ViewableRange<Rng> && InputRange<Rng> &&
-                    IndirectlyComparable<iterator_t<Rng>, Value const *, equal_to, Proj>)
+            constexpr auto CPP_fun(operator())(Rng && rng, Value value, Proj proj)(
+                const requires MoveConstructible<Value> && ViewableRange<Rng> &&
+                    InputRange<Rng> && IndirectlyComparable<
+                        iterator_t<Rng>, Value const *, equal_to, Proj>)
             {
-                return remove_if(static_cast<Rng&&>(rng), pred<Value>{std::move(value)},
-                    std::move(proj));
+                return remove_if(static_cast<Rng &&>(rng),
+                                 pred<Value>{std::move(value)},
+                                 std::move(proj));
             }
         };
 
@@ -91,4 +97,4 @@ namespace ranges
     /// @}
 }
 
-#endif //RANGES_V3_VIEW_REMOVE_HPP
+#endif // RANGES_V3_VIEW_REMOVE_HPP

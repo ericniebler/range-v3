@@ -15,13 +15,16 @@
 #define RANGES_V3_CONTAINER_ACTION_HPP
 
 #include <type_traits>
+
 #include <meta/meta.hpp>
+
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/concepts.hpp>
+
 #include <range/v3/action/concepts.hpp>
 #include <range/v3/functional/arithmetic.hpp>
-#include <range/v3/functional/invoke.hpp>
 #include <range/v3/functional/concepts.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/range/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/ref.hpp>
 
@@ -36,11 +39,13 @@ namespace ranges
             template<typename Action>
             struct impl
             {
-                template<typename...Ts, typename A = Action>
-                static constexpr auto CPP_auto_fun(bind)(Ts &&...ts)
+                // clang-format off
+                template<typename... Ts, typename A = Action>
+                static constexpr auto CPP_auto_fun(bind)(Ts &&... ts)
                 (
                     return A::bind(static_cast<Ts &&>(ts)...)
                 )
+                // clang-format on
             };
         };
 
@@ -58,8 +63,7 @@ namespace ranges
         RANGES_INLINE_VARIABLE(make_action_fn, make_action)
 
         template<typename Action>
-        struct action
-          : pipeable<action<Action>>
+        struct action : pipeable<action<Action>>
         {
         private:
             Action action_;
@@ -67,11 +71,10 @@ namespace ranges
 
             // Piping requires things are passed by value.
             template<typename Rng, typename Act>
-            static auto pipe(Rng &&rng, Act &&act) ->
-                CPP_ret(invoke_result_t<Action &, Rng>)(
-                    requires Range<Rng> &&
-                        Invocable<Action &, Rng> &&
-                        (!std::is_reference<Rng>::value))
+            static auto pipe(Rng && rng, Act && act)
+                -> CPP_ret(invoke_result_t<Action &, Rng>)( //
+                    requires Range<Rng> && Invocable<Action &, Rng> &&
+                    (!std::is_reference<Rng>::value))
             {
                 return invoke(act.action_, detail::move(rng));
             }
@@ -79,40 +82,38 @@ namespace ranges
         public:
             action() = default;
 
-            constexpr explicit action(Action a)
-                noexcept(std::is_nothrow_move_constructible<Action>::value)
+            constexpr explicit action(Action a) noexcept(
+                std::is_nothrow_move_constructible<Action>::value)
               : action_(detail::move(a))
             {}
 
             // Calling directly requires things are passed by reference.
-            template<typename Rng, typename ...Rest>
-            auto operator()(Rng &rng, Rest &&... rest) const ->
-                CPP_ret(invoke_result_t<Action const &, Rng &, Rest...>)(
-                    requires Range<Rng> &&
-                        Invocable<Action const &, Rng &, Rest...>)
+            template<typename Rng, typename... Rest>
+            auto operator()(Rng & rng, Rest &&... rest) const
+                -> CPP_ret(invoke_result_t<Action const &, Rng &, Rest...>)( //
+                    requires Range<Rng> && Invocable<Action const &, Rng &, Rest...>)
             {
                 return invoke(action_, rng, static_cast<Rest &&>(rest)...);
             }
 
             // Currying overload.
+            // clang-format off
             template<typename T, typename... Rest, typename A = Action>
-            auto CPP_auto_fun(operator())(T &&t, Rest &&... rest) (const)
+            auto CPP_auto_fun(operator())(T &&t, Rest &&... rest)(const)
             (
                 return make_action(
-                    action_access::impl<A>::bind(
-                        action_,
-                        static_cast<T &&>(t),
-                        static_cast<Rest &&>(rest)...))
+                    action_access::impl<A>::bind(action_,
+                                                 static_cast<T &&>(t),
+                                                 static_cast<Rest &&>(rest)...))
             )
+            // clang-format on
         };
 
         template<typename Rng, typename Action>
-        auto operator|=(Rng &rng, Action &&action) ->
-            CPP_ret(Rng &)(
-                requires is_pipeable<Action>::value && Range<Rng &> &&
-                Invocable<bitwise_or, ref_view<Rng>, Action &> &&
-                Same<ref_view<Rng>,
-                    invoke_result_t<bitwise_or, ref_view<Rng>, Action &>>)
+        auto operator|=(Rng & rng, Action && action) -> CPP_ret(Rng &)( //
+            requires is_pipeable<Action>::value && Range<Rng &> &&
+                Invocable<bitwise_or, ref_view<Rng>, Action &> && Same<
+                    ref_view<Rng>, invoke_result_t<bitwise_or, ref_view<Rng>, Action &>>)
         {
             view::ref(rng) | action;
             return rng;

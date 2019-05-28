@@ -14,9 +14,11 @@
 #ifndef RANGES_V3_VIEW_GETLINES_HPP
 #define RANGES_V3_VIEW_GETLINES_HPP
 
-#include <string>
 #include <istream>
+#include <string>
+
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
@@ -25,12 +27,11 @@ namespace ranges
 {
     /// \addtogroup group-views
     /// @{
-    struct getlines_view
-      : view_facade<getlines_view, unknown>
+    struct getlines_view : view_facade<getlines_view, unknown>
     {
     private:
         friend range_access;
-        std::istream *sin_;
+        std::istream * sin_;
         std::string str_;
         char delim_;
         struct cursor
@@ -38,17 +39,18 @@ namespace ranges
         private:
             friend range_access;
             using single_pass = std::true_type;
-            getlines_view *rng_ = nullptr;
+            getlines_view * rng_ = nullptr;
+
         public:
             cursor() = default;
-            explicit cursor(getlines_view &rng)
+            explicit cursor(getlines_view & rng)
               : rng_(&rng)
             {}
             void next()
             {
                 rng_->next();
             }
-            std::string &read() const noexcept
+            std::string & read() const noexcept
             {
                 return rng_->str_;
             }
@@ -70,10 +72,13 @@ namespace ranges
         {
             return cursor{*this};
         }
+
     public:
         getlines_view() = default;
-        getlines_view(std::istream &sin, char delim = '\n')
-          : sin_(&sin), str_{}, delim_(delim)
+        getlines_view(std::istream & sin, char delim = '\n')
+          : sin_(&sin)
+          , str_{}
+          , delim_(delim)
         {
             this->next(); // prime the pump
         }
@@ -84,9 +89,8 @@ namespace ranges
     };
 
     /// \cond
-    using getlines_range
-        RANGES_DEPRECATED("getlines_range has been renamed getlines_view") =
-            getlines_view;
+    using getlines_range RANGES_DEPRECATED(
+        "getlines_range has been renamed getlines_view") = getlines_view;
     /// \endcond
 
     struct getlines_fn

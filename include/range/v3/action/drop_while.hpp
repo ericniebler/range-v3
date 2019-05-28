@@ -15,10 +15,12 @@
 #define RANGES_V3_ACTION_DROP_WHILE_HPP
 
 #include <functional>
+
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/algorithm/find_if_not.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
+#include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -34,20 +36,21 @@ namespace ranges
         private:
             friend action_access;
             template<typename Fun>
-            static auto CPP_fun(bind)(drop_while_fn drop_while, Fun fun)(
-                requires (!Range<Fun>))
+            static auto CPP_fun(bind)(drop_while_fn drop_while, Fun fun)( //
+                requires(!Range<Fun>))
             {
                 return std::bind(drop_while, std::placeholders::_1, std::move(fun));
             }
+
         public:
             template<typename Rng, typename Fun>
-            auto operator()(Rng &&rng, Fun fun) const -> CPP_ret(Rng)(
+            auto operator()(Rng && rng, Fun fun) const -> CPP_ret(Rng)( //
                 requires ForwardRange<Rng> &&
                     IndirectUnaryPredicate<Fun, iterator_t<Rng>> &&
-                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
+                        ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
             {
-                ranges::action::erase(rng, begin(rng), find_if_not(begin(rng), end(rng),
-                    std::move(fun)));
+                ranges::action::erase(
+                    rng, begin(rng), find_if_not(begin(rng), end(rng), std::move(fun)));
                 return static_cast<Rng &&>(rng);
             }
         };

@@ -17,15 +17,18 @@
 
 #include <type_traits>
 #include <utility>
+
 #include <meta/meta.hpp>
+
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/traits.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/primitives.hpp>
-#include <range/v3/view/adaptor.hpp>
+
 #include <range/v3/iterator/operations.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/primitives.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -38,8 +41,9 @@ namespace ranges
     namespace detail
     {
         template<typename Rng>
-        using stride_view_adaptor = view_adaptor<stride_view<Rng>, Rng,
-            is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>;
+        using stride_view_adaptor =
+            view_adaptor<stride_view<Rng>, Rng,
+                         is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>;
 
         // Bidirectional stride views need to remember the distance between
         // the penultimate iterator and the end iterator - which may be less
@@ -50,32 +54,29 @@ namespace ranges
         template<typename Rng, bool BidiRange>
         struct stride_view_base_;
         template<typename Rng>
-        using stride_view_base = stride_view_base_<Rng, (bool) BidirectionalRange<Rng>>;
+        using stride_view_base = stride_view_base_<Rng, (bool)BidirectionalRange<Rng>>;
 
         template<typename Rng, bool /*= BidirectionalRange<Rng>*/>
-        struct stride_view_base_
-          : stride_view_adaptor<Rng>
+        struct stride_view_base_ : stride_view_adaptor<Rng>
         {
             stride_view_base_() = default;
-            constexpr /*c++14*/
-            stride_view_base_(Rng &&rng, range_difference_t<Rng> const stride)
-              : stride_view_adaptor<Rng>{std::move(rng)},
-                stride_{(RANGES_EXPECT(0 < stride), stride)},
-                offset_{calc_offset(meta::bool_<SizedRange<Rng>>{})}
+            constexpr stride_view_base_(Rng && rng, range_difference_t<Rng> const stride)
+              : stride_view_adaptor<Rng>{std::move(rng)}
+              , stride_{(RANGES_EXPECT(0 < stride), stride)}
+              , offset_{calc_offset(meta::bool_<SizedRange<Rng>>{})}
             {}
+
         protected:
-            constexpr /*c++14*/
-            void set_offset(range_difference_t<Rng> const delta) noexcept
+            constexpr void set_offset(range_difference_t<Rng> const delta) noexcept
             {
                 RANGES_EXPECT(0 <= delta && delta < stride_);
-                if(0 > offset_) offset_ = delta;
-                else RANGES_EXPECT(offset_ == delta);
+                if(0 > offset_)
+                    offset_ = delta;
+                else
+                    RANGES_EXPECT(offset_ == delta);
             }
-            constexpr /*c++14*/
-            void set_offset(range_difference_t<Rng> const) const noexcept
-            {}
-            constexpr /*c++14*/
-            range_difference_t<Rng> get_offset(bool check = true) const noexcept
+            constexpr void set_offset(range_difference_t<Rng> const) const noexcept {}
+            constexpr range_difference_t<Rng> get_offset(bool check = true) const noexcept
             {
                 RANGES_EXPECT(!check || 0 <= offset_);
                 return offset_;
@@ -83,37 +84,33 @@ namespace ranges
 
             range_difference_t<Rng> stride_;
             range_difference_t<Rng> offset_ = -1;
+
         private:
-            constexpr /*c++14*/
-            range_difference_t<Rng> calc_offset(std::true_type)
+            constexpr range_difference_t<Rng> calc_offset(std::true_type)
             {
                 if(auto const rem = ranges::distance(this->base()) % stride_)
                     return stride_ - rem;
                 else
                     return 0;
             }
-            constexpr /*c++14*/
-            range_difference_t<Rng> calc_offset(std::false_type) const noexcept
+            constexpr range_difference_t<Rng> calc_offset(std::false_type) const noexcept
             {
                 return -1;
             }
         };
 
         template<typename Rng>
-        struct stride_view_base_<Rng, false>
-          : stride_view_adaptor<Rng>
+        struct stride_view_base_<Rng, false> : stride_view_adaptor<Rng>
         {
             stride_view_base_() = default;
-            constexpr stride_view_base_(Rng &&rng, range_difference_t<Rng> const stride)
-              : stride_view_adaptor<Rng>{std::move(rng)},
-                stride_{(RANGES_EXPECT(0 < stride), stride)}
+            constexpr stride_view_base_(Rng && rng, range_difference_t<Rng> const stride)
+              : stride_view_adaptor<Rng>{std::move(rng)}
+              , stride_{(RANGES_EXPECT(0 < stride), stride)}
             {}
+
         protected:
-            constexpr /*c++14*/
-            void set_offset(range_difference_t<Rng> const) const noexcept
-            {}
-            constexpr /*c++14*/
-            range_difference_t<Rng> get_offset(bool = true) const noexcept
+            constexpr void set_offset(range_difference_t<Rng> const) const noexcept {}
+            constexpr range_difference_t<Rng> get_offset(bool = true) const noexcept
             {
                 return 0;
             }
@@ -126,8 +123,7 @@ namespace ranges
     /// \addtogroup group-views
     /// @{
     template<typename Rng>
-    struct stride_view
-      : detail::stride_view_base<Rng>
+    struct stride_view : detail::stride_view_base<Rng>
     {
     private:
         friend range_access;
@@ -136,13 +132,13 @@ namespace ranges
         // either (1) Rng is sized, so we can pre-calculate offset_, or (2)
         // Rng is !Bidirectional, so it does not need offset_.
 #ifdef RANGES_WORKAROUND_MSVC_711347
-        static constexpr bool const_iterable = Range<Rng const> &&
-            (SizedRange<Rng const> || !BidirectionalRange<Rng const>);
-#else // ^^^ workaround / no workaround vvv
+        static constexpr bool const_iterable =
+            Range<Rng const> && (SizedRange<Rng const> || !BidirectionalRange<Rng const>);
+#else  // ^^^ workaround / no workaround vvv
         static constexpr bool const_iterable() noexcept
         {
             return Range<Rng const> &&
-                (SizedRange<Rng const> || !BidirectionalRange<Rng const>);
+                   (SizedRange<Rng const> || !BidirectionalRange<Rng const>);
         }
 #endif // RANGES_WORKAROUND_MSVC_711347
 
@@ -153,15 +149,14 @@ namespace ranges
         // CommonView, adapt it anyway.
 #ifdef RANGES_WORKAROUND_MSVC_711347
         template<bool Const, class CRng = meta::const_if_c<Const, Rng>>
-        static constexpr bool can_bound = CommonRange<CRng>
-                && (SizedRange<CRng> || !BidirectionalRange<CRng>);
-#else // ^^^ workaround / no workaround vvv
+        static constexpr bool can_bound = CommonRange<CRng> &&
+                                          (SizedRange<CRng> || !BidirectionalRange<CRng>);
+#else  // ^^^ workaround / no workaround vvv
         template<bool Const>
         static constexpr bool can_bound() noexcept
         {
             using CRng = meta::const_if_c<Const, Rng>;
-            return CommonRange<CRng>
-                && (SizedRange<CRng> || !BidirectionalRange<CRng>);
+            return CommonRange<CRng> && (SizedRange<CRng> || !BidirectionalRange<CRng>);
         }
 #endif // RANGES_WORKAROUND_MSVC_711347
 
@@ -171,18 +166,19 @@ namespace ranges
         private:
             using CRng = meta::const_if_c<Const, Rng>;
             using stride_view_t = meta::const_if_c<Const, stride_view>;
-            stride_view_t *rng_;
+            stride_view_t * rng_;
+
         public:
             adaptor() = default;
-            constexpr adaptor(stride_view_t &rng) noexcept
+            constexpr adaptor(stride_view_t & rng) noexcept
               : rng_(&rng)
             {}
-            CPP_template(bool Other)(
-                requires Const && (!Other))
-            adaptor(adaptor<Other> that)
+            CPP_template(bool Other)(       //
+                requires Const && (!Other)) //
+                adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
-            constexpr /*c++14*/ void next(iterator_t<CRng> &it)
+            constexpr void next(iterator_t<CRng> & it)
             {
                 auto const last = ranges::end(rng_->base());
                 RANGES_EXPECT(it != last);
@@ -193,9 +189,8 @@ namespace ranges
                 }
             }
             CPP_member
-            constexpr /*c++14*/ auto prev(iterator_t<CRng> &it) ->
-                CPP_ret(void)(
-                    requires BidirectionalRange<CRng>)
+            constexpr auto prev(iterator_t<CRng> & it) -> CPP_ret(void)( //
+                requires BidirectionalRange<CRng>)
             {
                 RANGES_EXPECT(it != ranges::begin(rng_->base()));
                 auto delta = -rng_->stride_;
@@ -207,9 +202,9 @@ namespace ranges
                 ranges::advance(it, delta);
             }
             template<typename Other>
-            constexpr /*c++14*/ auto distance_to(iterator_t<CRng> const &here,
-                    Other const &there) const ->
-                CPP_ret(range_difference_t<Rng>)(
+            constexpr auto distance_to(iterator_t<CRng> const & here,
+                                       Other const & there) const
+                -> CPP_ret(range_difference_t<Rng>)( //
                     requires SizedSentinel<Other, iterator_t<CRng>>)
             {
                 range_difference_t<Rng> delta = there - here;
@@ -220,10 +215,9 @@ namespace ranges
                 return delta / rng_->stride_;
             }
             CPP_member
-            constexpr /*c++14*/ auto advance(
-                iterator_t<CRng> &it, range_difference_t<Rng> n) ->
-                CPP_ret(void)(
-                    requires RandomAccessRange<CRng>)
+            constexpr auto advance(iterator_t<CRng> & it,
+                                   range_difference_t<Rng> n) -> CPP_ret(void)( //
+                requires RandomAccessRange<CRng>)
             {
                 if(0 == n)
                     return;
@@ -256,7 +250,7 @@ namespace ranges
                 }
             }
         };
-        constexpr /*c++14*/ auto begin_adaptor() noexcept -> adaptor<false>
+        constexpr auto begin_adaptor() noexcept -> adaptor<false>
         {
             return adaptor<false>{*this};
         }
@@ -264,18 +258,17 @@ namespace ranges
         constexpr auto begin_adaptor() const noexcept ->
 #ifdef RANGES_WORKAROUND_MSVC_711347
             CPP_ret(adaptor<true>)(requires const_iterable)
-#else // ^^^ workaround / no workaround vvv
-            CPP_ret(adaptor<true>)(requires (const_iterable()))
+#else  // ^^^ workaround / no workaround vvv
+            CPP_ret(adaptor<true>)(requires(const_iterable()))
 #endif // RANGES_WORKAROUND_MSVC_711347
         {
             return adaptor<true>{*this};
         }
 
-        constexpr /*c++14*/
-        auto end_adaptor() noexcept ->
+        constexpr auto end_adaptor() noexcept ->
 #ifdef RANGES_WORKAROUND_MSVC_711347
             meta::if_c<can_bound<false>, adaptor<false>, adaptor_base>
-#else // ^^^ workaround / no workaround vvv
+#else  // ^^^ workaround / no workaround vvv
             meta::if_c<can_bound<false>(), adaptor<false>, adaptor_base>
 #endif // RANGES_WORKAROUND_MSVC_711347
         {
@@ -284,37 +277,36 @@ namespace ranges
         CPP_member
         constexpr auto end_adaptor() const noexcept ->
 #ifdef RANGES_WORKAROUND_MSVC_711347
-            CPP_ret(meta::if_c<can_bound<true>, adaptor<true>, adaptor_base>)(
+            CPP_ret(meta::if_c<can_bound<true>, adaptor<true>, adaptor_base>)( //
                 requires const_iterable)
-#else // ^^^ workaround / no workaround vvv
-            CPP_ret(meta::if_c<can_bound<true>(), adaptor<true>, adaptor_base>)(
-                requires (const_iterable()))
+#else  // ^^^ workaround / no workaround vvv
+            CPP_ret(meta::if_c<can_bound<true>(), adaptor<true>, adaptor_base>)( //
+                requires(const_iterable()))
 #endif // RANGES_WORKAROUND_MSVC_711347
         {
             return {*this};
         }
+
     public:
         stride_view() = default;
         constexpr stride_view(Rng rng, range_difference_t<Rng> const stride)
           : detail::stride_view_base<Rng>{std::move(rng), stride}
         {}
         CPP_member
-        constexpr /*c++14*/ auto CPP_fun(size)() (
-            requires SizedRange<Rng>)
+        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             using size_type = range_size_t<Rng>;
             auto const n = ranges::size(this->base());
             return (n + static_cast<size_type>(this->stride_) - 1) /
-                static_cast<size_type>(this->stride_);
+                   static_cast<size_type>(this->stride_);
         }
         CPP_member
-        constexpr auto CPP_fun(size)() (const
-            requires SizedRange<Rng const>)
+        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             using size_type = range_size_t<Rng const>;
             auto const n = ranges::size(this->base());
             return (n + static_cast<size_type>(this->stride_) - 1) /
-                static_cast<size_type>(this->stride_);
+                   static_cast<size_type>(this->stride_);
         }
     };
 
@@ -325,16 +317,17 @@ namespace ranges
         private:
             friend view_access;
             template<typename Difference>
-            constexpr /*c++14*/
-            static auto CPP_fun(bind)(stride_fn stride, Difference step)(
+            constexpr static auto CPP_fun(bind)(stride_fn stride, Difference step)( //
                 requires Integral<Difference>)
             {
-                return make_pipeable(std::bind(stride, std::placeholders::_1, std::move(step)));
+                return make_pipeable(
+                    std::bind(stride, std::placeholders::_1, std::move(step)));
             }
+
         public:
             template<typename Rng>
-            constexpr auto operator()(Rng &&rng, range_difference_t<Rng> step) const ->
-                CPP_ret(stride_view<all_t<Rng>>)(
+            constexpr auto operator()(Rng && rng, range_difference_t<Rng> step) const
+                -> CPP_ret(stride_view<all_t<Rng>>)( //
                     requires ViewableRange<Rng> && InputRange<Rng>)
             {
                 return stride_view<all_t<Rng>>{all(static_cast<Rng &&>(rng)), step};

@@ -14,17 +14,19 @@
 #define RANGES_V3_ALGORITHM_REMOVE_IF_HPP
 
 #include <meta/meta.hpp>
+
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/algorithm/find_if.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/algorithm/find_if.hpp>
-#include <range/v3/functional/identity.hpp>
-#include <range/v3/functional/invoke.hpp>
-#include <range/v3/iterator/operations.hpp>
-#include <range/v3/iterator/concepts.hpp>
-#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -34,10 +36,9 @@ namespace ranges
     struct remove_if_fn
     {
         template<typename I, typename S, typename C, typename P = identity>
-        auto operator()(I begin, S end, C pred, P proj = P{}) const ->
-            CPP_ret(I)(
-                requires Permutable<I> && Sentinel<S, I> &&
-                    IndirectUnaryPredicate<C, projected<I, P>>)
+        auto operator()(I begin, S end, C pred, P proj = P{}) const -> CPP_ret(I)( //
+            requires Permutable<I> && Sentinel<S, I> &&
+                IndirectUnaryPredicate<C, projected<I, P>>)
         {
             begin = find_if(std::move(begin), end, std::ref(pred), std::ref(proj));
             if(begin != end)
@@ -55,8 +56,8 @@ namespace ranges
         }
 
         template<typename Rng, typename C, typename P = identity>
-        auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+        auto operator()(Rng && rng, C pred, P proj = P{}) const
+            -> CPP_ret(safe_iterator_t<Rng>)( //
                 requires ForwardRange<Rng> && Permutable<iterator_t<Rng>> &&
                     IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
         {

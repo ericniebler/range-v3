@@ -29,8 +29,7 @@ namespace ranges
         // See https://github.com/ericniebler/range-v3/issues/1141
         // for why we don't just use iota_view.
         template<typename Size, typename Diff>
-        struct index_view
-          : view_facade<index_view<Size, Diff>, infinite>
+        struct index_view : view_facade<index_view<Size, Diff>, infinite>
         {
         private:
             friend range_access;
@@ -38,9 +37,10 @@ namespace ranges
             struct cursor
             {
                 using difference_type = Diff;
+
             private:
                 friend range_access;
-                Size index_ {0};
+                Size index_{0};
 
                 Size read() const
                 {
@@ -50,7 +50,7 @@ namespace ranges
                 {
                     ++index_;
                 }
-                bool equal(cursor const &that) const
+                bool equal(cursor const & that) const
                 {
                     return that.index_ == index_;
                 }
@@ -62,11 +62,12 @@ namespace ranges
                 {
                     index_ += static_cast<Size>(n);
                 }
-                Diff distance_to(cursor const &that) const
+                Diff distance_to(cursor const & that) const
                 {
-                    return static_cast<Diff>(
-                        static_cast<Diff>(that.index_) - static_cast<Diff>(index_));
+                    return static_cast<Diff>(static_cast<Diff>(that.index_) -
+                                             static_cast<Diff>(index_));
                 }
+
             public:
                 cursor() = default;
             };
@@ -78,6 +79,7 @@ namespace ranges
             {
                 return unreachable;
             }
+
         public:
             index_view() = default;
         };
@@ -92,8 +94,7 @@ namespace ranges
         struct enumerate_fn
         {
             template<typename Rng>
-            auto CPP_fun(operator())(Rng &&rng) (const
-                requires ViewableRange<Rng>)
+            auto CPP_fun(operator())(Rng && rng)(const requires ViewableRange<Rng>)
             {
                 using D = range_difference_t<Rng>;
                 using S = detail::iter_size_t<iterator_t<Rng>>;

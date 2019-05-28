@@ -15,6 +15,7 @@
 #define RANGES_V3_VIEW_FILTER_HPP
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/not_fn.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -25,8 +26,7 @@ namespace ranges
     /// \addtogroup group-views
     /// @{
     template<typename Rng, typename Pred>
-    struct filter_view
-      : remove_if_view<Rng, logical_negate<Pred>>
+    struct filter_view : remove_if_view<Rng, logical_negate<Pred>>
     {
         filter_view() = default;
         constexpr filter_view(Rng rng, Pred pred)
@@ -35,10 +35,11 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Pred)(
+    CPP_template(typename Rng, typename Pred)( //
         requires InputRange<Rng> && IndirectUnaryPredicate<Pred, iterator_t<Rng>> &&
-            View<Rng> && std::is_object<Pred>::value)
-    filter_view(Rng &&, Pred) -> filter_view<view::all_t<Rng>, Pred>;
+            View<Rng> && std::is_object<Pred>::value) //
+        filter_view(Rng &&, Pred)
+            ->filter_view<view::all_t<Rng>, Pred>;
 #endif
 
     namespace view
@@ -55,27 +56,25 @@ namespace ranges
             template<typename Pred>
             static auto bind(cpp20_filter_fn filter, Pred pred)
             {
-                return make_pipeable(std::bind(filter, std::placeholders::_1,
-                    protect(std::move(pred))));
+                return make_pipeable(
+                    std::bind(filter, std::placeholders::_1, protect(std::move(pred))));
             }
+
         public:
             template<typename Rng, typename Pred>
-            constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred) const ->
-                CPP_ret(filter_view<all_t<Rng>, Pred>)(
+            constexpr auto operator()(Rng && rng, Pred pred) const
+                -> CPP_ret(filter_view<all_t<Rng>, Pred>)( //
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
             {
-                return filter_view<all_t<Rng>, Pred>{
-                    all(static_cast<Rng &&>(rng)),
-                    std::move(pred)
-                };
+                return filter_view<all_t<Rng>, Pred>{all(static_cast<Rng &&>(rng)),
+                                                     std::move(pred)};
             }
         };
 
         /// Given a source range, unary predicate, and optional projection,
         /// present a view of the elements that satisfy the predicate.
-        struct filter_fn
-          : cpp20_filter_fn
+        struct filter_fn : cpp20_filter_fn
         {
         private:
             friend view_access;
@@ -84,22 +83,24 @@ namespace ranges
             template<typename Pred, typename Proj>
             static auto bind(filter_fn filter, Pred pred, Proj proj)
             {
-                return make_pipeable(std::bind(filter, std::placeholders::_1,
-                    protect(std::move(pred)), protect(std::move(proj))));
+                return make_pipeable(std::bind(filter,
+                                               std::placeholders::_1,
+                                               protect(std::move(pred)),
+                                               protect(std::move(proj))));
             }
+
         public:
             using cpp20_filter_fn::operator();
 
             template<typename Rng, typename Pred, typename Proj>
-            constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred, Proj proj) const ->
-                CPP_ret(filter_view<all_t<Rng>, composed<Pred, Proj>>)(
+            constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
+                -> CPP_ret(filter_view<all_t<Rng>, composed<Pred, Proj>>)( //
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<Pred, projected<iterator_t<Rng>, Proj>>)
             {
                 return filter_view<all_t<Rng>, composed<Pred, Proj>>{
                     all(static_cast<Rng &&>(rng)),
-                    compose(std::move(pred), std::move(proj))
-                };
+                    compose(std::move(pred), std::move(proj))};
             }
         };
 
@@ -112,12 +113,13 @@ namespace ranges
     {
         namespace view
         {
-            RANGES_INLINE_VARIABLE(ranges::view::view<ranges::view::cpp20_filter_fn>, filter)
+            RANGES_INLINE_VARIABLE(ranges::view::view<ranges::view::cpp20_filter_fn>,
+                                   filter)
         }
-        CPP_template(typename V, typename Pred)(
+        CPP_template(typename V, typename Pred)( //
             requires InputRange<V> && IndirectUnaryPredicate<Pred, iterator_t<V>> &&
-                View<V> && std::is_object<Pred>::value)
-        using filter_view = ranges::filter_view<V, Pred>;
+                View<V> && std::is_object<Pred>::value) //
+            using filter_view = ranges::filter_view<V, Pred>;
     }
     /// @}
 }

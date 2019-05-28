@@ -14,10 +14,13 @@
 #define RANGES_V3_VIEW_ALL_HPP
 
 #include <type_traits>
+
 #include <meta/meta.hpp>
+
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/concepts.hpp>
+
 #include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/ref.hpp>
@@ -29,13 +32,13 @@ namespace ranges
     /// @{
     namespace view
     {
-        struct all_fn
-          : pipeable<all_fn>
+        struct all_fn : pipeable<all_fn>
         {
         private:
             /// If it's a view already, pass it though.
             template<typename T>
-            static auto from_range_(T &&t, std::true_type, detail::ignore_t, detail::ignore_t)
+            static auto from_range_(T && t, std::true_type, detail::ignore_t,
+                                    detail::ignore_t)
             {
                 return static_cast<T &&>(t);
             }
@@ -43,7 +46,8 @@ namespace ranges
             /// If it is container-like, turn it into a view, being careful
             /// to preserve the Sized-ness of the range.
             template<typename T>
-            static auto from_range_(T &&t, std::false_type, std::true_type, detail::ignore_t)
+            static auto from_range_(T && t, std::false_type, std::true_type,
+                                    detail::ignore_t)
             {
                 return ranges::view::ref(t);
             }
@@ -51,27 +55,26 @@ namespace ranges
             /// Not a view and not an lvalue? If it's a ForwardingRange_, then
             /// return a subrange holding the range's begin/end.
             template<typename T>
-            static auto from_range_(T &&t, std::false_type, std::false_type, std::true_type)
+            static auto from_range_(T && t, std::false_type, std::false_type,
+                                    std::true_type)
             {
                 return make_subrange(static_cast<T &&>(t));
             }
 
         public:
             template<typename T>
-            auto CPP_fun(operator())(T &&t) (const
-                requires ViewableRange<T>)
+            auto CPP_fun(operator())(T && t)(const requires ViewableRange<T>)
             {
-                return all_fn::from_range_(
-                    static_cast<T &&>(t),
-                    meta::bool_<View<uncvref_t<T>>>{},
-                    std::is_lvalue_reference<T>{},
-                    meta::bool_<ForwardingRange_<T>>{});
+                return all_fn::from_range_(static_cast<T &&>(t),
+                                           meta::bool_<View<uncvref_t<T>>>{},
+                                           std::is_lvalue_reference<T>{},
+                                           meta::bool_<ForwardingRange_<T>>{});
             }
 
             template<typename T>
             RANGES_DEPRECATED("Passing a reference_wrapper to view::all is deprecated.")
-            auto operator()(std::reference_wrapper<T> ref) const ->
-                CPP_ret(ref_view<T>)(
+            auto operator()(std::reference_wrapper<T> ref) const
+                -> CPP_ret(ref_view<T>)( //
                     requires Range<T &>)
             {
                 return ranges::view::ref(ref.get());
@@ -87,16 +90,15 @@ namespace ranges
     }
 
     template<typename Rng>
-    struct identity_adaptor
-      : Rng
+    struct identity_adaptor : Rng
     {
         CPP_assert(View<Rng>);
 
         identity_adaptor() = default;
-        constexpr explicit identity_adaptor(Rng const &rng)
+        constexpr explicit identity_adaptor(Rng const & rng)
           : Rng(rng)
         {}
-        constexpr explicit identity_adaptor(Rng &&rng)
+        constexpr explicit identity_adaptor(Rng && rng)
           : Rng(detail::move(rng))
         {}
     };
@@ -107,9 +109,9 @@ namespace ranges
         {
             using ranges::view::all;
         }
-        CPP_template(typename Rng)(
-            requires ViewableRange<Rng>)
-        using all_view = ranges::view::all_t<Rng>;
+        CPP_template(typename Rng)(      //
+            requires ViewableRange<Rng>) //
+            using all_view = ranges::view::all_t<Rng>;
     }
     /// @}
 }

@@ -14,16 +14,17 @@
 #define RANGES_V3_ALGORITHM_MIN_ELEMENT_HPP
 
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/dangling.hpp>
-#include <range/v3/range/traits.hpp>
+
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
-#include <range/v3/iterator/traits.hpp>
 #include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -33,8 +34,8 @@ namespace ranges
     struct min_element_fn
     {
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
+        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const
+            -> CPP_ret(I)( //
                 requires ForwardIterator<I> && Sentinel<S, I> &&
                     IndirectStrictWeakOrder<C, projected<I, P>>)
         {
@@ -46,8 +47,8 @@ namespace ranges
         }
 
         template<typename Rng, typename C = less, typename P = identity>
-        auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+        auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
+            -> CPP_ret(safe_iterator_t<Rng>)( //
                 requires ForwardRange<Rng> &&
                     IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>>)
         {
@@ -63,7 +64,7 @@ namespace ranges
     {
         using ranges::min_element;
     }
-   /// @}
+    /// @}
 } // namespace ranges
 
 #endif // include guard

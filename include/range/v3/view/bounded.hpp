@@ -14,7 +14,8 @@
 #define RANGES_V3_VIEW_BOUNDED_HPP
 
 #include <range/v3/detail/config.hpp>
-RANGES_DEPRECATED_HEADER("This header is deprecated. Please #include <range/v3/view/common.hpp> instead.")
+RANGES_DEPRECATED_HEADER(
+    "This header is deprecated. Please #include <range/v3/view/common.hpp> instead.")
 
 #include <range/v3/view/common.hpp>
 

@@ -29,15 +29,17 @@
 #define RANGES_V3_ALGORITHM_AUX_MERGE_N_HPP
 
 #include <tuple>
+
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/algorithm/result_types.hpp>
+
 #include <range/v3/algorithm/copy_n.hpp>
+#include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/functional/comparisons.hpp>
-#include <range/v3/functional/invoke.hpp>
 #include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -52,11 +54,11 @@ namespace ranges
         struct merge_n_fn
         {
             template<typename I0, typename I1, typename O, typename C = less,
-                typename P0 = identity, typename P1 = identity>
+                     typename P0 = identity, typename P1 = identity>
             auto operator()(I0 begin0, iter_difference_t<I0> n0, I1 begin1,
-                    iter_difference_t<I1> n1, O out, C r = C{}, P0 p0 = P0{}, P1 p1 = P1{}) const ->
-                CPP_ret(merge_n_result<I0, I1, O>)(
-                    requires Mergeable<I0, I1, O, C, P0, P1>)
+                            iter_difference_t<I1> n1, O out, C r = C{}, P0 p0 = P0{},
+                            P1 p1 = P1{}) const -> CPP_ret(merge_n_result<I0, I1, O>)( //
+                requires Mergeable<I0, I1, O, C, P0, P1>)
             {
                 using T = merge_n_result<I0, I1, O>;
                 auto n0orig = n0;
@@ -82,12 +84,16 @@ namespace ranges
                     if(invoke(r, invoke(p1, *b1), invoke(p0, *b0)))
                     {
                         *out = *b1;
-                        ++b1; ++out; --n1;
+                        ++b1;
+                        ++out;
+                        --n1;
                     }
                     else
                     {
                         *out = *b0;
-                        ++b0; ++out; --n0;
+                        ++b0;
+                        ++out;
+                        --n0;
                     }
                 }
             }

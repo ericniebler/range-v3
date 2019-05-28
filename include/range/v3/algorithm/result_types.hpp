@@ -13,6 +13,7 @@
 #define RANGES_V3_ALGORITHM_RESULT_TYPES_HPP
 
 #include <concepts/concepts.hpp>
+
 #include <range/v3/range_fwd.hpp>
 
 namespace ranges
@@ -20,69 +21,66 @@ namespace ranges
     /// \cond
     namespace detail
     {
-            // Extensions: the dangling story actually works, and result structs
-            // are conditionally EqualityComparable
-        #define RANGES_ALGO_RESULT_AUX_2(C, T1, M1, T2, M2)                                     \
-            CPP_template(typename X, typename Y)(                                               \
-                requires ConvertibleTo<T1 const &, X> && ConvertibleTo<T2 const &, Y>)          \
-            operator C<X, Y>() const &                                                          \
-            {                                                                                   \
-                return {M1, M2};                                                                \
-            }                                                                                   \
-            CPP_template(typename X, typename Y)(                                               \
-                requires ConvertibleTo<T1, X> && ConvertibleTo<T2, Y>)                          \
-            operator C<X, Y>() &&                                                               \
-            {                                                                                   \
-                return {static_cast<T1 &&>(M1), static_cast<T2 &&>(M2)};                        \
-            }                                                                                   \
-            CPP_broken_friend_member                                                            \
-            friend constexpr auto operator==(C<T1, T2> const &x, C<T1, T2> const &y) ->         \
-                CPP_broken_friend_ret(bool)(                                                    \
-                    requires EqualityComparable<T1> && EqualityComparable<T2>)                  \
-            {                                                                                   \
-                return x.M1 == y.M1 && x.M2 == y.M2;                                            \
-            }                                                                                   \
-            CPP_broken_friend_member                                                            \
-            friend constexpr auto operator!=(C<T1, T2> const &x, C<T1, T2> const &y) ->         \
-                CPP_broken_friend_ret(bool)(                                                    \
-                    requires EqualityComparable<T1> && EqualityComparable<T2>)                  \
-            {                                                                                   \
-                return !(x == y);                                                               \
-            }                                                                                   \
-            /**/
+        // Extensions: the dangling story actually works, and result structs
+        // are conditionally EqualityComparable
+#define RANGES_ALGO_RESULT_AUX_2(C, T1, M1, T2, M2)                                 \
+    CPP_template(typename X, typename Y)(requires ConvertibleTo<T1 const &, X> &&   \
+                                         ConvertibleTo<T2 const &, Y>)              \
+    operator C<X, Y>() const &                                                      \
+    {                                                                               \
+        return {M1, M2};                                                            \
+    }                                                                               \
+    CPP_template(typename X,                                                        \
+                 typename Y)(requires ConvertibleTo<T1, X> && ConvertibleTo<T2, Y>) \
+    operator C<X, Y>() &&                                                           \
+    {                                                                               \
+        return {static_cast<T1 &&>(M1), static_cast<T2 &&>(M2)};                    \
+    }                                                                               \
+    CPP_broken_friend_member                                                        \
+    friend constexpr auto operator==(C<T1, T2> const & x, C<T1, T2> const & y)      \
+        ->CPP_broken_friend_ret(bool)(requires EqualityComparable<T1> &&            \
+                                      EqualityComparable<T2>)                       \
+    {                                                                               \
+        return x.M1 == y.M1 && x.M2 == y.M2;                                        \
+    }                                                                               \
+    CPP_broken_friend_member                                                        \
+    friend constexpr auto operator!=(C<T1, T2> const & x, C<T1, T2> const & y)      \
+        ->CPP_broken_friend_ret(bool)(requires EqualityComparable<T1> &&            \
+                                      EqualityComparable<T2>)                       \
+    {                                                                               \
+        return !(x == y);                                                           \
+    }                                                                               \
+    /**/
 
-        #define RANGES_ALGO_RESULT_AUX_3(C, T1, M1, T2, M2, T3, M3)                             \
-            CPP_template(typename X, typename Y, typename Z)(                                   \
-                requires ConvertibleTo<T1 const &, X> && ConvertibleTo<T2 const &, Y> &&        \
-                    ConvertibleTo<T3 const &, Z>)                                               \
-            operator C<X, Y, Z>() const &                                                       \
-            {                                                                                   \
-                return {M1, M2, M3};                                                            \
-            }                                                                                   \
-            CPP_template(typename X, typename Y, typename Z)(                                   \
-                requires ConvertibleTo<T1, X> && ConvertibleTo<T2, Y> &&                        \
-                    ConvertibleTo<T3, Z>)                                                       \
-            operator C<X, Y, Z>() &&                                                            \
-            {                                                                                   \
-                return {static_cast<T1 &&>(M1), static_cast<T2 &&>(M2), static_cast<T3 &&>(M3)};\
-            }                                                                                   \
-            CPP_broken_friend_member                                                            \
-            friend constexpr auto operator==(C<T1, T2, T3> const &x, C<T1, T2, T3> const &y) -> \
-                CPP_broken_friend_ret(bool)(                                                    \
-                    requires EqualityComparable<T1> && EqualityComparable<T2> &&                \
-                        EqualityComparable<T3>)                                                 \
-            {                                                                                   \
-                return x.M1 == y.M1 && x.M2 == y.M2 && x.M3 == y.M3;                            \
-            }                                                                                   \
-            CPP_broken_friend_member                                                            \
-            friend constexpr auto operator!=(C<T1, T2, T3> const &x, C<T1, T2, T3> const &y) -> \
-                CPP_broken_friend_ret(bool)(                                                    \
-                    requires EqualityComparable<T1> && EqualityComparable<T2> &&                \
-                        EqualityComparable<T3>)                                                 \
-            {                                                                                   \
-                return !(x == y);                                                               \
-            }                                                                                   \
-            /**/
+#define RANGES_ALGO_RESULT_AUX_3(C, T1, M1, T2, M2, T3, M3)                              \
+    CPP_template(typename X, typename Y, typename Z)(                                    \
+        requires ConvertibleTo<T1 const &, X> && ConvertibleTo<T2 const &, Y> &&         \
+        ConvertibleTo<T3 const &, Z>)                                                    \
+    operator C<X, Y, Z>() const &                                                        \
+    {                                                                                    \
+        return {M1, M2, M3};                                                             \
+    }                                                                                    \
+    CPP_template(typename X, typename Y, typename Z)(                                    \
+        requires ConvertibleTo<T1, X> && ConvertibleTo<T2, Y> && ConvertibleTo<T3, Z>)   \
+    operator C<X, Y, Z>() &&                                                             \
+    {                                                                                    \
+        return {static_cast<T1 &&>(M1), static_cast<T2 &&>(M2), static_cast<T3 &&>(M3)}; \
+    }                                                                                    \
+    CPP_broken_friend_member                                                             \
+    friend constexpr auto operator==(C<T1, T2, T3> const & x, C<T1, T2, T3> const & y)   \
+        ->CPP_broken_friend_ret(bool)(requires EqualityComparable<T1> &&                 \
+                                      EqualityComparable<T2> && EqualityComparable<T3>)  \
+    {                                                                                    \
+        return x.M1 == y.M1 && x.M2 == y.M2 && x.M3 == y.M3;                             \
+    }                                                                                    \
+    CPP_broken_friend_member                                                             \
+    friend constexpr auto operator!=(C<T1, T2, T3> const & x, C<T1, T2, T3> const & y)   \
+        ->CPP_broken_friend_ret(bool)(requires EqualityComparable<T1> &&                 \
+                                      EqualityComparable<T2> && EqualityComparable<T3>)  \
+    {                                                                                    \
+        return !(x == y);                                                                \
+    }                                                                                    \
+    /**/
 
         template<typename I, typename O>
         struct in_out_result

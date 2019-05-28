@@ -14,6 +14,7 @@
 #define RANGES_V3_ITERATOR_UNREACHABLE_SENTINEL_HPP
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/concepts.hpp>
 
 namespace ranges
@@ -23,33 +24,29 @@ namespace ranges
     struct unreachable_sentinel_t
     {
         template<typename I>
-        friend constexpr
-        auto operator==(I const &, unreachable_sentinel_t) noexcept ->
-            CPP_broken_friend_ret(bool)(
+        friend constexpr auto operator==(I const &, unreachable_sentinel_t) noexcept
+            -> CPP_broken_friend_ret(bool)( //
                 requires WeaklyIncrementable<I>)
         {
             return false;
         }
         template<typename I>
-        friend constexpr
-        auto operator==(unreachable_sentinel_t, I const &) noexcept ->
-            CPP_broken_friend_ret(bool)(
+        friend constexpr auto operator==(unreachable_sentinel_t, I const &) noexcept
+            -> CPP_broken_friend_ret(bool)( //
                 requires WeaklyIncrementable<I>)
         {
             return false;
         }
         template<typename I>
-        friend constexpr
-        auto operator!=(I const &, unreachable_sentinel_t) noexcept ->
-            CPP_broken_friend_ret(bool)(
+        friend constexpr auto operator!=(I const &, unreachable_sentinel_t) noexcept
+            -> CPP_broken_friend_ret(bool)( //
                 requires WeaklyIncrementable<I>)
         {
             return true;
         }
         template<typename I>
-        friend constexpr
-        auto operator!=(unreachable_sentinel_t, I const &) noexcept ->
-            CPP_broken_friend_ret(bool)(
+        friend constexpr auto operator!=(unreachable_sentinel_t, I const &) noexcept
+            -> CPP_broken_friend_ret(bool)( //
                 requires WeaklyIncrementable<I>)
         {
             return true;
@@ -60,8 +57,8 @@ namespace ranges
 
     namespace cpp20
     {
-        using ranges::unreachable_sentinel_t;
         using ranges::unreachable;
+        using ranges::unreachable_sentinel_t;
     }
     /// @}
 }

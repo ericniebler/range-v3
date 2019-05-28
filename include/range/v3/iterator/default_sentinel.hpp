@@ -28,8 +28,8 @@ namespace ranges
 
     namespace cpp20
     {
-        using ranges::default_sentinel_t;
         using ranges::default_sentinel;
+        using ranges::default_sentinel_t;
     }
     /// @}
 }

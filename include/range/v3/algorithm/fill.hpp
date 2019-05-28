@@ -14,6 +14,7 @@
 #define RANGES_V3_ALGORITHM_FILL_HPP
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -28,9 +29,8 @@ namespace ranges
     struct fill_fn
     {
         template<typename O, typename S, typename V>
-        auto operator()(O begin, S end, V const & val) const ->
-            CPP_ret(O)(
-                requires OutputIterator<O, V const &> && Sentinel<S, O>)
+        auto operator()(O begin, S end, V const & val) const -> CPP_ret(O)( //
+            requires OutputIterator<O, V const &> && Sentinel<S, O>)
         {
             for(; begin != end; ++begin)
                 *begin = val;
@@ -38,8 +38,8 @@ namespace ranges
         }
 
         template<typename Rng, typename V>
-        auto operator()(Rng &&rng, V const & val) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+        auto operator()(Rng && rng, V const & val) const
+            -> CPP_ret(safe_iterator_t<Rng>)( //
                 requires OutputRange<Rng, V const &>)
         {
             return (*this)(begin(rng), end(rng), val);

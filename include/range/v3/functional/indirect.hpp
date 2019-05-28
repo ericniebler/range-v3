@@ -15,7 +15,9 @@
 #define RANGES_V3_FUNCTIONAL_INDIRECT_HPP
 
 #include <utility>
+
 #include <concepts/concepts.hpp>
+
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/move.hpp>
@@ -31,46 +33,49 @@ namespace ranges
     private:
         RANGES_NO_UNIQUE_ADDRESS
         Fn fn_;
+
     public:
         indirected() = default;
         indirected(Fn fn)
           : fn_(std::move(fn))
         {}
         // value_type (needs no impl)
-        template<typename ...Its>
-        [[noreturn]] auto operator()(copy_tag, Its...) const ->
-            invoke_result_t<Fn &, iter_reference_t<Its>...>
+        template<typename... Its>
+        [[noreturn]] auto operator()(copy_tag, Its...) const
+            -> invoke_result_t<Fn &, iter_reference_t<Its>...>
         {
             RANGES_EXPECT(false);
         }
 
         // Reference
-        template<typename ...Its>
-        auto CPP_auto_fun(operator())(Its ...its)
+        // clang-format off
+        template<typename... Its>
+        auto CPP_auto_fun(operator())(Its... its)
         (
             return invoke(fn_, *its...)
         )
-        template<typename ...Its>
-        auto CPP_auto_fun(operator())(Its ...its) (const)
+        template<typename... Its>
+        auto CPP_auto_fun(operator())(Its... its)(const)
         (
-            return invoke((Fn const &) fn_, *its...)
+            return invoke((Fn const &)fn_, *its...)
         )
 
         // Rvalue reference
-        template<typename ...Its>
-        auto CPP_auto_fun(operator())(move_tag, Its ...its)
+        template<typename... Its>
+        auto CPP_auto_fun(operator())(move_tag, Its... its)
         (
             return static_cast<
                 aux::move_t<invoke_result_t<Fn &, iter_reference_t<Its>...>>>(
-                    aux::move(invoke(fn_, *its...)))
+                aux::move(invoke(fn_, *its...)))
         )
-        template<typename ...Its>
-        auto CPP_auto_fun(operator())(move_tag, Its ...its) (const)
+        template<typename... Its>
+        auto CPP_auto_fun(operator())(move_tag, Its... its)(const)
         (
             return static_cast<
                 aux::move_t<invoke_result_t<Fn const &, iter_reference_t<Its>...>>>(
-                    aux::move(invoke((Fn const &) fn_, *its...)))
+                aux::move(invoke((Fn const &)fn_, *its...)))
         )
+        // clang-format on
     };
 
     struct indirect_fn

@@ -14,17 +14,19 @@
 #ifndef RANGES_V3_VIEW_TAIL_HPP
 #define RANGES_V3_VIEW_TAIL_HPP
 
-#include <utility>
 #include <type_traits>
+#include <utility>
+
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/view/interface.hpp>
-#include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/interface.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -42,14 +44,14 @@ namespace ranges
     /// @{
     template<typename Rng>
     struct tail_view
-      : view_interface<
-            tail_view<Rng>,
-            (range_cardinality<Rng>::value >= 0)
-              ? detail::prev_or_zero_(range_cardinality<Rng>::value)
-              : range_cardinality<Rng>::value>
+      : view_interface<tail_view<Rng>,
+                       (range_cardinality<Rng>::value >= 0)
+                           ? detail::prev_or_zero_(range_cardinality<Rng>::value)
+                           : range_cardinality<Rng>::value>
     {
     private:
         Rng rng_;
+
     public:
         tail_view() = default;
         tail_view(Rng rng)
@@ -62,9 +64,8 @@ namespace ranges
             return next(ranges::begin(rng_), 1, ranges::end(rng_));
         }
         template<bool Const = true>
-        auto begin() const ->
-            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)(
-                requires Const && Range<meta::const_if_c<Const, Rng>>)
+        auto begin() const -> CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)( //
+            requires Const && Range<meta::const_if_c<Const, Rng>>)
         {
             return next(ranges::begin(rng_), 1, ranges::end(rng_));
         }
@@ -73,29 +74,26 @@ namespace ranges
             return ranges::end(rng_);
         }
         template<bool Const = true>
-        auto end() const ->
-            CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)(
-                requires Const && Range<meta::const_if_c<Const, Rng>>)
+        auto end() const -> CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)( //
+            requires Const && Range<meta::const_if_c<Const, Rng>>)
         {
             return ranges::end(rng_);
         }
         CPP_member
-        constexpr /*c++14*/ auto CPP_fun(size)() (
-            requires SizedRange<Rng>)
+        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
         {
             using size_type = range_size_t<Rng>;
             return range_cardinality<Rng>::value >= 0
-              ? detail::prev_or_zero_((size_type)range_cardinality<Rng>::value)
-              : detail::prev_or_zero_(ranges::size(rng_));
+                       ? detail::prev_or_zero_((size_type)range_cardinality<Rng>::value)
+                       : detail::prev_or_zero_(ranges::size(rng_));
         }
         CPP_member
-        constexpr auto CPP_fun(size)() (const
-            requires SizedRange<Rng const>)
+        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
         {
             using size_type = range_size_t<Rng>;
             return range_cardinality<Rng>::value >= 0
-              ? detail::prev_or_zero_((size_type)range_cardinality<Rng>::value)
-              : detail::prev_or_zero_(ranges::size(rng_));
+                       ? detail::prev_or_zero_((size_type)range_cardinality<Rng>::value)
+                       : detail::prev_or_zero_(ranges::size(rng_));
         }
         Rng base() const
         {
@@ -108,9 +106,9 @@ namespace ranges
         struct tail_fn
         {
             template<typename Rng>
-            auto operator()(Rng &&rng) const ->
-                CPP_ret(meta::if_c<range_cardinality<Rng>::value == 0,
-                        all_t<Rng>, tail_view<all_t<Rng>>>)(
+            auto operator()(Rng && rng) const
+                -> CPP_ret(meta::if_c<range_cardinality<Rng>::value == 0, all_t<Rng>,
+                                      tail_view<all_t<Rng>>>)( //
                     requires ViewableRange<Rng> && InputRange<Rng>)
             {
                 return all(static_cast<Rng &&>(rng));

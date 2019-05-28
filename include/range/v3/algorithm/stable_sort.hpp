@@ -36,24 +36,26 @@
 #ifndef RANGES_V3_ALGORITHM_STABLE_SORT_HPP
 #define RANGES_V3_ALGORITHM_STABLE_SORT_HPP
 
-#include <memory>
-#include <iterator>
 #include <functional>
+#include <iterator>
+#include <memory>
+
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/dangling.hpp>
-#include <range/v3/range/traits.hpp>
+
+#include <range/v3/algorithm/inplace_merge.hpp>
 #include <range/v3/algorithm/merge.hpp>
 #include <range/v3/algorithm/min.hpp>
 #include <range/v3/algorithm/sort.hpp>
-#include <range/v3/algorithm/inplace_merge.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/move_iterators.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/memory.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -64,40 +66,58 @@ namespace ranges
     struct stable_sort_fn
     {
         template<typename I, typename C, typename P>
-        static void inplace_stable_sort(I begin, I end, C &pred, P &proj)
+        static void inplace_stable_sort(I begin, I end, C & pred, P & proj)
         {
             if(end - begin < 15)
                 return detail::insertion_sort(begin, end, pred, proj), void();
             I middle = begin + (end - begin) / 2;
             stable_sort_fn::inplace_stable_sort(begin, middle, pred, proj);
             stable_sort_fn::inplace_stable_sort(middle, end, pred, proj);
-            detail::inplace_merge_no_buffer(begin, middle, end, middle - begin, end - middle,
-                std::ref(pred), std::ref(proj));
+            detail::inplace_merge_no_buffer(begin,
+                                            middle,
+                                            end,
+                                            middle - begin,
+                                            end - middle,
+                                            std::ref(pred),
+                                            std::ref(proj));
         }
 
         template<typename I1, typename I2, typename D, typename C, typename P>
-        static void merge_sort_loop(I1 begin, I1 end, I2 result, D step_size, C &pred, P &proj)
+        static void merge_sort_loop(I1 begin, I1 end, I2 result, D step_size, C & pred,
+                                    P & proj)
         {
             D two_step = 2 * step_size;
             while(end - begin >= two_step)
             {
                 result = merge(make_move_iterator(begin),
-                    make_move_iterator(begin + step_size),
-                    make_move_iterator(begin + step_size),
-                    make_move_iterator(begin + two_step), result,
-                    std::ref(pred), std::ref(proj), std::ref(proj)).out;
+                               make_move_iterator(begin + step_size),
+                               make_move_iterator(begin + step_size),
+                               make_move_iterator(begin + two_step),
+                               result,
+                               std::ref(pred),
+                               std::ref(proj),
+                               std::ref(proj))
+                             .out;
                 begin += two_step;
             }
             step_size = ranges::min(D(end - begin), step_size);
-            merge(make_move_iterator(begin), make_move_iterator(begin + step_size),
-                make_move_iterator(begin + step_size), make_move_iterator(end), result,
-                std::ref(pred), std::ref(proj), std::ref(proj));
+            merge(make_move_iterator(begin),
+                  make_move_iterator(begin + step_size),
+                  make_move_iterator(begin + step_size),
+                  make_move_iterator(end),
+                  result,
+                  std::ref(pred),
+                  std::ref(proj),
+                  std::ref(proj));
         }
 
-        static constexpr int merge_sort_chunk_size() { return 7; }
+        static constexpr int merge_sort_chunk_size()
+        {
+            return 7;
+        }
 
         template<typename I, typename D, typename C, typename P>
-        static void chunk_insertion_sort(I begin, I end, D chunk_size, C &pred, P &proj)
+        static void chunk_insertion_sort(I begin, I end, D chunk_size, C & pred, P & proj)
         {
             while(end - begin >= chunk_size)
             {
@@ -110,20 +130,23 @@ namespace ranges
         // buffer points to raw memory, we create objects, and then restore the buffer to
         // raw memory by destroying the objects on return.
         template<typename I, typename V, typename C, typename P>
-        static void merge_sort_with_buffer(I begin, I end, V *buffer, C &pred, P &proj)
+        static void merge_sort_with_buffer(I begin, I end, V * buffer, C & pred, P & proj)
         {
-            iter_difference_t<I> len = end - begin, step_size = stable_sort_fn::merge_sort_chunk_size();
+            iter_difference_t<I> len = end - begin,
+                                 step_size = stable_sort_fn::merge_sort_chunk_size();
             stable_sort_fn::chunk_insertion_sort(begin, end, step_size, pred, proj);
             if(step_size >= len)
                 return;
-            // The first call to merge_sort_loop moves into raw storage. Construct on-demand
-            // and keep track of how many objects we need to destroy.
-            V *buffer_end = buffer + static_cast<std::ptrdiff_t>(len);
+            // The first call to merge_sort_loop moves into raw storage. Construct
+            // on-demand and keep track of how many objects we need to destroy.
+            V * buffer_end = buffer + static_cast<std::ptrdiff_t>(len);
             auto tmpbuf = make_raw_buffer(buffer);
-            stable_sort_fn::merge_sort_loop(begin, end, tmpbuf.begin(), step_size, pred, proj);
+            stable_sort_fn::merge_sort_loop(
+                begin, end, tmpbuf.begin(), step_size, pred, proj);
             step_size *= 2;
         loop:
-            stable_sort_fn::merge_sort_loop(buffer, buffer_end, begin, (std::ptrdiff_t) step_size, pred, proj);
+            stable_sort_fn::merge_sort_loop(
+                buffer, buffer_end, begin, (std::ptrdiff_t)step_size, pred, proj);
             step_size *= 2;
             if(step_size >= len)
                 return;
@@ -134,46 +157,58 @@ namespace ranges
 
         // buffer points to raw memory
         template<typename I, typename V, typename C, typename P>
-        static void stable_sort_adaptive(I begin, I end, V *buffer, std::ptrdiff_t buffer_size, C &pred, P &proj)
+        static void stable_sort_adaptive(I begin, I end, V * buffer,
+                                         std::ptrdiff_t buffer_size, C & pred, P & proj)
         {
             iter_difference_t<I> len = (end - begin + 1) / 2;
             I middle = begin + len;
             if(len > buffer_size)
             {
-                stable_sort_fn::stable_sort_adaptive(begin, middle, buffer, buffer_size, pred, proj);
-                stable_sort_fn::stable_sort_adaptive(middle, end, buffer, buffer_size, pred, proj);
+                stable_sort_fn::stable_sort_adaptive(
+                    begin, middle, buffer, buffer_size, pred, proj);
+                stable_sort_fn::stable_sort_adaptive(
+                    middle, end, buffer, buffer_size, pred, proj);
             }
             else
             {
                 stable_sort_fn::merge_sort_with_buffer(begin, middle, buffer, pred, proj);
                 stable_sort_fn::merge_sort_with_buffer(middle, end, buffer, pred, proj);
             }
-            detail::merge_adaptive(begin, middle, end, middle - begin, end - middle,
-                buffer, buffer_size, std::ref(pred), std::ref(proj));
+            detail::merge_adaptive(begin,
+                                   middle,
+                                   end,
+                                   middle - begin,
+                                   end - middle,
+                                   buffer,
+                                   buffer_size,
+                                   std::ref(pred),
+                                   std::ref(proj));
         }
 
     public:
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, S end_, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
+        auto operator()(I begin, S end_, C pred = C{}, P proj = P{}) const
+            -> CPP_ret(I)( //
                 requires Sortable<I, C, P> && RandomAccessIterator<I> && Sentinel<S, I>)
         {
             I end = ranges::next(begin, end_);
             using D = iter_difference_t<I>;
             using V = iter_value_t<I>;
             D len = end - begin;
-            auto buf = len > 256 ? detail::get_temporary_buffer<V>(len) : detail::value_init{};
+            auto buf =
+                len > 256 ? detail::get_temporary_buffer<V>(len) : detail::value_init{};
             std::unique_ptr<V, detail::return_temporary_buffer> h{buf.first};
             if(buf.first == nullptr)
                 stable_sort_fn::inplace_stable_sort(begin, end, pred, proj);
             else
-                stable_sort_fn::stable_sort_adaptive(begin, end, buf.first, buf.second, pred, proj);
+                stable_sort_fn::stable_sort_adaptive(
+                    begin, end, buf.first, buf.second, pred, proj);
             return end;
         }
 
         template<typename Rng, typename C = less, typename P = identity>
-        auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+        auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
+            -> CPP_ret(safe_iterator_t<Rng>)( //
                 requires Sortable<iterator_t<Rng>, C, P> && RandomAccessRange<Rng>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

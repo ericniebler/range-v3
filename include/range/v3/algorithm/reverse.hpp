@@ -14,15 +14,16 @@
 #define RANGES_V3_ALGORITHM_REVERSE_HPP
 
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/iterator/operations.hpp>
-#include <range/v3/iterator/concepts.hpp>
-#include <range/v3/iterator/traits.hpp>
-#include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/swap.hpp>
 
 namespace ranges
 {
@@ -53,9 +54,8 @@ namespace ranges
 
     public:
         template<typename I, typename S>
-        auto operator()(I begin, S end_) const ->
-            CPP_ret(I)(
-                requires BidirectionalIterator<I> && Sentinel<S, I> && Permutable<I>)
+        auto operator()(I begin, S end_) const -> CPP_ret(I)( //
+            requires BidirectionalIterator<I> && Sentinel<S, I> && Permutable<I>)
         {
             I end = ranges::next(begin, end_);
             reverse_fn::impl(begin, end, iterator_tag_of<I>{});
@@ -63,9 +63,8 @@ namespace ranges
         }
 
         template<typename Rng, typename I = iterator_t<Rng>>
-        auto operator()(Rng &&rng) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
-                requires BidirectionalRange<Rng> && Permutable<I>)
+        auto operator()(Rng && rng) const -> CPP_ret(safe_iterator_t<Rng>)( //
+            requires BidirectionalRange<Rng> && Permutable<I>)
         {
             return (*this)(begin(rng), end(rng));
         }

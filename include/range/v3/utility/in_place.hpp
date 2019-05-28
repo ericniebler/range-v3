@@ -1,4 +1,4 @@
- /// \file
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-present
@@ -15,12 +15,14 @@
 #define RANGES_V3_UTILITY_IN_PLACE_HPP
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
-       /// \ingroup group-utility
-    struct in_place_t {};
+    /// \ingroup group-utility
+    struct in_place_t
+    {};
     RANGES_INLINE_VARIABLE(in_place_t, in_place)
 }
 

@@ -14,8 +14,10 @@
 #ifndef RANGES_V3_UTILITY_GET_HPP
 #define RANGES_V3_UTILITY_GET_HPP
 
-#include <concepts/concepts.hpp>
 #include <meta/meta.hpp>
+
+#include <concepts/concepts.hpp>
+
 #include <range/v3/detail/adl_get.hpp>
 
 namespace ranges
@@ -27,7 +29,8 @@ namespace ranges
     /// \cond
     namespace _get_
     {
-    /// \endcond
+        /// \endcond
+        // clang-format off
         template<std::size_t I, typename TupleLike>
         constexpr auto CPP_auto_fun(get)(TupleLike &&t)
         (
@@ -38,23 +41,24 @@ namespace ranges
         (
             return detail::adl_get<T>(static_cast<TupleLike &&>(t))
         )
+            // clang-format on
 
-        template<typename T>
-        T & get(meta::id_t<T> &value) noexcept
+            template<typename T>
+            T & get(meta::id_t<T> & value) noexcept
         {
             return value;
         }
         template<typename T>
-        T const & get(meta::id_t<T> const &value) noexcept
+        T const & get(meta::id_t<T> const & value) noexcept
         {
             return value;
         }
         template<typename T>
-        T &&get(meta::id_t<T> &&value) noexcept
+        T && get(meta::id_t<T> && value) noexcept
         {
             return static_cast<T &&>(value);
         }
-    /// \cond
+        /// \cond
     }
     using namespace _get_;
     /// \endcond

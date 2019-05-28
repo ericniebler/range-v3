@@ -16,14 +16,16 @@
 
 #include <functional>
 #include <utility>
+
 #include <concepts/concepts.hpp>
+
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/detail/config.hpp>
-#include <range/v3/iterator/concepts.hpp>
 #include <range/v3/functional/bind.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/functional/pipeable.hpp>
+#include <range/v3/iterator/concepts.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
@@ -48,12 +50,12 @@ namespace ranges
 
     public:
         CPP_assert(BidirectionalView<Rng> &&
-            IndirectUnaryPredicate<Pred, iterator_t<Rng>> &&
-            CommonRange<Rng>);
+                       IndirectUnaryPredicate<Pred, iterator_t<Rng>> && CommonRange<Rng>);
 
         trim_view() = default;
         trim_view(Rng rng, Pred pred)
-          : rng_(std::move(rng)), pred_(std::move(pred))
+          : rng_(std::move(rng))
+          , pred_(std::move(pred))
         {}
 
         iterator_t<Rng> begin()
@@ -68,8 +70,8 @@ namespace ranges
             {
                 const auto first = begin();
                 auto last = ranges::end(rng_);
-                while (last != first)
-                    if (!invoke(pred_, *--last))
+                while(last != first)
+                    if(!invoke(pred_, *--last))
                     {
                         ++last;
                         break;
@@ -87,7 +89,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng, typename Pred>
-    trim_view(Rng &&, Pred) -> trim_view<view::all_t<Rng>, Pred>;
+    trim_view(Rng &&, Pred)->trim_view<view::all_t<Rng>, Pred>;
 #endif
 
     template<typename Rng, typename Pred>
@@ -108,31 +110,30 @@ namespace ranges
             template<typename Pred, typename Proj>
             static auto bind(trim_fn trim, Pred pred, Proj proj)
             {
-                return make_pipeable(
-                    std::bind(trim, std::placeholders::_1, protect(std::move(pred)),
-                    protect(std::move(proj))));
+                return make_pipeable(std::bind(trim,
+                                               std::placeholders::_1,
+                                               protect(std::move(pred)),
+                                               protect(std::move(proj))));
             }
+
         public:
             template<typename Rng, typename Pred>
-            auto operator()(Rng &&rng, Pred pred) const ->
-                CPP_ret(trim_view<all_t<Rng>, Pred>)(
+            auto operator()(Rng && rng, Pred pred) const
+                -> CPP_ret(trim_view<all_t<Rng>, Pred>)( //
                     requires ViewableRange<Rng> && BidirectionalRange<Rng> &&
-                        IndirectUnaryPredicate<Pred, iterator_t<Rng>> &&
-                        CommonRange<Rng>)
+                        IndirectUnaryPredicate<Pred, iterator_t<Rng>> && CommonRange<Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
             template<typename Rng, typename Pred, typename Proj>
-            auto operator()(Rng &&rng, Pred pred, Proj proj) const ->
-                CPP_ret(trim_view<all_t<Rng>, composed<Pred, Proj>>)(
+            auto operator()(Rng && rng, Pred pred, Proj proj) const
+                -> CPP_ret(trim_view<all_t<Rng>, composed<Pred, Proj>>)( //
                     requires ViewableRange<Rng> && BidirectionalRange<Rng> &&
                         IndirectUnaryPredicate<composed<Pred, Proj>, iterator_t<Rng>> &&
-                        CommonRange<Rng>)
+                            CommonRange<Rng>)
             {
-                return {
-                    all(static_cast<Rng &&>(rng)),
-                    compose(std::move(pred), std::move(proj))
-                };
+                return {all(static_cast<Rng &&>(rng)),
+                        compose(std::move(pred), std::move(proj))};
             }
         };
 

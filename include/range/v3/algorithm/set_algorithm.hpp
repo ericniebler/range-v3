@@ -22,11 +22,9 @@
 #define RANGES_V3_ALGORITHM_SET_ALGORITHM_HPP
 
 #include <utility>
+
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/dangling.hpp>
-#include <range/v3/range/traits.hpp>
+
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/functional/comparisons.hpp>
@@ -34,6 +32,10 @@
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -43,17 +45,17 @@ namespace ranges
     struct includes_fn
     {
         template<typename I1, typename S1, typename I2, typename S2, typename C = less,
-            typename P1 = identity, typename P2 = identity>
-        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
-                P2 proj2 = P2{}) const ->
-            CPP_ret(bool)(
-                requires InputIterator<I1> && Sentinel<S1, I1> &&
-                    InputIterator<I2> && Sentinel<S2, I2> &&
+                 typename P1 = identity, typename P2 = identity>
+        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{},
+                        P1 proj1 = P1{}, P2 proj2 = P2{}) const -> CPP_ret(bool)( //
+            requires InputIterator<I1> && Sentinel<S1, I1> && InputIterator<I2> &&
+                Sentinel<S2, I2> &&
                     IndirectStrictWeakOrder<C, projected<I1, P1>, projected<I2, P2>>)
         {
             for(; begin2 != end2; ++begin1)
             {
-                if(begin1 == end1 || invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
+                if(begin1 == end1 ||
+                   invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
                     return false;
                 if(!invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
                     ++begin2;
@@ -62,16 +64,19 @@ namespace ranges
         }
 
         template<typename Rng1, typename Rng2, typename C = less, typename P1 = identity,
-            typename P2 = identity>
-        auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
-                P2 proj2 = P2{}) const ->
-            CPP_ret(bool)(
-                requires InputRange<Rng1> && InputRange<Rng2> &&
-                    IndirectStrictWeakOrder<C, projected<iterator_t<Rng1>, P1>,
-                                               projected<iterator_t<Rng2>, P2>>)
+                 typename P2 = identity>
+        auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
+                        P2 proj2 = P2{}) const -> CPP_ret(bool)( //
+            requires InputRange<Rng1> && InputRange<Rng2> && IndirectStrictWeakOrder<
+                C, projected<iterator_t<Rng1>, P1>, projected<iterator_t<Rng2>, P2>>)
         {
-            return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
-                std::move(proj1), std::move(proj2));
+            return (*this)(begin(rng1),
+                           end(rng1),
+                           begin(rng2),
+                           end(rng2),
+                           std::move(pred),
+                           std::move(proj1),
+                           std::move(proj2));
         }
     };
 
@@ -90,10 +95,10 @@ namespace ranges
     struct set_union_fn
     {
         template<typename I1, typename S1, typename I2, typename S2, typename O,
-            typename C = less, typename P1 = identity, typename P2 = identity>
+                 typename C = less, typename P1 = identity, typename P2 = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
-                P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
-            CPP_ret(set_union_result<I1, I2, O>)(
+                        P1 proj1 = P1{}, P2 proj2 = P2{}) const
+            -> CPP_ret(set_union_result<I1, I2, O>)( //
                 requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
                     Mergeable<I1, I2, O, C, P1, P2>)
         {
@@ -122,15 +127,22 @@ namespace ranges
         }
 
         template<typename Rng1, typename Rng2, typename O, typename C = less,
-            typename P1 = identity, typename P2 = identity>
-        auto operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
-                P2 proj2 = P2{}) const ->
-            CPP_ret(set_union_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>, O>)(
+                 typename P1 = identity, typename P2 = identity>
+        auto operator()(Rng1 && rng1, Rng2 && rng2, O out, C pred = C{}, P1 proj1 = P1{},
+                        P2 proj2 = P2{}) const
+            -> CPP_ret(
+                set_union_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>, O>)( //
                 requires Range<Rng1> && Range<Rng2> &&
                     Mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         {
-            return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
-                std::move(pred), std::move(proj1), std::move(proj2));
+            return (*this)(begin(rng1),
+                           end(rng1),
+                           begin(rng2),
+                           end(rng2),
+                           std::move(out),
+                           std::move(pred),
+                           std::move(proj1),
+                           std::move(proj2));
         }
     };
 
@@ -140,19 +152,18 @@ namespace ranges
 
     namespace cpp20
     {
-        using ranges::set_union_result;
         using ranges::set_union;
+        using ranges::set_union_result;
     }
 
     struct set_intersection_fn
     {
         template<typename I1, typename S1, typename I2, typename S2, typename O,
-            typename C = less, typename P1 = identity, typename P2 = identity>
+                 typename C = less, typename P1 = identity, typename P2 = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
-                P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
-            CPP_ret(O)(
-                requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
-                    Mergeable<I1, I2, O, C, P1, P2>)
+                        P1 proj1 = P1{}, P2 proj2 = P2{}) const -> CPP_ret(O)( //
+            requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
+                Mergeable<I1, I2, O, C, P1, P2>)
         {
             while(begin1 != end1 && begin2 != end2)
             {
@@ -173,15 +184,20 @@ namespace ranges
         }
 
         template<typename Rng1, typename Rng2, typename O, typename C = less,
-            typename P1 = identity, typename P2 = identity>
-        auto operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
-                P2 proj2 = P2{}) const ->
-            CPP_ret(O)(
-                requires Range<Rng1> && Range<Rng2> &&
-                    Mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
+                 typename P1 = identity, typename P2 = identity>
+        auto operator()(Rng1 && rng1, Rng2 && rng2, O out, C pred = C{}, P1 proj1 = P1{},
+                        P2 proj2 = P2{}) const -> CPP_ret(O)( //
+            requires Range<Rng1> && Range<Rng2> &&
+                Mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         {
-            return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
-                std::move(pred), std::move(proj1), std::move(proj2));
+            return (*this)(begin(rng1),
+                           end(rng1),
+                           begin(rng2),
+                           end(rng2),
+                           std::move(out),
+                           std::move(pred),
+                           std::move(proj1),
+                           std::move(proj2));
         }
     };
 
@@ -200,10 +216,10 @@ namespace ranges
     struct set_difference_fn
     {
         template<typename I1, typename S1, typename I2, typename S2, typename O,
-            typename C = less, typename P1 = identity, typename P2 = identity>
+                 typename C = less, typename P1 = identity, typename P2 = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
-                P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
-            CPP_ret(set_difference_result<I1, O>)(
+                        P1 proj1 = P1{}, P2 proj2 = P2{}) const
+            -> CPP_ret(set_difference_result<I1, O>)( //
                 requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
                     Mergeable<I1, I2, O, C, P1, P2>)
         {
@@ -231,15 +247,21 @@ namespace ranges
         }
 
         template<typename Rng1, typename Rng2, typename O, typename C = less,
-            typename P1 = identity, typename P2 = identity>
-        auto operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
-                P2 proj2 = P2{}) const ->
-            CPP_ret(set_difference_result<safe_iterator_t<Rng1>, O>)(
+                 typename P1 = identity, typename P2 = identity>
+        auto operator()(Rng1 && rng1, Rng2 && rng2, O out, C pred = C{}, P1 proj1 = P1{},
+                        P2 proj2 = P2{}) const
+            -> CPP_ret(set_difference_result<safe_iterator_t<Rng1>, O>)( //
                 requires Range<Rng1> && Range<Rng2> &&
                     Mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         {
-            return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
-                std::move(pred), std::move(proj1), std::move(proj2));
+            return (*this)(begin(rng1),
+                           end(rng1),
+                           begin(rng2),
+                           end(rng2),
+                           std::move(out),
+                           std::move(pred),
+                           std::move(proj1),
+                           std::move(proj2));
         }
     };
 
@@ -249,8 +271,8 @@ namespace ranges
 
     namespace cpp20
     {
-        using ranges::set_difference_result;
         using ranges::set_difference;
+        using ranges::set_difference_result;
     }
 
     template<typename I1, typename I2, typename O>
@@ -259,10 +281,10 @@ namespace ranges
     struct set_symmetric_difference_fn
     {
         template<typename I1, typename S1, typename I2, typename S2, typename O,
-            typename C = less, typename P1 = identity, typename P2 = identity>
+                 typename C = less, typename P1 = identity, typename P2 = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
-                P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
-            CPP_ret(set_symmetric_difference_result<I1, I2, O>)(
+                        P1 proj1 = P1{}, P2 proj2 = P2{}) const
+            -> CPP_ret(set_symmetric_difference_result<I1, I2, O>)( //
                 requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
                     Mergeable<I1, I2, O, C, P1, P2>)
         {
@@ -296,17 +318,23 @@ namespace ranges
         }
 
         template<typename Rng1, typename Rng2, typename O, typename C = less,
-            typename P1 = identity, typename P2 = identity>
-        auto operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
-                P2 proj2 = P2{}) const ->
-            CPP_ret(set_symmetric_difference_result<safe_iterator_t<Rng1>,
-                                                    safe_iterator_t<Rng2>,
-                                                    O>)(
+                 typename P1 = identity, typename P2 = identity>
+        auto operator()(Rng1 && rng1, Rng2 && rng2, O out, C pred = C{}, P1 proj1 = P1{},
+                        P2 proj2 = P2{}) const
+            -> CPP_ret(set_symmetric_difference_result<safe_iterator_t<Rng1>,
+                                                       safe_iterator_t<Rng2>,
+                                                       O>)( //
                 requires Range<Rng1> && Range<Rng2> &&
                     Mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         {
-            return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
-                std::move(pred), std::move(proj1), std::move(proj2));
+            return (*this)(begin(rng1),
+                           end(rng1),
+                           begin(rng2),
+                           end(rng2),
+                           std::move(out),
+                           std::move(pred),
+                           std::move(proj1),
+                           std::move(proj2));
         }
     };
 
@@ -316,8 +344,8 @@ namespace ranges
 
     namespace cpp20
     {
-        using ranges::set_symmetric_difference_result;
         using ranges::set_symmetric_difference;
+        using ranges::set_symmetric_difference_result;
     }
     /// @}
 } // namespace ranges

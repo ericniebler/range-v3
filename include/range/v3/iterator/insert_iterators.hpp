@@ -15,7 +15,9 @@
 
 #include <cstddef>
 #include <utility>
+
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/operations.hpp>
 
 namespace ranges
@@ -29,24 +31,24 @@ namespace ranges
         using difference_type = std::ptrdiff_t;
 
         constexpr back_insert_iterator() = default;
-        explicit constexpr back_insert_iterator(Container &x)
+        explicit constexpr back_insert_iterator(Container & x)
           : container_(std::addressof(x))
         {}
-        back_insert_iterator &operator=(typename Container::value_type const &value)
+        back_insert_iterator & operator=(typename Container::value_type const & value)
         {
             container_->push_back(value);
             return *this;
         }
-        back_insert_iterator &operator=(typename Container::value_type &&value)
+        back_insert_iterator & operator=(typename Container::value_type && value)
         {
             container_->push_back(std::move(value));
             return *this;
         }
-        back_insert_iterator &operator*()
+        back_insert_iterator & operator*()
         {
             return *this;
         }
-        back_insert_iterator &operator++()
+        back_insert_iterator & operator++()
         {
             return *this;
         }
@@ -54,14 +56,15 @@ namespace ranges
         {
             return *this;
         }
+
     private:
-        Container *container_ = nullptr;
+        Container * container_ = nullptr;
     };
 
     struct back_inserter_fn
     {
         template<typename Container>
-        constexpr back_insert_iterator<Container> operator()(Container &x) const
+        constexpr back_insert_iterator<Container> operator()(Container & x) const
         {
             return back_insert_iterator<Container>{x};
         }
@@ -77,24 +80,24 @@ namespace ranges
         using difference_type = std::ptrdiff_t;
 
         constexpr front_insert_iterator() = default;
-        explicit constexpr front_insert_iterator(Container &x)
+        explicit constexpr front_insert_iterator(Container & x)
           : container_(std::addressof(x))
         {}
-        front_insert_iterator &operator=(typename Container::value_type const &value)
+        front_insert_iterator & operator=(typename Container::value_type const & value)
         {
             container_->push_front(value);
             return *this;
         }
-        front_insert_iterator &operator=(typename Container::value_type &&value)
+        front_insert_iterator & operator=(typename Container::value_type && value)
         {
             container_->push_front(std::move(value));
             return *this;
         }
-        front_insert_iterator &operator*()
+        front_insert_iterator & operator*()
         {
             return *this;
         }
-        front_insert_iterator &operator++()
+        front_insert_iterator & operator++()
         {
             return *this;
         }
@@ -102,14 +105,15 @@ namespace ranges
         {
             return *this;
         }
+
     private:
-        Container *container_ = nullptr;
+        Container * container_ = nullptr;
     };
 
     struct front_inserter_fn
     {
         template<typename Cont>
-        constexpr front_insert_iterator<Cont> operator()(Cont &cont) const
+        constexpr front_insert_iterator<Cont> operator()(Cont & cont) const
         {
             return front_insert_iterator<Cont>{cont};
         }
@@ -125,40 +129,43 @@ namespace ranges
         using difference_type = std::ptrdiff_t;
 
         constexpr insert_iterator() = default;
-        explicit constexpr insert_iterator(Container &x, typename Container::iterator w)
-          : container_(std::addressof(x)), where_(w)
+        explicit constexpr insert_iterator(Container & x, typename Container::iterator w)
+          : container_(std::addressof(x))
+          , where_(w)
         {}
-        insert_iterator &operator=(typename Container::value_type const &value)
+        insert_iterator & operator=(typename Container::value_type const & value)
         {
             where_ = ranges::next(container_->insert(where_, value));
             return *this;
         }
-        insert_iterator &operator=(typename Container::value_type &&value)
+        insert_iterator & operator=(typename Container::value_type && value)
         {
             where_ = ranges::next(container_->insert(where_, std::move(value)));
             return *this;
         }
-        insert_iterator &operator*()
+        insert_iterator & operator*()
         {
             return *this;
         }
-        insert_iterator &operator++()
+        insert_iterator & operator++()
         {
             return *this;
         }
-        insert_iterator &operator++(int)
+        insert_iterator & operator++(int)
         {
             return *this;
         }
+
     private:
-        Container* container_ = nullptr;
+        Container * container_ = nullptr;
         typename Container::iterator where_ = typename Container::iterator();
     };
 
     struct inserter_fn
     {
         template<typename Cont>
-        constexpr insert_iterator<Cont> operator()(Cont &cont, typename Cont::iterator where) const
+        constexpr insert_iterator<Cont> operator()(Cont & cont,
+                                                   typename Cont::iterator where) const
         {
             return insert_iterator<Cont>{cont, std::move(where)};
         }
@@ -183,17 +190,17 @@ namespace ranges
 namespace std
 {
     template<typename Container>
-    struct iterator_traits< ::ranges::back_insert_iterator<Container>>
+    struct iterator_traits<::ranges::back_insert_iterator<Container>>
       : ::ranges::detail::std_output_iterator_traits<>
     {};
 
     template<typename Container>
-    struct iterator_traits< ::ranges::front_insert_iterator<Container>>
+    struct iterator_traits<::ranges::front_insert_iterator<Container>>
       : ::ranges::detail::std_output_iterator_traits<>
     {};
 
     template<typename Container>
-    struct iterator_traits< ::ranges::insert_iterator<Container>>
+    struct iterator_traits<::ranges::insert_iterator<Container>>
       : ::ranges::detail::std_output_iterator_traits<>
     {};
 }

@@ -22,14 +22,16 @@
 #define RANGES_V3_ALGORITHM_IS_PARTITIONED_HPP
 
 #include <meta/meta.hpp>
+
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/traits.hpp>
+
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -39,10 +41,9 @@ namespace ranges
     struct is_partitioned_fn
     {
         template<typename I, typename S, typename C, typename P = identity>
-        auto operator()(I begin, S end, C pred, P proj = P{}) const ->
-            CPP_ret(bool)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    IndirectUnaryPredicate<C, projected<I, P>>)
+        auto operator()(I begin, S end, C pred, P proj = P{}) const -> CPP_ret(bool)( //
+            requires InputIterator<I> && Sentinel<S, I> &&
+                IndirectUnaryPredicate<C, projected<I, P>>)
         {
             for(; begin != end; ++begin)
                 if(!invoke(pred, invoke(proj, *begin)))
@@ -54,10 +55,9 @@ namespace ranges
         }
 
         template<typename Rng, typename C, typename P = identity>
-        auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
-            CPP_ret(bool)(
-                requires InputRange<Rng> &&
-                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+        auto operator()(Rng && rng, C pred, P proj = P{}) const -> CPP_ret(bool)( //
+            requires InputRange<Rng> &&
+                IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

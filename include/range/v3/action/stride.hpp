@@ -15,12 +15,14 @@
 #define RANGES_V3_ACTION_STRIDE_HPP
 
 #include <functional>
+
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/iterator/concepts.hpp>
-#include <range/v3/iterator/traits.hpp>
 #include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -34,17 +36,19 @@ namespace ranges
         private:
             friend action_access;
             template<typename D>
-            static auto CPP_fun(bind)(stride_fn stride, D step)(
+            static auto CPP_fun(bind)(stride_fn stride, D step)( //
                 requires Integral<D>)
             {
                 return std::bind(stride, std::placeholders::_1, step);
             }
+
         public:
-            CPP_template(typename Rng, typename D = range_difference_t<Rng>)(
-                requires ForwardRange<Rng> &&
-                    ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                    Permutable<iterator_t<Rng>>)
-            Rng operator()(Rng &&rng, range_difference_t<Rng> const step) const
+            template<typename Rng, typename D = range_difference_t<Rng>>
+            auto operator()(Rng && rng, range_difference_t<Rng> const step) const
+                -> CPP_ret(Rng)( //
+                    requires ForwardRange<Rng> &&
+                        ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
+                            Permutable<iterator_t<Rng>>)
             {
                 using I = iterator_t<Rng>;
                 using S = sentinel_t<Rng>;
@@ -55,7 +59,7 @@ namespace ranges
                     S const end = ranges::end(rng);
                     if(begin != end)
                     {
-                        for(I i = ranges::next(++begin, step-1, end); i != end;
+                        for(I i = ranges::next(++begin, step - 1, end); i != end;
                             advance(i, step, end), ++begin)
                         {
                             *begin = iter_move(i);

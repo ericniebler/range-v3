@@ -14,18 +14,22 @@
 #ifndef RANGES_V3_VIEW_REPLACE_IF_HPP
 #define RANGES_V3_VIEW_REPLACE_IF_HPP
 
-#include <utility>
 #include <type_traits>
+#include <utility>
+
 #include <meta/meta.hpp>
+
 #include <concepts/concepts.hpp>
+
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
-#include <range/v3/view/view.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/view/view.hpp>
 
 RANGES_DISABLE_WARNINGS
 
@@ -35,8 +39,7 @@ namespace ranges
     namespace detail
     {
         template<typename Pred, typename Val>
-        struct replacer_if_fn
-          : compressed_pair<semiregular_t<Pred>, Val>
+        struct replacer_if_fn : compressed_pair<semiregular_t<Pred>, Val>
         {
         private:
             using base_t = compressed_pair<semiregular_t<Pred>, Val>;
@@ -50,53 +53,57 @@ namespace ranges
             {}
 
             template<typename I>
-            [[noreturn]]
-            common_type_t<decay_t<unwrap_reference_t<Val const &>>, iter_value_t<I>> &
+            [[noreturn]] common_type_t<decay_t<unwrap_reference_t<Val const &>>,
+                                       iter_value_t<I>> &
             operator()(copy_tag, I const &) const
             {
                 RANGES_EXPECT(false);
             }
 
             template<typename I>
-            auto operator()(I const &i) ->
-                CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, iter_reference_t<I>>)(
-                    requires (!Invocable<Pred const&, iter_reference_t<I>>))
+            auto operator()(I const & i)
+                -> CPP_ret(common_reference_t<unwrap_reference_t<Val const &>,
+                                              iter_reference_t<I>>)( //
+                    requires(!Invocable<Pred const &, iter_reference_t<I>>))
             {
-                auto &&x = *i;
-                if(invoke(first(), (decltype(x) &&) x))
+                auto && x = *i;
+                if(invoke(first(), (decltype(x) &&)x))
                     return unwrap_reference(second());
-                return (decltype(x) &&) x;
+                return (decltype(x) &&)x;
             }
             template<typename I>
-            auto operator()(I const &i) const ->
-                CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, iter_reference_t<I>>)(
-                    requires Invocable<Pred const&, iter_reference_t<I>>)
+            auto operator()(I const & i) const
+                -> CPP_ret(common_reference_t<unwrap_reference_t<Val const &>,
+                                              iter_reference_t<I>>)( //
+                    requires Invocable<Pred const &, iter_reference_t<I>>)
             {
-                auto &&x = *i;
-                if(invoke(first(), (decltype(x) &&) x))
+                auto && x = *i;
+                if(invoke(first(), (decltype(x) &&)x))
                     return unwrap_reference(second());
-                return (decltype(x) &&) x;
+                return (decltype(x) &&)x;
             }
 
             template<typename I>
-            auto operator()(move_tag, I const &i) ->
-                CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, iter_rvalue_reference_t<I>>)(
-                    requires (!Invocable<Pred const&, iter_rvalue_reference_t<I>>))
+            auto operator()(move_tag, I const & i)
+                -> CPP_ret(common_reference_t<unwrap_reference_t<Val const &>,
+                                              iter_rvalue_reference_t<I>>)( //
+                    requires(!Invocable<Pred const &, iter_rvalue_reference_t<I>>))
             {
-                auto &&x = iter_move(i);
-                if(invoke(first(), (decltype(x) &&) x))
+                auto && x = iter_move(i);
+                if(invoke(first(), (decltype(x) &&)x))
                     return unwrap_reference(second());
-                return (decltype(x) &&) x;
+                return (decltype(x) &&)x;
             }
             template<typename I>
-            auto operator()(move_tag, I const &i) const ->
-                CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, iter_rvalue_reference_t<I>>)(
-                    requires Invocable<Pred const&, iter_rvalue_reference_t<I>>)
+            auto operator()(move_tag, I const & i) const
+                -> CPP_ret(common_reference_t<unwrap_reference_t<Val const &>,
+                                              iter_rvalue_reference_t<I>>)( //
+                    requires Invocable<Pred const &, iter_rvalue_reference_t<I>>)
             {
-                auto &&x = iter_move(i);
-                if(invoke(first(), (decltype(x) &&) x))
+                auto && x = iter_move(i);
+                if(invoke(first(), (decltype(x) &&)x))
                     return unwrap_reference(second());
-                return (decltype(x) &&) x;
+                return (decltype(x) &&)x;
             }
         };
     }
@@ -113,20 +120,27 @@ namespace ranges
             template<typename Pred, typename Val>
             static auto bind(replace_if_fn replace_if, Pred pred, Val new_value)
             {
-                return make_pipeable(std::bind(replace_if, std::placeholders::_1,
-                    protect(std::move(pred)), std::move(new_value)));
+                return make_pipeable(std::bind(replace_if,
+                                               std::placeholders::_1,
+                                               protect(std::move(pred)),
+                                               std::move(new_value)));
             }
+
         public:
             template<typename Rng, typename Pred, typename Val>
-            auto operator()(Rng &&rng, Pred pred, Val new_value) const ->
-                CPP_ret(replace_if_view<all_t<Rng>, Pred, Val>)(
+            auto operator()(Rng && rng, Pred pred, Val new_value) const
+                -> CPP_ret(replace_if_view<all_t<Rng>, Pred, Val>)( //
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<Pred, iterator_t<Rng>> &&
-                        Common<detail::decay_t<unwrap_reference_t<Val const &>>, range_value_t<Rng>> &&
-                        CommonReference<unwrap_reference_t<Val const &>, range_reference_t<Rng>> &&
-                        CommonReference<unwrap_reference_t<Val const &>, range_rvalue_reference_t<Rng>>)
+                            Common<detail::decay_t<unwrap_reference_t<Val const &>>,
+                                   range_value_t<Rng>> &&
+                                CommonReference<unwrap_reference_t<Val const &>,
+                                                range_reference_t<Rng>> &&
+                                    CommonReference<unwrap_reference_t<Val const &>,
+                                                    range_rvalue_reference_t<Rng>>)
             {
-                return {all(static_cast<Rng &&>(rng)), {std::move(pred), std::move(new_value)}};
+                return {all(static_cast<Rng &&>(rng)),
+                        {std::move(pred), std::move(new_value)}};
             }
         };
 

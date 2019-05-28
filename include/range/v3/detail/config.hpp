@@ -23,9 +23,10 @@
 #include <iosfwd>
 #endif
 
-#if (defined(NDEBUG) && !defined(RANGES_ENSURE_MSG)) || \
-    (!defined(NDEBUG) && !defined(RANGES_ASSERT) && \
-     ((defined(__GNUC__) && !defined(__clang__) && (__GNUC__ < 5 || defined(__MINGW32__))) || \
+#if(defined(NDEBUG) && !defined(RANGES_ENSURE_MSG)) || \
+    (!defined(NDEBUG) && !defined(RANGES_ASSERT) &&    \
+     ((defined(__GNUC__) && !defined(__clang__) &&     \
+       (__GNUC__ < 5 || defined(__MINGW32__))) ||      \
       defined(_MSVC_STL_VERSION)))
 #include <cstdio>
 #include <cstdlib>
@@ -35,7 +36,7 @@ namespace ranges
     namespace detail
     {
         template<typename = void>
-        [[noreturn]] void assert_failure(char const *file, int line, char const *msg)
+        [[noreturn]] void assert_failure(char const * file, int line, char const * msg)
         {
             std::fprintf(stderr, "%s(%d): %s\n", file, line, msg);
             std::abort();
@@ -45,15 +46,17 @@ namespace ranges
 #endif
 
 #ifndef RANGES_ASSERT
-    // Always use our hand-rolled assert implementation on older GCCs, which do
-    // not allow assert to be used in a constant expression, and on MSVC whose
-    // assert is not marked [[noreturn]].
-#if !defined(NDEBUG) && \
-    ((defined(__GNUC__) && !defined(__clang__) && (__GNUC__ < 5 || defined(__MINGW32__))) || \
-     defined(_MSVC_STL_VERSION))
-#define RANGES_ASSERT(...) \
-    static_cast<void>((__VA_ARGS__) ? void(0) : \
-        ::ranges::detail::assert_failure(__FILE__, __LINE__, "assertion failed: " #__VA_ARGS__))
+// Always use our hand-rolled assert implementation on older GCCs, which do
+// not allow assert to be used in a constant expression, and on MSVC whose
+// assert is not marked [[noreturn]].
+#if !defined(NDEBUG) && ((defined(__GNUC__) && !defined(__clang__) && \
+                          (__GNUC__ < 5 || defined(__MINGW32__))) ||  \
+                         defined(_MSVC_STL_VERSION))
+#define RANGES_ASSERT(...)                                    \
+    static_cast<void>((__VA_ARGS__)                           \
+                          ? void(0)                           \
+                          : ::ranges::detail::assert_failure( \
+                                __FILE__, __LINE__, "assertion failed: " #__VA_ARGS__))
 #else
 #include <cassert>
 #define RANGES_ASSERT assert
@@ -82,9 +85,10 @@ namespace ranges
 
 #ifndef RANGES_ENSURE_MSG
 #if defined(NDEBUG)
-#define RANGES_ENSURE_MSG(COND, MSG) \
-    static_cast<void>((COND) ? void(0) \
-        : ::ranges::detail::assert_failure(__FILE__, __LINE__, "ensure failed: " MSG))
+#define RANGES_ENSURE_MSG(COND, MSG)                             \
+    static_cast<void>((COND) ? void(0)                           \
+                             : ::ranges::detail::assert_failure( \
+                                   __FILE__, __LINE__, "ensure failed: " MSG))
 #else
 #define RANGES_ENSURE_MSG(COND, MSG) RANGES_ASSERT((COND) && MSG)
 #endif
@@ -94,26 +98,29 @@ namespace ranges
 #define RANGES_ENSURE(...) RANGES_ENSURE_MSG((__VA_ARGS__), #__VA_ARGS__)
 #endif
 
-#define RANGES_DECLTYPE_AUTO_RETURN(...)                        \
-    -> decltype(__VA_ARGS__)                                    \
-    { return (__VA_ARGS__); }                                   \
+#define RANGES_DECLTYPE_AUTO_RETURN(...) \
+    ->decltype(__VA_ARGS__)              \
+    {                                    \
+        return (__VA_ARGS__);            \
+    }                                    \
     /**/
 
-#define RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(...)               \
-    noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__))) ->   \
-    decltype(__VA_ARGS__)                                       \
-    { return (__VA_ARGS__); }                                   \
+#define RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(...)                                 \
+    noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__)))->decltype(__VA_ARGS__) \
+    {                                                                             \
+        return (__VA_ARGS__);                                                     \
+    }                                                                             \
     /**/
 
-#define RANGES_AUTO_RETURN_NOEXCEPT(...)                        \
-    noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__)))      \
-    { return (__VA_ARGS__); }                                   \
+#define RANGES_AUTO_RETURN_NOEXCEPT(...)                   \
+    noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__))) \
+    {                                                      \
+        return (__VA_ARGS__);                              \
+    }                                                      \
     /**/
 
-#define RANGES_DECLTYPE_NOEXCEPT(...)                           \
-    noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__))) ->   \
-    decltype(__VA_ARGS__)                                       \
-    /**/
+#define RANGES_DECLTYPE_NOEXCEPT(...) \
+    noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__)))->decltype(__VA_ARGS__) /**/
 
 // Non-portable forward declarations of standard containers
 #define RANGES_BEGIN_NAMESPACE_STD META_BEGIN_NAMESPACE_STD
@@ -151,7 +158,8 @@ namespace ranges
 #define RANGES_CXX_STD_11 201103L
 #define RANGES_CXX_STD_14 201402L
 #define RANGES_CXX_STD_17 201703L
-#define RANGES_CXX_THREAD_LOCAL_PRE_STANDARD 200000L // Arbitrary number between 0 and C++11
+#define RANGES_CXX_THREAD_LOCAL_PRE_STANDARD \
+    200000L // Arbitrary number between 0 and C++11
 #define RANGES_CXX_THREAD_LOCAL_11 RANGES_CXX_STD_11
 #define RANGES_CXX_THREAD_LOCAL_14 RANGES_CXX_THREAD_LOCAL_11
 #define RANGES_CXX_THREAD_LOCAL_17 RANGES_CXX_THREAD_LOCAL_14
@@ -176,8 +184,9 @@ namespace ranges
 #if defined(_MSC_VER) && !defined(__clang__)
 #define RANGES_DIAGNOSTIC_PUSH __pragma(warning(push))
 #define RANGES_DIAGNOSTIC_POP __pragma(warning(pop))
-#define RANGES_DIAGNOSTIC_IGNORE_PRAGMAS __pragma(warning(disable:4068))
-#define RANGES_DIAGNOSTIC_IGNORE(X) RANGES_DIAGNOSTIC_IGNORE_PRAGMAS __pragma(warning(disable:X))
+#define RANGES_DIAGNOSTIC_IGNORE_PRAGMAS __pragma(warning(disable : 4068))
+#define RANGES_DIAGNOSTIC_IGNORE(X) \
+    RANGES_DIAGNOSTIC_IGNORE_PRAGMAS __pragma(warning(disable : X))
 #define RANGES_DIAGNOSTIC_IGNORE_SHADOWING RANGES_DIAGNOSTIC_IGNORE(4456)
 #define RANGES_DIAGNOSTIC_IGNORE_INDENTATION
 #define RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_INTERNAL
@@ -203,40 +212,58 @@ namespace ranges
 #define RANGES_CXX_VER _MSVC_LANG
 
 #if _MSC_VER < 1922
-#define RANGES_WORKAROUND_MSVC_793042 // T[0] sometimes accepted as a valid type in SFINAE context
+#define RANGES_WORKAROUND_MSVC_793042 // T[0] sometimes accepted as a valid type in SFINAE
+                                      // context
 
 #if _MSC_VER < 1921
 #define RANGES_WORKAROUND_MSVC_785522 // SFINAE failure for error in immediate context
-#define RANGES_WORKAROUND_MSVC_786376 // Assertion casting anonymous union member in trailing-return-type
-#define RANGES_WORKAROUND_MSVC_787074 // Over-eager substitution of dependent type in non-instantiated nested class template
-#define RANGES_WORKAROUND_MSVC_790554 // Assert for return type that uses dependent default non-type template argument
+#define RANGES_WORKAROUND_MSVC_786376 // Assertion casting anonymous union member in
+                                      // trailing-return-type
+#define RANGES_WORKAROUND_MSVC_787074 // Over-eager substitution of dependent type in
+                                      // non-instantiated nested class template
+#define RANGES_WORKAROUND_MSVC_790554 // Assert for return type that uses dependent
+                                      // default non-type template argument
 
 #if _MSC_VER < 1920
 #define RANGES_WORKAROUND_MSVC_DC338193 // https://developercommunity.visualstudio.com/content/problem/338193/sfinae-disabled-ref-qualified-function-collides-wi.html
-#define RANGES_WORKAROUND_MSVC_401490 // conversion of constant expressions with representable values is NOT narrowing
-#define RANGES_WORKAROUND_MSVC_589046 // hidden friends should not be visible to qualified name lookup
-#define RANGES_WORKAROUND_MSVC_699982 // Nasty context-sensitive alias expansion / SFINAE error
-#define RANGES_WORKAROUND_MSVC_701425 // Failure to deduce decltype(pointer-to-member) (gcc_bugs_bugs_bugs for MSVC)
-#define RANGES_WORKAROUND_MSVC_711347 // Assertion invoking constexpr member function as alias template argument
-#endif // _MSC_VER < 1920
-#endif // _MSC_VER < 1921
-#endif // _MSC_VER < 1922
+#define RANGES_WORKAROUND_MSVC_401490   // conversion of constant expressions with
+                                        // representable values is NOT narrowing
+#define RANGES_WORKAROUND_MSVC_589046 // hidden friends should not be visible to qualified
+                                      // name lookup
+#define RANGES_WORKAROUND_MSVC_699982 // Nasty context-sensitive alias expansion / SFINAE
+                                      // error
+#define RANGES_WORKAROUND_MSVC_701425 // Failure to deduce decltype(pointer-to-member)
+                                      // (gcc_bugs_bugs_bugs for MSVC)
+#define RANGES_WORKAROUND_MSVC_711347 // Assertion invoking constexpr member function as
+                                      // alias template argument
+#endif                                // _MSC_VER < 1920
+#endif                                // _MSC_VER < 1921
+#endif                                // _MSC_VER < 1922
 
 #if 1 // Fixed in 1920, but more bugs hiding behind workaround
-#define RANGES_WORKAROUND_MSVC_620035 // Error when definition-context name binding finds only deleted function
+#define RANGES_WORKAROUND_MSVC_620035 // Error when definition-context name binding finds
+                                      // only deleted function
 #define RANGES_WORKAROUND_MSVC_701385 // Yet another alias expansion error
 #endif
 
-#define RANGES_WORKAROUND_MSVC_249830 // constexpr and arguments that aren't subject to lvalue-to-rvalue conversion
-#define RANGES_WORKAROUND_MSVC_573728 // rvalues of array types bind to lvalue references [no workaround]
-#define RANGES_WORKAROUND_MSVC_677925 // Bogus C2676 "binary '++': '_Ty' does not define this operator"
-#define RANGES_WORKAROUND_MSVC_683388 // decltype(*i) is incorrectly an rvalue reference for pointer-to-array i
-#define RANGES_WORKAROUND_MSVC_688606 // SFINAE failing to account for access control during specialization matching
-#define RANGES_WORKAROUND_MSVC_756601 // constexpr friend non-template erroneously rejected with C3615
+#define RANGES_WORKAROUND_MSVC_249830 // constexpr and arguments that aren't subject to
+                                      // lvalue-to-rvalue conversion
+#define RANGES_WORKAROUND_MSVC_573728 // rvalues of array types bind to lvalue references
+                                      // [no workaround]
+#define RANGES_WORKAROUND_MSVC_677925 // Bogus C2676 "binary '++': '_Ty' does not define
+                                      // this operator"
+#define RANGES_WORKAROUND_MSVC_683388 // decltype(*i) is incorrectly an rvalue reference
+                                      // for pointer-to-array i
+#define RANGES_WORKAROUND_MSVC_688606 // SFINAE failing to account for access control
+                                      // during specialization matching
+#define RANGES_WORKAROUND_MSVC_756601 // constexpr friend non-template erroneously
+                                      // rejected with C3615
 #define RANGES_WORKAROUND_MSVC_779708 // ADL for operands of function type [No workaround]
 #define RANGES_WORKAROUND_MSVC_786312 // Yet another mixed-pack-expansion failure
-#define RANGES_WORKAROUND_MSVC_792338 // Failure to match specialization enabled via call to constexpr function
-#define RANGES_WORKAROUND_MSVC_835948 // Silent bad codegen destroying sized_generator [No workaround]
+#define RANGES_WORKAROUND_MSVC_792338 // Failure to match specialization enabled via call
+                                      // to constexpr function
+#define RANGES_WORKAROUND_MSVC_835948 // Silent bad codegen destroying sized_generator [No
+                                      // workaround]
 
 // 15.9 doesn't define __cpp_coroutines even with /await (Fix not yet live)
 #if !defined(RANGES_CXX_COROUTINES) && defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
@@ -248,41 +275,57 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_PUSH RANGES_PRAGMA(GCC diagnostic push)
 #define RANGES_DIAGNOSTIC_POP RANGES_PRAGMA(GCC diagnostic pop)
 #define RANGES_DIAGNOSTIC_IGNORE_PRAGMAS RANGES_PRAGMA(GCC diagnostic ignored "-Wpragmas")
-#define RANGES_DIAGNOSTIC_IGNORE(X) \
-    RANGES_DIAGNOSTIC_IGNORE_PRAGMAS \
-    RANGES_PRAGMA(GCC diagnostic ignored "-Wunknown-pragmas") \
+#define RANGES_DIAGNOSTIC_IGNORE(X)                                  \
+    RANGES_DIAGNOSTIC_IGNORE_PRAGMAS                                 \
+    RANGES_PRAGMA(GCC diagnostic ignored "-Wunknown-pragmas")        \
     RANGES_PRAGMA(GCC diagnostic ignored "-Wunknown-warning-option") \
     RANGES_PRAGMA(GCC diagnostic ignored X)
 #define RANGES_DIAGNOSTIC_IGNORE_SHADOWING RANGES_DIAGNOSTIC_IGNORE("-Wshadow")
-#define RANGES_DIAGNOSTIC_IGNORE_INDENTATION RANGES_DIAGNOSTIC_IGNORE("-Wmisleading-indentation")
-#define RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_INTERNAL RANGES_DIAGNOSTIC_IGNORE("-Wundefined-internal")
-#define RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS RANGES_DIAGNOSTIC_IGNORE("-Wmismatched-tags")
-#define RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION RANGES_DIAGNOSTIC_IGNORE("-Wsign-conversion")
+#define RANGES_DIAGNOSTIC_IGNORE_INDENTATION \
+    RANGES_DIAGNOSTIC_IGNORE("-Wmisleading-indentation")
+#define RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_INTERNAL \
+    RANGES_DIAGNOSTIC_IGNORE("-Wundefined-internal")
+#define RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS \
+    RANGES_DIAGNOSTIC_IGNORE("-Wmismatched-tags")
+#define RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION \
+    RANGES_DIAGNOSTIC_IGNORE("-Wsign-conversion")
 #define RANGES_DIAGNOSTIC_IGNORE_FLOAT_EQUAL RANGES_DIAGNOSTIC_IGNORE("-Wfloat-equal")
-#define RANGES_DIAGNOSTIC_IGNORE_MISSING_BRACES RANGES_DIAGNOSTIC_IGNORE("-Wmissing-braces")
-#define RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS RANGES_DIAGNOSTIC_IGNORE("-Wglobal-constructors")
-#define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_INTERNAL RANGES_DIAGNOSTIC_IGNORE("-Wunneeded-internal-declaration")
-#define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_MEMBER RANGES_DIAGNOSTIC_IGNORE("-Wunneeded-member-function")
-#define RANGES_DIAGNOSTIC_IGNORE_ZERO_LENGTH_ARRAY RANGES_DIAGNOSTIC_IGNORE("-Wzero-length-array")
+#define RANGES_DIAGNOSTIC_IGNORE_MISSING_BRACES \
+    RANGES_DIAGNOSTIC_IGNORE("-Wmissing-braces")
+#define RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS \
+    RANGES_DIAGNOSTIC_IGNORE("-Wglobal-constructors")
+#define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_INTERNAL \
+    RANGES_DIAGNOSTIC_IGNORE("-Wunneeded-internal-declaration")
+#define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_MEMBER \
+    RANGES_DIAGNOSTIC_IGNORE("-Wunneeded-member-function")
+#define RANGES_DIAGNOSTIC_IGNORE_ZERO_LENGTH_ARRAY \
+    RANGES_DIAGNOSTIC_IGNORE("-Wzero-length-array")
 #define RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT RANGES_DIAGNOSTIC_IGNORE("-Wc++1z-compat")
-#define RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_FUNC_TEMPLATE RANGES_DIAGNOSTIC_IGNORE("-Wundefined-func-template")
-#define RANGES_DIAGNOSTIC_IGNORE_INCONSISTENT_OVERRIDE RANGES_DIAGNOSTIC_IGNORE("-Winconsistent-missing-override")
-#define RANGES_DIAGNOSTIC_IGNORE_RANGE_LOOP_ANALYSIS RANGES_DIAGNOSTIC_IGNORE("-Wrange-loop-analysis")
-#define RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS RANGES_DIAGNOSTIC_IGNORE("-Wdeprecated-declarations")
-#define RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_THIS_CAPTURE RANGES_DIAGNOSTIC_IGNORE("-Wdeprecated-this-capture")
-#define RANGES_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME RANGES_DIAGNOSTIC_IGNORE("-Winit-list-lifetime")
+#define RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_FUNC_TEMPLATE \
+    RANGES_DIAGNOSTIC_IGNORE("-Wundefined-func-template")
+#define RANGES_DIAGNOSTIC_IGNORE_INCONSISTENT_OVERRIDE \
+    RANGES_DIAGNOSTIC_IGNORE("-Winconsistent-missing-override")
+#define RANGES_DIAGNOSTIC_IGNORE_RANGE_LOOP_ANALYSIS \
+    RANGES_DIAGNOSTIC_IGNORE("-Wrange-loop-analysis")
+#define RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS \
+    RANGES_DIAGNOSTIC_IGNORE("-Wdeprecated-declarations")
+#define RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_THIS_CAPTURE \
+    RANGES_DIAGNOSTIC_IGNORE("-Wdeprecated-this-capture")
+#define RANGES_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME \
+    RANGES_DIAGNOSTIC_IGNORE("-Winit-list-lifetime")
 #define RANGES_DIAGNOSTIC_IGNORE_DIVIDE_BY_ZERO
 
 #define RANGES_WORKAROUND_CWG_1554
 #ifdef __clang__
 #if __clang_major__ < 4
-#define RANGES_WORKAROUND_CLANG_23135 // constexpr leads to premature instantiation on clang-3.x
+#define RANGES_WORKAROUND_CLANG_23135 // constexpr leads to premature instantiation on
+                                      // clang-3.x
 #endif
 #else // __GNUC__
 #if __GNUC__ < 6
 #define RANGES_WORKAROUND_GCC_UNFILED0 /* Workaround old GCC name lookup bug */
 #endif
-#if __GNUC__ >=9 && defined(__cpp_concepts)
+#if __GNUC__ >= 9 && defined(__cpp_concepts)
 #define RANGES_WORKAROUND_GCC_89953
 #endif
 #endif
@@ -316,7 +359,7 @@ namespace ranges
 #define RANGES_CXX_VER __cplusplus
 #endif
 
-#define RANGES_CXX_FEATURE_CONCAT2(y, z) RANGES_CXX_ ## y ## _ ## z
+#define RANGES_CXX_FEATURE_CONCAT2(y, z) RANGES_CXX_##y##_##z
 #define RANGES_CXX_FEATURE_CONCAT(y, z) RANGES_CXX_FEATURE_CONCAT2(y, z)
 
 #if RANGES_CXX_VER >= RANGES_CXX_STD_17
@@ -346,8 +389,8 @@ namespace ranges
 #endif
 #endif
 
-#if (defined(__cpp_lib_type_trait_variable_templates) && \
-    __cpp_lib_type_trait_variable_templates > 0) || \
+#if(defined(__cpp_lib_type_trait_variable_templates) && \
+    __cpp_lib_type_trait_variable_templates > 0) ||     \
     RANGES_CXX_VER >= RANGES_CXX_STD_17
 #define RANGES_CXX_TRAIT_VARIABLE_TEMPLATES 1
 #else
@@ -418,9 +461,8 @@ namespace ranges
 #endif
 
 #if !defined(RANGES_DEPRECATED) && !defined(RANGES_DISABLE_DEPRECATED_WARNINGS)
-#if RANGES_CXX_ATTRIBUTE_DEPRECATED &&            \
-   !((defined(__clang__) || defined(__GNUC__)) && \
-     RANGES_CXX_STD < RANGES_CXX_STD_14)
+#if RANGES_CXX_ATTRIBUTE_DEPRECATED && \
+    !((defined(__clang__) || defined(__GNUC__)) && RANGES_CXX_STD < RANGES_CXX_STD_14)
 #define RANGES_DEPRECATED(MSG) [[deprecated(MSG)]]
 #elif defined(__clang__) || defined(__GNUC__)
 #define RANGES_DEPRECATED(MSG) __attribute__((deprecated(MSG)))
@@ -436,7 +478,8 @@ namespace ranges
 #elif defined(_MSC_VER)
 #define RANGES_STRINGIZE_(MSG) #MSG
 #define RANGES_STRINGIZE(MSG) RANGES_STRINGIZE_(MSG)
-#define RANGES_DEPRECATED_HEADER(MSG) __pragma(message(__FILE__ "(" RANGES_STRINGIZE(__LINE__) ") : Warning: " MSG))
+#define RANGES_DEPRECATED_HEADER(MSG) \
+    __pragma(message(__FILE__ "(" RANGES_STRINGIZE(__LINE__) ") : Warning: " MSG))
 #endif
 #else
 #define RANGES_DEPRECATED_HEADER(MSG) /**/
@@ -473,46 +516,47 @@ namespace ranges
 #define RANGES_CXX_INLINE_VARIABLES __cpp_inline_variables
 #elif defined(__clang__) && (__clang_major__ == 3 && __clang_minor__ == 9) && \
     RANGES_CXX_VER > RANGES_CXX_STD_14
-// Clang 3.9 supports inline variables in C++17 mode, but doesn't define __cpp_inline_variables
+// Clang 3.9 supports inline variables in C++17 mode, but doesn't define
+// __cpp_inline_variables
 #define RANGES_CXX_INLINE_VARIABLES RANGES_CXX_INLINE_VARIABLES_17
 #else
 #define RANGES_CXX_INLINE_VARIABLES RANGES_CXX_FEATURE(INLINE_VARIABLES)
-#endif  // __cpp_inline_variables
-#endif  // RANGES_CXX_INLINE_VARIABLES
+#endif // __cpp_inline_variables
+#endif // RANGES_CXX_INLINE_VARIABLES
 
-#if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17 &&             \
+#if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17 && \
     !defined(RANGES_DOXYGEN_INVOKED)
 #define RANGES_INLINE_VAR
-#define RANGES_INLINE_VARIABLE(type, name)                                      \
-    namespace                                                                   \
-    {                                                                           \
-        constexpr auto &name = ::ranges::static_const<type>::value;             \
+#define RANGES_INLINE_VARIABLE(type, name)                           \
+    namespace                                                        \
+    {                                                                \
+        constexpr auto & name = ::ranges::static_const<type>::value; \
     }
-#else  // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
+#else // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
 #define RANGES_INLINE_VAR inline
-#define RANGES_INLINE_VARIABLE(type, name)                                      \
-    inline constexpr type name{};                                               \
+#define RANGES_INLINE_VARIABLE(type, name) \
+    inline constexpr type name{};          \
     /**/
 #endif // RANGES_CXX_INLINE_VARIABLES
 
 #if defined(RANGES_DOXYGEN_INVOKED)
-#define RANGES_DEFINE_CPO(type, name)                                           \
-    inline constexpr type name{};                                               \
+#define RANGES_DEFINE_CPO(type, name) \
+    inline constexpr type name{};     \
     /**/
 #elif RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17
-#define RANGES_DEFINE_CPO(type, name)                                           \
-    namespace                                                                   \
-    {                                                                           \
-        constexpr auto &name = ::ranges::static_const<type>::value;             \
-    }                                                                           \
+#define RANGES_DEFINE_CPO(type, name)                                \
+    namespace                                                        \
+    {                                                                \
+        constexpr auto & name = ::ranges::static_const<type>::value; \
+    }                                                                \
     /**/
-#else  // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
-#define RANGES_DEFINE_CPO(type, name)                                           \
-    namespace _                                                                 \
-    {                                                                           \
-        inline constexpr type name{};                                           \
-    }                                                                           \
-    using namespace _;                                                          \
+#else // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
+#define RANGES_DEFINE_CPO(type, name) \
+    namespace _                       \
+    {                                 \
+        inline constexpr type name{}; \
+    }                                 \
+    using namespace _;                \
     /**/
 #endif // RANGES_CXX_INLINE_VARIABLES
 
@@ -554,8 +598,8 @@ namespace ranges
 
 // Its not enough for the compiler to support this; the stdlib must support it too.
 #ifndef RANGES_CXX_ALIGNED_NEW
-#if (!defined(_LIBCPP_VERSION) || \
-		(_LIBCPP_VERSION >= 4000 && !defined(_LIBCPP_HAS_NO_ALIGNED_ALLOCATION))) && \
+#if(!defined(_LIBCPP_VERSION) ||                                                 \
+    (_LIBCPP_VERSION >= 4000 && !defined(_LIBCPP_HAS_NO_ALIGNED_ALLOCATION))) && \
     (!defined(__GLIBCXX__) || (defined(_GLIBCXX_RELEASE) && _GLIBCXX_RELEASE >= 7))
 #if defined(__cpp_aligned_new)
 #define RANGES_CXX_ALIGNED_NEW __cpp_aligned_new
@@ -600,7 +644,7 @@ namespace ranges
 #if defined(__clang__)
 #if __has_attribute(no_sanitize)
 #define RANGES_INTENDED_MODULAR_ARITHMETIC \
-  __attribute__((__no_sanitize__("unsigned-integer-overflow")))
+    __attribute__((__no_sanitize__("unsigned-integer-overflow")))
 #else
 #define RANGES_INTENDED_MODULAR_ARITHMETIC
 #endif
@@ -610,14 +654,14 @@ namespace ranges
 
 #ifndef RANGES_CONSTEXPR_IF
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-#define RANGES_CONSTEXPR_IF constexpr
+#define RANGES_CONSTEXPR_IF(...) false) {} else if constexpr(__VA_ARGS__
 #else
-#define RANGES_CONSTEXPR_IF
+#define RANGES_CONSTEXPR_IF(...) __VA_ARGS__
 #endif
 #endif // RANGES_CONSTEXPR_IF
 
 #if !defined(RANGES_BROKEN_CPO_LOOKUP) && !defined(RANGES_DOXYGEN_INVOKED) && \
-    (defined(RANGES_WORKAROUND_GCC_UNFILED0) || \
+    (defined(RANGES_WORKAROUND_GCC_UNFILED0) ||                               \
      defined(RANGES_WORKAROUND_MSVC_589046) || defined(RANGES_WORKAROUND_MSVC_620035))
 #define RANGES_BROKEN_CPO_LOOKUP 1
 #endif
@@ -629,12 +673,10 @@ namespace ranges
 #if defined(__has_cpp_attribute) && __has_cpp_attribute(nodiscard)
 #if defined(__clang__) && __cplusplus < 201703L
 // clang complains about using nodiscard in C++14 mode.
-#define RANGES_NODISCARD                                                        \
-    RANGES_DIAGNOSTIC_PUSH                                                      \
-    RANGES_DIAGNOSTIC_IGNORE("-Wc++1z-extensions")                              \
-    [[nodiscard]]                                                               \
-    RANGES_DIAGNOSTIC_POP                                                       \
-    /**/
+#define RANGES_NODISCARD                           \
+    RANGES_DIAGNOSTIC_PUSH                         \
+    RANGES_DIAGNOSTIC_IGNORE("-Wc++1z-extensions") \
+    [[nodiscard]] RANGES_DIAGNOSTIC_POP /**/
 #else
 #define RANGES_NODISCARD [[nodiscard]]
 #endif

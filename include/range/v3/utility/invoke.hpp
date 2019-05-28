@@ -14,7 +14,9 @@
 #define RANGES_V3_UTILITY_INVOKE_HPP
 
 #include <range/v3/detail/config.hpp>
-RANGES_DEPRECATED_HEADER("This file has been deprecated. Please #include <range/v3/functional/invoke.hpp> instead.")
+RANGES_DEPRECATED_HEADER(
+    "This file has been deprecated. Please #include <range/v3/functional/invoke.hpp> "
+    "instead.")
 
 #include <range/v3/functional/invoke.hpp>
 

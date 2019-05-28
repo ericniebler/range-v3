@@ -13,9 +13,11 @@
 #ifndef RANGES_V3_UTILITY_INFINITY_HPP
 #define RANGES_V3_UTILITY_INFINITY_HPP
 
-#include <range/v3/range_fwd.hpp>
 #include <concepts/concepts.hpp>
-RANGES_DEPRECATED_HEADER("This header is deprecated and will be removed from a future version of range-v3.")
+
+#include <range/v3/range_fwd.hpp>
+RANGES_DEPRECATED_HEADER(
+    "This header is deprecated and will be removed from a future version of range-v3.")
 
 namespace ranges
 {
@@ -31,29 +33,29 @@ namespace ranges
             return false;
         }
         template<typename Integer>
-        friend constexpr auto operator==(Integer, infinity) noexcept ->
-            CPP_broken_friend_ret(bool)(
+        friend constexpr auto operator==(Integer, infinity) noexcept
+            -> CPP_broken_friend_ret(bool)( //
                 requires Integral<Integer>)
         {
             return false;
         }
         template<typename Integer>
-        friend constexpr auto operator==(infinity, Integer) noexcept ->
-            CPP_broken_friend_ret(bool)(
+        friend constexpr auto operator==(infinity, Integer) noexcept
+            -> CPP_broken_friend_ret(bool)( //
                 requires Integral<Integer>)
         {
             return false;
         }
         template<typename Integer>
-        friend constexpr auto operator!=(Integer, infinity) noexcept ->
-            CPP_broken_friend_ret(bool)(
+        friend constexpr auto operator!=(Integer, infinity) noexcept
+            -> CPP_broken_friend_ret(bool)( //
                 requires Integral<Integer>)
         {
             return true;
         }
         template<typename Integer>
-        friend constexpr auto operator!=(infinity, Integer) noexcept ->
-            CPP_broken_friend_ret(bool)(
+        friend constexpr auto operator!=(infinity, Integer) noexcept
+            -> CPP_broken_friend_ret(bool)( //
                 requires Integral<Integer>)
         {
             return true;

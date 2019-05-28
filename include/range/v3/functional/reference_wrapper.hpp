@@ -15,8 +15,11 @@
 
 #include <type_traits>
 #include <utility>
+
 #include <meta/meta.hpp>
+
 #include <concepts/concepts.hpp>
+
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/functional/pipeable.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -32,13 +35,13 @@ namespace ranges
         template<typename T>
         struct reference_wrapper_
         {
-            T *t_ = nullptr;
+            T * t_ = nullptr;
             constexpr reference_wrapper_() = default;
-            constexpr reference_wrapper_(T &t) noexcept
+            constexpr reference_wrapper_(T & t) noexcept
               : t_(std::addressof(t))
             {}
             constexpr reference_wrapper_(T &&) = delete;
-            constexpr T &get() const noexcept
+            constexpr T & get() const noexcept
             {
                 return *t_;
             }
@@ -51,12 +54,12 @@ namespace ranges
         template<typename T>
         struct reference_wrapper_<T &&>
         {
-            T *t_ = nullptr;
+            T * t_ = nullptr;
             constexpr reference_wrapper_() = default;
-            constexpr reference_wrapper_(T &&t) noexcept
+            constexpr reference_wrapper_(T && t) noexcept
               : t_(std::addressof(t))
             {}
-            constexpr T &&get() const noexcept
+            constexpr T && get() const noexcept
             {
                 return static_cast<T &&>(*t_);
             }
@@ -67,12 +70,12 @@ namespace ranges
     // Can be used to store rvalue references in addition to lvalue references.
     // Also, see: https://wg21.link/lwg2993
     template<typename T>
-    struct reference_wrapper
-      : private detail::reference_wrapper_<T>
+    struct reference_wrapper : private detail::reference_wrapper_<T>
     {
     private:
         using base_ = detail::reference_wrapper_<T>;
         using base_::t_;
+
     public:
         using type = meta::_t<std::remove_reference<T>>;
         using reference = meta::if_<std::is_reference<T>, T, T &>;
@@ -80,19 +83,19 @@ namespace ranges
         constexpr reference_wrapper() = default;
 #if !defined(__clang__) || __clang_major__ > 3
         template<typename U>
-        constexpr CPP_ctor(reference_wrapper)(U &&u)(
-            noexcept(std::is_nothrow_constructible<base_, U>::value)
-            requires (!defer::Same<uncvref_t<U>, reference_wrapper>) &&
-                defer::Constructible<base_, U>)
-            : detail::reference_wrapper_<T>{static_cast<U &&>(u)}
+        constexpr CPP_ctor(reference_wrapper)(U && u)(               //
+            noexcept(std::is_nothrow_constructible<base_, U>::value) //
+            requires(!defer::Same<uncvref_t<U>, reference_wrapper>) &&
+            defer::Constructible<base_, U>)
+          : detail::reference_wrapper_<T>{static_cast<U &&>(u)}
         {}
 #else
         // BUGBUG clang-3.7 prefers a CPP_template here instead of a CPP_ctor
-        CPP_template(typename U)(
-            requires (!defer::Same<uncvref_t<U>, reference_wrapper>) &&
-                defer::Constructible<base_, U>)
-        constexpr reference_wrapper(U &&u)
-            noexcept(std::is_nothrow_constructible<base_, U>::value)
+        CPP_template(typename U)( //
+            requires(!defer::Same<uncvref_t<U>, reference_wrapper>) &&
+            defer::Constructible<base_, U>) //
+            constexpr reference_wrapper(U && u) noexcept(
+                std::is_nothrow_constructible<base_, U>::value)
           : detail::reference_wrapper_<T>{static_cast<U &&>(u)}
         {}
 #endif
@@ -104,25 +107,26 @@ namespace ranges
         {
             return get();
         }
-        CPP_template(typename...)(
-            requires (!std::is_rvalue_reference<T>::value))
-        operator std::reference_wrapper<type> () const noexcept
+        CPP_template(typename...)(                         //
+            requires(!std::is_rvalue_reference<T>::value)) //
+        operator std::reference_wrapper<type>() const noexcept
         {
             return {get()};
         }
+        // clang-format off
         template<typename ...Args>
         constexpr auto CPP_auto_fun(operator())(Args &&...args) (const)
         (
             return invoke(static_cast<reference>(*t_), static_cast<Args &&>(args)...)
         )
+        // clang-format on
     };
 
-    struct ref_fn
-      : pipeable<ref_fn>
+    struct ref_fn : pipeable<ref_fn>
     {
         template<typename T>
-        auto operator()(T &t) const -> CPP_ret(reference_wrapper<T>)(
-            requires (!is_reference_wrapper_v<T>))
+        auto operator()(T & t) const -> CPP_ret(reference_wrapper<T>)( //
+            requires(!is_reference_wrapper_v<T>))
         {
             return {t};
         }
@@ -150,26 +154,26 @@ namespace ranges
     struct unwrap_reference_fn
     {
         template<typename T>
-        T &&operator()(T &&t) const noexcept
+        T && operator()(T && t) const noexcept
         {
             return static_cast<T &&>(t);
         }
         /// \overload
         template<typename T>
-        typename reference_wrapper<T>::reference
-        operator()(reference_wrapper<T> t) const noexcept
+        typename reference_wrapper<T>::reference operator()(reference_wrapper<T> t) const
+            noexcept
         {
             return t.get();
         }
         /// \overload
         template<typename T>
-        T &operator()(std::reference_wrapper<T> t) const noexcept
+        T & operator()(std::reference_wrapper<T> t) const noexcept
         {
             return t.get();
         }
         /// \overload
         template<typename T>
-        T &operator()(ref_view<T> t) const noexcept
+        T & operator()(ref_view<T> t) const noexcept
         {
             return t.base();
         }

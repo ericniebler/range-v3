@@ -14,17 +14,19 @@
 #define RANGES_V3_ALGORITHM_PARTIAL_SORT_COPY_HPP
 
 #include <meta/meta.hpp>
+
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/dangling.hpp>
-#include <range/v3/range/traits.hpp>
+
 #include <range/v3/algorithm/heap_algorithm.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -34,13 +36,11 @@ namespace ranges
     struct partial_sort_copy_fn
     {
         template<typename I, typename SI, typename O, typename SO, typename C = less,
-            typename PI = identity, typename PO = identity>
+                 typename PI = identity, typename PO = identity>
         auto operator()(I begin, SI end, O out_begin, SO out_end, C pred = C{},
-                PI in_proj = PI{}, PO out_proj = PO{}) const ->
-            CPP_ret(O)(
-                requires InputIterator<I> && Sentinel<SI, I> &&
-                    RandomAccessIterator<O> && Sentinel<SO, O> &&
-                    IndirectlyCopyable<I, O> && Sortable<O, C, PO> &&
+                        PI in_proj = PI{}, PO out_proj = PO{}) const -> CPP_ret(O)( //
+            requires InputIterator<I> && Sentinel<SI, I> && RandomAccessIterator<O> &&
+                Sentinel<SO, O> && IndirectlyCopyable<I, O> && Sortable<O, C, PO> &&
                     IndirectStrictWeakOrder<C, projected<I, PI>, projected<O, PO>>)
         {
             O r = out_begin;
@@ -52,11 +52,15 @@ namespace ranges
                 auto len = r - out_begin;
                 for(; begin != end; ++begin)
                 {
-                    auto &&x = *begin;
+                    auto && x = *begin;
                     if(invoke(pred, invoke(in_proj, x), invoke(out_proj, *out_begin)))
                     {
-                        *out_begin = (decltype(x) &&) x;
-                        detail::sift_down_n(out_begin, len, out_begin, std::ref(pred), std::ref(out_proj));
+                        *out_begin = (decltype(x) &&)x;
+                        detail::sift_down_n(out_begin,
+                                            len,
+                                            out_begin,
+                                            std::ref(pred),
+                                            std::ref(out_proj));
                     }
                 }
                 sort_heap(out_begin, r, std::ref(pred), std::ref(out_proj));
@@ -65,18 +69,23 @@ namespace ranges
         }
 
         template<typename InRng, typename OutRng, typename C = less,
-            typename PI = identity, typename PO = identity>
-        auto operator()(InRng &&in_rng, OutRng &&out_rng, C pred = C{}, PI in_proj = PI{},
-                PO out_proj = PO{}) const ->
-            CPP_ret(safe_iterator_t<OutRng>)(
-                requires InputRange<InRng> &&
-                    RandomAccessRange<OutRng> &&
+                 typename PI = identity, typename PO = identity>
+        auto operator()(InRng && in_rng, OutRng && out_rng, C pred = C{},
+                        PI in_proj = PI{}, PO out_proj = PO{}) const
+            -> CPP_ret(safe_iterator_t<OutRng>)( //
+                requires InputRange<InRng> && RandomAccessRange<OutRng> &&
                     IndirectlyCopyable<iterator_t<InRng>, iterator_t<OutRng>> &&
-                    Sortable<iterator_t<OutRng>, C, PO> &&
-                    IndirectStrictWeakOrder<C, projected<iterator_t<InRng>, PI>, projected<iterator_t<OutRng>, PO>>)
+                        Sortable<iterator_t<OutRng>, C, PO> &&
+                            IndirectStrictWeakOrder<C, projected<iterator_t<InRng>, PI>,
+                                                    projected<iterator_t<OutRng>, PO>>)
         {
-            return (*this)(begin(in_rng), end(in_rng), begin(out_rng), end(out_rng),
-                std::move(pred), std::move(in_proj), std::move(out_proj));
+            return (*this)(begin(in_rng),
+                           end(in_rng),
+                           begin(out_rng),
+                           end(out_rng),
+                           std::move(pred),
+                           std::move(in_proj),
+                           std::move(out_proj));
         }
     };
 

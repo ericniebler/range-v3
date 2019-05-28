@@ -14,20 +14,23 @@
 #ifndef RANGES_V3_VIEW_DROP_WHILE_HPP
 #define RANGES_V3_VIEW_DROP_WHILE_HPP
 
-#include <utility>
 #include <functional>
+#include <utility>
+
 #include <meta/meta.hpp>
-#include <range/v3/range/traits.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/view/interface.hpp>
+
+#include <range/v3/range_fwd.hpp>
+
+#include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/functional/compose.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/interface.hpp>
 #include <range/v3/view/view.hpp>
-#include <range/v3/range_fwd.hpp>
 
 namespace ranges
 {
@@ -35,7 +38,8 @@ namespace ranges
     /// @{
     template<typename Rng, typename Pred>
     struct drop_while_view
-      : view_interface<drop_while_view<Rng, Pred>, is_finite<Rng>::value ? finite : unknown>
+      : view_interface<drop_while_view<Rng, Pred>,
+                       is_finite<Rng>::value ? finite : unknown>
     {
     private:
         Rng rng_;
@@ -48,10 +52,12 @@ namespace ranges
                 begin_ = find_if_not(rng_, std::ref(pred_));
             return *begin_;
         }
+
     public:
         drop_while_view() = default;
         drop_while_view(Rng rng, Pred pred)
-          : rng_(std::move(rng)), pred_(std::move(pred))
+          : rng_(std::move(rng))
+          , pred_(std::move(pred))
         {}
         iterator_t<Rng> begin()
         {
@@ -76,35 +82,35 @@ namespace ranges
             template<typename Pred>
             static auto bind(drop_while_fn drop_while, Pred pred)
             {
-                return make_pipeable(
-                    std::bind(drop_while, std::placeholders::_1, protect(std::move(pred))));
+                return make_pipeable(std::bind(
+                    drop_while, std::placeholders::_1, protect(std::move(pred))));
             }
             template<typename Pred, typename Proj>
             static auto bind(drop_while_fn drop_while, Pred pred, Proj proj)
             {
-                return make_pipeable(
-                    std::bind(drop_while, std::placeholders::_1, protect(std::move(pred)),
-                    protect(std::move(proj))));
+                return make_pipeable(std::bind(drop_while,
+                                               std::placeholders::_1,
+                                               protect(std::move(pred)),
+                                               protect(std::move(proj))));
             }
+
         public:
             template<typename Rng, typename Pred>
-            auto operator()(Rng &&rng, Pred pred) const ->
-                CPP_ret(drop_while_view<all_t<Rng>, Pred>)(
+            auto operator()(Rng && rng, Pred pred) const
+                -> CPP_ret(drop_while_view<all_t<Rng>, Pred>)( //
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
             template<typename Rng, typename Pred, typename Proj>
-            auto operator()(Rng &&rng, Pred pred, Proj proj) const ->
-                CPP_ret(drop_while_view<all_t<Rng>, composed<Pred, Proj>>)(
+            auto operator()(Rng && rng, Pred pred, Proj proj) const
+                -> CPP_ret(drop_while_view<all_t<Rng>, composed<Pred, Proj>>)( //
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<composed<Pred, Proj>, iterator_t<Rng>>)
             {
-                return {
-                    all(static_cast<Rng &&>(rng)),
-                    compose(std::move(pred), std::move(proj))
-                };
+                return {all(static_cast<Rng &&>(rng)),
+                        compose(std::move(pred), std::move(proj))};
             }
         };
 

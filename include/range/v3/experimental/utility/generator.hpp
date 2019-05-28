@@ -18,28 +18,34 @@
 #include <atomic>
 #include <cstddef>
 #include <exception>
-#include <utility>
 #include <experimental/coroutine>
+#include <utility>
+
 #include <meta/meta.hpp>
+
 #include <concepts/concepts.hpp>
+
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/view/facade.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/swap.hpp>
-#include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/facade.hpp>
 
 #if defined(_MSC_VER) && !defined(RANGES_SILENCE_COROUTINE_WARNING)
 #ifdef __clang__
-#pragma message("DANGER: clang doesn't (yet?) grok the MSVC coroutine ABI. " \
-    "Use at your own risk. " \
+#pragma message(                                                 \
+    "DANGER: clang doesn't (yet?) grok the MSVC coroutine ABI. " \
+    "Use at your own risk. "                                     \
     "(RANGES_SILENCE_COROUTINE_WARNING will silence this message.)")
 #elif defined RANGES_WORKAROUND_MSVC_835948
-#pragma message("DANGER: ranges::experimental::generator is fine, but this " \
+#pragma message(                                                                 \
+    "DANGER: ranges::experimental::generator is fine, but this "                 \
     "version of MSVC likely miscompiles ranges::experimental::sized_generator. " \
-    "Use the latter at your own risk. " \
+    "Use the latter at your own risk. "                                          \
     "(RANGES_SILENCE_COROUTINE_WARNING will silence this message.)")
 #endif
 #endif // RANGES_SILENCE_COROUTINE_WARNINGS
@@ -54,7 +60,10 @@ namespace ranges
         using generator_size_t = std::size_t;
 
         // Type upon which to co_await to set the size of a sized_generator
-        enum struct generator_size : generator_size_t { invalid = ~generator_size_t(0) };
+        enum struct generator_size : generator_size_t
+        {
+            invalid = ~generator_size_t(0)
+        };
 
         template<typename Promise = void>
         struct RANGES_EMPTY_BASES coroutine_owner;
@@ -63,7 +72,7 @@ namespace ranges
         {
             template<class>
             friend struct coroutine_owner;
-            std::atomic<unsigned int> refcount_ {1};
+            std::atomic<unsigned int> refcount_{1};
         };
     } // namespace experimental
 
@@ -80,16 +89,17 @@ namespace ranges
 
         namespace coroutine_owner_
         {
-            struct adl_hook {};
+            struct adl_hook
+            {};
 
             template<typename Promise>
-            void swap(experimental::coroutine_owner<Promise> &x,
-                      experimental::coroutine_owner<Promise> &y) noexcept
+            void swap(experimental::coroutine_owner<Promise> & x,
+                      experimental::coroutine_owner<Promise> & y) noexcept
             {
                 x.swap(y);
             }
         } // namespace coroutine_owner_
-    } // namespace detail
+    }     // namespace detail
     /// \endcond
 
     namespace experimental
@@ -111,11 +121,11 @@ namespace ranges
             explicit constexpr coroutine_owner(base_t coro) noexcept
               : base_t(coro)
             {}
-            coroutine_owner(coroutine_owner &&that) noexcept
+            coroutine_owner(coroutine_owner && that) noexcept
               : base_t(ranges::exchange(that.base(), {}))
               , copied_(that.copied_.load(std::memory_order_relaxed))
             {}
-            coroutine_owner(coroutine_owner const &that) noexcept
+            coroutine_owner(coroutine_owner const & that) noexcept
               : base_t(that.handle())
               , copied_(that.handle() != nullptr)
             {
@@ -128,10 +138,11 @@ namespace ranges
             ~coroutine_owner()
             {
                 if(base() && (!copied_.load(std::memory_order_relaxed) ||
-                                    1 == base().promise().refcount_.fetch_sub(1, std::memory_order_acq_rel)))
+                              1 == base().promise().refcount_.fetch_sub(
+                                       1, std::memory_order_acq_rel)))
                     base().destroy();
             }
-            coroutine_owner &operator=(coroutine_owner that) noexcept
+            coroutine_owner & operator=(coroutine_owner that) noexcept
             {
                 swap(that);
                 return *this;
@@ -144,10 +155,11 @@ namespace ranges
             {
                 detail::resume(handle());
             }
-            void swap(coroutine_owner &that) noexcept
+            void swap(coroutine_owner & that) noexcept
             {
                 bool tmp = copied_.load(std::memory_order_relaxed);
-                copied_.store(that.copied_.load(std::memory_order_relaxed), std::memory_order_relaxed);
+                copied_.store(that.copied_.load(std::memory_order_relaxed),
+                              std::memory_order_relaxed);
                 that.copied_.store(tmp, std::memory_order_relaxed);
                 std::swap(base(), that.base());
             }
@@ -155,10 +167,11 @@ namespace ranges
             {
                 return *this;
             }
-        private:
-            std::atomic<bool> copied_ {false};
 
-            base_t &base() noexcept
+        private:
+            std::atomic<bool> copied_{false};
+
+            base_t & base() noexcept
             {
                 return *this;
             }
@@ -169,15 +182,14 @@ namespace ranges
     namespace detail
     {
         template<typename Reference>
-        struct generator_promise
-          : experimental::enable_coroutine_owner
+        struct generator_promise : experimental::enable_coroutine_owner
         {
             std::exception_ptr except_ = nullptr;
 
             CPP_assert(std::is_reference<Reference>::value ||
-                CopyConstructible<Reference>);
+                       CopyConstructible<Reference>);
 
-            generator_promise *get_return_object() noexcept
+            generator_promise * get_return_object() noexcept
             {
                 return this;
             }
@@ -189,42 +201,43 @@ namespace ranges
             {
                 return {};
             }
-            void return_void() const noexcept
-            {}
+            void return_void() const noexcept {}
             void unhandled_exception() noexcept
             {
                 except_ = std::current_exception();
                 RANGES_EXPECT(except_);
             }
-            CPP_template(typename Arg)(
-                requires ConvertibleTo<Arg, Reference> &&
-                    std::is_assignable<semiregular_t<Reference> &, Arg>::value)
-            std::experimental::suspend_always yield_value(Arg &&arg)
-                noexcept(std::is_nothrow_assignable<semiregular_t<Reference> &, Arg>::value)
+            template<typename Arg>
+            auto yield_value(Arg && arg) noexcept(
+                std::is_nothrow_assignable<semiregular_t<Reference> &, Arg>::value)
+                -> CPP_ret(std::experimental::suspend_always)( //
+                    requires ConvertibleTo<Arg, Reference> &&
+                        std::is_assignable<semiregular_t<Reference> &, Arg>::value)
             {
                 ref_ = std::forward<Arg>(arg);
                 return {};
             }
-            std::experimental::suspend_never
-            await_transform(experimental::generator_size) const noexcept
+            std::experimental::suspend_never await_transform(
+                experimental::generator_size) const noexcept
             {
-                RANGES_ENSURE_MSG(false, "Invalid size request for a non-sized generator");
+                RANGES_ENSURE_MSG(false,
+                                  "Invalid size request for a non-sized generator");
                 return {};
             }
-            meta::if_<std::is_reference<Reference>, Reference, Reference const &>
-            read() const noexcept
+            meta::if_<std::is_reference<Reference>, Reference, Reference const &> read()
+                const noexcept
             {
                 return ref_;
             }
+
         private:
             semiregular_t<Reference> ref_;
         };
 
         template<typename Reference>
-        struct sized_generator_promise
-          : generator_promise<Reference>
+        struct sized_generator_promise : generator_promise<Reference>
         {
-            sized_generator_promise *get_return_object() noexcept
+            sized_generator_promise * get_return_object() noexcept
             {
                 return this;
             }
@@ -233,8 +246,8 @@ namespace ranges
                 // sized_generator doesn't suspend at its initial suspend point because...
                 return {};
             }
-            std::experimental::suspend_always
-            await_transform(experimental::generator_size size) noexcept
+            std::experimental::suspend_always await_transform(
+                experimental::generator_size size) noexcept
             {
                 // ...we need the coroutine set the size of the range first by
                 // co_awaiting on a generator_size.
@@ -246,6 +259,7 @@ namespace ranges
                 RANGES_EXPECT(size_ != experimental::generator_size::invalid);
                 return static_cast<experimental::generator_size_t>(size_);
             }
+
         private:
             experimental::generator_size size_ = experimental::generator_size::invalid;
         };
@@ -258,13 +272,12 @@ namespace ranges
         struct sized_generator;
 
         template<typename Reference, typename Value = uncvref_t<Reference>>
-        struct generator
-          : view_facade<generator<Reference, Value>>
+        struct generator : view_facade<generator<Reference, Value>>
         {
             using promise_type = detail::generator_promise<Reference>;
 
             constexpr generator() noexcept = default;
-            generator(promise_type *p)
+            generator(promise_type * p)
               : coro_{handle::from_promise(*p)}
             {
                 RANGES_EXPECT(coro_);
@@ -287,10 +300,11 @@ namespace ranges
                 bool equal(default_sentinel_t) const
                 {
                     RANGES_EXPECT(coro_);
-                    if (coro_.done())
+                    if(coro_.done())
                     {
-                        auto &e = coro_.promise().except_;
-                        if (e) std::rethrow_exception(std::move(e));
+                        auto & e = coro_.promise().except_;
+                        if(e)
+                            std::rethrow_exception(std::move(e));
                         return true;
                     }
                     return false;
@@ -304,6 +318,7 @@ namespace ranges
                     RANGES_EXPECT(coro_);
                     return coro_.promise().read();
                 }
+
             private:
                 handle coro_ = nullptr;
             };
@@ -316,24 +331,24 @@ namespace ranges
         };
 
         template<typename Reference, typename Value /* = uncvref_t<Reference>*/>
-        struct sized_generator
-          : generator<Reference, Value>
+        struct sized_generator : generator<Reference, Value>
         {
             using promise_type = detail::sized_generator_promise<Reference>;
             using handle = std::experimental::coroutine_handle<promise_type>;
 
             constexpr sized_generator() noexcept = default;
-            sized_generator(promise_type *p)
+            sized_generator(promise_type * p)
               : generator<Reference, Value>{p}
             {}
             generator_size_t size() const noexcept
             {
                 return promise().size();
             }
+
         private:
             using generator<Reference, Value>::coro_;
 
-            promise_type const &promise() const noexcept
+            promise_type const & promise() const noexcept
             {
                 RANGES_EXPECT(coro_);
                 return static_cast<promise_type const &>(coro_.promise());

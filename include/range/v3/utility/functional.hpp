@@ -14,7 +14,9 @@
 #define RANGES_V3_UTILITY_FUNCTIONAL_HPP
 
 #include <range/v3/detail/config.hpp>
-RANGES_DEPRECATED_HEADER("This header has been deprecated. Please find what you are looking for in the range/v3/functional/ directory.")
+RANGES_DEPRECATED_HEADER(
+    "This header has been deprecated. Please find what you are looking for in the "
+    "range/v3/functional/ directory.")
 
 #include <range/v3/detail/with_braced_init_args.hpp>
 #include <range/v3/functional/arithmetic.hpp>

@@ -23,17 +23,19 @@
 #define RANGES_V3_ALGORITHM_PARTITION_POINT_HPP
 
 #include <meta/meta.hpp>
+
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/algorithm/aux_/partition_point_n.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/algorithm/aux_/partition_point_n.hpp>
-#include <range/v3/functional/identity.hpp>
-#include <range/v3/functional/invoke.hpp>
-#include <range/v3/iterator/operations.hpp>
-#include <range/v3/iterator/concepts.hpp>
-#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -44,12 +46,11 @@ namespace ranges
     struct partition_point_fn
     {
         template<typename I, typename S, typename C, typename P = identity>
-        auto operator()(I begin, S end, C pred, P proj = P{}) const ->
-            CPP_ret(I)(
-                requires ForwardIterator<I> && Sentinel<S, I> &&
-                    IndirectUnaryPredicate<C, projected<I, P>>)
+        auto operator()(I begin, S end, C pred, P proj = P{}) const -> CPP_ret(I)( //
+            requires ForwardIterator<I> && Sentinel<S, I> &&
+                IndirectUnaryPredicate<C, projected<I, P>>)
         {
-            if RANGES_CONSTEXPR_IF (SizedSentinel<S, I>)
+            if(RANGES_CONSTEXPR_IF(SizedSentinel<S, I>))
             {
                 auto len = distance(begin, std::move(end));
                 return aux::partition_point_n(
@@ -75,19 +76,18 @@ namespace ranges
         }
 
         template<typename Rng, typename C, typename P = identity>
-        auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+        auto operator()(Rng && rng, C pred, P proj = P{}) const
+            -> CPP_ret(safe_iterator_t<Rng>)( //
                 requires ForwardRange<Rng> &&
                     IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
         {
-            if RANGES_CONSTEXPR_IF (SizedRange<Rng>)
+            if(RANGES_CONSTEXPR_IF(SizedRange<Rng>))
             {
                 auto len = distance(rng);
                 return aux::partition_point_n(
                     begin(rng), len, std::move(pred), std::move(proj));
             }
-            return (*this)(
-                begin(rng), end(rng), std::move(pred), std::move(proj));
+            return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
     };
 

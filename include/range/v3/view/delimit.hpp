@@ -15,15 +15,17 @@
 #define RANGES_V3_VIEW_DELIMIT_HPP
 
 #include <meta/meta.hpp>
+
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/view/adaptor.hpp>
-#include <range/v3/iterator/unreachable_sentinel.hpp>
+
 #include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/unreachable_sentinel.hpp>
+#include <range/v3/range/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/view/view.hpp>
+#include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/subrange.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -31,7 +33,8 @@ namespace ranges
     /// @{
     template<typename Rng, typename Val>
     struct delimit_view
-      : view_adaptor<delimit_view<Rng, Val>, Rng, is_finite<Rng>::value ? finite : unknown>
+      : view_adaptor<delimit_view<Rng, Val>, Rng,
+                     is_finite<Rng>::value ? finite : unknown>
     {
     private:
         friend range_access;
@@ -44,7 +47,7 @@ namespace ranges
               : value_(std::move(value))
             {}
             template<class I, class S>
-            bool empty(I const &it, S const &end) const
+            bool empty(I const & it, S const & end) const
             {
                 return it == end || *it == value_;
             }
@@ -55,6 +58,7 @@ namespace ranges
         {
             return {value_};
         }
+
     public:
         delimit_view() = default;
         delimit_view(Rng rng, Val value)
@@ -72,15 +76,15 @@ namespace ranges
             template<typename Val>
             static auto bind(delimit_impl_fn delimit, Val value)
             {
-                return make_pipeable(std::bind(delimit, std::placeholders::_1,
-                    std::move(value)));
+                return make_pipeable(
+                    std::bind(delimit, std::placeholders::_1, std::move(value)));
             }
+
         public:
             template<typename Rng, typename Val>
-            auto operator()(Rng &&rng, Val value) const ->
-                CPP_ret(delimit_view<all_t<Rng>, Val>)(
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        Semiregular<Val> &&
+            auto operator()(Rng && rng, Val value) const
+                -> CPP_ret(delimit_view<all_t<Rng>, Val>)( //
+                    requires ViewableRange<Rng> && InputRange<Rng> && Semiregular<Val> &&
                         EqualityComparableWith<Val, range_reference_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(value)};
@@ -92,11 +96,11 @@ namespace ranges
             using view<delimit_impl_fn>::operator();
 
             template<typename I_, typename Val, typename I = detail::decay_t<I_>>
-            auto operator()(I_ &&begin_, Val value) const ->
-                CPP_ret(delimit_view<subrange<I, unreachable_sentinel_t>, Val>)(
-                    requires (!Range<I_> && ConvertibleTo<I_, I> &&
-                        InputIterator<I> && Semiregular<Val> &&
-                        EqualityComparableWith<Val, iter_reference_t<I>>))
+            auto operator()(I_ && begin_, Val value) const
+                -> CPP_ret(delimit_view<subrange<I, unreachable_sentinel_t>, Val>)( //
+                    requires(!Range<I_> && ConvertibleTo<I_, I> && InputIterator<I> &&
+                             Semiregular<Val> &&
+                             EqualityComparableWith<Val, iter_reference_t<I>>))
             {
                 return {{static_cast<I_ &&>(begin_), {}}, std::move(value)};
             }
