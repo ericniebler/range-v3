@@ -58,6 +58,18 @@
         "tuple": "cpp",
         "typeinfo": "cpp",
         "utility": "cpp",
-        "__config": "cpp"
+        "__config": "cpp",
+        "__bit_reference": "cpp",
+        "__debug": "cpp",
+        "__functional_base": "cpp",
+        "__locale": "cpp",
+        "__mutex_base": "cpp",
+        "__nullptr": "cpp",
+        "__threading_support": "cpp",
+        "__tuple": "cpp",
+        "coroutine": "cpp",
+        "ios": "cpp",
+        "locale": "cpp",
+        "random": "cpp"
     }
 }

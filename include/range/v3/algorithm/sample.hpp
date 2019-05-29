@@ -15,16 +15,18 @@
 #define RANGES_V3_ALGORITHM_SAMPLE_HPP
 
 #include <utility>
+
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/algorithm/copy_n.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/algorithm/copy_n.hpp>
 #include <range/v3/utility/random.hpp>
-#include <range/v3/iterator/operations.hpp>
-#include <range/v3/iterator/concepts.hpp>
-#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 RANGES_DISABLE_WARNINGS
@@ -41,8 +43,8 @@ namespace ranges
     private:
         template<typename I, typename S, typename O, typename Gen>
         static auto sized_impl(I first, S last, iter_difference_t<I> pop_size, O out,
-                iter_difference_t<O> sample_size, Gen &&gen) ->
-            sample_result<I, O>
+                               iter_difference_t<O> sample_size, Gen && gen)
+            -> sample_result<I, O>
         {
             if(pop_size > 0 && sample_size > 0)
             {
@@ -68,21 +70,23 @@ namespace ranges
 
     public:
         template<typename I, typename S, typename O,
-            typename Gen = detail::default_random_engine &>
+                 typename Gen = detail::default_random_engine &>
         auto operator()(I first, S last, O out, iter_difference_t<O> const n,
-                Gen &&gen = detail::get_random_engine()) const ->
-            CPP_ret(sample_result<I, O>)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    WeaklyIncrementable<O> &&
-                    IndirectlyCopyable<I, O> &&
-                    UniformRandomNumberGenerator<Gen> &&
-                    (RandomAccessIterator<O> || ForwardIterator<I> || SizedSentinel<S, I>))
+                        Gen && gen = detail::get_random_engine()) const
+            -> CPP_ret(sample_result<I, O>)( //
+                requires InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
+                    IndirectlyCopyable<I, O> && UniformRandomNumberGenerator<Gen> &&
+                (RandomAccessIterator<O> || ForwardIterator<I> || SizedSentinel<S, I>))
         {
-            if RANGES_CONSTEXPR_IF (ForwardIterator<I> || SizedSentinel<S, I>)
+            if(RANGES_CONSTEXPR_IF(ForwardIterator<I> || SizedSentinel<S, I>))
             {
                 auto const k = distance(first, last);
-                return sample_fn::sized_impl(std::move(first), std::move(last),
-                    k, std::move(out), n, static_cast<Gen &&>(gen));
+                return sample_fn::sized_impl(std::move(first),
+                                             std::move(last),
+                                             k,
+                                             std::move(out),
+                                             n,
+                                             static_cast<Gen &&>(gen));
             }
             else
             {
@@ -117,70 +121,88 @@ namespace ranges
         }
 
         template<typename I, typename S, typename ORng,
-            typename Gen = detail::default_random_engine &>
-        auto operator()(I first, S last, ORng &&out,
-                Gen &&gen = detail::get_random_engine()) const ->
-            CPP_ret(sample_result<I, safe_iterator_t<ORng>>)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    WeaklyIncrementable<iterator_t<ORng>> &&
-                    IndirectlyCopyable<I, iterator_t<ORng>> &&
+                 typename Gen = detail::default_random_engine &>
+        auto operator()(I first, S last, ORng && out,
+                        Gen && gen = detail::get_random_engine()) const
+            -> CPP_ret(sample_result<I, safe_iterator_t<ORng>>)( //
+                requires InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<
+                    iterator_t<ORng>> && IndirectlyCopyable<I, iterator_t<ORng>> &&
                     UniformRandomNumberGenerator<Gen> &&
-                    (ForwardRange<ORng> || SizedRange<ORng>) &&
-                    (RandomAccessIterator<iterator_t<ORng>> || ForwardIterator<I> || SizedSentinel<S, I>))
+                (ForwardRange<ORng> ||
+                 SizedRange<ORng>)&&(RandomAccessIterator<iterator_t<ORng>> ||
+                                     ForwardIterator<I> || SizedSentinel<S, I>))
         {
-            if RANGES_CONSTEXPR_IF (ForwardIterator<I> || SizedSentinel<S, I>)
+            if(RANGES_CONSTEXPR_IF(ForwardIterator<I> || SizedSentinel<S, I>))
             {
                 auto k = distance(first, last);
-                return sample_fn::sized_impl(std::move(first), std::move(last),
-                    k, begin(out), distance(out), static_cast<Gen &&>(gen));
+                return sample_fn::sized_impl(std::move(first),
+                                             std::move(last),
+                                             k,
+                                             begin(out),
+                                             distance(out),
+                                             static_cast<Gen &&>(gen));
             }
             else
             {
-                return (*this)(std::move(first), std::move(last), begin(out),
-                    distance(out), static_cast<Gen &&>(gen));
+                return (*this)(std::move(first),
+                               std::move(last),
+                               begin(out),
+                               distance(out),
+                               static_cast<Gen &&>(gen));
             }
         }
 
         template<typename Rng, typename O, typename Gen = detail::default_random_engine &>
-        auto operator()(Rng &&rng, O out, difference_type_t<O> const n,
-            Gen &&gen = detail::get_random_engine()) const ->
-            CPP_ret(sample_result<safe_iterator_t<Rng>, O>)(
-                requires InputRange<Rng> &&
-                    WeaklyIncrementable<O> &&
-                    IndirectlyCopyable<iterator_t<Rng>, O> &&
-                    UniformRandomNumberGenerator<Gen> &&
-                    (RandomAccessIterator<O> || ForwardRange<Rng> || SizedRange<Rng>))
+        auto operator()(Rng && rng, O out, difference_type_t<O> const n,
+                        Gen && gen = detail::get_random_engine()) const
+            -> CPP_ret(sample_result<safe_iterator_t<Rng>, O>)( //
+                requires InputRange<Rng> && WeaklyIncrementable<O> && IndirectlyCopyable<
+                    iterator_t<Rng>, O> && UniformRandomNumberGenerator<Gen> &&
+                (RandomAccessIterator<O> || ForwardRange<Rng> || SizedRange<Rng>))
         {
-            if RANGES_CONSTEXPR_IF (ForwardRange<Rng> || SizedRange<Rng>)
+            if(RANGES_CONSTEXPR_IF(ForwardRange<Rng> || SizedRange<Rng>))
             {
-                return sample_fn::sized_impl(begin(rng), end(rng), distance(rng),
-                    std::move(out), n, static_cast<Gen &&>(gen));
+                return sample_fn::sized_impl(begin(rng),
+                                             end(rng),
+                                             distance(rng),
+                                             std::move(out),
+                                             n,
+                                             static_cast<Gen &&>(gen));
             }
             else
             {
-                return (*this)(begin(rng), end(rng),
-                    std::move(out), n, static_cast<Gen &&>(gen));
+                return (*this)(
+                    begin(rng), end(rng), std::move(out), n, static_cast<Gen &&>(gen));
             }
         }
 
-        template<typename IRng, typename ORng, typename Gen = detail::default_random_engine &>
-        auto operator()(IRng &&rng, ORng &&out, Gen &&gen = detail::get_random_engine()) const ->
-            CPP_ret(sample_result<safe_iterator_t<IRng>, safe_iterator_t<ORng>>)(
+        template<typename IRng, typename ORng,
+                 typename Gen = detail::default_random_engine &>
+        auto operator()(IRng && rng, ORng && out,
+                        Gen && gen = detail::get_random_engine()) const
+            -> CPP_ret(sample_result<safe_iterator_t<IRng>, safe_iterator_t<ORng>>)( //
                 requires InputRange<IRng> && Range<ORng> &&
                     IndirectlyCopyable<iterator_t<IRng>, iterator_t<ORng>> &&
-                    UniformRandomNumberGenerator<Gen> &&
-                    (RandomAccessIterator<iterator_t<ORng>> || ForwardRange<IRng> || SizedRange<IRng>) &&
-                    (ForwardRange<ORng> || SizedRange<ORng>))
+                        UniformRandomNumberGenerator<Gen> &&
+                (RandomAccessIterator<iterator_t<ORng>> || ForwardRange<IRng> ||
+                 SizedRange<IRng>)&&(ForwardRange<ORng> || SizedRange<ORng>))
         {
-            if RANGES_CONSTEXPR_IF (ForwardRange<IRng> || SizedRange<IRng>)
+            if(RANGES_CONSTEXPR_IF(ForwardRange<IRng> || SizedRange<IRng>))
             {
-                return sample_fn::sized_impl(begin(rng), end(rng), distance(rng),
-                    begin(out), distance(out), static_cast<Gen &&>(gen));
+                return sample_fn::sized_impl(begin(rng),
+                                             end(rng),
+                                             distance(rng),
+                                             begin(out),
+                                             distance(out),
+                                             static_cast<Gen &&>(gen));
             }
             else
             {
-                return (*this)(begin(rng), end(rng),
-                    begin(out), distance(out), static_cast<Gen &&>(gen));
+                return (*this)(begin(rng),
+                               end(rng),
+                               begin(out),
+                               distance(out),
+                               static_cast<Gen &&>(gen));
             }
         }
     };

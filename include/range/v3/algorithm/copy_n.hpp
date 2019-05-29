@@ -13,15 +13,17 @@
 #ifndef RANGES_V3_ALGORITHM_COPY_N_HPP
 #define RANGES_V3_ALGORITHM_COPY_N_HPP
 
+#include <functional>
 #include <tuple>
 #include <utility>
-#include <functional>
+
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/functional/identity.hpp>
-#include <range/v3/iterator/traits.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
@@ -37,9 +39,10 @@ namespace ranges
     struct copy_n_fn
     {
         template<typename I, typename O, typename P = identity>
-        auto operator()(I begin, iter_difference_t<I> n, O out) const ->
-            CPP_ret(copy_n_result<I, O>)(
-                requires InputIterator<I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
+        auto operator()(I begin, iter_difference_t<I> n, O out) const
+            -> CPP_ret(copy_n_result<I, O>)( //
+                requires InputIterator<I> && WeaklyIncrementable<O> &&
+                    IndirectlyCopyable<I, O>)
         {
             RANGES_EXPECT(0 <= n);
             auto norig = n;
@@ -56,8 +59,8 @@ namespace ranges
 
     namespace cpp20
     {
-        using ranges::copy_n_result;
         using ranges::copy_n;
+        using ranges::copy_n_result;
     }
     /// @}
 } // namespace ranges

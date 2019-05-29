@@ -15,11 +15,13 @@
 #define RANGES_V3_ACTION_TAKE_HPP
 
 #include <functional>
+
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
-#include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -34,19 +36,22 @@ namespace ranges
         private:
             friend action_access;
             template<typename Int>
-            static auto CPP_fun(bind)(take_fn take, Int n)(
+            static auto CPP_fun(bind)(take_fn take, Int n)( //
                 requires Integral<Int>)
             {
                 return std::bind(take, std::placeholders::_1, n);
             }
+
         public:
-            CPP_template(typename Rng)(
-                requires ForwardRange<Rng> &&
-                    ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>>)
-            Rng operator()(Rng &&rng, range_difference_t<Rng> n) const
+            template<typename Rng>
+            auto operator()(Rng && rng, range_difference_t<Rng> n) const
+                -> CPP_ret(Rng)( //
+                    requires ForwardRange<Rng> &&
+                        ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>>)
             {
                 RANGES_EXPECT(n >= 0);
-                ranges::action::erase(rng, ranges::next(begin(rng), n, end(rng)), end(rng));
+                ranges::action::erase(
+                    rng, ranges::next(begin(rng), n, end(rng)), end(rng));
                 return static_cast<Rng &&>(rng);
             }
         };

@@ -15,40 +15,42 @@
 #define RANGES_V3_VIEW_ISTREAM_HPP
 
 #include <istream>
+
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/view/facade.hpp>
+
+#include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/iterator/default_sentinel.hpp>
+#include <range/v3/view/facade.hpp>
 
 namespace ranges
 {
     /// \addtogroup group-views
     /// @{
     template<typename Val>
-    struct istream_view
-      : view_facade<istream_view<Val>, unknown>
+    struct istream_view : view_facade<istream_view<Val>, unknown>
     {
     private:
         friend range_access;
-        std::istream *sin_;
+        std::istream * sin_;
         semiregular_t<Val> obj_;
         struct cursor
         {
         private:
             friend range_access;
             using single_pass = std::true_type;
-            istream_view *rng_ = nullptr;
+            istream_view * rng_ = nullptr;
+
         public:
             cursor() = default;
-            explicit cursor(istream_view &rng)
+            explicit cursor(istream_view & rng)
               : rng_(&rng)
             {}
             void next()
             {
                 rng_->next();
             }
-            Val &read() const noexcept
+            Val & read() const noexcept
             {
                 return rng_->cached();
             }
@@ -70,14 +72,16 @@ namespace ranges
         {
             return cursor{*this};
         }
+
     public:
         istream_view() = default;
-        explicit istream_view(std::istream &sin)
-          : sin_(&sin), obj_{}
+        explicit istream_view(std::istream & sin)
+          : sin_(&sin)
+          , obj_{}
         {
             next(); // prime the pump
         }
-        Val &cached() noexcept
+        Val & cached() noexcept
         {
             return obj_;
         }
@@ -85,22 +89,21 @@ namespace ranges
 
     /// \cond
     template<typename Val>
-    using istream_range RANGES_DEPRECATED("istream_range<T> has been renamed to istream_view<T>") =
-        istream_view<Val>;
+    using istream_range RANGES_DEPRECATED(
+        "istream_range<T> has been renamed to istream_view<T>") = istream_view<Val>;
     /// \endcond
 
     /// \cond
     namespace _istream_
     {
-    /// \endcond
+        /// \endcond
         template<typename Val>
-        inline auto istream(std::istream &sin) ->
-            CPP_ret(istream_view<Val>)(
-                requires CopyConstructible<Val> && DefaultConstructible<Val>)
+        inline auto istream(std::istream & sin) -> CPP_ret(istream_view<Val>)( //
+            requires CopyConstructible<Val> && DefaultConstructible<Val>)
         {
             return istream_view<Val>{sin};
         }
-    /// \cond
+        /// \cond
     }
     using namespace _istream_;
     /// \endcond

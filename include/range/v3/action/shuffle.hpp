@@ -15,7 +15,9 @@
 #define RANGES_V3_ACTION_SHUFFLE_HPP
 
 #include <functional>
+
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/algorithm/shuffle.hpp>
 #include <range/v3/functional/invoke.hpp>
@@ -34,21 +36,18 @@ namespace ranges
         private:
             friend action_access;
             template<typename Gen>
-            static auto CPP_fun(bind)(shuffle_fn shuffle, Gen &&gen)(
+            static auto CPP_fun(bind)(shuffle_fn shuffle, Gen && gen)( //
                 requires UniformRandomNumberGenerator<Gen>)
             {
-                return std::bind(shuffle, std::placeholders::_1,
-                    bind_forward<Gen>(gen));
+                return std::bind(shuffle, std::placeholders::_1, bind_forward<Gen>(gen));
             }
+
         public:
-            CPP_template(typename Rng, typename Gen)(
-                requires RandomAccessRange<Rng> &&
-                    Permutable<iterator_t<Rng>> &&
+            template<typename Rng, typename Gen>
+            auto operator()(Rng && rng, Gen && gen) const -> CPP_ret(Rng)( //
+                requires RandomAccessRange<Rng> && Permutable<iterator_t<Rng>> &&
                     UniformRandomNumberGenerator<Gen> &&
-                    ConvertibleTo<
-                        invoke_result_t<Gen &>,
-                        range_difference_t<Rng>>)
-            Rng operator()(Rng &&rng, Gen &&gen) const
+                        ConvertibleTo<invoke_result_t<Gen &>, range_difference_t<Rng>>)
             {
                 ranges::shuffle(rng, static_cast<Gen &&>(gen));
                 return static_cast<Rng &&>(rng);

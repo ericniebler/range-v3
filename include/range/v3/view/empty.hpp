@@ -15,6 +15,7 @@
 #define RANGES_V3_VIEW_EMPTY_HPP
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/view/interface.hpp>
 
 namespace ranges
@@ -25,12 +26,12 @@ namespace ranges
         struct empty_view_base
         {
             template<typename T>
-            friend constexpr T *begin(empty_view<T>) noexcept
+            friend constexpr T * begin(empty_view<T>) noexcept
             {
                 return nullptr;
             }
             template<typename T>
-            friend constexpr T *end(empty_view<T>) noexcept
+            friend constexpr T * end(empty_view<T>) noexcept
             {
                 return nullptr;
             }
@@ -44,13 +45,13 @@ namespace ranges
       , private detail::empty_view_base
     {
         static_assert(std::is_object<T>::value,
-            "The template parameter to empty_view must be an object type.");
+                      "The template parameter to empty_view must be an object type.");
         empty_view() = default;
-        constexpr static T *begin() noexcept
+        constexpr static T * begin() noexcept
         {
             return nullptr;
         }
-        constexpr static T *end() noexcept
+        constexpr static T * end() noexcept
         {
             return nullptr;
         }
@@ -58,11 +59,12 @@ namespace ranges
         {
             return 0u;
         }
-        static constexpr T *data() noexcept
+        static constexpr T * data() noexcept
         {
             return nullptr;
         }
-        RANGES_DEPRECATED("Replace view::empty<T>() with view::empty<>. "
+        RANGES_DEPRECATED(
+            "Replace view::empty<T>() with view::empty<>. "
             "It is now a variable template.")
         empty_view operator()() const
         {
@@ -73,7 +75,7 @@ namespace ranges
     namespace view
     {
         template<typename T>
-        RANGES_INLINE_VAR constexpr empty_view<T> empty {};
+        RANGES_INLINE_VAR constexpr empty_view<T> empty{};
     }
 
     namespace cpp20
@@ -82,9 +84,9 @@ namespace ranges
         {
             using ranges::view::empty;
         }
-        CPP_template(typename T)(
-            requires std::is_object<T>::value)
-        using empty_view = ranges::empty_view<T>;
+        CPP_template(typename T)(              //
+            requires std::is_object<T>::value) //
+            using empty_view = ranges::empty_view<T>;
     }
 }
 

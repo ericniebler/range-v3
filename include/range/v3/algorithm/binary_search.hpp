@@ -13,9 +13,11 @@
 #ifndef RANGES_V3_ALGORITHM_BINARY_SEARCH_HPP
 #define RANGES_V3_ALGORITHM_BINARY_SEARCH_HPP
 
-#include <utility>
 #include <functional>
+#include <utility>
+
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/algorithm/lower_bound.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
@@ -38,25 +40,27 @@ namespace ranges
         /// range-based version of the \c binary_search std algorithm
         ///
         /// \pre `Rng` is a model of the `Range` concept
-        template<typename I, typename S, typename V, typename C = less, typename P = identity>
-        auto operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(bool)(
+        template<typename I, typename S, typename V, typename C = less,
+                 typename P = identity>
+        auto operator()(I begin, S end, V const & val, C pred = C{}, P proj = P{}) const
+            -> CPP_ret(bool)( //
                 requires ForwardIterator<I> && Sentinel<S, I> &&
                     IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
         {
-            begin = lower_bound(std::move(begin), end, val, std::ref(pred), std::ref(proj));
+            begin =
+                lower_bound(std::move(begin), end, val, std::ref(pred), std::ref(proj));
             return begin != end && !invoke(pred, val, invoke(proj, *begin));
         }
 
         /// \overload
         template<typename Rng, typename V, typename C = less, typename P = identity>
-        auto operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(bool)(
+        auto operator()(Rng && rng, V const & val, C pred = C{}, P proj = P{}) const
+            -> CPP_ret(bool)( //
                 requires ForwardRange<Rng> &&
                     IndirectStrictWeakOrder<C, V const *, projected<iterator_t<Rng>, P>>)
         {
             static_assert(!is_infinite<Rng>::value,
-                "Trying to binary search an infinite range");
+                          "Trying to binary search an infinite range");
             return (*this)(begin(rng), end(rng), val, std::move(pred), std::move(proj));
         }
     };

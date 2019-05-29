@@ -16,33 +16,32 @@
 #define RANGES_V3_VIEW_INDICES_HPP
 
 #include <meta/meta.hpp>
+
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/iota.hpp>
+#include <range/v3/view/take_exactly.hpp>
 
 namespace ranges
 {
     namespace view
     {
         /// Half-open range of indices: [from, to).
-        struct indices_fn
-          : iota_view<std::size_t>
+        struct indices_fn : iota_view<std::size_t>
         {
             indices_fn() = default;
 
             template<typename Val>
-            auto operator()(Val to) const ->
-                CPP_ret(iota_view<Val, Val>)(
-                    requires Integral<Val>)
+            auto operator()(Val to) const -> CPP_ret(iota_view<Val, Val>)( //
+                requires Integral<Val>)
             {
                 return {Val(), to};
             }
             template<typename Val>
-            auto operator()(Val from, Val to) const ->
-                CPP_ret(iota_view<Val, Val>)(
-                    requires Integral<Val>)
+            auto operator()(Val from, Val to) const -> CPP_ret(iota_view<Val, Val>)( //
+                requires Integral<Val>)
             {
                 return {from, to};
             }
@@ -52,16 +51,14 @@ namespace ranges
         struct closed_indices_fn
         {
             template<typename Val>
-            auto operator()(Val to) const ->
-                CPP_ret(closed_iota_view<Val>)(
-                    requires Integral<Val>)
+            auto operator()(Val to) const -> CPP_ret(closed_iota_view<Val>)( //
+                requires Integral<Val>)
             {
                 return {Val(), to};
             }
             template<typename Val>
-            auto operator()(Val from, Val to) const ->
-                CPP_ret(closed_iota_view<Val>)(
-                    requires Integral<Val>)
+            auto operator()(Val from, Val to) const -> CPP_ret(closed_iota_view<Val>)( //
+                requires Integral<Val>)
             {
                 return {from, to};
             }
@@ -74,7 +71,7 @@ namespace ranges
         /// \relates closed_indices_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(closed_indices_fn, closed_indices)
-    }  // namespace view
+    } // namespace view
 }
 
-#endif  // RANGES_V3_VIEW_INDICES_HPP
+#endif // RANGES_V3_VIEW_INDICES_HPP

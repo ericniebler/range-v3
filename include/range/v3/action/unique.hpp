@@ -15,6 +15,7 @@
 #define RANGES_V3_ACTION_UNIQUE_HPP
 
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/algorithm/unique.hpp>
@@ -35,18 +36,22 @@ namespace ranges
         private:
             friend action_access;
             template<typename C, typename P = identity>
-            static auto CPP_fun(bind)(unique_fn unique, C pred, P proj = P{})(
-                requires (!Range<C>))
+            static auto CPP_fun(bind)(unique_fn unique, C pred, P proj = P{})( //
+                requires(!Range<C>))
             {
-                return std::bind(unique, std::placeholders::_1, protect(std::move(pred)),
-                    protect(std::move(proj)));
+                return std::bind(unique,
+                                 std::placeholders::_1,
+                                 protect(std::move(pred)),
+                                 protect(std::move(proj)));
             }
+
         public:
-            CPP_template(typename Rng, typename C = equal_to, typename P = identity)(
-                requires ForwardRange<Rng> &&
-                    ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                    Sortable<iterator_t<Rng>, C, P>)
-            Rng operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            template<typename Rng, typename C = equal_to, typename P = identity>
+            auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
+                -> CPP_ret(Rng)( //
+                    requires ForwardRange<Rng> &&
+                        ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
+                            Sortable<iterator_t<Rng>, C, P>)
             {
                 auto it = ranges::unique(rng, std::move(pred), std::move(proj));
                 ranges::erase(rng, it, end(rng));

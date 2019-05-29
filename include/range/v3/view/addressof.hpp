@@ -16,7 +16,9 @@
 
 #include <type_traits>
 #include <utility>
+
 #include <meta/meta.hpp>
+
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -32,20 +34,18 @@ namespace ranges
             struct take_address
             {
                 template<typename V>
-                constexpr V *operator()(V &value) const noexcept
+                constexpr V * operator()(V & value) const noexcept
                 {
                     return std::addressof(value);
                 }
             };
+
         public:
-            CPP_template(typename Rng)(
-                requires ViewableRange<Rng> && InputRange<Rng> &&
-                    std::is_lvalue_reference<range_reference_t<Rng>>::value)
-            constexpr /*c++14*/ auto operator()(Rng &&rng) const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                transform(all(static_cast<Rng &&>(rng)), take_address{})
-            )
+            CPP_template(typename Rng)(                                      //
+                requires ViewableRange<Rng> && InputRange<Rng> &&            //
+                    std::is_lvalue_reference<range_reference_t<Rng>>::value) //
+                constexpr auto CPP_auto_fun(operator())(Rng && rng)(const)(
+                    return transform(all(static_cast<Rng &&>(rng)), take_address{}))
         };
 
         /// \relates addressof_fn

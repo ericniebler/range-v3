@@ -17,14 +17,15 @@
 #define RANGES_V3_ALGORITHM_IS_SORTED_UNTIL_HPP
 
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/dangling.hpp>
-#include <range/v3/range/traits.hpp>
+
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -42,11 +43,12 @@ namespace ranges
         /// \pre `Rng` is a model of the `ForwardRange` concept
         /// \pre `I` is a model of the `ForwardIterator` concept
         /// \pre `S` and `I` model the `Sentinel<S, I>` concept
-        /// \pre `R` and `projected<I, P>` model the `IndirectStrictWeakOrder<R, projected<I, P>>` concept
+        /// \pre `R` and `projected<I, P>` model the `IndirectStrictWeakOrder<R,
+        /// projected<I, P>>` concept
         ///
         template<typename I, typename S, typename R = less, typename P = identity>
-        auto operator()(I begin, S end, R pred = R{}, P proj = P{}) const ->
-            CPP_ret(I)(
+        auto operator()(I begin, S end, R pred = R{}, P proj = P{}) const
+            -> CPP_ret(I)( //
                 requires ForwardIterator<I> && Sentinel<S, I> &&
                     IndirectStrictWeakOrder<R, projected<I, P>>)
         {
@@ -64,8 +66,8 @@ namespace ranges
         }
 
         template<typename Rng, typename R = less, typename P = identity>
-        auto operator()(Rng &&rng, R pred = R{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+        auto operator()(Rng && rng, R pred = R{}, P proj = P{}) const
+            -> CPP_ret(safe_iterator_t<Rng>)( //
                 requires ForwardRange<Rng> &&
                     IndirectStrictWeakOrder<R, projected<iterator_t<Rng>, P>>)
         {

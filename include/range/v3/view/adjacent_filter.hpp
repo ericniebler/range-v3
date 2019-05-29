@@ -15,14 +15,17 @@
 #define RANGES_V3_VIEW_ADJACENT_FILTER_HPP
 
 #include <utility>
+
 #include <meta/meta.hpp>
+
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/view/adaptor.hpp>
+
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/functional/invoke.hpp>
+#include <range/v3/range/access.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -30,6 +33,7 @@ namespace ranges
     /// \cond
     namespace detail
     {
+        // clang-format off
         CPP_def
         (
             template(typename Rng, typename Pred)
@@ -37,6 +41,7 @@ namespace ranges
                 ViewableRange<Rng> && ForwardRange<Rng> &&
                 IndirectBinaryPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>
         );
+        // clang-format on
     }
     /// \endcond
 
@@ -44,50 +49,47 @@ namespace ranges
     /// @{
     template<typename Rng, typename Pred>
     struct RANGES_EMPTY_BASES adjacent_filter_view
-      : view_adaptor<
-            adjacent_filter_view<Rng, Pred>,
-            Rng,
-            is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
+      : view_adaptor<adjacent_filter_view<Rng, Pred>, Rng,
+                     is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
       , private box<semiregular_t<Pred>, adjacent_filter_view<Rng, Pred>>
     {
     private:
         friend range_access;
 
         template<bool Const>
-        struct adaptor
-          : adaptor_base
+        struct adaptor : adaptor_base
         {
         private:
             friend struct adaptor<!Const>;
             using CRng = meta::const_if_c<Const, Rng>;
             using Parent = meta::const_if_c<Const, adjacent_filter_view>;
-            Parent *rng_;
+            Parent * rng_;
+
         public:
             adaptor() = default;
-            constexpr adaptor(Parent &rng) noexcept
+            constexpr adaptor(Parent & rng) noexcept
               : rng_(&rng)
             {}
-            CPP_template(bool Other)(
-                requires Const && (!Other))
-            constexpr adaptor(adaptor<Other> that)
+            CPP_template(bool Other)(       //
+                requires Const && (!Other)) //
+                constexpr adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
-            constexpr /*c++14*/ void next(iterator_t<CRng> &it) const
+            constexpr void next(iterator_t<CRng> & it) const
             {
                 auto const last = ranges::end(rng_->base());
-                auto &pred = rng_->adjacent_filter_view::box::get();
+                auto & pred = rng_->adjacent_filter_view::box::get();
                 RANGES_EXPECT(it != last);
                 for(auto prev = it; ++it != last; prev = it)
                     if(invoke(pred, *prev, *it))
                         break;
             }
             CPP_member
-            constexpr /*c++14*/ auto prev(iterator_t<CRng> &it) const ->
-                CPP_ret(void)(
-                    requires BidirectionalRange<CRng>)
+            constexpr auto prev(iterator_t<CRng> & it) const -> CPP_ret(void)( //
+                requires BidirectionalRange<CRng>)
             {
                 auto const first = ranges::begin(rng_->base());
-                auto &pred = rng_->adjacent_filter_view::box::get();
+                auto & pred = rng_->adjacent_filter_view::box::get();
                 RANGES_EXPECT(it != first);
                 --it;
                 while(it != first)
@@ -100,30 +102,27 @@ namespace ranges
             }
             void distance_to() = delete;
         };
-        constexpr auto begin_adaptor() noexcept ->
-            adaptor<false>
+        constexpr auto begin_adaptor() noexcept -> adaptor<false>
         {
             return {*this};
         }
         CPP_member
-        constexpr auto begin_adaptor() const noexcept ->
-            CPP_ret(adaptor<true>)(
-                requires detail::AdjacentFilter<Rng const, Pred const>)
+        constexpr auto begin_adaptor() const noexcept -> CPP_ret(adaptor<true>)( //
+            requires detail::AdjacentFilter<Rng const, Pred const>)
         {
             return {*this};
         }
-        constexpr auto end_adaptor() noexcept ->
-            adaptor<false>
+        constexpr auto end_adaptor() noexcept -> adaptor<false>
         {
             return {*this};
         }
         CPP_member
-        constexpr auto end_adaptor() const noexcept ->
-            CPP_ret(adaptor<true>)(
-                requires detail::AdjacentFilter<Rng const, Pred const>)
+        constexpr auto end_adaptor() const noexcept -> CPP_ret(adaptor<true>)( //
+            requires detail::AdjacentFilter<Rng const, Pred const>)
         {
             return {*this};
         }
+
     public:
         adjacent_filter_view() = default;
         constexpr adjacent_filter_view(Rng rng, Pred pred)
@@ -145,16 +144,16 @@ namespace ranges
         private:
             friend view_access;
             template<typename Pred>
-            constexpr /*c++14*/
-            static auto bind(adjacent_filter_fn adjacent_filter, Pred pred)
+            constexpr static auto bind(adjacent_filter_fn adjacent_filter, Pred pred)
             {
-                return make_pipeable(std::bind(adjacent_filter, std::placeholders::_1,
-                    protect(std::move(pred))));
+                return make_pipeable(std::bind(
+                    adjacent_filter, std::placeholders::_1, protect(std::move(pred))));
             }
+
         public:
             template<typename Rng, typename Pred>
-            constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred) const ->
-                CPP_ret(adjacent_filter_view<all_t<Rng>, Pred>)(
+            constexpr auto operator()(Rng && rng, Pred pred) const
+                -> CPP_ret(adjacent_filter_view<all_t<Rng>, Pred>)( //
                     requires detail::AdjacentFilter<Rng, Pred>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};

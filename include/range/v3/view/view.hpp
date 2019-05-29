@@ -14,14 +14,17 @@
 #ifndef RANGES_V3_VIEW_VIEW_HPP
 #define RANGES_V3_VIEW_VIEW_HPP
 
-#include <utility>
 #include <type_traits>
+#include <utility>
+
 #include <meta/meta.hpp>
+
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/traits.hpp>
+
 #include <range/v3/functional/concepts.hpp>
 #include <range/v3/functional/pipeable.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -38,15 +41,18 @@ namespace ranges
 
         struct dereference_fn
         {
+            // clang-format off
             template<typename I>
-            constexpr auto CPP_auto_fun(operator())(I &&i) (const)
+            constexpr auto CPP_auto_fun(operator())(I &&i)(const)
             (
                 return *(I &&) i
             )
+            // clang-format on
         };
     }
     /// \endcond
 
+    // clang-format off
     CPP_def
     (
         template(typename Rng)
@@ -56,11 +62,12 @@ namespace ranges
             Same<iterator_t<Rng>, iterator_t<Rng const>> &&
             Same<sentinel_t<Rng>, sentinel_t<Rng const>>
     );
+    // clang-format on
 
     template<typename Rng>
     constexpr bool simple_view()
     {
-        return (bool) SimpleView<Rng>;
+        return (bool)SimpleView<Rng>;
     }
 
     namespace view
@@ -72,11 +79,13 @@ namespace ranges
             template<typename View>
             struct impl
             {
-                template<typename...Ts, typename V = View>
-                static constexpr auto CPP_auto_fun(bind)(Ts &&...ts)
+                // clang-format off
+                template<typename... Ts, typename V = View>
+                static constexpr auto CPP_auto_fun(bind)(Ts &&... ts)
                 (
                     return V::bind(static_cast<Ts &&>(ts)...)
                 )
+                // clang-format on
             };
         };
 
@@ -93,6 +102,7 @@ namespace ranges
         /// \sa make_view_fn
         RANGES_INLINE_VARIABLE(make_view_fn, make_view)
 
+        // clang-format off
         CPP_def
         (
             template(typename View, typename Rng, typename ...Rest)
@@ -100,6 +110,7 @@ namespace ranges
                 ViewableRange<Rng> &&
                 Invocable<View&, Rng, Rest...>
         );
+        // clang-format on
 
         template<typename View>
         struct view : pipeable<view<View>>
@@ -110,35 +121,38 @@ namespace ranges
 
             // Piping requires range arguments or lvalue containers.
             template<typename Rng, typename Vw>
-            static auto CPP_fun(pipe)(Rng &&rng, Vw &&v)(
+            static auto CPP_fun(pipe)(Rng && rng, Vw && v)( //
                 requires ViewableRange<Rng> && Invocable<View &, Rng>)
             {
                 return v.view_(static_cast<Rng &&>(rng));
             }
+
         public:
             view() = default;
 
-            constexpr explicit view(View a)
-                noexcept(std::is_nothrow_move_constructible<View>::value)
+            constexpr explicit view(View a) noexcept(
+                std::is_nothrow_move_constructible<View>::value)
               : view_(std::move(a))
             {}
 
             // Calling directly requires a ViewableRange.
-            template<typename Rng, typename...Rest>
-            auto operator()(Rng &&rng, Rest &&... rest) const ->
-                CPP_ret(invoke_result_t<View const &, Rng, Rest...>)(
+            template<typename Rng, typename... Rest>
+            auto operator()(Rng && rng, Rest &&... rest) const
+                -> CPP_ret(invoke_result_t<View const &, Rng, Rest...>)( //
                     requires ViewableRange<Rng> && Invocable<View const &, Rng, Rest...>)
             {
                 return view_(static_cast<Rng &&>(rng), static_cast<Rest &&>(rest)...);
             }
 
             // Currying overload.
-            template<typename...Ts, typename V = View>
-            auto CPP_auto_fun(operator())(Ts &&... ts) (const)
+            // clang-format off
+            template<typename... Ts, typename V = View>
+            auto CPP_auto_fun(operator())(Ts &&... ts)(const)
             (
-                return make_view(view_access::impl<V>::bind(view_,
-                    static_cast<Ts &&>(ts)...))
+                return make_view(
+                    view_access::impl<V>::bind(view_, static_cast<Ts &&>(ts)...))
             )
+            // clang-format on
         };
         /// \endcond
     }

@@ -14,16 +14,18 @@
 #define RANGES_V3_ALGORITHM_FOR_EACH_HPP
 
 #include <functional>
+
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/traits.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/dangling.hpp>
+
 #include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/functional/reference_wrapper.hpp>
 #include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -36,8 +38,8 @@ namespace ranges
     struct for_each_fn
     {
         template<typename I, typename S, typename F, typename P = identity>
-        auto operator()(I begin, S end, F fun, P proj = P{}) const ->
-            CPP_ret(for_each_result<I, F>)(
+        auto operator()(I begin, S end, F fun, P proj = P{}) const
+            -> CPP_ret(for_each_result<I, F>)( //
                 requires InputIterator<I> && Sentinel<S, I> &&
                     IndirectUnaryInvocable<F, projected<I, P>>)
         {
@@ -49,13 +51,13 @@ namespace ranges
         }
 
         template<typename Rng, typename F, typename P = identity>
-        auto operator()(Rng &&rng, F fun, P proj = P{}) const ->
-            CPP_ret(for_each_result<safe_iterator_t<Rng>, F>)(
+        auto operator()(Rng && rng, F fun, P proj = P{}) const
+            -> CPP_ret(for_each_result<safe_iterator_t<Rng>, F>)( //
                 requires InputRange<Rng> &&
                     IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
         {
             return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in,
-                detail::move(fun)};
+                    detail::move(fun)};
         }
     };
 
@@ -65,8 +67,8 @@ namespace ranges
 
     namespace cpp20
     {
-        using ranges::for_each_result;
         using ranges::for_each;
+        using ranges::for_each_result;
     }
     /// @}
 } // namespace ranges

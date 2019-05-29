@@ -14,7 +14,9 @@
 #define RANGES_V3_UTILITY_COMMON_ITERATOR_HPP
 
 #include <range/v3/detail/config.hpp>
-RANGES_DEPRECATED_HEADER("This header is deprecated. Please #include <range/v3/iterator/common_iterator.hpp> instead.")
+RANGES_DEPRECATED_HEADER(
+    "This header is deprecated. Please #include <range/v3/iterator/common_iterator.hpp> "
+    "instead.")
 
 #include <range/v3/iterator/common_iterator.hpp>
 

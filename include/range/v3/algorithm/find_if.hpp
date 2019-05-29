@@ -14,15 +14,17 @@
 #define RANGES_V3_ALGORITHM_FIND_IF_HPP
 
 #include <utility>
+
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/concepts.hpp>
-#include <range/v3/range/dangling.hpp>
-#include <range/v3/range/traits.hpp>
+
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -43,10 +45,9 @@ namespace ranges
         /// \pre `F` models `Predicate<X>`, where `X` is the result type
         ///      of `Invocable<P, V>`
         template<typename I, typename S, typename F, typename P = identity>
-        auto operator()(I begin, S end, F pred, P proj = P{}) const ->
-            CPP_ret(I)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    IndirectUnaryPredicate<F, projected<I, P>>)
+        auto operator()(I begin, S end, F pred, P proj = P{}) const -> CPP_ret(I)( //
+            requires InputIterator<I> && Sentinel<S, I> &&
+                IndirectUnaryPredicate<F, projected<I, P>>)
         {
             for(; begin != end; ++begin)
                 if(invoke(pred, invoke(proj, *begin)))
@@ -56,8 +57,8 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename F, typename P = identity>
-        auto operator()(Rng &&rng, F pred, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+        auto operator()(Rng && rng, F pred, P proj = P{}) const
+            -> CPP_ret(safe_iterator_t<Rng>)( //
                 requires InputRange<Rng> &&
                     IndirectUnaryPredicate<F, projected<iterator_t<Rng>, P>>)
         {

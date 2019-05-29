@@ -15,14 +15,16 @@
 
 #include <tuple>
 #include <utility>
+
 #include <range/v3/range_fwd.hpp>
+
+#include <range/v3/algorithm/result_types.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/algorithm/result_types.hpp>
-#include <range/v3/functional/invoke.hpp>
-#include <range/v3/iterator/operations.hpp>
-#include <range/v3/iterator/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -35,9 +37,9 @@ namespace ranges
     struct generate_n_fn
     {
         template<typename O, typename F>
-        auto operator()(O begin, iter_difference_t<O> n, F fun) const ->
-            CPP_ret(generate_n_result<O, F>)(
-                requires Invocable<F&> && OutputIterator<O, invoke_result_t<F &>>)
+        auto operator()(O begin, iter_difference_t<O> n, F fun) const
+            -> CPP_ret(generate_n_result<O, F>)( //
+                requires Invocable<F &> && OutputIterator<O, invoke_result_t<F &>>)
         {
             RANGES_EXPECT(n >= 0);
             auto norig = n;
@@ -54,8 +56,8 @@ namespace ranges
 
     namespace cpp20
     {
-        using ranges::generate_n_result;
         using ranges::generate_n;
+        using ranges::generate_n_result;
     }
     // @}
 } // namespace ranges

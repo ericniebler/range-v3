@@ -17,9 +17,13 @@
 
 #include <cstddef>
 #include <utility>
+
 #include <meta/meta.hpp>
-#include <range/v3/range_fwd.hpp>
+
 #include <concepts/concepts.hpp>
+
+#include <range/v3/range_fwd.hpp>
+
 #include <range/v3/iterator/concepts.hpp>
 
 namespace ranges
@@ -73,78 +77,80 @@ namespace ranges
         template<typename Cur>
         using mixin_base_t = meta::_t<mixin_base_<Cur>>;
 
+        // clang-format off
         template<typename Rng>
-        static constexpr /*c++14*/ auto CPP_auto_fun(begin_cursor)(Rng &rng)
+        static constexpr auto CPP_auto_fun(begin_cursor)(Rng &rng)
         (
             return rng.begin_cursor()
         )
         template<typename Rng>
-        static constexpr /*c++14*/ auto CPP_auto_fun(end_cursor)(Rng &rng)
+        static constexpr auto CPP_auto_fun(end_cursor)(Rng &rng)
         (
             return rng.end_cursor()
         )
 
         template<typename Rng>
-        static constexpr /*c++14*/ auto CPP_auto_fun(begin_adaptor)(Rng &rng)
+        static constexpr auto CPP_auto_fun(begin_adaptor)(Rng &rng)
         (
             return rng.begin_adaptor()
         )
         template<typename Rng>
-        static constexpr /*c++14*/ auto CPP_auto_fun(end_adaptor)(Rng &rng)
+        static constexpr auto CPP_auto_fun(end_adaptor)(Rng &rng)
         (
             return rng.end_adaptor()
         )
 
         template<typename Cur>
-        static constexpr /*c++14*/ auto CPP_auto_fun(read)(Cur const &pos)
+        static constexpr auto CPP_auto_fun(read)(Cur const &pos)
         (
             return pos.read()
         )
         template<typename Cur>
-        static constexpr /*c++14*/ auto CPP_auto_fun(arrow)(Cur const &pos)
+        static constexpr auto CPP_auto_fun(arrow)(Cur const &pos)
         (
             return pos.arrow()
         )
         template<typename Cur>
-        static constexpr /*c++14*/ auto CPP_auto_fun(move)(Cur const &pos)
+        static constexpr auto CPP_auto_fun(move)(Cur const &pos)
         (
             return pos.move()
         )
         template<typename Cur, typename T>
-        static constexpr /*c++14*/ auto CPP_auto_fun(write)(Cur &pos, T &&t)
+        static constexpr auto CPP_auto_fun(write)(Cur &pos, T &&t)
         (
             return pos.write((T &&) t)
         )
         template<typename Cur>
-        static constexpr /*c++14*/ auto CPP_auto_fun(next)(Cur & pos)
+        static constexpr auto CPP_auto_fun(next)(Cur & pos)
         (
             return pos.next()
         )
         template<typename Cur, typename O>
-        static constexpr /*c++14*/ auto CPP_auto_fun(equal)(Cur const &pos, O const &other)
+        static constexpr auto CPP_auto_fun(equal)(Cur const &pos, O const &other)
         (
             return pos.equal(other)
         )
         template<typename Cur>
-        static constexpr /*c++14*/ auto CPP_auto_fun(prev)(Cur & pos)
+        static constexpr auto CPP_auto_fun(prev)(Cur & pos)
         (
             return pos.prev()
         )
         template<typename Cur, typename D>
-        static constexpr /*c++14*/ auto CPP_auto_fun(advance)(Cur & pos, D n)
+        static constexpr auto CPP_auto_fun(advance)(Cur & pos, D n)
         (
             return pos.advance(n)
         )
         template<typename Cur, typename O>
-        static constexpr /*c++14*/ auto CPP_auto_fun(distance_to)(Cur const &pos, O const &other)
+        static constexpr auto CPP_auto_fun(distance_to)(Cur const &pos, O const &other)
         (
             return pos.distance_to(other)
         )
 
     private:
         template<typename Cur>
-        using sized_cursor_difference_t =
-            decltype(range_access::distance_to(std::declval<Cur>(), std::declval<Cur>()));
+        using sized_cursor_difference_t = decltype(
+            range_access::distance_to(std::declval<Cur>(), std::declval<Cur>()));
+        // clang-format on
 
         template<typename T>
         static std::ptrdiff_t cursor_difference_2_(detail::ignore_t);
@@ -169,8 +175,7 @@ namespace ranges
         };
 
         template<typename Cur>
-        struct cursor_value
-          : decltype(range_access::cursor_value_2_<Cur>(42))
+        struct cursor_value : decltype(range_access::cursor_value_2_<Cur>(42))
         {};
 #endif // RANGES_WORKAROUND_CWG_1554
     public:
@@ -180,7 +185,7 @@ namespace ranges
 
         template<typename Cur>
         using cursor_value_t = meta::_t<cursor_value<Cur>>;
-#else // ^^^ workaround ^^^ / vvv no workaround vvv
+#else  // ^^^ workaround ^^^ / vvv no workaround vvv
         template<typename Cur>
         using cursor_difference_t = decltype(range_access::cursor_difference_2_<Cur>(42));
 
@@ -189,23 +194,23 @@ namespace ranges
 #endif // RANGES_WORKAROUND_CWG_1554
 
         template<typename Cur>
-        static constexpr /*c++14*/ Cur &pos(basic_iterator<Cur> &it) noexcept
+        static constexpr Cur & pos(basic_iterator<Cur> & it) noexcept
         {
             return it.pos();
         }
         template<typename Cur>
-        static constexpr Cur const &pos(basic_iterator<Cur> const &it) noexcept
+        static constexpr Cur const & pos(basic_iterator<Cur> const & it) noexcept
         {
             return it.pos();
         }
         template<typename Cur>
-        static constexpr /*c++14*/ Cur &&pos(basic_iterator<Cur> &&it) noexcept
+        static constexpr Cur && pos(basic_iterator<Cur> && it) noexcept
         {
             return detail::move(it.pos());
         }
 
         template<typename Cur>
-        static constexpr /*c++14*/ Cur cursor(basic_iterator<Cur> it)
+        static constexpr Cur cursor(basic_iterator<Cur> it)
         {
             return std::move(it.pos());
         }
@@ -218,6 +223,7 @@ namespace ranges
     {
         //
         // Concepts that the range cursor must model
+        // clang-format off
         //
         CPP_def
         (
@@ -346,15 +352,13 @@ namespace ranges
             concept InfiniteCursor,
                 T::is_infinite::value
         );
+        // clang-format on
 
-        using cursor_tag =
-            concepts::tag<CursorConcept>;
+        using cursor_tag = concepts::tag<CursorConcept>;
 
-        using input_cursor_tag =
-            concepts::tag<InputCursorConcept, cursor_tag>;
+        using input_cursor_tag = concepts::tag<InputCursorConcept, cursor_tag>;
 
-        using forward_cursor_tag =
-            concepts::tag<ForwardCursorConcept, input_cursor_tag>;
+        using forward_cursor_tag = concepts::tag<ForwardCursorConcept, input_cursor_tag>;
 
         using bidirectional_cursor_tag =
             concepts::tag<BidirectionalCursorConcept, forward_cursor_tag>;
@@ -366,30 +370,26 @@ namespace ranges
             concepts::tag<ContiguousCursorConcept, random_access_cursor_tag>;
 
         template<typename T>
-        using cursor_tag_of =
-            concepts::tag_of<
-                meta::list<
-                    ContiguousCursorConcept,
-                    RandomAccessCursorConcept,
-                    BidirectionalCursorConcept,
-                    ForwardCursorConcept,
-                    InputCursorConcept,
-                    CursorConcept>,
-                T>;
+        using cursor_tag_of = concepts::tag_of<meta::list<ContiguousCursorConcept,    //
+                                                          RandomAccessCursorConcept,  //
+                                                          BidirectionalCursorConcept, //
+                                                          ForwardCursorConcept,       //
+                                                          InputCursorConcept,         //
+                                                          CursorConcept>,
+                                               T>;
 
         template<typename Cur, bool Readable>
-        struct is_writable_cursor_
-          : std::true_type
+        struct is_writable_cursor_ : std::true_type
         {};
 
         template<typename Cur>
         struct is_writable_cursor_<Cur, true>
-          : meta::bool_<(bool) WritableCursor<Cur, range_access::cursor_value_t<Cur>>>
+          : meta::bool_<(bool)WritableCursor<Cur, range_access::cursor_value_t<Cur>>>
         {};
 
         template<typename Cur>
         struct is_writable_cursor
-          : detail::is_writable_cursor_<Cur, (bool) ReadableCursor<Cur>>
+          : detail::is_writable_cursor_<Cur, (bool)ReadableCursor<Cur>>
         {};
     }
     /// \endcond

@@ -15,17 +15,20 @@
 #define RANGES_V3_VIEW_FOR_EACH_HPP
 
 #include <utility>
+
 #include <meta/meta.hpp>
+
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/invoke.hpp>
-#include <range/v3/view/view.hpp>
-#include <range/v3/view/all.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/view/join.hpp>
+#include <range/v3/view/all.hpp>
 #include <range/v3/view/generate_n.hpp>
+#include <range/v3/view/join.hpp>
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -41,14 +44,14 @@ namespace ranges
             template<typename Fun>
             static auto bind(for_each_fn for_each, Fun fun)
             {
-                return make_pipeable(std::bind(for_each, std::placeholders::_1,
-                    protect(std::move(fun))));
+                return make_pipeable(
+                    std::bind(for_each, std::placeholders::_1, protect(std::move(fun))));
             }
+
         public:
             template<typename Rng, typename Fun>
-            auto CPP_fun(operator())(Rng &&rng, Fun fun) (const
-                requires ViewableRange<Rng> &&
-                    TransformableRange<Rng, Fun> &&
+            auto CPP_fun(operator())(Rng && rng, Fun fun)(
+                const requires ViewableRange<Rng> && TransformableRange<Rng, Fun> &&
                     JoinableRange<transform_view<all_t<Rng>, Fun>>)
             {
                 return join(transform(static_cast<Rng &&>(rng), std::move(fun)));
@@ -63,9 +66,8 @@ namespace ranges
     struct yield_fn
     {
         template<typename V>
-        auto operator()(V v) const ->
-            CPP_ret(single_view<V>)(
-                requires CopyConstructible<V>)
+        auto operator()(V v) const -> CPP_ret(single_view<V>)( //
+            requires CopyConstructible<V>)
         {
             return view::single(std::move(v));
         }
@@ -78,9 +80,8 @@ namespace ranges
     struct yield_from_fn
     {
         template<typename Rng>
-        auto operator()(Rng rng) const ->
-            CPP_ret(Rng)(
-                requires View<Rng>)
+        auto operator()(Rng rng) const -> CPP_ret(Rng)( //
+            requires View<Rng>)
         {
             return rng;
         }
@@ -106,9 +107,8 @@ namespace ranges
     struct lazy_yield_if_fn
     {
         template<typename F>
-        auto operator()(bool b, F f) const ->
-            CPP_ret(generate_n_view<F>)(
-                requires Invocable<F &>)
+        auto operator()(bool b, F f) const -> CPP_ret(generate_n_view<F>)( //
+            requires Invocable<F &>)
         {
             return view::generate_n(std::move(f), b ? 1 : 0);
         }
@@ -120,11 +120,11 @@ namespace ranges
     /// @}
 
     /// \cond
-    CPP_template(typename Rng, typename Fun)(
-        requires ViewableRange<Rng> &&
-            view::TransformableRange<Rng, Fun> &&
-            InputRange<invoke_result_t<Fun&, range_reference_t<Rng>>>)
-    auto operator >>= (Rng &&rng, Fun fun)
+    CPP_template(typename Rng, typename Fun)( //
+        requires ViewableRange<Rng> && view::TransformableRange<Rng, Fun> &&
+            InputRange<invoke_result_t<Fun &, range_reference_t<Rng>>>) //
+        auto
+        operator>>=(Rng && rng, Fun fun)
     {
         return view::for_each(static_cast<Rng &&>(rng), std::move(fun));
     }

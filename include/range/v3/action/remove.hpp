@@ -14,7 +14,9 @@
 #define RANGES_V3_ACTION_REMOVE_HPP
 
 #include <meta/meta.hpp>
+
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/algorithm/remove.hpp>
@@ -27,13 +29,17 @@ namespace ranges
     /// |cond
     namespace detail
     {
-        CPP_def(
+        // clang-format off
+        CPP_def
+        (
             template(typename Val, typename Rng)
             concept ComparableWithRangeRef_,
                 EqualityComparableWith<range_reference_t<Rng>, Val>
         );
+        // clang-format on
     }
     /// |endcond
+
     /// \addtogroup group-actions
     /// @{
     namespace action
@@ -43,33 +49,33 @@ namespace ranges
         private:
             friend action_access;
             template<typename V, typename P>
-            static auto CPP_fun(bind)(remove_fn remove, V &&value, P proj)(
-                requires (!(Range<V> && detail::ComparableWithRangeRef_<P, V>)))
+            static auto CPP_fun(bind)(remove_fn remove, V && value, P proj)( //
+                requires(!(Range<V> && detail::ComparableWithRangeRef_<P, V>)))
             {
                 return std::bind(remove,
-                    std::placeholders::_1,
-                    bind_forward<V>(value),
-                    protect(std::move(proj)));
+                                 std::placeholders::_1,
+                                 bind_forward<V>(value),
+                                 protect(std::move(proj)));
             }
             template<typename V>
-            static auto bind(remove_fn remove, V &&value)
+            static auto bind(remove_fn remove, V && value)
             {
-                return std::bind(remove,
-                    std::placeholders::_1,
-                    bind_forward<V>(value),
-                    identity{});
+                return std::bind(
+                    remove, std::placeholders::_1, bind_forward<V>(value), identity{});
             }
+
         public:
             template<typename Rng, typename V, typename P = identity>
-            auto operator()(Rng &&rng, V const &value, P proj = {}) const ->
-                CPP_ret(Rng)(
+            auto operator()(Rng && rng, V const & value, P proj = {}) const
+                -> CPP_ret(Rng)( //
                     requires ForwardRange<Rng> && Permutable<iterator_t<Rng>> &&
                         ErasableRange<Rng, iterator_t<Rng>, sentinel_t<Rng>> &&
-                        IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
+                            IndirectRelation<equal_to, projected<iterator_t<Rng>, P>,
+                                             V const *>)
             {
                 auto it = ranges::remove(rng, value, std::move(proj));
                 ranges::erase(rng, it, ranges::end(rng));
-                return static_cast<Rng&&>(rng);
+                return static_cast<Rng &&>(rng);
             }
         };
         /// \ingroup group-actions

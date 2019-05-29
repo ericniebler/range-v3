@@ -16,15 +16,20 @@
 #define RANGES_V3_ITERATOR_ACCESS_HPP
 
 #include <iterator>
-#include <utility>
 #include <type_traits>
+#include <utility>
+
+#include <std/detail/associated_types.hpp>
+
 #include <meta/meta.hpp>
+
 #include <concepts/concepts.hpp>
+
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
-#include <std/detail/associated_types.hpp>
 
 namespace ranges
 {
@@ -34,18 +39,17 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        template<
-            typename I,
+        template<typename I,
 #ifdef RANGES_WORKAROUND_MSVC_683388
-            typename R = detail::if_then_t<
-                std::is_pointer<uncvref_t<I>>::value &&
-                    std::is_array<std::remove_pointer_t<uncvref_t<I>>>::value,
-                std::add_lvalue_reference_t<std::remove_pointer_t<uncvref_t<I>>>,
-                decltype(*std::declval<I &>())>,
+                 typename R = detail::if_then_t<
+                     std::is_pointer<uncvref_t<I>>::value &&
+                         std::is_array<std::remove_pointer_t<uncvref_t<I>>>::value,
+                     std::add_lvalue_reference_t<std::remove_pointer_t<uncvref_t<I>>>,
+                     decltype(*std::declval<I &>())>,
 #else
-            typename R = decltype(*std::declval<I &>()),
+                 typename R = decltype(*std::declval<I &>()),
 #endif
-            typename = R &>
+                 typename = R &>
         using iter_reference_t_ = R;
     } // namespace detail
     /// \endcond
@@ -57,14 +61,12 @@ namespace ranges
     !defined(RANGES_DOXYGEN_INVOKED)
     template<typename T>
     using iter_value_t =
-        typename detail::if_then_t<
-            detail::is_std_iterator_traits_specialized_v<T>,
-            std::iterator_traits<T>,
-            readable_traits<T>>::value_type;
+        typename detail::if_then_t<detail::is_std_iterator_traits_specialized_v<T>,
+                                   std::iterator_traits<T>,
+                                   readable_traits<T>>::value_type;
 #else
     template<typename T>
-    using iter_value_t =
-        typename readable_traits<T>::value_type;
+    using iter_value_t = typename readable_traits<T>::value_type;
 #endif
 
     /// \cond
@@ -86,13 +88,13 @@ namespace ranges
 
         struct fn
         {
-            template<
-                typename I,
-                typename = detail::enable_if_t<is_adl_indirectly_movable_v<I &>>>
+            // clang-format off
+            template<typename I,
+                     typename = detail::enable_if_t<is_adl_indirectly_movable_v<I &>>>
 #ifndef RANGES_WORKAROUND_CLANG_23135
             constexpr
 #endif // RANGES_WORKAROUND_CLANG_23135
-            auto CPP_auto_fun(operator())(I &&i) (const)
+            auto CPP_auto_fun(operator())(I &&i)(const)
             (
                 return iter_move(i)
             )
@@ -104,10 +106,11 @@ namespace ranges
 #ifndef RANGES_WORKAROUND_CLANG_23135
             constexpr
 #endif // RANGES_WORKAROUND_CLANG_23135
-            auto CPP_auto_fun(operator())(I &&i) (const)
+            auto CPP_auto_fun(operator())(I &&i)(const)
             (
                 return static_cast<aux::move_t<R>>(aux::move(*i))
             )
+            // clang-format on
         };
     } // _iter_move_
     /// \endcond
@@ -118,27 +121,22 @@ namespace ranges
     namespace detail
     {
         template<typename I, typename O>
-        auto is_indirectly_movable_(I &(*i)(), O &(*o)(), iter_value_t<I> *v = nullptr) ->
-            always_<
-                std::true_type,
-                decltype(iter_value_t<I>(iter_move(i()))),
-                decltype(*v = iter_move(i())),
-                decltype(*o() = (iter_value_t<I> &&) *v),
-                decltype(*o() = iter_move(i()))>;
+        auto is_indirectly_movable_(I & (*i)(), O & (*o)(), iter_value_t<I> * v = nullptr)
+            -> always_<std::true_type, decltype(iter_value_t<I>(iter_move(i()))),
+                       decltype(*v = iter_move(i())),
+                       decltype(*o() = (iter_value_t<I> &&) * v),
+                       decltype(*o() = iter_move(i()))>;
         template<typename I, typename O>
-        auto is_indirectly_movable_(...) ->
-            std::false_type;
+        auto is_indirectly_movable_(...) -> std::false_type;
 
         template<typename I, typename O>
-        auto is_nothrow_indirectly_movable_(iter_value_t<I> *v) ->
-            meta::bool_<
-                noexcept(iter_value_t<I>(iter_move(std::declval<I &>()))) &&
-                noexcept(*v = iter_move(std::declval<I &>())) &&
-                noexcept(*std::declval<O &>() = (iter_value_t<I> &&) *v) &&
-                noexcept(*std::declval<O &>() = iter_move(std::declval<I &>()))>;
+        auto is_nothrow_indirectly_movable_(iter_value_t<I> * v) -> meta::bool_<
+            noexcept(iter_value_t<I>(iter_move(std::declval<I &>()))) &&
+            noexcept(*v = iter_move(std::declval<I &>())) &&
+            noexcept(*std::declval<O &>() = (iter_value_t<I> &&) * v) &&
+            noexcept(*std::declval<O &>() = iter_move(std::declval<I &>()))>;
         template<typename I, typename O>
-        auto is_nothrow_indirectly_movable_(...) ->
-            std::false_type;
+        auto is_nothrow_indirectly_movable_(...) -> std::false_type;
     }
     /// \endcond
 
@@ -151,8 +149,7 @@ namespace ranges
         decltype(detail::is_nothrow_indirectly_movable_<I, O>(nullptr))::value;
 
     template<typename I, typename O>
-    struct is_indirectly_movable
-      : meta::bool_<is_indirectly_movable_v<I, O>>
+    struct is_indirectly_movable : meta::bool_<is_indirectly_movable_v<I, O>>
     {};
 
     template<typename I, typename O>
@@ -174,9 +171,9 @@ namespace ranges
         //    be confusing.
 
         // Q: Then why is it OK to "re"-define swap for pairs and tuples of references?
-        // A: Because as defined above, swapping an rvalue tuple of references has the same
-        //    semantics as swapping an lvalue tuple of references. Rather than reseat the
-        //    references, assignment happens *through* the references.
+        // A: Because as defined above, swapping an rvalue tuple of references has the
+        //    same semantics as swapping an lvalue tuple of references. Rather than
+        //    reseat the references, assignment happens *through* the references.
 
         // Q: But I have an iterator whose operator* returns an rvalue
         //    std::reference_wrapper<T>. How do I make it model IndirectlySwappable?
@@ -209,23 +206,19 @@ namespace ranges
         {
             // *If* a user-defined iter_swap is found via ADL, call that:
             template<typename T, typename U>
-            constexpr /*c++14*/
-            detail::enable_if_t<is_adl_indirectly_swappable_v<T, U>>
-            operator()(T &&t, U &&u) const
-                noexcept(noexcept(iter_swap((T &&) t, (U &&) u)))
+            constexpr detail::enable_if_t<is_adl_indirectly_swappable_v<T, U>> operator()(
+                T && t, U && u) const noexcept(noexcept(iter_swap((T &&) t, (U &&) u)))
             {
-                (void) iter_swap((T &&) t, (U &&) u);
+                (void)iter_swap((T &&) t, (U &&) u);
             }
 
             // *Otherwise*, for Readable types with swappable reference
             // types, call ranges::swap(*a, *b)
             template<typename I0, typename I1>
-            constexpr /*c++14*/
-            detail::enable_if_t<
+            constexpr detail::enable_if_t<
                 !is_adl_indirectly_swappable_v<I0, I1> &&
                 is_swappable_with<iter_reference_t<I0>, iter_reference_t<I1>>::value>
-            operator()(I0 &&a, I1 &&b) const
-                noexcept(noexcept(ranges::swap(*a, *b)))
+            operator()(I0 && a, I1 && b) const noexcept(noexcept(ranges::swap(*a, *b)))
             {
                 ranges::swap(*a, *b);
             }
@@ -236,16 +229,13 @@ namespace ranges
             //      *a = iter_move(b);
             //      *b = std::move(tmp);
             template<typename I0, typename I1>
-            constexpr /*c++14*/
-            detail::enable_if_t<
+            constexpr detail::enable_if_t<
                 !is_adl_indirectly_swappable_v<I0, I1> &&
                 !is_swappable_with<iter_reference_t<I0>, iter_reference_t<I1>>::value &&
-                is_indirectly_movable_v<I0, I1> &&
-                is_indirectly_movable_v<I1, I0>>
-            operator()(I0 &&a, I1 &&b) const
-                noexcept(
-                    is_nothrow_indirectly_movable_v<I0, I1> &&
-                    is_nothrow_indirectly_movable_v<I1, I0>)
+                is_indirectly_movable_v<I0, I1> && is_indirectly_movable_v<I1, I0>>
+            operator()(I0 && a, I1 && b) const
+                noexcept(is_nothrow_indirectly_movable_v<I0, I1> &&
+                             is_nothrow_indirectly_movable_v<I1, I0>)
             {
                 iter_value_t<I0> v0 = iter_move(a);
                 *a = iter_move(b);
@@ -262,20 +252,16 @@ namespace ranges
     namespace detail
     {
         template<typename T, typename U>
-        auto is_indirectly_swappable_(T &(*t)(), U &(*u)()) ->
-            detail::always_<
-                std::true_type,
-                decltype(iter_swap(t(), u()))>;
+        auto is_indirectly_swappable_(T & (*t)(), U & (*u)())
+            -> detail::always_<std::true_type, decltype(iter_swap(t(), u()))>;
         template<typename T, typename U>
-        auto is_indirectly_swappable_(...) ->
-            std::false_type;
+        auto is_indirectly_swappable_(...) -> std::false_type;
 
         template<typename T, typename U>
-        auto is_nothrow_indirectly_swappable_(int) ->
-            meta::bool_<noexcept(iter_swap(std::declval<T &>(), std::declval<U &>()))>;
+        auto is_nothrow_indirectly_swappable_(int)
+            -> meta::bool_<noexcept(iter_swap(std::declval<T &>(), std::declval<U &>()))>;
         template<typename T, typename U>
-        auto is_nothrow_indirectly_swappable_(long) ->
-            std::false_type;
+        auto is_nothrow_indirectly_swappable_(long) -> std::false_type;
     } // namespace detail
     /// \endcond
 
@@ -288,8 +274,7 @@ namespace ranges
         decltype(detail::is_nothrow_indirectly_swappable_<T, U>(0))::value;
 
     template<typename T, typename U>
-    struct is_indirectly_swappable
-      : meta::bool_<is_indirectly_swappable_v<T, U>>
+    struct is_indirectly_swappable : meta::bool_<is_indirectly_swappable_v<T, U>>
     {};
 
     template<typename T, typename U>
@@ -299,10 +284,10 @@ namespace ranges
 
     namespace cpp20
     {
-        using ranges::iter_value_t;
-        using ranges::iter_reference_t;
         using ranges::iter_move;
+        using ranges::iter_reference_t;
         using ranges::iter_swap;
+        using ranges::iter_value_t;
     }
     /// @}
 } // namespace ranges

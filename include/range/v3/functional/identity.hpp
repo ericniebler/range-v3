@@ -22,7 +22,7 @@ namespace ranges
     struct identity
     {
         template<typename T>
-        constexpr T &&operator()(T &&t) const noexcept
+        constexpr T && operator()(T && t) const noexcept
         {
             return (T &&) t;
         }
@@ -30,9 +30,8 @@ namespace ranges
     };
 
     /// \cond
-    using ident
-        RANGES_DEPRECATED("Repace uses of ranges::ident with ranges::identity") =
-            identity;
+    using ident RANGES_DEPRECATED("Repace uses of ranges::ident with ranges::identity") =
+        identity;
     /// \endcond
 
     namespace cpp20

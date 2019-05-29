@@ -15,9 +15,11 @@
 #define RANGES_V3_RANGE_PRIMITIVES_HPP
 
 #include <concepts/concepts.hpp>
+
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/access.hpp>
+
 #include <range/v3/iterator/concepts.hpp>
+#include <range/v3/range/access.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -52,64 +54,69 @@ namespace ranges
             }
 
             template<typename R, std::size_t N>
-            static constexpr std::size_t impl_(R (&&)[N], int) noexcept
+            static constexpr std::size_t impl_(R(&&)[N], int) noexcept
             {
                 return N;
             }
 
             // Prefer member if it returns Integral.
             template<typename R>
-            static constexpr auto impl_(R &&r, int) noexcept(noexcept(((R &&) r).size())) ->
-                CPP_ret(member_size_t<R>)(
+            static constexpr auto impl_(R && r, int) noexcept(noexcept(((R &&) r).size()))
+                -> CPP_ret(member_size_t<R>)( //
                     requires Integral<member_size_t<R>> &&
-                        (!disable_sized_range<uncvref_t<R>>))
+                    (!disable_sized_range<uncvref_t<R>>))
             {
                 return ((R &&) r).size();
             }
 
             // Use ADL if it returns Integral.
             template<typename R>
-            static constexpr auto impl_(R &&r, long) noexcept(noexcept(size((R &&) r))) ->
-                CPP_ret(non_member_size_t<R>)(
+            static constexpr auto impl_(R && r, long) noexcept(noexcept(size((R &&) r)))
+                -> CPP_ret(non_member_size_t<R>)( //
                     requires Integral<non_member_size_t<R>> &&
-                        (!disable_sized_range<uncvref_t<R>>))
+                    (!disable_sized_range<uncvref_t<R>>))
             {
                 return size((R &&) r);
             }
 
             template<typename R>
-            static constexpr /*c++14*/ auto impl_(R &&r, ...) ->
-                CPP_ret(detail::iter_size_t<_begin_::_t<R>>)(
+            static constexpr auto impl_(R && r, ...)
+                -> CPP_ret(detail::iter_size_t<_begin_::_t<R>>)( //
                     requires ForwardIterator<_begin_::_t<R>> &&
                         SizedSentinel<_end_::_t<R>, _begin_::_t<R>>)
             {
                 using size_type = detail::iter_size_t<_begin_::_t<R>>;
-                return static_cast<size_type>(ranges::end((R &&) r) - ranges::begin((R &&) r));
+                return static_cast<size_type>(ranges::end((R &&) r) -
+                                              ranges::begin((R &&) r));
             }
 
         public:
             template<typename R>
-            constexpr auto operator()(R &&r) const
-                noexcept(noexcept(fn::impl_((R &&) r, 0))) ->
-                decltype(fn::impl_((R &&) r, 0))
+            constexpr auto operator()(R && r) const
+                noexcept(noexcept(fn::impl_((R &&) r, 0)))
+                    -> decltype(fn::impl_((R &&) r, 0))
             {
                 return fn::impl_((R &&) r, 0);
             }
 
             template<typename T, typename Fn = fn>
-            RANGES_DEPRECATED("Using a reference_wrapper as a Range is deprecated. Use view::ref instead.")
-            constexpr auto operator()(std::reference_wrapper<T> ref) const
-                noexcept(noexcept(Fn{}(ref.get()))) ->
-                decltype(Fn{}(ref.get()))
+            RANGES_DEPRECATED(
+                "Using a reference_wrapper as a Range is deprecated. Use view::ref "
+                "instead.")
+            constexpr auto
+            operator()(std::reference_wrapper<T> ref) const
+                noexcept(noexcept(Fn{}(ref.get()))) -> decltype(Fn{}(ref.get()))
             {
                 return Fn{}(ref.get());
             }
 
             template<typename T, typename Fn = fn>
-            RANGES_DEPRECATED("Using a reference_wrapper as a Range is deprecated. Use view::ref instead.")
-            constexpr auto operator()(ranges::reference_wrapper<T> ref) const
-                noexcept(noexcept(Fn{}(ref.get()))) ->
-                decltype(Fn{}(ref.get()))
+            RANGES_DEPRECATED(
+                "Using a reference_wrapper as a Range is deprecated. Use view::ref "
+                "instead.")
+            constexpr auto
+            operator()(ranges::reference_wrapper<T> ref) const
+                noexcept(noexcept(Fn{}(ref.get()))) -> decltype(Fn{}(ref.get()))
             {
                 return Fn{}(ref.get());
             }
@@ -118,7 +125,8 @@ namespace ranges
     /// \endcond
 
     /// \ingroup group-range
-    /// \return For a given expression `E` of type `T`, `ranges::size(E)` is equivalent to:
+    /// \return For a given expression `E` of type `T`, `ranges::size(E)` is equivalent
+    /// to:
     ///   * `+extent_v<T>` if `T` is an array type.
     ///   * Otherwise, `+E.size()` if it is a valid expression and its type `I` models
     ///     `Integral` and `disable_sized_range<std::remove_cvref_t<T>>` is false.
@@ -148,49 +156,48 @@ namespace ranges
         {
         private:
             template<typename R>
-            using member_data_t =
-                detail::decay_t<decltype(std::declval<R>().data())>;
+            using member_data_t = detail::decay_t<decltype(std::declval<R>().data())>;
 
             template<typename R>
-            static constexpr auto impl_(R &r, detail::priority_tag<2>)
-                noexcept(noexcept(r.data())) ->
-                    CPP_ret(member_data_t<R &>)(
-                        requires std::is_pointer<member_data_t<R &>>::value)
+            static constexpr auto impl_(R & r, detail::priority_tag<2>) noexcept(
+                noexcept(r.data())) -> CPP_ret(member_data_t<R &>)( //
+                requires std::is_pointer<member_data_t<R &>>::value)
             {
                 return r.data();
             }
             template<typename R>
-            static constexpr auto impl_(R &&r, detail::priority_tag<1>)
-                noexcept(noexcept(ranges::begin((R &&) r))) ->
-                    CPP_ret(_begin_::_t<R>)(
-                        requires std::is_pointer<_begin_::_t<R>>::value)
+            static constexpr auto impl_(R && r, detail::priority_tag<1>) noexcept(
+                noexcept(ranges::begin((R &&) r))) -> CPP_ret(_begin_::_t<R>)( //
+                requires std::is_pointer<_begin_::_t<R>>::value)
             {
                 return ranges::begin((R &&) r);
             }
             template<typename R>
-            static constexpr auto impl_(R &&r, detail::priority_tag<0>)
-                noexcept(noexcept(ranges::begin((R &&) r) == ranges::end((R &&) r)
-                      ? nullptr
-                      : std::addressof(*ranges::begin((R &&) r)))) ->
-                    CPP_ret(decltype(std::addressof(*ranges::begin((R &&) r))))(
-                        requires ContiguousIterator<_begin_::_t<R>>)
+            static constexpr auto impl_(R && r, detail::priority_tag<0>) noexcept(
+                noexcept(ranges::begin((R &&) r) == ranges::end((R &&) r)
+                             ? nullptr
+                             : std::addressof(*ranges::begin((R &&) r))))
+                -> CPP_ret(decltype(std::addressof(*ranges::begin((R &&) r))))( //
+                    requires ContiguousIterator<_begin_::_t<R>>)
             {
                 return ranges::begin((R &&) r) == ranges::end((R &&) r)
-                  ? nullptr
-                  : std::addressof(*ranges::begin((R &&) r));
+                           ? nullptr
+                           : std::addressof(*ranges::begin((R &&) r));
             }
+
         public:
             template<typename charT, typename Traits, typename Alloc>
-            constexpr charT *operator()(std::basic_string<charT, Traits, Alloc> &s) const noexcept
+            constexpr charT * operator()(
+                std::basic_string<charT, Traits, Alloc> & s) const noexcept
             {
                 // string doesn't have non-const data before C++17
                 return const_cast<charT *>(detail::as_const(s).data());
             }
 
             template<typename R>
-            constexpr auto operator()(R &&r) const
-                noexcept(noexcept(fn::impl_((R &&) r, detail::priority_tag<2>{}))) ->
-                decltype(fn::impl_((R &&) r, detail::priority_tag<2>{}))
+            constexpr auto operator()(R && r) const
+                noexcept(noexcept(fn::impl_((R &&) r, detail::priority_tag<2>{})))
+                    -> decltype(fn::impl_((R &&) r, detail::priority_tag<2>{}))
             {
                 return fn::impl_((R &&) r, detail::priority_tag<2>{});
             }
@@ -209,16 +216,16 @@ namespace ranges
         struct fn
         {
             template<typename R>
-            constexpr _data_::_t<R const &> operator()(R const &r) const
+            constexpr _data_::_t<R const &> operator()(R const & r) const
                 noexcept(noexcept(ranges::data(r)))
             {
                 return ranges::data(r);
             }
             template<typename R>
-            constexpr _data_::_t<R const> operator()(R const &&r) const
-                noexcept(noexcept(ranges::data((R const &&) r)))
+            constexpr _data_::_t<R const> operator()(R const && r) const
+                noexcept(noexcept(ranges::data((R const &&)r)))
             {
-                return ranges::data((R const &&) r);
+                return ranges::data((R const &&)r);
             }
         };
     }
@@ -238,55 +245,59 @@ namespace ranges
         private:
             // Prefer member if it is valid.
             template<typename R>
-            static constexpr auto impl_(R &&r, detail::priority_tag<2>)
-                noexcept(noexcept(bool(((R &&) r).empty()))) ->
-                    decltype(bool(((R &&) r).empty()))
+            static constexpr auto impl_(R && r, detail::priority_tag<2>) noexcept(
+                noexcept(bool(((R &&) r).empty()))) -> decltype(bool(((R &&) r).empty()))
             {
                 return bool(((R &&) r).empty());
             }
 
             // Fall back to size == 0.
             template<typename R>
-            static constexpr auto impl_(R &&r, detail::priority_tag<1>)
-                noexcept(noexcept(bool(ranges::size((R &&) r) == 0))) ->
-                    decltype(bool(ranges::size((R &&) r) == 0))
+            static constexpr auto impl_(R && r, detail::priority_tag<1>) noexcept(
+                noexcept(bool(ranges::size((R &&) r) == 0)))
+                -> decltype(bool(ranges::size((R &&) r) == 0))
             {
                 return bool(ranges::size((R &&) r) == 0);
             }
 
             // Fall further back to begin == end.
             template<typename R>
-            static constexpr auto impl_(R &&r, detail::priority_tag<0>)
-                noexcept(noexcept(bool(ranges::begin((R &&) r) == ranges::end((R &&) r)))) ->
-                    CPP_ret(decltype(bool(ranges::begin((R &&) r) == ranges::end((R &&) r))))(
-                        requires ForwardIterator<_begin_::_t<R>>)
+            static constexpr auto impl_(R && r, detail::priority_tag<0>) noexcept(
+                noexcept(bool(ranges::begin((R &&) r) == ranges::end((R &&) r))))
+                -> CPP_ret(decltype(bool(ranges::begin((R &&) r) ==
+                                         ranges::end((R &&) r))))( //
+                    requires ForwardIterator<_begin_::_t<R>>)
             {
                 return bool(ranges::begin((R &&) r) == ranges::end((R &&) r));
             }
 
         public:
             template<typename R>
-            constexpr auto operator()(R &&r) const
-                noexcept(noexcept(fn::impl_((R &&) r, detail::priority_tag<2>{}))) ->
-                decltype(fn::impl_((R &&) r, detail::priority_tag<2>{}))
+            constexpr auto operator()(R && r) const
+                noexcept(noexcept(fn::impl_((R &&) r, detail::priority_tag<2>{})))
+                    -> decltype(fn::impl_((R &&) r, detail::priority_tag<2>{}))
             {
                 return fn::impl_((R &&) r, detail::priority_tag<2>{});
             }
 
             template<typename T, typename Fn = fn>
-            RANGES_DEPRECATED("Using a reference_wrapper as a Range is deprecated. Use view::ref instead.")
-            constexpr auto operator()(std::reference_wrapper<T> ref) const
-                noexcept(noexcept(Fn{}(ref.get()))) ->
-                decltype(Fn{}(ref.get()))
+            RANGES_DEPRECATED(
+                "Using a reference_wrapper as a Range is deprecated. Use view::ref "
+                "instead.")
+            constexpr auto
+            operator()(std::reference_wrapper<T> ref) const
+                noexcept(noexcept(Fn{}(ref.get()))) -> decltype(Fn{}(ref.get()))
             {
                 return Fn{}(ref.get());
             }
 
             template<typename T, typename Fn = fn>
-            RANGES_DEPRECATED("Using a reference_wrapper as a Range is deprecated. Use view::ref instead.")
-            constexpr auto operator()(ranges::reference_wrapper<T> ref) const
-                noexcept(noexcept(Fn{}(ref.get()))) ->
-                decltype(Fn{}(ref.get()))
+            RANGES_DEPRECATED(
+                "Using a reference_wrapper as a Range is deprecated. Use view::ref "
+                "instead.")
+            constexpr auto
+            operator()(ranges::reference_wrapper<T> ref) const
+                noexcept(noexcept(Fn{}(ref.get()))) -> decltype(Fn{}(ref.get()))
             {
                 return Fn{}(ref.get());
             }
@@ -301,11 +312,11 @@ namespace ranges
     namespace cpp20
     {
         // Specialize this is namespace ranges::
-        using ranges::disable_sized_range;
-        using ranges::size;
-        using ranges::empty;
-        using ranges::data;
         using ranges::cdata;
+        using ranges::data;
+        using ranges::disable_sized_range;
+        using ranges::empty;
+        using ranges::size;
     }
 }
 
