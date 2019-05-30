@@ -16,6 +16,7 @@
 #include <type_traits>
 #include <concepts/concepts.hpp>
 #include <range/v3/detail/config.hpp>
+#include <range/v3/range_fwd.hpp>
 
 namespace ranges
 {
@@ -25,12 +26,8 @@ namespace ranges
 #ifdef __cpp_lib_addressof_constexpr
         using std::addressof;
 #else
-        namespace test {
-            struct ignore {
-                template <typename T> ignore(T&&) { }
-            };
-
-            ignore operator&(ignore);
+        namespace check_addressof {
+            inline ignore_t operator&(ignore_t) { return {}; }
             template <typename T>
             auto addressof(T& t) {
                 return &t;
@@ -41,8 +38,8 @@ namespace ranges
         constexpr bool has_bad_addressof() {
             return !std::is_scalar<T>::value &&
                 !RANGES_IS_SAME(
-                    decltype(test::addressof(*(T*)nullptr)),
-                    test::ignore);
+                    decltype(check_addressof::addressof(*(T*)nullptr)),
+                    ignore_t);
         }
 
         template <typename T>
