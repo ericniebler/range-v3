@@ -40,7 +40,7 @@ namespace ranges
         constexpr bool has_bad_addressof() {
             return !std::is_scalar<T>::value &&
                 !RANGES_IS_SAME(
-                    decltype(test::addressof(*(T*)0)),
+                    decltype(test::addressof(*(T*)nullptr)),
                     test::ignore);
         }
 
