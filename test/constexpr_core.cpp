@@ -17,6 +17,7 @@
 #include <range/v3/range/operations.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/utility/addressof.hpp>
+
 #include "array.hpp"
 #include "test_iterators.hpp"
 

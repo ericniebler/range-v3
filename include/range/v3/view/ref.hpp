@@ -21,9 +21,9 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
+#include <range/v3/utility/addressof.hpp>
 #include <range/v3/view/interface.hpp>
 #include <range/v3/view/view.hpp>
-#include <range/v3/utility/addressof.hpp>
 
 RANGES_DISABLE_WARNINGS
 

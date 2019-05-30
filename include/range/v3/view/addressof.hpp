@@ -19,9 +19,9 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/utility/addressof.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/view.hpp>
-#include <range/v3/utility/addressof.hpp>
 
 namespace ranges
 {

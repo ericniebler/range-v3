@@ -22,8 +22,8 @@
 #include <concepts/concepts.hpp>
 
 #include <range/v3/detail/config.hpp>
-#include <range/v3/utility/in_place.hpp>
 #include <range/v3/utility/addressof.hpp>
+#include <range/v3/utility/in_place.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
 
@@ -234,7 +234,8 @@ namespace ranges
                         data_ = *static_cast<U &&>(that);
                     else
                     {
-                        auto const address = static_cast<void *>(detail::addressof(data_));
+                        auto const address =
+                            static_cast<void *>(detail::addressof(data_));
                         ::new(address) T(*static_cast<U &&>(that));
                         engaged_ = true;
                     }
