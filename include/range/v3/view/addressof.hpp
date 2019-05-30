@@ -19,6 +19,7 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/utility/addressof.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -36,7 +37,7 @@ namespace ranges
                 template<typename V>
                 constexpr V * operator()(V & value) const noexcept
                 {
-                    return std::addressof(value);
+                    return detail::addressof(value);
                 }
             };
 

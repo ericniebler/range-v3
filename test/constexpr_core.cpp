@@ -16,6 +16,8 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/operations.hpp>
 #include <range/v3/range/primitives.hpp>
+#include <range/v3/utility/addressof.hpp>
+
 #include "array.hpp"
 #include "test_iterators.hpp"
 
@@ -248,6 +250,42 @@ constexpr /*c++14*/ auto test_init_list() -> bool
     }
 
     return true;
+}
+
+#ifdef __cpp_lib_addressof_constexpr
+#define ADDR_CONSTEXPR constexpr
+#else
+#define ADDR_CONSTEXPR
+#endif
+
+namespace addr {
+    struct Good { };
+    struct Bad { void operator&() const; };
+    struct Bad2 { friend void operator&(Bad2); };
+}
+
+void test_constexpr_addressof() {
+    static constexpr int i = 0;
+    static constexpr int const* pi = ranges::detail::addressof(i);
+    static_assert(&i == pi, "");
+
+    static constexpr addr::Good g = {};
+    static constexpr addr::Good const* pg = ranges::detail::addressof(g);
+    static_assert(&g == pg, "");
+
+    static constexpr addr::Bad b = {};
+    static ADDR_CONSTEXPR addr::Bad const* pb = ranges::detail::addressof(b);
+
+    static constexpr addr::Bad2 b2 = {};
+    static ADDR_CONSTEXPR addr::Bad2 const* pb2 = ranges::detail::addressof(b2);
+
+#ifdef __cpp_lib_addressof_constexpr
+    static_assert(std::addressof(b) == pb, "");
+    static_assert(std::addressof(b2) == pb2, "");
+#else
+    (void)pb;
+    (void)pb2;
+#endif
 }
 
 int main()

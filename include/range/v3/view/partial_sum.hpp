@@ -28,6 +28,7 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
+#include <range/v3/utility/addressof.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
@@ -88,7 +89,7 @@ namespace ranges
 
             cursor() = default;
             constexpr explicit cursor(Parent & rng)
-              : parent_{std::addressof(rng)}
+              : parent_{detail::addressof(rng)}
               , current_(ranges::begin(rng.base_))
             {
                 if(current_ != ranges::end(rng.base_))

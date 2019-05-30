@@ -24,6 +24,7 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
+#include <range/v3/utility/addressof.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -87,11 +88,11 @@ namespace ranges
         }
         constexpr T * data() noexcept
         {
-            return std::addressof(static_cast<T &>(value_));
+            return detail::addressof(static_cast<T &>(value_));
         }
         constexpr T const * data() const noexcept
         {
-            return std::addressof(static_cast<T const &>(value_));
+            return detail::addressof(static_cast<T const &>(value_));
         }
     };
 
