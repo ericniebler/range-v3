@@ -26,7 +26,7 @@ namespace ranges
 #else
         namespace test {
             struct ignore {
-                template <typename T> ignore(T&&);
+                template <typename T> ignore(T&&) { }
             };
 
             ignore operator&(ignore);
