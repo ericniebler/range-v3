@@ -147,7 +147,7 @@ namespace ranges
         /// \relates reverse_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<reverse_fn>, reverse)
-    }
+    } // namespace view
 
     namespace cpp20
     {
@@ -158,9 +158,9 @@ namespace ranges
         CPP_template(typename Rng)(                        //
             requires View<Rng> && BidirectionalRange<Rng>) //
             using reverse_view = ranges::reverse_view<Rng>;
-    }
+    } // namespace cpp20
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::reverse_view)

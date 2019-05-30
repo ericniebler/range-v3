@@ -42,7 +42,7 @@ namespace ranges
                 IndirectBinaryPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>
         );
         // clang-format on
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-views
@@ -163,9 +163,9 @@ namespace ranges
         /// \relates adjacent_filter_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<adjacent_filter_fn>, adjacent_filter)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::adjacent_filter_view)

@@ -122,7 +122,7 @@ namespace ranges
     {
         using ranges::mismatch;
         using ranges::mismatch_result;
-    }
+    } // namespace cpp20
 
     // [*] In this case, the 'begin2' iterator is taken by universal reference. Why? So
     // that we can properly distinguish this case:

@@ -78,6 +78,6 @@ namespace ranges
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(unstable_remove_if_fn, unstable_remove_if)
     /// @}
-}
+} // namespace ranges
 
 #endif // RANGES_V3_ALGORITHM_UNSTABLE_REMOVE_IF_HPP

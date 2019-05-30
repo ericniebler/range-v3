@@ -61,7 +61,7 @@ namespace ranges
         {
             return rng.end();
         }
-    }
+    } // namespace _ref_view_
     /// \endcond
 
     /// \addtogroup group-views
@@ -135,7 +135,7 @@ namespace ranges
         /// \relates const_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<ref_fn>, ref)
-    }
+    } // namespace view
 
     namespace cpp20
     {
@@ -143,7 +143,7 @@ namespace ranges
             requires std::is_object<Rng>::value) //
             using ref_view = ranges::ref_view<Rng>;
     }
-}
+} // namespace ranges
 
 RANGES_RE_ENABLE_WARNINGS
 

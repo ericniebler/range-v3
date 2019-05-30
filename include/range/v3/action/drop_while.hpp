@@ -59,8 +59,8 @@ namespace ranges
         /// \relates drop_while_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<drop_while_fn>, drop_while)
-    }
+    } // namespace action
     /// @}
-}
+} // namespace ranges
 
 #endif

@@ -88,6 +88,6 @@ namespace ranges
     {
         return ScopeExit((Fun &&) fun);
     }
-}
+} // namespace ranges
 
 #endif

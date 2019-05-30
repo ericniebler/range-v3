@@ -114,6 +114,6 @@ namespace ranges
     /// \ingroup group-range
     /// \sa `front_fn`
     RANGES_INLINE_VARIABLE(front_fn, front)
-}
+} // namespace ranges
 
 #endif

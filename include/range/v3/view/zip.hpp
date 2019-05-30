@@ -144,9 +144,9 @@ namespace ranges
         /// \relates zip_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(zip_fn, zip)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 RANGES_RE_ENABLE_WARNINGS
 

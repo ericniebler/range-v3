@@ -420,7 +420,7 @@ namespace ranges
 
             using auto_seed_128 = auto_seeded<seed_seq_fe128>;
             using auto_seed_256 = auto_seeded<seed_seq_fe256>;
-        }
+        } // namespace randutils
 
         using default_URNG = meta::if_c<(sizeof(void *) >= sizeof(long long)),
                                         std::mt19937_64, std::mt19937>;
@@ -477,9 +477,9 @@ namespace ranges
 
             return engine;
         }
-    }
+    } // namespace detail
     /// \endcond
-}
+} // namespace ranges
 
 RANGES_DIAGNOSTIC_POP
 

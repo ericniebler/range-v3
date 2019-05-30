@@ -63,8 +63,8 @@ namespace ranges
         /// \relates unique_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<unique_fn>, unique)
-    }
+    } // namespace action
     /// @}
-}
+} // namespace ranges
 
 #endif

@@ -58,8 +58,8 @@ namespace ranges
         /// \relates shuffle_fn
         /// \sa `action`
         RANGES_INLINE_VARIABLE(action<shuffle_fn>, shuffle)
-    }
+    } // namespace action
     /// @}
-}
+} // namespace ranges
 
 #endif

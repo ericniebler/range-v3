@@ -59,8 +59,8 @@ namespace ranges
     {
         using ranges::unreachable;
         using ranges::unreachable_sentinel_t;
-    }
+    } // namespace cpp20
     /// @}
-}
+} // namespace ranges
 
 #endif // RANGES_V3_ITERATOR_UNREACHABLE_SENTINEL_HPP

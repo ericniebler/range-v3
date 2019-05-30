@@ -66,7 +66,7 @@ namespace ranges
     {
         using ranges::copy_backward;
         using ranges::copy_backward_result;
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

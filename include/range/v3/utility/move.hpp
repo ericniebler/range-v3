@@ -55,7 +55,7 @@ namespace ranges
         using move_t =
             meta::if_c<std::is_reference<R>::value, meta::_t<std::remove_reference<R>> &&,
                        detail::decay_t<R>>;
-    }
-}
+    } // namespace aux
+} // namespace ranges
 
 #endif

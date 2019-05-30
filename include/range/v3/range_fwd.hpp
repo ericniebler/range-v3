@@ -150,7 +150,7 @@ namespace ranges
 
         template<typename T>
         struct value_type_;
-    }
+    } // namespace detail
 
     template<typename T>
     using difference_type RANGES_DEPRECATED(
@@ -352,7 +352,7 @@ namespace ranges
         template<typename From, typename To>
         using is_convertible =
             std::is_convertible<meta::_t<std::add_rvalue_reference<From>>, To>;
-    }
+    } // namespace detail
     /// \endcond
 
     struct begin_tag
@@ -421,7 +421,7 @@ namespace ranges
 
         template<typename I>
         using cpp17_iterator = basic_iterator<cpp17_iterator_cursor<I>>;
-    }
+    } // namespace detail
     /// \endcond
 
     template<typename First, typename Second>
@@ -550,7 +550,7 @@ namespace ranges
     {
         struct iota_fn;
         struct closed_iota_fn;
-    }
+    } // namespace view
 
     template<typename Rng>
     struct join_view;
@@ -660,7 +660,7 @@ namespace ranges
         template<typename Rng,
                  bool IsRandomAccessBounded = is_random_access_common_<Rng>::value>
         struct take_exactly_view_;
-    }
+    } // namespace detail
     /// \endcond
 
     template<typename Rng>
@@ -681,7 +681,7 @@ namespace ranges
     {
         struct iter_take_while_fn;
         struct take_while_fn;
-    }
+    } // namespace view
 
     template<typename Rng, typename Regex, typename SubMatchRange>
     struct tokenize_view;
@@ -713,7 +713,7 @@ namespace ranges
         struct replace_fn;
 
         struct replace_if_fn;
-    }
+    } // namespace view
 
     template<typename Rng, typename Pred>
     struct trim_view;
@@ -750,7 +750,7 @@ namespace ranges
         struct keys_fn;
 
         struct values_fn;
-    }
+    } // namespace view
 
     template<typename Fun, typename... Rngs>
     struct iter_zip_with_view;
@@ -768,8 +768,8 @@ namespace ranges
         struct zip_with_fn;
 
         struct zip_fn;
-    }
-}
+    } // namespace view
+} // namespace ranges
 
 /// \cond
 namespace concepts
@@ -782,8 +782,8 @@ namespace concepts
         namespace defer
         {
         }
-    }
-}
+    } // namespace defs
+} // namespace concepts
 
 namespace ranges
 {
@@ -797,7 +797,7 @@ namespace ranges
     {
         using namespace ::concepts::defs::defer;
     }
-}
+} // namespace ranges
 
 RANGES_DIAGNOSTIC_POP
 

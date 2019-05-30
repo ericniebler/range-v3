@@ -391,8 +391,8 @@ namespace ranges
         struct is_writable_cursor
           : detail::is_writable_cursor_<Cur, (bool)ReadableCursor<Cur>>
         {};
-    }
+    } // namespace detail
     /// \endcond
-}
+} // namespace ranges
 
 #endif

@@ -54,7 +54,7 @@ namespace ranges
         struct is_common_range : meta::bool_<CommonRange<Rng>>
         {};
         /// \endcond
-    }
+    } // namespace detail
 
     template<typename Rng, bool = detail::is_common_range<Rng>::value>
     struct common_view : view_interface<common_view<Rng>, range_cardinality<Rng>::value>
@@ -172,7 +172,7 @@ namespace ranges
         /// \relates common_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<common_fn>, common)
-    }
+    } // namespace view
     /// @}
 
     /// \cond
@@ -191,13 +191,13 @@ namespace ranges
                 "The name view::bounded is deprecated. "
                 "Please use view::common instead.")
             RANGES_INLINE_VAR constexpr auto & bounded = common;
-        }
+        } // namespace
 
         template<typename Rng>
         using bounded_t RANGES_DEPRECATED("The name view::bounded_t is deprecated.") =
             decltype(common(std::declval<Rng>()));
         /// \endcond
-    }
+    } // namespace view
 
     namespace cpp20
     {
@@ -209,8 +209,8 @@ namespace ranges
         CPP_template(typename Rng)(                    //
             requires View<Rng> && (!CommonRange<Rng>)) //
             using common_view = ranges::common_view<Rng>;
-    }
-}
+    } // namespace cpp20
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::common_view)

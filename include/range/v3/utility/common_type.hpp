@@ -54,7 +54,7 @@ namespace ranges
 
     template<typename... Ts>
     using common_reference_t = concepts::common_reference_t<Ts...>;
-}
+} // namespace ranges
 
 namespace concepts
 {
@@ -112,6 +112,6 @@ namespace concepts
              template<typename> class Qual2>
     struct basic_common_reference<common_tuple<Ts...>, common_tuple<Us...>, Qual1, Qual2>;
     /// \endcond
-}
+} // namespace concepts
 
 #endif

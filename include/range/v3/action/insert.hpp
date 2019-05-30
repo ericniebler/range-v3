@@ -162,7 +162,7 @@ namespace ranges
                 auto pos = insert_reserve_helper(cont, std::move(p), delta);
                 return cont.insert(pos, C{ranges::begin(rng)}, C{ranges::end(rng)});
             }
-        }
+        } // namespace detail
         /// \endcond
 
         template<typename Cont, typename P, typename I, typename S>
@@ -282,7 +282,7 @@ namespace ranges
                     static_cast<Rng &&>(rng), std::move(p), std::move(i), std::move(j));
             }
         };
-    }
+    } // namespace adl_insert_detail
     /// \endcond
 
     /// \ingroup group-actions
@@ -308,6 +308,6 @@ namespace ranges
             Range<Rng>
     );
     // clang-format on
-}
+} // namespace ranges
 
 #endif

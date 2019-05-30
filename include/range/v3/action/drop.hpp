@@ -60,8 +60,8 @@ namespace ranges
         /// \relates drop_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<drop_fn>, drop)
-    }
+    } // namespace action
     /// @}
-}
+} // namespace ranges
 
 #endif

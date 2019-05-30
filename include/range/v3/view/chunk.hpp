@@ -52,7 +52,8 @@ namespace ranges
         struct zero
         {
             zero() = default;
-            constexpr explicit zero(T const &) noexcept {}
+            constexpr explicit zero(T const &) noexcept
+            {}
             constexpr zero & operator=(T const &) noexcept
             {
                 return *this;
@@ -70,7 +71,7 @@ namespace ranges
                 return T(0);
             }
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-views
@@ -432,9 +433,9 @@ namespace ranges
         /// \relates chunk_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<chunk_fn>, chunk)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::chunk_view)

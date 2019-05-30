@@ -107,7 +107,7 @@ namespace ranges
     {
         using ranges::merge;
         using ranges::merge_result;
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

@@ -163,7 +163,7 @@ namespace ranges
     {
         using ranges::unique_copy;
         using ranges::unique_copy_result;
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

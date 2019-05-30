@@ -95,7 +95,7 @@ namespace ranges
             "ranges::compressed_tuple is deprecated.") =
             compressed_tuple_<meta::list<Ts...>,
                               meta::make_index_sequence<sizeof...(Ts)>>;
-    }
+    } // namespace compressed_tuple_detail
     /// \endcond
 
     using compressed_tuple_detail::compressed_tuple;
@@ -186,7 +186,7 @@ namespace ranges
     /// \ingroup group-utility
     /// \sa `make_compressed_pair_fn`
     RANGES_INLINE_VARIABLE(make_compressed_pair_fn, make_compressed_pair)
-}
+} // namespace ranges
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
@@ -221,7 +221,7 @@ namespace std
     {
         using type = Second;
     };
-}
+} // namespace std
 RANGES_DIAGNOSTIC_POP
 
 #endif

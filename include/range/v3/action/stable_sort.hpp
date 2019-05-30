@@ -62,8 +62,8 @@ namespace ranges
         /// \relates stable_sort_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<stable_sort_fn>, stable_sort)
-    }
+    } // namespace action
     /// @}
-}
+} // namespace ranges
 
 #endif

@@ -134,7 +134,7 @@ namespace ranges
             for(I i = begin; i != end; ++i)
                 detail::unguarded_linear_insert(i, iter_move(i), pred, proj);
         }
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-algorithms

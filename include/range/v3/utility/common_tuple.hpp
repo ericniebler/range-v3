@@ -84,7 +84,7 @@ namespace ranges
         };
         template<typename... Ts>
         using args = args_<sizeof...(Ts), Ts...>;
-    }
+    } // namespace detail
     /// \endcond
 
     template<typename... Ts>
@@ -568,9 +568,9 @@ namespace ranges
           : meta::lazy::let<meta::lazy::invoke<
                 TupleLike, meta::lazy::_t<common_reference<Ts, Us>>...>>
         {};
-    }
+    } // namespace detail
     /// \endcond
-}
+} // namespace ranges
 
 /// \cond
 namespace concepts
@@ -664,7 +664,7 @@ namespace concepts
                                               ranges::common_tuple<Qual2<Us>...>,
                                               meta::quote<ranges::common_tuple>>
     {};
-}
+} // namespace concepts
 /// \endcond
 
 RANGES_DIAGNOSTIC_PUSH
@@ -698,7 +698,7 @@ namespace std
     struct tuple_element<N, ::ranges::common_tuple<Ts...>>
       : tuple_element<N, tuple<Ts...>>
     {};
-}
+} // namespace std
 
 RANGES_DIAGNOSTIC_POP
 

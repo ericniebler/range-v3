@@ -187,9 +187,9 @@ namespace ranges
         /// \relates remove_if_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<remove_if_fn>, remove_if)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 RANGES_RE_ENABLE_WARNINGS
 

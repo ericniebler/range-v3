@@ -95,7 +95,7 @@ namespace ranges
                     ranges::iter_swap(begin, i);
             }
         }
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-algorithms

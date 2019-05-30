@@ -83,7 +83,8 @@ namespace ranges
                     end_ = ranges::next(it_, ranges::end(rng_->rng_));
                 return *end_;
             }
-            void set_end_(std::true_type) const {}
+            void set_end_(std::true_type) const
+            {}
             void set_end_(std::false_type) const
             {
                 auto & end_ = static_cast<cache_t &>(*rng_);

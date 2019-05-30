@@ -93,7 +93,7 @@ namespace ranges
 #endif // RANGES_WORKAROUND_MSVC_688606
             compressed_pair<BaseIter, Adapt> data_;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-views
@@ -112,7 +112,8 @@ namespace ranges
         adaptor_base & operator=(adaptor_base &&) = default;
         adaptor_base & operator=(adaptor_base const &) = default;
 
-        adaptor_base(detail::ignore_t, detail::ignore_t = {}, detail::ignore_t = {}) {}
+        adaptor_base(detail::ignore_t, detail::ignore_t = {}, detail::ignore_t = {})
+        {}
         // clang-format off
         template<typename Rng>
         static constexpr auto CPP_auto_fun(begin)(Rng &rng)
@@ -223,7 +224,7 @@ namespace ranges
 
         template<typename BaseSent, typename Adapt>
         using adaptor_sentinel_ = meta::_t<base_adaptor_sentinel_<BaseSent, Adapt>>;
-    }
+    } // namespace detail
     /// \endcond
 
     template<typename BaseSent, typename Adapt>
@@ -547,6 +548,6 @@ namespace ranges
     };
 
     /// @}
-}
+} // namespace ranges
 
 #endif

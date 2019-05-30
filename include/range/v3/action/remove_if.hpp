@@ -64,8 +64,8 @@ namespace ranges
         /// \ingroup group-actions
         /// \sa action
         RANGES_INLINE_VARIABLE(action<remove_if_fn>, remove_if)
-    }
+    } // namespace action
     /// @}
-}
+} // namespace ranges
 
 #endif

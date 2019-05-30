@@ -174,9 +174,9 @@ namespace ranges
         /// \relates take_while_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<take_while_fn>, take_while)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::iter_take_while_view)

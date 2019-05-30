@@ -49,8 +49,8 @@ namespace ranges
         /// \ingroup group-utility
         /// \sa `copy_fn`
         RANGES_INLINE_VARIABLE(copy_fn, copy)
-    }
+    } // namespace aux
     /// @}
-}
+} // namespace ranges
 
 #endif

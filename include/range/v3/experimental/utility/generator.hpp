@@ -201,7 +201,8 @@ namespace ranges
             {
                 return {};
             }
-            void return_void() const noexcept {}
+            void return_void() const noexcept
+            {}
             void unhandled_exception() noexcept
             {
                 except_ = std::current_exception();

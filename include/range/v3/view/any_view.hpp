@@ -187,8 +187,10 @@ namespace ranges
             Rng, meta::void_<decltype(ranges::end(std::declval<Rng const &>()))>>
         {
             any_view_sentinel_impl() = default;
-            any_view_sentinel_impl(Rng &) noexcept {}
-            void init(Rng &) noexcept {}
+            any_view_sentinel_impl(Rng &) noexcept
+            {}
+            void init(Rng &) noexcept
+            {}
             sentinel_t<Rng> get(Rng & rng) const noexcept
             {
                 return ranges::end(rng);
@@ -500,7 +502,8 @@ namespace ranges
             any_view_impl() = default;
             any_view_impl(Rng rng)
               : range_box_t{std::move(rng)}
-              , sentinel_box_t{range_box_t::get()} // NB: initialization order dependence
+              , sentinel_box_t{range_box_t::get()}
+            // NB: initialization order dependence
             {}
 
         private:
@@ -525,7 +528,7 @@ namespace ranges
                 return static_cast<std::size_t>(ranges::size(range_box_t::get()));
             }
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// \brief A type-erased view
@@ -659,7 +662,7 @@ namespace ranges
     using any_random_access_view RANGES_DEPRECATED(
         "Use any_view<Ref, category::random_access> instead.") =
         any_view<Ref, category::random_access>;
-} // namepace ranges
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::any_view)

@@ -65,6 +65,6 @@ namespace ranges
     /// \sa `on_fn`
     RANGES_INLINE_VARIABLE(on_fn, on)
     /// @}
-}
+} // namespace ranges
 
 #endif

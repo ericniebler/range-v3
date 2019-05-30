@@ -100,7 +100,7 @@ namespace ranges
         };
 
         RANGES_INLINE_VARIABLE(merge_n_fn, merge_n)
-    }
+    } // namespace aux
 } // namespace ranges
 
 #endif // include guard

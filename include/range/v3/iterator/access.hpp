@@ -112,7 +112,7 @@ namespace ranges
             )
             // clang-format on
         };
-    } // _iter_move_
+    } // namespace _iter_move_
     /// \endcond
 
     RANGES_DEFINE_CPO(_iter_move_::fn, iter_move)
@@ -137,7 +137,7 @@ namespace ranges
             noexcept(*std::declval<O &>() = iter_move(std::declval<I &>()))>;
         template<typename I, typename O>
         auto is_nothrow_indirectly_movable_(...) -> std::false_type;
-    }
+    } // namespace detail
     /// \endcond
 
     template<typename I, typename O>
@@ -288,7 +288,7 @@ namespace ranges
         using ranges::iter_reference_t;
         using ranges::iter_swap;
         using ranges::iter_value_t;
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

@@ -128,6 +128,6 @@ namespace ranges
     };
 
     /// @}
-}
+} // namespace ranges
 
 #endif

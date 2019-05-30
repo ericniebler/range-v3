@@ -57,8 +57,8 @@ namespace ranges
         /// \relates unique_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<unique_fn>, unique)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #endif

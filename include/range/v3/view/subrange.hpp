@@ -155,7 +155,7 @@ namespace ranges
         {
             return K == subrange_kind::sized && !(bool)SizedSentinel<S, I>;
         }
-    }
+    } // namespace detail
     /// \endcond
 
     template<typename I, typename S = I,
@@ -207,7 +207,7 @@ namespace ranges
         {
             return r.end();
         }
-    }
+    } // namespace _subrange_
     /// \endcond
 
     template<typename I, typename S, subrange_kind K>
@@ -381,7 +381,8 @@ namespace ranges
         {
             return std::get<2>(data_);
         }
-        static constexpr void set_size_(...) noexcept {}
+        static constexpr void set_size_(...) noexcept
+        {}
         CPP_member
         constexpr auto set_size_(size_type n) noexcept -> CPP_ret(void)( //
             requires(detail::store_size_<K, S, I>()))
@@ -468,9 +469,9 @@ namespace ranges
             using subrange = ranges::subrange<I, S>;
 
         using ranges::safe_subrange_t;
-    }
+    } // namespace cpp20
     /// @}
-}
+} // namespace ranges
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
@@ -490,7 +491,7 @@ namespace std
     {
         using type = S;
     };
-}
+} // namespace std
 
 RANGES_DIAGNOSTIC_POP
 

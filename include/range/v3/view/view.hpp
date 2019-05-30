@@ -49,8 +49,8 @@ namespace ranges
             )
             // clang-format on
         };
-    }
-    /// \endcond
+    } // namespace detail
+      /// \endcond
 
     // clang-format off
     CPP_def
@@ -155,7 +155,7 @@ namespace ranges
             // clang-format on
         };
         /// \endcond
-    }
-}
+    } // namespace view
+} // namespace ranges
 
 #endif

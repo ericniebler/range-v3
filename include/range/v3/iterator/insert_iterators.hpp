@@ -183,7 +183,7 @@ namespace ranges
         using ranges::front_inserter;
         using ranges::insert_iterator;
         using ranges::inserter;
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 
@@ -204,6 +204,6 @@ namespace std
     struct iterator_traits<::ranges::insert_iterator<Container>>
       : ::ranges::detail::std_output_iterator_traits<>
     {};
-}
+} // namespace std
 /// \endcond
 #endif // RANGES_V3_ITERATOR_INSERT_ITERATORS_HPP

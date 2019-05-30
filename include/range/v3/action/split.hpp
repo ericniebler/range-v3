@@ -72,8 +72,8 @@ namespace ranges
         /// \relates split_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<split_fn>, split)
-    }
+    } // namespace action
     /// @}
-}
+} // namespace ranges
 
 #endif

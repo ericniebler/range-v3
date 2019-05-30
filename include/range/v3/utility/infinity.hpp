@@ -62,6 +62,6 @@ namespace ranges
         }
     };
     /// \endcond
-}
+} // namespace ranges
 
 #endif

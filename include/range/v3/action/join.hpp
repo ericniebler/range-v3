@@ -59,8 +59,8 @@ namespace ranges
         /// \relates join_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<join_fn>, join)
-    }
+    } // namespace action
     /// @}
-}
+} // namespace ranges
 
 #endif

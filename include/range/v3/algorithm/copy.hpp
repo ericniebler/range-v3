@@ -74,7 +74,7 @@ namespace ranges
     {
         using ranges::copy_result;
         RANGES_INLINE_VARIABLE(cpp20_copy_fn, copy)
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

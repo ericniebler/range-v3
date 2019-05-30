@@ -48,7 +48,7 @@ namespace ranges
         {
             return {&pred, &val};
         }
-    }
+    } // namespace detail
     /// \endcond
 
     namespace aux
@@ -74,7 +74,7 @@ namespace ranges
         };
 
         RANGES_INLINE_VARIABLE(upper_bound_n_fn, upper_bound_n)
-    }
+    } // namespace aux
 } // namespace ranges
 
 #endif // include guard

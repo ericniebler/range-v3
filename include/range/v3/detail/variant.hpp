@@ -92,7 +92,8 @@ namespace ranges
     template<std::size_t Index>
     struct indexed_element<void, Index>
     {
-        void get() const noexcept {}
+        void get() const noexcept
+        {}
     };
 
     /// \cond
@@ -212,7 +213,8 @@ namespace ranges
         template<typename Index>
         struct indexed_datum<void, Index>
         {
-            void get() const noexcept {}
+            void get() const noexcept
+            {}
             constexpr indexed_element<void, Index::value> ref() const noexcept
             {
                 return {};
@@ -256,7 +258,8 @@ namespace ranges
                     tail_t tail;
                 };
 
-                type() noexcept {}
+                type() noexcept
+                {}
                 template<typename... Args>
                 constexpr type(meta::size_t<0>, Args &&... args) noexcept(
                     std::is_nothrow_constructible<head_t, Args...>::value)
@@ -284,8 +287,10 @@ namespace ranges
                     tail_t tail;
                 };
 
-                type() noexcept {}
-                ~type() {}
+                type() noexcept
+                {}
+                ~type()
+                {}
                 template<typename... Args>
                 constexpr type(meta::size_t<0>, Args &&... args) noexcept(
                     std::is_nothrow_constructible<head_t, Args...>::value)
@@ -457,7 +462,8 @@ namespace ranges
                 U && u = t.get();
                 *t_ = std::addressof(u);
             }
-            void operator()(indexed_element<void, N>) const noexcept {}
+            void operator()(indexed_element<void, N>) const noexcept
+            {}
         };
 
         template<typename Variant, std::size_t N>
@@ -521,7 +527,8 @@ namespace ranges
         {
             return *t;
         }
-        inline void variant_deref_(void const volatile *) noexcept {}
+        inline void variant_deref_(void const volatile *) noexcept
+        {}
 
         template<typename Variant>
         struct variant_get
@@ -599,7 +606,7 @@ namespace ranges
         using variant_visit_results_t =
             meta::_t<variant_visit_results<Fun, meta::list<Ts...>,
                                            meta::make_index_sequence<sizeof...(Ts)>>>;
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-utility
@@ -861,7 +868,7 @@ namespace ranges
         return res;
     }
     /// @}
-}
+} // namespace ranges
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
@@ -875,7 +882,7 @@ namespace std
     template<size_t I, typename... Ts>
     struct tuple_element<I, ::ranges::variant<Ts...>> : tuple_element<I, tuple<Ts...>>
     {};
-}
+} // namespace std
 
 RANGES_DIAGNOSTIC_POP
 

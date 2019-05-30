@@ -107,7 +107,7 @@ namespace ranges
         /// \relates filter_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<filter_fn>, filter)
-    }
+    } // namespace view
 
     namespace cpp20
     {
@@ -120,9 +120,9 @@ namespace ranges
             requires InputRange<V> && IndirectUnaryPredicate<Pred, iterator_t<V>> &&
                 View<V> && std::is_object<Pred>::value) //
             using filter_view = ranges::filter_view<V, Pred>;
-    }
+    } // namespace cpp20
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::filter_view)

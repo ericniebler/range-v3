@@ -104,11 +104,11 @@ namespace ranges
             return istream_view<Val>{sin};
         }
         /// \cond
-    }
+    } // namespace _istream_
     using namespace _istream_;
     /// \endcond
 
     /// @}
-}
+} // namespace ranges
 
 #endif

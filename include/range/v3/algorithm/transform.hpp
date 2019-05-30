@@ -86,8 +86,9 @@ namespace ranges
                  typename P0 = identity, typename P1 = identity>
         auto operator()(Rng0 && rng0, Rng1 && rng1, O out, F fun, P0 proj0 = P0{},
                         P1 proj1 = P1{}) const
-            -> CPP_ret(binary_transform_result<safe_iterator_t<Rng0>,
-                                               safe_iterator_t<Rng1>, O>)( //
+            -> CPP_ret(
+                binary_transform_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>,
+                                        O>)( //
                 requires InputRange<Rng0> && InputRange<Rng1> && WeaklyIncrementable<O> &&
                     CopyConstructible<F> && Writable<
                         O, indirect_result_t<F &, projected<iterator_t<Rng0>, P0>,
@@ -162,7 +163,7 @@ namespace ranges
         using ranges::binary_transform_result;
         using ranges::transform;
         using ranges::unary_transform_result;
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

@@ -60,14 +60,16 @@ namespace ranges
         {
         public:
             size_tracker() = default;
-            size_tracker(Rng &) {}
-            void decrement() {}
+            size_tracker(Rng &)
+            {}
+            void decrement()
+            {}
             range_difference_t<Rng> get(Rng & rng, iterator_t<Rng> const & it) const
             {
                 return ranges::end(rng) - it;
             }
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-views
@@ -233,9 +235,9 @@ namespace ranges
         /// \relates sample_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<sample_fn>, sample)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::sample_view)

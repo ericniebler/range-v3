@@ -638,7 +638,7 @@ namespace ranges
         /// \relates split_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<split_fn>, split)
-    }
+    } // namespace view
 
     namespace cpp20
     {
@@ -652,10 +652,10 @@ namespace ranges
                     iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
             (ForwardRange<Rng> || ranges::detail::tiny_range<Pattern>)) using split_view =
             ranges::split_view<Rng, Pattern>;
-    }
+    } // namespace cpp20
 
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::split_view)

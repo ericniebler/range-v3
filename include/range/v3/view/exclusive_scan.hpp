@@ -45,7 +45,7 @@ namespace ranges
                 ExclusiveScanConstraint3<Rng, T, Fun>
         );
         // clang-format on
-    }
+    } // namespace detail
     /// \endcond
 
     // clang-format off
@@ -199,7 +199,7 @@ namespace ranges
         /// \relates exclusive_scan_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<exclusive_scan_fn>, exclusive_scan)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 #endif // RANGE_V3_VIEW_EXCLUSIVE_SCAN_HPP

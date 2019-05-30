@@ -118,8 +118,8 @@ namespace ranges
             view::ref(rng) | action;
             return rng;
         }
-    }
+    } // namespace action
     /// @}
-}
+} // namespace ranges
 
 #endif

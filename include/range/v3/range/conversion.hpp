@@ -158,7 +158,7 @@ namespace ranges
             using invoke = meta::invoke<meta::quote<ContT>, range_value_t<Rng>>;
 #endif
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-range
@@ -279,6 +279,6 @@ namespace ranges
         }
     } // namespace _to_
     /// \endcond
-}
+} // namespace ranges
 
 #endif

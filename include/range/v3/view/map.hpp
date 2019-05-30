@@ -87,7 +87,7 @@ namespace ranges
                 Invocable<get_second const &, T>
         );
         // clang-format on
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-views
@@ -123,8 +123,8 @@ namespace ranges
         /// \relates values_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<values_fn>, values)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #endif

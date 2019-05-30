@@ -108,7 +108,7 @@ namespace ranges
         /// \relates linear_distribute_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(linear_distribute_fn, linear_distribute)
-    }
-}
+    } // namespace view
+} // namespace ranges
 
 #endif

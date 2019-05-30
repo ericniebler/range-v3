@@ -49,7 +49,7 @@ namespace ranges
 
         template<typename T>
         using is_char_type = is_char_type_<meta::_t<std::remove_cv<T>>>;
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-views
@@ -84,7 +84,7 @@ namespace ranges
         /// \relates c_str_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(c_str_fn, c_str)
-    }
-}
+    } // namespace view
+} // namespace ranges
 
 #endif

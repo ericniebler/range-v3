@@ -103,6 +103,6 @@ namespace ranges
     struct coerce<T &&> : coerce<T>
     {};
     /// @}
-}
+} // namespace ranges
 
 #endif

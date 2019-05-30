@@ -90,6 +90,6 @@ namespace ranges
         using ranges::not_fn;
     }
     /// @}
-}
+} // namespace ranges
 
 #endif

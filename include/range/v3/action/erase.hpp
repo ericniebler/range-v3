@@ -45,7 +45,7 @@ namespace ranges
                 return erase(static_cast<Rng &&>(rng), begin, end);
             }
         };
-    }
+    } // namespace adl_erase_detail
     /// \endcond
 
     /// \ingroup group-actions
@@ -71,6 +71,6 @@ namespace ranges
     );
     // clang-format on
     /// @}
-}
+} // namespace ranges
 
 #endif

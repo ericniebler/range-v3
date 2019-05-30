@@ -63,7 +63,7 @@ namespace ranges
         {
             using iterator_concept = ranges::contiguous_iterator_tag;
         };
-    }
+    } // namespace _counted_iterator_
     /// \endcond
 
     CPP_template_def(typename I)( //
@@ -287,7 +287,7 @@ namespace ranges
             return ranges::iter_swap(_counted_iterator_::access::current(x),
                                      _counted_iterator_::access::current(y));
         }
-    }
+    } // namespace _counted_iterator_
 #endif
     /// endcond
 
@@ -423,7 +423,7 @@ namespace ranges
         using ranges::counted_iterator;
     }
     /// @}
-}
+} // namespace ranges
 
 /// \cond
 namespace ranges
@@ -446,7 +446,7 @@ namespace ranges
             using pointer = void;
         };
     } // namespace _counted_iterator_
-}
+} // namespace ranges
 
 namespace std
 {
@@ -454,7 +454,7 @@ namespace std
     struct iterator_traits<::ranges::counted_iterator<I>>
       : ::ranges::_counted_iterator_::iterator_traits_<I>
     {};
-}
+} // namespace std
 /// \endcond
 
 #endif

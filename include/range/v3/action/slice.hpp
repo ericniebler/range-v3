@@ -147,8 +147,8 @@ namespace ranges
         /// \relates slice_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<slice_fn>, slice)
-    }
+    } // namespace action
     /// @}
-}
+} // namespace ranges
 
 #endif

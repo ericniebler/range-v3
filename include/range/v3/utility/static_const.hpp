@@ -27,6 +27,6 @@ namespace ranges
     /// \sa `static_const`
     template<typename T>
     constexpr T static_const<T>::value;
-}
+} // namespace ranges
 
 #endif

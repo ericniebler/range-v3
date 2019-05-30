@@ -50,7 +50,7 @@ namespace ranges
             )
             // clang-format on
         };
-    }
+    } // namespace detail
     /// \endcond
 
     struct make_pipeable_fn
@@ -103,10 +103,10 @@ namespace ranges
     {
         // Evaluate the pipe with an argument
         template<typename Arg, typename Pipe>
-        friend auto operator|(Arg && arg, Pipe pipe)
-            -> CPP_ret(decltype(pipeable_access::impl<Pipe>::pipe(
-                std::declval<Arg>(), std::declval<Pipe &>())))( //
-                requires(!is_pipeable_v<Arg>) && is_pipeable_v<Pipe>)
+        friend auto operator|(Arg && arg, Pipe pipe) -> CPP_ret(
+            decltype(pipeable_access::impl<Pipe>::pipe(std::declval<Arg>(),
+                                                       std::declval<Pipe &>())))( //
+            requires(!is_pipeable_v<Arg>) && is_pipeable_v<Pipe>)
         {
             return pipeable_access::impl<Pipe>::pipe(static_cast<Arg &&>(arg), pipe);
         }
@@ -137,6 +137,6 @@ namespace ranges
         // clang-format on
     };
     /// @}
-}
+} // namespace ranges
 
 #endif

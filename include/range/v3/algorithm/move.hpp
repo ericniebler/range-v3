@@ -72,7 +72,7 @@ namespace ranges
     {
         using ranges::move_result;
         RANGES_INLINE_VARIABLE(cpp20_move_fn, move)
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

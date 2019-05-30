@@ -118,8 +118,8 @@ namespace ranges
                 return data_;
             }
         };
-    }
+    } // namespace detail
     /// \endcond
-}
+} // namespace ranges
 
 #endif

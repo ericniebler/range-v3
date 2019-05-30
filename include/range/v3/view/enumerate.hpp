@@ -83,7 +83,7 @@ namespace ranges
         public:
             index_view() = default;
         };
-    }
+    } // namespace detail
     /// \endcond
     /// \addtogroup group-views
     /// @{

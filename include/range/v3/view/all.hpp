@@ -87,7 +87,7 @@ namespace ranges
 
         template<typename Rng>
         using all_t = decltype(all(std::declval<Rng>()));
-    }
+    } // namespace view
 
     template<typename Rng>
     struct identity_adaptor : Rng
@@ -112,8 +112,8 @@ namespace ranges
         CPP_template(typename Rng)(      //
             requires ViewableRange<Rng>) //
             using all_view = ranges::view::all_t<Rng>;
-    }
+    } // namespace cpp20
     /// @}
-}
+} // namespace ranges
 
 #endif

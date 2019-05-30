@@ -112,7 +112,7 @@ namespace ranges
         template<typename T, std::size_t N>
         std::integral_constant<cardinality, static_cast<cardinality>(N)> test_cardinality(
             std::array<T, N> *);
-    }
+    } // namespace detail
     /// \endcond
 
     // User customization point for specifying the cardinality of ranges:
@@ -125,6 +125,6 @@ namespace ranges
     {};
 
     /// @}
-}
+} // namespace ranges
 
 #endif

@@ -61,7 +61,7 @@ namespace ranges
         /// \relates for_each_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<for_each_fn>, for_each)
-    }
+    } // namespace view
 
     struct yield_fn
     {
@@ -129,6 +129,6 @@ namespace ranges
         return view::for_each(static_cast<Rng &&>(rng), std::move(fun));
     }
     /// \endcond
-}
+} // namespace ranges
 
 #endif

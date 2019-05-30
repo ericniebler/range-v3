@@ -168,7 +168,7 @@ namespace ranges
 
         template<typename R>
         using _t = decltype(fn{}(std::declval<R>()));
-    }
+    } // namespace _begin_
     /// \endcond
 
     /// \ingroup group-range
@@ -327,7 +327,7 @@ namespace ranges
 
         template<typename R>
         using _t = decltype(fn{}(std::declval<R>()));
-    }
+    } // namespace _end_
     /// \endcond
 
     /// \ingroup group-range
@@ -350,7 +350,7 @@ namespace ranges
                 return ranges::begin(detail::as_const((R &&) r));
             }
         };
-    }
+    } // namespace _cbegin_
     /// \endcond
 
     /// \ingroup group-range
@@ -371,7 +371,7 @@ namespace ranges
                 return ranges::end(detail::as_const((R &&) r));
             }
         };
-    }
+    } // namespace _cend_
     /// \endcond
 
     /// \ingroup group-range
@@ -502,7 +502,7 @@ namespace ranges
 
         template<typename R>
         using _t = decltype(fn{}(std::declval<R>()));
-    }
+    } // namespace _rbegin_
     /// \endcond
 
     /// \ingroup group-range
@@ -636,7 +636,7 @@ namespace ranges
 
         template<typename R>
         using _t = decltype(fn{}(std::declval<R>()));
-    }
+    } // namespace _rend_
     /// \endcond
 
     /// \ingroup group-range
@@ -661,7 +661,7 @@ namespace ranges
                 return ranges::rbegin(detail::as_const((R &&) r));
             }
         };
-    }
+    } // namespace _crbegin_
     /// \endcond
 
     /// \ingroup group-range
@@ -682,7 +682,7 @@ namespace ranges
                 return ranges::rend(detail::as_const((R &&) r));
             }
         };
-    }
+    } // namespace _crend_
     /// \endcond
 
     /// \ingroup group-range
@@ -710,7 +710,7 @@ namespace ranges
 
         using ranges::iterator_t;
         using ranges::sentinel_t;
-    }
-}
+    } // namespace cpp20
+} // namespace ranges
 
 #endif

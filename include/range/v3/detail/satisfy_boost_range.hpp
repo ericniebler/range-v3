@@ -42,7 +42,7 @@ namespace boost
     /// views
     template<typename T>
     struct range_size;
-}
+} // namespace boost
 
 /// \brief Macro specialising Boost Range metafunctions for the specified view
 #define RANGES_SATISFY_BOOST_RANGE(view_name)                                           \

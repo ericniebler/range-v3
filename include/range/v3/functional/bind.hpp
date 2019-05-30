@@ -116,6 +116,6 @@ namespace ranges
     /// \sa `protect_fn`
     RANGES_INLINE_VARIABLE(protect_fn, protect)
     /// @}
-}
+} // namespace ranges
 
 #endif

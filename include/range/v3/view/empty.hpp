@@ -36,7 +36,7 @@ namespace ranges
                 return nullptr;
             }
         };
-    }
+    } // namespace detail
     /// \endcond
 
     template<typename T>
@@ -87,8 +87,8 @@ namespace ranges
         CPP_template(typename T)(              //
             requires std::is_object<T>::value) //
             using empty_view = ranges::empty_view<T>;
-    }
-}
+    } // namespace cpp20
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::empty_view)

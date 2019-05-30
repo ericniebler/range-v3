@@ -161,9 +161,9 @@ namespace ranges
         /// \relates drop_exactly_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<drop_exactly_fn>, drop_exactly)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::drop_exactly_view)

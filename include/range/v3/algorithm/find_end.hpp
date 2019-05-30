@@ -56,7 +56,7 @@ namespace ranges
         {
             return detail::next_to_if(std::move(i), std::move(s), meta::bool_<B>{});
         }
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-algorithms

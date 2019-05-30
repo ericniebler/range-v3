@@ -237,7 +237,7 @@ namespace ranges
         };
 
         RANGES_INLINE_VARIABLE(inplace_merge_no_buffer_fn, inplace_merge_no_buffer)
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-algorithms

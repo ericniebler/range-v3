@@ -115,9 +115,9 @@ namespace ranges
         /// \relates delimit_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(delimit_fn, delimit)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::delimit_view)

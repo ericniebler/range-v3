@@ -59,11 +59,11 @@ namespace ranges
             return static_cast<T &&>(value);
         }
         /// \cond
-    }
+    } // namespace _get_
     using namespace _get_;
     /// \endcond
 
     /// @}
-}
+} // namespace ranges
 
 #endif

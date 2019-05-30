@@ -44,8 +44,8 @@ namespace ranges
             bool operator!=(movable_input_iterator const &) const;
             T && operator*() const;
         };
-    }
-    /// \endcond
+    } // namespace detail
+      /// \endcond
 
     /// \addtogroup group-range
     /// @{
@@ -139,7 +139,7 @@ namespace ranges
         {
             return {};
         }
-    }
+    } // namespace detail
     /// \endcond
 
     // clang-format off
@@ -156,6 +156,6 @@ namespace ranges
     );
     // clang-format on
     /// @}
-}
+} // namespace ranges
 
 #endif

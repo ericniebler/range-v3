@@ -88,7 +88,7 @@ namespace ranges
         };
 
         RANGES_INLINE_VARIABLE(is_heap_n_fn, is_heap_n)
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-algorithms
@@ -249,7 +249,7 @@ namespace ranges
         };
 
         RANGES_INLINE_VARIABLE(sift_down_n_fn, sift_down_n)
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-algorithms
@@ -308,7 +308,7 @@ namespace ranges
         };
 
         RANGES_INLINE_VARIABLE(pop_heap_n_fn, pop_heap_n)
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-algorithms

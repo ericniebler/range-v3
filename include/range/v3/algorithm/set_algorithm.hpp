@@ -154,7 +154,7 @@ namespace ranges
     {
         using ranges::set_union;
         using ranges::set_union_result;
-    }
+    } // namespace cpp20
 
     struct set_intersection_fn
     {
@@ -273,7 +273,7 @@ namespace ranges
     {
         using ranges::set_difference;
         using ranges::set_difference_result;
-    }
+    } // namespace cpp20
 
     template<typename I1, typename I2, typename O>
     using set_symmetric_difference_result = detail::in1_in2_out_result<I1, I2, O>;
@@ -346,7 +346,7 @@ namespace ranges
     {
         using ranges::set_symmetric_difference;
         using ranges::set_symmetric_difference_result;
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

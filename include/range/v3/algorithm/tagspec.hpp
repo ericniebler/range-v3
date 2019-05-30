@@ -43,6 +43,6 @@ namespace ranges
     RANGES_DEFINE_TAG_SPECIFIER(first)
     RANGES_DEFINE_TAG_SPECIFIER(second)
     /// \endcond
-}
+} // namespace ranges
 
 #endif

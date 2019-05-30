@@ -194,8 +194,8 @@ namespace ranges
       : view_adaptor<drop_last_view<Rng, detail::drop_last_view::mode_forward>, Rng,
                      is_finite<Rng>::value
                          ? finite
-                         : range_cardinality<Rng>::value> // finite at best (but unknown
-                                                          // is expected)
+                         : range_cardinality<Rng>::value> // finite at best (but
+                                                          // unknown is expected)
     {
         CPP_assert(ForwardView<Rng>);
 
@@ -349,8 +349,8 @@ namespace ranges
         };
 
         RANGES_INLINE_VARIABLE(view<drop_last_fn>, drop_last)
-    }
-}
+    } // namespace view
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::drop_last_view)

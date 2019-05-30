@@ -53,7 +53,7 @@ namespace ranges
             )
             // clang-format on
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-utility
@@ -88,7 +88,8 @@ namespace ranges
             reset();
             construct_from(t);
         }
-        constexpr semiregular(tag, std::false_type) noexcept {}
+        constexpr semiregular(tag, std::false_type) noexcept
+        {}
         constexpr semiregular(tag, std::true_type) noexcept(
             std::is_nothrow_default_constructible<T>::value)
           : data_{}
@@ -298,6 +299,6 @@ namespace ranges
         (bool)Semiregular<T>, meta::if_c<IsConst, T, reference_wrapper<T>>,
         reference_wrapper<meta::if_c<IsConst, semiregular<T> const, semiregular<T>>>>;
     /// @}
-}
+} // namespace ranges
 
 #endif

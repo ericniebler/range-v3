@@ -44,7 +44,8 @@ namespace ranges
     {
         struct tag
         {};
-        explicit constexpr nullopt_t(tag) noexcept {}
+        explicit constexpr nullopt_t(tag) noexcept
+        {}
     };
 #if RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
     inline constexpr nullopt_t nullopt{nullopt_t::tag{}};
@@ -59,7 +60,7 @@ namespace ranges
         };
         template<typename T>
         constexpr nullopt_t nullopt_holder<T>::nullopt;
-    }
+    } // namespace detail
     /// \endcond
     namespace
     {
@@ -497,7 +498,8 @@ namespace ranges
         static_assert((bool)!Same<in_place_t, uncvref_t<T>>, "");
         using value_type = meta::_t<std::remove_cv<T>>;
 
-        constexpr optional() noexcept {}
+        constexpr optional() noexcept
+        {}
         constexpr optional(nullopt_t) noexcept
           : optional{}
         {}
@@ -908,7 +910,8 @@ namespace ranges
         struct non_propagating_cache : optional<T>
         {
             non_propagating_cache() = default;
-            constexpr non_propagating_cache(nullopt_t) noexcept {}
+            constexpr non_propagating_cache(nullopt_t) noexcept
+            {}
             constexpr non_propagating_cache(non_propagating_cache const &) noexcept
               : optional<T>{}
             {}

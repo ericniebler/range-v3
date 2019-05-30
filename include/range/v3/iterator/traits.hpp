@@ -185,8 +185,8 @@ namespace ranges
         using incrementable_traits = ranges::incrementable_traits<T>;
         template<typename T>
         using readable_traits = ranges::readable_traits<T>;
-    }
+    } // namespace cpp20
     /// @}
-}
+} // namespace ranges
 
 #endif // RANGES_V3_ITERATOR_TRAITS_HPP

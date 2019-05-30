@@ -88,6 +88,6 @@ namespace ranges
     /// \sa `overload_fn`
     RANGES_INLINE_VARIABLE(overload_fn, overload)
     /// @}
-}
+} // namespace ranges
 
 #endif

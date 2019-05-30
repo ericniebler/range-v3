@@ -49,8 +49,8 @@ namespace ranges
         };
         template<typename I>
         using as_value_type_t = composed<as_lvalue_fn, coerce<iter_value_t<I>>>;
-    }
-    /// \endcond
+    } // namespace detail
+      /// \endcond
 
     // axiom: BOp is associative over values of I.
     // clang-format off
@@ -155,6 +155,6 @@ namespace ranges
 
     RANGES_INLINE_VARIABLE(partial_sum_fn, partial_sum)
     /// @}
-}
+} // namespace ranges
 
 #endif

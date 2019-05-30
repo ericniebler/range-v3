@@ -52,8 +52,8 @@ namespace ranges
         /// \relates addressof_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<addressof_fn>, addressof)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #endif // RANGES_V3_VIEW_ADDRESSOF_HPP

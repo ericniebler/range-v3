@@ -46,6 +46,6 @@ namespace ranges
 
     RANGES_INLINE_VARIABLE(iota_fn, iota)
     /// @}
-}
+} // namespace ranges
 
 #endif

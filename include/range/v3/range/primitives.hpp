@@ -122,7 +122,7 @@ namespace ranges
                 return Fn{}(ref.get());
             }
         };
-    }
+    } // namespace _size_
     /// \endcond
 
     /// \ingroup group-range
@@ -206,7 +206,7 @@ namespace ranges
 
         template<typename R>
         using _t = decltype(fn{}(std::declval<R>()));
-    }
+    } // namespace _data_
     /// \endcond
 
     RANGES_INLINE_VARIABLE(_data_::fn, data)
@@ -229,7 +229,7 @@ namespace ranges
                 return ranges::data((R const &&)r);
             }
         };
-    }
+    } // namespace _cdata_
     /// \endcond
 
     /// \ingroup group-range
@@ -303,7 +303,7 @@ namespace ranges
                 return Fn{}(ref.get());
             }
         };
-    }
+    } // namespace _empty_
     /// \endcond
 
     /// \ingroup group-range
@@ -318,7 +318,7 @@ namespace ranges
         using ranges::disable_sized_range;
         using ranges::empty;
         using ranges::size;
-    }
-}
+    } // namespace cpp20
+} // namespace ranges
 
 #endif

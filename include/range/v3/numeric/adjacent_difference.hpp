@@ -131,6 +131,6 @@ namespace ranges
 
     RANGES_INLINE_VARIABLE(adjacent_difference_fn, adjacent_difference)
     /// @}
-}
+} // namespace ranges
 
 #endif

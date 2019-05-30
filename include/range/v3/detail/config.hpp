@@ -41,8 +41,8 @@ namespace ranges
             std::fprintf(stderr, "%s(%d): %s\n", file, line, msg);
             std::abort();
         }
-    }
-}
+    } // namespace detail
+} // namespace ranges
 #endif
 
 #ifndef RANGES_ASSERT
@@ -654,7 +654,8 @@ namespace ranges
 
 #ifndef RANGES_CONSTEXPR_IF
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-#define RANGES_CONSTEXPR_IF(...) false) {} else if constexpr(__VA_ARGS__
+#define RANGES_CONSTEXPR_IF(...) false) \
+    {} else if constexpr(__VA_ARGS__
 #else
 #define RANGES_CONSTEXPR_IF(...) __VA_ARGS__
 #endif

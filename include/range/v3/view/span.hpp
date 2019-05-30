@@ -84,7 +84,8 @@ namespace ranges
         private:
             struct tag
             {};
-            constexpr span_extent(tag) noexcept {}
+            constexpr span_extent(tag) noexcept
+            {}
         };
         template<>
         struct span_extent<dynamic_extent>

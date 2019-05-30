@@ -97,7 +97,7 @@ namespace ranges
         {
             return r.end();
         }
-    }
+    } // namespace _iterator_range_
     /// \endcond
 
     template<typename I, typename S /*= I*/>
@@ -327,7 +327,7 @@ namespace ranges
     // infinite
 
     /// @}
-}
+} // namespace ranges
 
 // The standard is inconsistent about whether these are classes or structs
 RANGES_DIAGNOSTIC_PUSH
@@ -374,7 +374,7 @@ namespace std
     {
         using type = typename ::ranges::sized_iterator_range<I, S>::size_type;
     };
-}
+} // namespace std
 /// \endcond
 
 RANGES_DIAGNOSTIC_POP

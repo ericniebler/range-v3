@@ -50,7 +50,7 @@ namespace ranges
             using type = typename First::template getter<
                 Base, I, meta::_t<tagged_chain<Base, I + 1, Rest...>>>;
         };
-    }
+    } // namespace detail
 
 #if RANGES_BROKEN_CPO_LOOKUP
     namespace _tagged_
@@ -169,7 +169,7 @@ namespace ranges
         {
             x.swap(y);
         }
-    }
+    } // namespace _tagged_
 #endif
 
     template<typename F, typename S>
@@ -185,7 +185,7 @@ namespace ranges
     {
         return {static_cast<T1 &&>(t1), static_cast<T2 &&>(t2)};
     }
-}
+} // namespace ranges
 
 #define RANGES_DEFINE_TAG_SPECIFIER(NAME)                                               \
     namespace tag                                                                       \
@@ -238,7 +238,7 @@ namespace std
     struct tuple_element<N, ::ranges::tagged<Untagged, Tags...>>
       : tuple_element<N, Untagged>
     {};
-}
+} // namespace std
 
 RANGES_DIAGNOSTIC_POP
 

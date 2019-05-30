@@ -209,9 +209,9 @@ namespace ranges
         /// \relates split_when_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<split_when_fn>, split_when)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::split_when_view)

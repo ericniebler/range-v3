@@ -105,7 +105,7 @@ namespace ranges
         /// \relates counted_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(counted_fn, counted)
-    }
+    } // namespace view
 
     namespace cpp20
     {
@@ -113,9 +113,9 @@ namespace ranges
         {
             RANGES_INLINE_VARIABLE(ranges::view::cpp20_counted_fn, counted)
         }
-    }
+    } // namespace cpp20
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::counted_view)

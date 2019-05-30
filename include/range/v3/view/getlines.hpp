@@ -103,6 +103,6 @@ namespace ranges
 
     RANGES_INLINE_VARIABLE(getlines_fn, getlines)
     /// @}
-}
+} // namespace ranges
 
 #endif

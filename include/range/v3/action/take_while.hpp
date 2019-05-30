@@ -59,8 +59,8 @@ namespace ranges
         /// \relates take_while_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<take_while_fn>, take_while)
-    }
+    } // namespace action
     /// @}
-}
+} // namespace ranges
 
 #endif

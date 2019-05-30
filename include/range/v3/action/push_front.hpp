@@ -87,7 +87,7 @@ namespace ranges
                 return static_cast<Rng &&>(rng);
             }
         };
-    }
+    } // namespace adl_push_front_detail
     /// \endcond
 
     namespace action
@@ -96,9 +96,9 @@ namespace ranges
         RANGES_INLINE_VARIABLE(
             detail::with_braced_init_args<action<adl_push_front_detail::push_front_fn>>,
             push_front)
-    }
+    } // namespace action
 
     using action::push_front;
-}
+} // namespace ranges
 
 #endif

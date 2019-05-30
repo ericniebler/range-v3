@@ -91,6 +91,6 @@ namespace ranges
     /// \sa `indirect_fn`
     RANGES_INLINE_VARIABLE(indirect_fn, indirect)
     /// @}
-}
+} // namespace ranges
 
 #endif

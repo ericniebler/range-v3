@@ -64,7 +64,7 @@ namespace ranges
         RANGES_INLINE_VAR constexpr bool is_reference_wrapper_v =
             meta::is<T, reference_wrapper>::value ||
             meta::is<T, std::reference_wrapper>::value;
-    }
+    } // namespace detail
     /// \endcond
 
     template<class T>
@@ -145,7 +145,7 @@ namespace ranges
         {
             using type = decltype(invoke(std::declval<Fun>(), std::declval<Args>()...));
         };
-    }
+    } // namespace detail
     /// \endcond
 
     template<typename Fun, typename... Args>
@@ -184,7 +184,7 @@ namespace ranges
         using ranges::invoke;
         using ranges::invoke_result;
         using ranges::invoke_result_t;
-    }
+    } // namespace cpp20
 
     /// @}
 } // namespace ranges

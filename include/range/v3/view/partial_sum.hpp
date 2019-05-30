@@ -54,7 +54,7 @@ namespace ranges
                     indirect_result_t<Fun &, iterator_t<Rng>, iterator_t<Rng>>>
         );
         // clang-format on
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-views
@@ -206,9 +206,9 @@ namespace ranges
         /// \relates partial_sum_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<partial_sum_fn>, partial_sum)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::partial_sum_view)

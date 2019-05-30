@@ -69,8 +69,8 @@ namespace ranges
                     static_cast<Args &&>(args)...);
             }
         };
-    }
+    } // namespace detail
     /// \endcond
-}
+} // namespace ranges
 
 #endif

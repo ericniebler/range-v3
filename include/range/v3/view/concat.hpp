@@ -57,7 +57,7 @@ namespace ranges
             meta::fold<meta::list<range_cardinality<Rngs>...>,
                        std::integral_constant<cardinality, static_cast<cardinality>(0)>,
                        meta::quote<concat_cardinality_>>;
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-views
@@ -399,9 +399,9 @@ namespace ranges
         /// \relates concat_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(concat_fn, concat)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::concat_view)

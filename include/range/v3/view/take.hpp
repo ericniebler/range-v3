@@ -289,7 +289,7 @@ namespace ranges
         /// \relates take_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<take_fn>, take)
-    }
+    } // namespace view
 
     namespace cpp20
     {
@@ -300,9 +300,9 @@ namespace ranges
         CPP_template(typename Rng)( //
             requires View<Rng>)     //
             using take_view = ranges::take_view<Rng>;
-    }
+    } // namespace cpp20
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::take_view)

@@ -166,9 +166,9 @@ namespace ranges
         /// \relates adjacent_remove_if_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<adjacent_remove_if_fn>, adjacent_remove_if)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::adjacent_remove_if_view)

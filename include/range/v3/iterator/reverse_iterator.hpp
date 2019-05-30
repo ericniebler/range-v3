@@ -132,7 +132,7 @@ namespace ranges
     {
         using ranges::make_reverse_iterator;
         using ranges::reverse_iterator;
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

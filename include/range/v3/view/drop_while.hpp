@@ -123,9 +123,9 @@ namespace ranges
         /// \relates drop_while_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<drop_while_fn>, drop_while)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::drop_while_view)

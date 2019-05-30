@@ -39,6 +39,6 @@ namespace ranges
         using ranges::identity;
     }
     /// @}
-}
+} // namespace ranges
 
 #endif

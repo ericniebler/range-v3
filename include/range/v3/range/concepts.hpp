@@ -185,8 +185,8 @@ namespace ranges
 
         template<typename Rng>
         using element_t = meta::_t<std::remove_pointer<data_t<Rng>>>;
-    }
-    /// \endcond
+    } // namespace detail
+      /// \endcond
 
     /// \cond
     // Needed to work around a bug in GCC
@@ -325,7 +325,7 @@ namespace ranges
         {
             return 0;
         }
-    }
+    } // namespace detail
     /// \endcond
 
     // Specialize this if the default is wrong.
@@ -498,8 +498,8 @@ namespace ranges
         using ranges::RandomAccessRange;
         using ranges::View;
         using ranges::ViewableRange;
-    }
+    } // namespace cpp20
     /// @}
-}
+} // namespace ranges
 
 #endif

@@ -58,7 +58,7 @@ namespace ranges
     {
         using ranges::generate_n;
         using ranges::generate_n_result;
-    }
+    } // namespace cpp20
     // @}
 } // namespace ranges
 

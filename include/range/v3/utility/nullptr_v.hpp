@@ -31,6 +31,6 @@ namespace ranges
     template<typename T>
     constexpr T * nullptr_v = nullptr;
 #endif
-}
+} // namespace ranges
 
 #endif

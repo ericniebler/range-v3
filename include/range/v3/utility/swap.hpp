@@ -46,6 +46,6 @@ namespace ranges
     {
         using ranges::swap;
     }
-}
+} // namespace ranges
 
 #endif

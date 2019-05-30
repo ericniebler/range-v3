@@ -67,14 +67,14 @@ namespace ranges
     {
         RANGES_DEPRECATED("The sanitize function is unneeded and deprecated.")
         constexpr auto & sanitize = static_const<_sanitize_fn>::value;
-    }
+    } // namespace
     /// \endcond
 
     namespace cpp20
     {
         using ranges::dangling;
         using ranges::safe_iterator_t;
-    }
-}
+    } // namespace cpp20
+} // namespace ranges
 
 #endif

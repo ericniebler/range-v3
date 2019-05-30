@@ -511,6 +511,6 @@ namespace ranges
             using view_interface = ranges::view_interface<Derived, ranges::unknown>;
     }
     /// @}
-}
+} // namespace ranges
 
 #endif

@@ -73,7 +73,8 @@ namespace ranges
     struct RANGES_DEPRECATED("The ranges::constant class template is deprecated") constant
     {
         constant() = default;
-        constexpr explicit constant(T const &) {}
+        constexpr explicit constant(T const &)
+        {}
         constant & operator=(T const &)
         {
             return *this;
@@ -124,8 +125,8 @@ namespace ranges
                                  meta::not_<detail::is_final<T>>
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 6 && __GNUC_MINOR__ < 2
                                  // GCC 6.0 & 6.1 find empty lambdas' implicit conversion
-                                 // to function pointer when doing overload resolution for
-                                 // function calls. That causes hard errors.
+                                 // to function pointer when doing overload resolution
+                                 // for function calls. That causes hard errors.
                                  // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=71117
                                  ,
                                  meta::not_<could_be_lambda<T>>
@@ -151,7 +152,7 @@ namespace ranges
         {
             return box_compression_<T>(0);
         }
-    }
+    } // namespace detail
     /// \endcond
 
     template<typename Element, typename Tag = void,
@@ -322,10 +323,10 @@ namespace ranges
             return detail::move(b).get();
         }
         /// \cond
-    }
+    } // namespace _get_
     /// \endcond
     /// @}
-}
+} // namespace ranges
 
 RANGES_DIAGNOSTIC_POP
 

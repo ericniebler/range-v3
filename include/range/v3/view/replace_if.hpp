@@ -106,7 +106,7 @@ namespace ranges
                 return (decltype(x) &&)x;
             }
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-views
@@ -147,9 +147,9 @@ namespace ranges
         /// \relates replace_if_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<replace_if_fn>, replace_if)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 RANGES_RE_ENABLE_WARNINGS
 

@@ -382,7 +382,7 @@ namespace ranges
         public:
             constexpr move_into_cursor() = default;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     struct move_into_fn
@@ -402,7 +402,7 @@ namespace ranges
         using ranges::make_move_iterator;
         using ranges::move_iterator;
         using ranges::move_sentinel;
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 
@@ -418,7 +418,7 @@ namespace std
         using reference = typename ::ranges::move_iterator<I>::reference;
         using pointer = meta::_t<std::add_pointer<reference>>;
     };
-}
+} // namespace std
 /// \endcond
 
 #endif // RANGES_V3_ITERATOR_MOVE_ITERATORS_HPP

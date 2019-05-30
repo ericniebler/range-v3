@@ -129,7 +129,7 @@ namespace ranges
                 return rng_;
             }
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-views
@@ -180,9 +180,9 @@ namespace ranges
         /// \relates take_exactly_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<take_exactly_fn>, take_exactly)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::detail::take_exactly_view_)

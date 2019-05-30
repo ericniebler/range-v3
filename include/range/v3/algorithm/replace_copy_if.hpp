@@ -79,7 +79,7 @@ namespace ranges
     {
         using ranges::replace_copy_if;
         using ranges::replace_copy_if_result;
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

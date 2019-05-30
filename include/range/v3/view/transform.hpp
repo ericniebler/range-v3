@@ -88,7 +88,7 @@ namespace ranges
                     invoke_result_t<Fun &, copy_tag, iterator_t<Rng1>, iterator_t<Rng2>> const &>
         );
         // clang-format on
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-views
@@ -520,7 +520,7 @@ namespace ranges
         /// \relates transform_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<transform_fn>, transform)
-    }
+    } // namespace view
 
     namespace cpp20
     {
@@ -533,9 +533,9 @@ namespace ranges
                 std::is_object<F>::value &&
                     RegularInvocable<F &, iter_reference_t<iterator_t<Rng>>>) //
             using transform_view = ranges::transform_view<Rng, F>;
-    }
+    } // namespace cpp20
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::iter_transform_view)

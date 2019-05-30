@@ -52,7 +52,7 @@ namespace ranges
                        ? cache::none
                        : BidirectionalRange<Rng> && CommonRange<Rng> ? cache::last
                                                                      : cache::first>;
-    }
+    } // namespace sliding_view_detail
     /// \endcond
 
     template<typename Rng,
@@ -96,14 +96,17 @@ namespace ranges
         struct trailing<Rng, true>
         {
             trailing() = default;
-            constexpr trailing(Rng &) noexcept {}
+            constexpr trailing(Rng &) noexcept
+            {}
             constexpr uncounted_t<Rng> get(iterator_t<Rng> const & it,
                                            range_difference_t<Rng> n) const
             {
                 return uncounted(it - (n - 1));
             }
-            void next() {}
-            void prev() {}
+            void next()
+            {}
+            void prev()
+            {}
         };
 
         template<typename Rng>
@@ -379,8 +382,8 @@ namespace ranges
         /// \relates sliding_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<sliding_fn>, sliding)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #endif

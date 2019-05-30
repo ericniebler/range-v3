@@ -78,7 +78,7 @@ namespace ranges
         };
 
         RANGES_INLINE_VARIABLE(equal_range_n_fn, equal_range_n)
-    }
+    } // namespace aux
 } // namespace ranges
 
 #endif // include guard

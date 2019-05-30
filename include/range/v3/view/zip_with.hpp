@@ -144,7 +144,7 @@ namespace ranges
                 Invocable<Fun&, move_tag, iterator_t<Rngs>...>
         );
         // clang-format on
-    }
+    } // namespace view
 
     /// \addtogroup group-views
     /// @{
@@ -424,9 +424,9 @@ namespace ranges
         /// \relates zip_with_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(zip_with_fn, zip_with)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::iter_zip_with_view)

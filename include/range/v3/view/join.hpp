@@ -127,7 +127,7 @@ namespace ranges
                 InputIterator<I> && (std::is_pointer<I>::value || HasMemberArrow_<I>)
         );
         // clang-format on
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-views
@@ -558,7 +558,7 @@ namespace ranges
         /// \relates join_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<join_fn>, join)
-    }
+    } // namespace view
     /// @}
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
@@ -585,8 +585,8 @@ namespace ranges
             (std::is_reference<iter_reference_t<iterator_t<Rng>>>::value ||
              View<iter_value_t<iterator_t<Rng>>>)) //
             using join_view = ranges::join_view<Rng>;
-    }
-}
+    } // namespace cpp20
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::join_view)

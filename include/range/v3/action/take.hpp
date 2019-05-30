@@ -60,8 +60,8 @@ namespace ranges
         /// \relates take_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<take_fn>, take)
-    }
+    } // namespace action
     /// @}
-}
+} // namespace ranges
 
 #endif

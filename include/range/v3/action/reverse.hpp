@@ -49,8 +49,8 @@ namespace ranges
         /// \relates reverse_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<reverse_fn>, reverse)
-    }
+    } // namespace action
     /// @}
-}
+} // namespace ranges
 
 #endif

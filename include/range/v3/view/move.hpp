@@ -114,9 +114,9 @@ namespace ranges
         /// \relates move_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<move_fn>, move)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::move_view)

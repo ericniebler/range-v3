@@ -40,7 +40,7 @@ namespace ranges
             {
                 return &t;
             }
-        }
+        } // namespace check_addressof
 
         template<typename T>
         constexpr bool has_bad_addressof()
@@ -66,8 +66,8 @@ namespace ranges
         template<typename T>
         T const * addressof(T const &&) = delete;
 #endif
-    }
+    } // namespace detail
     /// \endcond
-}
+} // namespace ranges
 
 #endif

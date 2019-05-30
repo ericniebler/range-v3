@@ -478,7 +478,7 @@ namespace ranges
                 return cache_;
             }
         };
-    }
+    } // namespace detail
     /// \endcond
 
 #if RANGES_BROKEN_CPO_LOOKUP
@@ -487,7 +487,7 @@ namespace ranges
         template<typename>
         struct adl_hook
         {};
-    }
+    } // namespace _basic_iterator_
 #endif
 
     template<typename Cur>
@@ -828,7 +828,7 @@ namespace ranges
         {
             return range_access::move(range_access::pos(it));
         }
-    }
+    } // namespace _basic_iterator_
 #endif
 
     /// Get a cursor from a basic_iterator
@@ -855,7 +855,7 @@ namespace ranges
     /// \sa `get_cursor_fn`
     RANGES_INLINE_VARIABLE(get_cursor_fn, get_cursor)
     /// @}
-}
+} // namespace ranges
 
 /// \cond
 namespace concepts
@@ -897,7 +897,7 @@ namespace concepts
       : common_type<::ranges::range_access::cursor_value_t<Cur1>,
                     ::ranges::range_access::cursor_value_t<Cur2>>
     {};
-}
+} // namespace concepts
 
 namespace ranges
 {
@@ -922,9 +922,9 @@ namespace ranges
 
         template<typename Cur>
         using std_iterator_traits = std_iterator_traits_<Cur, (bool)ReadableCursor<Cur>>;
-    }
+    } // namespace detail
     /// \endcond
-}
+} // namespace ranges
 
 namespace std
 {
@@ -932,7 +932,7 @@ namespace std
     struct iterator_traits<::ranges::basic_iterator<Cur>>
       : ::ranges::detail::std_iterator_traits<Cur>
     {};
-}
+} // namespace std
 /// \endcond
 
 #endif

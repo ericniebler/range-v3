@@ -99,8 +99,8 @@ namespace ranges
         using ranges::less;
         using ranges::less_equal;
         using ranges::not_equal_to;
-    }
+    } // namespace cpp20
     /// @}
-}
+} // namespace ranges
 
 #endif

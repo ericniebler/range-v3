@@ -95,7 +95,7 @@ namespace ranges
         {
             return std::unique_ptr<T>{new T(static_cast<Args &&>(args)...)};
         }
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-utility
@@ -246,6 +246,6 @@ namespace ranges
         return raw_buffer<Val>(val);
     }
     /// @}
-}
+} // namespace ranges
 
 #endif

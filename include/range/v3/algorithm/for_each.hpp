@@ -69,7 +69,7 @@ namespace ranges
     {
         using ranges::for_each;
         using ranges::for_each_result;
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

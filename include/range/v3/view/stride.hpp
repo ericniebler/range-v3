@@ -75,7 +75,8 @@ namespace ranges
                 else
                     RANGES_EXPECT(offset_ == delta);
             }
-            constexpr void set_offset(range_difference_t<Rng> const) const noexcept {}
+            constexpr void set_offset(range_difference_t<Rng> const) const noexcept
+            {}
             constexpr range_difference_t<Rng> get_offset(bool check = true) const noexcept
             {
                 RANGES_EXPECT(!check || 0 <= offset_);
@@ -109,7 +110,8 @@ namespace ranges
             {}
 
         protected:
-            constexpr void set_offset(range_difference_t<Rng> const) const noexcept {}
+            constexpr void set_offset(range_difference_t<Rng> const) const noexcept
+            {}
             constexpr range_difference_t<Rng> get_offset(bool = true) const noexcept
             {
                 return 0;
@@ -117,7 +119,7 @@ namespace ranges
 
             range_difference_t<Rng> stride_;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-views
@@ -342,9 +344,9 @@ namespace ranges
         /// \relates stride_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<stride_fn>, stride)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::stride_view)

@@ -87,6 +87,6 @@ namespace ranges
     /// \sa `compose_fn`
     RANGES_INLINE_VARIABLE(compose_fn, compose)
     /// @}
-}
+} // namespace ranges
 
 #endif

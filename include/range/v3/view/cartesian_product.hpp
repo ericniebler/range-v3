@@ -431,7 +431,7 @@ namespace ranges
         };
 
         RANGES_INLINE_VARIABLE(cartesian_product_fn, cartesian_product)
-    }
+    } // namespace view
 } // namespace ranges
 
 #endif

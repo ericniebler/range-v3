@@ -61,8 +61,8 @@ namespace ranges
         /// \relates transform_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<transform_fn>, transform)
-    }
+    } // namespace action
     /// @}
-}
+} // namespace ranges
 
 #endif

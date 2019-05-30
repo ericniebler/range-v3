@@ -47,14 +47,14 @@ namespace ranges
         {
             return that.data_;
         }
-    }
+    } // namespace detail
 
 #if RANGES_BROKEN_CPO_LOOKUP
     namespace _common_iterator_
     {
         struct adl_hook
         {};
-    }
+    } // namespace _common_iterator_
 #endif
     /// \endcond
 
@@ -242,7 +242,7 @@ namespace ranges
             return ranges::iter_swap(ranges::get<0>(detail::cidata(x)),
                                      ranges::get<0>(detail::cidata(y)));
         }
-    }
+    } // namespace _common_iterator_
 #endif
     /// \endcond
 
@@ -418,7 +418,7 @@ namespace ranges
                 return static_cast<std::ptrdiff_t>(d);
             }
         };
-    }
+    } // namespace detail
     /// \endcond
 
     namespace cpp20
@@ -426,7 +426,7 @@ namespace ranges
         using ranges::common_iterator;
     }
     /// @}
-}
+} // namespace ranges
 
 /// \cond
 RANGES_DIAGNOSTIC_PUSH
@@ -438,7 +438,7 @@ namespace std
     struct iterator_traits<::ranges::common_iterator<I, S>>
       : ::ranges::detail::common_iterator_std_traits<I>
     {};
-}
+} // namespace std
 
 RANGES_DIAGNOSTIC_POP
 /// \endcond

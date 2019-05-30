@@ -65,6 +65,6 @@ namespace ranges
 
     RANGES_INLINE_VARIABLE(accumulate_fn, accumulate)
     /// @}
-}
+} // namespace ranges
 
 #endif

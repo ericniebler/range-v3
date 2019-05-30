@@ -93,8 +93,8 @@ namespace ranges
         /// \relates remove_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<remove_fn>, remove)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #endif // RANGES_V3_VIEW_REMOVE_HPP

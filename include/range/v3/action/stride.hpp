@@ -75,8 +75,8 @@ namespace ranges
         /// \relates stride_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<stride_fn>, stride)
-    }
+    } // namespace action
     /// @}
-}
+} // namespace ranges
 
 #endif

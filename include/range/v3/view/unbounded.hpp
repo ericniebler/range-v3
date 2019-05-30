@@ -58,9 +58,9 @@ namespace ranges
         /// \relates unbounded_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(unbounded_fn, unbounded)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::unbounded_view)

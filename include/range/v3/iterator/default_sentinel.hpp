@@ -30,8 +30,8 @@ namespace ranges
     {
         using ranges::default_sentinel;
         using ranges::default_sentinel_t;
-    }
+    } // namespace cpp20
     /// @}
-}
+} // namespace ranges
 
 #endif

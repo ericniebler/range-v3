@@ -205,7 +205,7 @@ namespace ranges
                        : (c1 >= 0) || (c1 == finite) ? finite : // else, c1 == infinite
                              (c2 >= 0) || (c2 == finite) ? infinite : unknown;
         }
-    }
+    } // namespace detail
     /// \endcond
 
     template<typename Rng1, typename Rng2, typename C, typename P1, typename P2>
@@ -241,7 +241,7 @@ namespace ranges
         /// \relates set_difference_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<set_difference_fn>, set_difference)
-    }
+    } // namespace view
     /// @}
 
     /// \cond
@@ -356,7 +356,7 @@ namespace ranges
                        : (c1 >= 0 || c1 == finite) || (c2 >= 0 || c2 == finite) ? finite
                                                                                 : unknown;
         }
-    }
+    } // namespace detail
     /// \endcond
 
     template<typename Rng1, typename Rng2, typename C, typename P1, typename P2>
@@ -392,7 +392,7 @@ namespace ranges
         /// \relates set_intersection_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<set_intersection_fn>, set_intersection)
-    }
+    } // namespace view
     /// @}
 
     /// \cond
@@ -533,7 +533,7 @@ namespace ranges
                        : (c1 == unknown) || (c2 == unknown) ? unknown : finite;
         }
 
-    }
+    } // namespace detail
     /// \endcond
 
     template<typename Rng1, typename Rng2, typename C, typename P1, typename P2>
@@ -574,7 +574,7 @@ namespace ranges
         /// \relates set_union_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<set_union_fn>, set_union)
-    }
+    } // namespace view
     /// @}
 
     /// \cond
@@ -744,7 +744,7 @@ namespace ranges
                              : (c1 == infinite) && (c2 == infinite) ? unknown : finite;
         }
 
-    }
+    } // namespace detail
     /// \endcond
 
     template<typename Rng1, typename Rng2, typename C, typename P1, typename P2>
@@ -786,8 +786,8 @@ namespace ranges
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<set_symmetric_difference_fn>,
                                set_symmetric_difference)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #endif

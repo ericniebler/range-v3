@@ -65,7 +65,7 @@ namespace ranges
                 return static_cast<T &&>(*t_);
             }
         };
-    }
+    } // namespace detail
     /// \endcond
 
     // Can be used to store rvalue references in addition to lvalue references.
@@ -187,6 +187,6 @@ namespace ranges
     template<typename T>
     using unwrap_reference_t = decltype(unwrap_reference(std::declval<T>()));
     /// @}
-}
+} // namespace ranges
 
 #endif

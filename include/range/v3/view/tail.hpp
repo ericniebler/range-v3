@@ -38,7 +38,7 @@ namespace ranges
         {
             return n == 0 ? T(0) : T(n - 1);
         }
-    }
+    } // namespace detail
 
     /// \addtogroup group-views
     /// @{
@@ -123,9 +123,9 @@ namespace ranges
         /// \relates tail_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<tail_fn>, tail)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::tail_view)

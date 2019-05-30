@@ -64,7 +64,7 @@ namespace ranges
     {
         struct adl_hook
         {};
-    }
+    } // namespace _any_
 #endif
 
     struct any
@@ -92,7 +92,8 @@ namespace ranges
 
         struct interface
         {
-            virtual ~interface() {}
+            virtual ~interface()
+            {}
             virtual interface * clone() const = 0;
             virtual std::type_info const & type() const noexcept = 0;
         };
@@ -184,7 +185,7 @@ namespace ranges
         {
             x.swap(y);
         }
-    }
+    } // namespace _any_
 #endif
 
     /// \throw bad_any_cast
@@ -233,7 +234,7 @@ namespace ranges
                 return &q->get();
         return nullptr;
     }
-}
+} // namespace ranges
 
 RANGES_DIAGNOSTIC_POP
 

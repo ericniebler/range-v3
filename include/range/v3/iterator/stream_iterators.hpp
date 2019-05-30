@@ -190,9 +190,9 @@ namespace ranges
         using ostream_iterator = ranges::ostream_iterator<T, Char, Traits>;
 
         using ranges::ostreambuf_iterator;
-    }
+    } // namespace cpp20
     /// @}
-}
+} // namespace ranges
 
 /// \cond
 namespace std
@@ -206,7 +206,7 @@ namespace std
     struct iterator_traits<::ranges::ostreambuf_iterator<Char, Traits>>
       : ::ranges::detail::std_output_iterator_traits<>
     {};
-}
+} // namespace std
 /// \endcond
 
 #endif // RANGES_V3_ITERATOR_STREAM_ITERATORS_HPP

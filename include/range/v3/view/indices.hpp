@@ -72,6 +72,6 @@ namespace ranges
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(closed_indices_fn, closed_indices)
     } // namespace view
-}
+} // namespace ranges
 
 #endif // RANGES_V3_VIEW_INDICES_HPP

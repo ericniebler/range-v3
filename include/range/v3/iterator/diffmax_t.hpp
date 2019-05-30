@@ -337,9 +337,9 @@ namespace ranges
 
         template<>
         RANGES_INLINE_VAR constexpr bool _is_integer_like_<diffmax_t> = true;
-    }
+    } // namespace detail
     /// \endcond
-}
+} // namespace ranges
 
 /// \cond
 RANGES_DIAGNOSTIC_PUSH

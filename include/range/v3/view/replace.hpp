@@ -78,7 +78,7 @@ namespace ranges
                 return ((decltype(x) &&)x);
             }
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-views
@@ -127,9 +127,9 @@ namespace ranges
         /// \relates replace_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<replace_fn>, replace)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 RANGES_RE_ENABLE_WARNINGS
 

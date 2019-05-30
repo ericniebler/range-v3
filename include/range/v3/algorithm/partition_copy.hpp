@@ -92,7 +92,7 @@ namespace ranges
     {
         using ranges::partition_copy;
         using ranges::partition_copy_result;
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

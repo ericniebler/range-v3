@@ -75,8 +75,8 @@ namespace ranges
         using ranges::RegularInvocable;
         using ranges::Relation;
         using ranges::StrictWeakOrder;
-    }
+    } // namespace cpp20
     /// @}
-}
+} // namespace ranges
 
 #endif

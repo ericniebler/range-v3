@@ -37,6 +37,6 @@ namespace ranges
 #endif
         return static_cast<Target>(result);
     }
-}
+} // namespace ranges
 
 #endif // RANGES_V3_UTILITY_POLYMORPHIC_CAST_HPP

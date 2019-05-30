@@ -186,6 +186,6 @@ namespace ranges
     /// \sa `make_tuple_fn`
     RANGES_INLINE_VARIABLE(make_tuple_fn, make_tuple)
     /// @}
-}
+} // namespace ranges
 
 #endif

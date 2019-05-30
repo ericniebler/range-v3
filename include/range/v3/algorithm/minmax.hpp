@@ -119,7 +119,7 @@ namespace ranges
     {
         using ranges::minmax;
         using ranges::minmax_result;
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

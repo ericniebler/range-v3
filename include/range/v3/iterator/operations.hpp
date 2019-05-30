@@ -529,7 +529,7 @@ namespace ranges
                 return recounted((I &&) i, (J &&) j, n);
             }
         };
-    }
+    } // namespace adl_uncounted_recounted_detail
     /// \endcond
 
     RANGES_INLINE_VARIABLE(adl_uncounted_recounted_detail::uncounted_fn, uncounted)
@@ -645,7 +645,7 @@ namespace ranges
         using ranges::distance;
         using ranges::next;
         using ranges::prev;
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

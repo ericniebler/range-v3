@@ -155,8 +155,8 @@ namespace ranges
 
             RANGES_ALGO_RESULT_AUX_3(in_out1_out2_result, I, in, O1, out1, O2, out2)
         };
-    }
+    } // namespace detail
     /// \endcond
-}
+} // namespace ranges
 
 #endif

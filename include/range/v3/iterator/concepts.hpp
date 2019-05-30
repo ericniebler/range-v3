@@ -114,7 +114,7 @@ namespace ranges
             decltype(iter_concept_<I>(std::declval<I>(), priority_tag<3>{}));
 
         using ::concepts::detail::WeaklyEqualityComparableWith_;
-    }
+    } // namespace detail
     /// \endcond
 
     // clang-format off
@@ -165,8 +165,8 @@ namespace ranges
                 std::integral_constant<bool, (D(-1) < D(0))>::value
         );
         // clang-format on
-    }
-    /// \endcond
+    } // namespace detail
+      /// \endcond
 
     // clang-format off
     CPP_def
@@ -344,7 +344,7 @@ namespace ranges
         using iterator_category =
             iterator_category_<meta::_t<std::remove_const<T>>,
                                (bool)InputIterator<meta::_t<std::remove_const<T>>>>;
-    }
+    } // namespace detail
     /// \endcond
 
     // Generally useful to know if an iterator is single-pass or not:
@@ -394,8 +394,8 @@ namespace ranges
                     invoke_result_t<F &, iter_reference_t<I>>>
         );
         // clang-format on
-    }
-    /// \endcond
+    } // namespace detail
+      /// \endcond
 
     // clang-format off
     CPP_def
@@ -541,7 +541,7 @@ namespace ranges
             template<typename I>
             using apply = detail::enable_if_t<(bool)Readable<I>, I>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     template<typename I, typename Proj>
@@ -716,9 +716,9 @@ namespace ranges
         using ranges::Sortable;
         using ranges::WeaklyIncrementable;
         using ranges::Writable;
-    }
+    } // namespace cpp20
     /// @}
-}
+} // namespace ranges
 
 #ifdef _GLIBCXX_DEBUG
 // HACKHACK: workaround underconstrained operator- for libstdc++ debug iterator wrapper
@@ -735,7 +735,7 @@ namespace __gnu_debug
     auto operator-(_Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &)
         -> CPP_ret(void)( //
             requires(!::ranges::SizedSentinel<I1, I1>)) = delete;
-}
+} // namespace __gnu_debug
 #endif
 
 #if defined(__GLIBCXX__) || (defined(_LIBCPP_VERSION) && _LIBCPP_VERSION <= 3900)

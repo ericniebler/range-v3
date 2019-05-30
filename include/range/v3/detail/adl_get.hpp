@@ -40,9 +40,9 @@ namespace ranges
             {
                 return get<T>(static_cast<TupleLike &&>(t));
             }
-        }
+        } // namespace _adl_get_
         using _adl_get_::adl_get;
-    }
+    } // namespace detail
 
     namespace _tuple_wrapper_
     {
@@ -133,8 +133,8 @@ namespace ranges
             )
             // clang-format on
         };
-    }
+    } // namespace _tuple_wrapper_
     /// \endcond
-}
+} // namespace ranges
 
 #endif // RANGES_V3_DETAIL_ADL_GET_HPP

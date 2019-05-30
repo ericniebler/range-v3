@@ -158,7 +158,7 @@ namespace ranges
                                    -static_cast<iota_difference_t<Int>>(i0 - i1))
                              : static_cast<iota_difference_t<Int>>(i1 - i0);
         }
-    }
+    } // namespace detail
     /// \endcond
 
     /// \cond
@@ -190,7 +190,7 @@ namespace ranges
         {
             return r.end();
         }
-    }
+    } // namespace iota_view_detail
     /// \endcond
 
     /// \addtogroup group-views
@@ -309,7 +309,8 @@ namespace ranges
         {
             RANGES_EXPECT(from_ <= to_);
         }
-        constexpr void check_bounds_(std::false_type) {}
+        constexpr void check_bounds_(std::false_type)
+        {}
 
     public:
         closed_iota_view() = default;
@@ -439,7 +440,8 @@ namespace ranges
         {
             RANGES_EXPECT(from_ <= to_);
         }
-        constexpr void check_bounds_(std::false_type) {}
+        constexpr void check_bounds_(std::false_type)
+        {}
 
     public:
         iota_view() = default;
@@ -540,9 +542,9 @@ namespace ranges
         /// \relates ints_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(ints_fn, ints)
-    }
+    } // namespace view
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::closed_iota_view)

@@ -116,7 +116,7 @@ namespace ranges
         /// \relates single_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(single_fn, single)
-    }
+    } // namespace view
 
     namespace cpp20
     {
@@ -127,9 +127,9 @@ namespace ranges
         CPP_template(typename T)(              //
             requires std::is_object<T>::value) //
             using single_view = ranges::single_view<T>;
-    }
+    } // namespace cpp20
     /// @}
-}
+} // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::single_view)

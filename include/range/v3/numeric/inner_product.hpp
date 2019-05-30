@@ -147,6 +147,6 @@ namespace ranges
 
     RANGES_INLINE_VARIABLE(inner_product_fn, inner_product)
     /// @}
-}
+} // namespace ranges
 
 #endif

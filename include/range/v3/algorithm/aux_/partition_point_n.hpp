@@ -54,7 +54,7 @@ namespace ranges
         };
 
         RANGES_INLINE_VARIABLE(partition_point_n_fn, partition_point_n)
-    }
+    } // namespace aux
 } // namespace ranges
 
 #endif // include guard

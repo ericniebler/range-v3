@@ -63,7 +63,7 @@ namespace ranges
     {
         using ranges::generate;
         using ranges::generate_result;
-    }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

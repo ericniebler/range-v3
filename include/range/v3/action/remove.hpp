@@ -37,7 +37,7 @@ namespace ranges
                 EqualityComparableWith<range_reference_t<Rng>, Val>
         );
         // clang-format on
-    }
+    } // namespace detail
     /// |endcond
 
     /// \addtogroup group-actions
@@ -82,8 +82,8 @@ namespace ranges
         /// \sa action
         /// \sa with_braced_init_args
         RANGES_INLINE_VARIABLE(action<remove_fn>, remove)
-    }
+    } // namespace action
     /// @}
-}
+} // namespace ranges
 
 #endif // include guard

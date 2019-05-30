@@ -34,7 +34,7 @@ namespace ranges
     {
         return tagged_tuple<Tags(bind_element_t<Ts>)...>{static_cast<Ts &&>(ts)...};
     }
-}
+} // namespace ranges
 
 RANGES_DIAGNOSTIC_POP
 
