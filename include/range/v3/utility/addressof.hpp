@@ -41,7 +41,7 @@ namespace ranges
             return !std::is_scalar<T>::value &&
                 !RANGES_IS_SAME(
                     decltype(test::addressof(*(T*)0)),
-                    test::ignore)>;
+                    test::ignore);
         }
 
         template <typename T>
