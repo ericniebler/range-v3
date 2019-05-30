@@ -13,6 +13,7 @@
 #define RANGES_V3_UTLITY_ADDRESSOF_HPP
 
 #include <memory>
+#include <range/v3/detail/config.hpp>
 
 namespace ranges
 {
