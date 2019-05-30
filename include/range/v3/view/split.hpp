@@ -28,6 +28,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/interface.hpp>
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -336,7 +337,7 @@ namespace ranges
                 if_then_t<ForwardRange<Base>, std::forward_iterator_tag,
                           std::input_iterator_tag>;
             using iterator_category = std::input_iterator_tag;
-            struct value_type
+            struct value_type : view_interface<value_type>
             {
             private:
                 split_outer_iterator i_ = split_outer_iterator();
