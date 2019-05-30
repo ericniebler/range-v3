@@ -347,9 +347,8 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    template <typename Rng>
-    sliding_view(Rng &&, range_difference_t<Rng>) ->
-        sliding_view<view::all_t<Rng>>;
+    template<typename Rng>
+    sliding_view(Rng &&, range_difference_t<Rng>)->sliding_view<view::all_t<Rng>>;
 #endif
 
     namespace view

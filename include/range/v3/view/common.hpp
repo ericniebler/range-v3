@@ -136,9 +136,8 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng)(
-        requires !CommonRange<Rng>)
-    common_view(Rng&&) -> common_view<view::all_t<Rng>>;
+    CPP_template(typename Rng)(requires !CommonRange<Rng>) common_view(Rng &&)
+        ->common_view<view::all_t<Rng>>;
 #endif
 
     template<typename Rng>

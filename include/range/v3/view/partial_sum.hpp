@@ -165,9 +165,9 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)(
-        requires CopyConstructible<Fun>)
-    partial_sum_view(Rng&&, Fun) -> partial_sum_view<view::all_t<Rng>, Fun>;
+    CPP_template(typename Rng, typename Fun)(requires CopyConstructible<Fun>)
+        partial_sum_view(Rng &&, Fun)
+            ->partial_sum_view<view::all_t<Rng>, Fun>;
 #endif
 
     namespace view

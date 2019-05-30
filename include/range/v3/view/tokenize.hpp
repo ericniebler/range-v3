@@ -90,8 +90,8 @@ namespace ranges
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Rng, typename Regex, typename SubMatchRange)(
         requires CopyConstructible<Regex> && CopyConstructible<SubMatchRange>)
-    tokenize_view(Rng&&, Regex, SubMatchRange) ->
-        tokenize_view<view::all_t<Rng>, Regex, SubMatchRange>;
+        tokenize_view(Rng &&, Regex, SubMatchRange)
+            ->tokenize_view<view::all_t<Rng>, Regex, SubMatchRange>;
 #endif
 
     namespace view

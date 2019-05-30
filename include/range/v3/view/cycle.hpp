@@ -202,8 +202,8 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    template <typename Rng>
-    cycled_view(Rng&&) -> cycled_view<view::all_t<Rng>>;
+    template<typename Rng>
+    cycled_view(Rng &&)->cycled_view<view::all_t<Rng>>;
 #endif
 
     namespace view

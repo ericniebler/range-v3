@@ -68,9 +68,9 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Val)(
-        requires CopyConstructible<Val>)
-    delimit_view(Rng&&, Val) -> delimit_view<view::all_t<Rng>, Val>;
+    CPP_template(typename Rng, typename Val)(requires CopyConstructible<Val>)
+        delimit_view(Rng &&, Val)
+            ->delimit_view<view::all_t<Rng>, Val>;
 #endif
 
     namespace view

@@ -60,8 +60,8 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    template <typename I>
-    counted_view(I, iter_difference_t<I>) -> counted_view<I>;
+    template<typename I>
+    counted_view(I, iter_difference_t<I>)->counted_view<I>;
 #endif
 
     namespace view

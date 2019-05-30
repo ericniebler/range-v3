@@ -134,9 +134,9 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Pred)(
-        requires CopyConstructible<Pred>)
-    remove_if_view(Rng&&, Pred) -> remove_if_view<view::all_t<Rng>, Pred>;
+    CPP_template(typename Rng, typename Pred)(requires CopyConstructible<Pred>)
+        remove_if_view(Rng &&, Pred)
+            ->remove_if_view<view::all_t<Rng>, Pred>;
 #endif
 
     namespace view
