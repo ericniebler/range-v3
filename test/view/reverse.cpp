@@ -39,6 +39,23 @@ int main()
     ::check_equal(rng0 | view::reverse | view::reverse, {9,8,7,6,5,4,3,2,1,0});
     ::check_equal(rng0 | view::reverse | view::reverse | view::reverse, {0,1,2,3,4,5,6,7,8,9});
 
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+#if defined(__clang__) && __clang_major__ < 6
+    // Workaround https://bugs.llvm.org/show_bug.cgi?id=33314
+    RANGES_DIAGNOSTIC_PUSH
+    RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_FUNC_TEMPLATE
+#endif
+    {
+        ranges::reverse_view dg0{rgv};
+        ::check_equal(dg0, {9, 8, 7, 6, 5, 4, 3, 2, 1, 0});
+        ranges::reverse_view dg1{dg0};
+        ::check_equal(dg1, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+    }
+#if defined(__clang__) && __clang_major__ < 6
+    RANGES_DIAGNOSTIC_POP
+#endif // clang bug workaround
+#endif // use deduction guides
+
     // Reverse another random-access, non-common, sized range
     auto cnt = counted_view<std::vector<int>::iterator>(rgv.begin(), 10);
     models_not<BoundedRangeConcept>(cnt);

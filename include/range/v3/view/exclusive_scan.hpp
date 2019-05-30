@@ -164,6 +164,13 @@ namespace ranges
         }
     };
 
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+    CPP_template(typename Rng, typename T,
+                 typename Fun)(requires CopyConstructible<T> && CopyConstructible<Fun>)
+        exclusive_scan_view(Rng &&, T, Fun)
+            ->exclusive_scan_view<view::all_t<Rng>, T, Fun>;
+#endif
+
     namespace view
     {
         struct exclusive_scan_fn

@@ -192,6 +192,12 @@ namespace ranges
         }
     };
 
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+    template<typename Rng, typename URNG>
+    sample_view(Rng &&, range_difference_t<Rng>, URNG &)
+        ->sample_view<view::all_t<Rng>, URNG>;
+#endif
+
     namespace view
     {
         /// Returns a random sample of a range of length `size(range)`.

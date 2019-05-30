@@ -201,6 +201,11 @@ namespace ranges
         using identity_adaptor<Rng>::identity_adaptor;
     };
 
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+    template<typename Rng>
+    cycled_view(Rng &&)->cycled_view<view::all_t<Rng>>;
+#endif
+
     namespace view
     {
         /// Returns an infinite range that endlessly repeats the source

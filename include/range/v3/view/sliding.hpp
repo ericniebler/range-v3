@@ -346,6 +346,11 @@ namespace ranges
         using sliding_view::sv_base::sv_base;
     };
 
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+    template<typename Rng>
+    sliding_view(Rng &&, range_difference_t<Rng>)->sliding_view<view::all_t<Rng>>;
+#endif
+
     namespace view
     {
         // In:  Range<T>

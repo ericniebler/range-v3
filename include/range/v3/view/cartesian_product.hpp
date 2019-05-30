@@ -405,6 +405,11 @@ namespace ranges
         }
     };
 
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+    template<typename... Rng>
+    cartesian_product_view(Rng &&...)->cartesian_product_view<view::all_t<Rng>...>;
+#endif
+
     namespace view
     {
         struct cartesian_product_fn

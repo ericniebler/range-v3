@@ -191,5 +191,21 @@ int main()
         ::check_equal(rng, {T{"a","x"}, T{"b","y"}, T{"c","z"}});
     }
 
+    {
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+#if defined(__clang__) && __clang_major__ < 6
+        // Workaround https://bugs.llvm.org/show_bug.cgi?id=33314
+        RANGES_DIAGNOSTIC_PUSH
+        RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_FUNC_TEMPLATE
+#endif
+        std::vector<int> vi = {1, 2, 3};
+        ranges::transform_view times_ten{vi, [](int i) { return i * 10; }};
+        ::check_equal(times_ten, {10, 20, 30});
+#if defined(__clang__) && __clang_major__ < 6
+        RANGES_DIAGNOSTIC_POP
+#endif // clang bug workaround
+#endif // use deduction guides
+    }
+
     return test_result();
 }
