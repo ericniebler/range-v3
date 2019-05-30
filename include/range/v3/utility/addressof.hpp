@@ -14,6 +14,7 @@
 
 #include <memory>
 #include <type_traits>
+#include <concepts/concepts.hpp>
 #include <range/v3/detail/config.hpp>
 
 namespace ranges
