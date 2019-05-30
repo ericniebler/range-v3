@@ -12,27 +12,50 @@
 #ifndef RANGES_V3_UTLITY_ADDRESSOF_HPP
 #define RANGES_V3_UTLITY_ADDRESSOF_HPP
 
-#ifdef __cpp_lib_addressof_constexpr
 #include <memory>
-#endif
 
 namespace ranges
 {
     /// \cond
     namespace detail
     {
+#ifdef __cpp_lib_addressof_constexpr
+        using std::addressof;
+#else
+        namespace test {
+            struct ignore {
+                template <typename T> ignore(T&&);
+            };
+
+            ignore operator&(ignore);
+            template <typename T>
+            auto addressof(T& t) {
+                return &t;
+            }
+        }
+
         template <typename T>
-        constexpr T* addressof(T& arg) noexcept
+        using has_bad_addressof = meta::bool_<
+            !std::is_scalar<T>::value &&
+            !RANGES_IS_SAME(decltype(test::addressof(*(T*)0)), test::ignore)>;
+
+        template <typename T>
+        auto addressof(T& arg) noexcept
+            -> CPP_ret(T*)(requires has_bad_addressof<T>::value)
         {
-            #ifdef __cpp_lib_addressof_constexpr
             return std::addressof(arg);
-            #else
+        }
+
+        template <typename T>
+        constexpr auto addressof(T& arg) noexcept
+            -> CPP_ret(T*)(requires !has_bad_addressof<T>::value)
+        {
             return &arg;
-            #endif
         }
 
         template <typename T>
         T const* addressof(T const&&) = delete;
+#endif
     }
     /// \endcond
 }
