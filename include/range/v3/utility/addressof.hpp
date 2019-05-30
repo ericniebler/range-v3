@@ -13,6 +13,7 @@
 #define RANGES_V3_UTLITY_ADDRESSOF_HPP
 
 #include <memory>
+#include <type_traits>
 #include <range/v3/detail/config.hpp>
 
 namespace ranges
@@ -36,20 +37,23 @@ namespace ranges
         }
 
         template <typename T>
-        using has_bad_addressof = meta::bool_<
-            !std::is_scalar<T>::value &&
-            !RANGES_IS_SAME(decltype(test::addressof(*(T*)0)), test::ignore)>;
+        constexpr bool has_bad_addressof() {
+            return !std::is_scalar<T>::value &&
+                !RANGES_IS_SAME(
+                    decltype(test::addressof(*(T*)0)),
+                    test::ignore)>;
+        }
 
         template <typename T>
         auto addressof(T& arg) noexcept
-            -> CPP_ret(T*)(requires has_bad_addressof<T>::value)
+            -> CPP_ret(T*)(requires has_bad_addressof<T>())
         {
             return std::addressof(arg);
         }
 
         template <typename T>
         constexpr auto addressof(T& arg) noexcept
-            -> CPP_ret(T*)(requires !has_bad_addressof<T>::value)
+            -> CPP_ret(T*)(requires !has_bad_addressof<T>())
         {
             return &arg;
         }
