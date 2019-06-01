@@ -46,9 +46,9 @@ namespace ranges
             using CRng = meta::const_if_c<IsConst, Rng>;
 
             adaptor() = default;
-            CPP_template(bool Other)(         //
-                requires IsConst && (!Other)) //
-                constexpr adaptor(adaptor<Other>) noexcept
+            template<bool Other> // clang-format off
+            constexpr CPP_ctor(adaptor)(adaptor<Other>)( noexcept(true)
+                requires IsConst && (!Other)) // clang-format on
             {}
 
             // clang-format off

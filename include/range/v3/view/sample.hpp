@@ -135,9 +135,9 @@ namespace ranges
                     rng.size_ = n;
                 advance();
             }
-            CPP_template(bool Other)(         //
-                requires IsConst && (!Other)) //
-                cursor(cursor<Other> that)
+            template<bool Other>
+            CPP_ctor(cursor)(cursor<Other> that)( //
+                requires IsConst && (!Other))
               : parent_(that.parent_)
               , current_(std::move(that.current_))
               , size_(that.size_)
