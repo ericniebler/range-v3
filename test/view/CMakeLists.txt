@@ -61,6 +61,7 @@ rv3_add_test(test.view.tokenize view.tokenize tokenize.cpp)
 rv3_add_test(test.view.transform view.transform transform.cpp)
 rv3_add_test(test.view.trim view.trim trim.cpp)
 rv3_add_test(test.view.unique view.unique unique.cpp)
+rv3_add_test(test.view.view view.view view.cpp)
 rv3_add_test(test.view.zip view.zip zip.cpp)
 
 target_compile_definitions(view.iterator_range PRIVATE RANGES_DISABLE_DEPRECATED_WARNINGS)
