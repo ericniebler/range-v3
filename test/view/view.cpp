@@ -1,10 +1,10 @@
+#include <vector>
+
+#include <range/v3/view/drop.hpp>
+#include <range/v3/view/view.hpp>
+
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
-
-#include <range/v3/view/view.hpp>
-#include <range/v3/view/drop.hpp>
-
-#include <vector>
 
 using namespace ranges;
 
@@ -16,14 +16,12 @@ private:
     static constexpr auto bind(my_drop_fn my_drop, Int n)
     {
         return make_pipeable(
-            [=](auto&& rng){
-                return my_drop( std::forward<decltype(rng)>(rng), n );
-            }
-        );
+            [=](auto && rng) { return my_drop(std::forward<decltype(rng)>(rng), n); });
     }
+
 public:
     template<typename Rng>
-    auto operator()(Rng &&rng, range_difference_t<Rng> n) const
+    auto operator()(Rng && rng, range_difference_t<Rng> n) const
     {
         return drop_view<view::all_t<Rng>>(view::all(static_cast<Rng &&>(rng)), n);
     }
@@ -31,18 +29,20 @@ public:
 RANGES_INLINE_VARIABLE(view::view<my_drop_fn>, my_drop)
 
 /// #https://github.com/ericniebler/range-v3/issues/1169
-void constexpr_test_1169(){
+void constexpr_test_1169()
+{
 #if RANGES_CXX_CONSTEXPR >= RANGES_CXX_CONSTEXPR_LAMBDAS
     constexpr auto const drop1 = my_drop(1);
     constexpr auto const drop3 = drop1 | my_drop(2);
 
-    std::vector<int> vec = {1,2,3,4};
+    std::vector<int> vec = {1, 2, 3, 4};
     check_equal(vec | drop3, {4});
 #endif
     (void)my_drop;
 }
 
-int main(){
+int main()
+{
     constexpr_test_1169();
     return test_result();
 }

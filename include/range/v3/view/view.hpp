@@ -121,7 +121,7 @@ namespace ranges
 
             // Piping requires range arguments or lvalue containers.
             template<typename Rng, typename Vw>
-            static constexpr auto CPP_fun(pipe)(Rng &&rng, Vw &&v)( //
+            static constexpr auto CPP_fun(pipe)(Rng && rng, Vw && v)( //
                 requires ViewableRange<Rng> && Invocable<View &, Rng>)
             {
                 return v.view_(static_cast<Rng &&>(rng));
