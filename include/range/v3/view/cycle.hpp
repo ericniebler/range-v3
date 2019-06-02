@@ -98,9 +98,9 @@ namespace ranges
               : rng_(&rng)
               , it_(ranges::begin(rng.rng_))
             {}
-            CPP_template(bool Other)(         //
-                requires IsConst && (!Other)) //
-                cursor(cursor<Other> that)
+            template<bool Other>
+            CPP_ctor(cursor)(cursor<Other> that)( //
+                requires IsConst && (!Other))
               : rng_(that.rng_)
               , it_(std::move(that.it_))
             {}

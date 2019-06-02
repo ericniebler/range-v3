@@ -180,9 +180,9 @@ namespace ranges
                      std::tuple<sentinel_t<meta::const_if_c<Const, Rngs>>...> ends)
               : ends_(std::move(ends))
             {}
-            CPP_template(bool Other)(       //
-                requires Const && (!Other)) //
-                sentinel(sentinel<Other> that)
+            template<bool Other>
+            CPP_ctor(sentinel)(sentinel<Other> that)( //
+                requires Const && (!Other))
               : ends_(std::move(that.ends_))
             {}
         };
@@ -210,9 +210,9 @@ namespace ranges
               : fun_(std::move(fun))
               , its_(std::move(its))
             {}
-            CPP_template(bool Other)(       //
-                requires Const && (!Other)) //
-                cursor(cursor<Other> that)
+            template<bool Other>
+            CPP_ctor(cursor)(cursor<Other> that)( //
+                requires Const && (!Other))
               : fun_(std::move(that.fun_))
               , its_(std::move(that.its_))
             {}

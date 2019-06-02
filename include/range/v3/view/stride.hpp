@@ -175,9 +175,9 @@ namespace ranges
             constexpr adaptor(stride_view_t & rng) noexcept
               : rng_(&rng)
             {}
-            CPP_template(bool Other)(       //
-                requires Const && (!Other)) //
-                adaptor(adaptor<Other> that)
+            template<bool Other>
+            CPP_ctor(adaptor)(adaptor<Other> that)( //
+                requires Const && (!Other))
               : rng_(that.rng_)
             {}
             constexpr void next(iterator_t<CRng> & it)

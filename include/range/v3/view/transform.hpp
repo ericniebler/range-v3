@@ -120,9 +120,9 @@ namespace ranges
             adaptor(fun_ref_ fun)
               : fun_(std::move(fun))
             {}
-            CPP_template(bool Other)(         //
-                requires IsConst && (!Other)) //
-                adaptor(adaptor<Other> that)
+            template<bool Other>
+            CPP_ctor(adaptor)(adaptor<Other> that)( //
+                requires IsConst && (!Other))
               : fun_(std::move(that.fun_))
             {}
 
@@ -231,9 +231,9 @@ namespace ranges
               : end1_(end(parent.rng1_))
               , end2_(end(parent.rng2_))
             {}
-            CPP_template(bool Other)(       //
-                requires Const && (!Other)) //
-                sentinel(sentinel<Other> that)
+            template<bool Other>
+            CPP_ctor(sentinel)(sentinel<Other> that)( //
+                requires Const && (!Other))
               : end1_(std::move(that.end1_))
               , end2_(std::move(that.end2_))
             {}
@@ -266,9 +266,9 @@ namespace ranges
               , it1_(begin_end(parent.rng1_))
               , it2_(begin_end(parent.rng2_))
             {}
-            CPP_template(bool Other)(       //
-                requires Const && (!Other)) //
-                cursor(cursor<Other> that)
+            template<bool Other>
+            CPP_ctor(cursor)(cursor<Other> that)( //
+                requires Const && (!Other))
               : fun_(std::move(that.fun_))
               , it1_(std::move(that.end1_))
               , it2_(std::move(that.end2_))
