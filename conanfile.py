@@ -37,5 +37,5 @@ class Rangev3Conan(ConanFile):
 
         self.copy("LICENSE.txt", dst="licenses", ignore_case=True, keep_path=False)
 
-    def package_info(self):
+    def package_id(self):
         self.info.header_only()
