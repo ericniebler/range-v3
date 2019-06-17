@@ -88,10 +88,11 @@ namespace
     using size_compare =
         size_compare_<Rng, RandomAccessRange<Rng> || (BidirectionalRange<Rng> && CommonRange<Rng>)>;
 
-    template<typename Base>
-    void test_finite()
+    template<typename ToBase>
+    void test_finite(ToBase to_base)
     {
-        Base v = view::iota(0,N);
+        auto v = to_base(view::iota(0,N));
+        using Base = decltype(v);
         auto rng = v | view::sliding(K);
         using Adapted = decltype(rng);
         test_size(rng, meta::bool_<SizedRange<Base>>{});
@@ -147,10 +148,10 @@ void bug_975()
 
 int main()
 {
-    test_finite<std::forward_list<int>>();
-    test_finite<std::list<int>>();
-    test_finite<std::vector<int>>();
-    test_finite<decltype(view::iota(0,N))>();
+    test_finite(to<std::forward_list<int>>());
+    test_finite(to<std::list<int>>());
+    test_finite(to<std::vector<int>>());
+    test_finite(identity{});
 
     {
         // An infinite, cyclic range with cycle length == 1

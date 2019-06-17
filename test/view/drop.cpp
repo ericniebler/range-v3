@@ -87,13 +87,15 @@ int main()
 
     {
         // Regression test for https://github.com/ericniebler/range-v3/issues/413
-        auto skips = [](std::vector<int> xs) -> std::vector<std::vector<int>> {
+        auto skips = [](std::vector<int> xs) {
             return view::ints(0, (int)xs.size())
                 | view::transform([&](int n) {
                     return xs | view::chunk(n + 1)
                               | view::transform(view::drop(n))
                               | view::join;
-                });
+                })
+                | view::transform(to<std::vector>())
+                | to<std::vector>();
         };
         auto skipped = skips({1,2,3,4,5,6,7,8});
         CHECK(skipped.size() == 8u);

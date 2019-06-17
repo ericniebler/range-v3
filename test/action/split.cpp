@@ -24,7 +24,7 @@ int main()
     using namespace ranges;
 
     {
-        std::vector<int> v = view::ints(1,21);
+        auto v = view::ints(1,21) | to<std::vector>();
         std::vector<std::vector<int>> rgv = action::split(v, 10);
         CHECK(rgv.size() == 2u);
         ::check_equal(rgv[0], {1,2,3,4,5,6,7,8,9});

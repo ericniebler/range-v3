@@ -80,7 +80,7 @@ namespace
 
 int main()
 {
-    std::vector<int> v = view::iota(0,11);
+    auto v = view::iota(0,11) | to<std::vector>();
     auto rng1 = v | view::chunk(3);
     ::models<RandomAccessRangeConcept>(rng1);
     ::models<SizedRangeConcept>(rng1);
@@ -94,7 +94,7 @@ int main()
     CHECK(size(rng1), 4u);
     CHECK(sizeof(rng1.begin()) == sizeof(v.begin()) * 2 + sizeof(std::ptrdiff_t) * 2);
 
-    std::forward_list<int> l = view::iota(0,11);
+    auto l = view::iota(0,11) | to<std::forward_list>();
     auto rng2 = l | view::chunk(3);
     ::models<ForwardRangeConcept>(rng2);
     ::models_not<BidirectionalRangeConcept>(rng2);

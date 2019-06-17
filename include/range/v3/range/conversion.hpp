@@ -127,8 +127,7 @@ namespace ranges
             template<typename Rng, typename ToContainer>
             friend auto operator|(Rng && rng, fn<ToContainer> (*)(to_container))
                 -> CPP_broken_friend_ret(container_t<ToContainer, Rng>)( //
-                    requires InputRange<Rng> &&
-                        ConvertibleToContainer<Rng, container_t<ToContainer, Rng>>)
+                    requires Invocable<fn<ToContainer>, Rng>)
             {
                 return fn<ToContainer>{}(static_cast<Rng &&>(rng));
             }

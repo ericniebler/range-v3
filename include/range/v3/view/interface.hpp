@@ -440,18 +440,22 @@ namespace ranges
             return Slice{}(detail::move(derived()), offs.from, offs.to);
         }
         /// Implicit conversion to something that looks like a container.
-        CPP_template(typename Container, bool True = true)(              //
-            requires detail::ConvertibleToContainer<D<True>, Container>) //
-            constexpr
-            operator Container()
+        CPP_template(typename Container, bool True = true)( // clang-format off
+            requires detail::ConvertibleToContainer<D<True>, Container>)
+        RANGES_DEPRECATED(
+            "Implicit conversion from a view to a container is deprecated. "
+            "Please use ranges::to in <range/v3/range/conversion.hpp> instead.")
+        constexpr operator Container() // clang-format on
         {
             return ranges::to<Container>(derived());
         }
         /// \overload
-        CPP_template(typename Container, bool True = true)(                    //
-            requires detail::ConvertibleToContainer<D<True> const, Container>) //
-            constexpr
-            operator Container() const
+        CPP_template(typename Container, bool True = true)( // clang-format off
+            requires detail::ConvertibleToContainer<D<True> const, Container>)
+        RANGES_DEPRECATED(
+            "Implicit conversion from a view to a container is deprecated. "
+            "Please use ranges::to in <range/v3/range/conversion.hpp> instead.")
+        constexpr operator Container() const // clang-format on
         {
             return ranges::to<Container>(derived());
         }

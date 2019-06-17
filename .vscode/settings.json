@@ -70,6 +70,8 @@
         "coroutine": "cpp",
         "ios": "cpp",
         "locale": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "__node_handle": "cpp",
+        "__tree": "cpp"
     }
 }

@@ -46,59 +46,59 @@ int main()
         auto r0 = view::intersperse(c_str("abcde"), ',');
         models<CommonRangeConcept>(r0);
         CHECK((r0.end() - r0.begin()) == 9);
-        CHECK(std::string(r0) == "a,b,c,d,e");
+        CHECK(to<std::string>(r0) == "a,b,c,d,e");
         CHECK(r0.size() == 9u);
 
         auto r1 = view::intersperse(c_str(""), ',');
         models<CommonRangeConcept>(r1);
-        CHECK(std::string(r1) == "");
+        CHECK(to<std::string>(r1) == "");
         CHECK(r1.size() == 0u);
 
         auto r2 = view::intersperse(c_str("a"), ',');
         models<CommonRangeConcept>(r2);
-        CHECK(std::string(r2) == "a");
+        CHECK(to<std::string>(r2) == "a");
         CHECK(r2.size() == 1u);
 
         auto r3 = view::intersperse(c_str("ab"), ',');
         models<CommonRangeConcept>(r3);
-        CHECK(std::string(r3) == "a,b");
+        CHECK(to<std::string>(r3) == "a,b");
         CHECK(r3.size() == 3u);
     }
 
     {
         auto r0 = view::intersperse(c_str("abcde"), ',') | view::reverse;
         models<CommonRangeConcept>(r0);
-        CHECK(std::string(r0) == "e,d,c,b,a");
+        CHECK(to<std::string>(r0) == "e,d,c,b,a");
 
         auto r1 = view::intersperse(c_str(""), ',') | view::reverse;
         models<CommonRangeConcept>(r1);
-        CHECK(std::string(r1) == "");
+        CHECK(to<std::string>(r1) == "");
 
         auto r2 = view::intersperse(c_str("a"), ',') | view::reverse;
         models<CommonRangeConcept>(r2);
-        CHECK(std::string(r2) == "a");
+        CHECK(to<std::string>(r2) == "a");
 
         auto r3 = view::intersperse(c_str("ab"), ',') | view::reverse;
         models<CommonRangeConcept>(r3);
-        CHECK(std::string(r3) == "b,a");
+        CHECK(to<std::string>(r3) == "b,a");
     }
 
     {
         auto r0 = view::intersperse(c_str_("abcde"), ',');
         models_not<CommonRangeConcept>(r0);
-        CHECK(std::string(r0) == "a,b,c,d,e");
+        CHECK(to<std::string>(r0) == "a,b,c,d,e");
 
         auto r1 = view::intersperse(c_str_(""), ',');
         models_not<CommonRangeConcept>(r1);
-        CHECK(std::string(r1) == "");
+        CHECK(to<std::string>(r1) == "");
 
         auto r2 = view::intersperse(c_str_("a"), ',');
         models_not<CommonRangeConcept>(r2);
-        CHECK(std::string(r2) == "a");
+        CHECK(to<std::string>(r2) == "a");
 
         auto r3 = view::intersperse(c_str_("ab"), ',');
         models_not<CommonRangeConcept>(r3);
-        CHECK(std::string(r3) == "a,b");
+        CHECK(to<std::string>(r3) == "a,b");
     }
 
     {

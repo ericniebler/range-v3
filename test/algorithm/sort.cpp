@@ -313,10 +313,10 @@ int main()
     // Check sorting a zip view, which uses iter_move
     {
         using namespace ranges;
-        std::vector<int> v0 =
+        auto v0 =
             view::for_each(view::ints(1,6) | view::reverse, [](int i){
                 return ranges::yield_from(view::repeat_n(i,i));
-            });
+            }) | to<std::vector>();
         auto v1 = ranges::to<std::vector<Int>>(
             {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
         auto rng = view::zip(v0, v1);

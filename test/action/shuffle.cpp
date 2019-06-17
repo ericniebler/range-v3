@@ -27,7 +27,7 @@ int main()
     std::mt19937 gen;
 
     // "Ints" view vs. shuffled
-    std::vector<int> v = view::ints(0,100);
+    auto v = view::ints(0,100) | to<std::vector>();
     auto v2 = v | copy | action::shuffle(gen);
     CHECK(is_sorted(v));
     CHECK(!is_sorted(v2));
@@ -50,19 +50,19 @@ int main()
 
     // Container algorithms can also be called directly
     // in which case they take and return by reference
-    v = view::ints(0,100);
+    v = view::ints(0,100) | to<std::vector>();
     auto & v3 = action::shuffle(v, gen);
     CHECK(!is_sorted(v));
     CHECK(&v3 == &v);
 
     // Create and shuffle container reference
-    v = view::ints(0,100);
+    v = view::ints(0,100) | to<std::vector>();
     auto ref = view::ref(v);
     ref |= action::shuffle(gen);
     CHECK(!is_sorted(v));
 
     // Can pipe a view to a "container" algorithm.
-    v = view::ints(0,100);
+    v = view::ints(0,100) | to<std::vector>();
     v | view::stride(2) | action::shuffle(gen);
     CHECK(!is_sorted(v));
 

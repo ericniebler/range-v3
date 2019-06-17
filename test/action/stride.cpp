@@ -22,7 +22,7 @@ int main()
 {
     using namespace ranges;
 
-    std::vector<int> v = view::ints(0,100);
+    auto v = view::ints(0,100) | to<std::vector>();
 
     auto v2 = v | copy | action::stride(10);
     CHECK(size(v2) == 10u);

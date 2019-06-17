@@ -258,13 +258,13 @@ class interleave_view : public view_facade<interleave_view<Rngs>>
     struct cursor;
     cursor begin_cursor()
     {
-        return {0, &rngs_, view::transform(rngs_, ranges::begin)};
+        return {0, &rngs_, view::transform(rngs_, ranges::begin) | to<std::vector>};
     }
 
 public:
     interleave_view() = default;
     explicit interleave_view(Rngs rngs)
-      : rngs_(std::move(rngs))
+      : rngs_(std::move(rngs) | to<std::vector>)
     {}
 };
 
