@@ -32,6 +32,9 @@
 #include <range/v3/view/facade.hpp>
 #include <range/v3/view/take_exactly.hpp>
 
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_UNSIGNED_MATH
+
 namespace ranges
 {
     /// \cond
@@ -549,5 +552,7 @@ namespace ranges
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::closed_iota_view)
 RANGES_SATISFY_BOOST_RANGE(::ranges::iota_view)
+
+RANGES_DIAGNOSTIC_POP
 
 #endif
