@@ -156,6 +156,15 @@ namespace ranges
                 // TODO additional syntactic and semantic requirements
         );
 
+#ifdef RANGES_WORKAROUND_MSVC_792338
+        CPP_def
+        (
+            template(typename D)
+            concept SignedIntegerLike_,
+                Type<decltype(std::integral_constant<bool, (D(-1) < D(0))>{})> &&
+                std::integral_constant<bool, (D(-1) < D(0))>::value
+        );
+#else // ^^^ workaround / no workaround vvv
         CPP_def
         (
             template(typename D)
@@ -164,6 +173,7 @@ namespace ranges
                 Type<std::integral_constant<bool, (D(-1) < D(0))>> &&
                 std::integral_constant<bool, (D(-1) < D(0))>::value
         );
+#endif // RANGES_WORKAROUND_MSVC_792338
         // clang-format on
     } // namespace detail
       /// \endcond
