@@ -119,7 +119,12 @@ int main()
 
         std::map<std::uintmax_t, std::uintmax_t> m = r2;
         (void) m;
+
+#ifdef RANGES_WORKAROUND_MSVC_779708
+        (void)(r2 | ranges::to<std::map<std::uintmax_t, std::uintmax_t>>());
+#else // ^^^ workaround / no workaround vvv
         (void)(r2 | ranges::to<std::map<std::uintmax_t, std::uintmax_t>>);
+#endif // RANGES_WORKAROUND_MSVC_779708
     }
 
     test_zip_to_map(view::zip(view::ints, view::iota(0, 10)), 0);

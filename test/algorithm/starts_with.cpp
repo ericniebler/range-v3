@@ -56,8 +56,13 @@ void test_defaults()
       }
    }
    { // checks starts_with works for random-access ranges
+#ifdef RANGES_WORKAROUND_MSVC_779708
+      auto const long_range = view::iota(0, 100) | to<std::vector>();
+      auto const short_range = view::iota(0, 10) | to<std::vector>();
+#else // ^^^ workaround / no workaround vvv
       auto const long_range = view::iota(0, 100) | to<std::vector>;
       auto const short_range = view::iota(0, 10) | to<std::vector>;
+#endif // RANGES_WORKAROUND_MSVC_779708
 
       CHECK(starts_with(begin(long_range), end(long_range), begin(short_range), end(short_range)));
       CHECK(starts_with(long_range, short_range));
