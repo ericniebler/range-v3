@@ -308,9 +308,9 @@ namespace ranges
               : cursor(end_tag{}, view,
                        meta::bool_<CommonView<meta::at_c<meta::list<Views...>, 0>>>{})
             {}
-            template<bool Other>
-            CPP_ctor(cursor)(cursor<Other> that)( //
+            CPP_template(bool Other)( //
                 requires IsConst_ && (!Other))
+            cursor(cursor<Other> that)
               : view_(that.view_)
               , its_(std::move(that.its_))
             {}

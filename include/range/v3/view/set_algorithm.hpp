@@ -479,10 +479,9 @@ namespace ranges
             {
                 satisfy();
             }
-            template<bool Other>
-            CPP_ctor(set_union_cursor)(
-                set_union_cursor<Other, Rng1, Rng2, C, P1, P2> that)( //
+            CPP_template(bool Other)( //
                 requires IsConst && (!Other))
+            set_union_cursor(set_union_cursor<Other, Rng1, Rng2, C, P1, P2> that)
               : pred_(std::move(that.pred_))
               , proj1_(std::move(that.proj1_))
               , proj2_(std::move(that.proj2_))
