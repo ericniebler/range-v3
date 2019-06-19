@@ -448,6 +448,9 @@ namespace ranges
         {}
 
     public:
+#ifdef RANGES_WORKAROUND_MSVC_934264
+        constexpr
+#endif // RANGES_WORKAROUND_MSVC_934264
         iota_view() = default;
         constexpr explicit iota_view(From from)
           : from_(std::move(from))

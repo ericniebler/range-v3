@@ -266,6 +266,8 @@ namespace ranges
                                       // to constexpr function
 #define RANGES_WORKAROUND_MSVC_835948 // Silent bad codegen destroying sized_generator [No
                                       // workaround]
+#define RANGES_WORKAROUND_MSVC_934264 // Explicitly-defaulted inherited default constructor
+                                      // is not correctly implicitly constexpr
 
 // 15.9 doesn't define __cpp_coroutines even with /await (Fix not yet live)
 #if !defined(RANGES_CXX_COROUTINES) && defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
