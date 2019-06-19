@@ -36,8 +36,9 @@ namespace ranges
             auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(
                 const requires ViewableRange<Rng> && InputRange<Rng> && SizedRange<Rng>)
             {
-                range_difference_t<Rng> sz = ranges::size(rng);
-                return drop_exactly(static_cast<Rng &&>(rng), sz > n ? sz - n : 0);
+                auto sz = ranges::size(rng);
+                auto sz_n = static_cast<range_size_t<Rng>>(n);
+                return drop_exactly(static_cast<Rng &&>(rng), sz > sz_n ? sz - sz_n : 0);
             }
         };
 
