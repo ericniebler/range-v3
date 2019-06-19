@@ -26,7 +26,7 @@ namespace ranges
             friend view_access;
             template<typename Int>
             static auto CPP_fun(bind)(take_last_fn take_last, Int n)( //
-                requires Integral<int>)
+                requires Integral<Int>)
             {
                 return make_pipeable(std::bind(take_last, std::placeholders::_1, n));
             }
@@ -36,11 +36,8 @@ namespace ranges
             auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(
                 const requires ViewableRange<Rng> && InputRange<Rng> && SizedRange<Rng>)
             {
-                auto sz = ranges::size(rng);
-                auto cur = static_cast<range_size_t<Rng>>(n);
-                auto drop_n =
-                    static_cast<range_difference_t<Rng>>(sz > cur ? sz - cur : 0);
-                return drop_exactly(static_cast<Rng &&>(rng), drop_n);
+                auto sz = ranges::distance(rng);
+                return drop_exactly(static_cast<Rng &&>(rng), sz > n ? sz - n : 0);
             }
         };
 
