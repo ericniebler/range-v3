@@ -20,25 +20,22 @@
 
 namespace ranges
 {
-    namespace view
+    namespace detail
     {
-        namespace detail
+        template<typename Pred>
+        struct predicate_pred
         {
-            template<typename Pred>
-            struct predicate_pred
-            {
-                semiregular_t<Pred> pred_;
+            semiregular_t<Pred> pred_;
 
-                template<typename I, typename S>
-                auto operator()(I cur, S end) const -> CPP_ret(std::pair<bool, I>)( //
-                    requires Sentinel<S, I>)
-                {
-                    auto where = ranges::find_if_not(cur, end, std::ref(pred_));
-                    return {cur != where, where};
-                }
-            };
-        } // namespace detail
-    }     // namespace view
+            template<typename I, typename S>
+            auto operator()(I cur, S end) const -> CPP_ret(std::pair<bool, I>)( //
+                requires Sentinel<S, I>)
+            {
+                auto where = ranges::find_if_not(cur, end, std::ref(pred_));
+                return {cur != where, where};
+            }
+        };
+    } // namespace detail
 } // namespace ranges
 
 #endif
