@@ -49,7 +49,11 @@ int main()
         ranges::reverse_view dg0{rgv};
         ::check_equal(dg0, {9, 8, 7, 6, 5, 4, 3, 2, 1, 0});
         ranges::reverse_view dg1{dg0};
+#ifdef RANGES_WORKAROUND_MSVC_934330
+        ::check_equal(dg1, {9, 8, 7, 6, 5, 4, 3, 2, 1, 0});
+#else // ^^^ "workaround" / no "workaround" vvv
         ::check_equal(dg1, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+#endif // RANGES_WORKAROUND_MSVC_934330
     }
 #if defined(__clang__) && __clang_major__ < 6
     RANGES_DIAGNOSTIC_POP

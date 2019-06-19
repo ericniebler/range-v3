@@ -268,6 +268,8 @@ namespace ranges
                                       // workaround]
 #define RANGES_WORKAROUND_MSVC_934264 // Explicitly-defaulted inherited default constructor
                                       // is not correctly implicitly constexpr
+#define RANGES_WORKAROUND_MSVC_934330 // Deduction guide not correctly preferred to copy
+                                      // deduction candidate [No workaround]
 
 // 15.9 doesn't define __cpp_coroutines even with /await (Fix not yet live)
 #if !defined(RANGES_CXX_COROUTINES) && defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
