@@ -75,9 +75,9 @@ namespace ranges
             explicit constexpr cursor_adaptor(range_value_t<Rng> const & val)
               : val_{val}
             {}
-            template<bool Other>
-            CPP_ctor(cursor_adaptor)(cursor_adaptor<Other> that)( //
+            CPP_template(bool Other)( //
                 requires Const && (!Other))
+            cursor_adaptor(cursor_adaptor<Other> that)
               : toggle_(that.toggle_)
               , val_(std::move(that.val_))
             {}
@@ -141,9 +141,9 @@ namespace ranges
 
         public:
             sentinel_adaptor() = default;
-            template<bool Other>
-            CPP_ctor(sentinel_adaptor)(sentinel_adaptor<Other>)( //
+            CPP_template(bool Other)( //
                 requires Const && (!Other))
+            sentinel_adaptor(sentinel_adaptor<Other>)
             {}
             static constexpr bool empty(iterator_t<CRng> const & it,
                                         cursor_adaptor<Const> const &,

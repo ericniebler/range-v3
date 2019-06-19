@@ -41,9 +41,9 @@ namespace ranges
         struct adaptor : adaptor_base
         {
             adaptor() = default;
-            template<bool Other>
-            constexpr CPP_ctor(adaptor)(adaptor<Other>)( //
+            CPP_template(bool Other)( //
                 requires Const && (!Other))
+            constexpr adaptor(adaptor<Other>)
             {}
             using CRng = meta::const_if_c<Const, Rng>;
             using value_type = range_value_t<Rng>;

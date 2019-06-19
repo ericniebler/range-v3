@@ -32,6 +32,10 @@
 #include <range/v3/view/facade.hpp>
 #include <range/v3/view/take_exactly.hpp>
 
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_UNSIGNED_MATH
+RANGES_DIAGNOSTIC_IGNORE_TRUNCATION
+
 namespace ranges
 {
     /// \cond
@@ -444,6 +448,9 @@ namespace ranges
         {}
 
     public:
+#ifdef RANGES_WORKAROUND_MSVC_934264
+        constexpr
+#endif // RANGES_WORKAROUND_MSVC_934264
         iota_view() = default;
         constexpr explicit iota_view(From from)
           : from_(std::move(from))
@@ -549,5 +556,7 @@ namespace ranges
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::closed_iota_view)
 RANGES_SATISFY_BOOST_RANGE(::ranges::iota_view)
+
+RANGES_DIAGNOSTIC_POP
 
 #endif

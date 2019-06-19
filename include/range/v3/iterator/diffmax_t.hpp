@@ -24,6 +24,9 @@
 
 #include <range/v3/iterator/concepts.hpp>
 
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_UNSIGNED_MATH
+
 namespace ranges
 {
     /// \cond
@@ -342,7 +345,6 @@ namespace ranges
 } // namespace ranges
 
 /// \cond
-RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
 
 namespace std

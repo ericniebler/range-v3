@@ -48,7 +48,7 @@ namespace ranges
         {
             if(pop_size > 0 && sample_size > 0)
             {
-                std::uniform_int_distribution<difference_type_t<I>> dist;
+                std::uniform_int_distribution<iter_difference_t<I>> dist;
                 using param_t = typename decltype(dist)::param_type;
                 for(; first != last; ++first)
                 {
@@ -94,7 +94,7 @@ namespace ranges
                 // next(out,n) are O(1).
                 if(n > 0)
                 {
-                    for(difference_type_t<O> i = 0; i < n; (void)++i, ++first)
+                    for(iter_difference_t<O> i = 0; i < n; (void)++i, ++first)
                     {
                         if(first == last)
                         {
@@ -104,7 +104,7 @@ namespace ranges
                         *next(out, i) = *first;
                     }
 
-                    std::uniform_int_distribution<difference_type_t<O>> dist;
+                    std::uniform_int_distribution<iter_difference_t<O>> dist;
                     using param_t = typename decltype(dist)::param_type;
                     for(auto pop_size = n; first != last; (void)++first, ++pop_size)
                     {
@@ -153,7 +153,7 @@ namespace ranges
         }
 
         template<typename Rng, typename O, typename Gen = detail::default_random_engine &>
-        auto operator()(Rng && rng, O out, difference_type_t<O> const n,
+        auto operator()(Rng && rng, O out, iter_difference_t<O> const n,
                         Gen && gen = detail::get_random_engine()) const
             -> CPP_ret(sample_result<safe_iterator_t<Rng>, O>)( //
                 requires InputRange<Rng> && WeaklyIncrementable<O> && IndirectlyCopyable<

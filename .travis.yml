@@ -14,7 +14,7 @@
 # - Louis Dionne's Hana: https://github.com/ldionne/hana
 # - Paul Fultz II's FIT: https://github.com/pfultz2/Fit
 language: cpp
-sudo: true
+dist: xenial
 script: cmake
 
 git:

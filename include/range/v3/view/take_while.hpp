@@ -58,9 +58,9 @@ namespace ranges
             sentinel_adaptor(semiregular_ref_or_val_t<Pred, IsConst> pred)
               : pred_(std::move(pred))
             {}
-            template<bool Other>
-            CPP_ctor(sentinel_adaptor)(sentinel_adaptor<Other> that)( //
+            CPP_template(bool Other)( //
                 requires IsConst && (!Other))
+            sentinel_adaptor(sentinel_adaptor<Other> that)
               : pred_(std::move(that.pred_))
             {}
             bool empty(iterator_t<CRng> const & it, sentinel_t<CRng> const & end) const

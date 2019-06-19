@@ -100,9 +100,9 @@ namespace ranges
             adaptor(exclusive_scan_view_t & rng)
               : rng_(&rng)
             {}
-            template<bool Other>
-            CPP_ctor(adaptor)(adaptor<Other> that)( //
+            CPP_template(bool Other)( //
                 requires IsConst && (!Other))
+            adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
             iterator_t<CRng> begin(exclusive_scan_view_t &)

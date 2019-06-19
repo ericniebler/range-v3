@@ -207,12 +207,15 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_THIS_CAPTURE
 #define RANGES_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME
 // Ignores both "divide by zero" and "mod by zero":
-#define RANGES_DIAGNOSTIC_IGNORE_DIVIDE_BY_ZERO \
-    RANGES_DIAGNOSTIC_IGNORE(4723) RANGES_DIAGNOSTIC_IGNORE(4724)
+#define RANGES_DIAGNOSTIC_IGNORE_DIVIDE_BY_ZERO RANGES_DIAGNOSTIC_IGNORE(4723 4724)
+#define RANGES_DIAGNOSTIC_IGNORE_UNSIGNED_MATH RANGES_DIAGNOSTIC_IGNORE(4146)
+#define RANGES_DIAGNOSTIC_IGNORE_TRUNCATION RANGES_DIAGNOSTIC_IGNORE(4244)
 
 #define RANGES_CXX_VER _MSVC_LANG
 
 #if _MSC_VER < 1922
+#define RANGES_WORKAROUND_MSVC_756601 // constexpr friend non-template erroneously rejected
+                                      // with C3615
 #define RANGES_WORKAROUND_MSVC_793042 // T[0] sometimes accepted as a valid type in SFINAE
                                       // context
 
@@ -257,14 +260,16 @@ namespace ranges
                                       // for pointer-to-array i
 #define RANGES_WORKAROUND_MSVC_688606 // SFINAE failing to account for access control
                                       // during specialization matching
-#define RANGES_WORKAROUND_MSVC_756601 // constexpr friend non-template erroneously
-                                      // rejected with C3615
 #define RANGES_WORKAROUND_MSVC_779708 // ADL for operands of function type [No workaround]
 #define RANGES_WORKAROUND_MSVC_786312 // Yet another mixed-pack-expansion failure
 #define RANGES_WORKAROUND_MSVC_792338 // Failure to match specialization enabled via call
                                       // to constexpr function
 #define RANGES_WORKAROUND_MSVC_835948 // Silent bad codegen destroying sized_generator [No
                                       // workaround]
+#define RANGES_WORKAROUND_MSVC_934264 // Explicitly-defaulted inherited default constructor
+                                      // is not correctly implicitly constexpr
+#define RANGES_WORKAROUND_MSVC_934330 // Deduction guide not correctly preferred to copy
+                                      // deduction candidate [No workaround]
 
 // 15.9 doesn't define __cpp_coroutines even with /await (Fix not yet live)
 #if !defined(RANGES_CXX_COROUTINES) && defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
@@ -315,6 +320,8 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME \
     RANGES_DIAGNOSTIC_IGNORE("-Winit-list-lifetime")
 #define RANGES_DIAGNOSTIC_IGNORE_DIVIDE_BY_ZERO
+#define RANGES_DIAGNOSTIC_IGNORE_UNSIGNED_MATH
+#define RANGES_DIAGNOSTIC_IGNORE_TRUNCATION
 
 #define RANGES_WORKAROUND_CWG_1554
 #ifdef __clang__
@@ -353,6 +360,8 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_THIS_CAPTURE
 #define RANGES_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME
 #define RANGES_DIAGNOSTIC_IGNORE_DIVIDE_BY_ZERO
+#define RANGES_DIAGNOSTIC_IGNORE_UNSIGNED_MATH
+#define RANGES_DIAGNOSTIC_IGNORE_TRUNCATION
 #endif
 
 // Configuration via feature-test macros, with fallback to __cplusplus

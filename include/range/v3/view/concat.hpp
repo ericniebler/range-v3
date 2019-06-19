@@ -91,9 +91,9 @@ namespace ranges
             sentinel(concat_view_t & rng, end_tag)
               : end_(end(std::get<cranges - 1>(rng.rngs_)))
             {}
-            template<bool Other>
-            CPP_ctor(sentinel)(sentinel<Other> that)( //
+            CPP_template(bool Other)( //
                 requires IsConst && (!Other))
+            sentinel(sentinel<Other> that)
               : end_(std::move(that.end_))
             {}
         };
@@ -264,9 +264,9 @@ namespace ranges
               : rng_(&rng)
               , its_{emplaced_index<cranges - 1>, end(std::get<cranges - 1>(rng.rngs_))}
             {}
-            template<bool Other>
-            CPP_ctor(cursor)(cursor<Other> that)( //
+            CPP_template(bool Other)( //
                 requires IsConst && (!Other))
+            cursor(cursor<Other> that)
               : rng_(that.rng_)
               , its_(std::move(that.its_))
             {}
