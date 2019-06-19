@@ -37,8 +37,10 @@ namespace ranges
                 const requires ViewableRange<Rng> && InputRange<Rng> && SizedRange<Rng>)
             {
                 auto sz = ranges::size(rng);
-                auto sz_n = static_cast<range_size_t<Rng>>(n);
-                return drop_exactly(static_cast<Rng &&>(rng), sz > sz_n ? sz - sz_n : 0);
+                auto cur = static_cast<range_size_t<Rng>>(n);
+                auto drop_n =
+                    static_cast<range_difference_t<Rng>>(sz > cur ? sz - cur : 0);
+                return drop_exactly(static_cast<Rng &&>(rng), drop_n);
             }
         };
 
