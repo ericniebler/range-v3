@@ -763,7 +763,7 @@ provides, and a blurb about how each is intended to be used.
   <DD>Given a source range and an integral count, return a range consisting of the first *count* elements from the source range, or the complete range if it has fewer elements. (The result of `view::take` is not a `SizedRange`.)</DD>
 <DT>\link ranges::view::take_exactly_fn `view::take_exactly`\endlink</DT>
   <DD>Given a source range and an integral count, return a range consisting of the first *count* elements from the source range. The source range must have at least that many elements. (The result of `view::take_exactly` is a `SizedRange`.)</DD>
-<DT>\link ranges::view::drop_exactly_fn `view::take_last`\endlink</DT>
+<DT>\link ranges::view::take_last_fn `view::take_last`\endlink</DT>
   <DD>Given a source range and an integral count, return a range consisting of the last *count* elements from the source range. The source range must be a `SizedRange`. If the source range does not have enough elements, the full range is returned.</DD>
 <DT>\link ranges::view::take_while_fn `view::take_while`\endlink</DT>
   <DD>Given a source range and a unary predicate, return a new range consisting of the  elements from the front that satisfy the predicate.</DD>
