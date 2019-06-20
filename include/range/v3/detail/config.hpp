@@ -213,6 +213,10 @@ namespace ranges
 
 #define RANGES_CXX_VER _MSVC_LANG
 
+#if _MSC_VER < 1923
+#define RANGES_WORKAROUND_MSVC_934330 // Deduction guide not correctly preferred to copy
+                                      // deduction candidate [No workaround]
+
 #if _MSC_VER < 1922
 #define RANGES_WORKAROUND_MSVC_756601 // constexpr friend non-template erroneously rejected
                                       // with C3615
@@ -227,26 +231,11 @@ namespace ranges
                                       // non-instantiated nested class template
 #define RANGES_WORKAROUND_MSVC_790554 // Assert for return type that uses dependent
                                       // default non-type template argument
-
-#if _MSC_VER < 1920
-#define RANGES_WORKAROUND_MSVC_DC338193 // https://developercommunity.visualstudio.com/content/problem/338193/sfinae-disabled-ref-qualified-function-collides-wi.html
-#define RANGES_WORKAROUND_MSVC_401490   // conversion of constant expressions with
-                                        // representable values is NOT narrowing
-#define RANGES_WORKAROUND_MSVC_589046 // hidden friends should not be visible to qualified
-                                      // name lookup
-#define RANGES_WORKAROUND_MSVC_699982 // Nasty context-sensitive alias expansion / SFINAE
-                                      // error
-#define RANGES_WORKAROUND_MSVC_701425 // Failure to deduce decltype(pointer-to-member)
-                                      // (gcc_bugs_bugs_bugs for MSVC)
-#define RANGES_WORKAROUND_MSVC_711347 // Assertion invoking constexpr member function as
-                                      // alias template argument
-#endif                                // _MSC_VER < 1920
 #endif                                // _MSC_VER < 1921
 #endif                                // _MSC_VER < 1922
+#endif                                // _MSC_VER < 1923
 
 #if 1 // Fixed in 1920, but more bugs hiding behind workaround
-#define RANGES_WORKAROUND_MSVC_620035 // Error when definition-context name binding finds
-                                      // only deleted function
 #define RANGES_WORKAROUND_MSVC_701385 // Yet another alias expansion error
 #endif
 
@@ -266,15 +255,10 @@ namespace ranges
                                       // to constexpr function
 #define RANGES_WORKAROUND_MSVC_835948 // Silent bad codegen destroying sized_generator [No
                                       // workaround]
+#define RANGES_WORKAROUND_MSVC_895622 // Error when phase 1 name binding finds only deleted
+                                      // function
 #define RANGES_WORKAROUND_MSVC_934264 // Explicitly-defaulted inherited default constructor
                                       // is not correctly implicitly constexpr
-#define RANGES_WORKAROUND_MSVC_934330 // Deduction guide not correctly preferred to copy
-                                      // deduction candidate [No workaround]
-
-// 15.9 doesn't define __cpp_coroutines even with /await (Fix not yet live)
-#if !defined(RANGES_CXX_COROUTINES) && defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
-#define RANGES_CXX_COROUTINES RANGES_CXX_COROUTINES_TS1
-#endif
 
 #elif defined(__GNUC__) || defined(__clang__)
 #define RANGES_PRAGMA(X) _Pragma(#X)
@@ -672,8 +656,7 @@ namespace ranges
 #endif // RANGES_CONSTEXPR_IF
 
 #if !defined(RANGES_BROKEN_CPO_LOOKUP) && !defined(RANGES_DOXYGEN_INVOKED) && \
-    (defined(RANGES_WORKAROUND_GCC_UNFILED0) ||                               \
-     defined(RANGES_WORKAROUND_MSVC_589046) || defined(RANGES_WORKAROUND_MSVC_620035))
+    (defined(RANGES_WORKAROUND_GCC_UNFILED0) || defined(RANGES_WORKAROUND_MSVC_895622))
 #define RANGES_BROKEN_CPO_LOOKUP 1
 #endif
 #ifndef RANGES_BROKEN_CPO_LOOKUP

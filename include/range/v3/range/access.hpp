@@ -42,7 +42,7 @@ namespace ranges
         template<typename T>
         void begin(T &&) = delete;
 
-#ifdef RANGES_WORKAROUND_MSVC_620035
+#ifdef RANGES_WORKAROUND_MSVC_895622
         void begin();
 #endif
 
@@ -186,7 +186,7 @@ namespace ranges
         template<typename T>
         void end(T &&) = delete;
 
-#ifdef RANGES_WORKAROUND_MSVC_620035
+#ifdef RANGES_WORKAROUND_MSVC_895622
         void end();
 #endif
 

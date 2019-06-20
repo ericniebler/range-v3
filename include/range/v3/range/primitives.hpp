@@ -36,7 +36,7 @@ namespace ranges
         template<typename T>
         void size(T &&) = delete;
 
-#ifdef RANGES_WORKAROUND_MSVC_620035
+#ifdef RANGES_WORKAROUND_MSVC_895622
         void size();
 #endif
 

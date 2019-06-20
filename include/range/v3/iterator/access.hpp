@@ -184,7 +184,7 @@ namespace ranges
         template<typename T, typename U>
         nope iter_swap(T, U) = delete;
 
-#ifdef RANGES_WORKAROUND_MSVC_620035
+#ifdef RANGES_WORKAROUND_MSVC_895622
         nope iter_swap();
 #endif
 

@@ -506,11 +506,7 @@ RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_FUNC_TEMPLATE
             CPP_assert(std::is_same<span<int, 5>, decltype(s)>::value);
         }
         {
-#ifdef RANGES_WORKAROUND_MSVC_401490
-            span s{ranges::data(arr), ranges::distance(arr)};
-#else // ^^^ workaround ^^^ / vvv no workaround vvv
             span s{ranges::data(arr), ranges::size(arr)};
-#endif // RANGES_WORKAROUND_MSVC_401490
             CPP_assert(std::is_same<span<int>, decltype(s)>::value);
         }
         {
