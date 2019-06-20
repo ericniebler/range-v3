@@ -1,7 +1,7 @@
 /// \file
 // Range v3 library
 //
-//  Copyright Eric Niebler 2013-present
+//  Copyright Barry Revzin 2019-present
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -11,8 +11,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGES_V3_VIEW_WHEN_COMMON_HPP
-#define RANGES_V3_VIEW_WHEN_COMMON_HPP
+#ifndef RANGES_V3_DETAIL_DELIMITER_SPECIFIER_HPP
+#define RANGES_V3_DETAIL_DELIMITER_SPECIFIER_HPP
 
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -23,7 +23,7 @@ namespace ranges
     namespace detail
     {
         template<typename Pred>
-        struct predicate_pred
+        struct delimiter_specifier
         {
             semiregular_t<Pred> pred_;
 

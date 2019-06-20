@@ -733,6 +733,8 @@ provides, and a blurb about how each is intended to be used.
   <DD>Given a source range and a value, filter out those elements that do not equal value.</DD>
 <DT>\link ranges::view::remove_if_fn `view::remove_if`\endlink</DT>
   <DD>Given a source range and a unary predicate, filter out those elements that do not satisfy the predicate. (For users of Boost.Range, this is like the `filter` adaptor with the predicate negated.)</DD>
+<DT>\link ranges::view::remove_when_fn `view::remove_when`\endlink</DT>
+  <DD>Given a source range and a delimiter specifier, filter out those elements specified by the delimiter specifier. The delimiter specifier can be a predicate or a function. The predicate should take a single argument of the range's reference type and return `true` if and only if the element is part of a delimiter. The function should accept an iterator and sentinel indicating the current position and end of the source range and return `std::make_pair(true, iterator_past_the_delimiter)` if the current position is a boundary; otherwise `std::make_pair(false, ignored_iterator_value)`.</DD>
 <DT>\link ranges::view::repeat_fn `view::repeat`\endlink</DT>
   <DD>Given a value, create a range that is that value repeated infinitely.</DD>
 <DT>\link ranges::view::repeat_n_fn `view::repeat_n`\endlink</DT>

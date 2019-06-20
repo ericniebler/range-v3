@@ -1,7 +1,7 @@
 /// \file
 // Range v3 library
 //
-//  Copyright Eric Niebler 2013-present
+//  Copyright Barry Revzin 2019-present
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -32,7 +32,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
-#include <range/v3/view/when_common.hpp>
+#include <range/v3/detail/delimiter_specifier.hpp>
 
 RANGES_DISABLE_WARNINGS
 
@@ -40,16 +40,16 @@ namespace ranges
 {
     /// \addtogroup group-views
     /// @{
-    template<typename Rng, typename Pred>
+    template<typename Rng, typename Fun>
     struct RANGES_EMPTY_BASES remove_when_view
-      : view_adaptor<remove_when_view<Rng, Pred>, Rng,
+      : view_adaptor<remove_when_view<Rng, Fun>, Rng,
                      is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
-      , private box<semiregular_t<Pred>>
+      , private box<semiregular_t<Fun>>
     {
         remove_when_view() = default;
-        constexpr remove_when_view(Rng rng, Pred pred)
+        constexpr remove_when_view(Rng rng, Fun fun)
           : remove_when_view::view_adaptor{detail::move(rng)}
-          , remove_when_view::box(detail::move(pred))
+          , remove_when_view::box(detail::move(fun))
         {}
 
     private:
@@ -98,10 +98,10 @@ namespace ranges
             }
 
             auto const last = ranges::end(this->base());
-            auto & pred = this->remove_when_view::box::get();
+            auto & fun = this->remove_when_view::box::get();
             if(it != last)
             {
-                auto p = invoke(pred, it, last);
+                auto p = invoke(fun, it, last);
                 if(p.first)
                 {
                     zero_ = (it == p.second);
@@ -124,35 +124,33 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Pred)(requires CopyConstructible<Pred>)
-        remove_when_view(Rng &&, Pred)
-            ->remove_when_view<view::all_t<Rng>, Pred>;
+    CPP_template(typename Rng, typename Fun)(requires CopyConstructible<Fun>)
+        remove_when_view(Rng &&, Fun)
+            ->remove_when_view<view::all_t<Rng>, Fun>;
 #endif
 
     namespace view
     {
-        /// Given a source range, unary predicate, and optional projection,
-        /// present a view of the elements that do not satisfy the predicate.
         struct remove_when_fn
         {
         private:
             friend view_access;
-            template<typename Pred>
-            static auto bind(remove_when_fn remove_when, Pred && pred)
+            template<typename Fun>
+            static auto bind(remove_when_fn remove_when, Fun && fun)
             {
                 return make_pipeable(std::bind(
-                    remove_when, std::placeholders::_1, static_cast<Pred &&>(pred)));
+                    remove_when, std::placeholders::_1, static_cast<Fun &&>(fun)));
             }
 
         public:
-            template<typename Rng, typename Pred>
-            constexpr auto operator()(Rng && rng, Pred pred) const
-                -> CPP_ret(remove_when_view<all_t<Rng>, detail::predicate_pred<Pred>>)( //
+            template<typename Rng, typename Fun>
+            constexpr auto operator()(Rng && rng, Fun fun) const
+                -> CPP_ret(remove_when_view<all_t<Rng>, detail::delimiter_specifier<Fun>>)( //
                     requires ViewableRange<Rng> && InputRange<Rng> && Predicate<
-                        Pred const &, range_reference_t<Rng>> && CopyConstructible<Pred>)
+                        Fun const &, range_reference_t<Rng>> && CopyConstructible<Fun>)
             {
                 return {all(static_cast<Rng &&>(rng)),
-                        detail::predicate_pred<Pred>{std::move(pred)}};
+                        detail::delimiter_specifier<Fun>{std::move(fun)}};
             }
             template<typename Rng, typename Fun>
             auto operator()(Rng && rng, Fun fun) const -> CPP_ret(

@@ -34,7 +34,7 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/take_while.hpp>
 #include <range/v3/view/view.hpp>
-#include <range/v3/view/when_common.hpp>
+#include <range/v3/detail/delimiter_specifier.hpp>
 
 namespace ranges
 {
@@ -184,12 +184,12 @@ namespace ranges
             }
             template<typename Rng, typename Fun>
             auto operator()(Rng && rng, Fun fun) const
-                -> CPP_ret(split_when_view<all_t<Rng>, detail::predicate_pred<Fun>>)( //
+                -> CPP_ret(split_when_view<all_t<Rng>, detail::delimiter_specifier<Fun>>)( //
                     requires ViewableRange<Rng> && ForwardRange<Rng> && Predicate<
                         Fun const &, range_reference_t<Rng>> && CopyConstructible<Fun>)
             {
                 return {all(static_cast<Rng &&>(rng)),
-                        detail::predicate_pred<Fun>{std::move(fun)}};
+                        detail::delimiter_specifier<Fun>{std::move(fun)}};
             }
         };
 
