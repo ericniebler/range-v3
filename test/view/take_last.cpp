@@ -1,6 +1,6 @@
 // Range v3 library
 //
-//  Copyright Eric Niebler 2014-present
+//  Copyright Barry Revzin 2019-present
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
