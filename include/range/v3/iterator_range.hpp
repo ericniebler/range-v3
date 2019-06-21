@@ -293,7 +293,7 @@ namespace ranges
             template<std::size_t N>
             friend constexpr auto get(sized_iterator_range const & p) noexcept
             -> CPP_ret(size_type)( //
-                requires N == 2)
+                requires (N == 2))
         {
             return p.size();
         }
