@@ -42,7 +42,7 @@ void test_defaults()
 
          auto r1 = istream<char>(long_stream);
          auto r2 = istream<char>(short_stream);
-         CHECK(not starts_with(begin(r2), end(r2), begin(r1), end(r1)));
+         CHECK(!starts_with(begin(r2), end(r2), begin(r1), end(r1)));
       }
       {
          auto long_stream = std::istringstream{full_latin_alphabet};
@@ -52,7 +52,7 @@ void test_defaults()
       {
          auto long_stream = std::istringstream{full_latin_alphabet};
          auto short_stream = std::istringstream{partial_latin_alphabet};
-         CHECK(not starts_with(istream<char>(short_stream), istream<char>(long_stream)));
+         CHECK(!starts_with(istream<char>(short_stream), istream<char>(long_stream)));
       }
    }
    { // checks starts_with works for random-access ranges
@@ -67,8 +67,8 @@ void test_defaults()
       CHECK(starts_with(begin(long_range), end(long_range), begin(short_range), end(short_range)));
       CHECK(starts_with(long_range, short_range));
 
-      CHECK(not starts_with(begin(short_range), end(short_range), begin(long_range), end(long_range)));
-      CHECK(not starts_with(short_range, long_range));
+      CHECK(!starts_with(begin(short_range), end(short_range), begin(long_range), end(long_range)));
+      CHECK(!starts_with(short_range, long_range));
    }
    { // checks starts_with works for random-access ranges with arbitrary sentinels
       auto const long_range = view::iota(0);
@@ -77,8 +77,8 @@ void test_defaults()
       CHECK(starts_with(begin(long_range), end(long_range), begin(short_range), end(short_range)));
       CHECK(starts_with(long_range, short_range));
 
-      CHECK(not starts_with(begin(short_range), end(short_range), begin(long_range), end(long_range)));
-      CHECK(not starts_with(short_range, long_range));
+      CHECK(!starts_with(begin(short_range), end(short_range), begin(long_range), end(long_range)));
+      CHECK(!starts_with(short_range, long_range));
    }
    { // checks starts_with identifies a subrange
       auto const range = view::iota(0) | view::slice(50, 100);
@@ -94,11 +94,11 @@ void test_defaults()
       auto const first = view::iota(0, 1'000);
       auto const second = view::iota(10, 1'000);
 
-      CHECK(not starts_with(begin(first), end(first), begin(second), end(second)));
-      CHECK(not starts_with(first, second));
+      CHECK(!starts_with(begin(first), end(first), begin(second), end(second)));
+      CHECK(!starts_with(first, second));
 
-      CHECK(not starts_with(begin(second), end(second), begin(first), end(first)));
-      CHECK(not starts_with(second, first));
+      CHECK(!starts_with(begin(second), end(second), begin(first), end(first)));
+      CHECK(!starts_with(second, first));
    }
 }
 
@@ -111,9 +111,9 @@ void test_comparison()
       less{}));
    CHECK(starts_with(long_range, short_range, less{}));
 
-   CHECK(not starts_with(begin(long_range), end(long_range), begin(short_range), end(short_range),
+   CHECK(!starts_with(begin(long_range), end(long_range), begin(short_range), end(short_range),
       greater{}));
-   CHECK(not starts_with(long_range, short_range, greater{}));
+   CHECK(!starts_with(long_range, short_range, greater{}));
 }
 
 int main()

@@ -40,7 +40,7 @@ CPP_def
 struct check_equal_fn
 {
     CPP_template(typename T, typename U)(
-        requires (not BothRanges<T, U>))
+        requires (!BothRanges<T, U>))
     void operator()(T &&actual, U &&expected) const
     {
         CHECK((T &&) actual == (U &&) expected);

@@ -242,7 +242,7 @@ constexpr bool is_regular(T&&)
 }
 
 CPP_template(class T)
-    (requires (not concepts::Regular<T>))
+    (requires (!concepts::Regular<T>))
 constexpr bool is_regular(T&&)
 {
     return false;
