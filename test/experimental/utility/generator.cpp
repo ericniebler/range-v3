@@ -72,10 +72,10 @@ private:
     }
 public:
     CPP_template(typename Rng)(
-        requires
-            not meta::is<ranges::uncvref_t<Rng>, ranges::experimental::generator>::value &&
-            not meta::is<ranges::uncvref_t<Rng>, ranges::experimental::sized_generator>::value &&
-            CoroConcept<Rng>)
+        requires (
+            !meta::is<ranges::uncvref_t<Rng>, ranges::experimental::generator>::value &&
+            !meta::is<ranges::uncvref_t<Rng>, ranges::experimental::sized_generator>::value &&
+            CoroConcept<Rng>))
     generator_for<ranges::view::all_t<Rng>> operator()(Rng &&rng) const
     {
         return impl(ranges::view::all(static_cast<Rng &&>(rng)));
