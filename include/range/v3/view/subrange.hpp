@@ -275,7 +275,7 @@ namespace ranges
         template<typename R>
         constexpr CPP_ctor(subrange)(R && r, size_type n)(
             requires detail::RangeConvertibleTo_<R, I, S> &&
-                True<K == subrange_kind::sized>)
+                (K == subrange_kind::sized))
           : subrange{ranges::begin(r), ranges::end(r), n}
         {
             if(RANGES_CONSTEXPR_IF((bool)SizedRange<R>))
