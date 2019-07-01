@@ -28,7 +28,7 @@ int main()
 
     auto rng0 = rgi | view::take(6);
     has_type<int &>(*begin(rng0));
-    models<BoundedViewConcept>(aux::copy(rng0));
+    models<CommonViewConcept>(aux::copy(rng0));
     models<SizedViewConcept>(aux::copy(rng0));
     models<RandomAccessIteratorConcept>(begin(rng0));
     models<RangeConcept>(detail::as_const(rng0));
@@ -37,7 +37,7 @@ int main()
 
     auto rng0b = rgi | view::take(20);
     has_type<int &>(*begin(rng0b));
-    models<BoundedViewConcept>(aux::copy(rng0b));
+    models<CommonViewConcept>(aux::copy(rng0b));
     models<SizedViewConcept>(aux::copy(rng0b));
     models<RandomAccessIteratorConcept>(begin(rng0b));
     models<RangeConcept>(detail::as_const(rng0b));
@@ -46,7 +46,7 @@ int main()
 
     auto rng1 = rng0 | view::reverse;
     has_type<int &>(*begin(rng1));
-    models<BoundedViewConcept>(aux::copy(rng1));
+    models<CommonViewConcept>(aux::copy(rng1));
     models<SizedViewConcept>(aux::copy(rng1));
     models<RandomAccessIteratorConcept>(begin(rng1));
     models<RangeConcept>(detail::as_const(rng1));
@@ -55,7 +55,7 @@ int main()
     std::vector<int> v{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     auto rng2 = v | view::take(6) | view::reverse;
     has_type<int &>(*begin(rng2));
-    models<BoundedViewConcept>(aux::copy(rng2));
+    models<CommonViewConcept>(aux::copy(rng2));
     models<SizedViewConcept>(aux::copy(rng2));
     models<RandomAccessIteratorConcept>(begin(rng2));
     models<RangeConcept>(detail::as_const(rng2));
@@ -65,7 +65,7 @@ int main()
     auto rng3 = l | view::take(6);
     has_type<int &>(*begin(rng3));
     models<ViewConcept>(aux::copy(rng3));
-    models_not<BoundedViewConcept>(aux::copy(rng3));
+    models_not<CommonViewConcept>(aux::copy(rng3));
     models<SizedViewConcept>(aux::copy(rng3));
     models<BidirectionalIteratorConcept>(begin(rng3));
     models_not<RandomAccessIteratorConcept>(begin(rng3));
@@ -76,7 +76,7 @@ int main()
     auto rng3b = l | view::take(20);
     has_type<int &>(*begin(rng3b));
     models<ViewConcept>(aux::copy(rng3b));
-    models_not<BoundedViewConcept>(aux::copy(rng3b));
+    models_not<CommonViewConcept>(aux::copy(rng3b));
     models<SizedViewConcept>(aux::copy(rng3b));
     models<BidirectionalIteratorConcept>(begin(rng3b));
     models_not<RandomAccessIteratorConcept>(begin(rng3b));
@@ -85,7 +85,7 @@ int main()
     CHECK(size(rng3b) == 11u);
 
     auto rng4 = view::iota(10) | view::take(10);
-    models_not<BoundedViewConcept>(aux::copy(rng4));
+    models_not<CommonViewConcept>(aux::copy(rng4));
     models<SizedViewConcept>(aux::copy(rng4));
     models<RangeConcept>(detail::as_const(rng4));
     static_assert(!ranges::is_infinite<decltype(rng4)>::value, "");
@@ -93,7 +93,7 @@ int main()
     CHECK(size(rng4) == 10u);
 
     auto rng5 = view::iota(10) | view::take(10) | view::reverse;
-    models<BoundedViewConcept>(aux::copy(rng5));
+    models<CommonViewConcept>(aux::copy(rng5));
     models<SizedViewConcept>(aux::copy(rng5));
     models_not<RangeConcept>(detail::as_const(rng5));
     static_assert(!ranges::is_infinite<decltype(rng5)>::value, "");
@@ -106,7 +106,7 @@ int main()
 
     auto rng6 = c_str | view::take(5);
     models<RandomAccessRangeConcept>(rng6);
-    models_not<BoundedViewConcept>(aux::copy(rng6));
+    models_not<CommonViewConcept>(aux::copy(rng6));
     models_not<SizedViewConcept>(aux::copy(rng6));
     models<RangeConcept>(detail::as_const(rng6));
     check_equal(rng6, {'h','e','l','l','o'});
@@ -116,20 +116,20 @@ int main()
 
     subrange<std::list<int>::iterator> rl{l.begin(), l.end()};
     models<BidirectionalRangeConcept>(rl);
-    models<BoundedViewConcept>(aux::copy(rl));
+    models<CommonViewConcept>(aux::copy(rl));
     models_not<SizedViewConcept>(aux::copy(rl));
     models<RangeConcept>(detail::as_const(rl));
 
     auto rng8 = rl | view::take(5);
     models<BidirectionalRangeConcept>(rng8);
-    models_not<BoundedViewConcept>(aux::copy(rng8));
+    models_not<CommonViewConcept>(aux::copy(rng8));
     models_not<SizedViewConcept>(aux::copy(rng8));
     models<RangeConcept>(detail::as_const(rng8));
     check_equal(rng8, {0, 1, 2, 3, 4});
 
     auto rng9 = rl | view::take(20);
     models<BidirectionalRangeConcept>(rng9);
-    models_not<BoundedViewConcept>(aux::copy(rng9));
+    models_not<CommonViewConcept>(aux::copy(rng9));
     models_not<SizedViewConcept>(aux::copy(rng9));
     models<RangeConcept>(detail::as_const(rng9));
     check_equal(rng9, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10});

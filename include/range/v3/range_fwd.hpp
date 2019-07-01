@@ -658,7 +658,7 @@ namespace ranges
         struct is_random_access_common_;
 
         template<typename Rng,
-                 bool IsRandomAccessBounded = is_random_access_common_<Rng>::value>
+                 bool IsRandomAccessCommon = is_random_access_common_<Rng>::value>
         struct take_exactly_view_;
     } // namespace detail
     /// \endcond

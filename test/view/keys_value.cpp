@@ -30,7 +30,7 @@ int main()
     auto && keys = m | view::keys;
     has_type<std::string const &>(*begin(keys));
     models<SizedViewConcept>(aux::copy(keys));
-    models<BoundedViewConcept>(aux::copy(keys));
+    models<CommonViewConcept>(aux::copy(keys));
     models<BidirectionalIteratorConcept>(begin(keys));
     CHECK(&*begin(keys) == &m.begin()->first);
     ::check_equal(keys, {"other", "that", "this"});
@@ -38,7 +38,7 @@ int main()
     auto && values = m | view::values;
     has_type<int &>(*begin(values));
     models<SizedViewConcept>(aux::copy(values));
-    models<BoundedViewConcept>(aux::copy(values));
+    models<CommonViewConcept>(aux::copy(values));
     models<BidirectionalIteratorConcept>(begin(values));
     CHECK(&*begin(values) == &m.begin()->second);
     ::check_equal(values, {2, 1, 0});

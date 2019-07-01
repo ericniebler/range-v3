@@ -35,14 +35,14 @@ int main()
     has_type<int const &>(*begin(rng));
     models<ViewConcept>(aux::copy(rng));
     models_not<SizedViewConcept>(aux::copy(rng));
-    models_not<BoundedViewConcept>(aux::copy(rng));
+    models_not<CommonViewConcept>(aux::copy(rng));
     models<InputIteratorConcept>(begin(rng));
     models_not<ForwardIteratorConcept>(begin(rng));
 
     auto && tmp = rng | view::common;
     CPP_assert(Same<range_value_t<decltype((tmp))>, int>);
     has_type<int const &>(*begin(tmp));
-    models<BoundedViewConcept>(aux::copy(tmp));
+    models<CommonViewConcept>(aux::copy(tmp));
     models_not<SizedViewConcept>(aux::copy(tmp));
     models<InputIteratorConcept>(begin(tmp));
     models_not<ForwardIteratorConcept>(begin(tmp));
@@ -56,7 +56,7 @@ int main()
     has_type<int const &>(iter_move(begin(rng2)));
     models<ViewConcept>(aux::copy(rng2));
     models<SizedViewConcept>(aux::copy(rng2));
-    models<BoundedViewConcept>(aux::copy(rng2));
+    models<CommonViewConcept>(aux::copy(rng2));
     models<RandomAccessIteratorConcept>(begin(rng2));
     ::check_equal(rng2, {1,2,3,4,42,6,7,8,9});
 
@@ -67,7 +67,7 @@ int main()
     has_type<int const &>(iter_move(begin(rng3)));
     models<ViewConcept>(aux::copy(rng3));
     models<SizedViewConcept>(aux::copy(rng3));
-    models<BoundedViewConcept>(aux::copy(rng3));
+    models<CommonViewConcept>(aux::copy(rng3));
     models<RandomAccessIteratorConcept>(begin(rng3));
     ::check_equal(rng3, {1,2,3,4,42,6,7,8,9});
 
@@ -77,7 +77,7 @@ int main()
     has_type<int>(iter_move(begin(rng4)));
     models<ViewConcept>(aux::copy(rng4));
     models<SizedViewConcept>(aux::copy(rng4));
-    models_not<BoundedViewConcept>(aux::copy(rng4));
+    models_not<CommonViewConcept>(aux::copy(rng4));
     models<RandomAccessIteratorConcept>(begin(rng4));
     ::check_equal(rng4, {0,1,2,3,4,42,6,7,8,9});
 

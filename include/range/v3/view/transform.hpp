@@ -334,8 +334,8 @@ namespace ranges
 
         template<bool Const>
         using end_cursor_t =
-            meta::if_c<BoundedRange<meta::const_if_c<Const, Rng1>> &&
-                           BoundedRange<meta::const_if_c<Const, Rng2>> &&
+            meta::if_c<CommonRange<meta::const_if_c<Const, Rng1>> &&
+                           CommonRange<meta::const_if_c<Const, Rng2>> &&
                            !SinglePass<iterator_t<meta::const_if_c<Const, Rng1>>> &&
                            !SinglePass<iterator_t<meta::const_if_c<Const, Rng2>>>,
                        cursor<Const>, sentinel<Const>>;

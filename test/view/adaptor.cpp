@@ -138,7 +138,7 @@ int main()
     using namespace ranges;
     std::vector<int> v{1, 2, 3, 4};
     my_reverse_view<std::vector<int>&> retro{v};
-    ::models<BoundedViewConcept>(aux::copy(retro));
+    ::models<CommonViewConcept>(aux::copy(retro));
     ::models<RandomAccessIteratorConcept>(retro.begin());
     ::check_equal(retro, {4, 3, 2, 1});
 
@@ -149,7 +149,7 @@ int main()
 
     std::list<int> l{1, 2, 3, 4};
     my_reverse_view<std::list<int>& > retro2{l};
-    ::models<BoundedViewConcept>(aux::copy(retro2));
+    ::models<CommonViewConcept>(aux::copy(retro2));
     ::models<BidirectionalIteratorConcept>(retro2.begin());
     ::models_not<RandomAccessIteratorConcept>(retro2.begin());
     ::check_equal(retro2, {4, 3, 2, 1});
@@ -157,7 +157,7 @@ int main()
     std::stringstream sinx("1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 42 6 7 8 9 ");
     my_delimited_range r{view::delimit(istream<int>(sinx), 42)};
     ::models<ViewConcept>(aux::copy(r));
-    ::models_not<BoundedViewConcept>(aux::copy(r));
+    ::models_not<CommonViewConcept>(aux::copy(r));
     ::models<InputIteratorConcept>(r.begin());
     ::models_not<ForwardIteratorConcept>(r.begin());
     ::check_equal(r, {1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4});

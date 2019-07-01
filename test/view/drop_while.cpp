@@ -35,7 +35,7 @@ int main()
     auto rng0 = view::iota(10) | view::drop_while([](int i) { return i < 25; });
     CPP_assert(range_cardinality<decltype(rng0)>::value == unknown);
     ::models<RandomAccessViewConcept>(aux::copy(rng0));
-    ::models_not<BoundedViewConcept>(aux::copy(rng0));
+    ::models_not<CommonViewConcept>(aux::copy(rng0));
     ::models<RandomAccessIteratorConcept>(rng0.begin());
     auto b = rng0.begin();
     CHECK(*b == 25);
@@ -46,7 +46,7 @@ int main()
     auto rng1 = vi | view::drop_while([](int i) { return i != 50; });
     CPP_assert(range_cardinality<decltype(rng1)>::value == ranges::finite);
     ::models<BidirectionalViewConcept>(aux::copy(rng1));
-    ::models<BoundedViewConcept>(aux::copy(rng1));
+    ::models<CommonViewConcept>(aux::copy(rng1));
     ::models<BidirectionalIteratorConcept>(rng1.begin());
     CHECK(rng1.begin() == rng1.end());
 

@@ -51,7 +51,7 @@ int main()
 
         models<ForwardViewConcept>(aux::copy(res));
         models_not<RandomAccessViewConcept>(aux::copy(res));
-        models_not<BoundedViewConcept>(aux::copy(res));
+        models_not<CommonViewConcept>(aux::copy(res));
 
         using R = decltype(res);
 
@@ -72,7 +72,7 @@ int main()
 
         models<ForwardViewConcept>(aux::copy(res));
         models_not<RandomAccessViewConcept>(aux::copy(res));
-        models_not<BoundedViewConcept>(aux::copy(res));
+        models_not<CommonViewConcept>(aux::copy(res));
 
         using R = decltype(res);
 
@@ -91,7 +91,7 @@ int main()
 
         models<ForwardViewConcept>(aux::copy(res));
         models_not<RandomAccessViewConcept>(aux::copy(res));
-        models_not<BoundedViewConcept>(aux::copy(res));
+        models_not<CommonViewConcept>(aux::copy(res));
 
         using R = decltype(res);
 
@@ -107,7 +107,7 @@ int main()
 
         models<ForwardViewConcept>(aux::copy(res2));
         models_not<RandomAccessViewConcept>(aux::copy(res2));
-        models_not<BoundedViewConcept>(aux::copy(res2));
+        models_not<CommonViewConcept>(aux::copy(res2));
 
         using R2 = decltype(res2);
 

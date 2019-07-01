@@ -60,7 +60,7 @@ int main()
     auto && rng = rgi | view::remove_if(is_even());
     has_type<int &>(*begin(rgi));
     has_type<int &>(*begin(rng));
-    models<BoundedViewConcept>(aux::copy(rng));
+    models<CommonViewConcept>(aux::copy(rng));
     models_not<SizedViewConcept>(aux::copy(rng));
     models<BidirectionalViewConcept>(aux::copy(rng));
     models_not<RandomAccessViewConcept>(aux::copy(rng));
@@ -73,7 +73,7 @@ int main()
     has_type<int &>(*begin(rng2));
     models<BidirectionalViewConcept>(aux::copy(rng2));
     models_not<RandomAccessViewConcept>(aux::copy(rng2));
-    models<BoundedViewConcept>(aux::copy(rng2));
+    models<CommonViewConcept>(aux::copy(rng2));
     models_not<SizedViewConcept>(aux::copy(rng2));
     ::check_equal(rng2, {1,3,5,7,9});
     CHECK(&*begin(rng2) == &rgi[0]);
@@ -82,7 +82,7 @@ int main()
     has_type<int &>(*begin(rng3));
     models<BidirectionalViewConcept>(aux::copy(rng3));
     models_not<RandomAccessViewConcept>(aux::copy(rng3));
-    models_not<BoundedViewConcept>(aux::copy(rng3));
+    models_not<CommonViewConcept>(aux::copy(rng3));
     models_not<SizedViewConcept>(aux::copy(rng3));
     ::check_equal(rng3, {1,3,5,7,9});
     CHECK(&*begin(rng3) == &rgi[0]);

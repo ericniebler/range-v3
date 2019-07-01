@@ -79,7 +79,7 @@ int main()
         CHECK(list_view.size() == 3u);
         has_type<int &>(*begin(list_view));
         ::models<SizedRangeConcept>(list_view);
-        ::models<BoundedRangeConcept>(list_view);
+        ::models<CommonRangeConcept>(list_view);
         ::models<BidirectionalRangeConcept>(list_view);
         ::models_not<RandomAccessRangeConcept>(list_view);
 
@@ -95,7 +95,7 @@ int main()
         CHECK(vec_view.size() == 3u);
         has_type<int &>(*begin(vec_view));
         ::models<SizedRangeConcept>(vec_view);
-        ::models<BoundedRangeConcept>(vec_view);
+        ::models<CommonRangeConcept>(vec_view);
         ::models<RandomAccessRangeConcept>(vec_view);
         CHECK(vec_view[0] == 1);
         CHECK(vec_view[1] == 2);

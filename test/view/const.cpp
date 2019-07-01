@@ -31,7 +31,7 @@ int main()
     has_type<int &>(*begin(rgi));
     has_type<int const &>(*begin(rng));
     CPP_assert(Same<range_rvalue_reference_t<decltype(rng)>, int const &&>);
-    models<BoundedViewConcept>(aux::copy(rng));
+    models<CommonViewConcept>(aux::copy(rng));
     models<SizedViewConcept>(aux::copy(rng));
     models<RandomAccessViewConcept>(aux::copy(rng));
     ::check_equal(rng, {1, 2, 3, 4});
@@ -43,7 +43,7 @@ int main()
     CPP_assert(Same<range_rvalue_reference_t<decltype(rng2)>, int const &&>);
     models<ForwardViewConcept>(aux::copy(rng2));
     models_not<BidirectionalViewConcept>(aux::copy(rng2));
-    models_not<BoundedViewConcept>(aux::copy(rng2));
+    models_not<CommonViewConcept>(aux::copy(rng2));
     models<SizedViewConcept>(aux::copy(rng2));
     ::check_equal(rng2, {1, 2, 3, 4});
     CHECK(&*begin(rng2) == &rgi[0]);
@@ -56,7 +56,7 @@ int main()
     has_type<common_pair<int const &, int const &>>(*begin(rng3));
     has_type<common_pair<int const &&, int const &&>>(iter_move(begin(rng3)));
     models<RandomAccessViewConcept>(aux::copy(rng3));
-    models<BoundedViewConcept>(aux::copy(rng3));
+    models<CommonViewConcept>(aux::copy(rng3));
     models<SizedViewConcept>(aux::copy(rng3));
     using P = std::pair<int,int>;
     ::check_equal(rng3, {P{1,1}, P{2,2}, P{3,3}, P{4,4}});
@@ -70,7 +70,7 @@ int main()
     has_type<common_pair<int const &&, int const &&>>(*begin(rng4));
     has_type<common_pair<int const &&, int const &&>>(iter_move(begin(rng4)));
     models<RandomAccessViewConcept>(aux::copy(rng4));
-    models<BoundedViewConcept>(aux::copy(rng4));
+    models<CommonViewConcept>(aux::copy(rng4));
     models<SizedViewConcept>(aux::copy(rng4));
     using P = std::pair<int,int>;
     ::check_equal(rng4, {P{1,1}, P{2,2}, P{3,3}, P{4,4}});

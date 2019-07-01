@@ -44,7 +44,7 @@ int main()
         using V = std::tuple<int, std::string, std::string>;
         auto && rng = view::zip(vi, vs, istream<std::string>(str) | view::common);
         using Rng = decltype((rng));
-        ::models_not<BoundedViewConcept>(aux::copy(rng));
+        ::models_not<CommonViewConcept>(aux::copy(rng));
         ::models_not<SizedViewConcept>(aux::copy(rng));
         CPP_assert(Same<
             range_value_t<Rng>,
@@ -73,7 +73,7 @@ int main()
         auto && rng = view::zip(vi, vs, istream<std::string>(str));
         ::models<ViewConcept>(aux::copy(rng));
         ::models_not<SizedViewConcept>(aux::copy(rng));
-        ::models_not<BoundedViewConcept>(aux::copy(rng));
+        ::models_not<CommonViewConcept>(aux::copy(rng));
         ::models<InputIteratorConcept>(begin(rng));
         ::models_not<ForwardIteratorConcept>(begin(rng));
         std::vector<V> expected;
@@ -87,7 +87,7 @@ int main()
     auto rnd_rng = view::zip(vi, vs);
     using Ref = range_reference_t<decltype(rnd_rng)>;
     static_assert(std::is_same<Ref, common_pair<int &,std::string const &>>::value, "");
-    ::models<BoundedViewConcept>(aux::copy(rnd_rng));
+    ::models<CommonViewConcept>(aux::copy(rnd_rng));
     ::models<SizedViewConcept>(aux::copy(rnd_rng));
     ::models<RandomAccessIteratorConcept>(begin(rnd_rng));
     auto tmp = cbegin(rnd_rng) + 3;
@@ -199,7 +199,7 @@ int main()
         std::unique_ptr<int> rg1[10], rg2[10];
         auto rg3 = rg2 | view::take_while([](std::unique_ptr<int> &){return true;});
         auto x = view::zip(rg1, rg3);
-        ::models_not<BoundedRangeConcept>(x);
+        ::models_not<CommonRangeConcept>(x);
         auto y = x | view::common;
         std::pair<std::unique_ptr<int>, std::unique_ptr<int>> p = iter_move(y.begin());
         auto it = x.begin();

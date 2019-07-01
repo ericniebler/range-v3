@@ -31,7 +31,7 @@ int main()
 
     auto rng0 = rgi | view::drop_exactly(6);
     has_type<int &>(*begin(rng0));
-    models<BoundedViewConcept>(aux::copy(rng0));
+    models<CommonViewConcept>(aux::copy(rng0));
     models<SizedViewConcept>(aux::copy(rng0));
     models<RandomAccessIteratorConcept>(begin(rng0));
     ::check_equal(rng0, {6, 7, 8, 9, 10});
@@ -39,7 +39,7 @@ int main()
 
     auto rng1 = rng0 | view::reverse;
     has_type<int &>(*begin(rng1));
-    models<BoundedViewConcept>(aux::copy(rng1));
+    models<CommonViewConcept>(aux::copy(rng1));
     models<SizedViewConcept>(aux::copy(rng1));
     models<RandomAccessIteratorConcept>(begin(rng1));
     ::check_equal(rng1, {10, 9, 8, 7, 6});
@@ -47,7 +47,7 @@ int main()
     std::vector<int> v{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     auto rng2 = v | view::drop_exactly(6) | view::reverse;
     has_type<int &>(*begin(rng2));
-    models<BoundedViewConcept>(aux::copy(rng2));
+    models<CommonViewConcept>(aux::copy(rng2));
     models<SizedViewConcept>(aux::copy(rng2));
     models<RandomAccessIteratorConcept>(begin(rng2));
     ::check_equal(rng2, {10, 9, 8, 7, 6});
@@ -55,7 +55,7 @@ int main()
     std::list<int> l{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     auto rng3 = l | view::drop_exactly(6);
     has_type<int &>(*begin(rng3));
-    models<BoundedViewConcept>(aux::copy(rng3));
+    models<CommonViewConcept>(aux::copy(rng3));
     models<SizedViewConcept>(aux::copy(rng3));
     models<BidirectionalIteratorConcept>(begin(rng3));
     models_not<RandomAccessIteratorConcept>(begin(rng3));
@@ -63,7 +63,7 @@ int main()
 
     auto rng4 = view::iota(10) | view::drop_exactly(10);
     ::models<ViewConcept>(aux::copy(rng4));
-    ::models_not<BoundedViewConcept>(aux::copy(rng4));
+    ::models_not<CommonViewConcept>(aux::copy(rng4));
     ::models_not<SizedViewConcept>(aux::copy(rng4));
     static_assert(ranges::is_infinite<decltype(rng4)>::value, "");
     auto b = ranges::begin(rng4);
@@ -71,7 +71,7 @@ int main()
     CHECK(*(b+1) == 21);
 
     auto rng5 = view::iota(10) | view::drop_exactly(10) | view::take(10) | view::reverse;
-    ::models<BoundedViewConcept>(aux::copy(rng5));
+    ::models<CommonViewConcept>(aux::copy(rng5));
     ::models<SizedViewConcept>(aux::copy(rng5));
     static_assert(!ranges::is_infinite<decltype(rng5)>::value, "");
     ::check_equal(rng5, {29, 28, 27, 26, 25, 24, 23, 22, 21, 20});

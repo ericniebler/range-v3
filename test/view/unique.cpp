@@ -66,7 +66,7 @@ int main()
         has_type<int &>(*begin(rng));
         models<BidirectionalViewConcept>(aux::copy(rng));
         models_not<RandomAccessRangeConcept>(rng);
-        models<BoundedRangeConcept>(rng);
+        models<CommonRangeConcept>(rng);
         models_not<SizedRangeConcept>(rng);
         CPP_assert(Range<decltype(rng) const>);
         copy(rng, ranges::back_inserter(out));
@@ -80,7 +80,7 @@ int main()
         has_type<ci_string &>(*begin(rng));
         models<BidirectionalViewConcept>(aux::copy(rng));
         models_not<RandomAccessRangeConcept>(rng);
-        models<BoundedRangeConcept>(rng);
+        models<CommonRangeConcept>(rng);
         models_not<SizedRangeConcept>(rng);
         CPP_assert(Range<decltype(rng) const>);
         auto fs = rng | view::transform([](ci_string s){return std::string(s.data(), s.size());});
@@ -99,7 +99,7 @@ int main()
         auto rng = rng0 | view::unique(equal_to{});
         models<BidirectionalViewConcept>(aux::copy(rng));
         models_not<RandomAccessRangeConcept>(rng);
-        models<BoundedRangeConcept>(rng);
+        models<CommonRangeConcept>(rng);
         models_not<SizedRangeConcept>(rng);
         ::check_equal(rng, {4, 3, 2, 1});
     }
@@ -120,7 +120,7 @@ int main()
         has_type<std::string &>(*begin(rng));
         models<BidirectionalViewConcept>(aux::copy(rng));
         models_not<RandomAccessRangeConcept>(rng);
-        models<BoundedRangeConcept>(rng);
+        models<CommonRangeConcept>(rng);
         models_not<SizedRangeConcept>(rng);
         CPP_assert(Range<decltype(rng) const>);
         models<BidirectionalViewConcept>(aux::copy(rng));
@@ -139,7 +139,7 @@ int main()
                         | view::transform([](const int& n){ return n > 0 ? n: -n;});
         models<BidirectionalViewConcept>(aux::copy(rng));
         models_not<RandomAccessRangeConcept>(rng);
-        models<BoundedRangeConcept>(rng);
+        models<CommonRangeConcept>(rng);
         models_not<SizedRangeConcept>(rng);
         ::check_equal(rng, {4, 3, 2, 1});
     }
