@@ -75,7 +75,7 @@ namespace ranges
             explicit operator bool() const = delete;
         };
         // Default implementations
-        view_as_cursor begin_cursor() const
+        constexpr view_as_cursor begin_cursor() const
         {
             return view_as_cursor{derived()};
         }
@@ -91,14 +91,14 @@ namespace ranges
         /// `b`.
         /// \return `ranges::basic_iterator<B>(b)`
         template<typename D = Derived>
-        auto begin() -> CPP_ret(detail::facade_iterator_t<D>)( //
+        constexpr auto begin() -> CPP_ret(detail::facade_iterator_t<D>)( //
             requires Same<D, Derived>)
         {
             return detail::facade_iterator_t<D>{range_access::begin_cursor(derived())};
         }
         /// \overload
         template<typename D = Derived>
-        auto begin() const -> CPP_ret(detail::facade_iterator_t<D const>)( //
+        constexpr auto begin() const -> CPP_ret(detail::facade_iterator_t<D const>)( //
             requires Same<D, Derived>)
         {
             return detail::facade_iterator_t<D const>{
@@ -111,7 +111,7 @@ namespace ranges
         /// \return `ranges::basic_iterator<E>(e)` if `E` is the same
         /// as `B` computed above for `begin()`; otherwise, return `e`.
         template<typename D = Derived>
-        auto end() -> CPP_ret(detail::facade_sentinel_t<D>)( //
+        constexpr auto end() -> CPP_ret(detail::facade_sentinel_t<D>)( //
             requires Same<D, Derived>)
         {
             return static_cast<detail::facade_sentinel_t<D>>(
@@ -119,7 +119,7 @@ namespace ranges
         }
         /// \overload
         template<typename D = Derived>
-        auto end() const -> CPP_ret(detail::facade_sentinel_t<D const>)( //
+        constexpr auto end() const -> CPP_ret(detail::facade_sentinel_t<D const>)( //
             requires Same<D, Derived>)
         {
             return static_cast<detail::facade_sentinel_t<D const>>(
