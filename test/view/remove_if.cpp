@@ -150,7 +150,7 @@ int main()
     // test constexpr binding
     {
         using namespace ranges;
-        constexpr std::array<int, 4> is = {1,2,3,4};
+        constexpr std::array<int, 4> is = {{1,2,3,4}};
         constexpr auto filter = view::remove_if(is_even()) | view::remove_if(is_odd());
         auto rng = is | filter;
         CHECK(rng.empty());
