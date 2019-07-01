@@ -37,7 +37,7 @@ namespace ranges
         private:
             /// If it's a view already, pass it though.
             template<typename T>
-            static auto from_range_(T && t, std::true_type, detail::ignore_t,
+            static constexpr auto from_range_(T && t, std::true_type, detail::ignore_t,
                                     detail::ignore_t)
             {
                 return static_cast<T &&>(t);
@@ -46,7 +46,7 @@ namespace ranges
             /// If it is container-like, turn it into a view, being careful
             /// to preserve the Sized-ness of the range.
             template<typename T>
-            static auto from_range_(T && t, std::false_type, std::true_type,
+            static constexpr auto from_range_(T && t, std::false_type, std::true_type,
                                     detail::ignore_t)
             {
                 return ranges::view::ref(t);
@@ -55,7 +55,7 @@ namespace ranges
             /// Not a view and not an lvalue? If it's a ForwardingRange_, then
             /// return a subrange holding the range's begin/end.
             template<typename T>
-            static auto from_range_(T && t, std::false_type, std::false_type,
+            static constexpr auto from_range_(T && t, std::false_type, std::false_type,
                                     std::true_type)
             {
                 return make_subrange(static_cast<T &&>(t));
@@ -63,7 +63,7 @@ namespace ranges
 
         public:
             template<typename T>
-            auto CPP_fun(operator())(T && t)(const requires ViewableRange<T>)
+            constexpr auto CPP_fun(operator())(T && t)(const requires ViewableRange<T>)
             {
                 return all_fn::from_range_(static_cast<T &&>(t),
                                            meta::bool_<View<uncvref_t<T>>>{},
@@ -73,7 +73,7 @@ namespace ranges
 
             template<typename T>
             RANGES_DEPRECATED("Passing a reference_wrapper to view::all is deprecated.")
-            auto operator()(std::reference_wrapper<T> ref) const
+            constexpr auto operator()(std::reference_wrapper<T> ref) const
                 -> CPP_ret(ref_view<T>)( //
                     requires Range<T &>)
             {
