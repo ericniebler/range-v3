@@ -11,8 +11,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGE_V3_FUNCTIONAL_BIND_FRONT_HPP
-#define RANGE_V3_FUNCTIONAL_BIND_FRONT_HPP
+#ifndef RANGE_V3_FUNCTIONAL_BIND_BACK_HPP
+#define RANGE_V3_FUNCTIONAL_BIND_BACK_HPP
 
 #include <functional>
 #include <tuple>
@@ -83,4 +83,4 @@ namespace ranges
 
 } // namespace ranges
 
-#endif // RANGE_V3_FUNCTIONAL_BIND_FRONT_HPP
+#endif // RANGE_V3_FUNCTIONAL_BIND_BACK_HPP
