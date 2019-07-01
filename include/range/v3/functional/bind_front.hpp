@@ -15,7 +15,10 @@
 #define RANGE_V3_FUNCTIONAL_BIND_FRONT_HPP
 
 #include <tuple>
+#include <type_traits>
 #include <utility>
+
+#include <range/v3/range_fwd.hpp>
 
 namespace ranges
 {
@@ -32,7 +35,7 @@ namespace ranges
         }
 
     public:
-        constexpr bind_front_t(Fn fn, Args... args)
+        constexpr bind_front_t(Fn && fn, Args &&... args)
           : fn(std::move(fn))
           , args_tuple(std::move(args)...)
         {}
@@ -44,11 +47,24 @@ namespace ranges
         }
     };
 
-    template<typename Fn, typename... Args>
-    constexpr auto bind_front(Fn fn, Args... args)
+    // T/T&& => T&&, T& => T
+    template<typename T,
+             typename U = meta::if_<             //
+                 std::is_lvalue_reference<T>,    //
+                 uncvref_t<T>,                   //
+                 std::remove_reference_t<T> &&>> //
+    constexpr U bind_front_forward(std::remove_reference_t<T> & t) noexcept
     {
-        return bind_front_t<Fn, Args...>(fn, std::move(args)...);
+        return static_cast<U>(t);
     }
+
+    template<typename Fn, typename... Args>
+    constexpr auto bind_front(Fn && fn, Args &&... args)
+    {
+        return bind_front_t<std::decay_t<Fn>, std::decay_t<Args>...>(
+            bind_front_forward<Fn>(fn), bind_front_forward<Args>(args)...);
+    }
+
 } // namespace ranges
 
 #endif // RANGE_V3_FUNCTIONAL_BIND_FRONT_HPP
