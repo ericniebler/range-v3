@@ -18,32 +18,41 @@
 #include <tuple>
 #include <type_traits>
 #include <utility>
+
 #include <range/v3/range_fwd.hpp>
+
 #include <range/v3/functional/invoke.hpp>
 
 namespace ranges
 {
+    // bind_back like std::bind_front has no special treatment for nested
+    // bind-expressions. So there is no need to wrap Callables with ranges::protect.
+
     template<typename Fn, typename... Args>
     class bind_back_t
     {
-        Fn fn;
-        std::tuple<Args...> args_tuple;
+        using Self = bind_back_t<Fn, Args...>;
 
+        // clang-format off
         template<typename Self, std::size_t... I, typename... CallArgs>
-        constexpr decltype(auto) static apply(Self & self, std::index_sequence<I...>,
-                                              CallArgs &&... call_args)
-        {
+        constexpr auto static CPP_auto_fun(apply)
+            (Self & self, std::index_sequence<I...>, CallArgs &&... call_args)
+        (
             return invoke(self.fn,
                           std::forward<CallArgs>(call_args)...,
-                          std::get<I>(self.args_tuple)...);
-        }
+                          std::get<I>(self.args_tuple)...)
+        )
         template<typename Self, typename... CallArgs>
-        constexpr decltype(auto) static run(Self & self, CallArgs &&... call_args)
-        {
+        constexpr auto static CPP_auto_fun(run)(Self & self, CallArgs &&... call_args)
+        (
             return apply(self,
                          std::index_sequence_for<Args...>{},
-                         std::forward<CallArgs>(call_args)...);
-        }
+                         std::forward<CallArgs>(call_args)...)
+        )
+
+        Fn fn;
+        std::tuple<Args...> args_tuple;
+        // clang-format on
 
     public:
         constexpr bind_back_t(Fn && fn, Args &&... args)
@@ -52,12 +61,15 @@ namespace ranges
         {}
 
         template<typename... CallArgs>
-        constexpr decltype(auto) operator()(CallArgs &&... call_args)
+        constexpr decltype(auto) operator()(CallArgs &&... call_args) noexcept(
+            noexcept(run(std::declval<Self &>(), std::forward<CallArgs>(call_args)...)))
         {
             return run(*this, std::forward<CallArgs>(call_args)...);
         }
         template<typename... CallArgs>
         constexpr decltype(auto) operator()(CallArgs &&... call_args) const
+            noexcept(noexcept(run(std::declval<const Self &>(),
+                                  std::forward<CallArgs>(call_args)...)))
         {
             return run(*this, std::forward<CallArgs>(call_args)...);
         }
@@ -74,12 +86,14 @@ namespace ranges
         return static_cast<U>(t);
     }
 
+    // clang-format off
     template<typename Fn, typename... Args>
-    constexpr auto bind_back(Fn && fn, Args &&... args)
-    {
+    constexpr auto CPP_auto_fun(bind_back)(Fn && fn, Args &&... args)
+    (
         return bind_back_t<std::decay_t<Fn>, std::decay_t<Args>...>(
-            bind_back_forward<Fn>(fn), bind_back_forward<Args>(args)...);
-    }
+            bind_back_forward<Fn>(fn), bind_back_forward<Args>(args)...)
+    )
+    // clang-format on
 
 } // namespace ranges
 
