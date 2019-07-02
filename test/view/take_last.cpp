@@ -23,7 +23,7 @@ int main()
 
     auto rng0 = rgi | view::take_last(3);
     has_type<int &>(*begin(rng0));
-    models<BoundedViewConcept>(aux::copy(rng0));
+    models<CommonViewConcept>(aux::copy(rng0));
     models<SizedViewConcept>(aux::copy(rng0));
     models<RandomAccessIteratorConcept>(begin(rng0));
     ::check_equal(rng0, {3, 4, 5});
