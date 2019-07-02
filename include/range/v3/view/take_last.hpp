@@ -34,7 +34,7 @@ namespace ranges
         public:
             template<typename Rng>
             auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(
-                const requires ViewableRange<Rng> && InputRange<Rng> && SizedRange<Rng>)
+                const requires ViewableRange<Rng> && SizedRange<Rng>)
             {
                 auto sz = ranges::distance(rng);
                 return drop_exactly(static_cast<Rng &&>(rng), sz > n ? sz - n : 0);
