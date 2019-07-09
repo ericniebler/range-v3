@@ -19,6 +19,16 @@ cc_library(
 )
 
 cc_library(
+  name = 'std',
+  hdrs = glob([
+    'include/std/**/*.hpp',
+  ]),
+  includes = [
+    "include",
+  ],
+)
+
+cc_library(
   name = 'range-v3',
   hdrs = glob([
     'include/range/v3/**/*.hpp',
@@ -27,5 +37,6 @@ cc_library(
   deps = [
     ':concepts',
     ':meta',
+    ':std',
   ],
 )
