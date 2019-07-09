@@ -87,7 +87,7 @@ int main()
     static_assert(range_cardinality<decltype(rng0)>::value == ranges::finite, "");
     models<InputRangeConcept>(rng0);
     models_not<ForwardRangeConcept>(rng0);
-    models_not<BoundedRangeConcept>(rng0);
+    models_not<CommonRangeConcept>(rng0);
     models_not<SizedRangeConcept>(rng0);
     check_equal(rng0, {0,1,2,3,4,5,6,7,8});
 
@@ -97,7 +97,7 @@ int main()
     static_assert(range_cardinality<decltype(rng1)>::value == ranges::finite, "");
     models<InputRangeConcept>(rng1);
     models_not<ForwardRangeConcept>(rng1);
-    models_not<BoundedRangeConcept>(rng1);
+    models_not<CommonRangeConcept>(rng1);
     models_not<SizedRangeConcept>(rng1);
     check_equal(rng1, {0,1,2,42,3,4,5,42,6,7,8});
 
@@ -108,7 +108,7 @@ int main()
     static_assert(range_cardinality<decltype(rng2)>::value == ranges::finite, "");
     models<InputRangeConcept>(rng2);
     models_not<ForwardRangeConcept>(rng2);
-    models_not<BoundedRangeConcept>(rng2);
+    models_not<CommonRangeConcept>(rng2);
     models_not<SizedRangeConcept>(rng2);
     check_equal(rng2, {0,1,2,42,43,3,4,5,42,43,6,7,8});
 

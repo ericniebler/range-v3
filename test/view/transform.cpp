@@ -64,7 +64,7 @@ int main()
     has_type<int &>(*begin(rng2));
     CPP_assert(Same<range_value_t<decltype(rng2)>, int>);
     CPP_assert(Same<decltype(iter_move(begin(rng2))), int &&>);
-    models<BoundedViewConcept>(aux::copy(rng2));
+    models<CommonViewConcept>(aux::copy(rng2));
     models<SizedViewConcept>(aux::copy(rng2));
     models<RandomAccessViewConcept>(aux::copy(rng2));
     ::check_equal(rng2, {1,2,3,4,5,6,7,8,9,10});
@@ -74,7 +74,7 @@ int main()
 
     auto && rng3 = view::counted(rgp, 10) | view::transform(&std::pair<int,int>::first);
     has_type<int &>(*begin(rng3));
-    models<BoundedViewConcept>(aux::copy(rng3));
+    models<CommonViewConcept>(aux::copy(rng3));
     models<SizedViewConcept>(aux::copy(rng3));
     models<RandomAccessViewConcept>(aux::copy(rng3));
     ::check_equal(rng3, {1,2,3,4,5,6,7,8,9,10});
@@ -84,7 +84,7 @@ int main()
     auto && rng4 = view::counted(forward_iterator<std::pair<int, int>*>{rgp}, 10)
                       | view::transform(&std::pair<int,int>::first);
     has_type<int &>(*begin(rng4));
-    models_not<BoundedViewConcept>(aux::copy(rng4));
+    models_not<CommonViewConcept>(aux::copy(rng4));
     models<SizedViewConcept>(aux::copy(rng4));
     models<ForwardViewConcept>(aux::copy(rng4));
     models_not<BidirectionalViewConcept>(aux::copy(rng4));

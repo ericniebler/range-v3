@@ -54,7 +54,7 @@ namespace
     template<typename Adapted>
     void test_common(Adapted& a, std::true_type)
     {
-        ::models<BoundedRangeConcept>(a);
+        ::models<CommonRangeConcept>(a);
     }
     // template<typename Adapted>
     // void test_common(Adapted&, std::false_type)

@@ -33,7 +33,7 @@ int main()
 
     auto && rng = rgi | view::adjacent_remove_if(std::equal_to<int>{});
     has_type<int const &>(*begin(rng));
-    models<BoundedViewConcept>(aux::copy(rng));
+    models<CommonViewConcept>(aux::copy(rng));
     models_not<SizedViewConcept>(aux::copy(rng));
     models<BidirectionalIteratorConcept>(begin(rng));
     models_not<RandomAccessIteratorConcept>(begin(rng));
@@ -46,7 +46,7 @@ int main()
       | view::adjacent_remove_if([&](int i, int j) { return i == j; });
     has_type<int const &>(*begin(rng2));
     models<ForwardViewConcept>(aux::copy(rng2));
-    models<BoundedViewConcept>(aux::copy(rng2));
+    models<CommonViewConcept>(aux::copy(rng2));
     models_not<SizedViewConcept>(aux::copy(rng2));
     models<BidirectionalIteratorConcept>(begin(rng2));
     models_not<RandomAccessIteratorConcept>(begin(rng2));
@@ -55,7 +55,7 @@ int main()
     auto && rng3 = view::counted(forward_iterator<int const*>(rgi), 7) | view::adjacent_remove_if(std::equal_to<int>{});
     has_type<int const &>(*begin(rng3));
     models<ForwardViewConcept>(aux::copy(rng3));
-    models_not<BoundedViewConcept>(aux::copy(rng3));
+    models_not<CommonViewConcept>(aux::copy(rng3));
     models_not<SizedViewConcept>(aux::copy(rng3));
     models<ForwardIteratorConcept>(begin(rng3));
     models_not<BidirectionalIteratorConcept>(begin(rng3));
@@ -66,7 +66,7 @@ int main()
     has_type<int const &>(*begin(rng4));
     CHECK(*begin(rng4) == 4);
     models<ForwardViewConcept>(aux::copy(rng4));
-    models_not<BoundedViewConcept>(aux::copy(rng4));
+    models_not<CommonViewConcept>(aux::copy(rng4));
     models_not<SizedViewConcept>(aux::copy(rng4));
     models<ForwardIteratorConcept>(begin(rng4));
     models_not<BidirectionalIteratorConcept>(begin(rng4));
@@ -76,7 +76,7 @@ int main()
     auto && rng5 = view::iota(0, 11) | view::adjacent_remove_if(is_odd_then_even);
     has_type<int>(*begin(rng5));
     models<ForwardViewConcept>(aux::copy(rng5));
-    models<BoundedViewConcept>(aux::copy(rng5));
+    models<CommonViewConcept>(aux::copy(rng5));
     models_not<SizedViewConcept>(aux::copy(rng5));
     models<BidirectionalIteratorConcept>(begin(rng5));
     models_not<RandomAccessIteratorConcept>(begin(rng5));

@@ -29,7 +29,7 @@ int main()
     auto x = vs | view::move;
     CPP_assert(Same<common_view_tag_of<decltype(x)>, common_view_tag>);
     CPP_assert(Same<sized_view_tag_of<decltype(x)>, sized_view_tag>);
-    ::models<BoundedViewConcept>(aux::copy(x));
+    ::models<CommonViewConcept>(aux::copy(x));
     ::models<SizedViewConcept>(aux::copy(x));
     ::models<RandomAccessIteratorConcept>(x.begin());
     using I = decltype(x.begin());

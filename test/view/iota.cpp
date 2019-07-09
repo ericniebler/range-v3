@@ -81,13 +81,13 @@ int main()
     CPP_assert(RandomAccessRange<decltype(chars)>);
     CPP_assert(Same<int, range_difference_t<decltype(chars)>>);
     ::models<RandomAccessViewConcept>(aux::copy(chars));
-    models<BoundedViewConcept>(aux::copy(chars));
+    models<CommonViewConcept>(aux::copy(chars));
     CHECK(distance(chars.begin(), chars.end()) == (long) CHAR_MAX - (long) CHAR_MIN);
     CHECK(chars.size() == (unsigned)((long) CHAR_MAX - (long) CHAR_MIN));
 
     auto ushorts = view::ints(std::numeric_limits<unsigned short>::min(),
                               std::numeric_limits<unsigned short>::max());
-    models<BoundedViewConcept>(aux::copy(ushorts));
+    models<CommonViewConcept>(aux::copy(ushorts));
     CPP_assert(Same<int, range_difference_t<decltype(ushorts)>>);
     CPP_assert(Same<unsigned int, range_size_t<decltype(ushorts)>>);
     CHECK(distance(ushorts.begin(), ushorts.end()) == (int) USHRT_MAX);
@@ -96,7 +96,7 @@ int main()
     auto uints = view::closed_indices(
         std::numeric_limits<std::uint_least32_t>::min(),
         std::numeric_limits<std::uint_least32_t>::max() - 1);
-    models<BoundedViewConcept>(aux::copy(uints));
+    models<CommonViewConcept>(aux::copy(uints));
     CPP_assert(Same<std::int_fast64_t, range_difference_t<decltype(uints)>>);
     CPP_assert(Same<std::uint_fast64_t, range_size_t<decltype(uints)>>);
     CHECK(uints.size() == std::numeric_limits<std::uint32_t>::max());
@@ -113,14 +113,14 @@ int main()
     CPP_assert(RandomAccessRange<decltype(sints)>);
     CPP_assert(Same<std::int_fast64_t, range_difference_t<decltype(sints)>>);
     ::models<RandomAccessViewConcept>(aux::copy(sints));
-    models<BoundedViewConcept>(aux::copy(sints));
+    models<CommonViewConcept>(aux::copy(sints));
     CHECK(distance(sints.begin(), sints.end()) == (std::int_fast64_t) INT_MAX - (std::int_fast64_t) INT_MIN);
     CHECK(sints.size() == (std::uint_fast64_t)((std::int_fast64_t) INT_MAX - (std::int_fast64_t) INT_MIN));
 
     {
         auto ints = view::closed_iota(Int{0}, Int{10});
         ::check_equal(ints, {Int{0},Int{1},Int{2},Int{3},Int{4},Int{5},Int{6},Int{7},Int{8},Int{9},Int{10}});
-        models<BoundedViewConcept>(aux::copy(ints));
+        models<CommonViewConcept>(aux::copy(ints));
         models_not<SizedViewConcept>(aux::copy(ints));
         models<ForwardViewConcept>(aux::copy(ints));
         models_not<BidirectionalViewConcept>(aux::copy(ints));
@@ -129,7 +129,7 @@ int main()
     {
         auto ints = view::closed_iota(0, 10);
         ::check_equal(ints, {0,1,2,3,4,5,6,7,8,9,10});
-        models<BoundedViewConcept>(aux::copy(ints));
+        models<CommonViewConcept>(aux::copy(ints));
         models<SizedViewConcept>(aux::copy(ints));
         models<RandomAccessViewConcept>(aux::copy(ints));
         CHECK(size(ints) == 11u);

@@ -25,7 +25,7 @@ int main()
     auto rng0 = view::iota(10) | view::delimit(25);
     ::check_equal(rng0, {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24});
     ::models<ViewConcept>(aux::copy(rng0));
-    ::models_not<BoundedViewConcept>(aux::copy(rng0));
+    ::models_not<CommonViewConcept>(aux::copy(rng0));
     ::models<RandomAccessIteratorConcept>(rng0.begin());
     CPP_assert(RandomAccessView<delimit_view<view::all_t<std::vector<int> &>, int>>);
 

@@ -21,12 +21,12 @@ int main()
     ::has_type<const std::sub_match<std::string::iterator>&>(*ranges::begin(rng));
     ::has_type<const std::sub_match<std::string::iterator>&>(*ranges::begin(crng));
 
-    ::models<BoundedRangeConcept>(rng);
+    ::models<CommonRangeConcept>(rng);
     ::models<ForwardRangeConcept>(rng);
     ::models_not<BidirectionalRangeConcept>(rng);
     ::models_not<SizedRangeConcept>(rng);
 
-    ::models<BoundedRangeConcept>(crng);
+    ::models<CommonRangeConcept>(crng);
     ::models<ForwardRangeConcept>(crng);
     ::models_not<BidirectionalRangeConcept>(crng);
     ::models_not<SizedRangeConcept>(crng);
