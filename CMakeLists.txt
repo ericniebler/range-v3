@@ -145,11 +145,18 @@ if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
 endif()
 
 include(CMakePackageConfigHelpers)
+
+# write_basic_package_version_file(...) gained ARCH_INDEPENDENT in CMake 3.14.
+# For CMake 3.6, this workaround makes the version file ARCH_INDEPENDENT
+# by making CMAKE_SIZEOF_VOID_P empty.
+set(OLD_CMAKE_SIZEOF_VOID_P ${CMAKE_SIZEOF_VOID_P})
+set(CMAKE_SIZEOF_VOID_P "")
 write_basic_package_version_file(
   ${CMAKE_CURRENT_BINARY_DIR}/range-v3-config-version.cmake
   VERSION ${RANGE_V3_VERSION}
   COMPATIBILITY ExactVersion
 )
+set(CMAKE_SIZEOF_VOID_P ${OLD_CMAKE_SIZEOF_VOID_P})
 
 install(TARGETS concepts meta range-v3 EXPORT range-v3-targets DESTINATION lib)
 install(EXPORT range-v3-targets FILE range-v3-config.cmake DESTINATION lib/cmake/range-v3)
