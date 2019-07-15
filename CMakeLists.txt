@@ -163,6 +163,6 @@ install(EXPORT range-v3-targets FILE range-v3-config.cmake DESTINATION lib/cmake
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/range-v3-config-version.cmake
   DESTINATION lib/cmake/range-v3)
-install(DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN "*.hpp")
+install(DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN "*")
 
 export(EXPORT range-v3-targets FILE range-v3-config.cmake)
