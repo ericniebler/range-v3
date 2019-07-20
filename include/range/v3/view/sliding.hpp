@@ -23,6 +23,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -363,15 +364,15 @@ namespace ranges
         private:
             friend view_access;
             template<typename Int>
-            static auto CPP_fun(bind)(sliding_fn sliding, Int n)( //
+            static constexpr auto CPP_fun(bind)(sliding_fn sliding, Int n)( //
                 requires Integral<Int>)
             {
-                return make_pipeable(std::bind(sliding, std::placeholders::_1, n));
+                return make_pipeable(bind_back<1>(sliding, n));
             }
 
         public:
             template<typename Rng>
-            auto operator()(Rng && rng, range_difference_t<Rng> n) const
+            constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> CPP_ret(sliding_view<all_t<Rng>>)( //
                     requires ViewableRange<Rng> && ForwardRange<Rng>)
             {

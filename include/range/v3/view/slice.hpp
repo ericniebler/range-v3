@@ -20,6 +20,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/iterator/counted_iterator.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/iterator/operations.hpp>
@@ -89,7 +90,7 @@ namespace ranges
 
         public:
             slice_view_() = default;
-            slice_view_(Rng rng, range_difference_t<Rng> from,
+            constexpr slice_view_(Rng rng, range_difference_t<Rng> from,
                         range_difference_t<Rng> count)
               : rng_(std::move(rng))
               , from_(from)
@@ -122,7 +123,7 @@ namespace ranges
 
         public:
             slice_view_() = default;
-            slice_view_(Rng rng, range_difference_t<Rng> from,
+            constexpr slice_view_(Rng rng, range_difference_t<Rng> from,
                         range_difference_t<Rng> count)
               : rng_(std::move(rng))
               , from_(from)
@@ -190,64 +191,63 @@ namespace ranges
             friend view_access;
 
             template<typename Rng>
-            static slice_view<all_t<Rng>> impl_(Rng && rng, range_difference_t<Rng> from,
+            constexpr static slice_view<all_t<Rng>> impl_(Rng && rng, range_difference_t<Rng> from,
                                                 range_difference_t<Rng> count,
                                                 input_range_tag, range_tag = {})
             {
                 return {all(static_cast<Rng &&>(rng)), from, count};
             }
             template<typename Rng>
-            static auto impl_(Rng && rng, range_difference_t<Rng> from,
+            constexpr static auto impl_(Rng && rng, range_difference_t<Rng> from,
                               range_difference_t<Rng> count, random_access_range_tag,
                               common_range_tag = {})
                 -> CPP_ret(subrange<iterator_t<Rng>>)( //
                     requires ForwardingRange_<Rng>)
             {
-                auto it =
+                constexpr auto it =
                     detail::pos_at_(rng, from, range_tag_of<Rng>{}, is_infinite<Rng>{});
                 return {it, it + count};
             }
 
             // Overloads for the pipe syntax: rng | view::slice(from,to)
             template<typename Int>
-            static auto CPP_fun(bind)(slice_fn slice, Int from, Int to)( //
+            static constexpr auto CPP_fun(bind)(slice_fn slice, Int from, Int to)( //
                 requires detail::IntegerLike_<Int>)
             {
-                return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
+                return make_pipeable(bind_back<1>(slice, from, to));
             }
             template<typename Int>
-            static auto CPP_fun(bind)(slice_fn slice, Int from,
+            static constexpr auto CPP_fun(bind)(slice_fn slice, Int from,
                                       detail::from_end_<Int> to)( //
                 requires detail::IntegerLike_<Int>)
             {
-                return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
+                return make_pipeable(bind_back<1>(slice, from, to));
             }
             template<typename Int>
-            static auto CPP_fun(bind)(slice_fn slice, detail::from_end_<Int> from,
+            static constexpr auto CPP_fun(bind)(slice_fn slice, detail::from_end_<Int> from,
                                       detail::from_end_<Int> to)( //
                 requires detail::IntegerLike_<Int>)
             {
-                return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
+                return make_pipeable(bind_back<1>(slice, from, to));
             }
             template<typename Int>
-            static auto CPP_fun(bind)(slice_fn, Int from, end_fn)( //
+            static constexpr auto CPP_fun(bind)(slice_fn, Int from, end_fn)( //
                 requires detail::IntegerLike_<Int>)
             {
-                return make_pipeable(
-                    std::bind(ranges::view::drop_exactly, std::placeholders::_1, from));
+                return make_pipeable(bind_back<1>(ranges::view::drop_exactly,  from));
             }
             template<typename Int>
-            static auto CPP_fun(bind)(slice_fn slice, detail::from_end_<Int> from,
+            static constexpr auto CPP_fun(bind)(slice_fn slice, detail::from_end_<Int> from,
                                       end_fn to)( //
                 requires detail::IntegerLike_<Int>)
             {
-                return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
+                return make_pipeable(bind_back<1>(slice, from, to));
             }
 
         public:
             // slice(rng, 2, 4)
             template<typename Rng>
-            auto CPP_fun(operator())( //
+            constexpr auto CPP_fun(operator())( //
                 Rng && rng, range_difference_t<Rng> from, range_difference_t<Rng> to)(
                 const requires ViewableRange<Rng> && InputRange<Rng>)
             {

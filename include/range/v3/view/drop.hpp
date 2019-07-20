@@ -20,6 +20,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/algorithm/min.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/traits.hpp>
@@ -134,10 +135,10 @@ namespace ranges
         private:
             friend view_access;
             template<typename Int>
-            static auto CPP_fun(bind)(drop_fn drop, Int n)( //
+            static constexpr auto CPP_fun(bind)(drop_fn drop, Int n)( //
                 requires Integral<Int>)
             {
-                return make_pipeable(std::bind(drop, std::placeholders::_1, n));
+                return make_pipeable(bind_back<1>(drop, n));
             }
             template<typename Rng>
             static auto impl_(Rng && rng, range_difference_t<Rng> n, input_range_tag)

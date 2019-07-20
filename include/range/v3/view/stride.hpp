@@ -22,6 +22,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -303,8 +304,7 @@ namespace ranges
             constexpr static auto CPP_fun(bind)(stride_fn stride, Difference step)( //
                 requires Integral<Difference>)
             {
-                return make_pipeable(
-                    std::bind(stride, std::placeholders::_1, std::move(step)));
+                return make_pipeable(bind_back<1>(stride, std::move(step)));
             }
 
         public:

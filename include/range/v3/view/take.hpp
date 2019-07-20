@@ -18,6 +18,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/algorithm/min.hpp>
 #include <range/v3/iterator/counted_iterator.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
@@ -270,10 +271,10 @@ namespace ranges
             friend view_access;
 
             template<typename Int>
-            static auto CPP_fun(bind)(take_fn take, Int n)( //
+            static constexpr auto CPP_fun(bind)(take_fn take, Int n)( //
                 requires Integral<Int>)
             {
-                return make_pipeable(std::bind(take, std::placeholders::_1, n));
+                return make_pipeable( bind_back<1>(take, n) );
             }
 
         public:

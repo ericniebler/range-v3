@@ -21,6 +21,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/algorithm/mismatch.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range/access.hpp>
@@ -605,11 +606,11 @@ namespace ranges
         {
         private:
             friend view_access;
+
             template<typename T>
-            static auto bind(split_fn split, T && t)
+            static constexpr auto bind(split_fn split, T t)
             {
-                return make_pipeable(
-                    std::bind(split, std::placeholders::_1, bind_forward<T>(t)));
+                return make_pipeable( bind_back(split, std::move(t)) );
             }
 
         public:

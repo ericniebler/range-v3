@@ -21,6 +21,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
@@ -130,7 +131,7 @@ namespace ranges
 
     public:
         group_by_view() = default;
-        group_by_view(Rng rng, Fun fun)
+        constexpr group_by_view(Rng rng, Fun fun)
           : rng_(std::move(rng))
           , fun_(std::move(fun))
         {}
@@ -149,15 +150,14 @@ namespace ranges
         private:
             friend view_access;
             template<typename Fun>
-            static auto bind(group_by_fn group_by, Fun fun)
+            static constexpr auto bind(group_by_fn group_by, Fun fun)
             {
-                return make_pipeable(
-                    std::bind(group_by, std::placeholders::_1, std::move(fun)));
+                return make_pipeable(bind_back<1>(group_by, std::move(fun)));
             }
 
         public:
             template<typename Rng, typename Fun>
-            auto operator()(Rng && rng, Fun fun) const
+            constexpr auto operator()(Rng && rng, Fun fun) const
                 -> CPP_ret(group_by_view<all_t<Rng>, Fun>)( //
                     requires ViewableRange<Rng> && ForwardRange<Rng> &&
                         IndirectRelation<Fun, iterator_t<Rng>>)

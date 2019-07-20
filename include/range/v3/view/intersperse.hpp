@@ -21,6 +21,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -207,11 +208,10 @@ namespace ranges
         private:
             friend view_access;
             template<typename T>
-            static auto CPP_fun(bind)(intersperse_fn intersperse, T t)( //
+            static constexpr auto CPP_fun(bind)(intersperse_fn intersperse, T t)( //
                 requires Copyable<T>)
             {
-                return make_pipeable(
-                    std::bind(intersperse, std::placeholders::_1, std::move(t)));
+                return make_pipeable(bind_back<1>(intersperse, std::move(t)));
             }
 
         public:
