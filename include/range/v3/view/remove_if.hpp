@@ -21,7 +21,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/functional/bind_back.hpp>
+#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/range/access.hpp>
