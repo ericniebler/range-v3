@@ -198,13 +198,13 @@ namespace ranges
                 return {all(static_cast<Rng &&>(rng)), from, count};
             }
             template<typename Rng>
-            constexpr static auto impl_(Rng && rng, range_difference_t<Rng> from,
+            static auto impl_(Rng && rng, range_difference_t<Rng> from,
                               range_difference_t<Rng> count, random_access_range_tag,
                               common_range_tag = {})
                 -> CPP_ret(subrange<iterator_t<Rng>>)( //
                     requires ForwardingRange_<Rng>)
             {
-                constexpr auto it =
+                auto it =
                     detail::pos_at_(rng, from, range_tag_of<Rng>{}, is_infinite<Rng>{});
                 return {it, it + count};
             }
