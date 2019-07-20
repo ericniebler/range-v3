@@ -24,6 +24,7 @@
 
 #include <range/v3/algorithm/max.hpp>
 #include <range/v3/algorithm/min.hpp>
+#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/functional/indirect.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/operations.hpp>
@@ -381,7 +382,7 @@ namespace ranges
 
     public:
         iter_transform2_view() = default;
-        iter_transform2_view(Rng1 rng1, Rng2 rng2, Fun fun)
+        constexpr iter_transform2_view(Rng1 rng1, Rng2 rng2, Fun fun)
           : fun_(std::move(fun))
           , rng1_(std::move(rng1))
           , rng2_(std::move(rng2))
@@ -413,7 +414,7 @@ namespace ranges
     struct transform2_view : iter_transform2_view<Rng1, Rng2, indirected<Fun>>
     {
         transform2_view() = default;
-        transform2_view(Rng1 rng1, Rng2 rng2, Fun fun)
+        constexpr transform2_view(Rng1 rng1, Rng2 rng2, Fun fun)
           : iter_transform2_view<Rng1, Rng2, indirected<Fun>>{std::move(rng1),
                                                               std::move(rng2),
                                                               indirect(std::move(fun))}
@@ -427,15 +428,14 @@ namespace ranges
         private:
             friend view_access;
             template<typename Fun>
-            static auto bind(iter_transform_fn iter_transform, Fun fun)
+            static constexpr auto bind(iter_transform_fn iter_transform, Fun fun)
             {
-                return make_pipeable(std::bind(
-                    iter_transform, std::placeholders::_1, protect(std::move(fun))));
+                return make_pipeable(bind_back<1>(iter_transform, std::move(fun)));
             }
 
         public:
             template<typename Rng, typename Fun>
-            auto operator()(Rng && rng, Fun fun) const -> CPP_ret(
+            constexpr auto operator()(Rng && rng, Fun fun) const -> CPP_ret(
                 iter_transform_view<all_t<Rng>, Fun>)( //
                 requires ViewableRange<Rng> && InputRange<Rng> &&
                     CopyConstructible<Fun> && detail::IterTransform1Readable<Fun, Rng>)
@@ -444,7 +444,7 @@ namespace ranges
             }
 
             template<typename Rng1, typename Rng2, typename Fun>
-            auto operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const -> CPP_ret(
+            constexpr auto operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const -> CPP_ret(
                 iter_transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>)( //
                 requires ViewableRange<Rng1> && InputRange<Rng1> && ViewableRange<Rng2> &&
                     InputRange<Rng2> && CopyConstructible<Fun> &&
@@ -491,15 +491,14 @@ namespace ranges
         private:
             friend view_access;
             template<typename Fun>
-            static auto bind(transform_fn transform, Fun fun)
+            static constexpr auto bind(transform_fn transform, Fun fun)
             {
-                return make_pipeable(
-                    std::bind(transform, std::placeholders::_1, protect(std::move(fun))));
+                return make_pipeable(bind_back<1>(transform, std::move(fun)));
             }
 
         public:
             template<typename Rng, typename Fun>
-            auto operator()(Rng && rng, Fun fun) const
+            constexpr auto operator()(Rng && rng, Fun fun) const
                 -> CPP_ret(transform_view<all_t<Rng>, Fun>)( //
                     requires TransformableRange<Rng, Fun>)
             {
@@ -507,7 +506,7 @@ namespace ranges
             }
 
             template<typename Rng1, typename Rng2, typename Fun>
-            auto operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
+            constexpr auto operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
                 -> CPP_ret(transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>)( //
                     requires TransformableRanges<Rng1, Rng2, Fun>)
             {

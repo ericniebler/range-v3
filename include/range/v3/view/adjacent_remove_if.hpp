@@ -20,6 +20,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/utility/box.hpp>
@@ -146,10 +147,9 @@ namespace ranges
         private:
             friend view_access;
             template<typename Pred>
-            static auto bind(adjacent_remove_if_fn adjacent_remove_if, Pred pred)
+            static constexpr auto bind(adjacent_remove_if_fn adjacent_remove_if, Pred pred)
             {
-                return make_pipeable(std::bind(
-                    adjacent_remove_if, std::placeholders::_1, protect(std::move(pred))));
+                return make_pipeable(bind_back<1>(adjacent_remove_if, std::move(pred)));
             }
 
         public:

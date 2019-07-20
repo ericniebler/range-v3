@@ -18,6 +18,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/unreachable_sentinel.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -61,7 +62,7 @@ namespace ranges
 
     public:
         delimit_view() = default;
-        delimit_view(Rng rng, Val value)
+        constexpr delimit_view(Rng rng, Val value)
           : delimit_view::view_adaptor{std::move(rng)}
           , value_(std::move(value))
         {}
@@ -80,15 +81,14 @@ namespace ranges
         private:
             friend view_access;
             template<typename Val>
-            static auto bind(delimit_impl_fn delimit, Val value)
+            static constexpr auto bind(delimit_impl_fn delimit, Val value)
             {
-                return make_pipeable(
-                    std::bind(delimit, std::placeholders::_1, std::move(value)));
+                return make_pipeable(bind_back<1>(delimit, std::move(value)));
             }
 
         public:
             template<typename Rng, typename Val>
-            auto operator()(Rng && rng, Val value) const
+            constexpr auto operator()(Rng && rng, Val value) const
                 -> CPP_ret(delimit_view<all_t<Rng>, Val>)( //
                     requires ViewableRange<Rng> && InputRange<Rng> && Semiregular<Val> &&
                         EqualityComparableWith<Val, range_reference_t<Rng>>)
@@ -102,7 +102,7 @@ namespace ranges
             using view<delimit_impl_fn>::operator();
 
             template<typename I_, typename Val, typename I = detail::decay_t<I_>>
-            auto operator()(I_ && begin_, Val value) const
+            constexpr auto operator()(I_ && begin_, Val value) const
                 -> CPP_ret(delimit_view<subrange<I, unreachable_sentinel_t>, Val>)( //
                     requires(!Range<I_> && ConvertibleTo<I_, I> && InputIterator<I> &&
                              Semiregular<Val> &&

@@ -22,6 +22,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/indirect.hpp>
 #include <range/v3/functional/invoke.hpp>
@@ -82,7 +83,7 @@ namespace ranges
 
     public:
         iter_take_while_view() = default;
-        iter_take_while_view(Rng rng, Pred pred)
+        constexpr iter_take_while_view(Rng rng, Pred pred)
           : iter_take_while_view::view_adaptor{std::move(rng)}
           , pred_(std::move(pred))
         {}
@@ -92,7 +93,7 @@ namespace ranges
     struct take_while_view : iter_take_while_view<Rng, indirected<Pred>>
     {
         take_while_view() = default;
-        take_while_view(Rng rng, Pred pred)
+        constexpr take_while_view(Rng rng, Pred pred)
           : iter_take_while_view<Rng, indirected<Pred>>{std::move(rng),
                                                         indirect(std::move(pred))}
         {}
@@ -111,15 +112,14 @@ namespace ranges
         private:
             friend view_access;
             template<typename Pred>
-            static auto bind(iter_take_while_fn iter_take_while, Pred pred)
+            static constexpr auto bind(iter_take_while_fn iter_take_while, Pred pred)
             {
-                return make_pipeable(std::bind(
-                    iter_take_while, std::placeholders::_1, protect(std::move(pred))));
+                return make_pipeable( bind_back<1>(iter_take_while, std::move(pred)) );
             }
 
         public:
             template<typename Rng, typename Pred>
-            auto operator()(Rng && rng, Pred pred) const
+            constexpr auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(iter_take_while_view<all_t<Rng>, Pred>)( //
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         Predicate<Pred &, iterator_t<Rng>> && CopyConstructible<Pred>)
@@ -133,23 +133,20 @@ namespace ranges
         private:
             friend view_access;
             template<typename Pred>
-            static auto bind(take_while_fn take_while, Pred pred)
+            static constexpr auto bind(take_while_fn take_while, Pred pred)
             {
-                return make_pipeable(std::bind(
-                    take_while, std::placeholders::_1, protect(std::move(pred))));
+                return make_pipeable( bind_back<1>(take_while, std::move(pred)) );
             }
             template<typename Pred, typename Proj>
-            static auto bind(take_while_fn take_while, Pred pred, Proj proj)
+            static constexpr auto bind(take_while_fn take_while, Pred pred, Proj proj)
             {
-                return make_pipeable(std::bind(take_while,
-                                               std::placeholders::_1,
-                                               protect(std::move(pred)),
-                                               protect(std::move(proj))));
+                return make_pipeable(
+                    bind_back<1>(take_while, std::move(pred), std::move(proj)));
             }
 
         public:
             template<typename Rng, typename Pred>
-            auto operator()(Rng && rng, Pred pred) const
+            constexpr auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(take_while_view<all_t<Rng>, Pred>)( //
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<Pred &, iterator_t<Rng>>)
@@ -157,7 +154,7 @@ namespace ranges
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
             template<typename Rng, typename Pred, typename Proj>
-            auto operator()(Rng && rng, Pred pred, Proj proj) const
+            constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
                 -> CPP_ret(take_while_view<all_t<Rng>, composed<Pred, Proj>>)( //
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<composed<Pred, Proj> &, iterator_t<Rng>>)

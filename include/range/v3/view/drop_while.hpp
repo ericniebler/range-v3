@@ -21,6 +21,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -86,18 +87,14 @@ namespace ranges
         private:
             friend view_access;
             template<typename Pred>
-            static auto bind(drop_while_fn drop_while, Pred pred)
+            static constexpr auto bind(drop_while_fn drop_while, Pred pred)
             {
-                return make_pipeable(std::bind(
-                    drop_while, std::placeholders::_1, protect(std::move(pred))));
+                return make_pipeable(bind_back<1>(drop_while, std::move(pred)));
             }
             template<typename Pred, typename Proj>
-            static auto bind(drop_while_fn drop_while, Pred pred, Proj proj)
+            static constexpr auto bind(drop_while_fn drop_while, Pred pred, Proj proj)
             {
-                return make_pipeable(std::bind(drop_while,
-                                               std::placeholders::_1,
-                                               protect(std::move(pred)),
-                                               protect(std::move(proj))));
+                return make_pipeable(bind_back<1>(drop_while, std::move(pred), std::move(proj)));
             }
 
         public:

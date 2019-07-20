@@ -18,6 +18,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/iterator/counted_iterator.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/iterator/operations.hpp>
@@ -145,21 +146,21 @@ namespace ranges
             friend view_access;
 
             template<typename Int>
-            static auto CPP_fun(bind)(take_exactly_fn take_exactly, Int n)( //
+            static constexpr auto CPP_fun(bind)(take_exactly_fn take_exactly, Int n)( //
                 requires Integral<Int>)
             {
-                return make_pipeable(std::bind(take_exactly, std::placeholders::_1, n));
+                return make_pipeable(bind_back<1>(take_exactly, n));
             }
 
             template<typename Rng>
-            static take_exactly_view<all_t<Rng>> impl_(Rng && rng,
+            static constexpr take_exactly_view<all_t<Rng>> impl_(Rng && rng,
                                                        range_difference_t<Rng> n,
                                                        input_range_tag)
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
             template<typename Rng>
-            static auto impl_(Rng && rng, range_difference_t<Rng> n,
+            static constexpr auto impl_(Rng && rng, range_difference_t<Rng> n,
                               random_access_range_tag)
                 -> CPP_ret(subrange<iterator_t<Rng>>)( //
                     requires ForwardingRange_<Rng>)
@@ -169,7 +170,7 @@ namespace ranges
 
         public:
             template<typename Rng>
-            auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(
+            constexpr auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(
                 const requires ViewableRange<Rng> && InputRange<Rng>)
             {
                 return take_exactly_fn::impl_(
