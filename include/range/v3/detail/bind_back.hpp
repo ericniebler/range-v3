@@ -11,8 +11,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGE_V3_FUNCTIONAL_BIND_BACK_HPP
-#define RANGE_V3_FUNCTIONAL_BIND_BACK_HPP
+#ifndef RANGE_V3_DETAIL_BIND_BACK_HPP
+#define RANGE_V3_DETAIL_BIND_BACK_HPP
 
 #include <functional>
 #include <tuple>
@@ -27,6 +27,7 @@ namespace ranges
 {
     // bind_back like std::bind_front has no special treatment for nested
     // bind-expressions. So there is no need to wrap Callables with ranges::protect.
+    // Also, bind_back does not unwrap std::ref's
 
     template<typename Fn, typename... Args>
     class bind_back_t
@@ -38,8 +39,7 @@ namespace ranges
         constexpr auto static CPP_auto_fun(apply)
             (Self & self, std::index_sequence<I...>, CallArgs &&... call_args)
         (
-            return invoke(self.fn,
-                          std::forward<CallArgs>(call_args)...,
+            return self.fn(std::forward<CallArgs>(call_args)...,
                           std::get<I>(self.args_tuple)...)
         )
         template<typename Self, typename... CallArgs>
@@ -64,14 +64,14 @@ namespace ranges
         constexpr decltype(auto) operator()(CallArgs &&... call_args) noexcept(
             noexcept(run(std::declval<Self &>(), std::forward<CallArgs>(call_args)...)))
         {
-            return run(*this, std::forward<CallArgs>(call_args)...);
+            return Self::run(*this, std::forward<CallArgs>(call_args)...);
         }
         template<typename... CallArgs>
         constexpr decltype(auto) operator()(CallArgs &&... call_args) const
             noexcept(noexcept(run(std::declval<const Self &>(),
                                   std::forward<CallArgs>(call_args)...)))
         {
-            return run(*this, std::forward<CallArgs>(call_args)...);
+            return Self::run(*this, std::forward<CallArgs>(call_args)...);
         }
     };
 
@@ -97,4 +97,4 @@ namespace ranges
 
 } // namespace ranges
 
-#endif // RANGE_V3_FUNCTIONAL_BIND_BACK_HPP
+#endif // RANGE_V3_DETAIL_BIND_BACK_HPP
