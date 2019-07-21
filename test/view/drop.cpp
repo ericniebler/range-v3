@@ -94,8 +94,7 @@ int main()
                               | view::transform(view::drop(n))
                               | view::join;
                 })
-                | view::transform(to<std::vector>())
-                | to<std::vector>();
+                | to<std::vector<std::vector<int>>>();
         };
         auto skipped = skips({1,2,3,4,5,6,7,8});
         CHECK(skipped.size() == 8u);

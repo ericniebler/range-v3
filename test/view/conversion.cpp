@@ -52,9 +52,7 @@ int main()
 
     // 2-d vector
 
-    // TODO: make `| to<vector<vector<int>>` work
-    auto vv = view::repeat_n(view::ints(0, 8), 10) | view::transform(to<std::vector>()) |
-        to<std::vector>();
+    auto vv = view::repeat_n(view::ints(0, 8), 10) | to<std::vector<std::vector<int>>>();
     ::check_equal(vv, std::vector<std::vector<int>>(10, {0,1,2,3,4,5,6,7}));
 
     // issue #556
@@ -67,11 +65,8 @@ int main()
             view::single(s | view::drop(2));
         auto v3 = view::concat(v1, v2);
 
-        // TODO:
-        // auto owner1 = v3 | to<std::vector<std::vector<char>>>();
-        // auto owner2 = v3 | to<std::vector<std::string>>();
-        auto owner1 = v3 | view::transform(to<std::vector>()) | to<std::vector>();
-        auto owner2 = v3 | view::transform(to<std::string>()) | to<std::vector>();
+        auto owner1 = v3 | to<std::vector<std::vector<char>>>();
+        auto owner2 = v3 | to<std::vector<std::string>>();
 
         ::check_equal(owner1, std::vector<std::vector<char>>{{'b', 'c'}, {'c'}});
         ::check_equal(owner2, std::vector<std::string>{{"bc"}, {"c"}});
