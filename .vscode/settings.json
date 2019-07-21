@@ -73,5 +73,6 @@
         "random": "cpp",
         "__node_handle": "cpp",
         "__tree": "cpp"
-    }
+    },
+    "C_Cpp.configurationWarnings": "Disabled"
 }
