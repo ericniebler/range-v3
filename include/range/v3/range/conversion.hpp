@@ -191,7 +191,10 @@ namespace ranges
             concept ConvertibleToContainerImpl,
                 Range<Cont> && (!View<Cont>) && MoveConstructible<Cont> &&
                 Constructible<range_value_t<Cont>, range_reference_t<Rng>> &&
-                Constructible<Cont, range_cpp17_iterator_t<Rng>, range_cpp17_iterator_t<Rng>>
+                Constructible<
+                    Cont,
+                    range_cpp17_iterator_t<Rng>,
+                    range_cpp17_iterator_t<Rng>>
         );
 
         CPP_def
@@ -199,11 +202,17 @@ namespace ranges
             template(typename Rng, typename Cont)
             concept ConvertibleToContainerContainerImpl,
                 Range<Cont> && (!View<Cont>) && MoveConstructible<Cont> &&
-                Range<range_value_t<Cont>> && (!View<range_value_t<Cont>>) &&
+                True<ranges::defer::Range<range_value_t<Cont>> &&
+                    (!ranges::defer::View<range_value_t<Cont>>)> &&
                 // Test that each element of the input range can be ranges::to<>
                 // to the output container.
-                Invocable<to_container::fn<meta::id<range_value_t<Cont>>>, range_reference_t<Rng>> &&
-                Constructible<Cont, to_container_iterator<Rng, Cont>, to_container_iterator<Rng, Cont>>
+                Invocable<
+                    to_container::fn<meta::id<range_value_t<Cont>>>,
+                    range_reference_t<Rng>> &&
+                Constructible<
+                    Cont,
+                    to_container_iterator<Rng, Cont>,
+                    to_container_iterator<Rng, Cont>>
         );
 
         CPP_def
@@ -270,8 +279,8 @@ namespace ranges
             }
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(container_t<Rng>)( //
-                requires InputRange<Rng> &&
-                    (!ConvertibleToContainer<Rng, container_t<Rng>>) &&
+                requires InputRange<Rng> && //
+                    (!ConvertibleToContainer<Rng, container_t<Rng>>)&& //
                     ConvertibleToContainerContainer<Rng, container_t<Rng>>)
             {
                 static_assert(!is_infinite<Rng>::value,
