@@ -136,7 +136,7 @@ namespace ranges
                 it_ -= n;
                 return *this;
             }
-            CPP_member
+            CPP_broken_friend_member
             friend auto operator+(to_container_iterator i, difference_type n) //
                 -> CPP_broken_friend_ret(to_container_iterator)(
                     requires DerivedFrom<iterator_category,
@@ -144,7 +144,7 @@ namespace ranges
             {
                 return i += n;
             }
-            CPP_member
+            CPP_broken_friend_member
             friend auto operator-(to_container_iterator i, difference_type n) //
                 -> CPP_broken_friend_ret(to_container_iterator)(
                     requires DerivedFrom<iterator_category,
@@ -152,7 +152,7 @@ namespace ranges
             {
                 return i -= n;
             }
-            CPP_member
+            CPP_broken_friend_member
             friend auto operator-(difference_type n, to_container_iterator i) //
                 -> CPP_broken_friend_ret(to_container_iterator)(
                     requires DerivedFrom<iterator_category,
@@ -160,7 +160,7 @@ namespace ranges
             {
                 return i -= n;
             }
-            CPP_member
+            CPP_broken_friend_member
             friend auto operator-(to_container_iterator const & i,
                                   to_container_iterator const & j) //
                 -> CPP_broken_friend_ret(difference_type)(
