@@ -22,10 +22,10 @@ using namespace ranges;
 int main()
 {
     // [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...]
-    std::vector<int> v =
+    auto v =
         view::for_each(view::ints(1,6), [](int i){
             return yield_from(view::repeat_n(i,i));
-        });
+        }) | to<std::vector>();
     check_equal(v, {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
 
     v |= action::unique | action::reverse;

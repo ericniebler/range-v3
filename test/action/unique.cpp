@@ -29,10 +29,10 @@ int main()
     std::mt19937 gen;
 
     // [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...]
-    std::vector<int> v =
+    auto v =
         view::for_each(view::ints(1,100), [](int i){
             return yield_from(view::repeat_n(i,i));
-        });
+        }) | to<std::vector>();
     check_equal(view::take(v, 15), {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
     v |= action::shuffle(gen);
     CHECK(!is_sorted(v));

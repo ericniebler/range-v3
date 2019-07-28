@@ -29,7 +29,7 @@ int main()
     using namespace ranges;
     std::mt19937 gen;
 
-    std::vector<int> v = view::ints(0,100);
+    auto v = view::ints(0,100) | to<std::vector>();
     v |= action::shuffle(gen);
     CHECK(!is_sorted(v));
 

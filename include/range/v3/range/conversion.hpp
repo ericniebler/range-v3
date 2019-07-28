@@ -42,6 +42,141 @@ namespace ranges
     /// \cond
     namespace detail
     {
+        struct to_container
+        {
+            template<typename ToContainer>
+            struct fn;
+
+            template<typename ToContainer, typename Rng>
+            using container_t = meta::invoke<ToContainer, Rng>;
+
+            template<typename Rng, typename ToContainer>
+            friend auto operator|(Rng && rng, fn<ToContainer> (*)(to_container))
+                -> CPP_broken_friend_ret(container_t<ToContainer, Rng>)( //
+                    requires Invocable<fn<ToContainer>, Rng>)
+            {
+                return fn<ToContainer>{}(static_cast<Rng &&>(rng));
+            }
+        };
+
+        // A simple, light-weight transform iterator that applies ranges::to
+        // to each element in the range. Used by ranges::to to convers a range
+        // of ranges into a container of containers.
+        template<typename Rng, typename Cont>
+        struct to_container_iterator
+        {
+        private:
+            using I = range_cpp17_iterator_t<Rng>;
+            using ValueType = range_value_t<Cont>;
+            I it_;
+
+        public:
+            using difference_type = typename std::iterator_traits<I>::difference_type;
+            using value_type = ValueType;
+            using reference = ValueType;
+            using pointer = typename std::iterator_traits<I>::pointer;
+            using iterator_category = typename std::iterator_traits<I>::iterator_category;
+
+            to_container_iterator() = default;
+            template<typename OtherIt>
+            to_container_iterator(OtherIt it)
+              : it_(std::move(it))
+            {}
+            friend bool operator==(to_container_iterator const & a,
+                                   to_container_iterator const & b)
+            {
+                return a.it_ == b.it_;
+            }
+            friend bool operator!=(to_container_iterator const & a,
+                                   to_container_iterator const & b)
+            {
+                return !(a == b);
+            }
+            reference operator*() const
+            {
+                return to_container::fn<meta::id<ValueType>>{}(*it_);
+            }
+            to_container_iterator & operator++()
+            {
+                ++it_;
+                return *this;
+            }
+            to_container_iterator operator++(int)
+            {
+                auto tmp = *this;
+                ++it_;
+                return tmp;
+            }
+            CPP_member
+            auto operator--() -> CPP_ret(to_container_iterator &)(
+                requires DerivedFrom<iterator_category, std::bidirectional_iterator_tag>)
+            {
+                --it_;
+                return *this;
+            }
+            CPP_member
+            auto operator--(int) -> CPP_ret(to_container_iterator &)(
+                requires DerivedFrom<iterator_category, std::bidirectional_iterator_tag>)
+            {
+                auto tmp = *this;
+                ++it_;
+                return tmp;
+            }
+            CPP_member
+            auto operator+=(difference_type n) -> CPP_ret(to_container_iterator &)(
+                requires DerivedFrom<iterator_category, std::random_access_iterator_tag>)
+            {
+                it_ += n;
+                return *this;
+            }
+            CPP_member
+            auto operator-=(difference_type n) -> CPP_ret(to_container_iterator &)(
+                requires DerivedFrom<iterator_category, std::random_access_iterator_tag>)
+            {
+                it_ -= n;
+                return *this;
+            }
+            CPP_broken_friend_member
+            friend auto operator+(to_container_iterator i, difference_type n) //
+                -> CPP_broken_friend_ret(to_container_iterator)(
+                    requires DerivedFrom<iterator_category,
+                                         std::random_access_iterator_tag>)
+            {
+                return i += n;
+            }
+            CPP_broken_friend_member
+            friend auto operator-(to_container_iterator i, difference_type n) //
+                -> CPP_broken_friend_ret(to_container_iterator)(
+                    requires DerivedFrom<iterator_category,
+                                         std::random_access_iterator_tag>)
+            {
+                return i -= n;
+            }
+            CPP_broken_friend_member
+            friend auto operator-(difference_type n, to_container_iterator i) //
+                -> CPP_broken_friend_ret(to_container_iterator)(
+                    requires DerivedFrom<iterator_category,
+                                         std::random_access_iterator_tag>)
+            {
+                return i -= n;
+            }
+            CPP_broken_friend_member
+            friend auto operator-(to_container_iterator const & i,
+                                  to_container_iterator const & j) //
+                -> CPP_broken_friend_ret(difference_type)(
+                    requires DerivedFrom<iterator_category,
+                                         std::random_access_iterator_tag>)
+            {
+                return i.it_ - j.it_;
+            }
+            CPP_member
+            auto operator[](difference_type n) const -> CPP_ret(reference)(
+                requires DerivedFrom<iterator_category, std::random_access_iterator_tag>)
+            {
+                return *(*this + n);
+            }
+        };
+
         // clang-format off
         CPP_def
         (
@@ -55,8 +190,29 @@ namespace ranges
             template(typename Rng, typename Cont)
             concept ConvertibleToContainerImpl,
                 Range<Cont> && (!View<Cont>) && MoveConstructible<Cont> &&
-                ConvertibleTo<range_value_t<Rng>, range_value_t<Cont>> &&
-                Constructible<Cont, range_cpp17_iterator_t<Rng>, range_cpp17_iterator_t<Rng>>
+                Constructible<range_value_t<Cont>, range_reference_t<Rng>> &&
+                Constructible<
+                    Cont,
+                    range_cpp17_iterator_t<Rng>,
+                    range_cpp17_iterator_t<Rng>>
+        );
+
+        CPP_def
+        (
+            template(typename Rng, typename Cont)
+            concept ConvertibleToContainerContainerImpl,
+                Range<Cont> && (!View<Cont>) && MoveConstructible<Cont> &&
+                True<ranges::defer::Range<range_value_t<Cont>> &&
+                    (!ranges::defer::View<range_value_t<Cont>>)> &&
+                // Test that each element of the input range can be ranges::to<>
+                // to the output container.
+                Invocable<
+                    to_container::fn<meta::id<range_value_t<Cont>>>,
+                    range_reference_t<Rng>> &&
+                Constructible<
+                    Cont,
+                    to_container_iterator<Rng, Cont>,
+                    to_container_iterator<Rng, Cont>>
         );
 
         CPP_def
@@ -69,68 +225,71 @@ namespace ranges
 
         CPP_def
         (
-            template(typename C, typename R)
+            template(typename Rng, typename Cont)
+            concept ConvertibleToContainerContainer,
+                defer::HasAllocatorType<Cont> && // HACKHACK
+                defer::ConvertibleToContainerContainerImpl<Rng, Cont>
+        );
+
+        CPP_def
+        (
+            template(typename C, typename I, typename R)
             concept ToContainerReserve,
-                ReserveAndAssignable<C, range_cpp17_iterator_t<R>> &&
+                ReserveAndAssignable<C, I> &&
                 SizedRange<R>
         );
         // clang-format on
 
-        struct to_container
+        template<typename ToContainer>
+        struct to_container::fn : pipeable<fn<ToContainer>>
         {
-            template<typename ToContainer>
-            struct fn : pipeable<fn<ToContainer>>
+        private:
+            template<typename Cont, typename I, typename Rng>
+            static Cont impl(Rng && rng, std::false_type)
             {
-            private:
-                template<typename Cont, typename Rng>
-                static auto impl(Rng && rng) -> CPP_ret(Cont)( //
-                    requires(!ToContainerReserve<Cont, Rng>))
-                {
-                    using I = range_cpp17_iterator_t<Rng>;
-                    return Cont(I{ranges::begin(rng)}, I{ranges::end(rng)});
-                }
-
-                template<typename Cont, typename Rng>
-                static auto impl(Rng && rng) -> CPP_ret(Cont)( //
-                    requires ToContainerReserve<Cont, Rng>)
-                {
-                    Cont c;
-                    auto const rng_size = ranges::size(rng);
-                    using size_type = decltype(c.max_size());
-                    using C = common_type_t<range_size_t<Rng>, size_type>;
-                    RANGES_EXPECT(static_cast<C>(rng_size) <=
-                                  static_cast<C>(c.max_size()));
-                    c.reserve(static_cast<size_type>(rng_size));
-                    using I = range_cpp17_iterator_t<Rng>;
-                    c.assign(I{ranges::begin(rng)}, I{ranges::end(rng)});
-                    return c;
-                }
-
-                template<typename Rng>
-                using container_t = meta::invoke<ToContainer, Rng>;
-
-            public:
-                template<typename Rng>
-                auto operator()(Rng && rng) const -> CPP_ret(container_t<Rng>)( //
-                    requires InputRange<Rng> &&
-                        ConvertibleToContainer<Rng, container_t<Rng>>)
-                {
-                    static_assert(!is_infinite<Rng>::value,
-                                  "Attempt to convert an infinite range to a container.");
-                    return impl<container_t<Rng>>(static_cast<Rng &&>(rng));
-                }
-            };
-
-            template<typename ToContainer, typename Rng>
+                return Cont(I{ranges::begin(rng)}, I{ranges::end(rng)});
+            }
+            template<typename Cont, typename I, typename Rng>
+            static auto impl(Rng && rng, std::true_type)
+            {
+                Cont c;
+                auto const rng_size = ranges::size(rng);
+                using size_type = decltype(c.max_size());
+                using C = common_type_t<range_size_t<Rng>, size_type>;
+                RANGES_EXPECT(static_cast<C>(rng_size) <= static_cast<C>(c.max_size()));
+                c.reserve(static_cast<size_type>(rng_size));
+                c.assign(I{ranges::begin(rng)}, I{ranges::end(rng)});
+                return c;
+            }
+            template<typename Rng>
             using container_t = meta::invoke<ToContainer, Rng>;
 
-            template<typename Rng, typename ToContainer>
-            friend auto operator|(Rng && rng, fn<ToContainer> (*)(to_container))
-                -> CPP_broken_friend_ret(container_t<ToContainer, Rng>)( //
-                    requires InputRange<Rng> &&
-                        ConvertibleToContainer<Rng, container_t<ToContainer, Rng>>)
+        public:
+            template<typename Rng>
+            auto operator()(Rng && rng) const -> CPP_ret(container_t<Rng>)( //
+                requires InputRange<Rng> && ConvertibleToContainer<Rng, container_t<Rng>>)
             {
-                return fn<ToContainer>{}(static_cast<Rng &&>(rng));
+                static_assert(!is_infinite<Rng>::value,
+                              "Attempt to convert an infinite range to a container.");
+                using cont_t = container_t<Rng>;
+                using iter_t = range_cpp17_iterator_t<Rng>;
+                using use_reserve_t =
+                    meta::bool_<(bool)ToContainerReserve<cont_t, iter_t, Rng>>;
+                return impl<cont_t, iter_t>(static_cast<Rng &&>(rng), use_reserve_t{});
+            }
+            template<typename Rng>
+            auto operator()(Rng && rng) const -> CPP_ret(container_t<Rng>)(       //
+                requires InputRange<Rng> &&                                       //
+                    True<!defer::ConvertibleToContainer<Rng, container_t<Rng>> && //
+                         defer::ConvertibleToContainerContainer<Rng, container_t<Rng>>>)
+            {
+                static_assert(!is_infinite<Rng>::value,
+                              "Attempt to convert an infinite range to a container.");
+                using cont_t = container_t<Rng>;
+                using iter_t = to_container_iterator<Rng, cont_t>;
+                using use_reserve_t =
+                    meta::bool_<(bool)ToContainerReserve<cont_t, iter_t, Rng>>;
+                return impl<cont_t, iter_t>(static_cast<Rng &&>(rng), use_reserve_t{});
             }
         };
 

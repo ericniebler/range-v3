@@ -20,7 +20,7 @@ int main()
     using namespace ranges;
     using namespace std::placeholders;
 
-    std::vector<int> v = view::ints(1,21);
+    auto v = view::ints(1,21) | to<std::vector>();
     auto & v2 = action::drop_while(v, std::bind(std::less<int>(), _1, 4));
     CHECK(&v2 == &v);
     CHECK(v.size() == 17u);

@@ -23,7 +23,7 @@ int main()
 {
     using namespace ranges;
     {
-        std::vector<int> v = view::ints(0, 100);
+        auto v = view::ints(0, 100) | to<std::vector>();
 
         auto v2 = v | copy | action::slice(10, 20);
         CHECK(size(v2) == 10u);
@@ -42,7 +42,7 @@ int main()
     }
 
     {
-        std::vector<int> rng = view::ints(0, 100);
+        auto rng = view::ints(0, 100) | to<std::vector>();
 
         rng |= action::slice(20, end - 70);
         CHECK(size(rng) == 10u);
@@ -54,7 +54,7 @@ int main()
     }
 
     {
-        std::vector<int> rng = view::ints(0, 100);
+        auto rng = view::ints(0, 100) | to<std::vector>();
 
         auto &rng_copy = action::slice(rng, 90, end);
         CHECK(&rng_copy == &rng);

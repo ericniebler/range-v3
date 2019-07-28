@@ -73,7 +73,7 @@ RANGES_DIAGNOSTIC_IGNORE("-Wunused-member-function")
             { 1, 2, 3 },
             { 4, 5, 6 }
         };
-        const std::vector<int> flat_nums = ranges::view::join( nums );
+        const auto flat_nums = ranges::view::join( nums ) | ranges::to<std::vector>();
         ::check_equal(flat_nums, {1,2,3,4,5,6});
     }
 }
@@ -114,7 +114,7 @@ int main()
 
     // Just for fun:
     std::string str = "Now,is,the,time,for,all,good,men,to,come,to,the,aid,of,their,country";
-    std::string res = str | view::split(',') | view::join(' ');
+    auto res = str | view::split(',') | view::join(' ') | to<std::string>();
     CHECK(res == "Now is the time for all good men to come to the aid of their country");
     static_assert(range_cardinality<decltype(res)>::value == ranges::finite, "");
 

@@ -20,7 +20,7 @@ int main()
 {
     using namespace ranges;
 
-    std::vector<int> v = view::ints(1,21);
+    auto v = view::ints(1,21) | to<std::vector>();
     auto & v2 = action::remove_if(v, [](int i){return i % 2 == 0;});
     CHECK(&v2 == &v);
     check_equal(v, {1,3,5,7,9,11,13,15,17,19});
