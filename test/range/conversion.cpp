@@ -25,6 +25,8 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
+
 template<typename T>
 struct vector_like : std::vector<T>
 {
