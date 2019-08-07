@@ -60,7 +60,7 @@ namespace ranges
         };
 
         // A simple, light-weight transform iterator that applies ranges::to
-        // to each element in the range. Used by ranges::to to convers a range
+        // to each element in the range. Used by ranges::to to convert a range
         // of ranges into a container of containers.
         template<typename Rng, typename Cont>
         struct to_container_iterator
@@ -203,7 +203,7 @@ namespace ranges
             concept ConvertibleToContainerContainerImpl,
                 Range<Cont> && (!View<Cont>) && MoveConstructible<Cont> &&
                 True<ranges::defer::Range<range_value_t<Cont>> &&
-                    (!ranges::defer::View<range_value_t<Cont>>)> &&
+                    !ranges::defer::View<range_value_t<Cont>>> &&
                 // Test that each element of the input range can be ranges::to<>
                 // to the output container.
                 Invocable<

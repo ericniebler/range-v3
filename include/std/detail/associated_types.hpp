@@ -243,6 +243,11 @@ namespace ranges
 
         // For testing whether a particular instantiation of std::iterator_traits
         // is user-specified or not.
+#if defined(_MSVC_STL_UPDATE) && defined(__cpp_lib_concepts) && _MSVC_STL_UPDATE >= 201908L
+        template<typename I>
+        inline constexpr bool is_std_iterator_traits_specialized_v =
+            !std::_Is_from_primary<std::iterator_traits<I>>;
+#else
 #if defined(__GLIBCXX__)
         template<typename I>
         char (&is_std_iterator_traits_specialized_impl_(std::__iterator_traits<I> *))[2];
@@ -275,6 +280,7 @@ namespace ranges
         // This helps with `T volatile*` and `void *`.
         template<typename T>
         RANGES_INLINE_VAR constexpr bool is_std_iterator_traits_specialized_v<T *> = false;
+#endif
     }
     /// \endcond
 }
