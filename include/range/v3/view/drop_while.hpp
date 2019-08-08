@@ -124,6 +124,18 @@ namespace ranges
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<drop_while_fn>, drop_while)
     } // namespace view
+
+    namespace cpp20
+    {
+        namespace view
+        {
+            using ranges::view::drop_while;
+        }
+        CPP_template(typename Rng, typename Pred)( //
+            requires ViewableRange<Rng> && InputRange<Rng> &&
+                        IndirectUnaryPredicate<Pred, iterator_t<Rng>>)     //
+            using drop_while_view = ranges::drop_while_view<Rng, Pred>;
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

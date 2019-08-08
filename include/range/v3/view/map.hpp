@@ -124,6 +124,16 @@ namespace ranges
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<values_fn>, values)
     } // namespace view
+
+    namespace cpp20
+    {
+        namespace view
+        {
+            using ranges::view::keys;
+            using ranges::view::values;
+        }
+        // TODO(@cjdb): provide implementation for elements_view
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

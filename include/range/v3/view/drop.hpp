@@ -167,6 +167,17 @@ namespace ranges
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<drop_fn>, drop)
     } // namespace view
+
+    namespace cpp20
+    {
+        namespace view
+        {
+            using ranges::view::drop;
+        }
+        CPP_template(typename Rng)( //
+            requires View<Rng>)     //
+            using drop_view = ranges::drop_view<Rng>;
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

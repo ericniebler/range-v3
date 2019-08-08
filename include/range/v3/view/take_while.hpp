@@ -175,6 +175,18 @@ namespace ranges
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<take_while_fn>, take_while)
     } // namespace view
+
+    namespace cpp20
+    {
+        namespace view
+        {
+            using ranges::view::take_while;
+        }
+        CPP_template(typename Rng, typename Pred)( //
+            requires ViewableRange<Rng> && InputRange<Rng> &&
+                        Predicate<Pred &, iterator_t<Rng>> && CopyConstructible<Pred>)     //
+            using take_while_view = ranges::take_while_view<Rng, Pred>;
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 
