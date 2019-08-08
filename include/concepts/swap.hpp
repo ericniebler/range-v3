@@ -41,7 +41,7 @@
 #endif  // CPP_CXX_INLINE_VARIABLES
 
 #if defined(_MSC_VER) && !defined(__clang__)
-#define CPP_WORKAROUND_MSVC_620035 // Error when definition-context name binding finds only deleted function
+#define CPP_WORKAROUND_MSVC_895622 // Error when phase 1 name binding finds only deleted function
 #endif
 
 #if CPP_CXX_INLINE_VARIABLES < 201606L
@@ -157,7 +157,7 @@ namespace concepts
         template<typename T, std::size_t N>
         nope swap(T (&)[N], T (&)[N]) = delete;
 
-#ifdef CPP_WORKAROUND_MSVC_620035
+#ifdef CPP_WORKAROUND_MSVC_895622
         nope swap();
 #endif
 
