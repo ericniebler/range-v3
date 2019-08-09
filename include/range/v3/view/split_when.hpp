@@ -22,6 +22,7 @@
 #include <range/v3/range_fwd.hpp>
 
 #include <range/v3/algorithm/find_if_not.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/iterator/operations.hpp>
@@ -124,8 +125,7 @@ namespace ranges
         public:
             cursor() = default;
             CPP_template(bool Other)( //
-                requires IsConst && (!Other))
-            cursor(cursor<Other> that)
+                requires IsConst && (!Other)) cursor(cursor<Other> that)
               : cursor{std::move(that.cur_), std::move(that.last_), std::move(that.fun_)}
             {}
         };
@@ -165,8 +165,7 @@ namespace ranges
             template<typename T>
             static auto bind(split_when_fn split_when, T && t)
             {
-                return make_pipeable(
-                    std::bind(split_when, std::placeholders::_1, bind_forward<T>(t)));
+                return make_pipeable(bind_back(split_when, static_cast<T &&>(t)));
             }
             template<typename Pred>
             struct predicate_pred

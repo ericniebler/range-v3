@@ -14,12 +14,11 @@
 #ifndef RANGES_V3_ACTION_SORT_HPP
 #define RANGES_V3_ACTION_SORT_HPP
 
-#include <functional>
-
 #include <range/v3/range_fwd.hpp>
 
 #include <range/v3/action/action.hpp>
 #include <range/v3/algorithm/sort.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/iterator/concepts.hpp>
@@ -40,10 +39,7 @@ namespace ranges
             static auto CPP_fun(bind)(sort_fn sort, C pred, P proj = P{})( //
                 requires(!Range<C>))
             {
-                return std::bind(sort,
-                                 std::placeholders::_1,
-                                 protect(std::move(pred)),
-                                 protect(std::move(proj)));
+                return bind_back(sort, std::move(pred), std::move(proj));
             }
 
         public:

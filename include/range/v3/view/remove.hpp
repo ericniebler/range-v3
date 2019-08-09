@@ -23,7 +23,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/functional/bind.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/pipeable.hpp>
 #include <range/v3/view/remove_if.hpp>
@@ -41,19 +41,17 @@ namespace ranges
             friend view_access;
 
             template<typename Value>
-            static auto bind(remove_fn remove, Value value)
+            static constexpr auto bind(remove_fn remove, Value value)
             {
-                return make_pipeable(
-                    std::bind(remove, std::placeholders::_1, std::move(value)));
+                return make_pipeable(bind_back(remove, std::move(value)));
             }
             template<typename Value, typename Proj>
-            static auto CPP_fun(bind)(remove_fn remove, Value value, Proj proj)( //
+            static constexpr auto CPP_fun(bind)(remove_fn remove, Value value,
+                                                Proj proj)( //
                 requires(!Range<Value>))
             {
-                return make_pipeable(std::bind(remove,
-                                               std::placeholders::_1,
-                                               std::move(value),
-                                               protect(std::move(proj))));
+                return make_pipeable(
+                    bind_back(remove, std::move(value), std::move(proj)));
             }
 
             template<typename Value>

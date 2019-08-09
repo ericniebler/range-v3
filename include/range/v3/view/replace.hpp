@@ -23,6 +23,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/transform.hpp>
@@ -44,7 +45,7 @@ namespace ranges
 
         public:
             replacer_fn() = default;
-            replacer_fn(Val1 old_value, Val2 new_value)
+            constexpr replacer_fn(Val1 old_value, Val2 new_value)
               : old_value_(std::move(old_value))
               , new_value_(std::move(new_value))
             {}
@@ -90,20 +91,19 @@ namespace ranges
         private:
             friend view_access;
             template<typename Val1, typename Val2>
-            static auto CPP_fun(bind)(replace_fn replace, Val1 old_value,
-                                      Val2 new_value)( //
+            static constexpr auto CPP_fun(bind)(replace_fn replace, Val1 old_value,
+                                                Val2 new_value)( //
                 requires Same<detail::decay_t<unwrap_reference_t<Val1>>,
                               detail::decay_t<unwrap_reference_t<Val2>>>)
             {
-                return make_pipeable(std::bind(replace,
-                                               std::placeholders::_1,
-                                               std::move(old_value),
-                                               std::move(new_value)));
+                return make_pipeable(
+                    bind_back(replace, std::move(old_value), std::move(new_value)));
             }
 
         public:
             template<typename Rng, typename Val1, typename Val2>
-            auto operator()(Rng && rng, Val1 && old_value, Val2 && new_value) const
+            constexpr auto operator()(Rng && rng, Val1 && old_value,
+                                      Val2 && new_value) const
                 -> CPP_ret(replace_view<all_t<Rng>, detail::decay_t<Val1>,
                                         detail::decay_t<Val2>>)( //
                     requires ViewableRange<Rng> && InputRange<Rng> && Same<

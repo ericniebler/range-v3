@@ -165,6 +165,39 @@ namespace ranges
 #endif // RANGES_WORKAROUND_MSVC_701385
 
     /// \cond
+    namespace detail
+    {
+        template<bool IsInvocable>
+        struct is_nothrow_invocable_impl_
+        {
+            template<typename Fn, typename... Args>
+            static constexpr bool apply() noexcept
+            {
+                return false;
+            }
+        };
+        template<>
+        struct is_nothrow_invocable_impl_<true>
+        {
+            template<typename Fn, typename... Args>
+            static constexpr bool apply() noexcept
+            {
+                return noexcept(invoke(std::declval<Fn>(), std::declval<Args>()...));
+            }
+        };
+    } // namespace detail
+    /// \endcond
+
+    template<typename Fn, typename... Args>
+    RANGES_INLINE_VAR constexpr bool is_invocable_v =
+        meta::is_trait<invoke_result<Fn, Args...>>::value;
+
+    template<typename Fn, typename... Args>
+    RANGES_INLINE_VAR constexpr bool is_nothrow_invocable_v =
+        detail::is_nothrow_invocable_impl_<is_invocable_v<Fn, Args...>>::template apply<
+            Fn, Args...>();
+
+    /// \cond
     template<typename Sig>
     struct RANGES_DEPRECATED(
         "ranges::result_of is deprecated. "
@@ -184,6 +217,8 @@ namespace ranges
         using ranges::invoke;
         using ranges::invoke_result;
         using ranges::invoke_result_t;
+        using ranges::is_invocable_v;
+        using ranges::is_nothrow_invocable_v;
     } // namespace cpp20
 
     /// @}

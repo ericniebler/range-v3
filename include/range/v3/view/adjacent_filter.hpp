@@ -21,6 +21,7 @@
 #include <range/v3/range_fwd.hpp>
 
 #include <range/v3/algorithm/adjacent_find.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/utility/semiregular.hpp>
@@ -71,8 +72,7 @@ namespace ranges
               : rng_(&rng)
             {}
             CPP_template(bool Other)( //
-                requires Const && (!Other))
-            constexpr adaptor(adaptor<Other> that)
+                requires Const && (!Other)) constexpr adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
             constexpr void next(iterator_t<CRng> & it) const
@@ -146,8 +146,7 @@ namespace ranges
             template<typename Pred>
             constexpr static auto bind(adjacent_filter_fn adjacent_filter, Pred pred)
             {
-                return make_pipeable(std::bind(
-                    adjacent_filter, std::placeholders::_1, protect(std::move(pred))));
+                return make_pipeable(bind_back(adjacent_filter, std::move(pred)));
             }
 
         public:

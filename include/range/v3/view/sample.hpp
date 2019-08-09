@@ -17,6 +17,7 @@
 #include <meta/meta.hpp>
 
 #include <range/v3/algorithm/shuffle.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
@@ -136,8 +137,7 @@ namespace ranges
                 advance();
             }
             CPP_template(bool Other)( //
-                requires IsConst && (!Other))
-            cursor(cursor<Other> that)
+                requires IsConst && (!Other)) cursor(cursor<Other> that)
               : parent_(that.parent_)
               , current_(std::move(that.current_))
               , size_(that.size_)
@@ -208,12 +208,22 @@ namespace ranges
         private:
             friend view_access;
             template<typename Size, typename URNG = detail::default_random_engine>
-            static auto CPP_fun(bind)(sample_fn fn, Size n,
+            static auto CPP_fun(bind)(sample_fn sample, Size n,
                                       URNG & urng = detail::get_random_engine())( //
                 requires Integral<Size> && UniformRandomNumberGenerator<URNG>)
             {
-                return make_pipeable(
-                    std::bind(fn, std::placeholders::_1, n, bind_forward<URNG &>(urng)));
+                return make_pipeable(bind_back(
+                    [sample](auto && rng, Size n, URNG & urng)
+                        -> invoke_result_t<sample_fn,
+                                           decltype(rng),
+                                           range_difference_t<decltype(rng)>,
+                                           URNG &> {
+                        return sample(static_cast<decltype(rng)>(rng),
+                                      static_cast<range_difference_t<decltype(rng)>>(n),
+                                      urng);
+                    },
+                    n,
+                    std::ref(urng)));
             }
 
         public:

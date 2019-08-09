@@ -14,12 +14,12 @@
 #ifndef RANGES_V3_ACTION_SHUFFLE_HPP
 #define RANGES_V3_ACTION_SHUFFLE_HPP
 
-#include <functional>
-
 #include <range/v3/range_fwd.hpp>
 
 #include <range/v3/action/action.hpp>
 #include <range/v3/algorithm/shuffle.hpp>
+#include <range/v3/functional/bind.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
@@ -39,7 +39,18 @@ namespace ranges
             static auto CPP_fun(bind)(shuffle_fn shuffle, Gen && gen)( //
                 requires UniformRandomNumberGenerator<Gen>)
             {
-                return std::bind(shuffle, std::placeholders::_1, bind_forward<Gen>(gen));
+                return bind_back(shuffle, static_cast<Gen &&>(gen));
+            }
+            template<typename Gen>
+            static auto CPP_fun(bind)(shuffle_fn shuffle, Gen & gen)( //
+                requires UniformRandomNumberGenerator<Gen>)
+            {
+                return bind_back(
+                    [shuffle](auto && rng, Gen * gen)
+                        -> invoke_result_t<shuffle_fn, decltype(rng), Gen &> {
+                        return shuffle(static_cast<decltype(rng)>(rng), *gen);
+                    },
+                    &gen);
             }
 
         public:

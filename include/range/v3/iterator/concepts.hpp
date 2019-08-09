@@ -174,7 +174,7 @@ namespace ranges
                 std::integral_constant<bool, (D(-1) < D(0))>::value
         );
 #endif // RANGES_WORKAROUND_MSVC_792338
-        // clang-format on
+       // clang-format on
     } // namespace detail
       /// \endcond
 

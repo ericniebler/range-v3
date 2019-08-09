@@ -23,6 +23,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/semiregular.hpp>
@@ -48,7 +49,7 @@ namespace ranges
 
         public:
             replacer_if_fn() = default;
-            replacer_if_fn(Pred pred, Val new_value)
+            constexpr replacer_if_fn(Pred pred, Val new_value)
               : base_t{std::move(pred), std::move(new_value)}
             {}
 
@@ -118,17 +119,15 @@ namespace ranges
         private:
             friend view_access;
             template<typename Pred, typename Val>
-            static auto bind(replace_if_fn replace_if, Pred pred, Val new_value)
+            static constexpr auto bind(replace_if_fn replace_if, Pred pred, Val new_value)
             {
-                return make_pipeable(std::bind(replace_if,
-                                               std::placeholders::_1,
-                                               protect(std::move(pred)),
-                                               std::move(new_value)));
+                return make_pipeable(
+                    bind_back(replace_if, std::move(pred), std::move(new_value)));
             }
 
         public:
             template<typename Rng, typename Pred, typename Val>
-            auto operator()(Rng && rng, Pred pred, Val new_value) const
+            constexpr auto operator()(Rng && rng, Pred pred, Val new_value) const
                 -> CPP_ret(replace_if_view<all_t<Rng>, Pred, Val>)( //
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<Pred, iterator_t<Rng>> &&

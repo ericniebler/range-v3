@@ -20,6 +20,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -128,10 +129,10 @@ namespace ranges
         private:
             friend view_access;
             template<typename Int>
-            static auto CPP_fun(bind)(drop_exactly_fn drop_exactly, Int n)( //
+            static constexpr auto CPP_fun(bind)(drop_exactly_fn drop_exactly, Int n)( //
                 requires Integral<Int>)
             {
-                return make_pipeable(std::bind(drop_exactly, std::placeholders::_1, n));
+                return make_pipeable(bind_back(drop_exactly, n));
             }
             template<typename Rng>
             static auto impl_(Rng && rng, range_difference_t<Rng> n, input_range_tag)

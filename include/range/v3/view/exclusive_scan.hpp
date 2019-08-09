@@ -19,7 +19,7 @@
 #include <range/v3/range_fwd.hpp>
 
 #include <range/v3/functional/arithmetic.hpp>
-#include <range/v3/functional/bind.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
@@ -101,8 +101,7 @@ namespace ranges
               : rng_(&rng)
             {}
             CPP_template(bool Other)( //
-                requires IsConst && (!Other))
-            adaptor(adaptor<Other> that)
+                requires IsConst && (!Other)) adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
             iterator_t<CRng> begin(exclusive_scan_view_t &)
@@ -147,7 +146,7 @@ namespace ranges
 
     public:
         exclusive_scan_view() = default;
-        exclusive_scan_view(Rng rng, T init, Fun fun)
+        constexpr exclusive_scan_view(Rng rng, T init, Fun fun)
           : exclusive_scan_view::view_adaptor{std::move(rng)}
           , init_(std::move(init))
           , fun_(std::move(fun))
@@ -178,17 +177,16 @@ namespace ranges
         private:
             friend view_access;
             template<typename T, typename Fun = plus>
-            static auto bind(exclusive_scan_fn exclusive_scan, T init, Fun fun = {})
+            static constexpr auto bind(exclusive_scan_fn exclusive_scan, T init,
+                                       Fun fun = {})
             {
-                return make_pipeable(std::bind(exclusive_scan,
-                                               std::placeholders::_1,
-                                               std::move(init),
-                                               protect(std::move(fun))));
+                return make_pipeable(
+                    bind_back(exclusive_scan, std::move(init), std::move(fun)));
             }
 
         public:
             template<typename Rng, typename T, typename Fun = plus>
-            auto operator()(Rng && rng, T init, Fun fun = Fun{}) const
+            constexpr auto operator()(Rng && rng, T init, Fun fun = Fun{}) const
                 -> CPP_ret(exclusive_scan_view<all_t<Rng>, T, Fun>)( //
                     requires ExclusiveScanConstraint<Rng, T, Fun>)
             {

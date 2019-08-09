@@ -18,6 +18,7 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/pipeable.hpp>
 #include <range/v3/iterator/counted_iterator.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
@@ -87,11 +88,13 @@ namespace ranges
                 // keep range bound
                 // Sized Bidi O(N)
                 return (RandomAccessView<Rng> && SizedView<Rng>) ||
-                               (BidirectionalView<Rng> && CommonView<Rng>)
-                           ? mode_enum::bidi
-                           : SizedView<Rng> ? mode_enum::sized
-                                            : ForwardView<Rng> ? mode_enum::forward
-                                                               : mode_enum::invalid;
+                               (BidirectionalView<Rng> && CommonView<Rng>) //
+                           ? mode_enum::bidi                               //
+                           : SizedView<Rng>                                //
+                                 ? mode_enum::sized                        //
+                                 : ForwardView<Rng>                        //
+                                       ? mode_enum::forward                //
+                                       : mode_enum::invalid;               //
 
                 // max performance
                 // Sized Bidi O(1)
@@ -138,7 +141,7 @@ namespace ranges
 
     public:
         drop_last_view() = default;
-        drop_last_view(Rng rng, difference_t n)
+        constexpr drop_last_view(Rng rng, difference_t n)
           : rng_(std::move(rng))
           , n_(n)
         {
@@ -243,7 +246,7 @@ namespace ranges
 
     public:
         drop_last_view() = default;
-        drop_last_view(Rng rng, difference_t n)
+        constexpr drop_last_view(Rng rng, difference_t n)
           : drop_last_view::view_adaptor(std::move(rng))
           , n_(n)
         {
@@ -278,7 +281,7 @@ namespace ranges
 
     public:
         drop_last_view() = default;
-        drop_last_view(Rng rng, difference_t n)
+        constexpr drop_last_view(Rng rng, difference_t n)
           : rng_(std::move(rng))
           , n_(n)
         {
@@ -332,15 +335,15 @@ namespace ranges
             friend view_access;
 
             template<typename Int>
-            static auto CPP_fun(bind)(drop_last_fn drop_last, Int n)( //
+            static constexpr auto CPP_fun(bind)(drop_last_fn drop_last, Int n)( //
                 requires Integral<Int>)
             {
-                return make_pipeable(std::bind(drop_last, std::placeholders::_1, n));
+                return make_pipeable(bind_back(drop_last, n));
             }
 
         public:
             template<typename Rng>
-            auto operator()(Rng && rng, range_difference_t<Rng> n) const
+            constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> CPP_ret(drop_last_view<all_t<Rng>>)( //
                     requires SizedRange<Rng> || ForwardRange<Rng>)
             {

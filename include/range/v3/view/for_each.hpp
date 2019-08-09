@@ -20,6 +20,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
@@ -42,15 +43,14 @@ namespace ranges
         private:
             friend view_access;
             template<typename Fun>
-            static auto bind(for_each_fn for_each, Fun fun)
+            static constexpr auto bind(for_each_fn for_each, Fun fun)
             {
-                return make_pipeable(
-                    std::bind(for_each, std::placeholders::_1, protect(std::move(fun))));
+                return make_pipeable(bind_back(for_each, std::move(fun)));
             }
 
         public:
             template<typename Rng, typename Fun>
-            auto CPP_fun(operator())(Rng && rng, Fun fun)(
+            constexpr auto CPP_fun(operator())(Rng && rng, Fun fun)(
                 const requires ViewableRange<Rng> && TransformableRange<Rng, Fun> &&
                     JoinableRange<transform_view<all_t<Rng>, Fun>>)
             {

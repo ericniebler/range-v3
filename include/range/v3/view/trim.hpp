@@ -14,14 +14,13 @@
 #ifndef RANGES_V3_VIEW_TRIM_HPP
 #define RANGES_V3_VIEW_TRIM_HPP
 
-#include <functional>
 #include <utility>
 
 #include <concepts/concepts.hpp>
 
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/detail/config.hpp>
-#include <range/v3/functional/bind.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/functional/pipeable.hpp>
@@ -53,7 +52,7 @@ namespace ranges
                        IndirectUnaryPredicate<Pred, iterator_t<Rng>> && CommonRange<Rng>);
 
         trim_view() = default;
-        trim_view(Rng rng, Pred pred)
+        constexpr trim_view(Rng rng, Pred pred)
           : rng_(std::move(rng))
           , pred_(std::move(pred))
         {}
@@ -102,23 +101,19 @@ namespace ranges
         private:
             friend view_access;
             template<typename Pred>
-            static auto bind(trim_fn trim, Pred pred)
+            static constexpr auto bind(trim_fn trim, Pred pred)
             {
-                return make_pipeable(
-                    std::bind(trim, std::placeholders::_1, protect(std::move(pred))));
+                return make_pipeable(bind_back(trim, std::move(pred)));
             }
             template<typename Pred, typename Proj>
-            static auto bind(trim_fn trim, Pred pred, Proj proj)
+            static constexpr auto bind(trim_fn trim, Pred pred, Proj proj)
             {
-                return make_pipeable(std::bind(trim,
-                                               std::placeholders::_1,
-                                               protect(std::move(pred)),
-                                               protect(std::move(proj))));
+                return make_pipeable(bind_back(trim, std::move(pred), std::move(proj)));
             }
 
         public:
             template<typename Rng, typename Pred>
-            auto operator()(Rng && rng, Pred pred) const
+            constexpr auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(trim_view<all_t<Rng>, Pred>)( //
                     requires ViewableRange<Rng> && BidirectionalRange<Rng> &&
                         IndirectUnaryPredicate<Pred, iterator_t<Rng>> && CommonRange<Rng>)
@@ -126,7 +121,7 @@ namespace ranges
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
             template<typename Rng, typename Pred, typename Proj>
-            auto operator()(Rng && rng, Pred pred, Proj proj) const
+            constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
                 -> CPP_ret(trim_view<all_t<Rng>, composed<Pred, Proj>>)( //
                     requires ViewableRange<Rng> && BidirectionalRange<Rng> &&
                         IndirectUnaryPredicate<composed<Pred, Proj>, iterator_t<Rng>> &&

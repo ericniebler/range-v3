@@ -14,12 +14,11 @@
 #ifndef RANGES_V3_ACTION_STRIDE_HPP
 #define RANGES_V3_ACTION_STRIDE_HPP
 
-#include <functional>
-
 #include <range/v3/range_fwd.hpp>
 
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/traits.hpp>
@@ -39,7 +38,7 @@ namespace ranges
             static auto CPP_fun(bind)(stride_fn stride, D step)( //
                 requires Integral<D>)
             {
-                return std::bind(stride, std::placeholders::_1, step);
+                return bind_back(stride, step);
             }
 
         public:

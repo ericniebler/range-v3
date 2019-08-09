@@ -14,7 +14,6 @@
 #ifndef RANGES_V3_ACTION_SPLIT_HPP
 #define RANGES_V3_ACTION_SPLIT_HPP
 
-#include <functional>
 #include <vector>
 
 #include <meta/meta.hpp>

@@ -99,8 +99,7 @@ namespace ranges
               , it_(ranges::begin(rng.rng_))
             {}
             CPP_template(bool Other)( //
-                requires IsConst && (!Other))
-            cursor(cursor<Other> that)
+                requires IsConst && (!Other)) cursor(cursor<Other> that)
               : rng_(that.rng_)
               , it_(std::move(that.it_))
             {}
@@ -141,8 +140,8 @@ namespace ranges
                 --it_;
             }
             CPP_template(typename Diff)( //
-                requires RandomAccessRange<CRng> && detail::IntegerLike_<Diff>)
-            void advance(Diff n)
+                requires RandomAccessRange<CRng> &&
+                    detail::IntegerLike_<Diff>) void advance(Diff n)
             {
                 auto const begin = ranges::begin(rng_->rng_);
                 auto const end = this->get_end_(meta::bool_<(bool)CommonRange<CRng>>{},

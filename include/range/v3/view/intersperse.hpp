@@ -21,6 +21,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -76,8 +77,7 @@ namespace ranges
               : val_{val}
             {}
             CPP_template(bool Other)( //
-                requires Const && (!Other))
-            cursor_adaptor(cursor_adaptor<Other> that)
+                requires Const && (!Other)) cursor_adaptor(cursor_adaptor<Other> that)
               : toggle_(that.toggle_)
               , val_(std::move(that.val_))
             {}
@@ -142,8 +142,7 @@ namespace ranges
         public:
             sentinel_adaptor() = default;
             CPP_template(bool Other)( //
-                requires Const && (!Other))
-            sentinel_adaptor(sentinel_adaptor<Other>)
+                requires Const && (!Other)) sentinel_adaptor(sentinel_adaptor<Other>)
             {}
             static constexpr bool empty(iterator_t<CRng> const & it,
                                         cursor_adaptor<Const> const &,
@@ -207,11 +206,10 @@ namespace ranges
         private:
             friend view_access;
             template<typename T>
-            static auto CPP_fun(bind)(intersperse_fn intersperse, T t)( //
+            static constexpr auto CPP_fun(bind)(intersperse_fn intersperse, T t)( //
                 requires Copyable<T>)
             {
-                return make_pipeable(
-                    std::bind(intersperse, std::placeholders::_1, std::move(t)));
+                return make_pipeable(bind_back(intersperse, std::move(t)));
             }
 
         public:

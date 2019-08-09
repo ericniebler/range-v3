@@ -20,6 +20,7 @@
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/reverse.hpp>
+#include <range/v3/view/subrange.hpp>
 #include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -27,7 +28,7 @@
 
 struct is_odd
 {
-    bool operator()(int i) const
+    constexpr bool operator()(int i) const
     {
         return (i % 2) == 1;
     }
@@ -35,7 +36,7 @@ struct is_odd
 
 struct is_even
 {
-    bool operator()(int i) const
+    constexpr bool operator()(int i) const
     {
         return (i % 2) == 0;
     }
@@ -46,7 +47,7 @@ struct my_data
     int i;
 };
 
-bool operator==(my_data left, my_data right)
+constexpr bool operator==(my_data left, my_data right)
 {
     return left.i == right.i;
 }
@@ -144,6 +145,21 @@ int main()
             auto rng = some_my_datas | ranges::view::filter(is_even(), &my_data::i);
             ::check_equal(rng, std::vector<my_data>{{2}, {4}});
         }
+    }
+
+    // test constexpr binding
+    {
+        using namespace ranges;
+        constexpr std::array<int, 4> is = {{1,2,3,4}};
+        constexpr auto filter = view::remove_if(is_even()) | view::remove_if(is_odd());
+        auto rng = is | filter;
+        CHECK(rng.empty());
+    }
+    {
+        const std::vector<my_data> some_my_datas{{1}, {2}, {3}, {4}};
+        constexpr auto filter = view::remove_if(is_even(), &my_data::i) | view::remove_if(is_odd(), &my_data::i);
+        auto rng = some_my_datas | filter;
+        CHECK(rng.empty());
     }
 
     return test_result();
