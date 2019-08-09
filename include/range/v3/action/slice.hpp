@@ -14,14 +14,13 @@
 #ifndef RANGES_V3_ACTION_SLICE_HPP
 #define RANGES_V3_ACTION_SLICE_HPP
 
-#include <functional>
-
 #include <meta/meta.hpp>
 
 #include <range/v3/range_fwd.hpp>
 
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/traits.hpp>
@@ -47,33 +46,33 @@ namespace ranges
             static auto CPP_fun(bind)(slice_fn slice, D from, D to)( //
                 requires Integral<D>)
             {
-                return std::bind(slice, std::placeholders::_1, from, to);
+                return bind_back(slice, from, to);
             }
             template<typename D>
             static auto CPP_fun(bind)(slice_fn slice, D from, detail::from_end_<D> to)( //
                 requires Integral<D>)
             {
-                return std::bind(slice, std::placeholders::_1, from, to);
+                return bind_back(slice, from, to);
             }
             template<typename D>
             static auto CPP_fun(bind)(slice_fn slice, detail::from_end_<D> from,
                                       detail::from_end_<D> to)( //
                 requires Integral<D>)
             {
-                return std::bind(slice, std::placeholders::_1, from, to);
+                return bind_back(slice, from, to);
             }
             template<typename D>
             static auto CPP_fun(bind)(slice_fn slice, D from, end_fn const & to)( //
                 requires Integral<D>)
             {
-                return std::bind(slice, std::placeholders::_1, from, to);
+                return bind_back(slice, from, to);
             }
             template<typename D>
             static auto CPP_fun(bind)(slice_fn slice, detail::from_end_<D> from,
                                       end_fn const & to)( //
                 requires Integral<D>)
             {
-                return std::bind(slice, std::placeholders::_1, from, to);
+                return bind_back(slice, from, to);
             }
 
         public:

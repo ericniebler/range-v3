@@ -20,7 +20,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/bind_back.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/not_fn.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/adjacent_filter.hpp>
@@ -41,7 +41,7 @@ namespace ranges
             static constexpr auto CPP_fun(bind)(unique_fn unique, C pred)( //
                 requires(!Range<C>))
             {
-                return bind_back<1>(unique, std::move(pred));
+                return bind_back(unique, std::move(pred));
             }
 
         public:

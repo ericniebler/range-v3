@@ -14,12 +14,11 @@
 #ifndef RANGES_V3_ACTION_DROP_HPP
 #define RANGES_V3_ACTION_DROP_HPP
 
-#include <functional>
-
 #include <range/v3/range_fwd.hpp>
 
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/traits.hpp>
@@ -39,7 +38,7 @@ namespace ranges
             static auto CPP_fun(bind)(drop_fn drop, Int n)( //
                 requires Integral<Int>)
             {
-                return std::bind(drop, std::placeholders::_1, n);
+                return bind_back(drop, n);
             }
 
         public:

@@ -16,14 +16,13 @@
 #ifndef RANGES_V3_VIEW_SLIDING_HPP
 #define RANGES_V3_VIEW_SLIDING_HPP
 
-#include <functional>
 #include <utility>
 
 #include <meta/meta.hpp>
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/bind_back.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -367,7 +366,7 @@ namespace ranges
             static constexpr auto CPP_fun(bind)(sliding_fn sliding, Int n)( //
                 requires Integral<Int>)
             {
-                return make_pipeable(bind_back<1>(sliding, n));
+                return make_pipeable(bind_back(sliding, n));
             }
 
         public:

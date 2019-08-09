@@ -21,6 +21,7 @@ RANGES_DEPRECATED_HEADER(
 #include <range/v3/detail/with_braced_init_args.hpp>
 #include <range/v3/functional/arithmetic.hpp>
 #include <range/v3/functional/bind.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/concepts.hpp>

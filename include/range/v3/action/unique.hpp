@@ -19,6 +19,7 @@
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/algorithm/unique.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/iterator/concepts.hpp>
@@ -39,10 +40,7 @@ namespace ranges
             static auto CPP_fun(bind)(unique_fn unique, C pred, P proj = P{})( //
                 requires(!Range<C>))
             {
-                return std::bind(unique,
-                                 std::placeholders::_1,
-                                 protect(std::move(pred)),
-                                 protect(std::move(proj)));
+                return bind_back(unique, std::move(pred), std::move(proj));
             }
 
         public:

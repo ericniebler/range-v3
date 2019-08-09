@@ -24,7 +24,7 @@
 
 #include <range/v3/algorithm/max.hpp>
 #include <range/v3/algorithm/min.hpp>
-#include <range/v3/detail/bind_back.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/indirect.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/operations.hpp>
@@ -122,8 +122,7 @@ namespace ranges
               : fun_(std::move(fun))
             {}
             CPP_template(bool Other)( //
-                requires IsConst && (!Other))
-            adaptor(adaptor<Other> that)
+                requires IsConst && (!Other)) adaptor(adaptor<Other> that)
               : fun_(std::move(that.fun_))
             {}
 
@@ -233,8 +232,7 @@ namespace ranges
               , end2_(end(parent.rng2_))
             {}
             CPP_template(bool Other)( //
-                requires Const && (!Other))
-            sentinel(sentinel<Other> that)
+                requires Const && (!Other)) sentinel(sentinel<Other> that)
               : end1_(std::move(that.end1_))
               , end2_(std::move(that.end2_))
             {}
@@ -268,8 +266,7 @@ namespace ranges
               , it2_(begin_end(parent.rng2_))
             {}
             CPP_template(bool Other)( //
-                requires Const && (!Other))
-            cursor(cursor<Other> that)
+                requires Const && (!Other)) cursor(cursor<Other> that)
               : fun_(std::move(that.fun_))
               , it1_(std::move(that.end1_))
               , it2_(std::move(that.end2_))
@@ -430,7 +427,7 @@ namespace ranges
             template<typename Fun>
             static constexpr auto bind(iter_transform_fn iter_transform, Fun fun)
             {
-                return make_pipeable(bind_back<1>(iter_transform, std::move(fun)));
+                return make_pipeable(bind_back(iter_transform, std::move(fun)));
             }
 
         public:
@@ -444,10 +441,10 @@ namespace ranges
             }
 
             template<typename Rng1, typename Rng2, typename Fun>
-            constexpr auto operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const -> CPP_ret(
-                iter_transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>)( //
-                requires ViewableRange<Rng1> && InputRange<Rng1> && ViewableRange<Rng2> &&
-                    InputRange<Rng2> && CopyConstructible<Fun> &&
+            constexpr auto operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
+                -> CPP_ret(iter_transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>)( //
+                    requires ViewableRange<Rng1> && InputRange<Rng1> && ViewableRange<
+                        Rng2> && InputRange<Rng2> && CopyConstructible<Fun> &&
                         Common<range_difference_t<Rng1>, range_difference_t<Rng1>> &&
                             detail::IterTransform2Readable<Fun, Rng1, Rng2>)
             {
@@ -493,7 +490,7 @@ namespace ranges
             template<typename Fun>
             static constexpr auto bind(transform_fn transform, Fun fun)
             {
-                return make_pipeable(bind_back<1>(transform, std::move(fun)));
+                return make_pipeable(bind_back(transform, std::move(fun)));
             }
 
         public:

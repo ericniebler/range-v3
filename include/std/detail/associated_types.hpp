@@ -16,6 +16,7 @@
 
 #include <climits>
 #include <cstdint>
+
 #include <range/v3/detail/config.hpp>
 
 namespace ranges
@@ -27,7 +28,8 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        struct nil_ {};
+        struct nil_
+        {};
 
         template<typename T, typename...>
         using always_ = T;
@@ -60,12 +62,12 @@ namespace ranges
         using enable_if_t = typename enable_if<B>::template apply<T>;
 
         void is_objptr_(void const volatile *);
-        #ifdef _MSC_VER
+#ifdef _MSC_VER
         // Microsoft's compiler permits function pointers to implicitly
         // convert to void*.
         template<class R, class... Args>
-        void is_objptr_(R(*)(Args...)) = delete;
-        #endif
+        void is_objptr_(R (*)(Args...)) = delete;
+#endif
 
         // std::is_object, optimized for compile time.
         template<typename T>
@@ -74,10 +76,8 @@ namespace ranges
             return false;
         }
         template<typename T>
-        constexpr bool is_object_(int,
-            T *(*q)(T&) = nullptr,
-            T *p = nullptr,
-            decltype(detail::is_objptr_(q(*p)))* = nullptr)
+        constexpr bool is_object_(int, T * (*q)(T &) = nullptr, T * p = nullptr,
+                                  decltype(detail::is_objptr_(q(*p))) * = nullptr)
         {
             return (void)p, (void)q, true;
         }
@@ -92,14 +92,14 @@ namespace ranges
         {
             return true;
         }
-        #if defined(__cpp_nontype_template_parameter_class) && \
-            __cpp_nontype_template_parameter_class > 0
+#if defined(__cpp_nontype_template_parameter_class) && \
+    __cpp_nontype_template_parameter_class > 0
         template<typename T>
         constexpr bool is_integral_(int, int T::* = nullptr)
         {
             return false;
         }
-        #endif
+#endif
 
         template<typename T>
         struct with_difference_type_
@@ -120,7 +120,7 @@ namespace ranges
             T,
 #ifdef RANGES_WORKAROUND_MSVC_785522
             std::enable_if_t<std::is_integral_v<difference_result_t<T>>>>
-#else // ^^^ workaround / no workaround vvv
+#else  // ^^^ workaround / no workaround vvv
             always_<void, int[is_integral_<difference_result_t<T>>(0)]>>
 #endif // RANGES_WORKAROUND_MSVC_785522
         {
@@ -128,16 +128,12 @@ namespace ranges
         };
 
         template<typename T, typename = void>
-        struct incrementable_traits_1_
-          : incrementable_traits_2_<T>
+        struct incrementable_traits_1_ : incrementable_traits_2_<T>
         {};
 
         template<typename T>
         struct incrementable_traits_1_<T *>
-          : if_then_t<
-                is_object_<T>(0),
-                with_difference_type_<std::ptrdiff_t>,
-                nil_>
+          : if_then_t<is_object_<T>(0), with_difference_type_<std::ptrdiff_t>, nil_>
         {};
 
         template<typename T>
@@ -145,17 +141,15 @@ namespace ranges
         {
             using difference_type = typename T::difference_type;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     template<typename T>
-    struct incrementable_traits
-      : detail::incrementable_traits_1_<T>
+    struct incrementable_traits : detail::incrementable_traits_1_<T>
     {};
 
     template<typename T>
-    struct incrementable_traits<T const>
-      : incrementable_traits<T>
+    struct incrementable_traits<T const> : incrementable_traits<T>
     {};
 
     /// \cond
@@ -192,26 +186,22 @@ namespace ranges
           : with_value_type_<typename T::element_type>
         {};
         template<typename T, typename = void>
-        struct readable_traits_1_
-          : readable_traits_2_<T>
+        struct readable_traits_1_ : readable_traits_2_<T>
         {};
         template<typename T>
-        struct readable_traits_1_<T[]>
-          : with_value_type_<T>
+        struct readable_traits_1_<T[]> : with_value_type_<T>
         {};
         template<typename T, std::size_t N>
-        struct readable_traits_1_<T[N]>
-          : with_value_type_<T>
+        struct readable_traits_1_<T[N]> : with_value_type_<T>
         {};
         template<typename T>
-        struct readable_traits_1_<T *>
-          : detail::with_value_type_<T>
+        struct readable_traits_1_<T *> : detail::with_value_type_<T>
         {};
         template<typename T>
         struct readable_traits_1_<T, always_<void, typename T::value_type>>
           : with_value_type_<typename T::value_type>
         {};
-    }
+    } // namespace detail
     /// \endcond
 
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -219,13 +209,11 @@ namespace ranges
     // * For class types with both member value_type and element_type, value_type is
     //   preferred (see ericniebler/stl2#299).
     template<typename T>
-    struct readable_traits
-      : detail::readable_traits_1_<T>
+    struct readable_traits : detail::readable_traits_1_<T>
     {};
 
     template<typename T>
-    struct readable_traits<T const>
-      : readable_traits<T>
+    struct readable_traits<T const> : readable_traits<T>
     {};
 
     /// \cond
@@ -255,12 +243,14 @@ namespace ranges
         char is_std_iterator_traits_specialized_impl_(void *);
 #elif defined(_LIBCPP_VERSION)
         template<typename I, bool B>
-        char (&is_std_iterator_traits_specialized_impl_(std::__iterator_traits<I, B> *))[2];
+        char (
+            &is_std_iterator_traits_specialized_impl_(std::__iterator_traits<I, B> *))[2];
         template<typename I>
         char is_std_iterator_traits_specialized_impl_(void *);
 #elif defined(_MSVC_STL_VERSION)
         template<typename I>
-        char (&is_std_iterator_traits_specialized_impl_(std::_Iterator_traits_base<I> *))[2];
+        char (&is_std_iterator_traits_specialized_impl_(
+            std::_Iterator_traits_base<I> *))[2];
         template<typename I>
         char is_std_iterator_traits_specialized_impl_(void *);
 #else
@@ -273,16 +263,17 @@ namespace ranges
         template<typename I>
         RANGES_INLINE_VAR constexpr bool is_std_iterator_traits_specialized_v =
             1 == sizeof(is_std_iterator_traits_specialized_impl_<I>(
-                static_cast<std::iterator_traits<I> *>(nullptr)));
+                     static_cast<std::iterator_traits<I> *>(nullptr)));
 
         // The standard iterator_traits<T *> specialization(s) do not count
         // as user-specialized. This will no longer be necessary in C++20.
         // This helps with `T volatile*` and `void *`.
         template<typename T>
-        RANGES_INLINE_VAR constexpr bool is_std_iterator_traits_specialized_v<T *> = false;
+        RANGES_INLINE_VAR constexpr bool is_std_iterator_traits_specialized_v<T *> =
+            false;
 #endif
-    }
+    } // namespace detail
     /// \endcond
-}
+} // namespace ranges
 
 #endif

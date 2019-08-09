@@ -23,8 +23,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/bind_back.hpp>
-#include <range/v3/functional/bind.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/pipeable.hpp>
 #include <range/v3/view/remove_if.hpp>
@@ -44,13 +43,15 @@ namespace ranges
             template<typename Value>
             static constexpr auto bind(remove_fn remove, Value value)
             {
-                return make_pipeable(bind_back<1>(remove, std::move(value)));
+                return make_pipeable(bind_back(remove, std::move(value)));
             }
             template<typename Value, typename Proj>
-            static constexpr auto CPP_fun(bind)(remove_fn remove, Value value, Proj proj)( //
+            static constexpr auto CPP_fun(bind)(remove_fn remove, Value value,
+                                                Proj proj)( //
                 requires(!Range<Value>))
             {
-                return make_pipeable(bind_back<1>(remove, std::move(value), std::move(proj)));
+                return make_pipeable(
+                    bind_back(remove, std::move(value), std::move(proj)));
             }
 
             template<typename Value>

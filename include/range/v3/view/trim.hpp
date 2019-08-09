@@ -14,15 +14,13 @@
 #ifndef RANGES_V3_VIEW_TRIM_HPP
 #define RANGES_V3_VIEW_TRIM_HPP
 
-#include <functional>
 #include <utility>
 
 #include <concepts/concepts.hpp>
 
-#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/detail/config.hpp>
-#include <range/v3/functional/bind.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/functional/pipeable.hpp>
@@ -105,12 +103,12 @@ namespace ranges
             template<typename Pred>
             static constexpr auto bind(trim_fn trim, Pred pred)
             {
-                return make_pipeable(bind_back<1>(trim, std::move(pred)));
+                return make_pipeable(bind_back(trim, std::move(pred)));
             }
             template<typename Pred, typename Proj>
             static constexpr auto bind(trim_fn trim, Pred pred, Proj proj)
             {
-                return make_pipeable(bind_back<1>(trim, std::move(pred), std::move(proj)));
+                return make_pipeable(bind_back(trim, std::move(pred), std::move(proj)));
             }
 
         public:

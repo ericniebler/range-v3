@@ -14,13 +14,12 @@
 #ifndef RANGES_V3_ACTION_DROP_WHILE_HPP
 #define RANGES_V3_ACTION_DROP_WHILE_HPP
 
-#include <functional>
-
 #include <range/v3/range_fwd.hpp>
 
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -39,7 +38,7 @@ namespace ranges
             static auto CPP_fun(bind)(drop_while_fn drop_while, Fun fun)( //
                 requires(!Range<Fun>))
             {
-                return std::bind(drop_while, std::placeholders::_1, std::move(fun));
+                return bind_back(drop_while, std::move(fun));
             }
 
         public:

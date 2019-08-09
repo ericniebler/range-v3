@@ -14,7 +14,6 @@
 #ifndef RANGES_V3_ACTION_INSERT_HPP
 #define RANGES_V3_ACTION_INSERT_HPP
 
-#include <functional>
 #include <initializer_list>
 #include <utility>
 

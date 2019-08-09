@@ -22,6 +22,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -157,11 +158,8 @@ namespace ranges
                             std::regex_constants::match_flag_type flags =
                                 std::regex_constants::match_default) const
             {
-                return make_pipeable(std::bind(*this,
-                                               std::placeholders::_1,
-                                               bind_forward<Regex>(rex),
-                                               std::move(sub),
-                                               std::move(flags)));
+                return make_pipeable(
+                    bind_back(*this, static_cast<Regex &&>(rex), sub, flags));
             }
 
             template<typename Regex>
@@ -169,11 +167,8 @@ namespace ranges
                             std::regex_constants::match_flag_type flags =
                                 std::regex_constants::match_default) const
             {
-                return make_pipeable(std::bind(*this,
-                                               std::placeholders::_1,
-                                               bind_forward<Regex>(rex),
-                                               std::move(subs),
-                                               std::move(flags)));
+                return make_pipeable(
+                    bind_back(*this, static_cast<Regex &&>(rex), std::move(subs), flags));
             }
 
             template<typename Regex>
@@ -181,11 +176,8 @@ namespace ranges
                             std::regex_constants::match_flag_type flags =
                                 std::regex_constants::match_default) const
             {
-                return make_pipeable(std::bind(*this,
-                                               std::placeholders::_1,
-                                               bind_forward<Regex>(rex),
-                                               std::move(subs),
-                                               std::move(flags)));
+                return make_pipeable(
+                    bind_back(*this, static_cast<Regex &&>(rex), subs, flags));
             }
         };
 

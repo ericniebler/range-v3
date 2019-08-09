@@ -23,7 +23,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/bind_back.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/semiregular.hpp>
@@ -121,7 +121,8 @@ namespace ranges
             template<typename Pred, typename Val>
             static constexpr auto bind(replace_if_fn replace_if, Pred pred, Val new_value)
             {
-                return make_pipeable(bind_back<1>(replace_if, std::move(pred), std::move(new_value)));
+                return make_pipeable(
+                    bind_back(replace_if, std::move(pred), std::move(new_value)));
             }
 
         public:

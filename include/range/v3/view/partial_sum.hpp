@@ -14,7 +14,6 @@
 #ifndef RANGES_V3_VIEW_PARTIAL_SUM_HPP
 #define RANGES_V3_VIEW_PARTIAL_SUM_HPP
 
-#include <functional>
 #include <iterator>
 #include <type_traits>
 #include <utility>
@@ -23,8 +22,8 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/functional/arithmetic.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
@@ -181,7 +180,7 @@ namespace ranges
             template<typename Fun>
             static constexpr auto bind(partial_sum_fn partial_sum, Fun fun)
             {
-                return make_pipeable(bind_back<1>(partial_sum, std::move(fun)));
+                return make_pipeable(bind_back(partial_sum, std::move(fun)));
             }
             template<typename Fun = plus>
             RANGES_DEPRECATED(
@@ -189,7 +188,7 @@ namespace ranges
                 "\"ranges::view::partial_sum()\".")
             static constexpr auto bind(partial_sum_fn partial_sum)
             {
-                return make_pipeable(bind_back<1>(partial_sum, Fun{}));
+                return make_pipeable(bind_back(partial_sum, Fun{}));
             }
 
         public:

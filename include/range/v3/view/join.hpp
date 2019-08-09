@@ -21,6 +21,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
@@ -529,8 +530,17 @@ namespace ranges
             static auto CPP_fun(bind)(join_fn join, T && t)( //
                 requires(!JoinableRange<T>))
             {
-                return make_pipeable(
-                    std::bind(join, std::placeholders::_1, bind_forward<T>(t)));
+                return make_pipeable(bind_back(join, static_cast<T &&>(t)));
+            }
+            template<typename T, std::size_t N>
+            static auto bind(join_fn join, T (&val)[N])
+            {
+                return bind_back(
+                    [join](auto && rng, T(*val)[N])
+                        -> invoke_result_t<join_fn, decltype(rng), T(&)[N]> {
+                        return join(static_cast<decltype(rng)>(rng), *val);
+                    },
+                    &val);
             }
             template<typename Rng>
             using inner_value_t = range_value_t<range_reference_t<Rng>>;

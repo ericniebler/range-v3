@@ -16,7 +16,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/bind_back.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/not_fn.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -57,7 +57,7 @@ namespace ranges
             template<typename Pred>
             static constexpr auto bind(cpp20_filter_fn filter, Pred pred)
             {
-                return make_pipeable(bind_back<1>(filter, std::move(pred)));
+                return make_pipeable(bind_back(filter, std::move(pred)));
             }
 
         public:
@@ -83,7 +83,7 @@ namespace ranges
             template<typename Pred, typename Proj>
             static constexpr auto bind(filter_fn filter, Pred pred, Proj proj)
             {
-                return make_pipeable(bind_back<1>(filter, std::move(pred), std::move(proj)));
+                return make_pipeable(bind_back(filter, std::move(pred), std::move(proj)));
             }
 
         public:

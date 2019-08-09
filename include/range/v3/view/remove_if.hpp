@@ -21,7 +21,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/bind_back.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/range/access.hpp>
@@ -152,13 +152,13 @@ namespace ranges
             template<typename Pred>
             static constexpr auto bind(remove_if_fn remove_if, Pred pred)
             {
-                return make_pipeable(bind_back<1>(remove_if, std::move(pred)));
+                return make_pipeable(bind_back(remove_if, std::move(pred)));
             }
             template<typename Pred, typename Proj>
             static constexpr auto bind(remove_if_fn remove_if, Pred pred, Proj proj)
             {
                 return make_pipeable(
-                    bind_back<1>(remove_if, std::move(pred), std::move(proj)));
+                    bind_back(remove_if, std::move(pred), std::move(proj)));
             }
 
         public:
