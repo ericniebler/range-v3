@@ -171,14 +171,19 @@ namespace ranges
         struct is_nothrow_invocable_impl_
         {
             template<typename Fn, typename... Args>
-            static RANGES_INLINE_VAR constexpr bool apply_v = false;
+            static constexpr bool apply() noexcept
+            {
+                return false;
+            }
         };
         template<>
         struct is_nothrow_invocable_impl_<true>
         {
             template<typename Fn, typename... Args>
-            static RANGES_INLINE_VAR constexpr bool apply_v =
-                noexcept(invoke(std::declval<Fn>(), std::declval<Args>()...));
+            static constexpr bool apply() noexcept
+            {
+                return noexcept(invoke(std::declval<Fn>(), std::declval<Args>()...));
+            }
         };
     } // namespace detail
     /// \endcond
@@ -189,8 +194,8 @@ namespace ranges
 
     template<typename Fn, typename... Args>
     RANGES_INLINE_VAR constexpr bool is_nothrow_invocable_v =
-        detail::is_nothrow_invocable_impl_<is_invocable_v<Fn, Args...>>::template apply_v<
-            Fn, Args...>;
+        detail::is_nothrow_invocable_impl_<is_invocable_v<Fn, Args...>>::template apply<
+            Fn, Args...>();
 
     /// \cond
     template<typename Sig>

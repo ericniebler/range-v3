@@ -31,10 +31,9 @@ namespace ranges
     namespace detail
     {
         template<typename Fn, typename... Args>
-        struct bind_back_
+        struct bind_back_fn_
         {
-            Fn fn_;
-            std::tuple<Args...> args_tuple_;
+            std::tuple<Fn, Args...> fn_args_;
 
             template<typename... CallArgs>
                 constexpr auto operator()(CallArgs &&... cargs) &&
@@ -42,12 +41,12 @@ namespace ranges
                     -> invoke_result_t<Fn, CallArgs..., Args...>
             {
                 return tuple_apply(
-                    [&, this](auto &&... args) -> decltype(auto) {
-                        return invoke(static_cast<Fn &&>(fn_),
-                                      static_cast<CallArgs &&>(cargs)...,
-                                      static_cast<decltype(args)>(args)...);
+                    [&](auto && fn, auto &&... args) -> decltype(auto) {
+                        return invoke((decltype(fn))fn,
+                                      (CallArgs &&) cargs...,
+                                      (decltype(args))args...);
                     },
-                    static_cast<std::tuple<Args...> &&>(args_tuple_));
+                    (std::tuple<Fn, Args...> &&) fn_args_);
             }
 
             /// \overload
@@ -57,12 +56,10 @@ namespace ranges
                     -> invoke_result_t<Fn &, CallArgs..., Args &...>
             {
                 return tuple_apply(
-                    [&, this](auto &&... args) -> decltype(auto) {
-                        return invoke(fn_,
-                                      static_cast<CallArgs &&>(cargs)...,
-                                      static_cast<decltype(args)>(args)...);
+                    [&](auto & fn, auto &... args) -> decltype(auto) {
+                        return invoke(fn, (CallArgs &&) cargs..., args...);
                     },
-                    args_tuple_);
+                    fn_args_);
             }
 
             /// \overload
@@ -72,23 +69,24 @@ namespace ranges
                     -> invoke_result_t<Fn const &, CallArgs..., Args const &...>
             {
                 return tuple_apply(
-                    [&, this](auto &&... args) -> decltype(auto) {
-                        return invoke(fn_,
-                                      static_cast<CallArgs &&>(cargs)...,
-                                      static_cast<decltype(args)>(args)...);
+                    [&](auto & fn, auto &... args) -> decltype(auto) {
+                        return invoke(fn, (CallArgs &&) cargs..., args...);
                     },
-                    args_tuple_);
+                    fn_args_);
             }
         };
+
+        template<typename Fn, typename... Args>
+        using bind_back_fn = bind_back_fn_<decay_t<Fn>, decay_t<Args>...>;
     } // namespace detail
 
     struct bind_back_fn
     {
-        template<typename Fn, typename... Args>
-        constexpr auto operator()(Fn && fn, Args &&... args) const
+        template<typename Fn, typename Arg1, typename... Args>
+        constexpr auto operator()(Fn && fn, Arg1 && arg1, Args &&... args) const
+            -> detail::bind_back_fn<Fn, Arg1, Args...>
         {
-            return detail::bind_back_<detail::decay_t<Fn>, detail::decay_t<Args>...>{
-                static_cast<Fn &&>(fn), {static_cast<Args &&>(args)...}};
+            return {{(Fn &&) fn, (Arg1 &&) arg1, (Args &&) args...}};
         }
     };
 
