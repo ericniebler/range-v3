@@ -18,7 +18,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/bind_back.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/iterator/counted_iterator.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/iterator/operations.hpp>
@@ -149,19 +149,18 @@ namespace ranges
             static constexpr auto CPP_fun(bind)(take_exactly_fn take_exactly, Int n)( //
                 requires Integral<Int>)
             {
-                return make_pipeable(bind_back<1>(take_exactly, n));
+                return make_pipeable(bind_back(take_exactly, n));
             }
 
             template<typename Rng>
-            static constexpr take_exactly_view<all_t<Rng>> impl_(Rng && rng,
-                                                       range_difference_t<Rng> n,
-                                                       input_range_tag)
+            static constexpr take_exactly_view<all_t<Rng>> impl_(
+                Rng && rng, range_difference_t<Rng> n, input_range_tag)
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
             template<typename Rng>
             static constexpr auto impl_(Rng && rng, range_difference_t<Rng> n,
-                              random_access_range_tag)
+                                        random_access_range_tag)
                 -> CPP_ret(subrange<iterator_t<Rng>>)( //
                     requires ForwardingRange_<Rng>)
             {

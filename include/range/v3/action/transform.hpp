@@ -14,12 +14,11 @@
 #ifndef RANGES_V3_ACTION_TRANSFORM_HPP
 #define RANGES_V3_ACTION_TRANSFORM_HPP
 
-#include <functional>
-
 #include <range/v3/range_fwd.hpp>
 
 #include <range/v3/action/action.hpp>
 #include <range/v3/algorithm/transform.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
@@ -39,10 +38,7 @@ namespace ranges
             static auto CPP_fun(bind)(transform_fn transform, F fun, P proj = P{})( //
                 requires(!Range<F>))
             {
-                return std::bind(transform,
-                                 std::placeholders::_1,
-                                 protect(std::move(fun)),
-                                 protect(std::move(proj)));
+                return bind_back(transform, std::move(fun), std::move(proj));
             }
 
         public:

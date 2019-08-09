@@ -20,6 +20,7 @@
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/algorithm/remove.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -52,16 +53,12 @@ namespace ranges
             static auto CPP_fun(bind)(remove_fn remove, V && value, P proj)( //
                 requires(!(Range<V> && detail::ComparableWithRangeRef_<P, V>)))
             {
-                return std::bind(remove,
-                                 std::placeholders::_1,
-                                 bind_forward<V>(value),
-                                 protect(std::move(proj)));
+                return bind_back(remove, static_cast<V &&>(value), std::move(proj));
             }
             template<typename V>
             static auto bind(remove_fn remove, V && value)
             {
-                return std::bind(
-                    remove, std::placeholders::_1, bind_forward<V>(value), identity{});
+                return bind_back(remove, static_cast<V &&>(value), identity{});
             }
 
         public:

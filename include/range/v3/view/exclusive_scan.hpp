@@ -18,9 +18,8 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/functional/arithmetic.hpp>
-#include <range/v3/functional/bind.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
@@ -102,8 +101,7 @@ namespace ranges
               : rng_(&rng)
             {}
             CPP_template(bool Other)( //
-                requires IsConst && (!Other))
-            adaptor(adaptor<Other> that)
+                requires IsConst && (!Other)) adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
             iterator_t<CRng> begin(exclusive_scan_view_t &)
@@ -179,9 +177,11 @@ namespace ranges
         private:
             friend view_access;
             template<typename T, typename Fun = plus>
-            static constexpr auto bind(exclusive_scan_fn exclusive_scan, T init, Fun fun = {})
+            static constexpr auto bind(exclusive_scan_fn exclusive_scan, T init,
+                                       Fun fun = {})
             {
-                return make_pipeable(bind_back<1>(exclusive_scan, std::move(init), std::move(fun)));
+                return make_pipeable(
+                    bind_back(exclusive_scan, std::move(init), std::move(fun)));
             }
 
         public:

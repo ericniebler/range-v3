@@ -38,7 +38,7 @@ namespace ranges
             /// If it's a view already, pass it though.
             template<typename T>
             static constexpr auto from_range_(T && t, std::true_type, detail::ignore_t,
-                                    detail::ignore_t)
+                                              detail::ignore_t)
             {
                 return static_cast<T &&>(t);
             }
@@ -47,7 +47,7 @@ namespace ranges
             /// to preserve the Sized-ness of the range.
             template<typename T>
             static constexpr auto from_range_(T && t, std::false_type, std::true_type,
-                                    detail::ignore_t)
+                                              detail::ignore_t)
             {
                 return ranges::view::ref(t);
             }
@@ -56,7 +56,7 @@ namespace ranges
             /// return a subrange holding the range's begin/end.
             template<typename T>
             static constexpr auto from_range_(T && t, std::false_type, std::false_type,
-                                    std::true_type)
+                                              std::true_type)
             {
                 return make_subrange(static_cast<T &&>(t));
             }

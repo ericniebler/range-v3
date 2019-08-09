@@ -47,8 +47,7 @@ namespace ranges
 
             adaptor() = default;
             CPP_template(bool Other)( //
-                requires IsConst && (!Other))
-            constexpr adaptor(adaptor<Other>) noexcept
+                requires IsConst && (!Other)) constexpr adaptor(adaptor<Other>) noexcept
             {}
 
             // clang-format off

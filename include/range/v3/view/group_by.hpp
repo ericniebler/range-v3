@@ -21,8 +21,8 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/bind_back.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range/access.hpp>
@@ -109,8 +109,7 @@ namespace ranges
         public:
             cursor() = default;
             CPP_template(bool Other)( //
-                requires IsConst && (!Other))
-            cursor(cursor<Other> that)
+                requires IsConst && (!Other)) cursor(cursor<Other> that)
               : cur_(std::move(that.cur_))
               , last_(std::move(last_))
               , fun_(std::move(that.fun_))
@@ -152,7 +151,7 @@ namespace ranges
             template<typename Fun>
             static constexpr auto bind(group_by_fn group_by, Fun fun)
             {
-                return make_pipeable(bind_back<1>(group_by, std::move(fun)));
+                return make_pipeable(bind_back(group_by, std::move(fun)));
             }
 
         public:

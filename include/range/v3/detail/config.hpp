@@ -218,8 +218,8 @@ namespace ranges
                                       // deduction candidate [No workaround]
 
 #if _MSC_VER < 1922
-#define RANGES_WORKAROUND_MSVC_756601 // constexpr friend non-template erroneously rejected
-                                      // with C3615
+#define RANGES_WORKAROUND_MSVC_756601 // constexpr friend non-template erroneously
+                                      // rejected with C3615
 #define RANGES_WORKAROUND_MSVC_793042 // T[0] sometimes accepted as a valid type in SFINAE
                                       // context
 
@@ -255,10 +255,10 @@ namespace ranges
                                       // to constexpr function
 #define RANGES_WORKAROUND_MSVC_835948 // Silent bad codegen destroying sized_generator [No
                                       // workaround]
-#define RANGES_WORKAROUND_MSVC_895622 // Error when phase 1 name binding finds only deleted
-                                      // function
-#define RANGES_WORKAROUND_MSVC_934264 // Explicitly-defaulted inherited default constructor
-                                      // is not correctly implicitly constexpr
+#define RANGES_WORKAROUND_MSVC_895622 // Error when phase 1 name binding finds only
+                                      // deleted function
+#define RANGES_WORKAROUND_MSVC_934264 // Explicitly-defaulted inherited default
+                                      // constructor is not correctly implicitly constexpr
 
 #elif defined(__GNUC__) || defined(__clang__)
 #define RANGES_PRAGMA(X) _Pragma(#X)

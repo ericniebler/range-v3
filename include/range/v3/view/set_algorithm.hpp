@@ -16,7 +16,6 @@
 #define RANGES_V3_VIEW_SET_ALGORITHM_HPP
 
 #include <algorithm>
-#include <functional>
 #include <iterator>
 #include <type_traits>
 #include <utility>
@@ -481,7 +480,7 @@ namespace ranges
             }
             CPP_template(bool Other)( //
                 requires IsConst && (!Other))
-            set_union_cursor(set_union_cursor<Other, Rng1, Rng2, C, P1, P2> that)
+                set_union_cursor(set_union_cursor<Other, Rng1, Rng2, C, P1, P2> that)
               : pred_(std::move(that.pred_))
               , proj1_(std::move(that.proj1_))
               , proj2_(std::move(that.proj2_))

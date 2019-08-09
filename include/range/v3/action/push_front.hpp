@@ -23,6 +23,7 @@
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/insert.hpp>
 #include <range/v3/detail/with_braced_init_args.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -75,7 +76,17 @@ namespace ranges
             template<typename T>
             static auto bind(push_front_fn push_front, T && val)
             {
-                return std::bind(push_front, std::placeholders::_1, bind_forward<T>(val));
+                return bind_back(push_front, static_cast<T &&>(val));
+            }
+            template<typename T, std::size_t N>
+            static auto bind(push_front_fn push_front, T (&val)[N])
+            {
+                return bind_back(
+                    [push_front](auto && rng, T(*val)[N])
+                        -> invoke_result_t<push_front_fn, decltype(rng), T(&)[N]> {
+                        return push_front(static_cast<decltype(rng)>(rng), *val);
+                    },
+                    &val);
             }
 
         public:

@@ -14,7 +14,6 @@
 #ifndef RANGES_V3_VIEW_ZIP_WITH_HPP
 #define RANGES_V3_VIEW_ZIP_WITH_HPP
 
-#include <functional>
 #include <limits>
 #include <tuple>
 #include <type_traits>
@@ -24,6 +23,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/indirect.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/operations.hpp>
@@ -181,8 +181,7 @@ namespace ranges
               : ends_(std::move(ends))
             {}
             CPP_template(bool Other)( //
-                requires Const && (!Other))
-            sentinel(sentinel<Other> that)
+                requires Const && (!Other)) sentinel(sentinel<Other> that)
               : ends_(std::move(that.ends_))
             {}
         };
@@ -211,8 +210,7 @@ namespace ranges
               , its_(std::move(its))
             {}
             CPP_template(bool Other)( //
-                requires Const && (!Other))
-            cursor(cursor<Other> that)
+                requires Const && (!Other)) cursor(cursor<Other> that)
               : fun_(std::move(that.fun_))
               , its_(std::move(that.its_))
             {}
@@ -257,8 +255,7 @@ namespace ranges
             auto advance(difference_type n) -> CPP_ret(void)( //
                 requires And<RandomAccessRange<meta::const_if_c<Const, Rngs>>...>)
             {
-                using std::placeholders::_1;
-                tuple_for_each(its_, std::bind(detail::advance_, _1, n));
+                tuple_for_each(its_, bind_back(detail::advance_, n));
             }
             CPP_member
             auto distance_to(cursor const & that) const -> CPP_ret(difference_type)( //

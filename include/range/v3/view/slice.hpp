@@ -20,7 +20,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/bind_back.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/iterator/counted_iterator.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/iterator/operations.hpp>
@@ -91,7 +91,7 @@ namespace ranges
         public:
             slice_view_() = default;
             constexpr slice_view_(Rng rng, range_difference_t<Rng> from,
-                        range_difference_t<Rng> count)
+                                  range_difference_t<Rng> count)
               : rng_(std::move(rng))
               , from_(from)
               , count_(count)
@@ -124,7 +124,7 @@ namespace ranges
         public:
             slice_view_() = default;
             constexpr slice_view_(Rng rng, range_difference_t<Rng> from,
-                        range_difference_t<Rng> count)
+                                  range_difference_t<Rng> count)
               : rng_(std::move(rng))
               , from_(from)
               , count_(count)
@@ -191,9 +191,10 @@ namespace ranges
             friend view_access;
 
             template<typename Rng>
-            constexpr static slice_view<all_t<Rng>> impl_(Rng && rng, range_difference_t<Rng> from,
-                                                range_difference_t<Rng> count,
-                                                input_range_tag, range_tag = {})
+            constexpr static slice_view<all_t<Rng>> impl_(Rng && rng,
+                                                          range_difference_t<Rng> from,
+                                                          range_difference_t<Rng> count,
+                                                          input_range_tag, range_tag = {})
             {
                 return {all(static_cast<Rng &&>(rng)), from, count};
             }
@@ -214,34 +215,36 @@ namespace ranges
             static constexpr auto CPP_fun(bind)(slice_fn slice, Int from, Int to)( //
                 requires detail::IntegerLike_<Int>)
             {
-                return make_pipeable(bind_back<1>(slice, from, to));
+                return make_pipeable(bind_back(slice, from, to));
             }
             template<typename Int>
             static constexpr auto CPP_fun(bind)(slice_fn slice, Int from,
-                                      detail::from_end_<Int> to)( //
+                                                detail::from_end_<Int> to)( //
                 requires detail::IntegerLike_<Int>)
             {
-                return make_pipeable(bind_back<1>(slice, from, to));
+                return make_pipeable(bind_back(slice, from, to));
             }
             template<typename Int>
-            static constexpr auto CPP_fun(bind)(slice_fn slice, detail::from_end_<Int> from,
-                                      detail::from_end_<Int> to)( //
+            static constexpr auto CPP_fun(bind)(slice_fn slice,
+                                                detail::from_end_<Int> from,
+                                                detail::from_end_<Int> to)( //
                 requires detail::IntegerLike_<Int>)
             {
-                return make_pipeable(bind_back<1>(slice, from, to));
+                return make_pipeable(bind_back(slice, from, to));
             }
             template<typename Int>
             static constexpr auto CPP_fun(bind)(slice_fn, Int from, end_fn)( //
                 requires detail::IntegerLike_<Int>)
             {
-                return make_pipeable(bind_back<1>(ranges::view::drop_exactly,  from));
+                return make_pipeable(bind_back(ranges::view::drop_exactly, from));
             }
             template<typename Int>
-            static constexpr auto CPP_fun(bind)(slice_fn slice, detail::from_end_<Int> from,
-                                      end_fn to)( //
+            static constexpr auto CPP_fun(bind)(slice_fn slice,
+                                                detail::from_end_<Int> from,
+                                                end_fn to)( //
                 requires detail::IntegerLike_<Int>)
             {
-                return make_pipeable(bind_back<1>(slice, from, to));
+                return make_pipeable(bind_back(slice, from, to));
             }
 
         public:

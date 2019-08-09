@@ -22,7 +22,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/bind_back.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -166,8 +166,7 @@ namespace ranges
               : rng_(&rng)
             {}
             CPP_template(bool Other)( //
-                requires Const && (!Other))
-            adaptor(adaptor<Other> that)
+                requires Const && (!Other)) adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
             constexpr void next(iterator_t<CRng> & it)
@@ -247,20 +246,20 @@ namespace ranges
             return adaptor<false>{*this};
         }
         CPP_member
-        constexpr auto begin_adaptor() const noexcept ->
-            CPP_ret(adaptor<true>)(requires(const_iterable()))
+        constexpr auto begin_adaptor() const noexcept
+            -> CPP_ret(adaptor<true>)(requires(const_iterable()))
         {
             return adaptor<true>{*this};
         }
 
-        constexpr auto end_adaptor() noexcept ->
-            meta::if_c<can_bound<false>(), adaptor<false>, adaptor_base>
+        constexpr auto end_adaptor() noexcept
+            -> meta::if_c<can_bound<false>(), adaptor<false>, adaptor_base>
         {
             return {*this};
         }
         CPP_member
-        constexpr auto end_adaptor() const noexcept ->
-            CPP_ret(meta::if_c<can_bound<true>(), adaptor<true>, adaptor_base>)( //
+        constexpr auto end_adaptor() const noexcept
+            -> CPP_ret(meta::if_c<can_bound<true>(), adaptor<true>, adaptor_base>)( //
                 requires(const_iterable()))
         {
             return {*this};
@@ -304,7 +303,7 @@ namespace ranges
             constexpr static auto CPP_fun(bind)(stride_fn stride, Difference step)( //
                 requires Integral<Difference>)
             {
-                return make_pipeable(bind_back<1>(stride, std::move(step)));
+                return make_pipeable(bind_back(stride, std::move(step)));
             }
 
         public:

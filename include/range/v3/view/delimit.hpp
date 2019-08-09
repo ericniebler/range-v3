@@ -18,7 +18,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/bind_back.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/unreachable_sentinel.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -83,7 +83,7 @@ namespace ranges
             template<typename Val>
             static constexpr auto bind(delimit_impl_fn delimit, Val value)
             {
-                return make_pipeable(bind_back<1>(delimit, std::move(value)));
+                return make_pipeable(bind_back(delimit, std::move(value)));
             }
 
         public:

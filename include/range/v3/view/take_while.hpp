@@ -14,7 +14,6 @@
 #ifndef RANGES_V3_VIEW_TAKE_WHILE_HPP
 #define RANGES_V3_VIEW_TAKE_WHILE_HPP
 
-#include <functional>
 #include <type_traits>
 #include <utility>
 
@@ -22,7 +21,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/bind_back.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/indirect.hpp>
 #include <range/v3/functional/invoke.hpp>
@@ -61,7 +60,7 @@ namespace ranges
             {}
             CPP_template(bool Other)( //
                 requires IsConst && (!Other))
-            sentinel_adaptor(sentinel_adaptor<Other> that)
+                sentinel_adaptor(sentinel_adaptor<Other> that)
               : pred_(std::move(that.pred_))
             {}
             bool empty(iterator_t<CRng> const & it, sentinel_t<CRng> const & end) const
@@ -114,7 +113,7 @@ namespace ranges
             template<typename Pred>
             static constexpr auto bind(iter_take_while_fn iter_take_while, Pred pred)
             {
-                return make_pipeable( bind_back<1>(iter_take_while, std::move(pred)) );
+                return make_pipeable(bind_back(iter_take_while, std::move(pred)));
             }
 
         public:
@@ -135,13 +134,13 @@ namespace ranges
             template<typename Pred>
             static constexpr auto bind(take_while_fn take_while, Pred pred)
             {
-                return make_pipeable( bind_back<1>(take_while, std::move(pred)) );
+                return make_pipeable(bind_back(take_while, std::move(pred)));
             }
             template<typename Pred, typename Proj>
             static constexpr auto bind(take_while_fn take_while, Pred pred, Proj proj)
             {
                 return make_pipeable(
-                    bind_back<1>(take_while, std::move(pred), std::move(proj)));
+                    bind_back(take_while, std::move(pred), std::move(proj)));
             }
 
         public:

@@ -19,6 +19,7 @@ RANGES_DISABLE_WARNINGS
 
 #include <range/v3/functional/arithmetic.hpp>
 #include <range/v3/functional/bind.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/concepts.hpp>

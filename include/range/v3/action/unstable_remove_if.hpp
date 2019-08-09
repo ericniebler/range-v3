@@ -13,7 +13,6 @@
 #ifndef RANGES_V3_ACTION_UNSTABLE_REMOVE_IF_HPP
 #define RANGES_V3_ACTION_UNSTABLE_REMOVE_IF_HPP
 
-#include <functional>
 #include <utility>
 
 #include <concepts/concepts.hpp>
@@ -23,7 +22,7 @@
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/algorithm/unstable_remove_if.hpp>
-#include <range/v3/functional/bind.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/range/access.hpp>
@@ -41,12 +40,10 @@ namespace ranges
             friend action_access;
             template<typename C, typename P = identity>
             static auto CPP_fun(bind)(unstable_remove_if_fn unstable_remove_if, C pred,
-                                      P proj = P{})(requires(!Range<C>))
+                                      P proj = P{})( //
+                requires(!Range<C>))
             {
-                return std::bind(unstable_remove_if,
-                                 std::placeholders::_1,
-                                 protect(std::move(pred)),
-                                 protect(std::move(proj)));
+                return bind_back(unstable_remove_if, std::move(pred), std::move(proj));
             }
 
         public:
