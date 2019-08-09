@@ -21,7 +21,6 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/iterator/operations.hpp>
@@ -35,6 +34,7 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/take_while.hpp>
 #include <range/v3/view/view.hpp>
+#include <range/v3/detail/delimiter_specifier.hpp>
 
 namespace ranges
 {
@@ -168,19 +168,6 @@ namespace ranges
                 return make_pipeable(
                     std::bind(split_when, std::placeholders::_1, bind_forward<T>(t)));
             }
-            template<typename Pred>
-            struct predicate_pred
-            {
-                semiregular_t<Pred> pred_;
-
-                template<typename I, typename S>
-                auto operator()(I cur, S end) const -> CPP_ret(std::pair<bool, I>)( //
-                    requires Sentinel<S, I>)
-                {
-                    auto where = ranges::find_if_not(cur, end, std::ref(pred_));
-                    return {cur != where, where};
-                }
-            };
 
         public:
             template<typename Rng, typename Fun>
@@ -197,12 +184,12 @@ namespace ranges
             }
             template<typename Rng, typename Fun>
             auto operator()(Rng && rng, Fun fun) const
-                -> CPP_ret(split_when_view<all_t<Rng>, predicate_pred<Fun>>)( //
+                -> CPP_ret(split_when_view<all_t<Rng>, detail::delimiter_specifier<Fun>>)( //
                     requires ViewableRange<Rng> && ForwardRange<Rng> && Predicate<
                         Fun const &, range_reference_t<Rng>> && CopyConstructible<Fun>)
             {
                 return {all(static_cast<Rng &&>(rng)),
-                        predicate_pred<Fun>{std::move(fun)}};
+                        detail::delimiter_specifier<Fun>{std::move(fun)}};
             }
         };
 
