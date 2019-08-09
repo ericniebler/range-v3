@@ -86,7 +86,13 @@ namespace ranges
         constexpr auto operator()(Fn && fn, Arg1 && arg1, Args &&... args) const
             -> detail::bind_back_fn<Fn, Arg1, Args...>
         {
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ <= 5
+            using detail::decay_t;
+            using T = std::tuple<decay_t<Fn>, decay_t<Arg1>, decay_t<Args>...>;
+            return {T{(Fn &&) fn, (Arg1 &&) arg1, (Args &&) args...}};
+#else
             return {{(Fn &&) fn, (Arg1 &&) arg1, (Args &&) args...}};
+#endif
         }
     };
 
