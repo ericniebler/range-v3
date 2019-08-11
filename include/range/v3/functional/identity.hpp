@@ -30,7 +30,7 @@ namespace ranges
     };
 
     /// \cond
-    using ident RANGES_DEPRECATED("Repace uses of ranges::ident with ranges::identity") =
+    using ident RANGES_DEPRECATED("Replace uses of ranges::ident with ranges::identity") =
         identity;
     /// \endcond
 
