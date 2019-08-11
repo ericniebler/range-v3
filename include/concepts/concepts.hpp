@@ -618,7 +618,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 // CPP_auto_fun
 // Usage:
 //   template <typename A, typename B>
-//   void CPP_auto_fun(foo)(A a, B b)([const]opt [noexcept(true)]opt)opt
+//   auto CPP_auto_fun(foo)(A a, B b)([const]opt [noexcept(true)]opt)opt
 //   (
 //       return a + b
 //   )
