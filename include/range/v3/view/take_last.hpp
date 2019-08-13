@@ -14,6 +14,14 @@
 #ifndef RANGES_V3_VIEW_TAKE_LAST_HPP
 #define RANGES_V3_VIEW_TAKE_LAST_HPP
 
+#include <concepts/concepts.hpp>
+
+#include <range/v3/range_fwd.hpp>
+
+#include <range/v3/functional/bind_back.hpp>
+#include <range/v3/functional/pipeable.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/operations.hpp>
 #include <range/v3/view/drop_exactly.hpp>
 
 namespace ranges
@@ -25,10 +33,10 @@ namespace ranges
         private:
             friend view_access;
             template<typename Int>
-            static auto CPP_fun(bind)(take_last_fn take_last, Int n)( //
+            static constexpr auto CPP_fun(bind)(take_last_fn take_last, Int n)( //
                 requires Integral<Int>)
             {
-                return make_pipeable(std::bind(take_last, std::placeholders::_1, n));
+                return make_pipeable(bind_back(take_last, n));
             }
 
         public:
