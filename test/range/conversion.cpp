@@ -95,7 +95,7 @@ public:
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
 template<typename I>
-vector_like(I, I) -> vector_like<iter_value_t<I>>;
+vector_like(I, I) -> vector_like<ranges::iter_value_t<I>>;
 
 template<typename Rng, typename CI = ranges::range_common_iterator_t<Rng>,
          typename = decltype(std::map{CI{}, CI{}})>
