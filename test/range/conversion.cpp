@@ -25,27 +25,78 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
-RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
-
 template<typename T>
-struct vector_like : std::vector<T>
+struct vector_like
 {
-    using std::vector<T>::vector;
+private:
+    std::vector<T> data_;
+public:
+    using size_type = std::size_t;
+    using allocator_type = std::allocator<T>;
 
-    using typename std::vector<T>::size_type;
+    vector_like() = default;
+    template<typename I>
+    vector_like(I first, I last)
+      : data_(first, last)
+    {}
+    template<typename I>
+    void assign(I first, I last)
+    {
+        data_.assign(first, last);
+    }
+
+    auto begin()
+    {
+        return data_.begin();
+    }
+    auto end()
+    {
+        return data_.end();
+    }
+    auto begin() const
+    {
+        return data_.begin();
+    }
+    auto end() const
+    {
+        return data_.end();
+    }
+    size_type size() const
+    {
+        return data_.size();
+    }
+    size_type capacity() const
+    {
+        return data_.capacity();
+    }
+    size_type max_size() const
+    {
+        return data_.max_size();
+    }
+    auto& operator[](size_type n)
+    {
+        return data_[n];
+    }
+    auto& operator[](size_type n) const
+    {
+        return data_[n];
+    }
 
     size_type last_reservation{};
     size_type reservation_count{};
 
     void reserve(size_type n)
     {
-        std::vector<T>::reserve(n);
+        data_.reserve(n);
         last_reservation = n;
         ++reservation_count;
     }
 };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+template<typename I>
+vector_like(I, I) -> vector_like<iter_value_t<I>>;
+
 template<typename Rng, typename CI = ranges::range_common_iterator_t<Rng>,
          typename = decltype(std::map{CI{}, CI{}})>
 void test_zip_to_map(Rng && rng, int)

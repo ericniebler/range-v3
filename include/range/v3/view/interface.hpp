@@ -439,6 +439,7 @@ namespace ranges
         {
             return Slice{}(detail::move(derived()), offs.from, offs.to);
         }
+        /// \cond
         /// Implicit conversion to something that looks like a container.
         CPP_template(typename Container, bool True = true)( // clang-format off
             requires detail::ConvertibleToContainer<D<True>, Container>)
@@ -459,6 +460,7 @@ namespace ranges
         {
             return ranges::to<Container>(derived());
         }
+        /// \endcond
         /// \brief Print a range to an ostream
     private:
         template<typename Stream, typename Rng>
