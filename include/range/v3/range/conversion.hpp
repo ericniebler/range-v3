@@ -177,6 +177,10 @@ namespace ranges
             }
         };
 
+        template<typename Rng, typename Cont>
+        using to_container_iterator_t =
+            enable_if_t<(bool) Range<Rng>, to_container_iterator<Rng, Cont>>;
+
         // clang-format off
         CPP_def
         (
@@ -188,7 +192,7 @@ namespace ranges
         CPP_def
         (
             template(typename Rng, typename Cont)
-            concept ConvertibleToContainerImpl,
+            concept ConvertibleToContainerImpl_,
                 Range<Cont> && (!View<Cont>) && MoveConstructible<Cont> &&
                 Constructible<range_value_t<Cont>, range_reference_t<Rng>> &&
                 Constructible<
@@ -200,7 +204,7 @@ namespace ranges
         CPP_def
         (
             template(typename Rng, typename Cont)
-            concept ConvertibleToContainerContainerImpl,
+            concept ConvertibleToContainerContainerImpl_,
                 Range<Cont> && (!View<Cont>) && MoveConstructible<Cont> &&
                 True<ranges::defer::Range<range_value_t<Cont>> &&
                     !ranges::defer::View<range_value_t<Cont>>> &&
@@ -211,8 +215,8 @@ namespace ranges
                     range_reference_t<Rng>> &&
                 Constructible<
                     Cont,
-                    to_container_iterator<Rng, Cont>,
-                    to_container_iterator<Rng, Cont>>
+                    to_container_iterator_t<Rng, Cont>,
+                    to_container_iterator_t<Rng, Cont>>
         );
 
         CPP_def
@@ -220,7 +224,7 @@ namespace ranges
             template(typename Rng, typename Cont)
             concept ConvertibleToContainer,
                 defer::HasAllocatorType<Cont> && // HACKHACK
-                defer::ConvertibleToContainerImpl<Rng, Cont>
+                defer::ConvertibleToContainerImpl_<Rng, Cont>
         );
 
         CPP_def
@@ -228,7 +232,7 @@ namespace ranges
             template(typename Rng, typename Cont)
             concept ConvertibleToContainerContainer,
                 defer::HasAllocatorType<Cont> && // HACKHACK
-                defer::ConvertibleToContainerContainerImpl<Rng, Cont>
+                defer::ConvertibleToContainerContainerImpl_<Rng, Cont>
         );
 
         CPP_def
@@ -267,7 +271,9 @@ namespace ranges
         public:
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(container_t<Rng>)( //
-                requires InputRange<Rng> && ConvertibleToContainer<Rng, container_t<Rng>>)
+                requires InputRange<Rng> &&                                       //
+                    bool(!defer::ConvertibleToContainerContainer<Rng, container_t<Rng>> && //
+                         defer::ConvertibleToContainer<Rng, container_t<Rng>>))
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Attempt to convert an infinite range to a container.");
@@ -280,8 +286,7 @@ namespace ranges
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(container_t<Rng>)(       //
                 requires InputRange<Rng> &&                                       //
-                    True<!defer::ConvertibleToContainer<Rng, container_t<Rng>> && //
-                         defer::ConvertibleToContainerContainer<Rng, container_t<Rng>>>)
+                    ConvertibleToContainerContainer<Rng, container_t<Rng>>)
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Attempt to convert an infinite range to a container.");
