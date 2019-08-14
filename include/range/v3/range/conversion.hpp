@@ -177,6 +177,10 @@ namespace ranges
             }
         };
 
+        template<typename Rng, typename Cont>
+        using to_container_iterator_t =
+            enable_if_t<(bool) Range<Rng>, to_container_iterator<Rng, Cont>>;
+
         // clang-format off
         CPP_def
         (
@@ -211,8 +215,8 @@ namespace ranges
                     range_reference_t<Rng>> &&
                 Constructible<
                     Cont,
-                    to_container_iterator<Rng, Cont>,
-                    to_container_iterator<Rng, Cont>>
+                    to_container_iterator_t<Rng, Cont>,
+                    to_container_iterator_t<Rng, Cont>>
         );
 
         CPP_def
