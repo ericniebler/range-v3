@@ -61,7 +61,10 @@ namespace ranges
             }
             void next()
             {
-                view_->val_.reset();
+                if(view_->val_)
+                    view_->val_.reset();
+                else
+                    view_->gen_();
             }
         };
         cursor begin_cursor()
