@@ -64,7 +64,7 @@ namespace ranges
 
             /// \overload
             template<typename... CallArgs>
-            constexpr auto operator()(CallArgs &&... cargs) const
+            constexpr auto operator()(CallArgs &&... cargs) const &
                 noexcept(is_nothrow_invocable_v<Fn const &, CallArgs..., Args const &...>)
                     -> invoke_result_t<Fn const &, CallArgs..., Args const &...>
             {
