@@ -58,6 +58,9 @@ namespace ranges
     namespace views
     {}
 
+    namespace actions
+    {}
+
 // GCC either fails to accept an attribute on a namespace, or else
 // it ignores the deprecation attribute. Frustrating.
 #if(RANGES_CXX_VER < RANGES_CXX_STD_17 || defined(__GNUC__) && !defined(__clang__))
@@ -67,6 +70,7 @@ namespace ranges
     }
 
     namespace view = views;
+    namespace action = actions;
 #else
     inline namespace RANGES_DEPRECATED(
         "The name ranges::v3 namespace is deprecated. "
@@ -80,6 +84,13 @@ namespace ranges
         "(Sorry!)") view
     {
         using namespace views;
+    }
+
+    namespace RANGES_DEPRECATED(
+        "The ranges::action namespace has been renamed to ranges::actions. "
+        "(Sorry!)") action
+    {
+        using namespace actions;
     }
 #endif
 
@@ -119,7 +130,7 @@ namespace ranges
     template<typename... Fns>
     struct overloaded;
 
-    namespace action
+    namespace actions
     {
         template<typename Action>
         struct action;

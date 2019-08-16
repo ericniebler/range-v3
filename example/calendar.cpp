@@ -155,7 +155,7 @@ format_weeks()
     return views::transform([](/*range<date>*/ auto week) {
         return boost::str(boost::format("%1%%2%%|22t|") %
                           std::string(front(week).day_of_week() * 3u, ' ') %
-                          (week | views::transform(format_day) | action::join));
+                          (week | views::transform(format_day) | actions::join));
     });
 }
 
@@ -341,7 +341,7 @@ auto
 join_months()
 {
     return views::transform(
-        [](/*range<string>*/ auto rng) { return action::join(rng); });
+        [](/*range<string>*/ auto rng) { return actions::join(rng); });
 }
 
 // In:  range<date>

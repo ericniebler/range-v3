@@ -28,7 +28,7 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         struct take_while_fn
         {
@@ -48,7 +48,7 @@ namespace ranges
                     erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
                         indirect_unary_predicate<Fun, iterator_t<Rng>>)
             {
-                ranges::action::erase(
+                ranges::actions::erase(
                     rng, find_if_not(begin(rng), end(rng), std::move(fun)), end(rng));
                 return static_cast<Rng &&>(rng);
             }
@@ -58,7 +58,7 @@ namespace ranges
         /// \relates take_while_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<take_while_fn>, take_while)
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

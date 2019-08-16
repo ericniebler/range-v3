@@ -28,7 +28,7 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         struct stride_fn
         {
@@ -64,7 +64,7 @@ namespace ranges
                             *begin = iter_move(i);
                         }
                     }
-                    ranges::action::erase(rng, begin, end);
+                    ranges::actions::erase(rng, begin, end);
                 }
                 return static_cast<Rng &&>(rng);
             }
@@ -74,7 +74,7 @@ namespace ranges
         /// \relates stride_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<stride_fn>, stride)
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

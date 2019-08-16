@@ -29,7 +29,7 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         struct sort_fn
         {
@@ -57,7 +57,7 @@ namespace ranges
         /// \relates sort_fn
         /// \sa `action`
         RANGES_INLINE_VARIABLE(action<sort_fn>, sort)
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

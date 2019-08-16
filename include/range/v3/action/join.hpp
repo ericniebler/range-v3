@@ -31,7 +31,7 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         template<typename Rng>
         using join_action_value_t_ =
@@ -58,7 +58,7 @@ namespace ranges
         /// \relates join_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<join_fn>, join)
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

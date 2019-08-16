@@ -30,7 +30,7 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         struct adjacent_remove_if_fn
         {
@@ -63,7 +63,7 @@ namespace ranges
         /// \sa action
         /// \sa with_braced_init_args
         RANGES_INLINE_VARIABLE(action<adjacent_remove_if_fn>, adjacent_remove_if)
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

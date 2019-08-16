@@ -28,7 +28,7 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         struct drop_fn
         {
@@ -49,7 +49,7 @@ namespace ranges
                         erasable_range<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
             {
                 RANGES_EXPECT(n >= 0);
-                ranges::action::erase(
+                ranges::actions::erase(
                     rng, begin(rng), ranges::next(begin(rng), n, end(rng)));
                 return static_cast<Rng &&>(rng);
             }
@@ -59,7 +59,7 @@ namespace ranges
         /// \relates drop_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<drop_fn>, drop)
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

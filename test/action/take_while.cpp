@@ -21,23 +21,23 @@ int main()
     using namespace std::placeholders;
 
     auto v = views::ints(1,21) | to<std::vector>();
-    auto & v2 = action::take_while(v, std::bind(std::less<int>(), _1, 18));
+    auto & v2 = actions::take_while(v, std::bind(std::less<int>(), _1, 18));
     CHECK(&v2 == &v);
     CHECK(v.size() == 17u);
     CHECK(v.back() == 17);
 
-    v = std::move(v) | action::take_while([](int i){return i < 15;});
+    v = std::move(v) | actions::take_while([](int i){return i < 15;});
     CHECK(v.size() == 14u);
     CHECK(v.back() == 14);
 
-    v |= action::take_while([](int i){return i < 12;});
+    v |= actions::take_while([](int i){return i < 12;});
     CHECK(v.size() == 11u);
     CHECK(v.back() == 11);
 
-    v |= action::take_while([](int){return true;});
+    v |= actions::take_while([](int){return true;});
     CHECK(v.size() == 11u);
 
-    v |= action::take_while([](int){return false;});
+    v |= actions::take_while([](int){return false;});
     CHECK(v.size() == 0u);
 
     return ::test_result();

@@ -31,7 +31,7 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         struct slice_fn
         {
@@ -41,7 +41,7 @@ namespace ranges
             template<typename D>
             using diff_t = range_difference_t<D>;
 
-            // Overloads for the pipe syntax: rng | action::slice(from, to)
+            // Overloads for the pipe syntax: rng | actions::slice(from, to)
             template<typename D>
             static auto CPP_fun(bind)(slice_fn slice, D from, D to)( //
                 requires integral<D>)
@@ -83,8 +83,8 @@ namespace ranges
             {
                 RANGES_EXPECT(0 <= from && 0 <= to && from <= to);
                 RANGES_EXPECT(!sized_range<Rng> || to <= distance(rng));
-                ranges::action::erase(rng, begin(rng), next(begin(rng), from));
-                ranges::action::erase(rng, next(begin(rng), to - from), end(rng));
+                ranges::actions::erase(rng, begin(rng), next(begin(rng), from));
+                ranges::actions::erase(rng, next(begin(rng), to - from), end(rng));
                 return static_cast<Rng &&>(rng);
             }
 
@@ -95,11 +95,11 @@ namespace ranges
             {
                 RANGES_EXPECT(0 <= from && to.dist_ <= 0);
                 RANGES_EXPECT(!sized_range<Rng> || from - to.dist_ <= distance(rng));
-                ranges::action::erase(rng, begin(rng), next(begin(rng), from));
+                ranges::actions::erase(rng, begin(rng), next(begin(rng), from));
                 if(to.dist_ != 0)
                 {
                     auto const last = next(begin(rng), end(rng));
-                    ranges::action::erase(rng, prev(last, -to.dist_), last);
+                    ranges::actions::erase(rng, prev(last, -to.dist_), last);
                 }
                 return static_cast<Rng &&>(rng);
             }
@@ -112,9 +112,9 @@ namespace ranges
                 RANGES_EXPECT(from.dist_ <= 0 && to.dist_ <= 0 && from.dist_ <= to.dist_);
                 RANGES_EXPECT(!sized_range<Rng> || 0 <= distance(rng) + from.dist_);
                 auto last = next(begin(rng), end(rng));
-                ranges::action::erase(rng, prev(last, -to.dist_), last);
+                ranges::actions::erase(rng, prev(last, -to.dist_), last);
                 last = next(begin(rng), end(rng));
-                ranges::action::erase(rng, begin(rng), prev(last, to.dist_ - from.dist_));
+                ranges::actions::erase(rng, begin(rng), prev(last, to.dist_ - from.dist_));
                 return static_cast<Rng &&>(rng);
             }
 
@@ -125,7 +125,7 @@ namespace ranges
             {
                 RANGES_EXPECT(0 <= from);
                 RANGES_EXPECT(!sized_range<Rng> || from <= distance(rng));
-                ranges::action::erase(rng, begin(rng), next(begin(rng), from));
+                ranges::actions::erase(rng, begin(rng), next(begin(rng), from));
                 return static_cast<Rng &&>(rng);
             }
 
@@ -137,7 +137,7 @@ namespace ranges
                 RANGES_EXPECT(from.dist_ <= 0);
                 RANGES_EXPECT(!sized_range<Rng> || 0 <= distance(rng) + from.dist_);
                 auto const last = next(begin(rng), end(rng));
-                ranges::action::erase(rng, begin(rng), prev(last, -from.dist_));
+                ranges::actions::erase(rng, begin(rng), prev(last, -from.dist_));
                 return static_cast<Rng &&>(rng);
             }
         };
@@ -146,7 +146,7 @@ namespace ranges
         /// \relates slice_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<slice_fn>, slice)
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

@@ -150,25 +150,25 @@ Read data into a vector, sort it, and make it unique.
 ~~~~~~~{.cpp}
     extern std::vector<int> read_data();
     using namespace ranges;
-    std::vector<int> vi = read_data() | action::sort | action::unique;
+    std::vector<int> vi = read_data() | actions::sort | actions::unique;
 ~~~~~~~
 
 Do the same to a `vector` that already contains some data:
 
 ~~~~~~~{.cpp}
-    vi = std::move(vi) | action::sort | action::unique;
+    vi = std::move(vi) | actions::sort | actions::unique;
 ~~~~~~~
 
 Mutate the container in-place:
 
 ~~~~~~~{.cpp}
-    vi |= action::sort | action::unique;
+    vi |= actions::sort | actions::unique;
 ~~~~~~~
 
 Same as above, but with function-call syntax instead of pipe syntax:
 
 ~~~~~~~{.cpp}
-    action::unique(action::sort(vi));
+    actions::unique(actions::sort(vi));
 ~~~~~~~
 
 ## Create Custom Ranges
@@ -801,45 +801,45 @@ provides, and a blurb about how each is intended to be used.
 Below is a list of the eager range combinators, or *actions*, that Range-v3 provides, and a blurb about how each is intended to be used.
 
 <DL>
-<DT>\link ranges::action::drop_fn `action::drop`\endlink</DT>
+<DT>\link ranges::actions::drop_fn `actions::drop`\endlink</DT>
   <DD>Removes the first `N` elements of the source range.</DD>
-<DT>\link ranges::action::drop_while_fn `action::drop_while`\endlink</DT>
+<DT>\link ranges::actions::drop_while_fn `actions::drop_while`\endlink</DT>
   <DD>Removes the first elements of the source range that satisfy the unary predicate.</DD>
-<DT>`action::erase`</DT>
+<DT>`actions::erase`</DT>
   <DD>Removes all elements in the sub-range of the source (range version) or all elements after position.</DD>
-<DT>`action::insert`</DT>
+<DT>`actions::insert`</DT>
   <DD>Inserts all elements of the range into the source at position.</DD>
-<DT>\link ranges::action::join_fn `action::join`\endlink</DT>
+<DT>\link ranges::actions::join_fn `actions::join`\endlink</DT>
   <DD>Flattens a range of ranges.</DD>
-<DT> `action::push_back`</DT>
+<DT> `actions::push_back`</DT>
   <DD>Appends elements to the tail of the source.</DD>
-<DT>`action::push_front`</DT>
+<DT>`actions::push_front`</DT>
   <DD>Appends elements before the head of the source.</DD>
-<DT>\link ranges::action::remove_if_fn `action::remove_if`\endlink</DT>
+<DT>\link ranges::actions::remove_if_fn `actions::remove_if`\endlink</DT>
   <DD>Removes all elements from the source that satisfy the predicate.</DD>
-<DT>\link ranges::action::remove_fn `action::remove`\endlink</DT>
+<DT>\link ranges::actions::remove_fn `actions::remove`\endlink</DT>
   <DD>Removes all elements from the source that are equal to value.</DD>
-<DT>\link ranges::action::unstable_remove_if_fn `action::unstable_remove_if`\endlink</DT>
+<DT>\link ranges::actions::unstable_remove_if_fn `actions::unstable_remove_if`\endlink</DT>
   <DD>Much faster (each element remove has constant time complexity), unordered version of `remove_if`. Requires bidirectional container.</DD>
-<DT>\link ranges::action::shuffle_fn `action::shuffle`\endlink</DT>
+<DT>\link ranges::actions::shuffle_fn `actions::shuffle`\endlink</DT>
   <DD>Shuffles the source range.</DD>
-<DT>\link ranges::action::slice_fn `action::slice`\endlink</DT>
+<DT>\link ranges::actions::slice_fn `actions::slice`\endlink</DT>
   <DD>Removes all elements from the source that are not part of the sub-range.</DD>
-<DT>\link ranges::action::sort_fn `action::sort`\endlink</DT>
+<DT>\link ranges::actions::sort_fn `actions::sort`\endlink</DT>
   <DD>Sorts the source range (unstable).</DD>
-<DT>\link ranges::action::split_fn `action::split`\endlink</DT>
+<DT>\link ranges::actions::split_fn `actions::split`\endlink</DT>
   <DD>Split a range into a sequence of subranges using a delimiter (a value, a sequence of values, a predicate, or a binary function returning a `pair<bool, N>`).</DD>
-<DT>\link ranges::action::stable_sort_fn `action::stable_sort`\endlink</DT>
+<DT>\link ranges::actions::stable_sort_fn `actions::stable_sort`\endlink</DT>
   <DD>Sorts the source range (stable).</DD>
-<DT>\link ranges::action::stride_fn `action::stride`\endlink</DT>
+<DT>\link ranges::actions::stride_fn `actions::stride`\endlink</DT>
   <DD>Removes all elements whose position does not match the stride.</DD>
-<DT>\link ranges::action::take_fn `action::take`\endlink</DT>
+<DT>\link ranges::actions::take_fn `actions::take`\endlink</DT>
   <DD>Keeps the first `N`-th elements of the range, removes the rest.</DD>
-<DT>\link ranges::action::take_while_fn `action::take_while`\endlink</DT>
+<DT>\link ranges::actions::take_while_fn `actions::take_while`\endlink</DT>
   <DD>Keeps the first elements that satisfy the predicate, removes the rest.</DD>
-<DT>\link ranges::action::transform_fn `action::transform`\endlink</DT>
+<DT>\link ranges::actions::transform_fn `actions::transform`\endlink</DT>
   <DD>Replaces elements of the source with the result of the unary function.</DD>
-<DT>`action::unique`</DT>
+<DT>`actions::unique`</DT>
   <DD>Removes adjacent elements of the source that compare equal. If the source is sorted, removes all duplicate elements.</DD>
 </DL>
 

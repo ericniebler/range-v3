@@ -43,19 +43,19 @@ void simple_test()
 
     Data d2{2};
 
-    const auto remove_data = action::remove(d2);
+    const auto remove_data = actions::remove(d2);
 
     list |= remove_data;
     check_equal(list, {Data{1}, Data{3}, Data{4}});
 
-    list |= action::remove(3, &Data::i);
+    list |= actions::remove(3, &Data::i);
     check_equal(list, {Data{1}, Data{4}});
 }
 
 void string_test()
 {
     std::vector<std::string> list = {"aaa", "bbb", "ccc"};
-    list |= action::remove("bbb");
+    list |= actions::remove("bbb");
     check_equal(list, {"aaa", "ccc"});
 }
 

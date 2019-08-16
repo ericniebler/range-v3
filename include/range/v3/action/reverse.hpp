@@ -27,7 +27,7 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         /// Reversed the source range in-place.
         struct reverse_fn
@@ -49,7 +49,7 @@ namespace ranges
         /// \relates reverse_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<reverse_fn>, reverse)
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

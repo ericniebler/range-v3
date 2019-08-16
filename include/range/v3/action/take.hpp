@@ -28,7 +28,7 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         struct take_fn
         {
@@ -49,7 +49,7 @@ namespace ranges
                         erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>>)
             {
                 RANGES_EXPECT(n >= 0);
-                ranges::action::erase(
+                ranges::actions::erase(
                     rng, ranges::next(begin(rng), n, end(rng)), end(rng));
                 return static_cast<Rng &&>(rng);
             }
@@ -59,7 +59,7 @@ namespace ranges
         /// \relates take_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<take_fn>, take)
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

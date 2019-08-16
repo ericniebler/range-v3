@@ -28,7 +28,7 @@ int main()
         }) | to<std::vector>();
     check_equal(v, {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
 
-    v |= action::unique | action::reverse;
+    v |= actions::unique | actions::reverse;
     check_equal(v, {5,4,3,2,1});
 
     return ::test_result();

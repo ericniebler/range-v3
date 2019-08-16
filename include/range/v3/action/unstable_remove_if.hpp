@@ -32,7 +32,7 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         struct unstable_remove_if_fn
         {
@@ -65,9 +65,9 @@ namespace ranges
 
         /// \ingroup group-actions
         /// \sa `action`
-        /// \sa `action::unstable_remove_if_fn`
+        /// \sa `actions::unstable_remove_if_fn`
         RANGES_INLINE_VARIABLE(action<unstable_remove_if_fn>, unstable_remove_if)
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

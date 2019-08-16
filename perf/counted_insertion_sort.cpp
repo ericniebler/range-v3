@@ -132,7 +132,7 @@ template<typename Gen>
 void shuffle(int *a, int i, Gen && rand)
 {
     auto rng = ranges::views::counted(a, i);
-    rng |= ranges::action::shuffle(std::forward<Gen>(rand));
+    rng |= ranges::actions::shuffle(std::forward<Gen>(rand));
 }
 
 constexpr int cloops = 3;
