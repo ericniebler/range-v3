@@ -10,6 +10,7 @@
 // Project home: https://github.com/ericniebler/range-v3
 
 #include <range/v3/core.hpp>
+#include <range/v3/view/drop_exactly.hpp>
 #include <range/v3/view/generate_n.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -87,6 +88,22 @@ int main()
         int i = 0;
         auto rng = views::generate_n([&i]{return ++i;}, 2);
         CHECK(!rng.empty());
+    }
+
+
+    // Test that skipping past positions works correctly
+    // https://github.com/ericniebler/range-v3/issues/1258
+    {
+        auto fib = [p = std::make_pair(0, 1)]() mutable -> int {
+            auto a = p.first;
+            p = {p.second, p.first + p.second};
+            return a;
+        };
+
+        auto rng = ranges::views::generate_n(fib, 8)
+            | ranges::views::drop_exactly(3);
+
+        check_equal(rng, {2,3,5,8,13});
     }
 
     return test_result();

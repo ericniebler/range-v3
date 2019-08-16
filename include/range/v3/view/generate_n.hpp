@@ -66,8 +66,11 @@ namespace ranges
             void next()
             {
                 RANGES_EXPECT(0 != rng_->n_);
+                if (rng_->val_)
+                    rng_->val_.reset();
+                else
+                    rng_->gen_();
                 --rng_->n_;
-                rng_->val_.reset();
             }
         };
         cursor begin_cursor()
