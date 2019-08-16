@@ -13,10 +13,14 @@ var dir_517791fd89823035f0884929ce7bba8a =
     [ "algorithm.hpp", "algorithm_8hpp.html", null ],
     [ "all.hpp", "all_8hpp.html", null ],
     [ "core.hpp", "core_8hpp.html", null ],
+    [ "functional.hpp", "functional_8hpp.html", null ],
+    [ "iterator.hpp", "iterator_8hpp.html", null ],
     [ "iterator_range.hpp", "iterator__range_8hpp.html", null ],
     [ "numeric.hpp", "numeric_8hpp.html", null ],
+    [ "range.hpp", "range_8hpp.html", null ],
     [ "range_for.hpp", "range__for_8hpp.html", "range__for_8hpp" ],
     [ "range_fwd.hpp", "range__fwd_8hpp.html", "range__fwd_8hpp" ],
+    [ "utility.hpp", "utility_8hpp.html", null ],
     [ "version.hpp", "version_8hpp.html", "version_8hpp" ],
     [ "view.hpp", "view_8hpp.html", null ]
 ];

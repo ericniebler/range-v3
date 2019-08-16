@@ -1,14 +1,17 @@
 var cartesian__product_8hpp =
 [
     [ "cartesian_product_view", "classranges_1_1cartesian__product__view.html", "classranges_1_1cartesian__product__view" ],
-    [ "cursor", "classranges_1_1cartesian__product__view_1_1cursor.html", "classranges_1_1cartesian__product__view_1_1cursor" ],
-    [ "cartesian_product_fn", "structranges_1_1view_1_1cartesian__product__fn.html", null ],
-    [ "CPP_PP_CAT", "cartesian__product_8hpp.html#abeff2e1398ae777ed1ff2ca2e06c4277", null ],
+    [ "cartesian_product_fn", "structviews_1_1cartesian__product__fn.html", null ],
+    [ "begin_cursor", "cartesian__product_8hpp.html#ab9887a5847bd5460502efd5be098a855", null ],
+    [ "cartesian_product_view", "cartesian__product_8hpp.html#a8a1e3894544b7d1a2a16f5f7f1ccae02", null ],
+    [ "cartesian_product_view", "cartesian__product_8hpp.html#a6d2d0070344e93cbdf02e4697929b7c7", null ],
     [ "CPP_PP_CAT", "cartesian__product_8hpp.html#ad5349aac552b00faa5f5bbd0f16f5d6a", null ],
-    [ "cartesian_product", "cartesian__product_8hpp.html#a6a81f7830ea3dbb20a7a7d960f72a720", null ],
-    [ "CartesianProductViewCanBidi", "cartesian__product_8hpp.html#a9fb1787f3cd7f1f9837d47ac96502c26", null ],
-    [ "CartesianProductViewCanConst", "cartesian__product_8hpp.html#ac62c78d7f6e401b16ee9df09290fb1c4", null ],
-    [ "CartesianProductViewCanDistance", "cartesian__product_8hpp.html#a25e7a6bae2b12c712c8364a4e45dc591", null ],
-    [ "CartesianProductViewCanRandom", "cartesian__product_8hpp.html#a34cfb2530ad331dfbc37b2134295ae50", null ],
-    [ "CartesianProductViewCanSize", "cartesian__product_8hpp.html#a2a4b7d1f7c0fb04c64fbc038b272d197", null ]
+    [ "CPP_PP_CAT", "cartesian__product_8hpp.html#abeff2e1398ae777ed1ff2ca2e06c4277", null ],
+    [ "end_cursor", "cartesian__product_8hpp.html#ad26a74ba9a175b7bd09a71d6e011f317", null ],
+    [ "cartesian_produce_view_can_bidi", "cartesian__product_8hpp.html#a1d6ab55ecc357e97bd5bb0de7fa78421", null ],
+    [ "cartesian_produce_view_can_const", "cartesian__product_8hpp.html#a818a535f014687d7cd62e6fce81d764c", null ],
+    [ "cartesian_produce_view_can_distance", "cartesian__product_8hpp.html#a9bc02cc319f96ca38665c2620522db15", null ],
+    [ "cartesian_produce_view_can_random", "cartesian__product_8hpp.html#a68e7810edfa9f98794aa7c1faa1a51a4", null ],
+    [ "cartesian_produce_view_can_size", "cartesian__product_8hpp.html#a2dc0abc5bd5b5f58f0550389a00ec040", null ],
+    [ "cartesian_product", "cartesian__product_8hpp.html#a0b86b93406388723986980b41b3a7b66", null ]
 ];

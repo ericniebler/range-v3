@@ -1,6 +1,6 @@
 var structranges_1_1max__fn =
 [
-    [ "operator()", "structranges_1_1max__fn.html#a0e4ab18cd10769224260c84c05bee8e0", null ],
-    [ "operator()", "structranges_1_1max__fn.html#a2e8b676be477f143393423b08f57693e", null ],
-    [ "operator()", "structranges_1_1max__fn.html#a665a216612c1f2e830676081710b43f2", null ]
+    [ "operator()", "structranges_1_1max__fn.html#ad16f3eb7e46fa5a4e998eb2364dea299", null ],
+    [ "operator()", "structranges_1_1max__fn.html#a31abf2d0dad5dbd63aa24d3b95a880c5", null ],
+    [ "operator()", "structranges_1_1max__fn.html#a887617724ac64dd0ec5f9e4985f77390", null ]
 ];

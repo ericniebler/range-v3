@@ -1,4 +1,5 @@
 var view_2drop_8hpp =
 [
-    [ "drop", "view_2drop_8hpp.html#ga773b3b8caf4417a173986281055c733c", null ]
+    [ "drop_fn", "structranges_1_1views_1_1drop__fn.html", "structranges_1_1views_1_1drop__fn" ],
+    [ "drop_view", "view_2drop_8hpp.html#aa07cf936579e5189fc898c723548f7ec", null ]
 ];

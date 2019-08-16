@@ -2,6 +2,7 @@ var dir_2be7d25da53ccb2e3f92f520d0c54342 =
 [
     [ "arithmetic.hpp", "arithmetic_8hpp.html", null ],
     [ "bind.hpp", "bind_8hpp.html", "bind_8hpp" ],
+    [ "bind_back.hpp", "bind__back_8hpp.html", "bind__back_8hpp" ],
     [ "comparisons.hpp", "comparisons_8hpp.html", "comparisons_8hpp" ],
     [ "compose.hpp", "compose_8hpp.html", "compose_8hpp" ],
     [ "concepts.hpp", "range_2v3_2functional_2concepts_8hpp.html", "range_2v3_2functional_2concepts_8hpp" ],

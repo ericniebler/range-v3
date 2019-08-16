@@ -1,5 +1,6 @@
 var structranges_1_1pipeable__base =
 [
-    [ "operator|", "structranges_1_1pipeable__base.html#a06f4c44eefa5d426d131d7d5fee040bb", null ],
-    [ "operator|", "structranges_1_1pipeable__base.html#a550037c3cfa783e63c776a9ca786c184", null ]
+    [ "operator|", "structranges_1_1pipeable__base.html#ac3b151e6f4826c05bf448c990367ca5b", null ],
+    [ "requires", "structranges_1_1pipeable__base.html#a34129c1f3cdcc461906ec504b8852f80", null ],
+    [ "pipe", "structranges_1_1pipeable__base.html#a12f19f63ed54876b8a2b622db2e6206c", null ]
 ];

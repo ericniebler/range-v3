@@ -1,9 +1,9 @@
 var structranges_1_1action_1_1slice__fn =
 [
     [ "slice", "group__group-actions.html#gaea92c971cf16891792933cf5e86f3527", null ],
-    [ "operator()", "structranges_1_1action_1_1slice__fn.html#ac362f8a765e86c108815fc54b2c9198d", null ],
-    [ "operator()", "structranges_1_1action_1_1slice__fn.html#a1f0f0f4f845b1fe1c86e2e07dde6d0a6", null ],
-    [ "operator()", "structranges_1_1action_1_1slice__fn.html#a481d4ae03db490fc410b7d37197c0638", null ],
-    [ "operator()", "structranges_1_1action_1_1slice__fn.html#a45411c5b10cc8740c804af3426cf8b12", null ],
-    [ "operator()", "structranges_1_1action_1_1slice__fn.html#a602e48d8b9103c36052eacc26a47dd3c", null ]
+    [ "operator()", "structranges_1_1action_1_1slice__fn.html#a76e96227c3e8cd3e3389afef83a710ee", null ],
+    [ "operator()", "structranges_1_1action_1_1slice__fn.html#a65cfc5997d2201559492837bf78b6865", null ],
+    [ "operator()", "structranges_1_1action_1_1slice__fn.html#a42355d93606cdcf099773548e634705b", null ],
+    [ "operator()", "structranges_1_1action_1_1slice__fn.html#a0797cf9bfcc265dd751c986a04875fcc", null ],
+    [ "operator()", "structranges_1_1action_1_1slice__fn.html#a1ecf9bf6b48716afefed7d54088ff8b9", null ]
 ];

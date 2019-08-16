@@ -1,4 +1,6 @@
 var view_2take__while_8hpp =
 [
-    [ "take_while", "view_2take__while_8hpp.html#gac2e51b4f4c722fa114413ee366fc3f02", null ]
+    [ "iter_take_while_fn", "structranges_1_1views_1_1iter__take__while__fn.html", "structranges_1_1views_1_1iter__take__while__fn" ],
+    [ "take_while_fn", "structranges_1_1views_1_1take__while__fn.html", "structranges_1_1views_1_1take__while__fn" ],
+    [ "take_while_view", "view_2take__while_8hpp.html#a0d2eca889a05110034ac969ea90dbf69", null ]
 ];

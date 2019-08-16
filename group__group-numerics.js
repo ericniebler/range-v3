@@ -1,29 +1,29 @@
 var group__group_numerics =
 [
     [ "accumulate_fn", "structranges_1_1accumulate__fn.html", [
-      [ "operator()", "structranges_1_1accumulate__fn.html#ad44a98366f066d5fde170ede924ae317", null ],
-      [ "operator()", "structranges_1_1accumulate__fn.html#a6071f2a688f3e59d5efa78e3dccd0e9c", null ]
+      [ "operator()", "structranges_1_1accumulate__fn.html#aa7900af90ef2f0a41afde6d1932adc71", null ],
+      [ "operator()", "structranges_1_1accumulate__fn.html#a5d6cfe5d21a25b42f365902cc7881a74", null ]
     ] ],
     [ "adjacent_difference_fn", "structranges_1_1adjacent__difference__fn.html", [
-      [ "operator()", "structranges_1_1adjacent__difference__fn.html#a7b564526230827f5c9807500174bf7cb", null ],
-      [ "operator()", "structranges_1_1adjacent__difference__fn.html#ad69a4174eaa396c54145bd8cf96f8e45", null ],
-      [ "operator()", "structranges_1_1adjacent__difference__fn.html#afb980e35644770a48b96a9583bb7b1dc", null ],
-      [ "operator()", "structranges_1_1adjacent__difference__fn.html#a39b26d5e4bd9f4e9e6119cc9528bbc13", null ]
+      [ "operator()", "structranges_1_1adjacent__difference__fn.html#a4879563535fff0502ed3b27f9b464d8d", null ],
+      [ "operator()", "structranges_1_1adjacent__difference__fn.html#a7590cbbf13f59a6989f66414872a7952", null ],
+      [ "operator()", "structranges_1_1adjacent__difference__fn.html#a9828d7a7a4031238b163b9d3c316d889", null ],
+      [ "operator()", "structranges_1_1adjacent__difference__fn.html#abbb1faa1db33497b9cdb9d6009c046ed", null ]
     ] ],
     [ "inner_product_fn", "structranges_1_1inner__product__fn.html", [
-      [ "operator()", "structranges_1_1inner__product__fn.html#a2b0a479a6d55f119ccd0006380648fad", null ],
-      [ "operator()", "structranges_1_1inner__product__fn.html#af6aa970c36e6c68a86ca45b3474990a9", null ],
-      [ "operator()", "structranges_1_1inner__product__fn.html#a15f8ad9e58255adc573f0ae97e9d10d2", null ],
-      [ "operator()", "structranges_1_1inner__product__fn.html#a82c9f8e0adf0fb128bac60a7d92dc9a9", null ]
+      [ "operator()", "structranges_1_1inner__product__fn.html#aefe61ff242d5374fb232e12386711e8a", null ],
+      [ "operator()", "structranges_1_1inner__product__fn.html#a282ae6d5f64c69ea4ad2913b17a77d9f", null ],
+      [ "operator()", "structranges_1_1inner__product__fn.html#a9ca19417a2e260a03a6b36a63b4884eb", null ],
+      [ "operator()", "structranges_1_1inner__product__fn.html#a86da72a893b61caec60d4fbb7538332e", null ]
     ] ],
     [ "iota_fn", "structranges_1_1iota__fn.html", [
-      [ "operator()", "structranges_1_1iota__fn.html#aea96f79669c3c506da18402ede18e9a3", null ],
-      [ "operator()", "structranges_1_1iota__fn.html#ac69922c0ab8f34e9b020f85b09c48799", null ]
+      [ "operator()", "structranges_1_1iota__fn.html#abdbf632c653045299eb315f2948b9b41", null ],
+      [ "operator()", "structranges_1_1iota__fn.html#abca8dab0d3e1fbe7a463af01f7f14034", null ]
     ] ],
     [ "partial_sum_fn", "structranges_1_1partial__sum__fn.html", [
-      [ "operator()", "structranges_1_1partial__sum__fn.html#a4938d48b9a03de8923b2b84fd33645cb", null ],
-      [ "operator()", "structranges_1_1partial__sum__fn.html#aedf6efb103988506a9166f4212ca6ee9", null ],
-      [ "operator()", "structranges_1_1partial__sum__fn.html#afc1b4b57ceb2da1cf6b75109546881c5", null ],
-      [ "operator()", "structranges_1_1partial__sum__fn.html#aa10d706da78d00a7ff7a7ea3a4b6b3c4", null ]
+      [ "operator()", "structranges_1_1partial__sum__fn.html#a0152ad5a938d18b541372c4902d7b738", null ],
+      [ "operator()", "structranges_1_1partial__sum__fn.html#a83606ec9e8444dc6b50a1d48fdaec684", null ],
+      [ "operator()", "structranges_1_1partial__sum__fn.html#ae1b83ba461dadde1fdd9b450029355b9", null ],
+      [ "operator()", "structranges_1_1partial__sum__fn.html#a50665defe227955e144ca903139953a7", null ]
     ] ]
 ];

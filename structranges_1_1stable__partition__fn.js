@@ -1,5 +1,5 @@
 var structranges_1_1stable__partition__fn =
 [
-    [ "operator()", "structranges_1_1stable__partition__fn.html#aa01aa34e2ab6d8837224a65658c10876", null ],
-    [ "operator()", "structranges_1_1stable__partition__fn.html#a4a528fbed4299f024a7b00783cece631", null ]
+    [ "operator()", "structranges_1_1stable__partition__fn.html#a036620680a73f447e152b07612de2538", null ],
+    [ "operator()", "structranges_1_1stable__partition__fn.html#a6a880b7c5d996947335e9050acaa1e02", null ]
 ];

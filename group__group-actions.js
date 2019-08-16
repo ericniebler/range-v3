@@ -4,7 +4,6 @@ var group__group_actions =
     [ "drop", "group__group-actions.html#ga1e36152aecd17031d25fea4fe8da2b69", null ],
     [ "drop_while", "group__group-actions.html#gabf7e0a0e9db096aa11eb9d37f242fba8", null ],
     [ "join", "group__group-actions.html#gaf85c713c3d2cb80ef2c53b9c3212ccad", null ],
-    [ "make_action", "group__group-actions.html#ga0b2257b9d4c04c0be00bbc11b5e6936b", null ],
     [ "remove", "group__group-actions.html#ga2e528740dc8e332a02328f8a8719e522", null ],
     [ "remove_if", "group__group-actions.html#ga319d56e9aa5334504533ec3f9fdf5228", null ],
     [ "reverse", "group__group-actions.html#ga4c5cc0cc96a941b2fdc9fa5d744da163", null ],

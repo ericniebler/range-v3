@@ -1,4 +1,5 @@
 var view_2drop__while_8hpp =
 [
-    [ "drop_while", "view_2drop__while_8hpp.html#ga64cc934f54eff32f323a1175ecc27f66", null ]
+    [ "drop_while_fn", "structranges_1_1views_1_1drop__while__fn.html", "structranges_1_1views_1_1drop__while__fn" ],
+    [ "drop_while_view", "view_2drop__while_8hpp.html#a6efd13693258ed4e6a4a1a01c08588da", null ]
 ];

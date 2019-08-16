@@ -1,6 +1,6 @@
 var group__datatype =
 [
-    [ "List", "group__list.html", "group__list" ],
+    [ "list_like", "group__list.html", "group__list" ],
     [ "Integer sequence", "group__integral.html", "group__integral" ],
     [ "Extension", "group__extension.html", "group__extension" ],
     [ "lazy", "group__lazy__datatype.html", "group__lazy__datatype" ],

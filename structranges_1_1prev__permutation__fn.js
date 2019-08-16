@@ -1,5 +1,5 @@
 var structranges_1_1prev__permutation__fn =
 [
-    [ "operator()", "structranges_1_1prev__permutation__fn.html#a5e7770530f1a8b4d600f24ab672246c1", null ],
-    [ "operator()", "structranges_1_1prev__permutation__fn.html#ad103d195e0dd25d3586c36def51443e2", null ]
+    [ "operator()", "structranges_1_1prev__permutation__fn.html#ae20be4a0e7877d9f25c05c6f8ac4fa68", null ],
+    [ "operator()", "structranges_1_1prev__permutation__fn.html#ad6dc02f2b211c46fa321571970b04749", null ]
 ];

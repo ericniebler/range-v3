@@ -1,5 +1,5 @@
 var structranges_1_1make__move__sentinel__fn =
 [
-    [ "operator()", "structranges_1_1make__move__sentinel__fn.html#ad8e429e404ae8e83827d3ce2007ad23d", null ],
-    [ "operator()", "structranges_1_1make__move__sentinel__fn.html#ae143f14e57c2f3aeb457cd9179e6999e", null ]
+    [ "operator()", "structranges_1_1make__move__sentinel__fn.html#a32c33e0034f2e6e5f60f4fe8cd833289", null ],
+    [ "operator()", "structranges_1_1make__move__sentinel__fn.html#aa3c5bdc4a85fadebff87345d03f5bb85", null ]
 ];

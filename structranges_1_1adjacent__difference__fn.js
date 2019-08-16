@@ -1,7 +1,7 @@
 var structranges_1_1adjacent__difference__fn =
 [
-    [ "operator()", "structranges_1_1adjacent__difference__fn.html#a7b564526230827f5c9807500174bf7cb", null ],
-    [ "operator()", "structranges_1_1adjacent__difference__fn.html#ad69a4174eaa396c54145bd8cf96f8e45", null ],
-    [ "operator()", "structranges_1_1adjacent__difference__fn.html#afb980e35644770a48b96a9583bb7b1dc", null ],
-    [ "operator()", "structranges_1_1adjacent__difference__fn.html#a39b26d5e4bd9f4e9e6119cc9528bbc13", null ]
+    [ "operator()", "structranges_1_1adjacent__difference__fn.html#a4879563535fff0502ed3b27f9b464d8d", null ],
+    [ "operator()", "structranges_1_1adjacent__difference__fn.html#a7590cbbf13f59a6989f66414872a7952", null ],
+    [ "operator()", "structranges_1_1adjacent__difference__fn.html#a9828d7a7a4031238b163b9d3c316d889", null ],
+    [ "operator()", "structranges_1_1adjacent__difference__fn.html#abbb1faa1db33497b9cdb9d6009c046ed", null ]
 ];
