@@ -91,9 +91,9 @@ int main()
             return a;
         };
 
-        auto rng = ranges::view::generate(fib)
-            | ranges::view::drop_exactly(3)
-            | ranges::view::take_exactly(5);
+        auto rng = ranges::views::generate(fib)
+            | ranges::views::drop_exactly(3)
+            | ranges::views::take_exactly(5);
 
         check_equal(rng, {2,3,5,8,13});
     }
