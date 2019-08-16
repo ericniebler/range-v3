@@ -43,13 +43,13 @@ namespace ranges
         }
     };
 
-    namespace view
+    namespace views
     {
         struct unbounded_fn
         {
             template<typename I>
             constexpr auto operator()(I it) const -> CPP_ret(unbounded_view<I>)( //
-                requires InputIterator<I>)
+                requires input_iterator<I>)
             {
                 return unbounded_view<I>{detail::move(it)};
             }
@@ -58,7 +58,7 @@ namespace ranges
         /// \relates unbounded_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(unbounded_fn, unbounded)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

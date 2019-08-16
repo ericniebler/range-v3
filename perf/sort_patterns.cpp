@@ -36,7 +36,7 @@ namespace
   /// successor is multiplied by \p V
   auto geometric_sequence(std::size_t V) {
     std::size_t N = 1;
-    return ranges::view::generate([N, V]() mutable {
+    return ranges::views::generate([N, V]() mutable {
       auto old = N;
       N *= V;
       return old;
@@ -47,7 +47,7 @@ namespace
   /// successor is multiplied by \p V
   auto geometric_sequence_n(std::size_t V, std::size_t limit) {
     return geometric_sequence(V) |
-      ranges::view::take_while([limit](std::size_t n) { return n <= limit; });
+      ranges::views::take_while([limit](std::size_t n) { return n <= limit; });
   }
 
   /// Random uniform integer sequence
@@ -55,20 +55,20 @@ namespace
     std::default_random_engine gen;
     std::uniform_int_distribution<> dist;
     auto operator()(std::size_t) {
-      return ranges::view::generate([&]{ return dist(gen); });
+      return ranges::views::generate([&]{ return dist(gen); });
     }
     static std::string name() { return "random_uniform_integer_sequence"; }
   };
 
   struct ascending_integer_sequence {
-    auto operator()(std::size_t) { return ranges::view::iota(1); }
+    auto operator()(std::size_t) { return ranges::views::iota(1); }
     static std::string name() { return "ascending_integer_sequence"; }
   };
 
   struct descending_integer_sequence {
     auto operator()(std::size_t) {
-      return ranges::view::iota(0ll, std::numeric_limits<long long>::max()) |
-            ranges::view::reverse;
+      return ranges::views::iota(0ll, std::numeric_limits<long long>::max()) |
+            ranges::views::reverse;
     }
     static std::string name() { return "descending_integer_sequence"; }
   };
@@ -79,24 +79,24 @@ namespace
   struct even_odd_integer_sequence {
     static std::string name() { return "even_odd_integer_sequence"; }
     auto operator()(std::size_t n) {
-      return ranges::view::concat(ranges::view::ints(std::size_t{0}, n) | ranges::view::filter(even),
-                                  ranges::view::ints(std::size_t{0}, n) | ranges::view::filter(odd));
+      return ranges::views::concat(ranges::views::ints(std::size_t{0}, n) | ranges::views::filter(even),
+                                  ranges::views::ints(std::size_t{0}, n) | ranges::views::filter(odd));
     }
   };
 
   struct organ_pipe_integer_sequence {
     static std::string name() { return "organ_pipe_integer_sequence"; }
     auto operator()(std::size_t n) {
-      return ranges::view::concat(ranges::view::ints(std::size_t{0}, n/2),
-                                  ranges::view::ints(std::size_t{0}, n/2 + 1)
-                                  | ranges::view::reverse);
+      return ranges::views::concat(ranges::views::ints(std::size_t{0}, n/2),
+                                  ranges::views::ints(std::size_t{0}, n/2 + 1)
+                                  | ranges::views::reverse);
     }
   };
 
   template<typename Seq>
   void print(Seq seq, std::size_t n) {
     std::cout << "sequence: " << seq.name() << '\n';
-    RANGES_FOR(auto i, seq(n) | ranges::view::take(n)) {
+    RANGES_FOR(auto i, seq(n) | ranges::views::take(n)) {
       std::cout << i << '\n';
     }
   }
@@ -129,7 +129,7 @@ namespace
     using Rep = typename D::rep;
     const auto mean = compute_mean(durations);
     const auto stddev = ranges::accumulate(
-      durations | ranges::view::transform([=](auto i) {
+      durations | ranges::views::transform([=](auto i) {
         auto const delta = (i - mean).count();
         return delta * delta;
       }), Rep{}, ranges::plus{}, ranges::convert_to<Rep>{});
@@ -192,7 +192,7 @@ namespace
     }
     void init(std::size_t size) {
       data.resize(size);
-      ranges::copy(seq(size) | ranges::view::take(size), ranges::begin(data));
+      ranges::copy(seq(size) | ranges::views::take(size), ranges::begin(data));
     }
     void operator()() { comp(data); }
   };
@@ -221,7 +221,7 @@ namespace
     std::cout << '#' << setw(19) << 'N' << setw(20) << "ranges::sort" << setw(20)
               << "std::sort"
               << '\n';
-    RANGES_FOR(auto p, ranges::view::zip(ranges_sort_benchmark.results,
+    RANGES_FOR(auto p, ranges::views::zip(ranges_sort_benchmark.results,
                                          std_sort_benchmark.results)) {
       auto rs = p.first;
       auto ss = p.second;

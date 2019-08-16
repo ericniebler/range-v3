@@ -21,14 +21,15 @@ int main()
 
     int rgi[] = {0, 1, 2, 3, 4, 5};
 
-    auto rng0 = rgi | view::take_last(3);
+    auto rng0 = rgi | views::take_last(3);
     has_type<int &>(*begin(rng0));
-    models<CommonViewConcept>(aux::copy(rng0));
-    models<SizedViewConcept>(aux::copy(rng0));
-    models<RandomAccessIteratorConcept>(begin(rng0));
+    CPP_assert(view_<decltype(rng0)>);
+    CPP_assert(common_range<decltype(rng0)>);
+    CPP_assert(sized_range<decltype(rng0)>);
+    CPP_assert(random_access_iterator<decltype(begin(rng0))>);
     ::check_equal(rng0, {3, 4, 5});
     CHECK(size(rng0) == 3u);
 
-    auto rng1 = rgi | view::take_last(7);
+    auto rng1 = rgi | views::take_last(7);
     ::check_equal(rng1, {0, 1, 2, 3, 4, 5});
 }

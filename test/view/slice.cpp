@@ -28,78 +28,83 @@ int main()
 
     int rgi[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-    auto rng0 = rgi | view::slice(3, 9);
+    auto rng0 = rgi | views::slice(3, 9);
     has_type<int &>(*begin(rng0));
-    models<CommonViewConcept>(aux::copy(rng0));
-    models<SizedViewConcept>(aux::copy(rng0));
-    models<RandomAccessIteratorConcept>(begin(rng0));
+    CPP_assert(view_<decltype(rng0)>);
+    CPP_assert(common_range<decltype(rng0)>);
+    CPP_assert(sized_range<decltype(rng0)>);
+    CPP_assert(random_access_iterator<decltype(begin(rng0))>);
     ::check_equal(rng0, {3, 4, 5, 6, 7, 8});
 
-    auto rng1 = rng0 | view::reverse;
+    auto rng1 = rng0 | views::reverse;
     has_type<int &>(*begin(rng1));
-    models<CommonViewConcept>(aux::copy(rng1));
-    models<SizedViewConcept>(aux::copy(rng1));
-    models<RandomAccessIteratorConcept>(begin(rng1));
+    CPP_assert(view_<decltype(rng1)>);
+    CPP_assert(common_range<decltype(rng1)>);
+    CPP_assert(sized_range<decltype(rng1)>);
+    CPP_assert(random_access_iterator<decltype(begin(rng1))>);
     ::check_equal(rng1, {8, 7, 6, 5, 4, 3});
 
     std::vector<int> v{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    auto rng2 = v | view::slice(3, 9) | view::reverse;
+    auto rng2 = v | views::slice(3, 9) | views::reverse;
     has_type<int &>(*begin(rng2));
-    models<CommonViewConcept>(aux::copy(rng2));
-    models<SizedViewConcept>(aux::copy(rng2));
-    models<RandomAccessIteratorConcept>(begin(rng2));
+    CPP_assert(view_<decltype(rng2)>);
+    CPP_assert(common_range<decltype(rng2)>);
+    CPP_assert(sized_range<decltype(rng2)>);
+    CPP_assert(random_access_iterator<decltype(begin(rng2))>);
     ::check_equal(rng2, {8, 7, 6, 5, 4, 3});
 
     std::list<int> l{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    auto rng3 = l | view::slice(3, 9);
+    auto rng3 = l | views::slice(3, 9);
     has_type<int &>(*begin(rng3));
-    models<ViewConcept>(aux::copy(rng3));
-    models_not<CommonViewConcept>(aux::copy(rng3));
-    models<SizedViewConcept>(aux::copy(rng3));
-    models<BidirectionalIteratorConcept>(begin(rng3));
-    models_not<RandomAccessIteratorConcept>(begin(rng3));
+    CPP_assert(view_<decltype(rng3)>);
+    CPP_assert(!common_range<decltype(rng3)>);
+    CPP_assert(sized_range<decltype(rng3)>);
+    CPP_assert(bidirectional_iterator<decltype(begin(rng3))>);
+    CPP_assert(!random_access_iterator<decltype(begin(rng3))>);
     ::check_equal(rng3, {3, 4, 5, 6, 7, 8});
 
-    auto rng4 = view::iota(10) | view::slice(10, 20);
-    ::models<CommonViewConcept>(aux::copy(rng4));
-    ::models<SizedViewConcept>(aux::copy(rng4));
+    auto rng4 = views::iota(10) | views::slice(10, 20);
+    CPP_assert(view_<decltype(rng4)>);
+    CPP_assert(common_range<decltype(rng4)>);
+    CPP_assert(sized_range<decltype(rng4)>);
     static_assert(!ranges::is_infinite<decltype(rng4)>::value, "");
     ::check_equal(rng4, {20, 21, 22, 23, 24, 25, 26, 27, 28, 29});
 
-    auto rng5 = view::iota(10)[{10, 20}];
-    ::models<CommonViewConcept>(aux::copy(rng5));
-    ::models<SizedViewConcept>(aux::copy(rng5));
+    auto rng5 = views::iota(10)[{10, 20}];
+    CPP_assert(view_<decltype(rng5)>);
+    CPP_assert(common_range<decltype(rng5)>);
+    CPP_assert(sized_range<decltype(rng5)>);
     static_assert(!ranges::is_infinite<decltype(rng5)>::value, "");
     ::check_equal(rng5, {20, 21, 22, 23, 24, 25, 26, 27, 28, 29});
 
-    auto rng6 = view::all(l)[{3, 9}];
+    auto rng6 = views::all(l)[{3, 9}];
     has_type<int &>(*begin(rng6));
-    models<ViewConcept>(aux::copy(rng6));
-    models_not<CommonViewConcept>(aux::copy(rng6));
-    models<SizedViewConcept>(aux::copy(rng6));
-    models<BidirectionalIteratorConcept>(begin(rng6));
-    models_not<RandomAccessIteratorConcept>(begin(rng6));
+    CPP_assert(view_<decltype(rng6)>);
+    CPP_assert(!common_range<decltype(rng6)>);
+    CPP_assert(sized_range<decltype(rng6)>);
+    CPP_assert(bidirectional_iterator<decltype(begin(rng6))>);
+    CPP_assert(!random_access_iterator<decltype(begin(rng6))>);
     ::check_equal(rng6, {3, 4, 5, 6, 7, 8});
 
-    auto rng7 = view::all(l)[{3, end}];
+    auto rng7 = views::all(l)[{3, end}];
     has_type<int &>(*begin(rng7));
-    models<ViewConcept>(aux::copy(rng7));
-    models<CommonViewConcept>(aux::copy(rng7));
-    models<SizedViewConcept>(aux::copy(rng7));
-    models<BidirectionalIteratorConcept>(begin(rng7));
-    models_not<RandomAccessIteratorConcept>(begin(rng7));
+    CPP_assert(view_<decltype(rng7)>);
+    CPP_assert(common_range<decltype(rng7)>);
+    CPP_assert(sized_range<decltype(rng7)>);
+    CPP_assert(bidirectional_iterator<decltype(begin(rng7))>);
+    CPP_assert(!random_access_iterator<decltype(begin(rng7))>);
     ::check_equal(rng7, {3, 4, 5, 6, 7, 8, 9, 10});
 
-    auto rng8 = view::all(l)[{end-5,end-2}];
+    auto rng8 = views::all(l)[{end-5,end-2}];
     has_type<int &>(*begin(rng8));
-    models<ViewConcept>(aux::copy(rng8));
-    models_not<CommonViewConcept>(aux::copy(rng8));
-    models<SizedViewConcept>(aux::copy(rng8));
-    models<BidirectionalIteratorConcept>(begin(rng8));
-    models_not<RandomAccessIteratorConcept>(begin(rng8));
+    CPP_assert(view_<decltype(rng8)>);
+    CPP_assert(!common_range<decltype(rng8)>);
+    CPP_assert(sized_range<decltype(rng8)>);
+    CPP_assert(bidirectional_iterator<decltype(begin(rng8))>);
+    CPP_assert(!random_access_iterator<decltype(begin(rng8))>);
     ::check_equal(rng8, {6, 7, 8});
 
-    auto rng9 = view::iota(0)[{0,end}];
+    auto rng9 = views::iota(0)[{0,end}];
     static_assert(is_infinite<decltype(rng9)>::value, "should be infinite");
 
     {
@@ -117,15 +122,15 @@ int main()
     }
 
     {
-        auto letters = view::closed_iota('a','g');
-        static_assert(RandomAccessView<decltype(letters)>, "");
-        static_assert(CommonView<decltype(letters)>, "");
+        auto letters = views::closed_iota('a','g');
+        static_assert(random_access_range<decltype(letters)> && view_<decltype(letters)>, "");
+        static_assert(common_range<decltype(letters)> && view_<decltype(letters)>, "");
         ::check_equal(letters[{2,end-2}], {'c','d','e'});
     }
 
     {
         int const some_ints[] = {0,1,2,3,4,5,6,7,8,9};
-        auto rng = debug_input_view<int const>{some_ints} | view::slice(3,10);
+        auto rng = debug_input_view<int const>{some_ints} | views::slice(3,10);
         ::check_equal(rng, {3, 4, 5, 6, 7, 8, 9});
     }
 

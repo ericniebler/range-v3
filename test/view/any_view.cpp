@@ -79,16 +79,16 @@ int main()
     auto const ten_ints = {0,1,2,3,4,5,6,7,8,9};
 
     {
-        any_view<int> ints = view::ints;
-        CPP_assert(InputView<decltype(ints)>);
-        CPP_assert(!ForwardView<decltype(ints)>);
-        ::check_equal(std::move(ints) | view::take(10), ten_ints);
+        any_view<int> ints = views::ints;
+        CPP_assert(input_range<decltype(ints)> && view_<decltype(ints)>);
+        CPP_assert(!(forward_range<decltype(ints)> && view_<decltype(ints)>));
+        ::check_equal(std::move(ints) | views::take(10), ten_ints);
     }
     {
-        any_view<int> ints = view::ints | view::take_exactly(5);
-        CPP_assert(InputView<decltype(ints)>);
-        CPP_assert(!RandomAccessView<decltype(ints)>);
-        CPP_assert(!SizedView<decltype(ints)>);
+        any_view<int> ints = views::ints | views::take_exactly(5);
+        CPP_assert(input_range<decltype(ints)> && view_<decltype(ints)>);
+        CPP_assert(!(random_access_range<decltype(ints)> && view_<decltype(ints)>));
+        CPP_assert(!(sized_range<decltype(ints)> && view_<decltype(ints)>));
         static_assert((get_categories<decltype(ints)>() & category::random_access) == category::input, "");
         static_assert((get_categories<decltype(ints)>() & category::sized) == category::none, "");
     }
@@ -99,43 +99,44 @@ int main()
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_FUNC_TEMPLATE
 #endif
-        any_view ints = view::ints | view::take_exactly(5);
+        any_view ints = views::ints | views::take_exactly(5);
 #if defined(__clang__) && __clang_major__ < 6
 RANGES_DIAGNOSTIC_POP
 #endif
 #else
-        any_view<int, category::random_access | category::sized> ints = view::ints | view::take_exactly(5);
+        any_view<int, category::random_access | category::sized> ints = views::ints | views::take_exactly(5);
 #endif
-        CPP_assert(RandomAccessView<decltype(ints)>);
-        CPP_assert(SizedView<decltype(ints)>);
+        CPP_assert(random_access_range<decltype(ints)> && view_<decltype(ints)>);
+        CPP_assert(sized_range<decltype(ints)> && view_<decltype(ints)>);
         static_assert((get_categories<decltype(ints)>() & category::random_access) == category::random_access, "");
         static_assert((get_categories<decltype(ints)>() & category::sized) == category::sized, "");
     }
     {
-        any_view<int, category::input | category::sized> ints = view::ints | view::take_exactly(10);
-        CPP_assert(InputView<decltype(ints)>);
-        CPP_assert(SizedView<decltype(ints)>);
+        any_view<int, category::input | category::sized> ints = views::ints | views::take_exactly(10);
+        CPP_assert(input_range<decltype(ints)> && view_<decltype(ints)>);
+        CPP_assert(sized_range<decltype(ints)> && view_<decltype(ints)>);
         static_assert((get_categories<decltype(ints)>() & category::input) == category::input, "");
         static_assert((get_categories<decltype(ints)>() & category::sized) == category::sized, "");
     }
     {
-        any_view<int, category::bidirectional> ints = view::ints;
-        CPP_assert(BidirectionalView<decltype(ints)>);
-        CPP_assert(!RandomAccessView<decltype(ints)>);
+        any_view<int, category::bidirectional> ints = views::ints;
+        CPP_assert(bidirectional_range<decltype(ints)> && view_<decltype(ints)>);
+        CPP_assert(!(random_access_range<decltype(ints)> && view_<decltype(ints)>));
         static_assert((get_categories<decltype(ints)>() & category::random_access) == category::bidirectional, "");
     }
     {
-        any_view<int> ints2 = view::ints | view::take(10);
+        any_view<int> ints2 = views::ints | views::take(10);
         ::check_equal(ints2, ten_ints);
         ::check_equal(ints2, ten_ints);
     }
     {
-        any_view<int, category::random_access> ints3 = view::ints | view::take(10);
-        ::models<RandomAccessViewConcept>(aux::copy(ints3));
+        any_view<int, category::random_access> ints3 = views::ints | views::take(10);
+        CPP_assert(view_<decltype(ints3)>);
+        CPP_assert(random_access_range<decltype(ints3)>);
         ::check_equal(ints3, ten_ints);
         ::check_equal(ints3, ten_ints);
         ::check_equal(aux::copy(ints3), ten_ints);
-        ::check_equal(ints3 | view::reverse, {9,8,7,6,5,4,3,2,1,0});
+        ::check_equal(ints3 | views::reverse, {9,8,7,6,5,4,3,2,1,0});
     }
     {
         any_view<int&> e;
@@ -178,7 +179,7 @@ RANGES_DIAGNOSTIC_POP
     {
         std::map<int, int> mm{ {0, 1}, {2, 3} };
         ranges::any_view<int, ranges::category::forward | ranges::category::sized> as_any =
-            mm | ranges::view::keys;
+            mm | ranges::views::keys;
         (void)as_any;
     }
 

@@ -72,7 +72,7 @@ namespace ranges
       , private _ref_view_::adl_hook
     {
     private:
-        CPP_assert(Range<Rng>);
+        CPP_assert(range<Rng>);
         static_assert(std::is_object<Rng>::value, "");
         Rng * rng_ = nullptr; // exposition only
     public:
@@ -95,36 +95,36 @@ namespace ranges
         CPP_member
         constexpr auto empty() const noexcept(noexcept(ranges::empty(*rng_)))
             -> CPP_ret(bool)( //
-                requires detail::CanEmpty<Rng>)
+                requires detail::can_empty_<Rng>)
         {
             return ranges::empty(*rng_);
         }
         CPP_member
         constexpr auto CPP_fun(size)()(const noexcept(noexcept(ranges::size(*rng_))) //
-                                       requires SizedRange<Rng>)
+                                       requires sized_range<Rng>)
         {
             return ranges::size(*rng_);
         }
         CPP_member
         constexpr auto CPP_fun(data)()(const noexcept(noexcept(ranges::data(*rng_))) //
-                                       requires ContiguousRange<Rng>)
+                                       requires contiguous_range<Rng>)
         {
             return ranges::data(*rng_);
         }
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename R)(requires Range<R>) ref_view(R &)->ref_view<R>;
+    CPP_template(typename R)(requires range<R>) ref_view(R &)->ref_view<R>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct ref_fn
         {
             template<typename Rng>
             constexpr auto operator()(Rng & rng) const noexcept
                 -> CPP_ret(ref_view<Rng>)( //
-                    requires Range<Rng>)
+                    requires range<Rng>)
             {
                 return ref_view<Rng>(rng);
             }
@@ -135,7 +135,7 @@ namespace ranges
         /// \relates const_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<ref_fn>, ref)
-    } // namespace view
+    } // namespace views
 
     namespace cpp20
     {

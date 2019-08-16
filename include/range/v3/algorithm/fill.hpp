@@ -30,7 +30,7 @@ namespace ranges
     {
         template<typename O, typename S, typename V>
         auto operator()(O begin, S end, V const & val) const -> CPP_ret(O)( //
-            requires OutputIterator<O, V const &> && Sentinel<S, O>)
+            requires output_iterator<O, V const &> && sentinel_for<S, O>)
         {
             for(; begin != end; ++begin)
                 *begin = val;
@@ -40,7 +40,7 @@ namespace ranges
         template<typename Rng, typename V>
         auto operator()(Rng && rng, V const & val) const
             -> CPP_ret(safe_iterator_t<Rng>)( //
-                requires OutputRange<Rng, V const &>)
+                requires output_range<Rng, V const &>)
         {
             return (*this)(begin(rng), end(rng), val);
         }

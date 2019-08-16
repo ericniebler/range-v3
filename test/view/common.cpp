@@ -27,28 +27,30 @@ int main()
 
     {
         std::stringstream sinx("1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 42 6 7 8 9 ");
-        auto rng1 = istream<int>(sinx) | view::delimit(42); // | view::common;
-        ::models_not<CommonRangeConcept>(rng1);
-        ::models<InputRangeConcept>(rng1);
-        ::models_not<ForwardRangeConcept>(rng1);
+        auto rng1 = istream<int>(sinx) | views::delimit(42); // | views::common;
+        CPP_assert(!common_range<decltype(rng1)>);
+        CPP_assert(input_range<decltype(rng1)>);
+        CPP_assert(!forward_range<decltype(rng1)>);
         auto const& crng1 = rng1;
-        ::models_not<RangeConcept>(crng1);
-        auto rng2 = rng1 | view::common;
-        ::models<CommonViewConcept>(aux::copy(rng2));
-        ::models<InputIteratorConcept>(rng2.begin());
-        CPP_assert(Same<typename std::iterator_traits<decltype(rng2.begin())>::iterator_category,
+        CPP_assert(!range<decltype(crng1)>);
+        auto rng2 = rng1 | views::common;
+        CPP_assert(view_<decltype(rng2)>);
+        CPP_assert(common_range<decltype(rng2)>);
+        CPP_assert(input_iterator<decltype(rng2.begin())>);
+        CPP_assert(same_as<typename std::iterator_traits<decltype(rng2.begin())>::iterator_category,
                             std::input_iterator_tag>);
-        ::models_not<ForwardIteratorConcept>(rng2.begin());
+        CPP_assert(!forward_iterator<decltype(rng2.begin())>);
         ::check_equal(rng2, {1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4});
     }
 
     std::vector<int> v{1,2,3,4,5,6,7,8,9,0,42,64};
     {
-        auto rng1 = v | view::delimit(42) | view::common;
-        ::models<CommonViewConcept>(aux::copy(rng1));
-        ::models_not<SizedViewConcept>(aux::copy(rng1));
-        ::models<ForwardIteratorConcept>(rng1.begin());
-        ::models_not<BidirectionalIteratorConcept>(rng1.begin());
+        auto rng1 = v | views::delimit(42) | views::common;
+        CPP_assert(view_<decltype(rng1)>);
+        CPP_assert(common_range<decltype(rng1)>);
+        CPP_assert(!sized_range<decltype(rng1)>);
+        CPP_assert(forward_iterator<decltype(rng1.begin())>);
+        CPP_assert(!bidirectional_iterator<decltype(rng1.begin())>);
         auto const & crng1 = rng1;
         auto i = rng1.begin(); // non-const
         auto j = crng1.begin(); // const
@@ -58,12 +60,13 @@ int main()
 
     {
         std::list<int> l{1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0};
-        auto rng3 = view::counted(l.begin(), 10) | view::common;
-        ::models<CommonViewConcept>(aux::copy(rng3));
-        ::models<SizedViewConcept>(aux::copy(rng3));
-        ::models<ForwardIteratorConcept>(rng3.begin());
-        ::models_not<BidirectionalIteratorConcept>(rng3.begin());
-        ::models<SizedSentinelConcept>(rng3.begin(), rng3.end());
+        auto rng3 = views::counted(l.begin(), 10) | views::common;
+        CPP_assert(view_<decltype(rng3)>);
+        CPP_assert(common_range<decltype(rng3)>);
+        CPP_assert(sized_range<decltype(rng3)>);
+        CPP_assert(forward_iterator<decltype(rng3.begin())>);
+        CPP_assert(!bidirectional_iterator<decltype(rng3.begin())>);
+        CPP_assert(sized_sentinel_for<decltype(rng3.begin()), decltype(rng3.end())>);
         auto b = begin(rng3);
         auto e = end(rng3);
         CHECK((e-b) == 10);
@@ -72,46 +75,49 @@ int main()
         CHECK((next(b)-b) == 1);
 
         // Pass-through of already-common ranges is OK:
-        rng3 = rng3 | view::common;
+        rng3 = rng3 | views::common;
     }
 
     {
-        auto rng4 = view::counted(begin(v), 8) | view::common;
-        ::models<CommonViewConcept>(aux::copy(rng4));
-        ::models<SizedViewConcept>(aux::copy(rng4));
-        ::models<RandomAccessIteratorConcept>(begin(rng4));
+        auto rng4 = views::counted(begin(v), 8) | views::common;
+        CPP_assert(view_<decltype(rng4)>);
+        CPP_assert(common_range<decltype(rng4)>);
+        CPP_assert(sized_range<decltype(rng4)>);
+        CPP_assert(random_access_iterator<decltype(begin(rng4))>);
         ::check_equal(rng4, {1, 2, 3, 4, 5, 6, 7, 8});
     }
 
     {
         // Regression test for issue#504:
-        auto rng1 = view::repeat_n( 0, 10 );
-        ::models_not<CommonViewConcept>(aux::copy(rng1));
-        ::models<RandomAccessViewConcept>(aux::copy(rng1));
-        ::models<SizedViewConcept>(aux::copy(rng1));
+        auto rng1 = views::repeat_n( 0, 10 );
+        CPP_assert(view_<decltype(rng1)>);
+        CPP_assert(!common_range<decltype(rng1)>);
+        CPP_assert(random_access_range<decltype(rng1)>);
+        CPP_assert(sized_range<decltype(rng1)>);
         auto const& crng1 = rng1;
-        ::models<RandomAccessViewConcept>(aux::copy(crng1));
-        ::models<SizedViewConcept>(aux::copy(crng1));
+        CPP_assert(random_access_range<decltype(crng1)>);
+        CPP_assert(sized_range<decltype(crng1)>);
 
-        auto rng2 = rng1 | view::common;
-        ::models<CommonViewConcept>(aux::copy(rng2));
-        ::models<RandomAccessViewConcept>(aux::copy(rng2));
-        ::models<SizedViewConcept>(aux::copy(rng2));
+        auto rng2 = rng1 | views::common;
+        CPP_assert(view_<decltype(rng2)>);
+        CPP_assert(common_range<decltype(rng2)>);
+        CPP_assert(random_access_range<decltype(rng2)>);
+        CPP_assert(sized_range<decltype(rng2)>);
         auto const& crng2 = rng2;
-        ::models<CommonViewConcept>(aux::copy(crng2));
-        ::models<RandomAccessViewConcept>(aux::copy(crng2));
-        ::models<SizedViewConcept>(aux::copy(crng2));
+        CPP_assert(common_range<decltype(crng2)>);
+        CPP_assert(random_access_range<decltype(crng2)>);
+        CPP_assert(sized_range<decltype(crng2)>);
 
         ::check_equal(rng2, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
     }
 
     {
         int const data[] = {1,2,3,4};
-        auto rng = debug_input_view<int const>{data} | view::common;
+        auto rng = debug_input_view<int const>{data} | views::common;
         using Rng = decltype(rng);
-        CPP_assert(InputView<Rng>);
-        CPP_assert(!ForwardRange<Rng>);
-        CPP_assert(CommonRange<Rng>);
+        CPP_assert(input_range<Rng> && view_<Rng>);
+        CPP_assert(!forward_range<Rng>);
+        CPP_assert(common_range<Rng>);
         ::check_equal(rng, {1,2,3,4});
     }
 

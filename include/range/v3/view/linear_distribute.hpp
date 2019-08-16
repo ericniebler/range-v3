@@ -25,7 +25,7 @@
 
 namespace ranges
 {
-    namespace view
+    namespace views
     {
         /// \addtogroup group-views
         /// @{
@@ -108,7 +108,7 @@ namespace ranges
         /// \relates linear_distribute_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(linear_distribute_fn, linear_distribute)
-    } // namespace view
+    } // namespace views
 } // namespace ranges
 
 #endif

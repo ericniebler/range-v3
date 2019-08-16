@@ -27,7 +27,7 @@
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/optional.hpp>
-#include <range/v3/utility/semiregular.hpp>
+#include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
 
@@ -41,7 +41,7 @@ namespace ranges
     private:
         friend range_access;
         using result_t = invoke_result_t<G &>;
-        semiregular_t<G> gen_;
+        semiregular_box_t<G> gen_;
         detail::non_propagating_cache<result_t> val_;
         struct cursor
         {
@@ -87,17 +87,17 @@ namespace ranges
         }
     };
 
-    namespace view
+    namespace views
     {
         struct generate_fn
         {
             template<typename G>
             auto operator()(G g) const -> CPP_ret(generate_view<G>)( //
-                requires Invocable<G &> && CopyConstructible<G> &&
+                requires invocable<G &> && copy_constructible<G> &&
                     std::is_object<detail::decay_t<invoke_result_t<G &>>>::value &&
-                        Constructible<detail::decay_t<invoke_result_t<G &>>,
+                        constructible_from<detail::decay_t<invoke_result_t<G &>>,
                                       invoke_result_t<G &>> &&
-                            Assignable<detail::decay_t<invoke_result_t<G &>> &,
+                            assignable_from<detail::decay_t<invoke_result_t<G &>> &,
                                        invoke_result_t<G &>>)
             {
                 return generate_view<G>{std::move(g)};
@@ -107,7 +107,7 @@ namespace ranges
         /// \relates generate_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(generate_fn, generate)
-    } // namespace view
+    } // namespace views
     /// \@}
 } // namespace ranges
 

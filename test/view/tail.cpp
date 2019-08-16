@@ -26,14 +26,14 @@ int main()
 
     {
         std::vector<int> v{0,1,2,3};
-        auto rng = view::tail(v);
+        auto rng = views::tail(v);
         check_equal(rng, {1,2,3});
         CHECK(size(rng) == 3u);
     }
 
     {
         std::vector<int> v{};
-        auto rng = view::tail(v);
+        auto rng = views::tail(v);
         CHECK(empty(rng));
         CHECK(size(rng) == 0u);
     }
@@ -41,30 +41,30 @@ int main()
     {
         std::stringstream sin{"1 2 3 4"};
         istream_view<int> is(sin);
-        auto rng = view::tail(is);
+        auto rng = views::tail(is);
         check_equal(rng, {2,3,4});
     }
 
     {
         std::stringstream sin{""};
         istream_view<int> is(sin);
-        auto rng = view::tail(is);
+        auto rng = views::tail(is);
         CHECK(rng.begin() == rng.end());
     }
 
     {
-        auto rng = view::empty<int> | view::tail;
+        auto rng = views::empty<int> | views::tail;
         static_assert(0 == size(rng), "");
-        CPP_assert(Same<empty_view<int>, decltype(rng)>);
+        CPP_assert(same_as<empty_view<int>, decltype(rng)>);
     }
 
     {
-        tail_view<empty_view<int>> const rng(view::empty<int>);
+        tail_view<empty_view<int>> const rng(views::empty<int>);
         static_assert(0 == size(rng), "");
     }
 
     {
-        auto const rng = view::single(1) | view::tail;
+        auto const rng = views::single(1) | views::tail;
         static_assert(0 == size(rng), "");
     }
 

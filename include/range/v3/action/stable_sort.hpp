@@ -38,7 +38,7 @@ namespace ranges
             template<typename C, typename P = identity>
             static auto CPP_fun(bind)(stable_sort_fn stable_sort, C pred,
                                       P proj = P{})( //
-                requires(!Range<C>))
+                requires(!range<C>))
             {
                 return bind_back(stable_sort, std::move(pred), std::move(proj));
             }
@@ -47,7 +47,7 @@ namespace ranges
             template<typename Rng, typename C = less, typename P = identity>
             auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
                 -> CPP_ret(Rng)( //
-                    requires ForwardRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
+                    requires forward_range<Rng> && sortable<iterator_t<Rng>, C, P>)
             {
                 ranges::stable_sort(rng, std::move(pred), std::move(proj));
                 return static_cast<Rng &&>(rng);

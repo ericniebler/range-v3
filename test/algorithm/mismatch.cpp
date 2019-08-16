@@ -101,25 +101,25 @@ struct S
 
 int main()
 {
-    test_iter<input_iterator<const int*>>();
-    test_iter<forward_iterator<const int*>>();
-    test_iter<bidirectional_iterator<const int*>>();
-    test_iter<random_access_iterator<const int*>>();
+    test_iter<InputIterator<const int*>>();
+    test_iter<ForwardIterator<const int*>>();
+    test_iter<BidirectionalIterator<const int*>>();
+    test_iter<RandomAccessIterator<const int*>>();
     test_iter<const int*>();
-    test_iter<input_iterator<const int*>, sentinel<const int*>>();
-    test_iter<forward_iterator<const int*>, sentinel<const int*>>();
-    test_iter<bidirectional_iterator<const int*>, sentinel<const int*>>();
-    test_iter<random_access_iterator<const int*>, sentinel<const int*>>();
+    test_iter<InputIterator<const int*>, Sentinel<const int*>>();
+    test_iter<ForwardIterator<const int*>, Sentinel<const int*>>();
+    test_iter<BidirectionalIterator<const int*>, Sentinel<const int*>>();
+    test_iter<RandomAccessIterator<const int*>, Sentinel<const int*>>();
 
-    test_range<input_iterator<const int*>>();
-    test_range<forward_iterator<const int*>>();
-    test_range<bidirectional_iterator<const int*>>();
-    test_range<random_access_iterator<const int*>>();
+    test_range<InputIterator<const int*>>();
+    test_range<ForwardIterator<const int*>>();
+    test_range<BidirectionalIterator<const int*>>();
+    test_range<RandomAccessIterator<const int*>>();
     test_range<const int*>();
-    test_range<input_iterator<const int*>, sentinel<const int*>>();
-    test_range<forward_iterator<const int*>, sentinel<const int*>>();
-    test_range<bidirectional_iterator<const int*>, sentinel<const int*>>();
-    test_range<random_access_iterator<const int*>, sentinel<const int*>>();
+    test_range<InputIterator<const int*>, Sentinel<const int*>>();
+    test_range<ForwardIterator<const int*>, Sentinel<const int*>>();
+    test_range<BidirectionalIterator<const int*>, Sentinel<const int*>>();
+    test_range<RandomAccessIterator<const int*>, Sentinel<const int*>>();
 
     // Works with projections?
     S s1[] = {S{1},S{2},S{3},S{4},S{-4},S{5},S{6},S{40},S{7},S{8},S{9}};

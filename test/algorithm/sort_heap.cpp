@@ -58,7 +58,7 @@ namespace
             ia[i] = i;
         std::shuffle(ia, ia+N, gen);
         std::make_heap(ia, ia+N);
-        CHECK(ranges::sort_heap(ia, sentinel<int*>(ia+N)) == ia+N);
+        CHECK(ranges::sort_heap(ia, Sentinel<int*>(ia+N)) == ia+N);
         CHECK(std::is_sorted(ia, ia+N));
         delete[] ia;
     }
@@ -82,7 +82,7 @@ namespace
             ia[i] = i;
         std::shuffle(ia, ia+N, gen);
         std::make_heap(ia, ia+N);
-        CHECK(ranges::sort_heap(::as_lvalue(ranges::make_subrange(ia, sentinel<int*>(ia+N)))) == ia+N);
+        CHECK(ranges::sort_heap(::as_lvalue(ranges::make_subrange(ia, Sentinel<int*>(ia+N)))) == ia+N);
         CHECK(std::is_sorted(ia, ia+N));
         delete[] ia;
     }
@@ -106,7 +106,7 @@ namespace
             ia[i] = i;
         std::shuffle(ia, ia+N, gen);
         std::make_heap(ia, ia+N, std::greater<int>());
-        CHECK(ranges::sort_heap(ia, sentinel<int*>(ia+N), std::greater<int>()) == ia+N);
+        CHECK(ranges::sort_heap(ia, Sentinel<int*>(ia+N), std::greater<int>()) == ia+N);
         CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
         delete[] ia;
     }
@@ -130,7 +130,7 @@ namespace
             ia[i] = i;
         std::shuffle(ia, ia+N, gen);
         std::make_heap(ia, ia+N, std::greater<int>());
-        CHECK(ranges::sort_heap(ranges::make_subrange(ia, sentinel<int*>(ia+N)), std::greater<int>()) == ia+N);
+        CHECK(ranges::sort_heap(ranges::make_subrange(ia, Sentinel<int*>(ia+N)), std::greater<int>()) == ia+N);
         CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
 
         delete[] ia;

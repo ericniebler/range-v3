@@ -26,7 +26,7 @@
 #include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
-#include <range/v3/utility/semiregular.hpp>
+#include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/transform.hpp>
@@ -40,10 +40,10 @@ namespace ranges
     namespace detail
     {
         template<typename Pred, typename Val>
-        struct replacer_if_fn : compressed_pair<semiregular_t<Pred>, Val>
+        struct replacer_if_fn : compressed_pair<semiregular_box_t<Pred>, Val>
         {
         private:
-            using base_t = compressed_pair<semiregular_t<Pred>, Val>;
+            using base_t = compressed_pair<semiregular_box_t<Pred>, Val>;
             using base_t::first;
             using base_t::second;
 
@@ -65,7 +65,7 @@ namespace ranges
             auto operator()(I const & i)
                 -> CPP_ret(common_reference_t<unwrap_reference_t<Val const &>,
                                               iter_reference_t<I>>)( //
-                    requires(!Invocable<Pred const &, iter_reference_t<I>>))
+                    requires(!invocable<Pred const &, iter_reference_t<I>>))
             {
                 auto && x = *i;
                 if(invoke(first(), (decltype(x) &&)x))
@@ -76,7 +76,7 @@ namespace ranges
             auto operator()(I const & i) const
                 -> CPP_ret(common_reference_t<unwrap_reference_t<Val const &>,
                                               iter_reference_t<I>>)( //
-                    requires Invocable<Pred const &, iter_reference_t<I>>)
+                    requires invocable<Pred const &, iter_reference_t<I>>)
             {
                 auto && x = *i;
                 if(invoke(first(), (decltype(x) &&)x))
@@ -88,7 +88,7 @@ namespace ranges
             auto operator()(move_tag, I const & i)
                 -> CPP_ret(common_reference_t<unwrap_reference_t<Val const &>,
                                               iter_rvalue_reference_t<I>>)( //
-                    requires(!Invocable<Pred const &, iter_rvalue_reference_t<I>>))
+                    requires(!invocable<Pred const &, iter_rvalue_reference_t<I>>))
             {
                 auto && x = iter_move(i);
                 if(invoke(first(), (decltype(x) &&)x))
@@ -99,7 +99,7 @@ namespace ranges
             auto operator()(move_tag, I const & i) const
                 -> CPP_ret(common_reference_t<unwrap_reference_t<Val const &>,
                                               iter_rvalue_reference_t<I>>)( //
-                    requires Invocable<Pred const &, iter_rvalue_reference_t<I>>)
+                    requires invocable<Pred const &, iter_rvalue_reference_t<I>>)
             {
                 auto && x = iter_move(i);
                 if(invoke(first(), (decltype(x) &&)x))
@@ -112,7 +112,7 @@ namespace ranges
 
     /// \addtogroup group-views
     /// @{
-    namespace view
+    namespace views
     {
         struct replace_if_fn
         {
@@ -129,13 +129,13 @@ namespace ranges
             template<typename Rng, typename Pred, typename Val>
             constexpr auto operator()(Rng && rng, Pred pred, Val new_value) const
                 -> CPP_ret(replace_if_view<all_t<Rng>, Pred, Val>)( //
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        IndirectUnaryPredicate<Pred, iterator_t<Rng>> &&
-                            Common<detail::decay_t<unwrap_reference_t<Val const &>>,
+                    requires viewable_range<Rng> && input_range<Rng> &&
+                        indirect_unary_predicate<Pred, iterator_t<Rng>> &&
+                            common_with<detail::decay_t<unwrap_reference_t<Val const &>>,
                                    range_value_t<Rng>> &&
-                                CommonReference<unwrap_reference_t<Val const &>,
+                                common_reference_with<unwrap_reference_t<Val const &>,
                                                 range_reference_t<Rng>> &&
-                                    CommonReference<unwrap_reference_t<Val const &>,
+                                    common_reference_with<unwrap_reference_t<Val const &>,
                                                     range_rvalue_reference_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)),
@@ -146,7 +146,7 @@ namespace ranges
         /// \relates replace_if_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<replace_if_fn>, replace_if)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

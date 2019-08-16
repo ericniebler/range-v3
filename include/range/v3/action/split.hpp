@@ -39,7 +39,7 @@ namespace ranges
         {
         private:
             template<typename Rng>
-            using split_value_t = meta::if_c<(bool)ranges::Container<Rng>, uncvref_t<Rng>,
+            using split_value_t = meta::if_c<(bool)ranges::container<Rng>, uncvref_t<Rng>,
                                              std::vector<range_value_t<Rng>>>;
 
         public:
@@ -48,22 +48,22 @@ namespace ranges
             template<typename Rng>
             auto operator()(Rng && rng, range_value_t<Rng> val) const
                 -> CPP_ret(std::vector<split_value_t<Rng>>)( //
-                    requires InputRange<Rng> && IndirectlyComparable<
+                    requires input_range<Rng> && indirectly_comparable<
                         iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>)
             {
-                return view::split(rng, std::move(val)) |
-                       view::transform(to<split_value_t<Rng>>()) | to_vector;
+                return views::split(rng, std::move(val)) |
+                       views::transform(to<split_value_t<Rng>>()) | to_vector;
             }
             template<typename Rng, typename Pattern>
             auto operator()(Rng && rng, Pattern && pattern) const
                 -> CPP_ret(std::vector<split_value_t<Rng>>)( //
-                    requires InputRange<Rng> && ViewableRange<Pattern> &&
-                        ForwardRange<Pattern> && IndirectlyComparable<
+                    requires input_range<Rng> && viewable_range<Pattern> &&
+                        forward_range<Pattern> && indirectly_comparable<
                             iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
-                    (ForwardRange<Rng> || detail::tiny_range<Pattern>))
+                    (forward_range<Rng> || detail::tiny_range<Pattern>))
             {
-                return view::split(rng, static_cast<Pattern &&>(pattern)) |
-                       view::transform(to<split_value_t<Rng>>()) | to_vector;
+                return views::split(rng, static_cast<Pattern &&>(pattern)) |
+                       views::transform(to<split_value_t<Rng>>()) | to_vector;
             }
         };
 

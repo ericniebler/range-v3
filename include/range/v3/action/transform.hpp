@@ -36,7 +36,7 @@ namespace ranges
             friend action_access;
             template<typename F, typename P = identity>
             static auto CPP_fun(bind)(transform_fn transform, F fun, P proj = P{})( //
-                requires(!Range<F>))
+                requires(!range<F>))
             {
                 return bind_back(transform, std::move(fun), std::move(proj));
             }
@@ -44,8 +44,8 @@ namespace ranges
         public:
             template<typename Rng, typename F, typename P = identity>
             auto operator()(Rng && rng, F fun, P proj = P{}) const -> CPP_ret(Rng)( //
-                requires InputRange<Rng> && CopyConstructible<F> &&
-                    Writable<iterator_t<Rng>,
+                requires input_range<Rng> && copy_constructible<F> &&
+                    writable<iterator_t<Rng>,
                              indirect_result_t<F &, projected<iterator_t<Rng>, P>>>)
             {
                 ranges::transform(rng, begin(rng), std::move(fun), std::move(proj));

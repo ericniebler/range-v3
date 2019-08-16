@@ -133,9 +133,9 @@ namespace
 
 int main()
 {
-    // test<forward_iterator<int*> >();
-    test<bidirectional_iterator<int*> >();
-    test<random_access_iterator<int*> >();
+    // test<ForwardIterator<int*> >();
+    test<BidirectionalIterator<int*> >();
+    test<RandomAccessIterator<int*> >();
     test<int*>();
 
     return ::test_result();

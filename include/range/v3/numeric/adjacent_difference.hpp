@@ -40,14 +40,14 @@ namespace ranges
     CPP_def
     (
         template(typename I, typename O, typename BOp = minus, typename P = identity)
-        (concept AdjacentDifferentiable)(I, O, BOp, P),
-            InputIterator<I> &&
-            Invocable<P&, iter_value_t<I>> &&
-            CopyConstructible<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> &&
-            Movable<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> &&
-            OutputIterator<O, invoke_result_t<P&, iter_value_t<I>>> &&
-            Invocable<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>> &&
-            OutputIterator<O, invoke_result_t<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>>>
+        (concept differenceable)(I, O, BOp, P),
+            input_iterator<I> &&
+            invocable<P&, iter_value_t<I>> &&
+            copy_constructible<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> &&
+            movable<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> &&
+            output_iterator<O, invoke_result_t<P&, iter_value_t<I>>> &&
+            invocable<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>> &&
+            output_iterator<O, invoke_result_t<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>>>
     );
     // clang-format on
 
@@ -61,8 +61,8 @@ namespace ranges
         auto operator()(I begin, S end, O result, S2 end_result, BOp bop = BOp{},
                         P proj = P{}) const
             -> CPP_ret(adjacent_difference_result<I, O>)( //
-                requires Sentinel<S, I> && Sentinel<S2, O> &&
-                    AdjacentDifferentiable<I, O, BOp, P>)
+                requires sentinel_for<S, I> && sentinel_for<S2, O> &&
+                    differenceable<I, O, BOp, P>)
         {
             // BUGBUG think about the use of coerce here.
             using V = iter_value_t<I>;
@@ -89,7 +89,7 @@ namespace ranges
                  typename P = identity>
         auto operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(adjacent_difference_result<I, O>)( //
-                requires Sentinel<S, I> && AdjacentDifferentiable<I, O, BOp, P>)
+                requires sentinel_for<S, I> && differenceable<I, O, BOp, P>)
         {
             return (*this)(std::move(begin),
                            std::move(end),
@@ -103,7 +103,7 @@ namespace ranges
                  typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>>
         auto operator()(Rng && rng, ORef && result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(adjacent_difference_result<safe_iterator_t<Rng>, O>)( //
-                requires Range<Rng> && AdjacentDifferentiable<I, O, BOp, P>)
+                requires range<Rng> && differenceable<I, O, BOp, P>)
         {
             return (*this)(begin(rng),
                            end(rng),
@@ -117,8 +117,8 @@ namespace ranges
         auto operator()(Rng && rng, ORng && result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(adjacent_difference_result<safe_iterator_t<Rng>,
                                                   safe_iterator_t<ORng>>)( //
-                requires Range<Rng> && Range<ORng> &&
-                    AdjacentDifferentiable<I, O, BOp, P>)
+                requires range<Rng> && range<ORng> &&
+                    differenceable<I, O, BOp, P>)
         {
             return (*this)(begin(rng),
                            end(rng),

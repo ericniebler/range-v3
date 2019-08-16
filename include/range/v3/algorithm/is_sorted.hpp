@@ -36,19 +36,19 @@ namespace ranges
         ///
         /// range-based version of the \c is_sorted std algorithm
         ///
-        /// Works on ForwardRanges
+        /// Works on forward_ranges
         ///
-        /// \pre `Rng` is a model of the `ForwardRange` concept
-        /// \pre `I` is a model of the `ForwardIterator` concept
-        /// \pre `S` and `I` model the `Sentinel<S, I>` concept
-        /// \pre `R` and `projected<I, P>` model the `IndirectStrictWeakOrder<R,
+        /// \pre `Rng` is a model of the `forward_range` concept
+        /// \pre `I` is a model of the `forward_iterator` concept
+        /// \pre `S` and `I` model the `sentinel_for<S, I>` concept
+        /// \pre `R` and `projected<I, P>` model the `indirect_strict_weak_order<R,
         /// projected<I, P>>` concept
         ///
         template<typename I, typename S, typename R = less, typename P = identity>
         auto operator()(I begin, S end, R rel = R{}, P proj = P{}) const
             -> CPP_ret(bool)( //
-                requires ForwardIterator<I> && Sentinel<S, I> &&
-                    IndirectStrictWeakOrder<R, projected<I, P>>)
+                requires forward_iterator<I> && sentinel_for<S, I> &&
+                    indirect_strict_weak_order<R, projected<I, P>>)
         {
             return is_sorted_until(
                        std::move(begin), end, std::move(rel), std::move(proj)) == end;
@@ -56,8 +56,8 @@ namespace ranges
 
         template<typename Rng, typename R = less, typename P = identity>
         auto operator()(Rng && rng, R rel = R{}, P proj = P{}) const -> CPP_ret(bool)( //
-            requires ForwardRange<Rng> &&
-                IndirectStrictWeakOrder<R, projected<iterator_t<Rng>, P>>)
+            requires forward_range<Rng> &&
+                indirect_strict_weak_order<R, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(rel), std::move(proj));
         }

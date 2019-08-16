@@ -287,7 +287,7 @@ namespace concepts
         //    references, assignment happens *through* the references.
 
         // Q: But I have an iterator whose operator* returns an rvalue
-        //    std::reference_wrapper<T>. How do I make it model IndirectlySwappable?
+        //    std::reference_wrapper<T>. How do I make it model indirectly_swappable?
         // A: With an overload of iter_swap.
     }
     /// \endcond

@@ -44,7 +44,7 @@ namespace ranges
         {}
         template<typename U>
         auto operator=(U && value) -> CPP_ret(ostream_iterator &)( //
-            requires ConvertibleTo<
+            requires convertible_to<
                 U, detail::if_then_t<std::is_void<T>::value, U, T> const &>)
         {
             RANGES_EXPECT(sout_);
@@ -75,7 +75,7 @@ namespace ranges
              typename Traits = std::char_traits<Char>>
     struct ostream_joiner
     {
-        CPP_assert(Semiregular<Delim>);
+        CPP_assert(semiregular<Delim>);
         using difference_type = std::ptrdiff_t;
         using char_type = Char;
         using traits_type = Traits;
@@ -126,7 +126,7 @@ namespace ranges
         template<typename Delim, typename Char, typename Traits>
         auto operator()(std::basic_ostream<Char, Traits> & s, Delim && d) const
             -> CPP_ret(ostream_joiner<detail::decay_t<Delim>, Char, Traits>)( //
-                requires Semiregular<detail::decay_t<Delim>>)
+                requires semiregular<detail::decay_t<Delim>>)
         {
             return {s, std::forward<Delim>(d)};
         }

@@ -57,11 +57,11 @@ void test_defaults()
    }
    { // checks starts_with works for random-access ranges
 #ifdef RANGES_WORKAROUND_MSVC_779708
-      auto const long_range = view::iota(0, 100) | to<std::vector>();
-      auto const short_range = view::iota(0, 10) | to<std::vector>();
+      auto const long_range = views::iota(0, 100) | to<std::vector>();
+      auto const short_range = views::iota(0, 10) | to<std::vector>();
 #else // ^^^ workaround / no workaround vvv
-      auto const long_range = view::iota(0, 100) | to<std::vector>;
-      auto const short_range = view::iota(0, 10) | to<std::vector>;
+      auto const long_range = views::iota(0, 100) | to<std::vector>;
+      auto const short_range = views::iota(0, 10) | to<std::vector>;
 #endif // RANGES_WORKAROUND_MSVC_779708
 
       CHECK(starts_with(begin(long_range), end(long_range), begin(short_range), end(short_range)));
@@ -71,8 +71,8 @@ void test_defaults()
       CHECK(!starts_with(short_range, long_range));
    }
    { // checks starts_with works for random-access ranges with arbitrary sentinels
-      auto const long_range = view::iota(0);
-      auto const short_range = view::iota(0) | view::take_exactly(100);
+      auto const long_range = views::iota(0);
+      auto const short_range = views::iota(0) | views::take_exactly(100);
 
       CHECK(starts_with(begin(long_range), end(long_range), begin(short_range), end(short_range)));
       CHECK(starts_with(long_range, short_range));
@@ -81,8 +81,8 @@ void test_defaults()
       CHECK(!starts_with(short_range, long_range));
    }
    { // checks starts_with identifies a subrange
-      auto const range = view::iota(0) | view::slice(50, 100);
-      auto const offset = view::iota(50, 100);
+      auto const range = views::iota(0) | views::slice(50, 100);
+      auto const offset = views::iota(50, 100);
 
       CHECK(starts_with(begin(range), end(range), begin(offset), end(offset)));
       CHECK(starts_with(range, offset));
@@ -91,8 +91,8 @@ void test_defaults()
       CHECK(starts_with(offset, range));
    }
    { // checks starts_with identifies when two ranges don't have the same start sequence
-      auto const first = view::iota(0, 1'000);
-      auto const second = view::iota(10, 1'000);
+      auto const first = views::iota(0, 1'000);
+      auto const second = views::iota(10, 1'000);
 
       CHECK(!starts_with(begin(first), end(first), begin(second), end(second)));
       CHECK(!starts_with(first, second));
@@ -105,8 +105,8 @@ void test_defaults()
 void test_comparison()
 {
    using namespace ranges;
-   auto const long_range = view::iota(0, 100);
-   auto const short_range = view::iota(1, 51);
+   auto const long_range = views::iota(0, 100);
+   auto const short_range = views::iota(1, 51);
    CHECK(starts_with(begin(long_range), end(long_range), begin(short_range), end(short_range),
       less{}));
    CHECK(starts_with(long_range, short_range, less{}));

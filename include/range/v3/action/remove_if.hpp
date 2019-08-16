@@ -40,7 +40,7 @@ namespace ranges
             friend action_access;
             template<typename C, typename P = identity>
             static auto CPP_fun(bind)(remove_if_fn remove_if, C pred, P proj = P{})( //
-                requires(!Range<C>))
+                requires(!range<C>))
             {
                 return bind_back(remove_if, std::move(pred), std::move(proj));
             }
@@ -48,10 +48,10 @@ namespace ranges
         public:
             template<typename Rng, typename C, typename P = identity>
             auto operator()(Rng && rng, C pred, P proj = P{}) const -> CPP_ret(Rng)( //
-                requires ForwardRange<Rng> &&
-                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>> &&
-                        Permutable<iterator_t<Rng>> &&
-                            IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+                requires forward_range<Rng> &&
+                    erasable_range<Rng &, iterator_t<Rng>, iterator_t<Rng>> &&
+                        permutable<iterator_t<Rng>> &&
+                            indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
             {
                 auto it = ranges::remove_if(rng, std::move(pred), std::move(proj));
                 ranges::erase(rng, it, ranges::end(rng));

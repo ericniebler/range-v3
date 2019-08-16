@@ -28,14 +28,15 @@ int main()
 
     std::vector<std::string> his_face{"this", "is", "his", "face"};
     std::vector<std::string> another_mess{"another", "fine", "mess"};
-    auto joined = view::concat(his_face, another_mess);
-    ::models<RandomAccessViewConcept>(aux::copy(joined));
+    auto joined = views::concat(his_face, another_mess);
+    CPP_assert(view_<decltype(joined)>);
+    CPP_assert(random_access_range<decltype(joined)>);
     static_assert(std::is_same<range_reference_t<decltype(joined)>, std::string &>::value, "");
     CHECK(joined.size() == 7u);
     CHECK((joined.end() - joined.begin()) == 7);
-    ::check_equal(joined | view::reverse, {"mess", "fine", "another", "face", "his", "is", "this"});
+    ::check_equal(joined | views::reverse, {"mess", "fine", "another", "face", "his", "is", "this"});
 
-    auto revjoin = joined | view::reverse;
+    auto revjoin = joined | views::reverse;
     CHECK((revjoin.end() - revjoin.begin()) == 7);
 
     auto begin = joined.begin();
@@ -75,29 +76,29 @@ int main()
     {
         const std::array<int, 3> a{{0, 1, 2}};
         const std::array<int, 2> b{{3, 4}};
-        check_equal(view::concat(a, b), {0, 1, 2, 3, 4});
+        check_equal(views::concat(a, b), {0, 1, 2, 3, 4});
 
         auto odd = [](int i) { return i % 2 != 0; };
-        auto even_filter = ranges::view::remove_if(odd);
+        auto even_filter = ranges::views::remove_if(odd);
 
         auto f_rng0 = a | even_filter;
         auto f_rng1 = b | even_filter;
 
-        check_equal(view::concat(f_rng0, f_rng1), {0, 2, 4});
+        check_equal(views::concat(f_rng0, f_rng1), {0, 2, 4});
     }
 
     // Regression test for http://github.com/ericniebler/range-v3/issues/395.
     {
         int i = 0;
-        auto rng = ranges::view::concat(ranges::view::generate([&]{ return i++; }))
-            | ranges::view::take_while([](int i){ return i < 30; });
+        auto rng = ranges::views::concat(ranges::views::generate([&]{ return i++; }))
+            | ranges::views::take_while([](int i){ return i < 30; });
         CHECK(ranges::distance(ranges::begin(rng), ranges::end(rng)) == 30);
     }
 
     {
         int const data[] = {0,1,2,3};
         auto dv = [&]{ return debug_input_view<int const>{data}; };
-        auto rng = view::concat(dv(), dv(), dv());
+        auto rng = views::concat(dv(), dv(), dv());
         ::check_equal(rng, {0,1,2,3,0,1,2,3,0,1,2,3});
     }
 

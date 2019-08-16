@@ -18,7 +18,7 @@ RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
 int main()
 {
     static int const some_ints[] = {0,1,2,3,4};
-    auto rng = some_ints | ranges::view::partial_sum();
+    auto rng = some_ints | ranges::views::partial_sum();
     ::check_equal(rng, {0,1,3,6,10});
 
     return ::test_result();

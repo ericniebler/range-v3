@@ -77,17 +77,16 @@ namespace ranges
     CPP_def
     (
         template(typename Gen)
-        concept UniformRandomNumberGenerator,
+        concept uniform_random_bit_generator,
             requires(int)
             (
-                uncvref_t<Gen>::min(),
-                uncvref_t<Gen>::max(),
-                concepts::requires_<Same<invoke_result_t<Gen&>, decltype(uncvref_t<Gen>::min())>>,
-                concepts::requires_<Same<invoke_result_t<Gen&>, decltype(uncvref_t<Gen>::max())>>
+                Gen::min(),
+                Gen::max(),
+                concepts::requires_<same_as<invoke_result_t<Gen&>, decltype(Gen::min())>>,
+                concepts::requires_<same_as<invoke_result_t<Gen&>, decltype(Gen::max())>>
             ) &&
-            Invocable<Gen &> &&
-            UnsignedIntegral<invoke_result_t<Gen&>> &&
-            uncvref_t<Gen>::min() < uncvref_t<Gen>::max()
+            invocable<Gen &> &&
+            unsigned_integral<invoke_result_t<Gen&>>
     );
     // clang-format on
     /// @}
@@ -115,7 +114,7 @@ namespace ranges
 
             template<typename I>
             constexpr auto fast_exp(I x, I power, I result = I{1}) -> CPP_ret(I)( //
-                requires UnsignedIntegral<I>)
+                requires unsigned_integral<I>)
             {
                 return power == I{0}
                            ? result
@@ -195,7 +194,7 @@ namespace ranges
             struct seed_seq_fe
             {
             public:
-                CPP_assert(UnsignedIntegral<IntRep>);
+                CPP_assert(unsigned_integral<IntRep>);
                 typedef IntRep result_type;
 
             private:
@@ -215,8 +214,8 @@ namespace ranges
 
                 template<typename I, typename S>
                 auto mix_entropy(I begin, S end) -> CPP_ret(void)( //
-                    requires InputIterator<I> && Sentinel<S, I> &&
-                        ConvertibleTo<iter_reference_t<I>, IntRep>)
+                    requires input_iterator<I> && sentinel_for<S, I> &&
+                        convertible_to<iter_reference_t<I>, IntRep>)
                 {
                     auto hash_const = INIT_A;
                     auto hash = [&](IntRep value) RANGES_INTENDED_MODULAR_ARITHMETIC {
@@ -257,15 +256,15 @@ namespace ranges
 
                 template<typename T>
                 CPP_ctor(seed_seq_fe)(std::initializer_list<T> init)( //
-                    requires ConvertibleTo<T const &, IntRep>)
+                    requires convertible_to<T const &, IntRep>)
                 {
                     seed(init.begin(), init.end());
                 }
 
                 template<typename I, typename S>
                 CPP_ctor(seed_seq_fe)(I begin, S end)( //
-                    requires InputIterator<I> && Sentinel<S, I> &&
-                        ConvertibleTo<iter_reference_t<I>, IntRep>)
+                    requires input_iterator<I> && sentinel_for<S, I> &&
+                        convertible_to<iter_reference_t<I>, IntRep>)
                 {
                     seed(begin, end);
                 }
@@ -275,7 +274,7 @@ namespace ranges
                 RANGES_INTENDED_MODULAR_ARITHMETIC auto generate(I first,
                                                                  S const last) const
                     -> CPP_ret(void)( //
-                        requires RandomAccessIterator<I> && Sentinel<S, I>)
+                        requires random_access_iterator<I> && sentinel_for<S, I>)
                 {
                     auto src_begin = mixer_.begin();
                     auto src_end = mixer_.end();
@@ -302,8 +301,8 @@ namespace ranges
                 template<typename O>
                 RANGES_INTENDED_MODULAR_ARITHMETIC auto param(O dest) const
                     -> CPP_ret(void)( //
-                        requires WeaklyIncrementable<O> &&
-                            IndirectlyCopyable<decltype(mixer_.begin()), O>)
+                        requires weakly_incrementable<O> &&
+                            indirectly_copyable<decltype(mixer_.begin()), O>)
                 {
                     constexpr IntRep INV_A = randutils::fast_exp(MULT_A, IntRep(-1));
                     constexpr IntRep MIX_INV_L =
@@ -351,8 +350,8 @@ namespace ranges
 
                 template<typename I, typename S>
                 auto seed(I begin, S end) -> CPP_ret(void)( //
-                    requires InputIterator<I> && Sentinel<S, I> &&
-                        ConvertibleTo<iter_reference_t<I>, IntRep>)
+                    requires input_iterator<I> && sentinel_for<S, I> &&
+                        convertible_to<iter_reference_t<I>, IntRep>)
                 {
                     mix_entropy(begin, end);
                     // For very small sizes, we do some additional mixing.  For normal

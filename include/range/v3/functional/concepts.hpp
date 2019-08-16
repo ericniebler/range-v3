@@ -27,7 +27,7 @@ namespace ranges
     CPP_def
     (
         template(typename Fun, typename... Args)
-        (concept Invocable)(Fun, Args...),
+        (concept invocable)(Fun, Args...),
             requires (Fun&& fn)
             (
                 invoke(static_cast<Fun &&>(fn), std::declval<Args>()...)
@@ -37,44 +37,44 @@ namespace ranges
     CPP_def
     (
         template(typename Fun, typename... Args)
-        (concept RegularInvocable)(Fun, Args...),
-            Invocable<Fun, Args...>
+        (concept regular_invocable)(Fun, Args...),
+            invocable<Fun, Args...>
             // Axiom: equality_preserving(invoke(f, args...))
     );
 
     CPP_def
     (
         template(typename Fun, typename... Args)
-        (concept Predicate)(Fun, Args...),
-            RegularInvocable<Fun, Args...> &&
-            ConvertibleTo<invoke_result_t<Fun, Args...>, bool>
+        (concept predicate)(Fun, Args...),
+            regular_invocable<Fun, Args...> &&
+            convertible_to<invoke_result_t<Fun, Args...>, bool>
     );
 
     CPP_def
     (
         template(typename R, typename T, typename U)
-        concept Relation,
-            Predicate<R, T, T> &&
-            Predicate<R, U, U> &&
-            Predicate<R, T, U> &&
-            Predicate<R, U, T>
+        concept relation,
+            predicate<R, T, T> &&
+            predicate<R, U, U> &&
+            predicate<R, T, U> &&
+            predicate<R, U, T>
     );
 
     CPP_def
     (
         template(typename R, typename T, typename U)
-        concept StrictWeakOrder,
-            Relation<R, T, U>
+        concept strict_weak_order,
+            relation<R, T, U>
     );
     // clang-format on
 
     namespace cpp20
     {
-        using ranges::Invocable;
-        using ranges::Predicate;
-        using ranges::RegularInvocable;
-        using ranges::Relation;
-        using ranges::StrictWeakOrder;
+        using ranges::invocable;
+        using ranges::predicate;
+        using ranges::regular_invocable;
+        using ranges::relation;
+        using ranges::strict_weak_order;
     } // namespace cpp20
     /// @}
 } // namespace ranges

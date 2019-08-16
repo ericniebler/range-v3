@@ -34,13 +34,13 @@ namespace ranges
     namespace detail
     {
         template<typename Rng,
-                 bool = (bool)SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>>
+                 bool = (bool)sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>>>
         class size_tracker
         {
             range_difference_t<Rng> size_;
 
         public:
-            CPP_assert(ForwardRange<Rng> || SizedRange<Rng>);
+            CPP_assert(forward_range<Rng> || sized_range<Rng>);
             size_tracker() = default;
             size_tracker(Rng & rng)
               : size_(ranges::distance(rng))
@@ -55,7 +55,7 @@ namespace ranges
             }
         };
 
-        // Impl for SizedSentinel (no need to store anything)
+        // Impl for sized_sentinel_for (no need to store anything)
         template<typename Rng>
         class size_tracker<Rng, true>
         {
@@ -169,10 +169,10 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
-            requires Const && SizedRange<meta::const_if_c<Const, Rng>> ||
-            SizedSentinel<sentinel_t<meta::const_if_c<Const, Rng>>,
+            requires Const && sized_range<meta::const_if_c<Const, Rng>> ||
+            sized_sentinel_for<sentinel_t<meta::const_if_c<Const, Rng>>,
                           iterator_t<meta::const_if_c<Const, Rng>>> ||
-            ForwardRange<meta::const_if_c<Const, Rng>>)
+            forward_range<meta::const_if_c<Const, Rng>>)
         {
             return cursor<true>{*this};
         }
@@ -197,10 +197,10 @@ namespace ranges
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng, typename URNG>
     sample_view(Rng &&, range_difference_t<Rng>, URNG &)
-        ->sample_view<view::all_t<Rng>, URNG>;
+        ->sample_view<views::all_t<Rng>, URNG>;
 #endif
 
-    namespace view
+    namespace views
     {
         /// Returns a random sample of a range of length `size(range)`.
         struct sample_fn
@@ -210,7 +210,7 @@ namespace ranges
             template<typename Size, typename URNG = detail::default_random_engine>
             static auto CPP_fun(bind)(sample_fn sample, Size n,
                                       URNG & urng = detail::get_random_engine())( //
-                requires Integral<Size> && UniformRandomNumberGenerator<URNG>)
+                requires integral<Size> && uniform_random_bit_generator<URNG>)
             {
                 return make_pipeable(bind_back(
                     [sample](auto && rng, Size n, URNG & urng)
@@ -231,11 +231,11 @@ namespace ranges
             auto operator()(Rng && rng, range_difference_t<Rng> sample_size,
                             URNG & generator = detail::get_random_engine()) const
                 -> CPP_ret(sample_view<all_t<Rng>, URNG>)( //
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        UniformRandomNumberGenerator<URNG> && ConvertibleTo<
+                    requires viewable_range<Rng> && input_range<Rng> &&
+                        uniform_random_bit_generator<URNG> && convertible_to<
                             invoke_result_t<URNG &>, range_difference_t<Rng>> &&
-                    (SizedRange<Rng> || SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>> ||
-                     ForwardRange<Rng>))
+                    (sized_range<Rng> || sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>> ||
+                     forward_range<Rng>))
             {
                 return sample_view<all_t<Rng>, URNG>{
                     all(static_cast<Rng &&>(rng)), sample_size, generator};
@@ -245,7 +245,7 @@ namespace ranges
         /// \relates sample_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<sample_fn>, sample)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

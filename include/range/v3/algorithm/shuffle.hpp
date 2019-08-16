@@ -38,9 +38,9 @@ namespace ranges
         template<typename I, typename S, typename Gen = detail::default_random_engine &>
         auto operator()(I const begin, S const end,
                         Gen && gen = detail::get_random_engine()) const -> CPP_ret(I)( //
-            requires RandomAccessIterator<I> && Sentinel<S, I> && Permutable<I> &&
-                UniformRandomNumberGenerator<Gen> &&
-                    ConvertibleTo<invoke_result_t<Gen &>, iter_difference_t<I>>)
+            requires random_access_iterator<I> && sentinel_for<S, I> && permutable<I> &&
+                uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+                    convertible_to<invoke_result_t<Gen &>, iter_difference_t<I>>)
         {
             auto mid = begin;
             if(mid == end)
@@ -61,8 +61,8 @@ namespace ranges
         template<typename Rng, typename Gen = detail::default_random_engine &>
         auto operator()(Rng && rng, Gen && rand = detail::get_random_engine()) const
             -> CPP_ret(safe_iterator_t<Rng>)( //
-                requires RandomAccessRange<Rng> && Permutable<iterator_t<Rng>> &&
-                    UniformRandomNumberGenerator<Gen> && ConvertibleTo<
+                requires random_access_range<Rng> && permutable<iterator_t<Rng>> &&
+                    uniform_random_bit_generator<std::remove_reference_t<Gen>> && convertible_to<
                         invoke_result_t<Gen &>, iter_difference_t<iterator_t<Rng>>>)
         {
             return (*this)(begin(rng), end(rng), static_cast<Gen &&>(rand));

@@ -56,21 +56,21 @@ namespace ranges
     CPP_def
     (
         template(typename Rng)
-        concept SimpleView,
-            View<Rng> &&
-            Range<Rng const> &&
-            Same<iterator_t<Rng>, iterator_t<Rng const>> &&
-            Same<sentinel_t<Rng>, sentinel_t<Rng const>>
+        concept simple_view_,
+            view_<Rng> &&
+            range<Rng const> &&
+            same_as<iterator_t<Rng>, iterator_t<Rng const>> &&
+            same_as<sentinel_t<Rng>, sentinel_t<Rng const>>
     );
     // clang-format on
 
     template<typename Rng>
     constexpr bool simple_view()
     {
-        return (bool)SimpleView<Rng>;
+        return (bool)simple_view_<Rng>;
     }
 
-    namespace view
+    namespace views
     {
         /// \addtogroup group-views
         /// @{
@@ -102,16 +102,6 @@ namespace ranges
         /// \sa make_view_fn
         RANGES_INLINE_VARIABLE(make_view_fn, make_view)
 
-        // clang-format off
-        CPP_def
-        (
-            template(typename View, typename Rng, typename ...Rest)
-            (concept ViewConcept)(View, Rng, Rest...),
-                ViewableRange<Rng> &&
-                Invocable<View&, Rng, Rest...>
-        );
-        // clang-format on
-
         template<typename View>
         struct view : pipeable<view<View>>
         {
@@ -122,7 +112,7 @@ namespace ranges
             // Piping requires range arguments or lvalue containers.
             template<typename Rng, typename Vw>
             static constexpr auto CPP_fun(pipe)(Rng && rng, Vw && v)( //
-                requires ViewableRange<Rng> && Invocable<View &, Rng>)
+                requires viewable_range<Rng> && invocable<View &, Rng>)
             {
                 return v.view_(static_cast<Rng &&>(rng));
             }
@@ -135,11 +125,11 @@ namespace ranges
               : view_(std::move(a))
             {}
 
-            // Calling directly requires a ViewableRange.
+            // Calling directly requires a viewable_range.
             template<typename Rng, typename... Rest>
             constexpr auto operator()(Rng && rng, Rest &&... rest) const
                 -> CPP_ret(invoke_result_t<View const &, Rng, Rest...>)( //
-                    requires ViewableRange<Rng> && Invocable<View const &, Rng, Rest...>)
+                    requires viewable_range<Rng> && invocable<View const &, Rng, Rest...>)
             {
                 return view_(static_cast<Rng &&>(rng), static_cast<Rest &&>(rest)...);
             }
@@ -155,7 +145,7 @@ namespace ranges
             // clang-format on
         };
         /// \endcond
-    } // namespace view
+    } // namespace views
 } // namespace ranges
 
 #endif

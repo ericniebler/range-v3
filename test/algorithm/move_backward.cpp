@@ -120,28 +120,28 @@ test1()
 
 int main()
 {
-    test<bidirectional_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, random_access_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, int*>();
+    test<BidirectionalIterator<const int*>, BidirectionalIterator<int*> >();
+    test<BidirectionalIterator<const int*>, RandomAccessIterator<int*> >();
+    test<BidirectionalIterator<const int*>, int*>();
 
-    test<random_access_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<random_access_iterator<const int*>, random_access_iterator<int*> >();
-    test<random_access_iterator<const int*>, int*>();
+    test<RandomAccessIterator<const int*>, BidirectionalIterator<int*> >();
+    test<RandomAccessIterator<const int*>, RandomAccessIterator<int*> >();
+    test<RandomAccessIterator<const int*>, int*>();
 
-    test<const int*, bidirectional_iterator<int*> >();
-    test<const int*, random_access_iterator<int*> >();
+    test<const int*, BidirectionalIterator<int*> >();
+    test<const int*, RandomAccessIterator<int*> >();
     test<const int*, int*>();
 
-    test1<bidirectional_iterator<std::unique_ptr<int>*>, bidirectional_iterator<std::unique_ptr<int>*> >();
-    test1<bidirectional_iterator<std::unique_ptr<int>*>, random_access_iterator<std::unique_ptr<int>*> >();
-    test1<bidirectional_iterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
+    test1<BidirectionalIterator<std::unique_ptr<int>*>, BidirectionalIterator<std::unique_ptr<int>*> >();
+    test1<BidirectionalIterator<std::unique_ptr<int>*>, RandomAccessIterator<std::unique_ptr<int>*> >();
+    test1<BidirectionalIterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
 
-    test1<random_access_iterator<std::unique_ptr<int>*>, bidirectional_iterator<std::unique_ptr<int>*> >();
-    test1<random_access_iterator<std::unique_ptr<int>*>, random_access_iterator<std::unique_ptr<int>*> >();
-    test1<random_access_iterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
+    test1<RandomAccessIterator<std::unique_ptr<int>*>, BidirectionalIterator<std::unique_ptr<int>*> >();
+    test1<RandomAccessIterator<std::unique_ptr<int>*>, RandomAccessIterator<std::unique_ptr<int>*> >();
+    test1<RandomAccessIterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
 
-    test1<std::unique_ptr<int>*, bidirectional_iterator<std::unique_ptr<int>*> >();
-    test1<std::unique_ptr<int>*, random_access_iterator<std::unique_ptr<int>*> >();
+    test1<std::unique_ptr<int>*, BidirectionalIterator<std::unique_ptr<int>*> >();
+    test1<std::unique_ptr<int>*, RandomAccessIterator<std::unique_ptr<int>*> >();
     test1<std::unique_ptr<int>*, std::unique_ptr<int>*>();
 
     return test_result();

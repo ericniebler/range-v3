@@ -64,7 +64,7 @@ int main()
 
     {
         std::fill_n(out, size(out), std::make_pair(0, 0));
-        auto res = ranges::copy_backward(ranges::view::all(a), end(out));
+        auto res = ranges::copy_backward(ranges::views::all(a), end(out));
         CHECK(res.in == end(a));
         CHECK(res.out == begin(out));
         CHECK(std::equal(a, a + size(a), out));

@@ -43,7 +43,7 @@ namespace ranges
       : view_interface<drop_view<Rng>,
                        is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
       , private detail::non_propagating_cache<iterator_t<Rng>, drop_view<Rng>,
-                                              !RandomAccessRange<Rng>>
+                                              !random_access_range<Rng>>
     {
     private:
         using difference_type_ = range_difference_t<Rng>;
@@ -53,19 +53,19 @@ namespace ranges
         template<bool Const = true>
         auto get_begin_(std::true_type, std::true_type) const
             -> CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)( //
-                requires Const && Range<meta::const_if_c<Const, Rng>>)
+                requires Const && range<meta::const_if_c<Const, Rng>>)
         {
-            CPP_assert(RandomAccessRange<meta::const_if_c<Const, Rng>>);
+            CPP_assert(random_access_range<meta::const_if_c<Const, Rng>>);
             return next(ranges::begin(rng_), n_, ranges::end(rng_));
         }
         iterator_t<Rng> get_begin_(std::true_type, std::false_type)
         {
-            CPP_assert(RandomAccessRange<Rng>);
+            CPP_assert(random_access_range<Rng>);
             return next(ranges::begin(rng_), n_, ranges::end(rng_));
         }
         iterator_t<Rng> get_begin_(std::false_type, detail::ignore_t)
         {
-            CPP_assert(!RandomAccessRange<Rng>);
+            CPP_assert(!random_access_range<Rng>);
             using cache_t =
                 detail::non_propagating_cache<iterator_t<Rng>, drop_view<Rng>>;
             auto & begin_ = static_cast<cache_t &>(*this);
@@ -84,7 +84,7 @@ namespace ranges
         }
         iterator_t<Rng> begin()
         {
-            return this->get_begin_(meta::bool_<RandomAccessRange<Rng>>{},
+            return this->get_begin_(meta::bool_<random_access_range<Rng>>{},
                                     std::false_type{});
         }
         sentinel_t<Rng> end()
@@ -93,25 +93,25 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin() const -> CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)( //
-            requires Const && RandomAccessRange<meta::const_if_c<Const, Rng>>)
+            requires Const && random_access_range<meta::const_if_c<Const, Rng>>)
         {
             return this->get_begin_(std::true_type{}, std::true_type{});
         }
         template<bool Const = true>
         auto end() const -> CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)( //
-            requires Const && RandomAccessRange<meta::const_if_c<Const, Rng>>)
+            requires Const && random_access_range<meta::const_if_c<Const, Rng>>)
         {
             return ranges::end(rng_);
         }
         CPP_member
-        auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        auto CPP_fun(size)()(const requires sized_range<Rng const>)
         {
             auto const s = ranges::size(rng_);
             auto const n = static_cast<range_size_t<Rng const>>(n_);
             return s < n ? 0 : s - n;
         }
         CPP_member
-        auto CPP_fun(size)()(requires SizedRange<Rng>)
+        auto CPP_fun(size)()(requires sized_range<Rng>)
         {
             auto const s = ranges::size(rng_);
             auto const n = static_cast<range_size_t<Rng>>(n_);
@@ -125,10 +125,10 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    drop_view(Rng &&, range_difference_t<Rng>)->drop_view<view::all_t<Rng>>;
+    drop_view(Rng &&, range_difference_t<Rng>)->drop_view<views::all_t<Rng>>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct drop_fn
         {
@@ -136,7 +136,7 @@ namespace ranges
             friend view_access;
             template<typename Int>
             static constexpr auto CPP_fun(bind)(drop_fn drop, Int n)( //
-                requires Integral<Int>)
+                requires integral<Int>)
             {
                 return make_pipeable(bind_back(drop, n));
             }
@@ -150,7 +150,7 @@ namespace ranges
             static auto impl_(Rng && rng, range_difference_t<Rng> n,
                               random_access_range_tag)
                 -> CPP_ret(subrange<iterator_t<Rng>, sentinel_t<Rng>>)( //
-                    requires ForwardingRange_<Rng> && SizedRange<Rng>)
+                    requires forwarding_range_<Rng> && sized_range<Rng>)
             {
                 return {begin(rng) + ranges::min(n, distance(rng)), end(rng)};
             }
@@ -158,7 +158,7 @@ namespace ranges
         public:
             template<typename Rng>
             auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(
-                const requires ViewableRange<Rng> && InputRange<Rng>)
+                const requires viewable_range<Rng> && input_range<Rng>)
             {
                 return drop_fn::impl_(static_cast<Rng &&>(rng), n, range_tag_of<Rng>{});
             }
@@ -167,16 +167,16 @@ namespace ranges
         /// \relates drop_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<drop_fn>, drop)
-    } // namespace view
+    } // namespace views
 
     namespace cpp20
     {
-        namespace view
+        namespace views
         {
-            using ranges::view::drop;
+            using ranges::views::drop;
         }
         CPP_template(typename Rng)( //
-            requires View<Rng>)     //
+            requires view_<Rng>)     //
             using drop_view = ranges::drop_view<Rng>;
     } // namespace cpp20
     /// @}

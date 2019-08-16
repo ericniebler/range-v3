@@ -41,7 +41,7 @@ namespace ranges
             template<typename... Its>
             [[noreturn]] auto operator()(copy_tag, Its...) const
                 -> CPP_ret(std::tuple<iter_value_t<Its>...>)( //
-                    requires And<Readable<Its>...> && (sizeof...(Its) != 2))
+                    requires and_v<readable<Its>...> && (sizeof...(Its) != 2))
             {
                 RANGES_EXPECT(false);
             }
@@ -51,7 +51,7 @@ namespace ranges
             auto operator()(Its const &... its) const
                 noexcept(meta::and_c<noexcept(iter_reference_t<Its>(*its))...>::value)
                     -> CPP_ret(common_tuple<iter_reference_t<Its>...>)( //
-                        requires And<Readable<Its>...> && (sizeof...(Its) != 2))
+                        requires and_v<readable<Its>...> && (sizeof...(Its) != 2))
             {
                 return common_tuple<iter_reference_t<Its>...>{*its...};
             }
@@ -62,7 +62,7 @@ namespace ranges
                 noexcept(meta::and_c<noexcept(
                              iter_rvalue_reference_t<Its>(iter_move(its)))...>::value)
                     -> CPP_ret(common_tuple<iter_rvalue_reference_t<Its>...>)( //
-                        requires And<Readable<Its>...> && (sizeof...(Its) != 2))
+                        requires and_v<readable<Its>...> && (sizeof...(Its) != 2))
             {
                 return common_tuple<iter_rvalue_reference_t<Its>...>{iter_move(its)...};
             }
@@ -71,7 +71,7 @@ namespace ranges
             template<typename It1, typename It2>
             [[noreturn]] auto operator()(copy_tag, It1, It2) const
                 -> CPP_ret(std::pair<iter_value_t<It1>, iter_value_t<It2>>)( //
-                    requires Readable<It1> && Readable<It2>)
+                    requires readable<It1> && readable<It2>)
             {
                 RANGES_EXPECT(false);
             }
@@ -82,7 +82,7 @@ namespace ranges
                 noexcept(iter_reference_t<It1>(*it1)) &&
                 noexcept(iter_reference_t<It2>(*it2)))
                 -> CPP_ret(common_pair<iter_reference_t<It1>, iter_reference_t<It2>>)( //
-                    requires Readable<It1> && Readable<It2>)
+                    requires readable<It1> && readable<It2>)
             {
                 return {*it1, *it2};
             }
@@ -94,7 +94,7 @@ namespace ranges
                          noexcept(iter_rvalue_reference_t<It2>(iter_move(it2))))
                     -> CPP_ret(common_pair<iter_rvalue_reference_t<It1>,
                                            iter_rvalue_reference_t<It2>>)( //
-                        requires Readable<It1> && Readable<It2>)
+                        requires readable<It1> && readable<It2>)
             {
                 return {iter_move(it1), iter_move(it2)};
             }
@@ -119,17 +119,17 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename... Rng>
-    zip_view(Rng &&...)->zip_view<view::all_t<Rng>...>;
+    zip_view(Rng &&...)->zip_view<views::all_t<Rng>...>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct zip_fn
         {
             template<typename... Rngs>
             auto operator()(Rngs &&... rngs) const
                 -> CPP_ret(zip_view<all_t<Rngs>...>)( //
-                    requires And<ViewableRange<Rngs>...> && And<InputRange<Rngs>...> &&
+                    requires and_v<viewable_range<Rngs>...> && and_v<input_range<Rngs>...> &&
                     (sizeof...(Rngs) != 0))
             {
                 return zip_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
@@ -144,7 +144,7 @@ namespace ranges
         /// \relates zip_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(zip_fn, zip)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

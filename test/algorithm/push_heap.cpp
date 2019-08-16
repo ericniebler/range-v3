@@ -24,7 +24,7 @@
 
 // <algorithm>
 
-// template<RandomAccessIterator Iter>
+// template<random_access_iterator Iter>
 //   requires ShuffleIterator<Iter>
 //         && LessThanComparable<Iter::value_type>
 //   void

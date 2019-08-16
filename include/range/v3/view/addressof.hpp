@@ -27,7 +27,7 @@ namespace ranges
 {
     /// \addtogroup group-views
     /// @{
-    namespace view
+    namespace views
     {
         struct addressof_fn
         {
@@ -43,7 +43,7 @@ namespace ranges
 
         public:
             CPP_template(typename Rng)(                                      //
-                requires ViewableRange<Rng> && InputRange<Rng> &&            //
+                requires viewable_range<Rng> && input_range<Rng> &&            //
                     std::is_lvalue_reference<range_reference_t<Rng>>::value) //
                 constexpr auto CPP_auto_fun(operator())(Rng && rng)(const)(
                     return transform(all(static_cast<Rng &&>(rng)), take_address{}))
@@ -52,7 +52,7 @@ namespace ranges
         /// \relates addressof_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<addressof_fn>, addressof)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

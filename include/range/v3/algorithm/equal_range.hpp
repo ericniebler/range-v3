@@ -39,10 +39,10 @@ namespace ranges
                  typename P = identity>
         auto operator()(I begin, S end, V const & val, C pred = C{}, P proj = P{}) const
             -> CPP_ret(subrange<I>)( //
-                requires ForwardIterator<I> && Sentinel<S, I> &&
-                    IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
+                requires forward_iterator<I> && sentinel_for<S, I> &&
+                    indirect_strict_weak_order<C, V const *, projected<I, P>>)
         {
-            if(RANGES_CONSTEXPR_IF(SizedSentinel<S, I>))
+            if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S, I>))
             {
                 auto const len = distance(begin, end);
                 return aux::equal_range_n(
@@ -96,10 +96,10 @@ namespace ranges
         template<typename Rng, typename V, typename C = less, typename P = identity>
         auto operator()(Rng && rng, V const & val, C pred = C{}, P proj = P{}) const
             -> CPP_ret(safe_subrange_t<Rng>)( //
-                requires ForwardRange<Rng> &&
-                    IndirectStrictWeakOrder<C, V const *, projected<iterator_t<Rng>, P>>)
+                requires forward_range<Rng> &&
+                    indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
         {
-            if(RANGES_CONSTEXPR_IF(SizedRange<Rng>))
+            if(RANGES_CONSTEXPR_IF(sized_range<Rng>))
             {
                 auto const len = distance(rng);
                 return aux::equal_range_n(

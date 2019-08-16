@@ -17,10 +17,10 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
-CPP_assert(ranges::Constructible<ranges::reference_wrapper<int>, int&>);
-CPP_assert(!ranges::Constructible<ranges::reference_wrapper<int>, int&&>);
-CPP_assert(!ranges::Constructible<ranges::reference_wrapper<int &&>, int&>);
-CPP_assert(ranges::Constructible<ranges::reference_wrapper<int &&>, int&&>);
+CPP_assert(ranges::constructible_from<ranges::reference_wrapper<int>, int&>);
+CPP_assert(!ranges::constructible_from<ranges::reference_wrapper<int>, int&&>);
+CPP_assert(!ranges::constructible_from<ranges::reference_wrapper<int &&>, int&>);
+CPP_assert(ranges::constructible_from<ranges::reference_wrapper<int &&>, int&&>);
 
 namespace
 {
@@ -163,8 +163,8 @@ namespace
             CHECK(a.i == 0);
             ranges::invoke(&A::i, &a) = 1;
             CHECK(a.i == 1);
-            CPP_assert(ranges::Same<decltype(ranges::invoke(&A::i, ca)), const int&>);
-            CPP_assert(ranges::Same<decltype(ranges::invoke(&A::i, &ca)), const int&>);
+            CPP_assert(ranges::same_as<decltype(ranges::invoke(&A::i, ca)), const int&>);
+            CPP_assert(ranges::same_as<decltype(ranges::invoke(&A::i, &ca)), const int&>);
         }
 
         {
@@ -204,7 +204,7 @@ int main()
     {
         // Check that not_fn works with callables
         Integer some_ints[] = {{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}};
-        ::check_equal(some_ints | ranges::view::filter(ranges::not_fn(&Integer::odd)),
+        ::check_equal(some_ints | ranges::views::filter(ranges::not_fn(&Integer::odd)),
                       {0,2,4,6});
     }
 
@@ -236,13 +236,13 @@ int main()
 
 #ifdef _WIN32
     {
-        // Ensure that Invocable accepts pointers to functions with non-default calling conventions.
-        CPP_assert(ranges::Invocable<void(__cdecl*)()>);
-        CPP_assert(ranges::Invocable<void(__stdcall*)()>);
-        CPP_assert(ranges::Invocable<void(__fastcall*)()>);
-        CPP_assert(ranges::Invocable<void(__thiscall*)()>);
+        // Ensure that invocable accepts pointers to functions with non-default calling conventions.
+        CPP_assert(ranges::invocable<void(__cdecl*)()>);
+        CPP_assert(ranges::invocable<void(__stdcall*)()>);
+        CPP_assert(ranges::invocable<void(__fastcall*)()>);
+        CPP_assert(ranges::invocable<void(__thiscall*)()>);
 #ifndef __MINGW32__
-        CPP_assert(ranges::Invocable<void(__vectorcall*)()>);
+        CPP_assert(ranges::invocable<void(__vectorcall*)()>);
 #endif
     }
 #endif // _WIN32

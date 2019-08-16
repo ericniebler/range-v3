@@ -19,7 +19,7 @@
 #include <range/v3/range_fwd.hpp>
 
 #include <range/v3/iterator/default_sentinel.hpp>
-#include <range/v3/utility/semiregular.hpp>
+#include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
 
@@ -33,7 +33,7 @@ namespace ranges
     private:
         friend range_access;
         std::istream * sin_;
-        semiregular_t<Val> obj_;
+        semiregular_box_t<Val> obj_;
         struct cursor
         {
         private:
@@ -99,7 +99,7 @@ namespace ranges
         /// \endcond
         template<typename Val>
         inline auto istream(std::istream & sin) -> CPP_ret(istream_view<Val>)( //
-            requires CopyConstructible<Val> && DefaultConstructible<Val>)
+            requires copy_constructible<Val> && default_constructible<Val>)
         {
             return istream_view<Val>{sin};
         }

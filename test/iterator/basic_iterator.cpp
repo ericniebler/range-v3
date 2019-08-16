@@ -36,20 +36,20 @@ namespace test_weak_input
         cursor() = default;
         explicit cursor(I i) : it_(i) {}
         CPP_template(class J)(
-            requires ranges::ConvertibleTo<J, I>)
+            requires ranges::convertible_to<J, I>)
         cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
         auto read() const -> decltype(*it_) { return *it_; }
         void next() { ++it_; }
     };
 
-    CPP_assert(ranges::detail::InputCursor<cursor<char *>>);
-    CPP_assert(!ranges::detail::CursorSentinel<cursor<char *>, cursor<char *>>);
+    CPP_assert(ranges::detail::input_cursor<cursor<char *>>);
+    CPP_assert(!ranges::detail::sentinel_for_cursor<cursor<char *>, cursor<char *>>);
 
     template<class I>
     using iterator = ranges::basic_iterator<cursor<I>>;
-    CPP_assert(ranges::Readable<iterator<char *>>);
-    CPP_assert(ranges::InputIterator<iterator<char *>>);
+    CPP_assert(ranges::readable<iterator<char *>>);
+    CPP_assert(ranges::input_iterator<iterator<char *>>);
 
     static_assert(
         !has_iter_cat<iterator<char *>>::value,
@@ -63,7 +63,7 @@ namespace test_weak_input
             std::input_iterator_tag>::value,
         "");
     static_assert(
-        !ranges::EqualityComparable<iterator<char *>>,
+        !ranges::equality_comparable<iterator<char *>>,
         "");
 
     void test()
@@ -97,12 +97,12 @@ namespace test_random_access
         cursor() = default;
         explicit cursor(I i) : it_(i) {}
         CPP_template(class J)(
-            requires ranges::ConvertibleTo<J, I>)
+            requires ranges::convertible_to<J, I>)
         cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
         auto read() const -> decltype(*it_) { return *it_; }
         CPP_template(class J)(
-            requires ranges::Sentinel<J, I>)
+            requires ranges::sentinel_for<J, I>)
         bool equal(cursor<J> const &that) const { return that.it_ == it_; }
         void next() { ++it_; }
         void prev() { --it_; }
@@ -110,13 +110,13 @@ namespace test_random_access
             it_ += n;
         }
         CPP_template(class J)(
-            requires ranges::SizedSentinel<J, I>)
+            requires ranges::sized_sentinel_for<J, I>)
         ranges::iter_difference_t<I> distance_to(cursor<J> const &that) const {
             return that.it_ - it_;
         }
     };
 
-    CPP_assert(ranges::detail::RandomAccessCursor<cursor<char *>>);
+    CPP_assert(ranges::detail::random_access_cursor<cursor<char *>>);
 
     template<class I>
     using iterator = ranges::basic_iterator<cursor<I>>;
@@ -175,14 +175,14 @@ namespace test_weak_output
         I it_;
     };
 
-    CPP_assert(ranges::detail::OutputCursor<cursor<char *>, char>);
-    CPP_assert(!ranges::detail::CursorSentinel<cursor<char *>, cursor<char *>>);
+    CPP_assert(ranges::detail::output_cursor<cursor<char *>, char>);
+    CPP_assert(!ranges::detail::sentinel_for_cursor<cursor<char *>, cursor<char *>>);
 
     template<class I>
     using iterator = ranges::basic_iterator<cursor<I>>;
 
-    CPP_assert(ranges::OutputIterator<iterator<char *>, char>);
-    CPP_assert(!ranges::EqualityComparable<iterator<char *>>);
+    CPP_assert(ranges::output_iterator<iterator<char *>, char>);
+    CPP_assert(!ranges::equality_comparable<iterator<char *>>);
 
     void test()
     {
@@ -218,7 +218,7 @@ namespace test_output
         cursor() = default;
         explicit cursor(I i) : it_(i) {}
         CPP_template(class J)(
-            requires ranges::ConvertibleTo<J, I>)
+            requires ranges::convertible_to<J, I>)
         cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
         using value_type = ranges::iter_value_t<I>;
@@ -229,14 +229,14 @@ namespace test_output
         bool equal(cursor const &that) const { return it_ == that.it_; }
     };
 
-    CPP_assert(ranges::detail::OutputCursor<cursor<char *>, char>);
-    CPP_assert(ranges::detail::ForwardCursor<cursor<char *>>);
+    CPP_assert(ranges::detail::output_cursor<cursor<char *>, char>);
+    CPP_assert(ranges::detail::forward_cursor<cursor<char *>>);
 
     template<class I>
     using iterator = ranges::basic_iterator<cursor<I>>;
 
-    CPP_assert(ranges::OutputIterator<iterator<char *>, char>);
-    CPP_assert(ranges::ForwardIterator<iterator<char *>>);
+    CPP_assert(ranges::output_iterator<iterator<char *>, char>);
+    CPP_assert(ranges::forward_iterator<iterator<char *>>);
 
     CPP_assert(std::is_same<std::iterator_traits<iterator<char *>>::pointer, char *>());
 
@@ -290,7 +290,7 @@ namespace test_move_only
         zip1_cursor() = default;
         explicit zip1_cursor(I i) : it_(i) {}
         CPP_template(class J)(
-            requires ranges::ConvertibleTo<J, I>)
+            requires ranges::convertible_to<J, I>)
         zip1_cursor(zip1_cursor<J> that) : it_(std::move(that.it_)) {}
 
         using value_type = std::tuple<ranges::iter_value_t<I>>;
@@ -304,14 +304,14 @@ namespace test_move_only
         bool equal(zip1_cursor const &that) const { return it_ == that.it_; }
     };
 
-    CPP_assert(ranges::detail::OutputCursor<zip1_cursor<MoveOnly *>, std::tuple<MoveOnly> &&>);
-    CPP_assert(ranges::detail::ForwardCursor<zip1_cursor<MoveOnly *>>);
+    CPP_assert(ranges::detail::output_cursor<zip1_cursor<MoveOnly *>, std::tuple<MoveOnly> &&>);
+    CPP_assert(ranges::detail::forward_cursor<zip1_cursor<MoveOnly *>>);
 
     template<class I>
     using iterator = ranges::basic_iterator<zip1_cursor<I>>;
 
-    CPP_assert(ranges::OutputIterator<iterator<MoveOnly *>, std::tuple<MoveOnly> &&>);
-    CPP_assert(ranges::ForwardIterator<iterator<MoveOnly *>>);
+    CPP_assert(ranges::output_iterator<iterator<MoveOnly *>, std::tuple<MoveOnly> &&>);
+    CPP_assert(ranges::forward_iterator<iterator<MoveOnly *>>);
 
     void test()
     {
@@ -339,23 +339,23 @@ namespace test_forward_sized
         cursor() = default;
         explicit cursor(I i) : it_(i) {}
         CPP_template(class J)(
-            requires ranges::ConvertibleTo<J, I>)
+            requires ranges::convertible_to<J, I>)
         cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
         auto read() const -> decltype(*it_) { return *it_; }
         CPP_template(class J)(
-            requires ranges::Sentinel<J, I>)
+            requires ranges::sentinel_for<J, I>)
         bool equal(cursor<J> const &that) const { return that.it_ == it_; }
         void next() { ++it_; }
         CPP_template(class J)(
-            requires ranges::SizedSentinel<J, I>)
+            requires ranges::sized_sentinel_for<J, I>)
         ranges::iter_difference_t<I> distance_to(cursor<J> const &that) const {
             return that.it_ - it_;
         }
     };
 
-    CPP_assert(ranges::detail::SizedCursorSentinel<cursor<char *>, cursor<char *>>);
-    CPP_assert(ranges::detail::ForwardCursor<cursor<char *>>);
+    CPP_assert(ranges::detail::sized_sentinel_for_cursor<cursor<char *>, cursor<char *>>);
+    CPP_assert(ranges::detail::forward_cursor<cursor<char *>>);
 
     template<class I>
     using iterator = ranges::basic_iterator<cursor<I>>;
@@ -418,7 +418,7 @@ void test_box()
             void next() {}
         };
         CPP_assert(ranges::detail::box_compression<cursor>() == ranges::detail::box_compress::ebo);
-        CPP_assert(ranges::Same<int, ranges::basic_iterator<cursor>::value_type>);
+        CPP_assert(ranges::same_as<int, ranges::basic_iterator<cursor>::value_type>);
     }
 }
 

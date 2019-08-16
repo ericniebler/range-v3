@@ -38,21 +38,21 @@ namespace ranges
     {
         template<typename I, typename S>
         auto next_to_if(I i, S s, std::true_type) -> CPP_ret(I)( //
-            requires InputIterator<I> && Sentinel<S, I>)
+            requires input_iterator<I> && sentinel_for<S, I>)
         {
             return ranges::next(i, s);
         }
 
         template<typename I, typename S>
         auto next_to_if(I, S s, std::false_type) -> CPP_ret(S)( //
-            requires InputIterator<I> && Sentinel<S, I>)
+            requires input_iterator<I> && sentinel_for<S, I>)
         {
             return s;
         }
 
         template<bool B, typename I, typename S>
         auto next_to_if(I i, S s) -> CPP_ret(meta::if_c<B, I, S>)( //
-            requires InputIterator<I> && Sentinel<S, I>)
+            requires input_iterator<I> && sentinel_for<S, I>)
         {
             return detail::next_to_if(std::move(i), std::move(s), meta::bool_<B>{});
         }
@@ -185,10 +185,10 @@ namespace ranges
                  typename R = equal_to, typename P = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{},
                         P proj = P{}) const -> CPP_ret(subrange<I1>)( //
-            requires ForwardIterator<I1> && Sentinel<S1, I1> && ForwardIterator<I2> &&
-                Sentinel<S2, I2> && IndirectRelation<R, projected<I1, P>, I2>)
+            requires forward_iterator<I1> && sentinel_for<S1, I1> && forward_iterator<I2> &&
+                sentinel_for<S2, I2> && indirect_relation<R, projected<I1, P>, I2>)
         {
-            constexpr bool Bidi = BidirectionalIterator<I1> && BidirectionalIterator<I2>;
+            constexpr bool Bidi = bidirectional_iterator<I1> && bidirectional_iterator<I2>;
             return find_end_fn::impl(begin1,
                                      detail::next_to_if<Bidi>(begin1, end1),
                                      begin2,
@@ -203,8 +203,8 @@ namespace ranges
                  typename P = identity>
         auto operator()(Rng1 && rng1, Rng2 && rng2, R pred = R{}, P proj = P{}) const
             -> CPP_ret(safe_subrange_t<Rng1>)( //
-                requires ForwardRange<Rng1> && ForwardRange<Rng2> &&
-                    IndirectRelation<R, projected<iterator_t<Rng1>, P>, iterator_t<Rng2>>)
+                requires forward_range<Rng1> && forward_range<Rng2> &&
+                    indirect_relation<R, projected<iterator_t<Rng1>, P>, iterator_t<Rng2>>)
         {
             return (*this)(begin(rng1),
                            end(rng1),

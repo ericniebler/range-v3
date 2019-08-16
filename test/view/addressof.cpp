@@ -29,7 +29,7 @@ void simple_test()
 {
     std::vector<int> list = {1,2,3};
 
-    auto out = list | view::addressof;
+    auto out = list | views::addressof;
 
     check_equal(out, {&list[0], &list[1], &list[2]});
 }
@@ -86,9 +86,9 @@ void test_input_range()
 
     std::vector<int> list{1, 2, 3};
     auto rng = test_istream_range(list);
-    CPP_assert(InputRange<decltype(rng)>);
+    CPP_assert(input_range<decltype(rng)>);
 
-    auto out = rng | view::addressof;
+    auto out = rng | views::addressof;
     check_equal(out, {&list[0], &list[1], &list[2]});
 }
 
@@ -113,11 +113,11 @@ template<typename, typename = void>
 constexpr bool can_view = false;
 template<typename R>
 constexpr bool can_view<R,
-    meta::void_<decltype(view::addressof(std::declval<R>()))>> = true;
+    meta::void_<decltype(views::addressof(std::declval<R>()))>> = true;
 
-// prvalue ranges cannot be passed to view::addressof
-CPP_assert(!can_view<decltype(view::iota(0, 3))>);
-// xvalue ranges cannot be passed to view::addressof
+// prvalue ranges cannot be passed to views::addressof
+CPP_assert(!can_view<decltype(views::iota(0, 3))>);
+// xvalue ranges cannot be passed to views::addressof
 CPP_assert(!can_view<test_xvalue_range>);
 
 int main()

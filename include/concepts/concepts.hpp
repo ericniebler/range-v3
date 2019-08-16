@@ -143,12 +143,12 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 //   For defining concepts with a syntax similar to C++20. For example:
 //
 //     CPP_def(
-//         // The Assignable concept from the C++20
+//         // The assignable_from concept from the C++20
 //         template(typename T, typename U)
-//         concept Assignable,
+//         concept assignable_from,
 //             requires (T t, U &&u) (
 //                 t = (U &&) u,
-//                 ::concepts::requires_<Same<decltype(t = (U &&) u), T>>
+//                 ::concepts::requires_<same_as<decltype(t = (U &&) u), T>>
 //             ) &&
 //             std::is_lvalue_reference_v<T>
 //     );
@@ -232,26 +232,26 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
         CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
         META_CONCEPT NAME = CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);         \
     }                                                                           \
-    struct CPP_PP_CAT(NAME, Concept) {                                          \
+    struct CPP_PP_CAT(NAME, _concept) {                                         \
         CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
         struct Eval {                                                           \
-            using Concept = CPP_PP_CAT(NAME, Concept);                          \
+            using Concept = CPP_PP_CAT(NAME, _concept);                         \
             CPP_EXPLICIT constexpr operator bool() const noexcept {             \
                 return (bool) _eager_::NAME<CPP_PP_EXPAND ARGS>;                \
             }                                                                   \
             constexpr auto operator!() const noexcept {                         \
-                return ::concepts::detail::Not<Eval>{};                         \
+                return ::concepts::detail::not_<Eval>{};                        \
             }                                                                   \
             template<typename That>                                             \
             constexpr auto operator&&(That) const noexcept {                    \
-                return ::concepts::detail::And<Eval, That>{};                   \
+                return ::concepts::detail::and_<Eval, That>{};                  \
             }                                                                   \
         };                                                                      \
     };                                                                          \
     namespace lazy {                                                            \
         CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
         CPP_INLINE_VAR constexpr auto NAME =                                    \
-            CPP_PP_CAT(NAME, Concept)::Eval<CPP_PP_EXPAND ARGS>{};              \
+            CPP_PP_CAT(NAME, _concept)::Eval<CPP_PP_EXPAND ARGS>{};             \
     }                                                                           \
     namespace defer {                                                           \
         using namespace _eager_;                                                \
@@ -290,8 +290,8 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #endif
 #define CPP_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, ...)                           \
-    struct CPP_PP_CAT(NAME, Concept) {                                          \
-        using Concept = CPP_PP_CAT(NAME, Concept);                              \
+    struct CPP_PP_CAT(NAME, _concept) {                                         \
+        using Concept = CPP_PP_CAT(NAME, _concept);                             \
         CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                        \
         CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
         static auto Requires_ CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);       \
@@ -304,21 +304,21 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
                 return Eval::impl(0);                                           \
             }                                                                   \
             constexpr auto operator!() const noexcept {                         \
-                return ::concepts::detail::Not<Eval>{};                         \
+                return ::concepts::detail::not_<Eval>{};                        \
             }                                                                   \
             template<typename That>                                             \
             constexpr auto operator&&(That) const noexcept {                    \
-                return ::concepts::detail::And<Eval, That>{};                   \
+                return ::concepts::detail::and_<Eval, That>{};                  \
             }                                                                   \
         };                                                                      \
     };                                                                          \
     CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                             \
     CPP_INLINE_VAR constexpr bool NAME =                                        \
-        (bool)CPP_PP_CAT(NAME, Concept)::Eval<CPP_PP_EXPAND ARGS>{};            \
+        (bool)CPP_PP_CAT(NAME, _concept)::Eval<CPP_PP_EXPAND ARGS>{};           \
     namespace lazy {                                                            \
         CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
         CPP_INLINE_VAR constexpr auto NAME =                                    \
-            CPP_PP_CAT(NAME, Concept)::Eval<CPP_PP_EXPAND ARGS>{};              \
+            CPP_PP_CAT(NAME, _concept)::Eval<CPP_PP_EXPAND ARGS>{};             \
     }                                                                           \
     namespace defer {                                                           \
         using namespace lazy;                                                   \
@@ -694,9 +694,9 @@ namespace concepts
             return true;
         }
         template<typename T, typename U>
-        struct And;
+        struct and_;
         template<typename T>
-        struct Not
+        struct not_
         {
             CPP_EXPLICIT constexpr operator bool() const noexcept
             {
@@ -709,11 +709,11 @@ namespace concepts
             template<typename That>
             constexpr auto operator&&(That) const noexcept
             {
-                return And<Not, That>{};
+                return and_<not_, That>{};
             }
         };
         template<typename T, typename U>
-        struct And
+        struct and_
         {
             static constexpr bool impl(std::false_type) noexcept
             {
@@ -725,16 +725,16 @@ namespace concepts
             }
             CPP_EXPLICIT constexpr operator bool() const noexcept
             {
-                return And::impl(bool_<(bool) T{}>{});
+                return and_::impl(bool_<(bool) T{}>{});
             }
             constexpr auto operator!() const noexcept
             {
-                return Not<And>{};
+                return not_<and_>{};
             }
             template<typename That>
             constexpr auto operator&&(That) const noexcept
             {
-                return detail::And<And, That>{};
+                return detail::and_<and_, That>{};
             }
         };
 
@@ -788,7 +788,7 @@ namespace concepts
         CPP_def
         (
             template(typename T, typename U)
-            concept WeaklyEqualityComparableWith_,
+            concept weakly_equality_comparable_with_,
                 requires (detail::as_cref_t<T> t, detail::as_cref_t<U> u)
                 (
                     (t == u) ? 1 : 0,
@@ -798,12 +798,6 @@ namespace concepts
                 )
         );
     } // namespace detail
-
-    template<typename T>
-    constexpr bool implicitly_convertible_to(T)
-    {
-        return true;
-    }
 
 #if defined(__clang__) || defined(_MSC_VER)
     template<bool B>
@@ -823,43 +817,22 @@ namespace concepts
         CPP_def
         (
             template(bool B)
-            (concept True)(B),
+            (concept is_true)(B),
                 B
         );
 
         CPP_def
         (
             template(typename... Args)
-            (concept Type)(Args...),
+            (concept type)(Args...),
                 true
         );
 
         CPP_def
         (
-            template(typename T, template<typename...> class C, typename... Args)
-            (concept Valid)(T, C, Args...),
-                Type< C<T, Args...> >
-        );
-
-        CPP_def
-        (
             template(class T, template<typename...> class Trait, typename... Args)
-            (concept Satisfies)(T, Trait, Args...),
+            (concept satisfies)(T, Trait, Args...),
                 static_cast<bool>(Trait<T, Args...>::type::value)
-        );
-
-        CPP_def
-        (
-            template(bool...Bs)
-            (concept And)(Bs...),
-                and_v<Bs...>
-        );
-
-        CPP_def
-        (
-            template(bool...Bs)
-            (concept Or)(Bs...),
-                or_v<Bs...>
         );
 
         ////////////////////////////////////////////////////////////////////////////////////////
@@ -869,7 +842,7 @@ namespace concepts
         CPP_def
         (
             template(typename A, typename B)
-            concept Same,
+            concept same_as,
                 META_IS_SAME(A, B) && META_IS_SAME(B, A)
         );
 
@@ -877,8 +850,8 @@ namespace concepts
         CPP_def
         (
             template(typename A, typename B)
-            concept NotSameAs_,
-                (!Same<detail::remove_cvref_t<A>, detail::remove_cvref_t<B>>)
+            concept not_same_as_,
+                (!same_as<detail::remove_cvref_t<A>, detail::remove_cvref_t<B>>)
         );
 
         // Workaround bug in the Standard Library:
@@ -888,14 +861,14 @@ namespace concepts
         CPP_def
         (
             template(typename From, typename To)
-            concept ImplicitlyConvertibleTo,
+            concept implicitly_convertible_to,
                 std::is_convertible<typename std::add_rvalue_reference<From>::type, To>::value
         );
 
         CPP_def
         (
             template(typename From, typename To)
-            concept ExplicitlyConvertibleTo,
+            concept explicitly_convertible_to,
                 requires (From (&from)())
                 (
                     static_cast<To>(from())
@@ -906,39 +879,39 @@ namespace concepts
         CPP_def
         (
             template(typename From, typename To)
-            concept ConvertibleTo,
-                ImplicitlyConvertibleTo<From, To> &&
-                ExplicitlyConvertibleTo<From, To>
+            concept convertible_to,
+                implicitly_convertible_to<From, To> &&
+                explicitly_convertible_to<From, To>
         );
 
         CPP_def
         (
             template(typename T, typename U)
-            concept DerivedFrom,
+            concept derived_from,
                 std::is_base_of<U, T>::value &&
-                ConvertibleTo<T const volatile *, U const volatile *>
+                convertible_to<T const volatile *, U const volatile *>
         );
 
         CPP_def
         (
             template(typename T, typename U)
-            concept CommonReference,
-                Same<common_reference_t<T, U>, common_reference_t<U, T>> &&
-                ConvertibleTo<T, common_reference_t<T, U>> &&
-                ConvertibleTo<U, common_reference_t<T, U>>
+            concept common_reference_with,
+                same_as<common_reference_t<T, U>, common_reference_t<U, T>> &&
+                convertible_to<T, common_reference_t<T, U>> &&
+                convertible_to<U, common_reference_t<T, U>>
         );
 
         CPP_def
         (
             template(typename T, typename U)
-            concept Common,
-                Same<common_type_t<T, U>, common_type_t<U, T>> &&
-                ConvertibleTo<T, common_type_t<T, U>> &&
-                ConvertibleTo<U, common_type_t<T, U>> &&
-                CommonReference<
+            concept common_with,
+                same_as<common_type_t<T, U>, common_type_t<U, T>> &&
+                convertible_to<T, common_type_t<T, U>> &&
+                convertible_to<U, common_type_t<T, U>> &&
+                common_reference_with<
                     typename std::add_lvalue_reference<T const>::type,
                     typename std::add_lvalue_reference<U const>::type> &&
-                CommonReference<
+                common_reference_with<
                     typename std::add_lvalue_reference<common_type_t<T, U>>::type,
                     common_reference_t<
                         typename std::add_lvalue_reference<T const>::type,
@@ -948,34 +921,34 @@ namespace concepts
         CPP_def
         (
             template(typename T)
-            concept Integral,
+            concept integral,
                 std::is_integral<T>::value
         );
 
         CPP_def
         (
             template(typename T)
-            concept SignedIntegral,
-                Integral<T> &&
+            concept signed_integral,
+                integral<T> &&
                 std::is_signed<T>::value
         );
 
         CPP_def
         (
             template(typename T)
-            concept UnsignedIntegral,
-                Integral<T> &&
-                !SignedIntegral<T>
+            concept unsigned_integral,
+                integral<T> &&
+                !signed_integral<T>
         );
 
         CPP_def
         (
             template(typename T, typename U)
-            concept Assignable,
+            concept assignable_from,
                 requires (T t, U &&u)
                 (
                     t = (U &&) u,
-                    requires_<Same<T, decltype(t = (U &&) u)>>
+                    requires_<same_as<T, decltype(t = (U &&) u)>>
                 ) &&
                 std::is_lvalue_reference<T>::value
         );
@@ -983,7 +956,7 @@ namespace concepts
         CPP_def
         (
             template(typename T)
-            concept Swappable,
+            concept swappable,
                 requires (T &t, T &u)
                 (
                     concepts::swap(t, u)
@@ -993,7 +966,7 @@ namespace concepts
         CPP_def
         (
             template(typename T, typename U)
-            concept SwappableWith,
+            concept swappable_with,
                 requires (T &&t, U &&u)
                 (
                     concepts::swap((T &&) t, (T &&) t),
@@ -1001,7 +974,7 @@ namespace concepts
                     concepts::swap((U &&) u, (T &&) t),
                     concepts::swap((T &&) t, (U &&) u)
                 ) &&
-                CommonReference<detail::as_cref_t<T>, detail::as_cref_t<U>>
+                common_reference_with<detail::as_cref_t<T>, detail::as_cref_t<U>>
         );
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -1011,26 +984,26 @@ namespace concepts
         CPP_def
         (
             template(typename T)
-            concept EqualityComparable,
-                detail::WeaklyEqualityComparableWith_<T, T>
+            concept equality_comparable,
+                detail::weakly_equality_comparable_with_<T, T>
         );
 
         CPP_def
         (
             template(typename T, typename U)
-            concept EqualityComparableWith,
-                EqualityComparable<T> &&
-                EqualityComparable<U> &&
-                detail::WeaklyEqualityComparableWith_<T, U> &&
-                CommonReference<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
-                EqualityComparable<
+            concept equality_comparable_with,
+                equality_comparable<T> &&
+                equality_comparable<U> &&
+                detail::weakly_equality_comparable_with_<T, U> &&
+                common_reference_with<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
+                equality_comparable<
                     common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
         );
 
         CPP_def
         (
             template(typename T)
-            concept StrictTotallyOrdered,
+            concept totally_ordered,
                 requires (detail::as_cref_t<T> t, detail::as_cref_t<T> u)
                 (
                     t < u ? 1 : 0,
@@ -1038,13 +1011,13 @@ namespace concepts
                     u <= t ? 1 : 0,
                     u >= t ? 1 : 0
                 ) &&
-                EqualityComparable<T>
+                equality_comparable<T>
         );
 
         CPP_def
         (
             template(typename T, typename U)
-            concept StrictTotallyOrderedWith,
+            concept totally_ordered_with,
                 requires (detail::as_cref_t<T> t, detail::as_cref_t<U> u)
                 (
                     t < u ? 1 : 0,
@@ -1056,11 +1029,11 @@ namespace concepts
                     u <= t ? 1 : 0,
                     u >= t ? 1 : 0
                 ) &&
-                StrictTotallyOrdered<T> &&
-                StrictTotallyOrdered<U> &&
-                EqualityComparableWith<T, U> &&
-                CommonReference<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
-                StrictTotallyOrdered<
+                totally_ordered<T> &&
+                totally_ordered<U> &&
+                equality_comparable_with<T, U> &&
+                common_reference_with<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
+                totally_ordered<
                     common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
         );
 
@@ -1071,75 +1044,71 @@ namespace concepts
         CPP_def
         (
             template(typename T)
-            concept Destructible,
+            concept destructible,
                 std::is_nothrow_destructible<T>::value
         );
 
         CPP_def
         (
             template(typename T, typename... Args)
-            (concept Constructible)(T, Args...),
-                Destructible<T> &&
+            (concept constructible_from)(T, Args...),
+                destructible<T> &&
                 std::is_constructible<T, Args...>::value
         );
 
         CPP_def
         (
             template(typename T)
-            concept DefaultConstructible,
-                Constructible<T>
+            concept default_constructible,
+                constructible_from<T>
         );
 
         CPP_def
         (
             template(typename T)
-            concept MoveConstructible,
-                Constructible<T, T> &&
-                ConvertibleTo<T, T>
+            concept move_constructible,
+                constructible_from<T, T> &&
+                convertible_to<T, T>
         );
 
         CPP_def
         (
             template(typename T)
-            concept CopyConstructible,
-                MoveConstructible<T> &&
-                Constructible<T, T &> &&
-                Constructible<T, T const &> &&
-                Constructible<T, T const> &&
-                ConvertibleTo<T &, T> &&
-                ConvertibleTo<T const &, T> &&
-                ConvertibleTo<T const, T>
+            concept copy_constructible,
+                move_constructible<T> &&
+                constructible_from<T, T &> &&
+                constructible_from<T, T const &> &&
+                constructible_from<T, T const> &&
+                convertible_to<T &, T> &&
+                convertible_to<T const &, T> &&
+                convertible_to<T const, T>
         );
 
         CPP_def
         (
             template(typename T)
-            concept Movable,
-                MoveConstructible<T> &&
+            concept movable,
                 std::is_object<T>::value &&
-                Assignable<T &, T> &&
-                Swappable<T>
+                move_constructible<T> &&
+                assignable_from<T &, T> &&
+                swappable<T>
         );
 
         CPP_def
         (
             template(typename T)
-            concept Copyable,
-                Movable<T> &&
-                CopyConstructible<T> &&
-                // Spec requires this to be validated
-                Assignable<T &, T const &> &&
-                // Spec does not require these to be validated
-                Assignable<T &, T &> &&
-                Assignable<T &, T const>
+            concept copyable,
+                copy_constructible<T> &&
+                movable<T> &&
+                assignable_from<T &, T const &>
         );
 
         CPP_def
         (
             template(typename T)
-            concept Semiregular,
-                Copyable<T> &&
-                DefaultConstructible<T>
+            concept semiregular,
+                copyable<T> &&
+                default_constructible<T>
             // Axiom: copies are independent. See Fundamentals of Generic Programming
             // http://www.stepanovpapers.com/DeSt98.pdf
         );
@@ -1147,9 +1116,9 @@ namespace concepts
         CPP_def
         (
             template(typename T)
-            concept Regular,
-                Semiregular<T> &&
-                EqualityComparable<T>
+            concept regular,
+                semiregular<T> &&
+                equality_comparable<T>
         );
     } // inline namespace defs
 

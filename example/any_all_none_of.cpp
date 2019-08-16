@@ -35,7 +35,7 @@ main()
 {
     std::vector<int> v{6, 2, 3, 4, 5, 6};
     cout << std::boolalpha;
-    cout << "vector: " << ranges::view::all(v) << '\n';
+    cout << "vector: " << ranges::views::all(v) << '\n';
 
     cout << "vector any_of is_six: " << ranges::any_of(v, is_six) << '\n';
     cout << "vector all_of is_six: " << ranges::all_of(v, is_six) << '\n';

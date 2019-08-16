@@ -31,8 +31,8 @@ namespace ranges
             auto operator()(I begin, iter_difference_t<I> d, C pred,
                             P proj = P{}) const //
                 -> CPP_ret(I)(                  //
-                    requires ForwardIterator<I> &&
-                        IndirectUnaryPredicate<C, projected<I, P>>)
+                    requires forward_iterator<I> &&
+                        indirect_unary_predicate<C, projected<I, P>>)
             {
                 if(0 < d)
                 {

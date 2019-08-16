@@ -57,7 +57,7 @@ namespace ranges
         tail_view(Rng rng)
           : rng_(static_cast<Rng &&>(rng))
         {
-            CPP_assert(InputRange<Rng>);
+            CPP_assert(input_range<Rng>);
         }
         iterator_t<Rng> begin()
         {
@@ -65,7 +65,7 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin() const -> CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)( //
-            requires Const && Range<meta::const_if_c<Const, Rng>>)
+            requires Const && range<meta::const_if_c<Const, Rng>>)
         {
             return next(ranges::begin(rng_), 1, ranges::end(rng_));
         }
@@ -75,12 +75,12 @@ namespace ranges
         }
         template<bool Const = true>
         auto end() const -> CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)( //
-            requires Const && Range<meta::const_if_c<Const, Rng>>)
+            requires Const && range<meta::const_if_c<Const, Rng>>)
         {
             return ranges::end(rng_);
         }
         CPP_member
-        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
         {
             using size_type = range_size_t<Rng>;
             return range_cardinality<Rng>::value >= 0
@@ -88,7 +88,7 @@ namespace ranges
                        : detail::prev_or_zero_(ranges::size(rng_));
         }
         CPP_member
-        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
         {
             using size_type = range_size_t<Rng>;
             return range_cardinality<Rng>::value >= 0
@@ -102,11 +102,11 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng)(requires ViewableRange<Rng>) tail_view(Rng &&)
-        ->tail_view<view::all_t<Rng>>;
+    CPP_template(typename Rng)(requires viewable_range<Rng>) tail_view(Rng &&)
+        ->tail_view<views::all_t<Rng>>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct tail_fn
         {
@@ -114,7 +114,7 @@ namespace ranges
             auto operator()(Rng && rng) const
                 -> CPP_ret(meta::if_c<range_cardinality<Rng>::value == 0, all_t<Rng>,
                                       tail_view<all_t<Rng>>>)( //
-                    requires ViewableRange<Rng> && InputRange<Rng>)
+                    requires viewable_range<Rng> && input_range<Rng>)
             {
                 return all(static_cast<Rng &&>(rng));
             }
@@ -123,7 +123,7 @@ namespace ranges
         /// \relates tail_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<tail_fn>, tail)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

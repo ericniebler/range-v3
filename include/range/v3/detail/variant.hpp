@@ -103,7 +103,7 @@ namespace ranges
 
         template<typename I, typename S, typename O>
         auto uninitialized_copy(I first, S last, O out) -> CPP_ret(O)( //
-            requires(!SizedSentinel<S, I>))
+            requires(!sized_sentinel_for<S, I>))
         {
             for(; first != last; ++first, ++out)
                 ::new((void *)std::addressof(*out)) iter_value_t<O>(*first);
@@ -112,7 +112,7 @@ namespace ranges
 
         template<typename I, typename S, typename O>
         auto uninitialized_copy(I first, S last, O out) -> CPP_ret(O)( //
-            requires SizedSentinel<S, I>)
+            requires sized_sentinel_for<S, I>)
         {
             return std::uninitialized_copy_n(first, (last - first), out);
         }
@@ -135,11 +135,11 @@ namespace ranges
             CPP_member
             constexpr CPP_ctor(indexed_datum)()(                          //
                 noexcept(std::is_nothrow_default_constructible<T>::value) //
-                requires DefaultConstructible<T>)
+                requires default_constructible<T>)
               : datum_{}
             {}
             CPP_template(typename... Ts)(                                 //
-                requires Constructible<T, Ts...> && (sizeof...(Ts) != 0)) //
+                requires constructible_from<T, Ts...> && (sizeof...(Ts) != 0)) //
                 constexpr indexed_datum(Ts &&... ts) noexcept(
                     std::is_nothrow_constructible<T, Ts...>::value)
               : datum_(static_cast<Ts &&>(ts)...)
@@ -147,8 +147,8 @@ namespace ranges
             template<typename U>
             constexpr CPP_ctor(indexed_datum)(indexed_datum<U, Index> that)( //
                 noexcept(std::is_nothrow_constructible<T, U>::value)         //
-                requires(!Same<T, U>) &&
-                ConvertibleTo<U, T>)
+                requires(!same_as<T, U>) &&
+                convertible_to<U, T>)
               : datum_(std::move(that.datum_))
             {}
             constexpr indexed_element<T, Index::value> ref() noexcept
@@ -182,8 +182,8 @@ namespace ranges
             template<typename U>
             constexpr CPP_ctor(indexed_datum)(indexed_datum<U &, Index> that)(
                 noexcept(true) //
-                requires(!Same<T, U>) &&
-                ConvertibleTo<U &, T &>)
+                requires(!same_as<T, U>) &&
+                convertible_to<U &, T &>)
               : reference_wrapper<T &>(that.get())
             {}
             constexpr indexed_element<T &, Index::value> ref() const noexcept
@@ -201,8 +201,8 @@ namespace ranges
             template<typename U>
             constexpr CPP_ctor(indexed_datum)(indexed_datum<U &&, Index> that)(
                 noexcept(true) //
-                requires(!Same<T, U>) &&
-                ConvertibleTo<U &&, T &&>)
+                requires(!same_as<T, U>) &&
+                convertible_to<U &&, T &&>)
               : reference_wrapper<T &&>(that.get())
             {}
             constexpr indexed_element<T &&, Index::value> ref() const noexcept
@@ -228,7 +228,7 @@ namespace ranges
     } // namespace detail
 
     template<std::size_t N, typename... Ts, typename... Args>
-    meta::if_c<(bool)Constructible<detail::variant_datum_t<N, Ts...>, Args...>> emplace(
+    meta::if_c<(bool)constructible_from<detail::variant_datum_t<N, Ts...>, Args...>> emplace(
         variant<Ts...> &, Args &&...);
 
     namespace detail
@@ -665,7 +665,7 @@ namespace ranges
         static constexpr auto all_convertible_to(int) noexcept -> CPP_ret(bool)( //
             requires(sizeof...(Args) == sizeof...(Ts)))
         {
-            return And<ConvertibleTo<Args, Ts>...>;
+            return and_v<convertible_to<Args, Ts>...>;
         }
         template<typename... Args>
         static constexpr bool all_convertible_to(long) noexcept
@@ -677,18 +677,18 @@ namespace ranges
         CPP_member
         constexpr CPP_ctor(variant)()(                                         //
             noexcept(std::is_nothrow_default_constructible<datum_t<0>>::value) //
-            requires DefaultConstructible<datum_t<0>>)
+            requires default_constructible<datum_t<0>>)
           : variant{emplaced_index<0>}
         {}
         CPP_template(std::size_t N, typename... Args)(   //
-            requires Constructible<datum_t<N>, Args...>) //
+            requires constructible_from<datum_t<N>, Args...>) //
             constexpr variant(RANGES_EMPLACED_INDEX_T(N), Args &&... args) noexcept(
                 std::is_nothrow_constructible<datum_t<N>, Args...>::value)
           : detail::variant_data<Ts...>{meta::size_t<N>{}, static_cast<Args &&>(args)...}
           , index_(N)
         {}
         CPP_template(std::size_t N, typename T, typename... Args)(                   //
-            requires Constructible<datum_t<N>, std::initializer_list<T> &, Args...>) //
+            requires constructible_from<datum_t<N>, std::initializer_list<T> &, Args...>) //
             constexpr variant(
                 RANGES_EMPLACED_INDEX_T(N), std::initializer_list<T> il,
                 Args &&... args) noexcept(std::
@@ -703,7 +703,7 @@ namespace ranges
         template<std::size_t N>
         constexpr CPP_ctor(variant)(RANGES_EMPLACED_INDEX_T(N), meta::nil_)(       //
             noexcept(std::is_nothrow_constructible<datum_t<N>, meta::nil_>::value) //
-            requires Constructible<datum_t<N>, meta::nil_>)
+            requires constructible_from<datum_t<N>, meta::nil_>)
           : detail::variant_data<Ts...>{meta::size_t<N>{}, meta::nil_{}}
           , index_(N)
         {}
@@ -718,7 +718,7 @@ namespace ranges
         {}
         template<typename... Args>
         CPP_ctor(variant)(variant<Args...> that)( //
-            requires(!Same<variant<Args...>, variant>) &&
+            requires(!same_as<variant<Args...>, variant>) &&
             (all_convertible_to<Args...>(0)))
           : detail::variant_data<Ts...>{}
           , index_(detail::variant_move_copy_(that.index(), data_(),
@@ -740,7 +740,7 @@ namespace ranges
         }
         template<typename... Args>
         auto operator=(variant<Args...> that) -> CPP_ret(variant &)( //
-            requires(!Same<variant<Args...>, variant>) &&
+            requires(!same_as<variant<Args...>, variant>) &&
             (all_convertible_to<Args...>(0)))
         {
             // TODO do a simple copy assign when index()==that.index()
@@ -754,7 +754,7 @@ namespace ranges
         }
         template<std::size_t N, typename... Args>
         auto emplace(Args &&... args) -> CPP_ret(void)( //
-            requires Constructible<datum_t<N>, Args...>)
+            requires constructible_from<datum_t<N>, Args...>)
         {
             this->clear_();
             detail::construct_fn<N, Args &&...> fn{static_cast<Args &&>(args)...};
@@ -814,7 +814,7 @@ namespace ranges
     template<typename... Ts, typename... Us>
     auto operator==(variant<Ts...> const & lhs, variant<Us...> const & rhs)
         -> CPP_ret(bool)( //
-            requires And<EqualityComparableWith<Ts, Us>...>)
+            requires and_v<equality_comparable_with<Ts, Us>...>)
     {
         return (!lhs.valid() && !rhs.valid()) ||
                (lhs.index() == rhs.index() &&
@@ -826,7 +826,7 @@ namespace ranges
     template<typename... Ts, typename... Us>
     auto operator!=(variant<Ts...> const & lhs, variant<Us...> const & rhs)
         -> CPP_ret(bool)( //
-            requires And<EqualityComparableWith<Ts, Us>...>)
+            requires and_v<equality_comparable_with<Ts, Us>...>)
     {
         return !(lhs == rhs);
     }
@@ -834,7 +834,7 @@ namespace ranges
     ////////////////////////////////////////////////////////////////////////////////////////////
     // emplace
     template<std::size_t N, typename... Ts, typename... Args>
-    meta::if_c<(bool)Constructible<detail::variant_datum_t<N, Ts...>, Args...>> emplace(
+    meta::if_c<(bool)constructible_from<detail::variant_datum_t<N, Ts...>, Args...>> emplace(
         variant<Ts...> & var, Args &&... args)
     {
         var.template emplace<N>(static_cast<Args &&>(args)...);

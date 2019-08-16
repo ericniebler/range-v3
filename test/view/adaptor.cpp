@@ -23,8 +23,8 @@ struct my_reverse_view
   : ranges::view_adaptor<my_reverse_view<BidiRange>, BidiRange>
 {
 private:
-    CPP_assert(ranges::BidirectionalRange<BidiRange>);
-    CPP_assert(ranges::CommonRange<BidiRange>);
+    CPP_assert(ranges::bidirectional_range<BidiRange>);
+    CPP_assert(ranges::common_range<BidiRange>);
     friend ranges::range_access;
     using base_iterator_t = ranges::iterator_t<BidiRange>;
 
@@ -72,7 +72,7 @@ private:
         auto advance(base_iterator_t &it,
             ranges::range_difference_t<BidiRange> n) const ->
             CPP_ret(void)(
-                requires ranges::RandomAccessRange<BidiRange>)
+                requires ranges::random_access_range<BidiRange>)
         {
             it -= n;
         }
@@ -80,7 +80,7 @@ private:
         auto distance_to(base_iterator_t const &here,
             base_iterator_t const &there) const ->
             CPP_ret(ranges::range_difference_t<BidiRange>)(
-                requires ranges::SizedSentinel<base_iterator_t, base_iterator_t>)
+                requires ranges::sized_sentinel_for<base_iterator_t, base_iterator_t>)
         {
             return here - there;
         }
@@ -138,8 +138,9 @@ int main()
     using namespace ranges;
     std::vector<int> v{1, 2, 3, 4};
     my_reverse_view<std::vector<int>&> retro{v};
-    ::models<CommonViewConcept>(aux::copy(retro));
-    ::models<RandomAccessIteratorConcept>(retro.begin());
+    CPP_assert(common_range<decltype(retro)>);
+    CPP_assert(view_<decltype(retro)>);
+    CPP_assert(random_access_iterator<decltype(retro.begin())>);
     ::check_equal(retro, {4, 3, 2, 1});
 
     // test cursor mixin
@@ -149,17 +150,18 @@ int main()
 
     std::list<int> l{1, 2, 3, 4};
     my_reverse_view<std::list<int>& > retro2{l};
-    ::models<CommonViewConcept>(aux::copy(retro2));
-    ::models<BidirectionalIteratorConcept>(retro2.begin());
-    ::models_not<RandomAccessIteratorConcept>(retro2.begin());
+    CPP_assert(common_range<decltype(retro2)>);
+    CPP_assert(view_<decltype(retro2)>);
+    CPP_assert(bidirectional_iterator<decltype(retro2.begin())>);
+    CPP_assert(!random_access_iterator<decltype(retro2.begin())>);
     ::check_equal(retro2, {4, 3, 2, 1});
 
     std::stringstream sinx("1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 42 6 7 8 9 ");
-    my_delimited_range r{view::delimit(istream<int>(sinx), 42)};
-    ::models<ViewConcept>(aux::copy(r));
-    ::models_not<CommonViewConcept>(aux::copy(r));
-    ::models<InputIteratorConcept>(r.begin());
-    ::models_not<ForwardIteratorConcept>(r.begin());
+    my_delimited_range r{views::delimit(istream<int>(sinx), 42)};
+    CPP_assert(view_<decltype(r)>);
+    CPP_assert(!common_range<decltype(r)>);
+    CPP_assert(input_iterator<decltype(r.begin())>);
+    CPP_assert(!forward_iterator<decltype(r.begin())>);
     ::check_equal(r, {1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4});
 
     // test sentinel mixin

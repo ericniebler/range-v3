@@ -36,7 +36,7 @@ namespace ranges
             friend action_access;
             template<typename Fun>
             static auto CPP_fun(bind)(take_while_fn take_while, Fun fun)( //
-                requires(!Range<Fun>))
+                requires(!range<Fun>))
             {
                 return bind_back(take_while, std::move(fun));
             }
@@ -44,9 +44,9 @@ namespace ranges
         public:
             template<typename Rng, typename Fun>
             auto operator()(Rng && rng, Fun fun) const -> CPP_ret(Rng)( //
-                requires ForwardRange<Rng> &&
-                    ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                        IndirectUnaryPredicate<Fun, iterator_t<Rng>>)
+                requires forward_range<Rng> &&
+                    erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
+                        indirect_unary_predicate<Fun, iterator_t<Rng>>)
             {
                 ranges::action::erase(
                     rng, find_if_not(begin(rng), end(rng), std::move(fun)), end(rng));

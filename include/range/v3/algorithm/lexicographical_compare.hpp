@@ -35,9 +35,9 @@ namespace ranges
                  typename P0 = identity, typename P1 = identity>
         auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred = C{},
                         P0 proj0 = P0{}, P1 proj1 = P1{}) const -> CPP_ret(bool)( //
-            requires InputIterator<I0> && Sentinel<S0, I0> && InputIterator<I1> &&
-                Sentinel<S1, I1> &&
-                    IndirectStrictWeakOrder<C, projected<I0, P0>, projected<I1, P1>>)
+            requires input_iterator<I0> && sentinel_for<S0, I0> && input_iterator<I1> &&
+                sentinel_for<S1, I1> &&
+                    indirect_strict_weak_order<C, projected<I0, P0>, projected<I1, P1>>)
         {
             for(; begin1 != end1; ++begin0, ++begin1)
             {
@@ -54,7 +54,7 @@ namespace ranges
                  typename P1 = identity>
         auto operator()(Rng0 && rng0, Rng1 && rng1, C pred = C{}, P0 proj0 = P0{},
                         P1 proj1 = P1{}) const -> CPP_ret(bool)( //
-            requires InputRange<Rng0> && InputRange<Rng1> && IndirectStrictWeakOrder<
+            requires input_range<Rng0> && input_range<Rng1> && indirect_strict_weak_order<
                 C, projected<iterator_t<Rng0>, P0>, projected<iterator_t<Rng1>, P1>>)
         {
             return (*this)(begin(rng0),

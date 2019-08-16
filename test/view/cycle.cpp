@@ -31,42 +31,42 @@ using namespace ranges;
 template<typename Rng>
 void test_const_forward_range(Rng const &rng)
 {
-    auto r = rng | view::cycle;
+    auto r = rng | views::cycle;
     static_assert(is_infinite<decltype(r)>{}, "");
-    static_assert(!CommonRange<decltype(r)>, "");
-    CHECK(distance(r | view::take_exactly(0)) == 0);
-    CHECK(distance(r | view::take_exactly(1)) == 1);
-    CHECK(distance(r | view::take_exactly(2)) == 2);
-    CHECK(distance(r | view::take_exactly(3)) == 3);
-    CHECK(distance(r | view::take_exactly(4)) == 4);
-    CHECK(distance(r | view::take_exactly(6)) == 6);
-    CHECK(distance(r | view::take_exactly(7)) == 7);
-    CHECK(count_if(r | view::take_exactly(7), [](int) { return true; }) == 7);
+    static_assert(!common_range<decltype(r)>, "");
+    CHECK(distance(r | views::take_exactly(0)) == 0);
+    CHECK(distance(r | views::take_exactly(1)) == 1);
+    CHECK(distance(r | views::take_exactly(2)) == 2);
+    CHECK(distance(r | views::take_exactly(3)) == 3);
+    CHECK(distance(r | views::take_exactly(4)) == 4);
+    CHECK(distance(r | views::take_exactly(6)) == 6);
+    CHECK(distance(r | views::take_exactly(7)) == 7);
+    CHECK(count_if(r | views::take_exactly(7), [](int) { return true; }) == 7);
 
-    ::check_equal(r | view::take_exactly(0), std::array<int, 0>{});
-    ::check_equal(r | view::take_exactly(1), {0});
-    ::check_equal(r | view::take_exactly(2), {0, 1});
-    ::check_equal(r | view::take_exactly(3), {0, 1, 2});
-    ::check_equal(r | view::take_exactly(4), {0, 1, 2, 0});
-    ::check_equal(r | view::take_exactly(6), {0, 1, 2, 0, 1, 2});
-    ::check_equal(r | view::take_exactly(7), {0, 1, 2, 0, 1, 2, 0});
+    ::check_equal(r | views::take_exactly(0), std::array<int, 0>{});
+    ::check_equal(r | views::take_exactly(1), {0});
+    ::check_equal(r | views::take_exactly(2), {0, 1});
+    ::check_equal(r | views::take_exactly(3), {0, 1, 2});
+    ::check_equal(r | views::take_exactly(4), {0, 1, 2, 0});
+    ::check_equal(r | views::take_exactly(6), {0, 1, 2, 0, 1, 2});
+    ::check_equal(r | views::take_exactly(7), {0, 1, 2, 0, 1, 2, 0});
 
-    CHECK(distance(r | view::take(0)) == 0);
-    CHECK(distance(r | view::take(1)) == 1);
-    CHECK(distance(r | view::take(2)) == 2);
-    CHECK(distance(r | view::take(3)) == 3);
-    CHECK(distance(r | view::take(4)) == 4);
-    CHECK(distance(r | view::take(6)) == 6);
-    CHECK(distance(r | view::take(7)) == 7);
-    CHECK(count_if(r | view::take(7), [](int) { return true; }) == 7);
+    CHECK(distance(r | views::take(0)) == 0);
+    CHECK(distance(r | views::take(1)) == 1);
+    CHECK(distance(r | views::take(2)) == 2);
+    CHECK(distance(r | views::take(3)) == 3);
+    CHECK(distance(r | views::take(4)) == 4);
+    CHECK(distance(r | views::take(6)) == 6);
+    CHECK(distance(r | views::take(7)) == 7);
+    CHECK(count_if(r | views::take(7), [](int) { return true; }) == 7);
 
-    ::check_equal(r | view::take(0), std::array<int, 0>{});
-    ::check_equal(r | view::take(1), {0});
-    ::check_equal(r | view::take(2), {0, 1});
-    ::check_equal(r | view::take(3), {0, 1, 2});
-    ::check_equal(r | view::take(4), {0, 1, 2, 0});
-    ::check_equal(r | view::take(6), {0, 1, 2, 0, 1, 2});
-    ::check_equal(r | view::take(7), {0, 1, 2, 0, 1, 2, 0});
+    ::check_equal(r | views::take(0), std::array<int, 0>{});
+    ::check_equal(r | views::take(1), {0});
+    ::check_equal(r | views::take(2), {0, 1});
+    ::check_equal(r | views::take(3), {0, 1, 2});
+    ::check_equal(r | views::take(4), {0, 1, 2, 0});
+    ::check_equal(r | views::take(6), {0, 1, 2, 0, 1, 2});
+    ::check_equal(r | views::take(7), {0, 1, 2, 0, 1, 2, 0});
 }
 
 template<typename Rng>
@@ -74,43 +74,43 @@ void test_const_forward_reversed_range(Rng const &rng)
 {
     test_const_forward_range(rng);
 
-    auto r = rng | view::reverse | view::cycle;
+    auto r = rng | views::reverse | views::cycle;
     static_assert(is_infinite<decltype(r)>{}, "");
-    static_assert(!CommonRange<decltype(r)>, "");
+    static_assert(!common_range<decltype(r)>, "");
 
-    CHECK(distance(r | view::take_exactly(0)) == 0);
-    CHECK(distance(r | view::take_exactly(1)) == 1);
-    CHECK(distance(r | view::take_exactly(2)) == 2);
-    CHECK(distance(r | view::take_exactly(3)) == 3);
-    CHECK(distance(r | view::take_exactly(4)) == 4);
-    CHECK(distance(r | view::take_exactly(6)) == 6);
-    CHECK(distance(r | view::take_exactly(7)) == 7);
-    CHECK(count_if(r | view::take_exactly(7), [](int) { return true; }) == 7);
+    CHECK(distance(r | views::take_exactly(0)) == 0);
+    CHECK(distance(r | views::take_exactly(1)) == 1);
+    CHECK(distance(r | views::take_exactly(2)) == 2);
+    CHECK(distance(r | views::take_exactly(3)) == 3);
+    CHECK(distance(r | views::take_exactly(4)) == 4);
+    CHECK(distance(r | views::take_exactly(6)) == 6);
+    CHECK(distance(r | views::take_exactly(7)) == 7);
+    CHECK(count_if(r | views::take_exactly(7), [](int) { return true; }) == 7);
 
-    ::check_equal(r | view::take_exactly(0), std::array<int, 0>{});
-    ::check_equal(r | view::take_exactly(1), {2});
-    ::check_equal(r | view::take_exactly(2), {2, 1});
-    ::check_equal(r | view::take_exactly(3), {2, 1, 0});
-    ::check_equal(r | view::take_exactly(4), {2, 1, 0, 2});
-    ::check_equal(r | view::take_exactly(6), {2, 1, 0, 2, 1, 0});
-    ::check_equal(r | view::take_exactly(7), {2, 1, 0, 2, 1, 0, 2});
+    ::check_equal(r | views::take_exactly(0), std::array<int, 0>{});
+    ::check_equal(r | views::take_exactly(1), {2});
+    ::check_equal(r | views::take_exactly(2), {2, 1});
+    ::check_equal(r | views::take_exactly(3), {2, 1, 0});
+    ::check_equal(r | views::take_exactly(4), {2, 1, 0, 2});
+    ::check_equal(r | views::take_exactly(6), {2, 1, 0, 2, 1, 0});
+    ::check_equal(r | views::take_exactly(7), {2, 1, 0, 2, 1, 0, 2});
 
-    CHECK(distance(r | view::take(0)) == 0);
-    CHECK(distance(r | view::take(1)) == 1);
-    CHECK(distance(r | view::take(2)) == 2);
-    CHECK(distance(r | view::take(3)) == 3);
-    CHECK(distance(r | view::take(4)) == 4);
-    CHECK(distance(r | view::take(6)) == 6);
-    CHECK(distance(r | view::take(7)) == 7);
-    CHECK(count_if(r | view::take(7), [](int) { return true; }) == 7);
+    CHECK(distance(r | views::take(0)) == 0);
+    CHECK(distance(r | views::take(1)) == 1);
+    CHECK(distance(r | views::take(2)) == 2);
+    CHECK(distance(r | views::take(3)) == 3);
+    CHECK(distance(r | views::take(4)) == 4);
+    CHECK(distance(r | views::take(6)) == 6);
+    CHECK(distance(r | views::take(7)) == 7);
+    CHECK(count_if(r | views::take(7), [](int) { return true; }) == 7);
 
-    ::check_equal(r | view::take(0), std::array<int, 0>{});
-    ::check_equal(r | view::take(1), {2});
-    ::check_equal(r | view::take(2), {2, 1});
-    ::check_equal(r | view::take(3), {2, 1, 0});
-    ::check_equal(r | view::take(4), {2, 1, 0, 2});
-    ::check_equal(r | view::take(6), {2, 1, 0, 2, 1, 0});
-    ::check_equal(r | view::take(7), {2, 1, 0, 2, 1, 0, 2});
+    ::check_equal(r | views::take(0), std::array<int, 0>{});
+    ::check_equal(r | views::take(1), {2});
+    ::check_equal(r | views::take(2), {2, 1});
+    ::check_equal(r | views::take(3), {2, 1, 0});
+    ::check_equal(r | views::take(4), {2, 1, 0, 2});
+    ::check_equal(r | views::take(6), {2, 1, 0, 2, 1, 0});
+    ::check_equal(r | views::take(7), {2, 1, 0, 2, 1, 0, 2});
 }
 
 template<typename Rng>
@@ -118,17 +118,17 @@ void test_mutable_forward_range_reversed(Rng &rng)
 {
     test_const_forward_reversed_range(rng);
     int count = 2;
-    RANGES_FOR(auto &&i, rng | view::cycle | view::take_exactly(6)) { i = ++count; }
-    ::check_equal(rng | view::take_exactly(3), {6, 7, 8});
+    RANGES_FOR(auto &&i, rng | views::cycle | views::take_exactly(6)) { i = ++count; }
+    ::check_equal(rng | views::take_exactly(3), {6, 7, 8});
 }
 
 template<typename Rng>
 void test_forward_it(Rng const &rng)
 {
-    auto r = rng | view::cycle;
-    static_assert(ForwardRange<decltype(r)>, "");
+    auto r = rng | views::cycle;
+    static_assert(forward_range<decltype(r)>, "");
     auto f = begin(r);
-    static_assert(ForwardIterator<decltype(f)>, "");
+    static_assert(forward_iterator<decltype(f)>, "");
 
     CHECK((*f) == 0);
     auto n = next(f, 1);
@@ -139,10 +139,10 @@ template<typename Rng>
 void test_bidirectional_it(Rng const &rng)
 {
     test_forward_it(rng);
-    auto r = rng | view::cycle;
-    static_assert(BidirectionalRange<decltype(r)>, "");
+    auto r = rng | views::cycle;
+    static_assert(bidirectional_range<decltype(r)>, "");
     auto f = begin(r);
-    static_assert(BidirectionalIterator<decltype(f)>, "");
+    static_assert(bidirectional_iterator<decltype(f)>, "");
 
     CHECK((*f) == 0);
     auto n = next(f, 1);
@@ -154,10 +154,10 @@ template<typename Rng>
 void test_random_access_it(Rng const &rng)
 {
     test_bidirectional_it(rng);
-    auto r = rng | view::cycle;
-    static_assert(RandomAccessRange<decltype(r)>, "");
+    auto r = rng | views::cycle;
+    static_assert(random_access_range<decltype(r)>, "");
     auto f = begin(r);
-    static_assert(RandomAccessIterator<decltype(f)>, "");
+    static_assert(random_access_iterator<decltype(f)>, "");
     auto m = begin(r) + 1;
     auto l = begin(r) + 2;
     auto f1 = begin(r) + 3;
@@ -274,7 +274,7 @@ int main()
             std::unique_ptr<int>(new int(1)),
             std::unique_ptr<int>(new int(2))
         }};
-        auto r = a | view::cycle;
+        auto r = a | views::cycle;
         auto b = iter_move(r.begin() + 4);
         CHECK((*(b)) == 1);
     }
@@ -284,7 +284,7 @@ int main()
         int count = 0;
         auto il = {0, 1, 2};
         auto v = 10;
-        RANGES_FOR(auto&& i, il | view::cycle)
+        RANGES_FOR(auto&& i, il | views::cycle)
         {
             if (count == 42) { break; }
             v = i;
@@ -296,12 +296,12 @@ int main()
 
     // non-bounded
     {
-        auto sz = view::c_str((char const *)"hi! ");
+        auto sz = views::c_str((char const *)"hi! ");
         ::check_equal(
-            sz | view::cycle | view::take(10),
+            sz | views::cycle | views::take(10),
             {'h','i','!',' ','h','i','!',' ','h','i'} );
 
-        auto rng = sz | view::cycle;
+        auto rng = sz | views::cycle;
         auto it = ranges::begin(rng);
         CHECK(*it == 'h');
         CHECK(*++it == 'i');
@@ -313,7 +313,7 @@ int main()
         CHECK(*--it == 'i');
         CHECK(*--it == 'h');
 
-        rng = sz | view::cycle;
+        rng = sz | views::cycle;
         it = ranges::begin(rng);
         it += 4;
         CHECK(*it == 'h');
@@ -322,12 +322,12 @@ int main()
     // Cycle of an infinite range,
     // https://github.com/ericniebler/range-v3/issues/780
     {
-        auto view = ranges::view::iota(0)
-                    | ranges::view::cycle;
+        auto view = ranges::views::iota(0)
+                    | ranges::views::cycle;
         CHECK(view[5] == 5);
     }
 
-    // Composing ranges::view::cycle with ranges::view::slice
+    // Composing ranges::views::cycle with ranges::views::slice
     // https://github.com/ericniebler/range-v3/issues/778
     {
         const auto length = 512;
@@ -335,8 +335,8 @@ int main()
 
         std::vector<int> input(length);
 
-        auto output = ranges::view::cycle(input)
-                    | ranges::view::slice(length + k, 2 * length + k);
+        auto output = ranges::views::cycle(input)
+                    | ranges::views::slice(length + k, 2 * length + k);
 
         CHECK(bool(ranges::begin(output) != ranges::end(output)));
         CHECK(ranges::size(output) == 512u);

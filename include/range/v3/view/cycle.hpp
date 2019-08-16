@@ -45,15 +45,15 @@ namespace ranges
     struct RANGES_EMPTY_BASES cycled_view
       : view_facade<cycled_view<Rng>, infinite>
       , private detail::non_propagating_cache<iterator_t<Rng>, cycled_view<Rng>,
-                                              !CommonRange<Rng>>
+                                              !common_range<Rng>>
     {
     private:
-        CPP_assert(ForwardRange<Rng> && !is_infinite<Rng>::value);
+        CPP_assert(forward_range<Rng> && !is_infinite<Rng>::value);
         friend range_access;
         Rng rng_;
 
         using cache_t = detail::non_propagating_cache<iterator_t<Rng>, cycled_view<Rng>,
-                                                      !CommonRange<Rng>>;
+                                                      !common_range<Rng>>;
 
         template<bool IsConst>
         struct cursor
@@ -111,7 +111,7 @@ namespace ranges
                 // clang-format on
                 CPP_member
             auto equal(cursor const & pos) const -> CPP_ret(bool)( //
-                requires EqualityComparable<iterator>)
+                requires equality_comparable<iterator>)
             {
                 RANGES_EXPECT(rng_ == pos.rng_);
                 return n_ == pos.n_ && it_ == pos.it_;
@@ -123,28 +123,28 @@ namespace ranges
                 if(++it_ == end)
                 {
                     ++n_;
-                    this->set_end_(meta::bool_<(bool)CommonRange<CRng>>{});
+                    this->set_end_(meta::bool_<(bool)common_range<CRng>>{});
                     it_ = ranges::begin(rng_->rng_);
                 }
             }
             CPP_member
             auto prev() -> CPP_ret(void)( //
-                requires BidirectionalRange<CRng>)
+                requires bidirectional_range<CRng>)
             {
                 if(it_ == ranges::begin(rng_->rng_))
                 {
                     RANGES_EXPECT(n_ > 0); // decrementing the begin iterator?!
                     --n_;
-                    it_ = this->get_end_(meta::bool_<(bool)CommonRange<CRng>>{});
+                    it_ = this->get_end_(meta::bool_<(bool)common_range<CRng>>{});
                 }
                 --it_;
             }
             CPP_template(typename Diff)( //
-                requires RandomAccessRange<CRng> &&
-                    detail::IntegerLike_<Diff>) void advance(Diff n)
+                requires random_access_range<CRng> &&
+                    detail::integer_like_<Diff>) void advance(Diff n)
             {
                 auto const begin = ranges::begin(rng_->rng_);
-                auto const end = this->get_end_(meta::bool_<(bool)CommonRange<CRng>>{},
+                auto const end = this->get_end_(meta::bool_<(bool)common_range<CRng>>{},
                                                 meta::bool_<true>());
                 auto const dist = end - begin;
                 auto const d = it_ - begin;
@@ -156,11 +156,11 @@ namespace ranges
             }
             CPP_member
             auto CPP_fun(distance_to)(cursor const & that)(
-                const requires SizedSentinel<iterator, iterator>)
+                const requires sized_sentinel_for<iterator, iterator>)
             {
                 RANGES_EXPECT(that.rng_ == rng_);
                 auto const begin = ranges::begin(rng_->rng_);
-                auto const end = this->get_end_(meta::bool_<(bool)CommonRange<Rng>>{},
+                auto const end = this->get_end_(meta::bool_<(bool)common_range<Rng>>{},
                                                 meta::bool_<true>());
                 auto const dist = end - begin;
                 return (that.n_ - n_) * dist + (that.it_ - it_);
@@ -169,13 +169,13 @@ namespace ranges
 
         CPP_member
         auto begin_cursor() -> CPP_ret(cursor<false>)( //
-            requires(!simple_view<Rng>() || !CommonRange<Rng const>))
+            requires(!simple_view<Rng>() || !common_range<Rng const>))
         {
             return {*this};
         }
         CPP_member
         auto begin_cursor() const -> CPP_ret(cursor<true>)( //
-            requires CommonRange<Rng const>)
+            requires common_range<Rng const>)
         {
             return {*this};
         }
@@ -203,10 +203,10 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    cycled_view(Rng &&)->cycled_view<view::all_t<Rng>>;
+    cycled_view(Rng &&)->cycled_view<views::all_t<Rng>>;
 #endif
 
-    namespace view
+    namespace views
     {
         /// Returns an infinite range that endlessly repeats the source
         /// range.
@@ -215,7 +215,7 @@ namespace ranges
             /// \pre <tt>!empty(rng)</tt>
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(cycled_view<all_t<Rng>>)( //
-                requires ViewableRange<Rng> && ForwardRange<Rng>)
+                requires viewable_range<Rng> && forward_range<Rng>)
             {
                 return cycled_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -224,7 +224,7 @@ namespace ranges
         /// \relates cycle_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<cycle_fn>, cycle)
-    } // namespace view
+    } // namespace views
       /// @}
 } // namespace ranges
 

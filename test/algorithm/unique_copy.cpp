@@ -252,34 +252,34 @@ bool operator==(S l, S r)
 
 int main()
 {
-    test<input_iterator<const int*>, output_iterator<int*> >();
-    test<input_iterator<const int*>, forward_iterator<int*> >();
-    test<input_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<input_iterator<const int*>, random_access_iterator<int*> >();
-    test<input_iterator<const int*>, int*>();
+    test<InputIterator<const int*>, OutputIterator<int*> >();
+    test<InputIterator<const int*>, ForwardIterator<int*> >();
+    test<InputIterator<const int*>, BidirectionalIterator<int*> >();
+    test<InputIterator<const int*>, RandomAccessIterator<int*> >();
+    test<InputIterator<const int*>, int*>();
 
-    test<forward_iterator<const int*>, output_iterator<int*> >();
-    test<forward_iterator<const int*>, forward_iterator<int*> >();
-    test<forward_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<forward_iterator<const int*>, random_access_iterator<int*> >();
-    test<forward_iterator<const int*>, int*>();
+    test<ForwardIterator<const int*>, OutputIterator<int*> >();
+    test<ForwardIterator<const int*>, ForwardIterator<int*> >();
+    test<ForwardIterator<const int*>, BidirectionalIterator<int*> >();
+    test<ForwardIterator<const int*>, RandomAccessIterator<int*> >();
+    test<ForwardIterator<const int*>, int*>();
 
-    test<bidirectional_iterator<const int*>, output_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, forward_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, random_access_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, int*>();
+    test<BidirectionalIterator<const int*>, OutputIterator<int*> >();
+    test<BidirectionalIterator<const int*>, ForwardIterator<int*> >();
+    test<BidirectionalIterator<const int*>, BidirectionalIterator<int*> >();
+    test<BidirectionalIterator<const int*>, RandomAccessIterator<int*> >();
+    test<BidirectionalIterator<const int*>, int*>();
 
-    test<random_access_iterator<const int*>, output_iterator<int*> >();
-    test<random_access_iterator<const int*>, forward_iterator<int*> >();
-    test<random_access_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<random_access_iterator<const int*>, random_access_iterator<int*> >();
-    test<random_access_iterator<const int*>, int*>();
+    test<RandomAccessIterator<const int*>, OutputIterator<int*> >();
+    test<RandomAccessIterator<const int*>, ForwardIterator<int*> >();
+    test<RandomAccessIterator<const int*>, BidirectionalIterator<int*> >();
+    test<RandomAccessIterator<const int*>, RandomAccessIterator<int*> >();
+    test<RandomAccessIterator<const int*>, int*>();
 
-    test<const int*, output_iterator<int*> >();
-    test<const int*, forward_iterator<int*> >();
-    test<const int*, bidirectional_iterator<int*> >();
-    test<const int*, random_access_iterator<int*> >();
+    test<const int*, OutputIterator<int*> >();
+    test<const int*, ForwardIterator<int*> >();
+    test<const int*, BidirectionalIterator<int*> >();
+    test<const int*, RandomAccessIterator<int*> >();
     test<const int*, int*>();
 
     // Test projections:
@@ -296,7 +296,7 @@ int main()
     {
         S const ia[] = {{1,1},{2,2},{3,3},{3,4},{4,5},{5,6},{5,7},{5,8},{6,9},{7,10}};
         S ib[ranges::size(ia)];
-        auto r = ranges::unique_copy(ranges::view::all(ia), ib, ranges::equal_to(), &S::i);
+        auto r = ranges::unique_copy(ranges::views::all(ia), ib, ranges::equal_to(), &S::i);
         CHECK(r.in == ranges::end(ia));
         CHECK(r.out == ib + 7);
         check_equal(ranges::make_subrange(ib, ib+7), {S{1,1},S{2,2},S{3,3},S{4,5},S{5,6},S{6,9},S{7,10}});

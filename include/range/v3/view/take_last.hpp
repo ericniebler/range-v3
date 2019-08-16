@@ -26,7 +26,7 @@
 
 namespace ranges
 {
-    namespace view
+    namespace views
     {
         struct take_last_fn
         {
@@ -34,7 +34,7 @@ namespace ranges
             friend view_access;
             template<typename Int>
             static constexpr auto CPP_fun(bind)(take_last_fn take_last, Int n)( //
-                requires Integral<Int>)
+                requires integral<Int>)
             {
                 return make_pipeable(bind_back(take_last, n));
             }
@@ -42,7 +42,7 @@ namespace ranges
         public:
             template<typename Rng>
             auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(
-                const requires ViewableRange<Rng> && SizedRange<Rng>)
+                const requires viewable_range<Rng> && sized_range<Rng>)
             {
                 auto sz = ranges::distance(rng);
                 return drop_exactly(static_cast<Rng &&>(rng), sz > n ? sz - n : 0);
@@ -52,7 +52,7 @@ namespace ranges
         /// \relates take_last_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<take_last_fn>, take_last)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

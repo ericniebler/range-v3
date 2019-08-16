@@ -43,7 +43,7 @@ int main()
     using namespace ranges;
     std::mt19937 gen;
 
-    auto v = view::ints(0,100) | to<std::vector>();
+    auto v = views::ints(0,100) | to<std::vector>();
     v |= action::shuffle(gen);
     CHECK(!is_sorted(v));
 
@@ -51,7 +51,7 @@ int main()
     CHECK(size(v2) == size(v));
     CHECK(is_sorted(v2));
     CHECK(!is_sorted(v));
-    ::models<SameConcept>(v, v2);
+    CPP_assert(same_as<decltype(v), decltype(v2)>);
 
     v |= action::stable_sort;
     CHECK(is_sorted(v));
@@ -71,13 +71,13 @@ int main()
     CHECK(is_sorted(v));
     CHECK(&v3 == &v);
 
-    auto ref = view::ref(v);
+    auto ref = views::ref(v);
     ref |= action::stable_sort;
 
     // Can pipe a view to a "container" algorithm.
     action::stable_sort(v, std::greater<int>());
-    v | view::stride(2) | action::stable_sort;
-    check_equal(view::take(v, 10), {1,98,3,96,5,94,7,92,9,90});
+    v | views::stride(2) | action::stable_sort;
+    check_equal(views::take(v, 10), {1,98,3,96,5,94,7,92,9,90});
 
     test_bug632();
 

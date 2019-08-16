@@ -256,48 +256,48 @@ namespace meta
     }
 
     template <typename...>
-    META_CONCEPT True = META_CONCEPT_BARRIER(true);
+    META_CONCEPT is_true = META_CONCEPT_BARRIER(true);
 
     template <typename T, typename U>
-    META_CONCEPT Same =
+    META_CONCEPT same_as =
         META_CONCEPT_BARRIER(META_IS_SAME(T, U));
 
     template <template <typename...> class C, typename... Ts>
-    META_CONCEPT Valid = requires
+    META_CONCEPT valid = requires
     {
         typename C<Ts...>;
     };
 
     template <typename T, template <T...> class C, T... Is>
-    META_CONCEPT Valid_I = requires
+    META_CONCEPT valid_i = requires
     {
         typename C<Is...>;
     };
 
     template <typename T>
-    META_CONCEPT Trait = requires
+    META_CONCEPT trait = requires
     {
         typename T::type;
     };
 
     template <typename T>
-    META_CONCEPT Invocable = requires
+    META_CONCEPT invocable = requires
     {
         typename quote<T::template invoke>;
     };
 
     template <typename T>
-    META_CONCEPT List = is_v<T, list>;
+    META_CONCEPT list_like = is_v<T, list>;
 
     // clang-format off
     template <typename T>
-    META_CONCEPT Integral = requires
+    META_CONCEPT integral = requires
     {
         typename T::type;
         typename T::value_type;
         typename T::type::value_type;
     }
-    && Same<typename T::value_type, typename T::type::value_type>
+    && same_as<typename T::value_type, typename T::type::value_type>
 #if META_CXX_TRAIT_VARIABLE_TEMPLATES
     && std::is_integral_v<typename T::value_type>
 #else
@@ -306,20 +306,20 @@ namespace meta
 
     && requires
     {
-        // { T::value } -> Same<const typename T::value_type&>;
+        // { T::value } -> same_as<const typename T::value_type&>;
         T::value;
-        requires Same<decltype(T::value), const typename T::value_type>;
+        requires same_as<decltype(T::value), const typename T::value_type>;
         typename detail::require_constant<decltype(T::value), T::value>;
 
-        // { T::type::value } -> Same<const typename T::value_type&>;
+        // { T::type::value } -> same_as<const typename T::value_type&>;
         T::type::value;
-        requires Same<decltype(T::type::value), const typename T::value_type>;
+        requires same_as<decltype(T::type::value), const typename T::value_type>;
         typename detail::require_constant<decltype(T::type::value), T::type::value>;
         requires T::value == T::type::value;
 
-        // { T{}() } -> Same<typename T::value_type>;
+        // { T{}() } -> same_as<typename T::value_type>;
         T{}();
-        requires Same<decltype(T{}()), typename T::value_type>;
+        requires same_as<decltype(T{}()), typename T::value_type>;
         typename detail::require_constant<decltype(T{}()), T{}()>;
         requires T{}() == T::value;
 
@@ -330,7 +330,7 @@ namespace meta
 
     namespace extension
     {
-        template <META_TYPE_CONSTRAINT(Invocable) F, typename L>
+        template <META_TYPE_CONSTRAINT(invocable) F, typename L>
         struct apply;
     }
 } // namespace meta

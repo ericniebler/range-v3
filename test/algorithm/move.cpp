@@ -116,126 +116,126 @@ test1()
 
 int main()
 {
-    test<input_iterator<const int*>, output_iterator<int*> >();
-    test<input_iterator<const int*>, input_iterator<int*> >();
-    test<input_iterator<const int*>, forward_iterator<int*> >();
-    test<input_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<input_iterator<const int*>, random_access_iterator<int*> >();
-    test<input_iterator<const int*>, int*>();
+    test<InputIterator<const int*>, OutputIterator<int*> >();
+    test<InputIterator<const int*>, InputIterator<int*> >();
+    test<InputIterator<const int*>, ForwardIterator<int*> >();
+    test<InputIterator<const int*>, BidirectionalIterator<int*> >();
+    test<InputIterator<const int*>, RandomAccessIterator<int*> >();
+    test<InputIterator<const int*>, int*>();
 
-    test<forward_iterator<const int*>, output_iterator<int*> >();
-    test<forward_iterator<const int*>, input_iterator<int*> >();
-    test<forward_iterator<const int*>, forward_iterator<int*> >();
-    test<forward_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<forward_iterator<const int*>, random_access_iterator<int*> >();
-    test<forward_iterator<const int*>, int*>();
+    test<ForwardIterator<const int*>, OutputIterator<int*> >();
+    test<ForwardIterator<const int*>, InputIterator<int*> >();
+    test<ForwardIterator<const int*>, ForwardIterator<int*> >();
+    test<ForwardIterator<const int*>, BidirectionalIterator<int*> >();
+    test<ForwardIterator<const int*>, RandomAccessIterator<int*> >();
+    test<ForwardIterator<const int*>, int*>();
 
-    test<bidirectional_iterator<const int*>, output_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, input_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, forward_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, random_access_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, int*>();
+    test<BidirectionalIterator<const int*>, OutputIterator<int*> >();
+    test<BidirectionalIterator<const int*>, InputIterator<int*> >();
+    test<BidirectionalIterator<const int*>, ForwardIterator<int*> >();
+    test<BidirectionalIterator<const int*>, BidirectionalIterator<int*> >();
+    test<BidirectionalIterator<const int*>, RandomAccessIterator<int*> >();
+    test<BidirectionalIterator<const int*>, int*>();
 
-    test<random_access_iterator<const int*>, output_iterator<int*> >();
-    test<random_access_iterator<const int*>, input_iterator<int*> >();
-    test<random_access_iterator<const int*>, forward_iterator<int*> >();
-    test<random_access_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<random_access_iterator<const int*>, random_access_iterator<int*> >();
-    test<random_access_iterator<const int*>, int*>();
+    test<RandomAccessIterator<const int*>, OutputIterator<int*> >();
+    test<RandomAccessIterator<const int*>, InputIterator<int*> >();
+    test<RandomAccessIterator<const int*>, ForwardIterator<int*> >();
+    test<RandomAccessIterator<const int*>, BidirectionalIterator<int*> >();
+    test<RandomAccessIterator<const int*>, RandomAccessIterator<int*> >();
+    test<RandomAccessIterator<const int*>, int*>();
 
-    test<const int*, output_iterator<int*> >();
-    test<const int*, input_iterator<int*> >();
-    test<const int*, forward_iterator<int*> >();
-    test<const int*, bidirectional_iterator<int*> >();
-    test<const int*, random_access_iterator<int*> >();
+    test<const int*, OutputIterator<int*> >();
+    test<const int*, InputIterator<int*> >();
+    test<const int*, ForwardIterator<int*> >();
+    test<const int*, BidirectionalIterator<int*> >();
+    test<const int*, RandomAccessIterator<int*> >();
     test<const int*, int*>();
 
-    test<input_iterator<const int*>, output_iterator<int*>, sentinel<const int*>>();
-    test<input_iterator<const int*>, input_iterator<int*>, sentinel<const int*> >();
-    test<input_iterator<const int*>, forward_iterator<int*>, sentinel<const int*> >();
-    test<input_iterator<const int*>, bidirectional_iterator<int*>, sentinel<const int*> >();
-    test<input_iterator<const int*>, random_access_iterator<int*>, sentinel<const int*> >();
+    test<InputIterator<const int*>, OutputIterator<int*>, Sentinel<const int*>>();
+    test<InputIterator<const int*>, InputIterator<int*>, Sentinel<const int*> >();
+    test<InputIterator<const int*>, ForwardIterator<int*>, Sentinel<const int*> >();
+    test<InputIterator<const int*>, BidirectionalIterator<int*>, Sentinel<const int*> >();
+    test<InputIterator<const int*>, RandomAccessIterator<int*>, Sentinel<const int*> >();
 
-    test<forward_iterator<const int*>, output_iterator<int*>, sentinel<const int*> >();
-    test<forward_iterator<const int*>, input_iterator<int*>, sentinel<const int*> >();
-    test<forward_iterator<const int*>, forward_iterator<int*>, sentinel<const int*> >();
-    test<forward_iterator<const int*>, bidirectional_iterator<int*>, sentinel<const int*> >();
-    test<forward_iterator<const int*>, random_access_iterator<int*>, sentinel<const int*> >();
+    test<ForwardIterator<const int*>, OutputIterator<int*>, Sentinel<const int*> >();
+    test<ForwardIterator<const int*>, InputIterator<int*>, Sentinel<const int*> >();
+    test<ForwardIterator<const int*>, ForwardIterator<int*>, Sentinel<const int*> >();
+    test<ForwardIterator<const int*>, BidirectionalIterator<int*>, Sentinel<const int*> >();
+    test<ForwardIterator<const int*>, RandomAccessIterator<int*>, Sentinel<const int*> >();
 
-    test<bidirectional_iterator<const int*>, output_iterator<int*>, sentinel<const int*> >();
-    test<bidirectional_iterator<const int*>, input_iterator<int*>, sentinel<const int*> >();
-    test<bidirectional_iterator<const int*>, forward_iterator<int*>, sentinel<const int*> >();
-    test<bidirectional_iterator<const int*>, bidirectional_iterator<int*>, sentinel<const int*> >();
-    test<bidirectional_iterator<const int*>, random_access_iterator<int*>, sentinel<const int*> >();
+    test<BidirectionalIterator<const int*>, OutputIterator<int*>, Sentinel<const int*> >();
+    test<BidirectionalIterator<const int*>, InputIterator<int*>, Sentinel<const int*> >();
+    test<BidirectionalIterator<const int*>, ForwardIterator<int*>, Sentinel<const int*> >();
+    test<BidirectionalIterator<const int*>, BidirectionalIterator<int*>, Sentinel<const int*> >();
+    test<BidirectionalIterator<const int*>, RandomAccessIterator<int*>, Sentinel<const int*> >();
 
-    test<random_access_iterator<const int*>, output_iterator<int*>, sentinel<const int*> >();
-    test<random_access_iterator<const int*>, input_iterator<int*>, sentinel<const int*> >();
-    test<random_access_iterator<const int*>, forward_iterator<int*>, sentinel<const int*> >();
-    test<random_access_iterator<const int*>, bidirectional_iterator<int*>, sentinel<const int*> >();
-    test<random_access_iterator<const int*>, random_access_iterator<int*>, sentinel<const int*> >();
+    test<RandomAccessIterator<const int*>, OutputIterator<int*>, Sentinel<const int*> >();
+    test<RandomAccessIterator<const int*>, InputIterator<int*>, Sentinel<const int*> >();
+    test<RandomAccessIterator<const int*>, ForwardIterator<int*>, Sentinel<const int*> >();
+    test<RandomAccessIterator<const int*>, BidirectionalIterator<int*>, Sentinel<const int*> >();
+    test<RandomAccessIterator<const int*>, RandomAccessIterator<int*>, Sentinel<const int*> >();
 
-    test1<input_iterator<std::unique_ptr<int>*>, output_iterator<std::unique_ptr<int>*> >();
-    test1<input_iterator<std::unique_ptr<int>*>, input_iterator<std::unique_ptr<int>*> >();
-    test1<input_iterator<std::unique_ptr<int>*>, forward_iterator<std::unique_ptr<int>*> >();
-    test1<input_iterator<std::unique_ptr<int>*>, bidirectional_iterator<std::unique_ptr<int>*> >();
-    test1<input_iterator<std::unique_ptr<int>*>, random_access_iterator<std::unique_ptr<int>*> >();
-    test1<input_iterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
+    test1<InputIterator<std::unique_ptr<int>*>, OutputIterator<std::unique_ptr<int>*> >();
+    test1<InputIterator<std::unique_ptr<int>*>, InputIterator<std::unique_ptr<int>*> >();
+    test1<InputIterator<std::unique_ptr<int>*>, ForwardIterator<std::unique_ptr<int>*> >();
+    test1<InputIterator<std::unique_ptr<int>*>, BidirectionalIterator<std::unique_ptr<int>*> >();
+    test1<InputIterator<std::unique_ptr<int>*>, RandomAccessIterator<std::unique_ptr<int>*> >();
+    test1<InputIterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
 
-    test1<forward_iterator<std::unique_ptr<int>*>, output_iterator<std::unique_ptr<int>*> >();
-    test1<forward_iterator<std::unique_ptr<int>*>, input_iterator<std::unique_ptr<int>*> >();
-    test1<forward_iterator<std::unique_ptr<int>*>, forward_iterator<std::unique_ptr<int>*> >();
-    test1<forward_iterator<std::unique_ptr<int>*>, bidirectional_iterator<std::unique_ptr<int>*> >();
-    test1<forward_iterator<std::unique_ptr<int>*>, random_access_iterator<std::unique_ptr<int>*> >();
-    test1<forward_iterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
+    test1<ForwardIterator<std::unique_ptr<int>*>, OutputIterator<std::unique_ptr<int>*> >();
+    test1<ForwardIterator<std::unique_ptr<int>*>, InputIterator<std::unique_ptr<int>*> >();
+    test1<ForwardIterator<std::unique_ptr<int>*>, ForwardIterator<std::unique_ptr<int>*> >();
+    test1<ForwardIterator<std::unique_ptr<int>*>, BidirectionalIterator<std::unique_ptr<int>*> >();
+    test1<ForwardIterator<std::unique_ptr<int>*>, RandomAccessIterator<std::unique_ptr<int>*> >();
+    test1<ForwardIterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
 
-    test1<bidirectional_iterator<std::unique_ptr<int>*>, output_iterator<std::unique_ptr<int>*> >();
-    test1<bidirectional_iterator<std::unique_ptr<int>*>, input_iterator<std::unique_ptr<int>*> >();
-    test1<bidirectional_iterator<std::unique_ptr<int>*>, forward_iterator<std::unique_ptr<int>*> >();
-    test1<bidirectional_iterator<std::unique_ptr<int>*>, bidirectional_iterator<std::unique_ptr<int>*> >();
-    test1<bidirectional_iterator<std::unique_ptr<int>*>, random_access_iterator<std::unique_ptr<int>*> >();
-    test1<bidirectional_iterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
+    test1<BidirectionalIterator<std::unique_ptr<int>*>, OutputIterator<std::unique_ptr<int>*> >();
+    test1<BidirectionalIterator<std::unique_ptr<int>*>, InputIterator<std::unique_ptr<int>*> >();
+    test1<BidirectionalIterator<std::unique_ptr<int>*>, ForwardIterator<std::unique_ptr<int>*> >();
+    test1<BidirectionalIterator<std::unique_ptr<int>*>, BidirectionalIterator<std::unique_ptr<int>*> >();
+    test1<BidirectionalIterator<std::unique_ptr<int>*>, RandomAccessIterator<std::unique_ptr<int>*> >();
+    test1<BidirectionalIterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
 
-    test1<random_access_iterator<std::unique_ptr<int>*>, output_iterator<std::unique_ptr<int>*> >();
-    test1<random_access_iterator<std::unique_ptr<int>*>, input_iterator<std::unique_ptr<int>*> >();
-    test1<random_access_iterator<std::unique_ptr<int>*>, forward_iterator<std::unique_ptr<int>*> >();
-    test1<random_access_iterator<std::unique_ptr<int>*>, bidirectional_iterator<std::unique_ptr<int>*> >();
-    test1<random_access_iterator<std::unique_ptr<int>*>, random_access_iterator<std::unique_ptr<int>*> >();
-    test1<random_access_iterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
+    test1<RandomAccessIterator<std::unique_ptr<int>*>, OutputIterator<std::unique_ptr<int>*> >();
+    test1<RandomAccessIterator<std::unique_ptr<int>*>, InputIterator<std::unique_ptr<int>*> >();
+    test1<RandomAccessIterator<std::unique_ptr<int>*>, ForwardIterator<std::unique_ptr<int>*> >();
+    test1<RandomAccessIterator<std::unique_ptr<int>*>, BidirectionalIterator<std::unique_ptr<int>*> >();
+    test1<RandomAccessIterator<std::unique_ptr<int>*>, RandomAccessIterator<std::unique_ptr<int>*> >();
+    test1<RandomAccessIterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
 
-    test1<std::unique_ptr<int>*, output_iterator<std::unique_ptr<int>*> >();
-    test1<std::unique_ptr<int>*, input_iterator<std::unique_ptr<int>*> >();
-    test1<std::unique_ptr<int>*, forward_iterator<std::unique_ptr<int>*> >();
-    test1<std::unique_ptr<int>*, bidirectional_iterator<std::unique_ptr<int>*> >();
-    test1<std::unique_ptr<int>*, random_access_iterator<std::unique_ptr<int>*> >();
+    test1<std::unique_ptr<int>*, OutputIterator<std::unique_ptr<int>*> >();
+    test1<std::unique_ptr<int>*, InputIterator<std::unique_ptr<int>*> >();
+    test1<std::unique_ptr<int>*, ForwardIterator<std::unique_ptr<int>*> >();
+    test1<std::unique_ptr<int>*, BidirectionalIterator<std::unique_ptr<int>*> >();
+    test1<std::unique_ptr<int>*, RandomAccessIterator<std::unique_ptr<int>*> >();
     test1<std::unique_ptr<int>*, std::unique_ptr<int>*>();
 
-    test1<input_iterator<std::unique_ptr<int>*>, output_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<input_iterator<std::unique_ptr<int>*>, input_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<input_iterator<std::unique_ptr<int>*>, forward_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<input_iterator<std::unique_ptr<int>*>, bidirectional_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<input_iterator<std::unique_ptr<int>*>, random_access_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<input_iterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
+    test1<InputIterator<std::unique_ptr<int>*>, OutputIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<InputIterator<std::unique_ptr<int>*>, InputIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<InputIterator<std::unique_ptr<int>*>, ForwardIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<InputIterator<std::unique_ptr<int>*>, BidirectionalIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<InputIterator<std::unique_ptr<int>*>, RandomAccessIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<InputIterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
 
-    test1<forward_iterator<std::unique_ptr<int>*>, output_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<forward_iterator<std::unique_ptr<int>*>, input_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<forward_iterator<std::unique_ptr<int>*>, forward_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<forward_iterator<std::unique_ptr<int>*>, bidirectional_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<forward_iterator<std::unique_ptr<int>*>, random_access_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<forward_iterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
+    test1<ForwardIterator<std::unique_ptr<int>*>, OutputIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<ForwardIterator<std::unique_ptr<int>*>, InputIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<ForwardIterator<std::unique_ptr<int>*>, ForwardIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<ForwardIterator<std::unique_ptr<int>*>, BidirectionalIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<ForwardIterator<std::unique_ptr<int>*>, RandomAccessIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<ForwardIterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
 
-    test1<bidirectional_iterator<std::unique_ptr<int>*>, output_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<bidirectional_iterator<std::unique_ptr<int>*>, input_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<bidirectional_iterator<std::unique_ptr<int>*>, forward_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<bidirectional_iterator<std::unique_ptr<int>*>, bidirectional_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<bidirectional_iterator<std::unique_ptr<int>*>, random_access_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<bidirectional_iterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
+    test1<BidirectionalIterator<std::unique_ptr<int>*>, OutputIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<BidirectionalIterator<std::unique_ptr<int>*>, InputIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<BidirectionalIterator<std::unique_ptr<int>*>, ForwardIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<BidirectionalIterator<std::unique_ptr<int>*>, BidirectionalIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<BidirectionalIterator<std::unique_ptr<int>*>, RandomAccessIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<BidirectionalIterator<std::unique_ptr<int>*>, std::unique_ptr<int>*>();
 
-    test1<random_access_iterator<std::unique_ptr<int>*>, output_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<random_access_iterator<std::unique_ptr<int>*>, input_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<random_access_iterator<std::unique_ptr<int>*>, forward_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<random_access_iterator<std::unique_ptr<int>*>, bidirectional_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
-    test1<random_access_iterator<std::unique_ptr<int>*>, random_access_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
+    test1<RandomAccessIterator<std::unique_ptr<int>*>, OutputIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<RandomAccessIterator<std::unique_ptr<int>*>, InputIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<RandomAccessIterator<std::unique_ptr<int>*>, ForwardIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<RandomAccessIterator<std::unique_ptr<int>*>, BidirectionalIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
+    test1<RandomAccessIterator<std::unique_ptr<int>*>, RandomAccessIterator<std::unique_ptr<int>*>, Sentinel<std::unique_ptr<int>*> >();
 
     return test_result();
 }

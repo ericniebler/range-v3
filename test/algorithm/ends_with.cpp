@@ -33,70 +33,70 @@ int main()
     constexpr auto as = distance(ia);
     int ib[] = {5, 6, 7, 8, 9};
     constexpr auto bs = distance(ib);
-    CHECK(ends_with(random_access_iterator<const int*>(ia),
-                     random_access_iterator<const int*>(ia + as),
-                     random_access_iterator<const int*>(ib),
-                     random_access_iterator<const int*>(ib + bs)));
-    CHECK(!ends_with(input_iterator<const int*>(ia),
-                      input_iterator<const int*, true>(ia + as),
-                      input_iterator<const int*>(ib),
-                      input_iterator<const int*, true>(ib + bs - 1)));
-    CHECK(!ends_with(forward_iterator<const int*>(ia),
-                      sentinel<const int*>(ia + as),
-                      forward_iterator<const int*>(ib),
-                      sentinel<const int*>(ib + bs - 1)));
-    CHECK(!ends_with(make_subrange(random_access_iterator<const int*>(ia),
-                      random_access_iterator<const int*>(ia + as)),
-                      make_subrange(random_access_iterator<const int*>(ib),
-                      random_access_iterator<const int*>(ib + bs - 1))));
-    CHECK(ends_with(make_subrange(input_iterator<const int*>(ia),
-                     input_iterator<const int*, true>(ia + as)),
-                     make_subrange(input_iterator<const int*>(ib),
-                     input_iterator<const int*, true>(ib + bs))));
-    CHECK(ends_with(make_subrange(forward_iterator<const int*>(ia),
-                     sentinel<const int*>(ia + as)),
-                     make_subrange(forward_iterator<const int*>(ib),
-                     sentinel<const int*>(ib + bs))));
+    CHECK(ends_with(RandomAccessIterator<const int*>(ia),
+                     RandomAccessIterator<const int*>(ia + as),
+                     RandomAccessIterator<const int*>(ib),
+                     RandomAccessIterator<const int*>(ib + bs)));
+    CHECK(!ends_with(InputIterator<const int*>(ia),
+                      InputIterator<const int*, true>(ia + as),
+                      InputIterator<const int*>(ib),
+                      InputIterator<const int*, true>(ib + bs - 1)));
+    CHECK(!ends_with(ForwardIterator<const int*>(ia),
+                      Sentinel<const int*>(ia + as),
+                      ForwardIterator<const int*>(ib),
+                      Sentinel<const int*>(ib + bs - 1)));
+    CHECK(!ends_with(make_subrange(RandomAccessIterator<const int*>(ia),
+                      RandomAccessIterator<const int*>(ia + as)),
+                      make_subrange(RandomAccessIterator<const int*>(ib),
+                      RandomAccessIterator<const int*>(ib + bs - 1))));
+    CHECK(ends_with(make_subrange(InputIterator<const int*>(ia),
+                     InputIterator<const int*, true>(ia + as)),
+                     make_subrange(InputIterator<const int*>(ib),
+                     InputIterator<const int*, true>(ib + bs))));
+    CHECK(ends_with(make_subrange(ForwardIterator<const int*>(ia),
+                     Sentinel<const int*>(ia + as)),
+                     make_subrange(ForwardIterator<const int*>(ib),
+                     Sentinel<const int*>(ib + bs))));
     comparison_count = 0;
-    CHECK(!ends_with(random_access_iterator<const int*>(ib),
-                      random_access_iterator<const int*>(ib + bs),
-                      random_access_iterator<const int*>(ia),
-                      random_access_iterator<const int*>(ia + as),
+    CHECK(!ends_with(RandomAccessIterator<const int*>(ib),
+                      RandomAccessIterator<const int*>(ib + bs),
+                      RandomAccessIterator<const int*>(ia),
+                      RandomAccessIterator<const int*>(ia + as),
                       counting_equals<int>));
     CHECK(comparison_count == 0);
     comparison_count = 0;
-    CHECK(ends_with(input_iterator<const int*>(ia),
-                     input_iterator<const int*, true>(ia + as),
-                     input_iterator<const int*>(ib),
-                     input_iterator<const int*, true>(ib + bs),
+    CHECK(ends_with(InputIterator<const int*>(ia),
+                     InputIterator<const int*, true>(ia + as),
+                     InputIterator<const int*>(ib),
+                     InputIterator<const int*, true>(ib + bs),
                      counting_equals<int>));
     CHECK(comparison_count > 0);
     comparison_count = 0;
-    CHECK(ends_with(forward_iterator<const int*>(ia),
-                     sentinel<const int*>(ia + as),
-                     forward_iterator<const int*>(ib),
-                     sentinel<const int*>(ib + bs),
+    CHECK(ends_with(ForwardIterator<const int*>(ia),
+                     Sentinel<const int*>(ia + as),
+                     ForwardIterator<const int*>(ib),
+                     Sentinel<const int*>(ib + bs),
                      counting_equals<int>));
     CHECK(comparison_count > 0);
     comparison_count = 0;
-    CHECK(ends_with(make_subrange(random_access_iterator<const int*>(ia),
-                     random_access_iterator<const int*>(ia + as)),
-                     make_subrange(random_access_iterator<const int*>(ib),
-                     random_access_iterator<const int*>(ib + bs)),
+    CHECK(ends_with(make_subrange(RandomAccessIterator<const int*>(ia),
+                     RandomAccessIterator<const int*>(ia + as)),
+                     make_subrange(RandomAccessIterator<const int*>(ib),
+                     RandomAccessIterator<const int*>(ib + bs)),
                      counting_equals<int>));
     CHECK(comparison_count > 0);
     comparison_count = 0;
-    CHECK(!ends_with(make_subrange(input_iterator<const int*>(ib),
-                      input_iterator<const int*, true>(ib + bs - 1)),
-                      make_subrange(input_iterator<const int*>(ib),
-                      input_iterator<const int*, true>(ib + bs)),
+    CHECK(!ends_with(make_subrange(InputIterator<const int*>(ib),
+                      InputIterator<const int*, true>(ib + bs - 1)),
+                      make_subrange(InputIterator<const int*>(ib),
+                      InputIterator<const int*, true>(ib + bs)),
                       counting_equals<int>));
     CHECK(comparison_count == 0);
     comparison_count = 0;
-    CHECK(!ends_with(make_subrange(forward_iterator<const int*>(ia),
-                      sentinel<const int*>(ia)),
-                      make_subrange(forward_iterator<const int*>(ib),
-                      sentinel<const int*>(ib + bs)),
+    CHECK(!ends_with(make_subrange(ForwardIterator<const int*>(ia),
+                      Sentinel<const int*>(ia)),
+                      make_subrange(ForwardIterator<const int*>(ib),
+                      Sentinel<const int*>(ib + bs)),
                       counting_equals<int>));
     CHECK(comparison_count == 0);
 

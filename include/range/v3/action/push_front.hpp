@@ -42,15 +42,15 @@ namespace ranges
 
         template<typename Cont, typename T>
         auto push_front(Cont && cont, T && t) -> CPP_ret(push_front_t<Cont, T>)( //
-            requires LvalueContainerLike<Cont> &&
-            (!Range<T>)&&Constructible<range_value_t<Cont>, T>)
+            requires lvalue_container_like<Cont> &&
+            (!range<T>)&&constructible_from<range_value_t<Cont>, T>)
         {
             unwrap_reference(cont).push_front(static_cast<T &&>(t));
         }
 
         template<typename Cont, typename Rng>
         auto push_front(Cont && cont, Rng && rng) -> CPP_ret(insert_t<Cont, Rng>)( //
-            requires LvalueContainerLike<Cont> && Range<Rng>)
+            requires lvalue_container_like<Cont> && range<Rng>)
         {
             ranges::insert(cont, begin(cont), static_cast<Rng &&>(rng));
         }
@@ -59,13 +59,11 @@ namespace ranges
         CPP_def
         (
             template(typename Rng, typename T)
-            concept PushFrontActionConcept,
+            concept can_push_front_,
                 requires (Rng &&rng, T &&t)
                 (
                     push_front(rng, (T &&) t)
-                ) &&
-                InputRange<Rng> &&
-                    (Range<T> || Constructible<range_value_t<Rng>, T>)
+                )
         );
         // clang-format on
 
@@ -92,7 +90,8 @@ namespace ranges
         public:
             template<typename Rng, typename T>
             auto operator()(Rng && rng, T && t) const -> CPP_ret(Rng)( //
-                requires PushFrontActionConcept<Rng, T>)
+                requires input_range<Rng> && can_push_front_<Rng, T> &&
+                    (range<T> || constructible_from<range_value_t<Rng>, T>))
             {
                 push_front(rng, static_cast<T &&>(t));
                 return static_cast<Rng &&>(rng);

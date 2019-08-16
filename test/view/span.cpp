@@ -698,7 +698,7 @@ void test_case_iterator_comparisons()
     {
         span<int> s = a;
         auto it = s.begin();
-        CPP_assert(ranges::Same<decltype(it), span<int>::iterator>);
+        CPP_assert(ranges::same_as<decltype(it), span<int>::iterator>);
         auto it2 = it + 1;
 
         CHECK(it == it);
@@ -1092,6 +1092,8 @@ int main() {
     test_case_interop_with_std_regex();
     test_case_default_constructible();
 
-    CPP_assert(ranges::ContiguousView<span<int>>);
-    CPP_assert(ranges::ContiguousView<span<int, 42>>);
+    CPP_assert(ranges::view_<span<int>>);
+    CPP_assert(ranges::contiguous_range<span<int>>);
+    CPP_assert(ranges::view_<span<int, 42>>);
+    CPP_assert(ranges::contiguous_range<span<int, 42>>);
 }

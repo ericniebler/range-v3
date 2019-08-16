@@ -70,88 +70,88 @@ struct IntSwappable
     friend void swap(IntSwappable, IntSwappable);
 };
 
-static_assert(concepts::Same<int, int>, "");
-static_assert(concepts::Same<void, void>, "");
-static_assert(concepts::Same<void const, void const>, "");
-static_assert(!concepts::Same<int&, int>, "");
-static_assert(!concepts::Same<void, void const>, "");
-static_assert(!concepts::Same<void(), void(*)()>, "");
+static_assert(concepts::same_as<int, int>, "");
+static_assert(concepts::same_as<void, void>, "");
+static_assert(concepts::same_as<void const, void const>, "");
+static_assert(!concepts::same_as<int&, int>, "");
+static_assert(!concepts::same_as<void, void const>, "");
+static_assert(!concepts::same_as<void(), void(*)()>, "");
 
-static_assert(concepts::ConvertibleTo<int, int>, "");
-static_assert(concepts::ConvertibleTo<short&, short const&>, "");
-static_assert(concepts::ConvertibleTo<int, short>, "");
-static_assert(!concepts::ConvertibleTo<int&, short&>, "");
-static_assert(!concepts::ConvertibleTo<int, void>, "");
-static_assert(!concepts::ConvertibleTo<int, int&>, "");
+static_assert(concepts::convertible_to<int, int>, "");
+static_assert(concepts::convertible_to<short&, short const&>, "");
+static_assert(concepts::convertible_to<int, short>, "");
+static_assert(!concepts::convertible_to<int&, short&>, "");
+static_assert(!concepts::convertible_to<int, void>, "");
+static_assert(!concepts::convertible_to<int, int&>, "");
 
-static_assert(concepts::UnsignedIntegral<unsigned>, "");
-static_assert(!concepts::UnsignedIntegral<int>, "");
+static_assert(concepts::unsigned_integral<unsigned>, "");
+static_assert(!concepts::unsigned_integral<int>, "");
 
-static_assert(concepts::Assignable<int&, int>, "");
-static_assert(!concepts::Assignable<int const&, int>, "");
-static_assert(!concepts::Assignable<int, int>, "");
+static_assert(concepts::assignable_from<int&, int>, "");
+static_assert(!concepts::assignable_from<int const&, int>, "");
+static_assert(!concepts::assignable_from<int, int>, "");
 
-static_assert(concepts::Destructible<int>, "");
-static_assert(concepts::Destructible<const int>, "");
-static_assert(!concepts::Destructible<void>, "");
-static_assert(concepts::Destructible<int&>, "");
-static_assert(!concepts::Destructible<void()>, "");
-static_assert(concepts::Destructible<void(*)()>, "");
-static_assert(concepts::Destructible<void(&)()>, "");
-static_assert(!concepts::Destructible<int[]>, "");
-static_assert(concepts::Destructible<int[2]>, "");
-static_assert(concepts::Destructible<int(*)[2]>, "");
-static_assert(concepts::Destructible<int(&)[2]>, "");
-static_assert(concepts::Destructible<moveonly>, "");
-static_assert(concepts::Destructible<nonmovable>, "");
-static_assert(!concepts::Destructible<NotDestructible>, "");
+static_assert(concepts::destructible<int>, "");
+static_assert(concepts::destructible<const int>, "");
+static_assert(!concepts::destructible<void>, "");
+static_assert(concepts::destructible<int&>, "");
+static_assert(!concepts::destructible<void()>, "");
+static_assert(concepts::destructible<void(*)()>, "");
+static_assert(concepts::destructible<void(&)()>, "");
+static_assert(!concepts::destructible<int[]>, "");
+static_assert(concepts::destructible<int[2]>, "");
+static_assert(concepts::destructible<int(*)[2]>, "");
+static_assert(concepts::destructible<int(&)[2]>, "");
+static_assert(concepts::destructible<moveonly>, "");
+static_assert(concepts::destructible<nonmovable>, "");
+static_assert(!concepts::destructible<NotDestructible>, "");
 
-static_assert(concepts::Constructible<int>, "");
-static_assert(concepts::Constructible<int const>, "");
-static_assert(!concepts::Constructible<void>, "");
-static_assert(!concepts::Constructible<int const &>, "");
-static_assert(!concepts::Constructible<int ()>, "");
-static_assert(!concepts::Constructible<int(&)()>, "");
-static_assert(!concepts::Constructible<int[]>, "");
-static_assert(concepts::Constructible<int[5]>, "");
-static_assert(!concepts::Constructible<nondefaultconstructible>, "");
-static_assert(concepts::Constructible<int const(&)[5], int(&)[5]>, "");
-static_assert(!concepts::Constructible<int, int(&)[3]>, "");
+static_assert(concepts::constructible_from<int>, "");
+static_assert(concepts::constructible_from<int const>, "");
+static_assert(!concepts::constructible_from<void>, "");
+static_assert(!concepts::constructible_from<int const &>, "");
+static_assert(!concepts::constructible_from<int ()>, "");
+static_assert(!concepts::constructible_from<int(&)()>, "");
+static_assert(!concepts::constructible_from<int[]>, "");
+static_assert(concepts::constructible_from<int[5]>, "");
+static_assert(!concepts::constructible_from<nondefaultconstructible>, "");
+static_assert(concepts::constructible_from<int const(&)[5], int(&)[5]>, "");
+static_assert(!concepts::constructible_from<int, int(&)[3]>, "");
 
-static_assert(concepts::Constructible<int, int>, "");
-static_assert(concepts::Constructible<int, int&>, "");
-static_assert(concepts::Constructible<int, int&&>, "");
-static_assert(concepts::Constructible<int, const int>, "");
-static_assert(concepts::Constructible<int, const int&>, "");
-static_assert(concepts::Constructible<int, const int&&>, "");
+static_assert(concepts::constructible_from<int, int>, "");
+static_assert(concepts::constructible_from<int, int&>, "");
+static_assert(concepts::constructible_from<int, int&&>, "");
+static_assert(concepts::constructible_from<int, const int>, "");
+static_assert(concepts::constructible_from<int, const int&>, "");
+static_assert(concepts::constructible_from<int, const int&&>, "");
 
-static_assert(!concepts::Constructible<int&, int>, "");
-static_assert(concepts::Constructible<int&, int&>, "");
-static_assert(!concepts::Constructible<int&, int&&>, "");
-static_assert(!concepts::Constructible<int&, const int>, "");
-static_assert(!concepts::Constructible<int&, const int&>, "");
-static_assert(!concepts::Constructible<int&, const int&&>, "");
+static_assert(!concepts::constructible_from<int&, int>, "");
+static_assert(concepts::constructible_from<int&, int&>, "");
+static_assert(!concepts::constructible_from<int&, int&&>, "");
+static_assert(!concepts::constructible_from<int&, const int>, "");
+static_assert(!concepts::constructible_from<int&, const int&>, "");
+static_assert(!concepts::constructible_from<int&, const int&&>, "");
 
-static_assert(concepts::Constructible<const int&, int>, "");
-static_assert(concepts::Constructible<const int&, int&>, "");
-static_assert(concepts::Constructible<const int&, int&&>, "");
-static_assert(concepts::Constructible<const int&, const int>, "");
-static_assert(concepts::Constructible<const int&, const int&>, "");
-static_assert(concepts::Constructible<const int&, const int&&>, "");
+static_assert(concepts::constructible_from<const int&, int>, "");
+static_assert(concepts::constructible_from<const int&, int&>, "");
+static_assert(concepts::constructible_from<const int&, int&&>, "");
+static_assert(concepts::constructible_from<const int&, const int>, "");
+static_assert(concepts::constructible_from<const int&, const int&>, "");
+static_assert(concepts::constructible_from<const int&, const int&&>, "");
 
-static_assert(concepts::Constructible<int&&, int>, "");
-static_assert(!concepts::Constructible<int&&, int&>, "");
-static_assert(concepts::Constructible<int&&, int&&>, "");
-static_assert(!concepts::Constructible<int&&, const int>, "");
-static_assert(!concepts::Constructible<int&&, const int&>, "");
-static_assert(!concepts::Constructible<int&&, const int&&>, "");
+static_assert(concepts::constructible_from<int&&, int>, "");
+static_assert(!concepts::constructible_from<int&&, int&>, "");
+static_assert(concepts::constructible_from<int&&, int&&>, "");
+static_assert(!concepts::constructible_from<int&&, const int>, "");
+static_assert(!concepts::constructible_from<int&&, const int&>, "");
+static_assert(!concepts::constructible_from<int&&, const int&&>, "");
 
-static_assert(concepts::Constructible<const int&&, int>, "");
-static_assert(!concepts::Constructible<const int&&, int&>, "");
-static_assert(concepts::Constructible<const int&&, int&&>, "");
-static_assert(concepts::Constructible<const int&&, const int>, "");
-static_assert(!concepts::Constructible<const int&&, const int&>, "");
-static_assert(concepts::Constructible<const int&&, const int&&>, "");
+static_assert(concepts::constructible_from<const int&&, int>, "");
+static_assert(!concepts::constructible_from<const int&&, int&>, "");
+static_assert(concepts::constructible_from<const int&&, int&&>, "");
+static_assert(concepts::constructible_from<const int&&, const int>, "");
+static_assert(!concepts::constructible_from<const int&&, const int&>, "");
+static_assert(concepts::constructible_from<const int&&, const int&&>, "");
 
 struct XXX
 {
@@ -160,89 +160,89 @@ struct XXX
     explicit XXX(int) {}
 };
 
-static_assert(concepts::Constructible<XXX, int>, "");
-static_assert(!concepts::MoveConstructible<XXX>, "");
-static_assert(!concepts::Movable<XXX>, "");
-static_assert(!concepts::Semiregular<XXX>, "");
-static_assert(!concepts::Regular<XXX>, "");
+static_assert(concepts::constructible_from<XXX, int>, "");
+static_assert(!concepts::move_constructible<XXX>, "");
+static_assert(!concepts::movable<XXX>, "");
+static_assert(!concepts::semiregular<XXX>, "");
+static_assert(!concepts::regular<XXX>, "");
 
-static_assert(concepts::DefaultConstructible<int>, "");
-static_assert(concepts::DefaultConstructible<int const>, "");
-static_assert(!concepts::DefaultConstructible<int const &>, "");
-static_assert(!concepts::DefaultConstructible<int ()>, "");
-static_assert(!concepts::DefaultConstructible<int(&)()>, "");
-static_assert(!concepts::DefaultConstructible<int[]>, "");
-static_assert(concepts::DefaultConstructible<int[5]>, "");
-static_assert(!concepts::DefaultConstructible<nondefaultconstructible>, "");
+static_assert(concepts::default_constructible<int>, "");
+static_assert(concepts::default_constructible<int const>, "");
+static_assert(!concepts::default_constructible<int const &>, "");
+static_assert(!concepts::default_constructible<int ()>, "");
+static_assert(!concepts::default_constructible<int(&)()>, "");
+static_assert(!concepts::default_constructible<int[]>, "");
+static_assert(concepts::default_constructible<int[5]>, "");
+static_assert(!concepts::default_constructible<nondefaultconstructible>, "");
 
-static_assert(concepts::MoveConstructible<int>, "");
-static_assert(concepts::MoveConstructible<const int>, "");
-static_assert(concepts::MoveConstructible<int &>, "");
-static_assert(concepts::MoveConstructible<int &&>, "");
-static_assert(concepts::MoveConstructible<const int &>, "");
-static_assert(concepts::MoveConstructible<const int &&>, "");
-static_assert(concepts::Destructible<moveonly>, "");
-static_assert(concepts::Constructible<moveonly, moveonly>, "");
-static_assert(concepts::MoveConstructible<moveonly>, "");
-static_assert(!concepts::MoveConstructible<nonmovable>, "");
-static_assert(concepts::MoveConstructible<nonmovable &>, "");
-static_assert(concepts::MoveConstructible<nonmovable &&>, "");
-static_assert(concepts::MoveConstructible<const nonmovable &>, "");
-static_assert(concepts::MoveConstructible<const nonmovable &&>, "");
+static_assert(concepts::move_constructible<int>, "");
+static_assert(concepts::move_constructible<const int>, "");
+static_assert(concepts::move_constructible<int &>, "");
+static_assert(concepts::move_constructible<int &&>, "");
+static_assert(concepts::move_constructible<const int &>, "");
+static_assert(concepts::move_constructible<const int &&>, "");
+static_assert(concepts::destructible<moveonly>, "");
+static_assert(concepts::constructible_from<moveonly, moveonly>, "");
+static_assert(concepts::move_constructible<moveonly>, "");
+static_assert(!concepts::move_constructible<nonmovable>, "");
+static_assert(concepts::move_constructible<nonmovable &>, "");
+static_assert(concepts::move_constructible<nonmovable &&>, "");
+static_assert(concepts::move_constructible<const nonmovable &>, "");
+static_assert(concepts::move_constructible<const nonmovable &&>, "");
 
-static_assert(concepts::CopyConstructible<int>, "");
-static_assert(concepts::CopyConstructible<const int>, "");
-static_assert(concepts::CopyConstructible<int &>, "");
-static_assert(!concepts::CopyConstructible<int &&>, "");
-static_assert(concepts::CopyConstructible<const int &>, "");
-static_assert(!concepts::CopyConstructible<const int &&>, "");
-static_assert(!concepts::CopyConstructible<moveonly>, "");
-static_assert(!concepts::CopyConstructible<nonmovable>, "");
-static_assert(concepts::CopyConstructible<nonmovable &>, "");
-static_assert(!concepts::CopyConstructible<nonmovable &&>, "");
-static_assert(concepts::CopyConstructible<const nonmovable &>, "");
-static_assert(!concepts::CopyConstructible<const nonmovable &&>, "");
+static_assert(concepts::copy_constructible<int>, "");
+static_assert(concepts::copy_constructible<const int>, "");
+static_assert(concepts::copy_constructible<int &>, "");
+static_assert(!concepts::copy_constructible<int &&>, "");
+static_assert(concepts::copy_constructible<const int &>, "");
+static_assert(!concepts::copy_constructible<const int &&>, "");
+static_assert(!concepts::copy_constructible<moveonly>, "");
+static_assert(!concepts::copy_constructible<nonmovable>, "");
+static_assert(concepts::copy_constructible<nonmovable &>, "");
+static_assert(!concepts::copy_constructible<nonmovable &&>, "");
+static_assert(concepts::copy_constructible<const nonmovable &>, "");
+static_assert(!concepts::copy_constructible<const nonmovable &&>, "");
 
-static_assert(concepts::Movable<int>, "");
-static_assert(!concepts::Movable<int const>, "");
-static_assert(concepts::Movable<moveonly>, "");
-static_assert(!concepts::Movable<nonmovable>, "");
+static_assert(concepts::movable<int>, "");
+static_assert(!concepts::movable<int const>, "");
+static_assert(concepts::movable<moveonly>, "");
+static_assert(!concepts::movable<nonmovable>, "");
 
-static_assert(concepts::Copyable<int>, "");
-static_assert(!concepts::Copyable<int const>, "");
-static_assert(!concepts::Copyable<moveonly>, "");
-static_assert(!concepts::Copyable<nonmovable>, "");
+static_assert(concepts::copyable<int>, "");
+static_assert(!concepts::copyable<int const>, "");
+static_assert(!concepts::copyable<moveonly>, "");
+static_assert(!concepts::copyable<nonmovable>, "");
 
-// static_assert(concepts::Predicate<std::less<int>, int, int>, "");
-// static_assert(!concepts::Predicate<std::less<int>, char*, int>, "");
+// static_assert(concepts::predicate<std::less<int>, int, int>, "");
+// static_assert(!concepts::predicate<std::less<int>, char*, int>, "");
 
-static_assert(concepts::Swappable<int &>, "");
-static_assert(concepts::Swappable<int>, "");
-static_assert(!concepts::Swappable<int const &>, "");
-static_assert(concepts::Swappable<IntSwappable>, "");
-static_assert(concepts::SwappableWith<IntSwappable, int &>, "");
-static_assert(!concepts::SwappableWith<IntSwappable, int const &>, "");
+static_assert(concepts::swappable<int &>, "");
+static_assert(concepts::swappable<int>, "");
+static_assert(!concepts::swappable<int const &>, "");
+static_assert(concepts::swappable<IntSwappable>, "");
+static_assert(concepts::swappable_with<IntSwappable, int &>, "");
+static_assert(!concepts::swappable_with<IntSwappable, int const &>, "");
 
-static_assert(concepts::StrictTotallyOrdered<int>, "");
-static_assert(concepts::Common<int, IntComparable>, "");
-static_assert(concepts::CommonReference<int &, IntComparable &>, "");
-static_assert(concepts::StrictTotallyOrderedWith<int, IntComparable>, "");
-static_assert(concepts::StrictTotallyOrderedWith<IntComparable, int>, "");
-static_assert(concepts::detail::WeaklyEqualityComparableWith_<int, int>, "");
-static_assert(concepts::EqualityComparable<int>, "");
-static_assert(concepts::EqualityComparableWith<int, int>, "");
-static_assert(concepts::EqualityComparableWith<int, IntComparable>, "");
-static_assert(concepts::EqualityComparableWith<int &, IntComparable &>, "");
+static_assert(concepts::totally_ordered<int>, "");
+static_assert(concepts::common_with<int, IntComparable>, "");
+static_assert(concepts::common_reference_with<int &, IntComparable &>, "");
+static_assert(concepts::totally_ordered_with<int, IntComparable>, "");
+static_assert(concepts::totally_ordered_with<IntComparable, int>, "");
+static_assert(concepts::detail::weakly_equality_comparable_with_<int, int>, "");
+static_assert(concepts::equality_comparable<int>, "");
+static_assert(concepts::equality_comparable_with<int, int>, "");
+static_assert(concepts::equality_comparable_with<int, IntComparable>, "");
+static_assert(concepts::equality_comparable_with<int &, IntComparable &>, "");
 
 CPP_template(class T)
-    (requires concepts::Regular<T>)
+    (requires concepts::regular<T>)
 constexpr bool is_regular(T&&)
 {
     return true;
 }
 
 CPP_template(class T)
-    (requires (!concepts::Regular<T>))
+    (requires (!concepts::regular<T>))
 constexpr bool is_regular(T&&)
 {
     return false;

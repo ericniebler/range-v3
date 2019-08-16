@@ -19,7 +19,7 @@
 
 int main()
 {
-    using ranges::view::linear_distribute;
+    using ranges::views::linear_distribute;
 
     auto float_eq = [](double a, double b) {
         return (int)std::floor(std::abs(a - b)) == 0;
@@ -28,8 +28,8 @@ int main()
     {
         auto irng = linear_distribute(0, 1, 2);
         CHECK(ranges::size(irng) == std::size_t{2});
-        CPP_assert(ranges::ForwardRange<decltype(irng)>);
-        CPP_assert(ranges::SizedRange<decltype(irng)>);
+        CPP_assert(ranges::forward_range<decltype(irng)>);
+        CPP_assert(ranges::sized_range<decltype(irng)>);
         auto il = {0, 1};
         check_equal(irng, il);
     }
@@ -42,12 +42,12 @@ int main()
     {
         auto irng = linear_distribute(0, 21, 22);
         auto frng = linear_distribute(0., 21., 22);
-        check_equal(irng, frng | ranges::view::transform(ranges::convert_to<int>{}));
+        check_equal(irng, frng | ranges::views::transform(ranges::convert_to<int>{}));
     }
     {
         auto frng = linear_distribute(0.0, 1.0, 11);
-        CPP_assert(ranges::ForwardRange<decltype(frng)>);
-        CPP_assert(ranges::SizedRange<decltype(frng)>);
+        CPP_assert(ranges::forward_range<decltype(frng)>);
+        CPP_assert(ranges::sized_range<decltype(frng)>);
         CHECK(ranges::size(frng) == std::size_t{11});
         auto il = {0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
         CHECK(ranges::size(il) == std::size_t{11});

@@ -36,7 +36,7 @@ namespace ranges
             friend action_access;
             template<typename D>
             static auto CPP_fun(bind)(stride_fn stride, D step)( //
-                requires Integral<D>)
+                requires integral<D>)
             {
                 return bind_back(stride, step);
             }
@@ -45,9 +45,9 @@ namespace ranges
             template<typename Rng, typename D = range_difference_t<Rng>>
             auto operator()(Rng && rng, range_difference_t<Rng> const step) const
                 -> CPP_ret(Rng)( //
-                    requires ForwardRange<Rng> &&
-                        ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                            Permutable<iterator_t<Rng>>)
+                    requires forward_range<Rng> &&
+                        erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
+                            permutable<iterator_t<Rng>>)
             {
                 using I = iterator_t<Rng>;
                 using S = sentinel_t<Rng>;

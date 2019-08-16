@@ -39,7 +39,7 @@ namespace ranges
         template<typename O, typename F>
         auto operator()(O begin, iter_difference_t<O> n, F fun) const
             -> CPP_ret(generate_n_result<O, F>)( //
-                requires Invocable<F &> && OutputIterator<O, invoke_result_t<F &>>)
+                requires invocable<F &> && output_iterator<O, invoke_result_t<F &>>)
         {
             RANGES_EXPECT(n >= 0);
             auto norig = n;

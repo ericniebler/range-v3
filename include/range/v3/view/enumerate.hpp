@@ -87,14 +87,14 @@ namespace ranges
     /// \endcond
     /// \addtogroup group-views
     /// @{
-    namespace view
+    namespace views
     {
         /// Lazily pairs each element in a source range with
         /// its corresponding index.
         struct enumerate_fn
         {
             template<typename Rng>
-            auto CPP_fun(operator())(Rng && rng)(const requires ViewableRange<Rng>)
+            auto CPP_fun(operator())(Rng && rng)(const requires viewable_range<Rng>)
             {
                 using D = range_difference_t<Rng>;
                 using S = detail::iter_size_t<iterator_t<Rng>>;
@@ -105,7 +105,7 @@ namespace ranges
         /// \relates enumerate_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<enumerate_fn>, enumerate)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

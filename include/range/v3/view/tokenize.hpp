@@ -40,9 +40,9 @@ namespace ranges
                        is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
     {
     private:
-        CPP_assert(BidirectionalView<Rng> && CommonRange<Rng>);
-        CPP_assert(Semiregular<Regex>);
-        CPP_assert(Semiregular<SubMatchRange>);
+        CPP_assert(bidirectional_range<Rng> && view_<Rng> && common_range<Rng>);
+        CPP_assert(semiregular<Regex>);
+        CPP_assert(semiregular<SubMatchRange>);
 
         Rng rng_;
         Regex rex_;
@@ -68,7 +68,7 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin() const -> CPP_ret(iterator_t<Const>)( //
-            requires Range<Rng const>)
+            requires range<Rng const>)
         {
             return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
         }
@@ -78,7 +78,7 @@ namespace ranges
         }
         template<bool Const = true>
         auto end() const -> CPP_ret(iterator_t<Const>)( //
-            requires Range<Rng const>)
+            requires range<Rng const>)
         {
             return {};
         }
@@ -90,12 +90,12 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Rng, typename Regex, typename SubMatchRange)(
-        requires CopyConstructible<Regex> && CopyConstructible<SubMatchRange>)
+        requires copy_constructible<Regex> && copy_constructible<SubMatchRange>)
         tokenize_view(Rng &&, Regex, SubMatchRange)
-            ->tokenize_view<view::all_t<Rng>, Regex, SubMatchRange>;
+            ->tokenize_view<views::all_t<Rng>, Regex, SubMatchRange>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct tokenizer_impl_fn
         {
@@ -105,8 +105,8 @@ namespace ranges
                 std::regex_constants::match_flag_type flags =
                     std::regex_constants::match_default) const
             {
-                CPP_assert(BidirectionalRange<Rng>);
-                CPP_assert(CommonRange<Rng>);
+                CPP_assert(bidirectional_range<Rng>);
+                CPP_assert(common_range<Rng>);
                 static_assert(
                     RANGES_IS_SAME(range_value_t<Rng>,
                                    typename detail::decay_t<Regex>::value_type),
@@ -123,8 +123,8 @@ namespace ranges
                        std::regex_constants::match_flag_type flags =
                            std::regex_constants::match_default) const
             {
-                CPP_assert(BidirectionalRange<Rng>);
-                CPP_assert(CommonRange<Rng>);
+                CPP_assert(bidirectional_range<Rng>);
+                CPP_assert(common_range<Rng>);
                 static_assert(
                     RANGES_IS_SAME(range_value_t<Rng>,
                                    typename detail::decay_t<Regex>::value_type),
@@ -141,8 +141,8 @@ namespace ranges
                        std::regex_constants::match_flag_type flags =
                            std::regex_constants::match_default) const
             {
-                CPP_assert(BidirectionalRange<Rng>);
-                CPP_assert(CommonRange<Rng>);
+                CPP_assert(bidirectional_range<Rng>);
+                CPP_assert(common_range<Rng>);
                 static_assert(
                     RANGES_IS_SAME(range_value_t<Rng>,
                                    typename detail::decay_t<Regex>::value_type),
@@ -225,7 +225,7 @@ namespace ranges
         /// \relates tokenize_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(tokenize_fn, tokenize)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

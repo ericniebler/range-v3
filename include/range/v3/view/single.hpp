@@ -26,7 +26,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/addressof.hpp>
 #include <range/v3/utility/optional.hpp>
-#include <range/v3/utility/semiregular.hpp>
+#include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
 
@@ -38,10 +38,10 @@ namespace ranges
     struct single_view : view_interface<single_view<T>, (cardinality)1>
     {
     private:
-        CPP_assert(CopyConstructible<T>);
+        CPP_assert(copy_constructible<T>);
         static_assert(std::is_object<T>::value,
                       "The template parameter of single_view must be an object type");
-        semiregular_t<T> value_;
+        semiregular_box_t<T> value_;
         template<typename... Args>
         constexpr single_view(in_place_t, std::true_type, Args &&... args)
           : value_{static_cast<Args &&>(args)...}
@@ -60,10 +60,10 @@ namespace ranges
           : value_(std::move(t))
         {}
         CPP_template(class... Args)(            //
-            requires Constructible<T, Args...>) //
+            requires constructible_from<T, Args...>) //
             constexpr single_view(in_place_t, Args &&... args)
           : single_view{in_place,
-                        meta::bool_<(bool)Semiregular<T>>{},
+                        meta::bool_<(bool)semiregular<T>>{},
                         static_cast<Args &&>(args)...}
         {}
         constexpr T * begin() noexcept
@@ -101,13 +101,13 @@ namespace ranges
     explicit single_view(T &&)->single_view<detail::decay_t<T>>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct single_fn
         {
             template<typename Val>
             auto operator()(Val value) const -> CPP_ret(single_view<Val>)( //
-                requires CopyConstructible<Val>)
+                requires copy_constructible<Val>)
             {
                 return single_view<Val>{std::move(value)};
             }
@@ -116,13 +116,13 @@ namespace ranges
         /// \relates single_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(single_fn, single)
-    } // namespace view
+    } // namespace views
 
     namespace cpp20
     {
-        namespace view
+        namespace views
         {
-            using ranges::view::single;
+            using ranges::views::single;
         }
         CPP_template(typename T)(              //
             requires std::is_object<T>::value) //

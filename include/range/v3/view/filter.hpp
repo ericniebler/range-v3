@@ -37,13 +37,13 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Rng, typename Pred)( //
-        requires InputRange<Rng> && IndirectUnaryPredicate<Pred, iterator_t<Rng>> &&
-            View<Rng> && std::is_object<Pred>::value) //
+        requires input_range<Rng> && indirect_unary_predicate<Pred, iterator_t<Rng>> &&
+            view_<Rng> && std::is_object<Pred>::value) //
         filter_view(Rng &&, Pred)
-            ->filter_view<view::all_t<Rng>, Pred>;
+            ->filter_view<views::all_t<Rng>, Pred>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct filter_fn;
 
@@ -64,8 +64,8 @@ namespace ranges
             template<typename Rng, typename Pred>
             constexpr auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(filter_view<all_t<Rng>, Pred>)( //
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
+                    requires viewable_range<Rng> && input_range<Rng> &&
+                        indirect_unary_predicate<Pred, iterator_t<Rng>>)
             {
                 return filter_view<all_t<Rng>, Pred>{all(static_cast<Rng &&>(rng)),
                                                      std::move(pred)};
@@ -92,8 +92,8 @@ namespace ranges
             template<typename Rng, typename Pred, typename Proj>
             constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
                 -> CPP_ret(filter_view<all_t<Rng>, composed<Pred, Proj>>)( //
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        IndirectUnaryPredicate<Pred, projected<iterator_t<Rng>, Proj>>)
+                    requires viewable_range<Rng> && input_range<Rng> &&
+                        indirect_unary_predicate<Pred, projected<iterator_t<Rng>, Proj>>)
             {
                 return filter_view<all_t<Rng>, composed<Pred, Proj>>{
                     all(static_cast<Rng &&>(rng)),
@@ -104,18 +104,18 @@ namespace ranges
         /// \relates filter_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<filter_fn>, filter)
-    } // namespace view
+    } // namespace views
 
     namespace cpp20
     {
-        namespace view
+        namespace views
         {
-            RANGES_INLINE_VARIABLE(ranges::view::view<ranges::view::cpp20_filter_fn>,
+            RANGES_INLINE_VARIABLE(ranges::views::view<ranges::views::cpp20_filter_fn>,
                                    filter)
         }
         CPP_template(typename V, typename Pred)( //
-            requires InputRange<V> && IndirectUnaryPredicate<Pred, iterator_t<V>> &&
-                View<V> && std::is_object<Pred>::value) //
+            requires input_range<V> && indirect_unary_predicate<Pred, iterator_t<V>> &&
+                view_<V> && std::is_object<Pred>::value) //
             using filter_view = ranges::filter_view<V, Pred>;
     } // namespace cpp20
     /// @}

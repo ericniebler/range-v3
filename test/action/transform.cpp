@@ -22,10 +22,10 @@ int main()
 {
     using namespace ranges;
 
-    auto v = view::ints(0,10) | to<std::vector>();
+    auto v = views::ints(0,10) | to<std::vector>();
 
     auto v0 = v | copy | action::transform([](int i){return i*i;});
-    ::models<SameConcept>(v, v0);
+    CPP_assert(same_as<decltype(v), decltype(v0)>);
     ::check_equal(v0, {0,1,4,9,16,25,36,49,64,81});
 
     action::transform(v, [](int i){return i*i;});

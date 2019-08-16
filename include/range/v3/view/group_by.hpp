@@ -28,7 +28,7 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
-#include <range/v3/utility/semiregular.hpp>
+#include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
 #include <range/v3/view/subrange.hpp>
@@ -51,7 +51,7 @@ namespace ranges
     private:
         friend range_access;
         Rng rng_;
-        semiregular_t<Fun> fun_;
+        semiregular_box_t<Fun> fun_;
 
         template<bool IsConst>
         struct cursor
@@ -63,12 +63,12 @@ namespace ranges
             using CRng = meta::const_if_c<IsConst, Rng>;
             iterator_t<CRng> cur_;
             sentinel_t<CRng> last_;
-            semiregular_ref_or_val_t<Fun, IsConst> fun_;
+            semiregular_box_ref_or_val_t<Fun, IsConst> fun_;
 
             struct pred
             {
                 iterator_t<CRng> first_;
-                semiregular_ref_or_val_t<Fun, IsConst> fun_;
+                semiregular_box_ref_or_val_t<Fun, IsConst> fun_;
                 bool operator()(range_reference_t<CRng> ref) const
                 {
                     return invoke(fun_, *first_, ref);
@@ -99,7 +99,7 @@ namespace ranges
             {
                 return cur_ == that.cur_;
             }
-            cursor(semiregular_ref_or_val_t<Fun, IsConst> fun, iterator_t<CRng> first,
+            cursor(semiregular_box_ref_or_val_t<Fun, IsConst> fun, iterator_t<CRng> first,
                    sentinel_t<CRng> last)
               : cur_(first)
               , last_(last)
@@ -121,7 +121,7 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
-            requires Const && Range<meta::const_if_c<Const, Rng>> && Invocable<
+            requires Const && range<meta::const_if_c<Const, Rng>> && invocable<
                 Fun const &, range_common_reference_t<meta::const_if_c<Const, Rng>>,
                 range_common_reference_t<meta::const_if_c<Const, Rng>>>)
         {
@@ -137,12 +137,12 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)(requires CopyConstructible<Fun>)
+    CPP_template(typename Rng, typename Fun)(requires copy_constructible<Fun>)
         group_by_view(Rng &&, Fun)
-            ->group_by_view<view::all_t<Rng>, Fun>;
+            ->group_by_view<views::all_t<Rng>, Fun>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct group_by_fn
         {
@@ -158,8 +158,8 @@ namespace ranges
             template<typename Rng, typename Fun>
             constexpr auto operator()(Rng && rng, Fun fun) const
                 -> CPP_ret(group_by_view<all_t<Rng>, Fun>)( //
-                    requires ViewableRange<Rng> && ForwardRange<Rng> &&
-                        IndirectRelation<Fun, iterator_t<Rng>>)
+                    requires viewable_range<Rng> && forward_range<Rng> &&
+                        indirect_relation<Fun, iterator_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
@@ -168,7 +168,7 @@ namespace ranges
         /// \relates group_by_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<group_by_fn>, group_by)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

@@ -22,11 +22,11 @@ int main()
 {
     using namespace ranges;
 
-    auto v = view::ints(0,100) | to<std::vector>();
+    auto v = views::ints(0,100) | to<std::vector>();
 
     auto v2 = v | copy | action::stride(10);
     CHECK(size(v2) == 10u);
-    ::models<SameConcept>(v, v2);
+    CPP_assert(same_as<decltype(v), decltype(v2)>);
     ::check_equal(v2, {0,10,20,30,40,50,60,70,80,90});
 
     v2 = v2 | move | action::stride(4);

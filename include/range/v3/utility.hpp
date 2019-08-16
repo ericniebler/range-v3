@@ -31,7 +31,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/utility/polymorphic_cast.hpp>
 #include <range/v3/utility/random.hpp>
 #include <range/v3/utility/scope_exit.hpp>
-#include <range/v3/utility/semiregular.hpp>
+#include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>

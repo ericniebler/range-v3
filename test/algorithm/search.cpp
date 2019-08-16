@@ -178,15 +178,15 @@ struct T
 
 int main()
 {
-    test<forward_iterator<const int*>, forward_iterator<const int*> >();
-    test<forward_iterator<const int*>, bidirectional_iterator<const int*> >();
-    test<forward_iterator<const int*>, random_access_iterator<const int*> >();
-    test<bidirectional_iterator<const int*>, forward_iterator<const int*> >();
-    test<bidirectional_iterator<const int*>, bidirectional_iterator<const int*> >();
-    test<bidirectional_iterator<const int*>, random_access_iterator<const int*> >();
-    test<random_access_iterator<const int*>, forward_iterator<const int*> >();
-    test<random_access_iterator<const int*>, bidirectional_iterator<const int*> >();
-    test<random_access_iterator<const int*>, random_access_iterator<const int*> >();
+    test<ForwardIterator<const int*>, ForwardIterator<const int*> >();
+    test<ForwardIterator<const int*>, BidirectionalIterator<const int*> >();
+    test<ForwardIterator<const int*>, RandomAccessIterator<const int*> >();
+    test<BidirectionalIterator<const int*>, ForwardIterator<const int*> >();
+    test<BidirectionalIterator<const int*>, BidirectionalIterator<const int*> >();
+    test<BidirectionalIterator<const int*>, RandomAccessIterator<const int*> >();
+    test<RandomAccessIterator<const int*>, ForwardIterator<const int*> >();
+    test<RandomAccessIterator<const int*>, BidirectionalIterator<const int*> >();
+    test<RandomAccessIterator<const int*>, RandomAccessIterator<const int*> >();
 
     // Test projections:
     {
@@ -200,7 +200,7 @@ int main()
     // Test counted ranges
     {
         int in[] = {0,1,2,3,4,5};
-        auto rng = ranges::view::counted(bidirectional_iterator<int*>(in), 6);
+        auto rng = ranges::views::counted(BidirectionalIterator<int*>(in), 6);
         auto sub = ranges::search(rng, std::initializer_list<int>{2,3});
         CHECK(base(sub.begin().base()) == in+2);
         CHECK(base(sub.end().base()) == in+4);
@@ -218,7 +218,7 @@ int main()
     {
         int ib[] = {0, 1, 2, 0, 1, 2, 3, 0, 1, 2, 3, 4};
         int ie[] = {1, 2, 3};
-        CHECK(ranges::search(ranges::view::all(ib), ie).begin() == ib+4);
+        CHECK(ranges::search(ranges::views::all(ib), ie).begin() == ib+4);
     }
 #ifndef RANGES_WORKAROUND_MSVC_573728
     {

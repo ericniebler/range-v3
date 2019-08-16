@@ -247,7 +247,7 @@ int main()
             v[i].i = (int)v.size() - i - 1;
             v[i].j = i;
         }
-        CHECK(ranges::stable_sort(ranges::view::all(v), std::less<int>{}, &S::i) == v.end());
+        CHECK(ranges::stable_sort(ranges::views::all(v), std::less<int>{}, &S::i) == v.end());
         for(int i = 0; (std::size_t)i < v.size(); ++i)
         {
             CHECK(v[i].i == i);

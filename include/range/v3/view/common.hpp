@@ -40,18 +40,18 @@ namespace ranges
         CPP_def
         (
             template(typename R)
-            concept RA_and_Sized,
-                RandomAccessRange<R> && SizedRange<R>
+            concept random_access_and_sized_range,
+                random_access_range<R> && sized_range<R>
         );
         // clang-format on
 
         template<typename R>
         using common_view_iterator_t =
-            meta::if_c<RA_and_Sized<R>, iterator_t<R>,
+            meta::if_c<random_access_and_sized_range<R>, iterator_t<R>,
                        common_iterator_t<iterator_t<R>, sentinel_t<R>>>;
 
         template<typename Rng>
-        struct is_common_range : meta::bool_<CommonRange<Rng>>
+        struct is_common_range : meta::bool_<common_range<Rng>>
         {};
         /// \endcond
     } // namespace detail
@@ -60,8 +60,8 @@ namespace ranges
     struct common_view : view_interface<common_view<Rng>, range_cardinality<Rng>::value>
     {
     private:
-        CPP_assert(View<Rng>);
-        CPP_assert(!CommonView<Rng>);
+        CPP_assert(view_<Rng>);
+        CPP_assert(!(common_range<Rng> && view_<Rng>));
         Rng rng_;
 
         sentinel_t<Rng> end_(std::false_type)
@@ -75,14 +75,14 @@ namespace ranges
         template<bool Const = true>
         auto end_(std::false_type) const
             -> CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)( //
-                requires Const && Range<meta::const_if_c<Const, Rng>>)
+                requires Const && range<meta::const_if_c<Const, Rng>>)
         {
             return ranges::end(rng_);
         }
         template<bool Const = true>
         auto end_(std::true_type) const
             -> CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)( //
-                requires Const && Range<meta::const_if_c<Const, Rng>>)
+                requires Const && range<meta::const_if_c<Const, Rng>>)
         {
             return ranges::begin(rng_) + ranges::distance(rng_);
         }
@@ -104,10 +104,10 @@ namespace ranges
         detail::common_view_iterator_t<Rng> end()
         {
             return detail::common_view_iterator_t<Rng>{
-                end_(meta::bool_<detail::RA_and_Sized<Rng>>{})};
+                end_(meta::bool_<detail::random_access_and_sized_range<Rng>>{})};
         }
         CPP_member
-        auto CPP_fun(size)()(requires SizedRange<Rng>)
+        auto CPP_fun(size)()(requires sized_range<Rng>)
         {
             return ranges::size(rng_);
         }
@@ -115,7 +115,7 @@ namespace ranges
         template<bool Const = true>
         auto begin() const
             -> CPP_ret(detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>)( //
-                requires Range<meta::const_if_c<Const, Rng>>)
+                requires range<meta::const_if_c<Const, Rng>>)
         {
             return detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>{
                 ranges::begin(rng_)};
@@ -123,37 +123,37 @@ namespace ranges
         template<bool Const = true>
         auto end() const
             -> CPP_ret(detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>)( //
-                requires Range<meta::const_if_c<Const, Rng>>)
+                requires range<meta::const_if_c<Const, Rng>>)
         {
             return detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>{
-                end_(meta::bool_<detail::RA_and_Sized<meta::const_if_c<Const, Rng>>>{})};
+                end_(meta::bool_<detail::random_access_and_sized_range<meta::const_if_c<Const, Rng>>>{})};
         }
         CPP_member
-        auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        auto CPP_fun(size)()(const requires sized_range<Rng const>)
         {
             return ranges::size(rng_);
         }
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng)(requires !CommonRange<Rng>) common_view(Rng &&)
-        ->common_view<view::all_t<Rng>>;
+    CPP_template(typename Rng)(requires !common_range<Rng>) common_view(Rng &&)
+        ->common_view<views::all_t<Rng>>;
 #endif
 
     template<typename Rng>
     struct common_view<Rng, true> : identity_adaptor<Rng>
     {
-        CPP_assert(CommonRange<Rng>);
+        CPP_assert(common_range<Rng>);
         using identity_adaptor<Rng>::identity_adaptor;
     };
 
-    namespace view
+    namespace views
     {
         struct cpp20_common_fn
         {
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(common_view<all_t<Rng>>)( //
-                requires ViewableRange<Rng> && (!CommonRange<Rng>))
+                requires viewable_range<Rng> && (!common_range<Rng>))
             {
                 return common_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -163,7 +163,7 @@ namespace ranges
         {
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(common_view<all_t<Rng>>)( //
-                requires ViewableRange<Rng>)
+                requires viewable_range<Rng>)
             {
                 return common_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -172,7 +172,7 @@ namespace ranges
         /// \relates common_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<common_fn>, common)
-    } // namespace view
+    } // namespace views
     /// @}
 
     /// \cond
@@ -182,32 +182,32 @@ namespace ranges
         "Please use common_view instead.") = common_view<Rng>;
     /// \endcond
 
-    namespace view
+    namespace views
     {
         /// \cond
         namespace
         {
             RANGES_DEPRECATED(
-                "The name view::bounded is deprecated. "
-                "Please use view::common instead.")
+                "The name views::bounded is deprecated. "
+                "Please use views::common instead.")
             RANGES_INLINE_VAR constexpr auto & bounded = common;
         } // namespace
 
         template<typename Rng>
-        using bounded_t RANGES_DEPRECATED("The name view::bounded_t is deprecated.") =
+        using bounded_t RANGES_DEPRECATED("The name views::bounded_t is deprecated.") =
             decltype(common(std::declval<Rng>()));
         /// \endcond
-    } // namespace view
+    } // namespace views
 
     namespace cpp20
     {
-        namespace view
+        namespace views
         {
-            RANGES_INLINE_VARIABLE(ranges::view::view<ranges::view::cpp20_common_fn>,
+            RANGES_INLINE_VARIABLE(ranges::views::view<ranges::views::cpp20_common_fn>,
                                    common)
         }
         CPP_template(typename Rng)(                    //
-            requires View<Rng> && (!CommonRange<Rng>)) //
+            requires view_<Rng> && (!common_range<Rng>)) //
             using common_view = ranges::common_view<Rng>;
     } // namespace cpp20
 } // namespace ranges

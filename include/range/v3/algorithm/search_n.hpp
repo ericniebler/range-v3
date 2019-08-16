@@ -132,12 +132,12 @@ namespace ranges
                  typename P = identity>
         auto operator()(I begin, S end, iter_difference_t<I> count, V const & val,
                         C pred = C{}, P proj = P{}) const -> CPP_ret(subrange<I>)( //
-            requires ForwardIterator<I> && Sentinel<S, I> &&
-                IndirectlyComparable<I, V const *, C, P>)
+            requires forward_iterator<I> && sentinel_for<S, I> &&
+                indirectly_comparable<I, V const *, C, P>)
         {
             if(count <= 0)
                 return {begin, begin};
-            if(RANGES_CONSTEXPR_IF(SizedSentinel<S, I>))
+            if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S, I>))
                 return search_n_fn::sized_impl(std::move(begin),
                                                std::move(end),
                                                distance(begin, end),
@@ -154,12 +154,12 @@ namespace ranges
         auto operator()(Rng && rng, iter_difference_t<iterator_t<Rng>> count,
                         V const & val, C pred = C{}, P proj = P{}) const
             -> CPP_ret(safe_subrange_t<Rng>)( //
-                requires ForwardRange<Rng> &&
-                    IndirectlyComparable<iterator_t<Rng>, V const *, C, P>)
+                requires forward_range<Rng> &&
+                    indirectly_comparable<iterator_t<Rng>, V const *, C, P>)
         {
             if(count <= 0)
                 return subrange<iterator_t<Rng>>{begin(rng), begin(rng)};
-            if(RANGES_CONSTEXPR_IF(SizedRange<Rng>))
+            if(RANGES_CONSTEXPR_IF(sized_range<Rng>))
                 return search_n_fn::sized_impl(
                     begin(rng), end(rng), distance(rng), count, val, pred, proj);
             else

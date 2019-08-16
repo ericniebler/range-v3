@@ -64,14 +64,14 @@ void test2()
 
 int main()
 {
-    test<forward_iterator<int*> >();
-    test<bidirectional_iterator<int*> >();
-    test<random_access_iterator<int*> >();
+    test<ForwardIterator<int*> >();
+    test<BidirectionalIterator<int*> >();
+    test<RandomAccessIterator<int*> >();
     test<int*>();
 
-    test<forward_iterator<int*>, sentinel<int*> >();
-    test<bidirectional_iterator<int*>, sentinel<int*> >();
-    test<random_access_iterator<int*>, sentinel<int*> >();
+    test<ForwardIterator<int*>, Sentinel<int*> >();
+    test<BidirectionalIterator<int*>, Sentinel<int*> >();
+    test<RandomAccessIterator<int*>, Sentinel<int*> >();
 
     test2();
 

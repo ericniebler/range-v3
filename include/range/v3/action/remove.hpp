@@ -27,20 +27,6 @@
 
 namespace ranges
 {
-    /// |cond
-    namespace detail
-    {
-        // clang-format off
-        CPP_def
-        (
-            template(typename Val, typename Rng)
-            concept ComparableWithRangeRef_,
-                EqualityComparableWith<range_reference_t<Rng>, Val>
-        );
-        // clang-format on
-    } // namespace detail
-    /// |endcond
-
     /// \addtogroup group-actions
     /// @{
     namespace action
@@ -51,7 +37,7 @@ namespace ranges
             friend action_access;
             template<typename V, typename P>
             static auto CPP_fun(bind)(remove_fn remove, V && value, P proj)( //
-                requires(!(Range<V> && detail::ComparableWithRangeRef_<P, V>)))
+                requires (!range<V>))
             {
                 return bind_back(remove, static_cast<V &&>(value), std::move(proj));
             }
@@ -65,9 +51,9 @@ namespace ranges
             template<typename Rng, typename V, typename P = identity>
             auto operator()(Rng && rng, V const & value, P proj = {}) const
                 -> CPP_ret(Rng)( //
-                    requires ForwardRange<Rng> && Permutable<iterator_t<Rng>> &&
-                        ErasableRange<Rng, iterator_t<Rng>, sentinel_t<Rng>> &&
-                            IndirectRelation<equal_to, projected<iterator_t<Rng>, P>,
+                    requires forward_range<Rng> && permutable<iterator_t<Rng>> &&
+                        erasable_range<Rng, iterator_t<Rng>, sentinel_t<Rng>> &&
+                            indirect_relation<equal_to, projected<iterator_t<Rng>, P>,
                                              V const *>)
             {
                 auto it = ranges::remove(rng, value, std::move(proj));

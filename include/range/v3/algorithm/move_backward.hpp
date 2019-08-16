@@ -39,8 +39,8 @@ namespace ranges
         template<typename I, typename S, typename O>
         auto operator()(I begin, S end_, O out) const
             -> CPP_ret(move_backward_result<I, O>)( //
-                requires BidirectionalIterator<I> && Sentinel<S, I> &&
-                    BidirectionalIterator<O> && IndirectlyMovable<I, O>)
+                requires bidirectional_iterator<I> && sentinel_for<S, I> &&
+                    bidirectional_iterator<O> && indirectly_movable<I, O>)
         {
             I i = ranges::next(begin, end_), end = i;
             while(begin != i)
@@ -51,8 +51,8 @@ namespace ranges
         template<typename Rng, typename O>
         auto operator()(Rng && rng, O out) const
             -> CPP_ret(move_backward_result<safe_iterator_t<Rng>, O>)( //
-                requires BidirectionalRange<Rng> && BidirectionalIterator<O> &&
-                    IndirectlyMovable<iterator_t<Rng>, O>)
+                requires bidirectional_range<Rng> && bidirectional_iterator<O> &&
+                    indirectly_movable<iterator_t<Rng>, O>)
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }

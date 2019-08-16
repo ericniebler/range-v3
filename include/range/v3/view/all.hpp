@@ -30,7 +30,7 @@ namespace ranges
 {
     /// \addtogroup group-views
     /// @{
-    namespace view
+    namespace views
     {
         struct all_fn : pipeable<all_fn>
         {
@@ -49,10 +49,10 @@ namespace ranges
             static constexpr auto from_range_(T && t, std::false_type, std::true_type,
                                               detail::ignore_t)
             {
-                return ranges::view::ref(t);
+                return ranges::views::ref(t);
             }
 
-            /// Not a view and not an lvalue? If it's a ForwardingRange_, then
+            /// Not a view and not an lvalue? If it's a forwarding_range_, then
             /// return a subrange holding the range's begin/end.
             template<typename T>
             static constexpr auto from_range_(T && t, std::false_type, std::false_type,
@@ -63,21 +63,21 @@ namespace ranges
 
         public:
             template<typename T>
-            constexpr auto CPP_fun(operator())(T && t)(const requires ViewableRange<T>)
+            constexpr auto CPP_fun(operator())(T && t)(const requires viewable_range<T>)
             {
                 return all_fn::from_range_(static_cast<T &&>(t),
-                                           meta::bool_<View<uncvref_t<T>>>{},
+                                           meta::bool_<view_<uncvref_t<T>>>{},
                                            std::is_lvalue_reference<T>{},
-                                           meta::bool_<ForwardingRange_<T>>{});
+                                           meta::bool_<forwarding_range_<T>>{});
             }
 
             template<typename T>
-            RANGES_DEPRECATED("Passing a reference_wrapper to view::all is deprecated.")
+            RANGES_DEPRECATED("Passing a reference_wrapper to views::all is deprecated.")
             constexpr auto operator()(std::reference_wrapper<T> ref) const
                 -> CPP_ret(ref_view<T>)( //
-                    requires Range<T &>)
+                    requires range<T &>)
             {
-                return ranges::view::ref(ref.get());
+                return ranges::views::ref(ref.get());
             }
         };
 
@@ -87,12 +87,12 @@ namespace ranges
 
         template<typename Rng>
         using all_t = decltype(all(std::declval<Rng>()));
-    } // namespace view
+    } // namespace views
 
     template<typename Rng>
     struct identity_adaptor : Rng
     {
-        CPP_assert(View<Rng>);
+        CPP_assert(view_<Rng>);
 
         identity_adaptor() = default;
         constexpr explicit identity_adaptor(Rng const & rng)
@@ -105,13 +105,13 @@ namespace ranges
 
     namespace cpp20
     {
-        namespace view
+        namespace views
         {
-            using ranges::view::all;
+            using ranges::views::all;
         }
         CPP_template(typename Rng)(      //
-            requires ViewableRange<Rng>) //
-            using all_view = ranges::view::all_t<Rng>;
+            requires viewable_range<Rng>) //
+            using all_view = ranges::views::all_t<Rng>;
     } // namespace cpp20
     /// @}
 } // namespace ranges

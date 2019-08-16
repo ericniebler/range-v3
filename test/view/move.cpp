@@ -26,15 +26,16 @@ int main()
     static const char * const data[] = {"'allo", "'allo", "???"};
     std::vector<MoveOnlyString> vs(begin(data), end(data));
 
-    auto x = vs | view::move;
-    CPP_assert(Same<common_view_tag_of<decltype(x)>, common_view_tag>);
-    CPP_assert(Same<sized_view_tag_of<decltype(x)>, sized_view_tag>);
-    ::models<CommonViewConcept>(aux::copy(x));
-    ::models<SizedViewConcept>(aux::copy(x));
-    ::models<RandomAccessIteratorConcept>(x.begin());
+    auto x = vs | views::move;
+    CPP_assert(common_range<decltype(x)>);
+    CPP_assert(sized_range<decltype(x)>);
+    CPP_assert(view_<decltype(x)>);
+    CPP_assert(common_range<decltype(x)>);
+    CPP_assert(sized_range<decltype(x)>);
+    CPP_assert(random_access_iterator<decltype(x.begin())>);
     using I = decltype(x.begin());
-    CPP_assert(Same<iterator_tag_of<I>, ranges::detail::random_access_iterator_tag_>);
-    CPP_assert(Same<
+    CPP_assert(same_as<iterator_tag_of<I>, ranges::detail::random_access_iterator_tag_>);
+    CPP_assert(same_as<
         typename std::iterator_traits<I>::iterator_category,
         std::random_access_iterator_tag>);
 
@@ -47,7 +48,7 @@ int main()
 
     {
         MoveOnlyString data[] = {"can", "you", "hear", "me", "now?"};
-        auto rng = debug_input_view<MoveOnlyString>{data} | view::move;
+        auto rng = debug_input_view<MoveOnlyString>{data} | views::move;
         MoveOnlyString target[sizeof(data) / sizeof(data[0])];
         copy(rng, target);
         ::check_equal(data, {"", "", "", "", ""});

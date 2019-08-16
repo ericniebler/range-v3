@@ -41,7 +41,7 @@ namespace ranges
             template<typename C, typename P = identity>
             static auto CPP_fun(bind)(unstable_remove_if_fn unstable_remove_if, C pred,
                                       P proj = P{})( //
-                requires(!Range<C>))
+                requires(!range<C>))
             {
                 return bind_back(unstable_remove_if, std::move(pred), std::move(proj));
             }
@@ -49,10 +49,10 @@ namespace ranges
         public:
             template<typename Rng, typename C, typename P = identity>
             auto operator()(Rng && rng, C pred, P proj = P{}) const -> CPP_ret(Rng)( //
-                requires BidirectionalRange<Rng> && CommonRange<Rng> &&
-                    Permutable<iterator_t<Rng>> &&
-                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>> &&
-                            ErasableRange<Rng, iterator_t<Rng>, iterator_t<Rng>>)
+                requires bidirectional_range<Rng> && common_range<Rng> &&
+                    permutable<iterator_t<Rng>> &&
+                        indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> &&
+                            erasable_range<Rng, iterator_t<Rng>, iterator_t<Rng>>)
             {
                 auto it = ranges::unstable_remove_if(ranges::begin(rng),
                                                      ranges::end(rng),

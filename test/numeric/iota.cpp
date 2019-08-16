@@ -49,16 +49,16 @@ void test()
 
 int main()
 {
-    test<input_iterator<int*> >();
-    test<forward_iterator<int*> >();
-    test<bidirectional_iterator<int*> >();
-    test<random_access_iterator<int*> >();
+    test<InputIterator<int*> >();
+    test<ForwardIterator<int*> >();
+    test<BidirectionalIterator<int*> >();
+    test<RandomAccessIterator<int*> >();
     test<int*>();
 
-    test<input_iterator<int*>, sentinel<int*> >();
-    test<forward_iterator<int*>, sentinel<int*> >();
-    test<bidirectional_iterator<int*>, sentinel<int*> >();
-    test<random_access_iterator<int*>, sentinel<int*> >();
+    test<InputIterator<int*>, Sentinel<int*> >();
+    test<ForwardIterator<int*>, Sentinel<int*> >();
+    test<BidirectionalIterator<int*>, Sentinel<int*> >();
+    test<RandomAccessIterator<int*>, Sentinel<int*> >();
 
     return ::test_result();
 }

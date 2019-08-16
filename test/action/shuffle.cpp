@@ -27,12 +27,12 @@ int main()
     std::mt19937 gen;
 
     // "Ints" view vs. shuffled
-    auto v = view::ints(0,100) | to<std::vector>();
+    auto v = views::ints(0,100) | to<std::vector>();
     auto v2 = v | copy | action::shuffle(gen);
     CHECK(is_sorted(v));
     CHECK(!is_sorted(v2));
     CHECK(size(v2) == size(v));
-    ::models<SameConcept>(v, v2);
+    CPP_assert(same_as<decltype(v), decltype(v2)>);
     CHECK(!equal(v, v2));
 
     // "Ints" view vs. shuffled and sorted
@@ -50,20 +50,20 @@ int main()
 
     // Container algorithms can also be called directly
     // in which case they take and return by reference
-    v = view::ints(0,100) | to<std::vector>();
+    v = views::ints(0,100) | to<std::vector>();
     auto & v3 = action::shuffle(v, gen);
     CHECK(!is_sorted(v));
     CHECK(&v3 == &v);
 
     // Create and shuffle container reference
-    v = view::ints(0,100) | to<std::vector>();
-    auto ref = view::ref(v);
+    v = views::ints(0,100) | to<std::vector>();
+    auto ref = views::ref(v);
     ref |= action::shuffle(gen);
     CHECK(!is_sorted(v));
 
     // Can pipe a view to a "container" algorithm.
-    v = view::ints(0,100) | to<std::vector>();
-    v | view::stride(2) | action::shuffle(gen);
+    v = views::ints(0,100) | to<std::vector>();
+    v | views::stride(2) | action::shuffle(gen);
     CHECK(!is_sorted(v));
 
     return ::test_result();

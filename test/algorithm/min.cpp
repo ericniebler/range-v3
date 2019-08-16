@@ -109,25 +109,25 @@ namespace
 
 int main()
 {
-    test_iter<input_iterator<const int*> >();
-    test_iter<forward_iterator<const int*> >();
-    test_iter<bidirectional_iterator<const int*> >();
-    test_iter<random_access_iterator<const int*> >();
+    test_iter<InputIterator<const int*> >();
+    test_iter<ForwardIterator<const int*> >();
+    test_iter<BidirectionalIterator<const int*> >();
+    test_iter<RandomAccessIterator<const int*> >();
     test_iter<const int*>();
-    test_iter<input_iterator<const int*>, sentinel<const int*>>();
-    test_iter<forward_iterator<const int*>, sentinel<const int*>>();
-    test_iter<bidirectional_iterator<const int*>, sentinel<const int*>>();
-    test_iter<random_access_iterator<const int*>, sentinel<const int*>>();
+    test_iter<InputIterator<const int*>, Sentinel<const int*>>();
+    test_iter<ForwardIterator<const int*>, Sentinel<const int*>>();
+    test_iter<BidirectionalIterator<const int*>, Sentinel<const int*>>();
+    test_iter<RandomAccessIterator<const int*>, Sentinel<const int*>>();
 
-    test_iter_comp<input_iterator<const int*> >();
-    test_iter_comp<forward_iterator<const int*> >();
-    test_iter_comp<bidirectional_iterator<const int*> >();
-    test_iter_comp<random_access_iterator<const int*> >();
+    test_iter_comp<InputIterator<const int*> >();
+    test_iter_comp<ForwardIterator<const int*> >();
+    test_iter_comp<BidirectionalIterator<const int*> >();
+    test_iter_comp<RandomAccessIterator<const int*> >();
     test_iter_comp<const int*>();
-    test_iter_comp<input_iterator<const int*>, sentinel<const int*>>();
-    test_iter_comp<forward_iterator<const int*>, sentinel<const int*>>();
-    test_iter_comp<bidirectional_iterator<const int*>, sentinel<const int*>>();
-    test_iter_comp<random_access_iterator<const int*>, sentinel<const int*>>();
+    test_iter_comp<InputIterator<const int*>, Sentinel<const int*>>();
+    test_iter_comp<ForwardIterator<const int*>, Sentinel<const int*>>();
+    test_iter_comp<BidirectionalIterator<const int*>, Sentinel<const int*>>();
+    test_iter_comp<RandomAccessIterator<const int*>, Sentinel<const int*>>();
 
     // Works with projections?
     S s[] = {S{1},S{2},S{3},S{4},S{-4},S{5},S{6},S{7},S{8},S{9}};

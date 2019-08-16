@@ -64,7 +64,7 @@ namespace ranges
             return nullptr;
         }
         RANGES_DEPRECATED(
-            "Replace view::empty<T>() with view::empty<>. "
+            "Replace views::empty<T>() with views::empty<>. "
             "It is now a variable template.")
         empty_view operator()() const
         {
@@ -72,7 +72,7 @@ namespace ranges
         }
     };
 
-    namespace view
+    namespace views
     {
         template<typename T>
         RANGES_INLINE_VAR constexpr empty_view<T> empty{};
@@ -80,9 +80,9 @@ namespace ranges
 
     namespace cpp20
     {
-        namespace view
+        namespace views
         {
-            using ranges::view::empty;
+            using ranges::views::empty;
         }
         CPP_template(typename T)(              //
             requires std::is_object<T>::value) //

@@ -36,8 +36,8 @@ namespace ranges
         template<typename I, typename S, typename C, typename T, typename P = identity>
         auto operator()(I begin, S end, C pred, T const & new_value, P proj = P{}) const
             -> CPP_ret(I)( //
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    IndirectUnaryPredicate<C, projected<I, P>> && Writable<I, T const &>)
+                requires input_iterator<I> && sentinel_for<S, I> &&
+                    indirect_unary_predicate<C, projected<I, P>> && writable<I, T const &>)
         {
             for(; begin != end; ++begin)
                 if(invoke(pred, invoke(proj, *begin)))
@@ -48,8 +48,8 @@ namespace ranges
         template<typename Rng, typename C, typename T, typename P = identity>
         auto operator()(Rng && rng, C pred, T const & new_value,
                         P proj = P{}) const -> CPP_ret(safe_iterator_t<Rng>)( //
-            requires InputRange<Rng> && IndirectUnaryPredicate<
-                C, projected<iterator_t<Rng>, P>> && Writable<iterator_t<Rng>, T const &>)
+            requires input_range<Rng> && indirect_unary_predicate<
+                C, projected<iterator_t<Rng>, P>> && writable<iterator_t<Rng>, T const &>)
         {
             return (*this)(
                 begin(rng), end(rng), std::move(pred), new_value, std::move(proj));

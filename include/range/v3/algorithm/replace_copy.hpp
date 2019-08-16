@@ -41,9 +41,9 @@ namespace ranges
                  typename P = identity>
         auto operator()(I begin, S end, O out, T1 const & old_value, T2 const & new_value,
                         P proj = {}) const -> CPP_ret(replace_copy_result<I, O>)( //
-            requires InputIterator<I> && Sentinel<S, I> &&
-                OutputIterator<O, T2 const &> && IndirectlyCopyable<I, O> &&
-                    IndirectRelation<equal_to, projected<I, P>, T1 const *>)
+            requires input_iterator<I> && sentinel_for<S, I> &&
+                output_iterator<O, T2 const &> && indirectly_copyable<I, O> &&
+                    indirect_relation<equal_to, projected<I, P>, T1 const *>)
         {
             for(; begin != end; ++begin, ++out)
             {
@@ -61,8 +61,8 @@ namespace ranges
         auto operator()(Rng && rng, O out, T1 const & old_value, T2 const & new_value,
                         P proj = {}) const
             -> CPP_ret(replace_copy_result<safe_iterator_t<Rng>, O>)( //
-                requires InputRange<Rng> && OutputIterator<O, T2 const &> &&
-                    IndirectlyCopyable<iterator_t<Rng>, O> && IndirectRelation<
+                requires input_range<Rng> && output_iterator<O, T2 const &> &&
+                    indirectly_copyable<iterator_t<Rng>, O> && indirect_relation<
                         equal_to, projected<iterator_t<Rng>, P>, T1 const *>)
         {
             return (*this)(begin(rng),

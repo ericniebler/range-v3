@@ -122,40 +122,40 @@ void test()
 
 int main()
 {
-    test<bidirectional_iterator<const int*>, output_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, forward_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, random_access_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, int*>();
+    test<BidirectionalIterator<const int*>, OutputIterator<int*> >();
+    test<BidirectionalIterator<const int*>, ForwardIterator<int*> >();
+    test<BidirectionalIterator<const int*>, BidirectionalIterator<int*> >();
+    test<BidirectionalIterator<const int*>, RandomAccessIterator<int*> >();
+    test<BidirectionalIterator<const int*>, int*>();
 
-    test<random_access_iterator<const int*>, output_iterator<int*> >();
-    test<random_access_iterator<const int*>, forward_iterator<int*> >();
-    test<random_access_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<random_access_iterator<const int*>, random_access_iterator<int*> >();
-    test<random_access_iterator<const int*>, int*>();
+    test<RandomAccessIterator<const int*>, OutputIterator<int*> >();
+    test<RandomAccessIterator<const int*>, ForwardIterator<int*> >();
+    test<RandomAccessIterator<const int*>, BidirectionalIterator<int*> >();
+    test<RandomAccessIterator<const int*>, RandomAccessIterator<int*> >();
+    test<RandomAccessIterator<const int*>, int*>();
 
-    test<const int*, output_iterator<int*> >();
-    test<const int*, forward_iterator<int*> >();
-    test<const int*, bidirectional_iterator<int*> >();
-    test<const int*, random_access_iterator<int*> >();
+    test<const int*, OutputIterator<int*> >();
+    test<const int*, ForwardIterator<int*> >();
+    test<const int*, BidirectionalIterator<int*> >();
+    test<const int*, RandomAccessIterator<int*> >();
     test<const int*, int*>();
 
-    test<bidirectional_iterator<const int*>, output_iterator<int*>, sentinel<const int *> >();
-    test<bidirectional_iterator<const int*>, forward_iterator<int*>, sentinel<const int *> >();
-    test<bidirectional_iterator<const int*>, bidirectional_iterator<int*>, sentinel<const int *> >();
-    test<bidirectional_iterator<const int*>, random_access_iterator<int*>, sentinel<const int *> >();
-    test<bidirectional_iterator<const int*>, int*>();
+    test<BidirectionalIterator<const int*>, OutputIterator<int*>, Sentinel<const int *> >();
+    test<BidirectionalIterator<const int*>, ForwardIterator<int*>, Sentinel<const int *> >();
+    test<BidirectionalIterator<const int*>, BidirectionalIterator<int*>, Sentinel<const int *> >();
+    test<BidirectionalIterator<const int*>, RandomAccessIterator<int*>, Sentinel<const int *> >();
+    test<BidirectionalIterator<const int*>, int*>();
 
-    test<random_access_iterator<const int*>, output_iterator<int*>, sentinel<const int *> >();
-    test<random_access_iterator<const int*>, forward_iterator<int*>, sentinel<const int *> >();
-    test<random_access_iterator<const int*>, bidirectional_iterator<int*>, sentinel<const int *> >();
-    test<random_access_iterator<const int*>, random_access_iterator<int*>, sentinel<const int *> >();
-    test<random_access_iterator<const int*>, int*>();
+    test<RandomAccessIterator<const int*>, OutputIterator<int*>, Sentinel<const int *> >();
+    test<RandomAccessIterator<const int*>, ForwardIterator<int*>, Sentinel<const int *> >();
+    test<RandomAccessIterator<const int*>, BidirectionalIterator<int*>, Sentinel<const int *> >();
+    test<RandomAccessIterator<const int*>, RandomAccessIterator<int*>, Sentinel<const int *> >();
+    test<RandomAccessIterator<const int*>, int*>();
 
-    test<const int*, output_iterator<int*>, sentinel<const int *> >();
-    test<const int*, forward_iterator<int*>, sentinel<const int *> >();
-    test<const int*, bidirectional_iterator<int*>, sentinel<const int *> >();
-    test<const int*, random_access_iterator<int*>, sentinel<const int *> >();
+    test<const int*, OutputIterator<int*>, Sentinel<const int *> >();
+    test<const int*, ForwardIterator<int*>, Sentinel<const int *> >();
+    test<const int*, BidirectionalIterator<int*>, Sentinel<const int *> >();
+    test<const int*, RandomAccessIterator<int*>, Sentinel<const int *> >();
     test<const int*, int*>();
 
     return ::test_result();

@@ -58,63 +58,66 @@ int main()
 
     int rgi[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-    auto && rng = rgi | view::remove_if(is_even());
+    auto rng = rgi | views::remove_if(is_even());
     has_type<int &>(*begin(rgi));
     has_type<int &>(*begin(rng));
-    models<CommonViewConcept>(aux::copy(rng));
-    models_not<SizedViewConcept>(aux::copy(rng));
-    models<BidirectionalViewConcept>(aux::copy(rng));
-    models_not<RandomAccessViewConcept>(aux::copy(rng));
+    CPP_assert(view_<decltype(rng)>);
+    CPP_assert(common_range<decltype(rng)>);
+    CPP_assert(!sized_range<decltype(rng)>);
+    CPP_assert(bidirectional_range<decltype(rng)>);
+    CPP_assert(!random_access_range<decltype(rng)>);
     ::check_equal(rng, {1,3,5,7,9});
-    ::check_equal(rng | view::reverse, {9,7,5,3,1});
-    auto tmp = rng | view::reverse;
+    ::check_equal(rng | views::reverse, {9,7,5,3,1});
+    auto tmp = rng | views::reverse;
     CHECK(&*begin(tmp) == &rgi[8]);
 
-    auto && rng2 = view::counted(rgi, 10) | view::remove_if(not_fn(is_odd()));
+    auto rng2 = views::counted(rgi, 10) | views::remove_if(not_fn(is_odd()));
     has_type<int &>(*begin(rng2));
-    models<BidirectionalViewConcept>(aux::copy(rng2));
-    models_not<RandomAccessViewConcept>(aux::copy(rng2));
-    models<CommonViewConcept>(aux::copy(rng2));
-    models_not<SizedViewConcept>(aux::copy(rng2));
+    CPP_assert(view_<decltype(rng2)>);
+    CPP_assert(bidirectional_range<decltype(rng2)>);
+    CPP_assert(!random_access_range<decltype(rng2)>);
+    CPP_assert(common_range<decltype(rng2)>);
+    CPP_assert(!sized_range<decltype(rng2)>);
     ::check_equal(rng2, {1,3,5,7,9});
     CHECK(&*begin(rng2) == &rgi[0]);
 
-    auto && rng3 = view::counted(bidirectional_iterator<int*>{rgi}, 10) | view::remove_if(is_even());
+    auto rng3 = views::counted(BidirectionalIterator<int*>{rgi}, 10) | views::remove_if(is_even());
     has_type<int &>(*begin(rng3));
-    models<BidirectionalViewConcept>(aux::copy(rng3));
-    models_not<RandomAccessViewConcept>(aux::copy(rng3));
-    models_not<CommonViewConcept>(aux::copy(rng3));
-    models_not<SizedViewConcept>(aux::copy(rng3));
+    CPP_assert(view_<decltype(rng3)>);
+    CPP_assert(bidirectional_range<decltype(rng3)>);
+    CPP_assert(!random_access_range<decltype(rng3)>);
+    CPP_assert(!common_range<decltype(rng3)>);
+    CPP_assert(!sized_range<decltype(rng3)>);
     ::check_equal(rng3, {1,3,5,7,9});
     CHECK(&*begin(rng3) == &rgi[0]);
     CHECK(&*prev(next(begin(rng3))) == &rgi[0]);
 
     // Test remove_if with a mutable lambda
     bool flag = true;
-    auto mutable_rng = view::remove_if(rgi, [flag](int) mutable { return flag = !flag;});
+    auto mutable_rng = views::remove_if(rgi, [flag](int) mutable { return flag = !flag;});
     ::check_equal(mutable_rng, {1,3,5,7,9});
-    CPP_assert(View<decltype(mutable_rng)>);
-    CPP_assert(!View<decltype(mutable_rng) const>);
+    CPP_assert(view_<decltype(mutable_rng)>);
+    CPP_assert(!view_<decltype(mutable_rng) const>);
 
     {
         const std::array<int, 3> a{{0, 1, 2}};
         const std::vector<int> b{3, 4, 5, 6};
 
-        auto r = view::concat(a, b);
+        auto r = views::concat(a, b);
         auto f = [](int i) { return i != 1 && i != 5; };
-        auto r2 = r | view::remove_if(f);
+        auto r2 = r | views::remove_if(f);
         ::check_equal(r2, {1,5});
     }
 
     {
-        auto rng = debug_input_view<int const>{rgi} | view::remove_if(is_even{});
+        auto rng = debug_input_view<int const>{rgi} | views::remove_if(is_even{});
         ::check_equal(rng, {1,3,5,7,9});
     }
 
     {
         // Defend against regression of #793
         int const some_ints[] = {1, 2, 3};
-        auto a = some_ints | ranges::view::remove_if([](int val) { return val > 0; });
+        auto a = some_ints | ranges::views::remove_if([](int val) { return val > 0; });
         CHECK(a.empty());
     }
 
@@ -123,26 +126,26 @@ int main()
         const std::vector<my_data> some_my_datas{{1}, {2}, {3}, {4}};
 
         {
-            // view::remove_if without pipe
-            auto rng = ranges::view::remove_if(some_my_datas, is_even(), &my_data::i);
+            // views::remove_if without pipe
+            auto rng = ranges::views::remove_if(some_my_datas, is_even(), &my_data::i);
             ::check_equal(rng, std::vector<my_data>{{1}, {3}});
         }
 
         {
-            // view::remove_if with pipe
-            auto rng = some_my_datas | ranges::view::remove_if(is_even(), &my_data::i);
+            // views::remove_if with pipe
+            auto rng = some_my_datas | ranges::views::remove_if(is_even(), &my_data::i);
             ::check_equal(rng, std::vector<my_data>{{1}, {3}});
         }
 
         {
-            // view::filter without pipe
-            auto rng = ranges::view::filter(some_my_datas, is_even(), &my_data::i);
+            // views::filter without pipe
+            auto rng = ranges::views::filter(some_my_datas, is_even(), &my_data::i);
             ::check_equal(rng, std::vector<my_data>{{2}, {4}});
         }
 
         {
-            // view::filter with pipe
-            auto rng = some_my_datas | ranges::view::filter(is_even(), &my_data::i);
+            // views::filter with pipe
+            auto rng = some_my_datas | ranges::views::filter(is_even(), &my_data::i);
             ::check_equal(rng, std::vector<my_data>{{2}, {4}});
         }
     }
@@ -151,13 +154,13 @@ int main()
     {
         using namespace ranges;
         constexpr std::array<int, 4> is = {{1,2,3,4}};
-        constexpr auto filter = view::remove_if(is_even()) | view::remove_if(is_odd());
+        constexpr auto filter = views::remove_if(is_even()) | views::remove_if(is_odd());
         auto rng = is | filter;
         CHECK(rng.empty());
     }
     {
         const std::vector<my_data> some_my_datas{{1}, {2}, {3}, {4}};
-        constexpr auto filter = view::remove_if(is_even(), &my_data::i) | view::remove_if(is_odd(), &my_data::i);
+        constexpr auto filter = views::remove_if(is_even(), &my_data::i) | views::remove_if(is_odd(), &my_data::i);
         auto rng = some_my_datas | filter;
         CHECK(rng.empty());
     }
