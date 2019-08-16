@@ -75,17 +75,17 @@ Release Notes:
 --------------
 * **0.5.0** Apr 30, 2019
   * **NEW:** MSVC support, from @CaseyCarter :tada: (See the docs for the list of supported compilers.)
-  * **NEW:** `views::enumerate`, from @MikeGitb
-  * **NEW:** `views::addressof`, from @tower120
+  * **NEW:** `view::enumerate`, from @MikeGitb
+  * **NEW:** `view::addressof`, from @tower120
   * **NEW:** `unstable_remove_if` algorithm and action, from @tower120
   * **NEW:** `adjacent_remove_if` algorithm and action, from @cjdb
   * **NEW:** `ostream_joiner`, from @sv1990
-  * `views::drop_while` and `views::take_while` get projection support, from @mrpi
-  * `views::filter` and `views::remove_if` get projection support, from @mrpi
-  * `views::unique` accepts optional comparison operator, from @tete17
+  * `view::drop_while` and `view::take_while` get projection support, from @mrpi
+  * `view::filter` and `view::remove_if` get projection support, from @mrpi
+  * `view::unique` accepts optional comparison operator, from @tete17
   * `action::slice` supports sliding from the end, from @tete17
   * Support coroutines on MSVC, from @CaseyCarter
-  * Faster `views::generate_n`, from GitHub user @tower120
+  * Faster `view::generate_n`, from GitHub user @tower120
   * Improved aligned new detection for libc++ on iOS, from @mtak-
   * Various CMake improvements, from @johelegp
   * `view_adaptor` supports `basic_iterator`-style mixins, from @tower120
@@ -107,9 +107,9 @@ Release Notes:
     * "generate(foo) | take(n) calls foo n+1 times" [#819](https://github.com/ericniebler/range-v3/issues/819).
     * "generate seems broken with move-only return types" [#905](https://github.com/ericniebler/range-v3/issues/905).
     * "Unexpected behavior in generate with return by reference" [#807](https://github.com/ericniebler/range-v3/issues/807).
-    * "Inconsistent behaviour of ranges::distance with ranges::views::zip using infinite views." [#783](https://github.com/ericniebler/range-v3/issues/783).
-    * "Infinite loop when using ranges::views::cycle with an infinite range" [#780](https://github.com/ericniebler/range-v3/issues/780).
-    * "Composing ranges::views::cycle with ranges::views::slice" [#778](https://github.com/ericniebler/range-v3/issues/778).
+    * "Inconsistent behaviour of ranges::distance with ranges::view::zip using infinite views." [#783](https://github.com/ericniebler/range-v3/issues/783).
+    * "Infinite loop when using ranges::view::cycle with an infinite range" [#780](https://github.com/ericniebler/range-v3/issues/780).
+    * "Composing ranges::view::cycle with ranges::view::slice" [#778](https://github.com/ericniebler/range-v3/issues/778).
     * "cartesian_product view, now with moar bugs." [#919](https://github.com/ericniebler/range-v3/issues/919).
 * **0.3.7** Sept 19, 2018
   - Improved support for clang-cl (thanks to @CaseyCarter).
@@ -118,18 +118,18 @@ Release Notes:
   - Fix `move_sentinel` comparisons (see #889).
   - Avoid ambiguity created by `boost::advance` and `std::advance` (see #893).
 * **0.3.6** May 15, 2018
-  - NEW: `views::exclusive_scan` (thanks to GitHub user @mitsutaka-takeda).
+  - NEW: `view::exclusive_scan` (thanks to GitHub user @mitsutaka-takeda).
   - All views get non-`const` overloads of `.empty()` and `.size()` (see [ericniebler/stl2\#793](https://github.com/ericniebler/stl2/issues/793)).
   - Upgrade Conan support for conan 1.0.
   - `subspan` interface tweaks.
-  - Fix bug in `views::split` (see [this stackoverflow question](https://stackoverflow.com/questions/49015671)).
-  - Fix bug in `views::stride` (see [ericniebler/stl2\#805](https://github.com/ericniebler/stl2/issues/805)).
-  - Fix `const`-correctness problem in `views::chunk` (see [this stackoverflow question](https://stackoverflow.com/questions/49210190)).
+  - Fix bug in `view::split` (see [this stackoverflow question](https://stackoverflow.com/questions/49015671)).
+  - Fix bug in `view::stride` (see [ericniebler/stl2\#805](https://github.com/ericniebler/stl2/issues/805)).
+  - Fix `const`-correctness problem in `view::chunk` (see [this stackoverflow question](https://stackoverflow.com/questions/49210190)).
   - Replace uses of `ranges::result_of` with `ranges::invoke_result`.
-  - Fix potential buffer overrun of `views::drop` over RandomAccessRanges.
-  - Lots of `views::cartesian_product` fixes (see [ericniebler/stl2\#820](https://github.com/ericniebler/stl2/issues/820), [ericniebler/stl2\#823](https://github.com/ericniebler/stl2/issues/823)).
+  - Fix potential buffer overrun of `view::drop` over RandomAccessRanges.
+  - Lots of `view::cartesian_product` fixes (see [ericniebler/stl2\#820](https://github.com/ericniebler/stl2/issues/820), [ericniebler/stl2\#823](https://github.com/ericniebler/stl2/issues/823)).
   - Work around gcc-8 regression regarding `volatile` `std::initializer_list`s (see [ericniebler/stl2\#826](https://github.com/ericniebler/stl2/issues/826)).
-  - Fix `const`-correctness problem of `views::take`.
+  - Fix `const`-correctness problem of `view::take`.
 * **0.3.5** February 17, 2018
   - Rvalues may satisfy `Writable` (see [ericniebler/stl2\#387](https://github.com/ericniebler/stl2/issues/387)).
   - `view_interface` gets a bounds-checking `at` method.
@@ -164,7 +164,7 @@ Release Notes:
   - `ranges::optional` now behaves like `std::optional` (from @CaseyCarter)
   - Extensive bug fixes with Input ranges (from @CaseyCarter)
 * **0.2.5** May 16, 2017
-  - `views::chunk` works on Input ranges (from @CaseyCarter)
+  - `view::chunk` works on Input ranges (from @CaseyCarter)
   - `for_each_n` algorithm (from @khlebnikov)
   - Portability fixes for MinGW, clang-3.6 and -3.7, and gcc-7; and cmake 3.0
 * **0.2.4** April 12, 2017
@@ -175,14 +175,14 @@ Release Notes:
   - iterators that return move-only types by value do not satisfy Readable (ericniebler/stl2#399).
 * **0.2.2** March 30, 2017
   New in this release:
-  - `views::linear_distribute(from,to,n)` - A view of `n` elements between `from` and `to`, distributed evenly.
-  - `views::indices(n)` - A view of the indices `[0,1,2...n-1]`.
-  - `views::closed_indices(n)` - A view of the indices `[0,1,2...n]`.
+  - `view::linear_distribute(from,to,n)` - A view of `n` elements between `from` and `to`, distributed evenly.
+  - `view::indices(n)` - A view of the indices `[0,1,2...n-1]`.
+  - `view::closed_indices(n)` - A view of the indices `[0,1,2...n]`.
 
-  This release deprecates `views::ints(n)` as confusing to new users.
+  This release deprecates `view::ints(n)` as confusing to new users.
 * **0.2.1** March 22, 2017
   New in this release:
-  - `views::cartesian_product`
+  - `view::cartesian_product`
   - `action::reverse`
 * **0.2.0** March 13, 2017
   Bring many interfaces into sync with the Ranges TS.
