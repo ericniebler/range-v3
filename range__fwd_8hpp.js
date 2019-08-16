@@ -1,6 +1,6 @@
 var range__fwd_8hpp =
 [
-    [ "action", "structranges_1_1action_1_1action.html", "structranges_1_1action_1_1action" ],
+    [ "action", "structranges_1_1actions_1_1action.html", "structranges_1_1actions_1_1action" ],
     [ "basic_view", "structranges_1_1basic__view.html", null ],
     [ "begin_tag", "structranges_1_1begin__tag.html", null ],
     [ "compressed_pair", "structranges_1_1compressed__pair.html", "structranges_1_1compressed__pair" ],

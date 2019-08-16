@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['datatype_2331',['Datatype',['../group__datatype.html',1,'']]]
+  ['datatype_2335',['Datatype',['../group__datatype.html',1,'']]]
 ];

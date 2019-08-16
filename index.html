@@ -187,7 +187,7 @@ Views</h3>
 <p>Filter a container using a predicate and transform it.</p>
 <div class="fragment"><div class="line">std::vector&lt;int&gt; vi{1,2,3,4,5,6,7,8,9,10};</div>
 <div class="line"><span class="keyword">using namespace </span>ranges;</div>
-<div class="line"><span class="keyword">auto</span> rng = vi | <a class="code" href="group__group-actions.html#ga319d56e9aa5334504533ec3f9fdf5228">views::remove_if</a>([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i % 2 == 1;})</div>
+<div class="line"><span class="keyword">auto</span> rng = vi | <a class="code" href="group__group-actions.html#ga8fa4d6429c889af4a6b67b2a90cb93a0">views::remove_if</a>([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i % 2 == 1;})</div>
 <div class="line">              | <a class="code" href="group__transformation.html#ga24923725e5aa3cc7ee73367935437a1c">views::transform</a>([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> std::to_string(i);});</div>
 <div class="line"><span class="comment">// rng == {&quot;2&quot;,&quot;4&quot;,&quot;6&quot;,&quot;8&quot;,&quot;10&quot;};</span></div>
 </div><!-- fragment --><p>Generate an infinite list of integers starting at 1, square them, take the first 10, and sum them:</p>
@@ -216,13 +216,13 @@ Actions</h3>
 <p>Read data into a vector, sort it, and make it unique.</p>
 <div class="fragment"><div class="line"><span class="keyword">extern</span> std::vector&lt;int&gt; read_data();</div>
 <div class="line"><span class="keyword">using namespace </span>ranges;</div>
-<div class="line">std::vector&lt;int&gt; vi = read_data() | <a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">action::sort</a> | <a class="code" href="group__transformation.html#ga851cff9736691f16f0899eac04839d58">action::unique</a>;</div>
+<div class="line">std::vector&lt;int&gt; vi = read_data() | <a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">actions::sort</a> | <a class="code" href="group__transformation.html#ga851cff9736691f16f0899eac04839d58">actions::unique</a>;</div>
 </div><!-- fragment --><p>Do the same to a <code>vector</code> that already contains some data:</p>
-<div class="fragment"><div class="line">vi = <a class="code" href="group__group-algorithms.html#ga0b2fdb8123a8df06072057e380557dc3">std::move</a>(vi) | <a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">action::sort</a> | <a class="code" href="group__transformation.html#ga851cff9736691f16f0899eac04839d58">action::unique</a>;</div>
+<div class="fragment"><div class="line">vi = <a class="code" href="group__group-algorithms.html#ga0b2fdb8123a8df06072057e380557dc3">std::move</a>(vi) | <a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">actions::sort</a> | <a class="code" href="group__transformation.html#ga851cff9736691f16f0899eac04839d58">actions::unique</a>;</div>
 </div><!-- fragment --><p>Mutate the container in-place:</p>
-<div class="fragment"><div class="line">vi |= <a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">action::sort</a> | <a class="code" href="group__transformation.html#ga851cff9736691f16f0899eac04839d58">action::unique</a>;</div>
+<div class="fragment"><div class="line">vi |= <a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">actions::sort</a> | <a class="code" href="group__transformation.html#ga851cff9736691f16f0899eac04839d58">actions::unique</a>;</div>
 </div><!-- fragment --><p>Same as above, but with function-call syntax instead of pipe syntax:</p>
-<div class="fragment"><div class="line"><a class="code" href="group__transformation.html#ga851cff9736691f16f0899eac04839d58">action::unique</a>(<a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">action::sort</a>(vi));</div>
+<div class="fragment"><div class="line"><a class="code" href="group__transformation.html#ga851cff9736691f16f0899eac04839d58">actions::unique</a>(<a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">actions::sort</a>(vi));</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md12"></a>
 Create Custom Ranges</h1>
 <p>Range-v3 provides a utility for easily creating your own range types, called <a class="el" href="structranges_1_1view__facade.html"><code>ranges::view_facade</code></a>. The code below uses <code>view_facade</code> to create a range that traverses a null-terminated string:</p>
@@ -737,45 +737,45 @@ Range Actions</h1>
 <hr  />
 <p>Below is a list of the eager range combinators, or <em>actions</em>, that Range-v3 provides, and a blurb about how each is intended to be used.</p>
 <dl>
-<dt><a class="el" href="structranges_1_1action_1_1drop__fn.html"><code>action::drop</code></a> </dt>
+<dt><a class="el" href="structranges_1_1actions_1_1drop__fn.html"><code>actions::drop</code></a> </dt>
 <dd>Removes the first <code>N</code> elements of the source range. </dd>
-<dt><a class="el" href="structranges_1_1action_1_1drop__while__fn.html"><code>action::drop_while</code></a> </dt>
+<dt><a class="el" href="structranges_1_1actions_1_1drop__while__fn.html"><code>actions::drop_while</code></a> </dt>
 <dd>Removes the first elements of the source range that satisfy the unary predicate. </dd>
-<dt><code>action::erase</code> </dt>
+<dt><code>actions::erase</code> </dt>
 <dd>Removes all elements in the sub-range of the source (range version) or all elements after position. </dd>
-<dt><code>action::insert</code> </dt>
+<dt><code>actions::insert</code> </dt>
 <dd>Inserts all elements of the range into the source at position. </dd>
-<dt><a class="el" href="structranges_1_1action_1_1join__fn.html"><code>action::join</code></a> </dt>
+<dt><a class="el" href="structranges_1_1actions_1_1join__fn.html"><code>actions::join</code></a> </dt>
 <dd>Flattens a range of ranges. </dd>
-<dt><code>action::push_back</code> </dt>
+<dt><code>actions::push_back</code> </dt>
 <dd>Appends elements to the tail of the source. </dd>
-<dt><code>action::push_front</code> </dt>
+<dt><code>actions::push_front</code> </dt>
 <dd>Appends elements before the head of the source. </dd>
-<dt><a class="el" href="structranges_1_1action_1_1remove__if__fn.html"><code>action::remove_if</code></a> </dt>
+<dt><a class="el" href="structranges_1_1actions_1_1remove__if__fn.html"><code>actions::remove_if</code></a> </dt>
 <dd>Removes all elements from the source that satisfy the predicate. </dd>
-<dt><a class="el" href="structranges_1_1action_1_1remove__fn.html"><code>action::remove</code></a> </dt>
+<dt><a class="el" href="structranges_1_1actions_1_1remove__fn.html"><code>actions::remove</code></a> </dt>
 <dd>Removes all elements from the source that are equal to value. </dd>
-<dt><a class="el" href="structranges_1_1action_1_1unstable__remove__if__fn.html"><code>action::unstable_remove_if</code></a> </dt>
+<dt><a class="el" href="structranges_1_1actions_1_1unstable__remove__if__fn.html"><code>actions::unstable_remove_if</code></a> </dt>
 <dd>Much faster (each element remove has constant time complexity), unordered version of <code>remove_if</code>. Requires bidirectional container. </dd>
-<dt><a class="el" href="structranges_1_1action_1_1shuffle__fn.html"><code>action::shuffle</code></a> </dt>
+<dt><a class="el" href="structranges_1_1actions_1_1shuffle__fn.html"><code>actions::shuffle</code></a> </dt>
 <dd>Shuffles the source range. </dd>
-<dt><a class="el" href="structranges_1_1action_1_1slice__fn.html"><code>action::slice</code></a> </dt>
+<dt><a class="el" href="structranges_1_1actions_1_1slice__fn.html"><code>actions::slice</code></a> </dt>
 <dd>Removes all elements from the source that are not part of the sub-range. </dd>
-<dt><a class="el" href="structranges_1_1action_1_1sort__fn.html"><code>action::sort</code></a> </dt>
+<dt><a class="el" href="structranges_1_1actions_1_1sort__fn.html"><code>actions::sort</code></a> </dt>
 <dd>Sorts the source range (unstable). </dd>
-<dt><a class="el" href="structranges_1_1action_1_1split__fn.html"><code>action::split</code></a> </dt>
+<dt><a class="el" href="structranges_1_1actions_1_1split__fn.html"><code>actions::split</code></a> </dt>
 <dd>Split a range into a sequence of subranges using a delimiter (a value, a sequence of values, a predicate, or a binary function returning a <code>pair&lt;bool, N&gt;</code>). </dd>
-<dt><a class="el" href="structranges_1_1action_1_1stable__sort__fn.html"><code>action::stable_sort</code></a> </dt>
+<dt><a class="el" href="structranges_1_1actions_1_1stable__sort__fn.html"><code>actions::stable_sort</code></a> </dt>
 <dd>Sorts the source range (stable). </dd>
-<dt><a class="el" href="structranges_1_1action_1_1stride__fn.html"><code>action::stride</code></a> </dt>
+<dt><a class="el" href="structranges_1_1actions_1_1stride__fn.html"><code>actions::stride</code></a> </dt>
 <dd>Removes all elements whose position does not match the stride. </dd>
-<dt><a class="el" href="structranges_1_1action_1_1take__fn.html"><code>action::take</code></a> </dt>
+<dt><a class="el" href="structranges_1_1actions_1_1take__fn.html"><code>actions::take</code></a> </dt>
 <dd>Keeps the first <code>N</code>-th elements of the range, removes the rest. </dd>
-<dt><a class="el" href="structranges_1_1action_1_1take__while__fn.html"><code>action::take_while</code></a> </dt>
+<dt><a class="el" href="structranges_1_1actions_1_1take__while__fn.html"><code>actions::take_while</code></a> </dt>
 <dd>Keeps the first elements that satisfy the predicate, removes the rest. </dd>
-<dt><a class="el" href="structranges_1_1action_1_1transform__fn.html"><code>action::transform</code></a> </dt>
+<dt><a class="el" href="structranges_1_1actions_1_1transform__fn.html"><code>actions::transform</code></a> </dt>
 <dd>Replaces elements of the source with the result of the unary function. </dd>
-<dt><code>action::unique</code> </dt>
+<dt><code>actions::unique</code> </dt>
 <dd>Removes adjacent elements of the source that compare equal. If the source is sorted, removes all duplicate elements. </dd>
 </dl>
 <h1><a class="anchor" id="example-section"></a>
@@ -1106,12 +1106,11 @@ is_sorted</h2>
 </div><!-- fragment --></div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="agroup__group-actions_html_gaf9135baba87fb451e6e904428239ad19"><div class="ttname"><a href="group__group-actions.html#gaf9135baba87fb451e6e904428239ad19">ranges::action::transform_fn::transform</a></div><div class="ttdeci">constexpr action&lt; transform_fn &gt; transform</div><div class="ttdef"><b>Definition:</b> transform.hpp:59</div></div>
+<div class="ttc" id="agroup__group-actions_html_gaf9135baba87fb451e6e904428239ad19"><div class="ttname"><a href="group__group-actions.html#gaf9135baba87fb451e6e904428239ad19">ranges::actions::transform_fn::transform</a></div><div class="ttdeci">constexpr action&lt; transform_fn &gt; transform</div><div class="ttdef"><b>Definition:</b> transform.hpp:59</div></div>
 <div class="ttc" id="aiterator_2basic__iterator_8hpp_html"><div class="ttname"><a href="iterator_2basic__iterator_8hpp.html">basic_iterator.hpp</a></div></div>
 <div class="ttc" id="agroup__runtime_html_ga8beaba5ae537715c97e180b05160cc03"><div class="ttname"><a href="group__runtime.html#ga8beaba5ae537715c97e180b05160cc03">meta::for_each</a></div><div class="ttdeci">constexpr auto &amp;&amp; for_each</div><div class="ttdoc">for_each(List, UnaryFunction) calls the UnaryFunction for each argument in the List.</div><div class="ttdef"><b>Definition:</b> meta.hpp:2844</div></div>
 <div class="ttc" id="agroup__list_html_gae64f0978e680ad1a96438c0756b4644d"><div class="ttname"><a href="group__list.html#gae64f0978e680ad1a96438c0756b4644d">meta::empty</a></div><div class="ttdeci">bool_&lt; 0==size&lt; L &gt;::type::value &gt; empty</div><div class="ttdoc">An Boolean integral constant wrapper around true if L is an empty type list; false,...</div><div class="ttdef"><b>Definition:</b> meta.hpp:2199</div></div>
 <div class="ttc" id="aany__of_8hpp_html"><div class="ttname"><a href="any__of_8hpp.html">any_of.hpp</a></div></div>
-<div class="ttc" id="agroup__group-actions_html_ga319d56e9aa5334504533ec3f9fdf5228"><div class="ttname"><a href="group__group-actions.html#ga319d56e9aa5334504533ec3f9fdf5228">ranges::action::remove_if</a></div><div class="ttdeci">constexpr action&lt; remove_if_fn &gt; remove_if</div><div class="ttdef"><b>Definition:</b> remove_if.hpp:64</div></div>
 <div class="ttc" id="astructranges_1_1basic__mixin_html"><div class="ttname"><a href="structranges_1_1basic__mixin.html">ranges::basic_mixin</a></div><div class="ttdef"><b>Definition:</b> basic_iterator.hpp:41</div></div>
 <div class="ttc" id="agroup__group-iterator_html_gaf136ff254688f2c24f5c5f58df7ff56d"><div class="ttname"><a href="group__group-iterator.html#gaf136ff254688f2c24f5c5f58df7ff56d">ranges::next</a></div><div class="ttdeci">constexpr next_fn next</div><div class="ttdef"><b>Definition:</b> operations.hpp:331</div></div>
 <div class="ttc" id="agroup__transformation_html_gadec7869718bf0ddf69579775156b351d"><div class="ttname"><a href="group__transformation.html#gadec7869718bf0ddf69579775156b351d">meta::accumulate</a></div><div class="ttdeci">fold&lt; L, State, Fn &gt; accumulate</div><div class="ttdoc">An alias for meta::fold.</div><div class="ttdef"><b>Definition:</b> meta.hpp:1565</div></div>
@@ -1124,14 +1123,15 @@ is_sorted</h2>
 <div class="ttc" id="agroup__query_html_ga4e7b439f707e529f3df7745ff7e2eb19"><div class="ttname"><a href="group__query.html#ga4e7b439f707e529f3df7745ff7e2eb19">meta::find</a></div><div class="ttdeci">drop&lt; L, min&lt; find_index&lt; L, T &gt;, size&lt; L &gt; &gt;&gt; find</div><div class="ttdoc">Return the tail of the list L starting at the first occurrence of T, if any such element exists; the ...</div><div class="ttdef"><b>Definition:</b> meta.hpp:2356</div></div>
 <div class="ttc" id="astructranges_1_1adaptor__base_html"><div class="ttname"><a href="structranges_1_1adaptor__base.html">ranges::adaptor_base</a></div><div class="ttdef"><b>Definition:</b> adaptor.hpp:107</div></div>
 <div class="ttc" id="agroup__list_html_gafd1e131e4e3ae4b0ae9bd3d2ec3a5f74"><div class="ttname"><a href="group__list.html#gafd1e131e4e3ae4b0ae9bd3d2ec3a5f74">meta::pair</a></div><div class="ttdeci">list&lt; F, S &gt; pair</div><div class="ttdoc">A list with exactly two elements.</div><div class="ttdef"><b>Definition:</b> meta.hpp:2214</div></div>
-<div class="ttc" id="astructranges_1_1view__facade_html"><div class="ttname"><a href="structranges_1_1view__facade.html">ranges::view_facade</a></div><div class="ttdoc">A utility for constructing a view from a (derived) type that implements begin and end cursors.</div><div class="ttdef"><b>Definition:</b> range_fwd.hpp:419</div></div>
+<div class="ttc" id="astructranges_1_1view__facade_html"><div class="ttname"><a href="structranges_1_1view__facade.html">ranges::view_facade</a></div><div class="ttdoc">A utility for constructing a view from a (derived) type that implements begin and end cursors.</div><div class="ttdef"><b>Definition:</b> range_fwd.hpp:430</div></div>
 <div class="ttc" id="aview_2all_8hpp_html"><div class="ttname"><a href="view_2all_8hpp.html">all.hpp</a></div></div>
 <div class="ttc" id="astructranges_1_1default__sentinel__t_html"><div class="ttname"><a href="structranges_1_1default__sentinel__t.html">ranges::default_sentinel_t</a></div><div class="ttdef"><b>Definition:</b> default_sentinel.hpp:23</div></div>
 <div class="ttc" id="agroup__group-algorithms_html_ga0b2fdb8123a8df06072057e380557dc3"><div class="ttname"><a href="group__group-algorithms.html#ga0b2fdb8123a8df06072057e380557dc3">ranges::move</a></div><div class="ttdeci">constexpr move_fn move</div><div class="ttdef"><b>Definition:</b> move.hpp:69</div></div>
 <div class="ttc" id="agroup__transformation_html_ga24923725e5aa3cc7ee73367935437a1c"><div class="ttname"><a href="group__transformation.html#ga24923725e5aa3cc7ee73367935437a1c">meta::transform</a></div><div class="ttdeci">_t&lt; detail::transform_&lt; list&lt; Args... &gt; &gt;&gt; transform</div><div class="ttdoc">Return a new meta::list constructed by transforming all the elements in L with the unary invocable Fn...</div><div class="ttdef"><b>Definition:</b> meta.hpp:1823</div></div>
 <div class="ttc" id="agroup__list_html_ga68418643d5aacd0ec2afe5a0e933ccf3"><div class="ttname"><a href="group__list.html#ga68418643d5aacd0ec2afe5a0e933ccf3">meta::first</a></div><div class="ttdeci">front&lt; Pair &gt; first</div><div class="ttdoc">Retrieve the first element of the pair Pair.</div><div class="ttdef"><b>Definition:</b> meta.hpp:2219</div></div>
 <div class="ttc" id="ais__sorted_8hpp_html"><div class="ttname"><a href="is__sorted_8hpp.html">is_sorted.hpp</a></div></div>
-<div class="ttc" id="astructranges_1_1view__adaptor_html"><div class="ttname"><a href="structranges_1_1view__adaptor.html">ranges::view_adaptor</a></div><div class="ttdef"><b>Definition:</b> range_fwd.hpp:423</div></div>
+<div class="ttc" id="agroup__group-actions_html_ga8fa4d6429c889af4a6b67b2a90cb93a0"><div class="ttname"><a href="group__group-actions.html#ga8fa4d6429c889af4a6b67b2a90cb93a0">ranges::actions::remove_if</a></div><div class="ttdeci">constexpr action&lt; remove_if_fn &gt; remove_if</div><div class="ttdef"><b>Definition:</b> remove_if.hpp:64</div></div>
+<div class="ttc" id="astructranges_1_1view__adaptor_html"><div class="ttname"><a href="structranges_1_1view__adaptor.html">ranges::view_adaptor</a></div><div class="ttdef"><b>Definition:</b> range_fwd.hpp:434</div></div>
 <div class="ttc" id="aalgorithm_2for__each_8hpp_html"><div class="ttname"><a href="algorithm_2for__each_8hpp.html">for_each.hpp</a></div></div>
 <div class="ttc" id="agroup__group-range_html_ga80d92c391f5b5c0a50156af5f9c9d8c7"><div class="ttname"><a href="group__group-range.html#ga80d92c391f5b5c0a50156af5f9c9d8c7">ranges::end</a></div><div class="ttdeci">constexpr _end_::fn end</div><div class="ttdef"><b>Definition:</b> access.hpp:339</div></div>
 <div class="ttc" id="agroup__group-range_html_ga446b20253a26c93ef3004fcbfcbf3ec3"><div class="ttname"><a href="group__group-range.html#ga446b20253a26c93ef3004fcbfcbf3ec3">ranges::begin</a></div><div class="ttdeci">constexpr _begin_::fn begin</div><div class="ttdef"><b>Definition:</b> access.hpp:179</div></div>

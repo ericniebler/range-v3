@@ -26,31 +26,31 @@ var annotated =
     ] ],
     [ "meta", "namespacemeta.html", "namespacemeta" ],
     [ "ranges", null, [
-      [ "action", null, [
-        [ "action", "structranges_1_1action_1_1action.html", "structranges_1_1action_1_1action" ],
-        [ "action_access", "structranges_1_1action_1_1action__access.html", [
-          [ "impl", "structranges_1_1action_1_1action__access_1_1impl.html", null ]
+      [ "actions", null, [
+        [ "action", "structranges_1_1actions_1_1action.html", "structranges_1_1actions_1_1action" ],
+        [ "action_access", "structranges_1_1actions_1_1action__access.html", [
+          [ "impl", "structranges_1_1actions_1_1action__access_1_1impl.html", null ]
         ] ],
-        [ "adjacent_remove_if_fn", "structranges_1_1action_1_1adjacent__remove__if__fn.html", "structranges_1_1action_1_1adjacent__remove__if__fn" ],
-        [ "drop_fn", "structranges_1_1action_1_1drop__fn.html", "structranges_1_1action_1_1drop__fn" ],
-        [ "drop_while_fn", "structranges_1_1action_1_1drop__while__fn.html", "structranges_1_1action_1_1drop__while__fn" ],
-        [ "join_fn", "structranges_1_1action_1_1join__fn.html", "structranges_1_1action_1_1join__fn" ],
-        [ "make_action_fn", "structranges_1_1action_1_1make__action__fn.html", "structranges_1_1action_1_1make__action__fn" ],
-        [ "remove_fn", "structranges_1_1action_1_1remove__fn.html", "structranges_1_1action_1_1remove__fn" ],
-        [ "remove_if_fn", "structranges_1_1action_1_1remove__if__fn.html", "structranges_1_1action_1_1remove__if__fn" ],
-        [ "reverse_fn", "structranges_1_1action_1_1reverse__fn.html", "structranges_1_1action_1_1reverse__fn" ],
-        [ "shuffle_fn", "structranges_1_1action_1_1shuffle__fn.html", "structranges_1_1action_1_1shuffle__fn" ],
-        [ "slice_fn", "structranges_1_1action_1_1slice__fn.html", "structranges_1_1action_1_1slice__fn" ],
-        [ "sort_fn", "structranges_1_1action_1_1sort__fn.html", "structranges_1_1action_1_1sort__fn" ],
-        [ "split_fn", "structranges_1_1action_1_1split__fn.html", "structranges_1_1action_1_1split__fn" ],
-        [ "split_when_fn", "structranges_1_1action_1_1split__when__fn.html", "structranges_1_1action_1_1split__when__fn" ],
-        [ "stable_sort_fn", "structranges_1_1action_1_1stable__sort__fn.html", "structranges_1_1action_1_1stable__sort__fn" ],
-        [ "stride_fn", "structranges_1_1action_1_1stride__fn.html", "structranges_1_1action_1_1stride__fn" ],
-        [ "take_fn", "structranges_1_1action_1_1take__fn.html", "structranges_1_1action_1_1take__fn" ],
-        [ "take_while_fn", "structranges_1_1action_1_1take__while__fn.html", "structranges_1_1action_1_1take__while__fn" ],
-        [ "transform_fn", "structranges_1_1action_1_1transform__fn.html", "structranges_1_1action_1_1transform__fn" ],
-        [ "unique_fn", "structranges_1_1action_1_1unique__fn.html", "structranges_1_1action_1_1unique__fn" ],
-        [ "unstable_remove_if_fn", "structranges_1_1action_1_1unstable__remove__if__fn.html", "structranges_1_1action_1_1unstable__remove__if__fn" ]
+        [ "adjacent_remove_if_fn", "structranges_1_1actions_1_1adjacent__remove__if__fn.html", "structranges_1_1actions_1_1adjacent__remove__if__fn" ],
+        [ "drop_fn", "structranges_1_1actions_1_1drop__fn.html", "structranges_1_1actions_1_1drop__fn" ],
+        [ "drop_while_fn", "structranges_1_1actions_1_1drop__while__fn.html", "structranges_1_1actions_1_1drop__while__fn" ],
+        [ "join_fn", "structranges_1_1actions_1_1join__fn.html", "structranges_1_1actions_1_1join__fn" ],
+        [ "make_action_fn", "structranges_1_1actions_1_1make__action__fn.html", "structranges_1_1actions_1_1make__action__fn" ],
+        [ "remove_fn", "structranges_1_1actions_1_1remove__fn.html", "structranges_1_1actions_1_1remove__fn" ],
+        [ "remove_if_fn", "structranges_1_1actions_1_1remove__if__fn.html", "structranges_1_1actions_1_1remove__if__fn" ],
+        [ "reverse_fn", "structranges_1_1actions_1_1reverse__fn.html", "structranges_1_1actions_1_1reverse__fn" ],
+        [ "shuffle_fn", "structranges_1_1actions_1_1shuffle__fn.html", "structranges_1_1actions_1_1shuffle__fn" ],
+        [ "slice_fn", "structranges_1_1actions_1_1slice__fn.html", "structranges_1_1actions_1_1slice__fn" ],
+        [ "sort_fn", "structranges_1_1actions_1_1sort__fn.html", "structranges_1_1actions_1_1sort__fn" ],
+        [ "split_fn", "structranges_1_1actions_1_1split__fn.html", "structranges_1_1actions_1_1split__fn" ],
+        [ "split_when_fn", "structranges_1_1actions_1_1split__when__fn.html", "structranges_1_1actions_1_1split__when__fn" ],
+        [ "stable_sort_fn", "structranges_1_1actions_1_1stable__sort__fn.html", "structranges_1_1actions_1_1stable__sort__fn" ],
+        [ "stride_fn", "structranges_1_1actions_1_1stride__fn.html", "structranges_1_1actions_1_1stride__fn" ],
+        [ "take_fn", "structranges_1_1actions_1_1take__fn.html", "structranges_1_1actions_1_1take__fn" ],
+        [ "take_while_fn", "structranges_1_1actions_1_1take__while__fn.html", "structranges_1_1actions_1_1take__while__fn" ],
+        [ "transform_fn", "structranges_1_1actions_1_1transform__fn.html", "structranges_1_1actions_1_1transform__fn" ],
+        [ "unique_fn", "structranges_1_1actions_1_1unique__fn.html", "structranges_1_1actions_1_1unique__fn" ],
+        [ "unstable_remove_if_fn", "structranges_1_1actions_1_1unstable__remove__if__fn.html", "structranges_1_1actions_1_1unstable__remove__if__fn" ]
       ] ],
       [ "aux", null, [
         [ "copy_fn", "structranges_1_1aux_1_1copy__fn.html", "structranges_1_1aux_1_1copy__fn" ],
