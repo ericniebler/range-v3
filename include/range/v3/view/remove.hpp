@@ -33,7 +33,7 @@ namespace ranges
 {
     /// \addtogroup group-views
     /// @{
-    namespace view
+    namespace views
     {
         struct remove_fn
         {
@@ -48,7 +48,7 @@ namespace ranges
             template<typename Value, typename Proj>
             static constexpr auto CPP_fun(bind)(remove_fn remove, Value value,
                                                 Proj proj)( //
-                requires(!Range<Value>))
+                requires(!range<Value>))
             {
                 return make_pipeable(
                     bind_back(remove, std::move(value), std::move(proj)));
@@ -60,7 +60,7 @@ namespace ranges
                 Value value_;
                 template<typename T>
                 auto operator()(T && other) const -> CPP_ret(bool)( //
-                    requires EqualityComparableWith<T, Value const &>)
+                    requires equality_comparable_with<T, Value const &>)
                 {
                     return static_cast<T &&>(other) == value_;
                 }
@@ -69,17 +69,17 @@ namespace ranges
         public:
             template<typename Rng, typename Value>
             constexpr auto CPP_fun(operator())(Rng && rng, Value value)(
-                const requires MoveConstructible<Value> && ViewableRange<Rng> &&
-                    InputRange<Rng> &&
-                        IndirectlyComparable<iterator_t<Rng>, Value const *, equal_to>)
+                const requires move_constructible<Value> && viewable_range<Rng> &&
+                    input_range<Rng> &&
+                        indirectly_comparable<iterator_t<Rng>, Value const *, equal_to>)
             {
                 return remove_if(static_cast<Rng &&>(rng), pred<Value>{std::move(value)});
             }
 
             template<typename Rng, typename Value, typename Proj>
             constexpr auto CPP_fun(operator())(Rng && rng, Value value, Proj proj)(
-                const requires MoveConstructible<Value> && ViewableRange<Rng> &&
-                    InputRange<Rng> && IndirectlyComparable<
+                const requires move_constructible<Value> && viewable_range<Rng> &&
+                    input_range<Rng> && indirectly_comparable<
                         iterator_t<Rng>, Value const *, equal_to, Proj>)
             {
                 return remove_if(static_cast<Rng &&>(rng),
@@ -91,7 +91,7 @@ namespace ranges
         /// \relates remove_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<remove_fn>, remove)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

@@ -23,11 +23,11 @@ int main()
 {
     using namespace ranges;
     {
-        auto v = view::ints(0, 100) | to<std::vector>();
+        auto v = views::ints(0, 100) | to<std::vector>();
 
         auto v2 = v | copy | action::slice(10, 20);
         CHECK(size(v2) == 10u);
-        ::models<SameConcept>(v, v2);
+        CPP_assert(same_as<decltype(v), decltype(v2)>);
         ::check_equal(v2, {10, 11, 12, 13, 14, 15, 16, 17, 18, 19});
 
         v2 = v2 | move | action::slice(2, 8);
@@ -42,7 +42,7 @@ int main()
     }
 
     {
-        auto rng = view::ints(0, 100) | to<std::vector>();
+        auto rng = views::ints(0, 100) | to<std::vector>();
 
         rng |= action::slice(20, end - 70);
         CHECK(size(rng) == 10u);
@@ -54,7 +54,7 @@ int main()
     }
 
     {
-        auto rng = view::ints(0, 100) | to<std::vector>();
+        auto rng = views::ints(0, 100) | to<std::vector>();
 
         auto &rng_copy = action::slice(rng, 90, end);
         CHECK(&rng_copy == &rng);

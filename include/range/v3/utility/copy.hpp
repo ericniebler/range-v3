@@ -30,7 +30,7 @@ namespace ranges
         {
             template<typename T>
             constexpr auto operator()(T && t) const -> CPP_ret(detail::decay_t<T>)( //
-                requires Constructible<detail::decay_t<T>, T>)
+                requires constructible_from<detail::decay_t<T>, T>)
             {
                 return static_cast<T &&>(t);
             }
@@ -40,7 +40,7 @@ namespace ranges
             template<typename T>
             friend constexpr auto operator|(T && t, copy_fn)
                 -> CPP_broken_friend_ret(detail::decay_t<T>)( //
-                    requires Constructible<detail::decay_t<T>, T>)
+                    requires constructible_from<detail::decay_t<T>, T>)
             {
                 return static_cast<T &&>(t);
             }

@@ -24,28 +24,28 @@ int main()
     std::vector<int> vi(begin(rgi), end(rgi));
     std::list<int> li(begin(rgi), end(rgi));
 
-    ref_view<int[7]> x = view::all(rgi);
-    ref_view<std::vector<int>> y = view::all(vi);
-    ref_view<std::list<int>> z = view::all(li);
+    ref_view<int[7]> x = views::all(rgi);
+    ref_view<std::vector<int>> y = views::all(vi);
+    ref_view<std::list<int>> z = views::all(li);
 
-    CPP_assert(SizedView<decltype(x)>);
-    CPP_assert(SizedView<decltype(y)>);
-    CPP_assert(SizedView<decltype(z)>);
+    CPP_assert(sized_range<decltype(x)> && view_<decltype(x)>);
+    CPP_assert(sized_range<decltype(y)> && view_<decltype(y)>);
+    CPP_assert(sized_range<decltype(z)> && view_<decltype(z)>);
 
-    x = view::all(x);
-    y = view::all(y);
-    z = view::all(z);
+    x = views::all(x);
+    y = views::all(y);
+    z = views::all(z);
 
     CHECK(x.size() == 7u);
     CHECK(y.size() == 7u);
     CHECK(z.size() == 7u);
 
     {
-        auto v = view::all(debug_input_view<int const>{rgi});
+        auto v = views::all(debug_input_view<int const>{rgi});
         CHECK(v.size() == size(rgi));
         CHECK(v.data_->first_ == rgi);
-        auto v2 = view::all(view::all(view::all(std::move(v))));
-        CPP_assert(Same<decltype(v), decltype(v2)>);
+        auto v2 = views::all(views::all(views::all(std::move(v))));
+        CPP_assert(same_as<decltype(v), decltype(v2)>);
         CHECK(v2.size() == size(rgi));
         CHECK(v2.data_->first_ == rgi);
     }

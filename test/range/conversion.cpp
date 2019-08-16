@@ -107,7 +107,7 @@ void test_zip_to_map(Rng && rng, int)
 #else  // ^^^ workaround / no workaround vvv
     auto m = static_cast<Rng &&>(rng) | to<std::map>;
 #endif // RANGES_WORKAROUND_MSVC_779708
-    CPP_assert(Same<decltype(m), std::map<int, int>>);
+    CPP_assert(same_as<decltype(m), std::map<int, int>>);
 }
 #endif
 template<typename Rng>
@@ -119,82 +119,82 @@ int main()
     using namespace ranges;
 
     {
-        auto lst0 = view::ints | view::transform([](int i) { return i * i; }) |
-                    view::take(10) | to<std::list>();
-        CPP_assert(Same<decltype(lst0), std::list<int>>);
+        auto lst0 = views::ints | views::transform([](int i) { return i * i; }) |
+                    views::take(10) | to<std::list>();
+        CPP_assert(same_as<decltype(lst0), std::list<int>>);
         ::check_equal(lst0, {0, 1, 4, 9, 16, 25, 36, 49, 64, 81});
     }
 
 #ifndef RANGES_WORKAROUND_MSVC_779708 // "workaround" is a misnomer; there's no
                                       // workaround.
     {
-        auto lst1 = view::ints | view::transform([](int i) { return i * i; }) |
-                    view::take(10) | to<std::list>;
-        CPP_assert(Same<decltype(lst1), std::list<int>>);
+        auto lst1 = views::ints | views::transform([](int i) { return i * i; }) |
+                    views::take(10) | to<std::list>;
+        CPP_assert(same_as<decltype(lst1), std::list<int>>);
         ::check_equal(lst1, {0, 1, 4, 9, 16, 25, 36, 49, 64, 81});
     }
 #endif // RANGES_WORKAROUND_MSVC_779708
 
     {
-        auto vec0 = view::ints | view::transform([](int i) { return i * i; }) |
-                    view::take(10) | to_vector | action::sort(std::greater<int>{});
-        CPP_assert(Same<decltype(vec0), std::vector<int>>);
+        auto vec0 = views::ints | views::transform([](int i) { return i * i; }) |
+                    views::take(10) | to_vector | action::sort(std::greater<int>{});
+        CPP_assert(same_as<decltype(vec0), std::vector<int>>);
         ::check_equal(vec0, {81, 64, 49, 36, 25, 16, 9, 4, 1, 0});
     }
 
     {
-        auto vec1 = view::ints | view::transform([](int i) { return i * i; }) |
-                    view::take(10) | to<std::vector<long>>() |
+        auto vec1 = views::ints | views::transform([](int i) { return i * i; }) |
+                    views::take(10) | to<std::vector<long>>() |
                     action::sort(std::greater<long>{});
-        CPP_assert(Same<decltype(vec1), std::vector<long>>);
+        CPP_assert(same_as<decltype(vec1), std::vector<long>>);
         ::check_equal(vec1, {81, 64, 49, 36, 25, 16, 9, 4, 1, 0});
     }
 
 #ifndef RANGES_WORKAROUND_MSVC_779708
     {
-        auto vec2 = view::ints | view::transform([](int i) { return i * i; }) |
-                    view::take(10) | to<std::vector<long>> |
+        auto vec2 = views::ints | views::transform([](int i) { return i * i; }) |
+                    views::take(10) | to<std::vector<long>> |
                     action::sort(std::greater<long>{});
-        CPP_assert(Same<decltype(vec2), std::vector<long>>);
+        CPP_assert(same_as<decltype(vec2), std::vector<long>>);
         ::check_equal(vec2, {81, 64, 49, 36, 25, 16, 9, 4, 1, 0});
     }
 #endif // RANGES_WORKAROUND_MSVC_779708
 
     {
         const std::size_t N = 4096;
-        auto vl = view::iota(0, int{N}) | to<vector_like<int>>();
-        CPP_assert(Same<decltype(vl), vector_like<int>>);
+        auto vl = views::iota(0, int{N}) | to<vector_like<int>>();
+        CPP_assert(same_as<decltype(vl), vector_like<int>>);
         CHECK(vl.reservation_count == std::size_t{1});
         CHECK(vl.last_reservation == N);
     }
 
     // https://github.com/ericniebler/range-v3/issues/1145
     {
-        auto r1 = view::indices(std::uintmax_t{100});
-        auto r2 = view::zip(r1, r1);
+        auto r1 = views::indices(std::uintmax_t{100});
+        auto r2 = views::zip(r1, r1);
 
 #ifdef RANGES_WORKAROUND_MSVC_779708
         auto m = r2 | ranges::to<std::map<std::uintmax_t, std::uintmax_t>>();
 #else // ^^^ workaround / no workaround vvv
         auto m = r2 | ranges::to<std::map<std::uintmax_t, std::uintmax_t>>;
 #endif // RANGES_WORKAROUND_MSVC_779708
-        CPP_assert(Same<decltype(m), std::map<std::uintmax_t, std::uintmax_t>>);
+        CPP_assert(same_as<decltype(m), std::map<std::uintmax_t, std::uintmax_t>>);
     }
 
     // Transform a range-of-ranges into a container of containers
     {
-        auto r = view::ints(1, 4) |
-                 view::transform([](int i) { return view::ints(i, i + 3); });
+        auto r = views::ints(1, 4) |
+                 views::transform([](int i) { return views::ints(i, i + 3); });
 
         auto m = r | ranges::to<std::vector<std::vector<int>>>();
-        CPP_assert(Same<decltype(m), std::vector<std::vector<int>>>);
+        CPP_assert(same_as<decltype(m), std::vector<std::vector<int>>>);
         CHECK(m.size() == 3u);
         check_equal(m[0], {1, 2, 3});
         check_equal(m[1], {2, 3, 4});
         check_equal(m[2], {3, 4, 5});
     }
 
-    test_zip_to_map(view::zip(view::ints, view::iota(0, 10)), 0);
+    test_zip_to_map(views::zip(views::ints, views::iota(0, 10)), 0);
 
     return ::test_result();
 }

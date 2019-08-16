@@ -38,8 +38,8 @@ namespace ranges
         template<typename I, typename S, typename T, typename P = identity>
         auto operator()(I begin, S end, T const & val, P proj = P{}) const
             -> CPP_ret(I)( //
-                requires Permutable<I> && Sentinel<S, I> &&
-                    IndirectRelation<equal_to, projected<I, P>, T const *>)
+                requires permutable<I> && sentinel_for<S, I> &&
+                    indirect_relation<equal_to, projected<I, P>, T const *>)
         {
             begin = find(std::move(begin), end, val, std::ref(proj));
             if(begin != end)
@@ -59,8 +59,8 @@ namespace ranges
         template<typename Rng, typename T, typename P = identity>
         auto operator()(Rng && rng, T const & val, P proj = P{}) const
             -> CPP_ret(safe_iterator_t<Rng>)( //
-                requires ForwardRange<Rng> && Permutable<iterator_t<Rng>> &&
-                    IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, T const *>)
+                requires forward_range<Rng> && permutable<iterator_t<Rng>> &&
+                    indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *>)
         {
             return (*this)(begin(rng), end(rng), val, std::move(proj));
         }

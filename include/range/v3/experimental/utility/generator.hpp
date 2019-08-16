@@ -30,7 +30,7 @@
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/box.hpp>
-#include <range/v3/utility/semiregular.hpp>
+#include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/facade.hpp>
@@ -110,7 +110,7 @@ namespace ranges
           : private std::experimental::coroutine_handle<Promise>
           , private detail::coroutine_owner_::adl_hook
         {
-            CPP_assert(DerivedFrom<Promise, enable_coroutine_owner>);
+            CPP_assert(derived_from<Promise, enable_coroutine_owner>);
             using base_t = std::experimental::coroutine_handle<Promise>;
 
             using base_t::operator bool;
@@ -187,7 +187,7 @@ namespace ranges
             std::exception_ptr except_ = nullptr;
 
             CPP_assert(std::is_reference<Reference>::value ||
-                       CopyConstructible<Reference>);
+                       copy_constructible<Reference>);
 
             generator_promise * get_return_object() noexcept
             {
@@ -210,10 +210,10 @@ namespace ranges
             }
             template<typename Arg>
             auto yield_value(Arg && arg) noexcept(
-                std::is_nothrow_assignable<semiregular_t<Reference> &, Arg>::value)
+                std::is_nothrow_assignable<semiregular_box_t<Reference> &, Arg>::value)
                 -> CPP_ret(std::experimental::suspend_always)( //
-                    requires ConvertibleTo<Arg, Reference> &&
-                        std::is_assignable<semiregular_t<Reference> &, Arg>::value)
+                    requires convertible_to<Arg, Reference> &&
+                        std::is_assignable<semiregular_box_t<Reference> &, Arg>::value)
             {
                 ref_ = std::forward<Arg>(arg);
                 return {};
@@ -232,7 +232,7 @@ namespace ranges
             }
 
         private:
-            semiregular_t<Reference> ref_;
+            semiregular_box_t<Reference> ref_;
         };
 
         template<typename Reference>

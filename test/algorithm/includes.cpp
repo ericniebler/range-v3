@@ -112,34 +112,34 @@ namespace
 
 int main()
 {
-    test<input_iterator<const int*>, input_iterator<const int*> >();
-    test<input_iterator<const int*>, forward_iterator<const int*> >();
-    test<input_iterator<const int*>, bidirectional_iterator<const int*> >();
-    test<input_iterator<const int*>, random_access_iterator<const int*> >();
-    test<input_iterator<const int*>, const int*>();
+    test<InputIterator<const int*>, InputIterator<const int*> >();
+    test<InputIterator<const int*>, ForwardIterator<const int*> >();
+    test<InputIterator<const int*>, BidirectionalIterator<const int*> >();
+    test<InputIterator<const int*>, RandomAccessIterator<const int*> >();
+    test<InputIterator<const int*>, const int*>();
 
-    test<forward_iterator<const int*>, input_iterator<const int*> >();
-    test<forward_iterator<const int*>, forward_iterator<const int*> >();
-    test<forward_iterator<const int*>, bidirectional_iterator<const int*> >();
-    test<forward_iterator<const int*>, random_access_iterator<const int*> >();
-    test<forward_iterator<const int*>, const int*>();
+    test<ForwardIterator<const int*>, InputIterator<const int*> >();
+    test<ForwardIterator<const int*>, ForwardIterator<const int*> >();
+    test<ForwardIterator<const int*>, BidirectionalIterator<const int*> >();
+    test<ForwardIterator<const int*>, RandomAccessIterator<const int*> >();
+    test<ForwardIterator<const int*>, const int*>();
 
-    test<bidirectional_iterator<const int*>, input_iterator<const int*> >();
-    test<bidirectional_iterator<const int*>, forward_iterator<const int*> >();
-    test<bidirectional_iterator<const int*>, bidirectional_iterator<const int*> >();
-    test<bidirectional_iterator<const int*>, random_access_iterator<const int*> >();
-    test<bidirectional_iterator<const int*>, const int*>();
+    test<BidirectionalIterator<const int*>, InputIterator<const int*> >();
+    test<BidirectionalIterator<const int*>, ForwardIterator<const int*> >();
+    test<BidirectionalIterator<const int*>, BidirectionalIterator<const int*> >();
+    test<BidirectionalIterator<const int*>, RandomAccessIterator<const int*> >();
+    test<BidirectionalIterator<const int*>, const int*>();
 
-    test<random_access_iterator<const int*>, input_iterator<const int*> >();
-    test<random_access_iterator<const int*>, forward_iterator<const int*> >();
-    test<random_access_iterator<const int*>, bidirectional_iterator<const int*> >();
-    test<random_access_iterator<const int*>, random_access_iterator<const int*> >();
-    test<random_access_iterator<const int*>, const int*>();
+    test<RandomAccessIterator<const int*>, InputIterator<const int*> >();
+    test<RandomAccessIterator<const int*>, ForwardIterator<const int*> >();
+    test<RandomAccessIterator<const int*>, BidirectionalIterator<const int*> >();
+    test<RandomAccessIterator<const int*>, RandomAccessIterator<const int*> >();
+    test<RandomAccessIterator<const int*>, const int*>();
 
-    test<const int*, input_iterator<const int*> >();
-    test<const int*, forward_iterator<const int*> >();
-    test<const int*, bidirectional_iterator<const int*> >();
-    test<const int*, random_access_iterator<const int*> >();
+    test<const int*, InputIterator<const int*> >();
+    test<const int*, ForwardIterator<const int*> >();
+    test<const int*, BidirectionalIterator<const int*> >();
+    test<const int*, RandomAccessIterator<const int*> >();
     test<const int*, const int*>();
 
     // Test projections

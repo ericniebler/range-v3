@@ -34,7 +34,7 @@ namespace ranges
     struct take_view : view_interface<take_view<Rng>, finite>
     {
     private:
-        CPP_assert(View<Rng>);
+        CPP_assert(view_<Rng>);
         Rng base_ = Rng();
         range_difference_t<Rng> count_ = 0;
         template<bool Const>
@@ -52,7 +52,7 @@ namespace ranges
             {}
             CPP_template(bool Other)( //
                 requires Const && (!Other) &&
-                ConvertibleTo<sentinel_t<Rng>,
+                convertible_to<sentinel_t<Rng>,
                               sentinel_t<Base>>) //
                 constexpr sentinel(sentinel<Other> that)
               : end_(std::move(that.end_))
@@ -107,7 +107,7 @@ namespace ranges
         static auto begin_sized_(Take & take, std::true_type)
         {
             return begin_random_access_(
-                take, meta::bool_<RandomAccessRange<decltype((take.base_))>>{});
+                take, meta::bool_<random_access_range<decltype((take.base_))>>{});
         }
         template<typename Take>
         static auto begin_sized_(Take & take, std::false_type)
@@ -129,7 +129,7 @@ namespace ranges
         static auto end_sized_(Take & take, std::true_type, std::false_type) // sized
         {
             return end_random_access_(
-                take, meta::bool_<RandomAccessRange<decltype((take.base_))>>{});
+                take, meta::bool_<random_access_range<decltype((take.base_))>>{});
         }
         static auto end_sized_(detail::ignore_t, std::false_type,
                                std::true_type) // infinite
@@ -162,8 +162,8 @@ namespace ranges
         constexpr auto CPP_fun(begin)()(requires(!simple_view<Rng>()))
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-            if constexpr(SizedRange<Rng>)
-                if constexpr(RandomAccessRange<Rng>)
+            if constexpr(sized_range<Rng>)
+                if constexpr(random_access_range<Rng>)
                     return ranges::begin(base_);
                 else
                 {
@@ -180,16 +180,16 @@ namespace ranges
             else
                 return make_counted_iterator(ranges::begin(base_), count_);
 #else
-            return begin_sized_(*this, meta::bool_<SizedRange<Rng>>{});
+            return begin_sized_(*this, meta::bool_<sized_range<Rng>>{});
 #endif
         }
 
         CPP_member
-        constexpr auto CPP_fun(begin)()(const requires Range<Rng const>)
+        constexpr auto CPP_fun(begin)()(const requires range<Rng const>)
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-            if constexpr(SizedRange<Rng const>)
-                if constexpr(RandomAccessRange<Rng const>)
+            if constexpr(sized_range<Rng const>)
+                if constexpr(random_access_range<Rng const>)
                     return ranges::begin(base_);
                 else
                 {
@@ -199,7 +199,7 @@ namespace ranges
             else
                 return make_counted_iterator(ranges::begin(base_), count_);
 #else
-            return begin_sized_(*this, meta::bool_<SizedRange<Rng const>>{});
+            return begin_sized_(*this, meta::bool_<sized_range<Rng const>>{});
 #endif
         }
 
@@ -207,8 +207,8 @@ namespace ranges
         constexpr auto CPP_fun(end)()(requires(!simple_view<Rng>()))
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-            if constexpr(SizedRange<Rng>)
-                if constexpr(RandomAccessRange<Rng>)
+            if constexpr(sized_range<Rng>)
+                if constexpr(random_access_range<Rng>)
                     return ranges::begin(base_) +
                            static_cast<range_difference_t<Rng>>(size());
                 else
@@ -219,16 +219,16 @@ namespace ranges
             else
                 return sentinel<false>{ranges::end(base_)};
 #else
-            return end_sized_(*this, meta::bool_<SizedRange<Rng>>{}, is_infinite<Rng>{});
+            return end_sized_(*this, meta::bool_<sized_range<Rng>>{}, is_infinite<Rng>{});
 #endif
         }
 
         CPP_member
-        constexpr auto CPP_fun(end)()(const requires Range<Rng const>)
+        constexpr auto CPP_fun(end)()(const requires range<Rng const>)
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-            if constexpr(SizedRange<Rng const>)
-                if constexpr(RandomAccessRange<Rng const>)
+            if constexpr(sized_range<Rng const>)
+                if constexpr(random_access_range<Rng const>)
                     return ranges::begin(base_) +
                            static_cast<range_difference_t<Rng>>(size());
                 else
@@ -240,18 +240,18 @@ namespace ranges
                 return sentinel<true>{ranges::end(base_)};
 #else
             return end_sized_(
-                *this, meta::bool_<SizedRange<Rng const>>{}, is_infinite<Rng const>{});
+                *this, meta::bool_<sized_range<Rng const>>{}, is_infinite<Rng const>{});
 #endif
         }
 
         CPP_member
-        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
         {
             auto n = ranges::size(base_);
             return ranges::min(n, static_cast<decltype(n)>(count_));
         }
         CPP_member
-        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
         {
             auto n = ranges::size(base_);
             return ranges::min(n, static_cast<decltype(n)>(count_));
@@ -260,10 +260,10 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    take_view(Rng &&, range_difference_t<Rng>)->take_view<view::all_t<Rng>>;
+    take_view(Rng &&, range_difference_t<Rng>)->take_view<views::all_t<Rng>>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct take_fn
         {
@@ -272,7 +272,7 @@ namespace ranges
 
             template<typename Int>
             static constexpr auto CPP_fun(bind)(take_fn take, Int n)( //
-                requires Integral<Int>)
+                requires integral<Int>)
             {
                 return make_pipeable(bind_back(take, n));
             }
@@ -281,7 +281,7 @@ namespace ranges
             template<typename Rng>
             auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> CPP_ret(take_view<all_t<Rng>>)( //
-                    requires ViewableRange<Rng>)
+                    requires viewable_range<Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
@@ -290,16 +290,16 @@ namespace ranges
         /// \relates take_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<take_fn>, take)
-    } // namespace view
+    } // namespace views
 
     namespace cpp20
     {
-        namespace view
+        namespace views
         {
-            using ranges::view::take;
+            using ranges::views::take;
         }
         CPP_template(typename Rng)( //
-            requires View<Rng>)     //
+            requires view_<Rng>)     //
             using take_view = ranges::take_view<Rng>;
     } // namespace cpp20
     /// @}

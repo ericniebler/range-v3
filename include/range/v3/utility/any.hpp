@@ -45,13 +45,13 @@ namespace ranges
         "this header and maintain it yourself).") any;
 
     template<typename T>
-    meta::if_c<std::is_reference<T>() || Copyable<T>, T> any_cast(any &);
+    meta::if_c<std::is_reference<T>() || copyable<T>, T> any_cast(any &);
 
     template<typename T>
-    meta::if_c<std::is_reference<T>() || Copyable<T>, T> any_cast(any const &);
+    meta::if_c<std::is_reference<T>() || copyable<T>, T> any_cast(any const &);
 
     template<typename T>
-    meta::if_c<std::is_reference<T>() || Copyable<T>, T> any_cast(any &&);
+    meta::if_c<std::is_reference<T>() || copyable<T>, T> any_cast(any &&);
 
     template<typename T>
     T * any_cast(any *) noexcept;
@@ -63,14 +63,14 @@ namespace ranges
     {
     private:
         template<typename T>
-        friend meta::if_c<std::is_reference<T>() || (bool)Copyable<T>, T> any_cast(any &);
+        friend meta::if_c<std::is_reference<T>() || (bool)copyable<T>, T> any_cast(any &);
 
         template<typename T>
-        friend meta::if_c<std::is_reference<T>() || (bool)Copyable<T>, T> any_cast(
+        friend meta::if_c<std::is_reference<T>() || (bool)copyable<T>, T> any_cast(
             any const &);
 
         template<typename T>
-        friend meta::if_c<std::is_reference<T>() || (bool)Copyable<T>, T> any_cast(
+        friend meta::if_c<std::is_reference<T>() || (bool)copyable<T>, T> any_cast(
             any &&);
 
         template<typename T>
@@ -122,7 +122,7 @@ namespace ranges
         any() noexcept = default;
         template<typename TRef, typename T = detail::decay_t<TRef>>
         CPP_ctor(any)(TRef && t)( //
-            requires Copyable<T> && (!Same<T, any>))
+            requires copyable<T> && (!same_as<T, any>))
           : ptr_(new impl<T>(static_cast<TRef &&>(t)))
         {}
         any(any &&) noexcept = default;
@@ -137,7 +137,7 @@ namespace ranges
         }
         template<typename TRef, typename T = detail::decay_t<TRef>>
         auto operator=(TRef && t) -> CPP_ret(any &)( //
-            requires Copyable<T> && (!Same<T, any>))
+            requires copyable<T> && (!same_as<T, any>))
         {
             any{static_cast<TRef &&>(t)}.swap(*this);
             return *this;
@@ -179,7 +179,7 @@ namespace ranges
 
     /// \throw bad_any_cast
     template<typename T>
-    meta::if_c<std::is_reference<T>() || Copyable<T>, T> any_cast(any & x)
+    meta::if_c<std::is_reference<T>() || copyable<T>, T> any_cast(any & x)
     {
         if(x.type() != typeid(detail::decay_t<T>))
             throw bad_any_cast{};
@@ -188,7 +188,7 @@ namespace ranges
 
     /// \overload
     template<typename T>
-    meta::if_c<std::is_reference<T>() || Copyable<T>, T> any_cast(any const & x)
+    meta::if_c<std::is_reference<T>() || copyable<T>, T> any_cast(any const & x)
     {
         if(x.type() != typeid(detail::decay_t<T>))
             throw bad_any_cast{};
@@ -197,7 +197,7 @@ namespace ranges
 
     /// \overload
     template<typename T>
-    meta::if_c<std::is_reference<T>() || Copyable<T>, T> any_cast(any && x)
+    meta::if_c<std::is_reference<T>() || copyable<T>, T> any_cast(any && x)
     {
         if(x.type() != typeid(detail::decay_t<T>))
             throw bad_any_cast{};

@@ -376,20 +376,20 @@ struct S
 
 int main()
 {
-    test_iter<bidirectional_iterator<std::pair<int,int>*> >();
-    test_iter<random_access_iterator<std::pair<int,int>*> >();
+    test_iter<BidirectionalIterator<std::pair<int,int>*> >();
+    test_iter<RandomAccessIterator<std::pair<int,int>*> >();
     test_iter<std::pair<int,int>*>();
-    test_iter<bidirectional_iterator<std::pair<int,int>*>, sentinel<std::pair<int,int>*> >();
-    test_iter<random_access_iterator<std::pair<int,int>*>, sentinel<std::pair<int,int>*> >();
+    test_iter<BidirectionalIterator<std::pair<int,int>*>, Sentinel<std::pair<int,int>*> >();
+    test_iter<RandomAccessIterator<std::pair<int,int>*>, Sentinel<std::pair<int,int>*> >();
 
-    test_range<bidirectional_iterator<std::pair<int,int>*> >();
-    test_range<random_access_iterator<std::pair<int,int>*> >();
+    test_range<BidirectionalIterator<std::pair<int,int>*> >();
+    test_range<RandomAccessIterator<std::pair<int,int>*> >();
     test_range<std::pair<int,int>*>();
-    test_range<bidirectional_iterator<std::pair<int,int>*>, sentinel<std::pair<int,int>*> >();
-    test_range<random_access_iterator<std::pair<int,int>*>, sentinel<std::pair<int,int>*> >();
+    test_range<BidirectionalIterator<std::pair<int,int>*>, Sentinel<std::pair<int,int>*> >();
+    test_range<RandomAccessIterator<std::pair<int,int>*>, Sentinel<std::pair<int,int>*> >();
 
     CHECK(move_only::count == 0);
-    test_move_only<bidirectional_iterator<move_only*> >();
+    test_move_only<BidirectionalIterator<move_only*> >();
     CHECK(move_only::count == 0);
 
     // Test projections
@@ -414,7 +414,7 @@ int main()
     using P = std::pair<int, int>;
     {  // check mixed
         S ap[] = { {{0, 1}}, {{0, 2}}, {{1, 1}}, {{1, 2}}, {{2, 1}}, {{2, 2}}, {{3, 1}}, {{3, 2}}, {{4, 1}}, {{4, 2}} };
-        auto r = ranges::stable_partition(ranges::view::all(ap), odd_first(), &S::p);
+        auto r = ranges::stable_partition(ranges::views::all(ap), odd_first(), &S::p);
         CHECK(r == ap + 4);
         CHECK(ap[0].p == P{1, 1});
         CHECK(ap[1].p == P{1, 2});

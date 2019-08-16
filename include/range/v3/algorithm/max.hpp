@@ -37,7 +37,7 @@ namespace ranges
         template<typename T, typename C = less, typename P = identity>
         constexpr auto operator()(T const & a, T const & b, C pred = C{},
                                   P proj = P{}) const -> CPP_ret(T const &)( //
-            requires IndirectStrictWeakOrder<C, projected<T const *, P>>)
+            requires indirect_strict_weak_order<C, projected<T const *, P>>)
         {
             return invoke(pred, invoke(proj, b), invoke(proj, a)) ? a : b;
         }
@@ -45,9 +45,9 @@ namespace ranges
         template<typename Rng, typename C = less, typename P = identity>
         constexpr auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
             -> CPP_ret(range_value_t<Rng>)( //
-                requires InputRange<Rng> &&
-                    IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>> &&
-                        IndirectlyCopyableStorable<iterator_t<Rng>, range_value_t<Rng> *>)
+                requires input_range<Rng> &&
+                    indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>> &&
+                        indirectly_copyable_storable<iterator_t<Rng>, range_value_t<Rng> *>)
         {
             auto begin = ranges::begin(rng);
             auto end = ranges::end(rng);
@@ -65,7 +65,7 @@ namespace ranges
         template<typename T, typename C = less, typename P = identity>
         constexpr auto operator()(std::initializer_list<T> const && rng, C pred = C{},
                                   P proj = P{}) const -> CPP_ret(T)( //
-            requires Copyable<T> && IndirectStrictWeakOrder<C, projected<T const *, P>>)
+            requires copyable<T> && indirect_strict_weak_order<C, projected<T const *, P>>)
         {
             return (*this)(rng, std::move(pred), std::move(proj));
         }

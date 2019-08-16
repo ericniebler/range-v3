@@ -47,10 +47,10 @@ namespace ranges
     {
         template<typename I, typename S, typename C, typename P = identity>
         auto operator()(I begin, S end, C pred, P proj = P{}) const -> CPP_ret(I)( //
-            requires ForwardIterator<I> && Sentinel<S, I> &&
-                IndirectUnaryPredicate<C, projected<I, P>>)
+            requires forward_iterator<I> && sentinel_for<S, I> &&
+                indirect_unary_predicate<C, projected<I, P>>)
         {
-            if(RANGES_CONSTEXPR_IF(SizedSentinel<S, I>))
+            if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S, I>))
             {
                 auto len = distance(begin, std::move(end));
                 return aux::partition_point_n(
@@ -78,10 +78,10 @@ namespace ranges
         template<typename Rng, typename C, typename P = identity>
         auto operator()(Rng && rng, C pred, P proj = P{}) const
             -> CPP_ret(safe_iterator_t<Rng>)( //
-                requires ForwardRange<Rng> &&
-                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+                requires forward_range<Rng> &&
+                    indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
         {
-            if(RANGES_CONSTEXPR_IF(SizedRange<Rng>))
+            if(RANGES_CONSTEXPR_IF(sized_range<Rng>))
             {
                 auto len = distance(rng);
                 return aux::partition_point_n(

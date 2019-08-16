@@ -70,7 +70,7 @@ namespace ranges
         }
         CPP_member
         constexpr auto begin_adaptor() const noexcept -> CPP_ret(adaptor<true>)( //
-            requires Range<Rng const>)
+            requires range<Rng const>)
         {
             return {};
         }
@@ -83,7 +83,7 @@ namespace ranges
         }
         CPP_member
         constexpr auto end_adaptor() const noexcept -> CPP_ret(adaptor<true>)( //
-            requires Range<Rng const>)
+            requires range<Rng const>)
         {
             return {};
         }
@@ -94,12 +94,12 @@ namespace ranges
           : indirect_view::view_adaptor{detail::move(rng)}
         {}
         CPP_member
-        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
         {
             return ranges::size(this->base());
         }
         CPP_member
-        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
         {
             return ranges::size(this->base());
         }
@@ -107,20 +107,20 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    indirect_view(Rng &&)->indirect_view<view::all_t<Rng>>;
+    indirect_view(Rng &&)->indirect_view<views::all_t<Rng>>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct indirect_fn
         {
             template<typename Rng>
             constexpr auto CPP_fun(operator())(Rng && rng)(
-                const requires ViewableRange<Rng> && InputRange<Rng> &&
+                const requires viewable_range<Rng> && input_range<Rng> &&
                 // We shouldn't need to strip references to test if something
                 // is readable. https://github.com/ericniebler/stl2/issues/594
-                // Readable<range_reference_t<Rng>>)
-                ((bool)Readable<range_value_t<Rng>>)) // Cast to bool needed for GCC (???)
+                // readable<range_reference_t<Rng>>)
+                ((bool)readable<range_value_t<Rng>>)) // Cast to bool needed for GCC (???)
             {
                 return indirect_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -129,7 +129,7 @@ namespace ranges
         /// \relates indirect_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<indirect_fn>, indirect)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

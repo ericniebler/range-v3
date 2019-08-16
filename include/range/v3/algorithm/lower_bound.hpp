@@ -38,8 +38,8 @@ namespace ranges
                  typename P = identity>
         auto operator()(I begin, S end, V const & val, C pred = C{}, P proj = P{}) const
             -> CPP_ret(I)( //
-                requires ForwardIterator<I> && Sentinel<S, I> &&
-                    IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
+                requires forward_iterator<I> && sentinel_for<S, I> &&
+                    indirect_strict_weak_order<C, V const *, projected<I, P>>)
         {
             return partition_point(std::move(begin),
                                    std::move(end),
@@ -50,8 +50,8 @@ namespace ranges
         template<typename Rng, typename V, typename C = less, typename P = identity>
         auto operator()(Rng && rng, V const & val, C pred = C{}, P proj = P{}) const
             -> CPP_ret(safe_iterator_t<Rng>)( //
-                requires ForwardRange<Rng> &&
-                    IndirectStrictWeakOrder<C, V const *, projected<iterator_t<Rng>, P>>)
+                requires forward_range<Rng> &&
+                    indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
         {
             return partition_point(
                 rng, detail::make_lower_bound_predicate(pred, val), std::move(proj));

@@ -42,18 +42,18 @@ namespace ranges
       : view_interface<drop_exactly_view<Rng>,
                        is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
       , private detail::non_propagating_cache<iterator_t<Rng>, drop_exactly_view<Rng>,
-                                              !RandomAccessRange<Rng>>
+                                              !random_access_range<Rng>>
     {
     private:
         using difference_type_ = range_difference_t<Rng>;
         Rng rng_;
         difference_type_ n_;
 
-        // RandomAccessRange == true
+        // random_access_range == true
         template<bool Const = true>
         auto get_begin_(std::true_type) const
             -> CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)( //
-                requires Const && RandomAccessRange<meta::const_if_c<Const, Rng>>)
+                requires Const && random_access_range<meta::const_if_c<Const, Rng>>)
         {
             return next(ranges::begin(rng_), n_);
         }
@@ -61,7 +61,7 @@ namespace ranges
         {
             return next(ranges::begin(rng_), n_);
         }
-        // RandomAccessRange == false
+        // random_access_range == false
         iterator_t<Rng> get_begin_(std::false_type)
         {
             using cache_t =
@@ -82,7 +82,7 @@ namespace ranges
         }
         iterator_t<Rng> begin()
         {
-            return this->get_begin_(meta::bool_<RandomAccessRange<Rng>>{});
+            return this->get_begin_(meta::bool_<random_access_range<Rng>>{});
         }
         sentinel_t<Rng> end()
         {
@@ -90,23 +90,23 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin() const -> CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)( //
-            requires Const && RandomAccessRange<meta::const_if_c<Const, Rng>>)
+            requires Const && random_access_range<meta::const_if_c<Const, Rng>>)
         {
             return this->get_begin_(std::true_type{});
         }
         template<bool Const = true>
         auto end() const -> CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)( //
-            requires Const && RandomAccessRange<meta::const_if_c<Const, Rng>>)
+            requires Const && random_access_range<meta::const_if_c<Const, Rng>>)
         {
             return ranges::end(rng_);
         }
         CPP_member
-        auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        auto CPP_fun(size)()(const requires sized_range<Rng const>)
         {
             return ranges::size(rng_) - static_cast<range_size_t<Rng const>>(n_);
         }
         CPP_member
-        auto CPP_fun(size)()(requires SizedRange<Rng>)
+        auto CPP_fun(size)()(requires sized_range<Rng>)
         {
             return ranges::size(rng_) - static_cast<range_size_t<Rng>>(n_);
         }
@@ -119,10 +119,10 @@ namespace ranges
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
     drop_exactly_view(Rng &&, range_difference_t<Rng>)
-        ->drop_exactly_view<view::all_t<Rng>>;
+        ->drop_exactly_view<views::all_t<Rng>>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct drop_exactly_fn
         {
@@ -130,7 +130,7 @@ namespace ranges
             friend view_access;
             template<typename Int>
             static constexpr auto CPP_fun(bind)(drop_exactly_fn drop_exactly, Int n)( //
-                requires Integral<Int>)
+                requires integral<Int>)
             {
                 return make_pipeable(bind_back(drop_exactly, n));
             }
@@ -144,7 +144,7 @@ namespace ranges
             static auto impl_(Rng && rng, range_difference_t<Rng> n,
                               random_access_range_tag)
                 -> CPP_ret(subrange<iterator_t<Rng>, sentinel_t<Rng>>)( //
-                    requires ForwardingRange_<Rng>)
+                    requires forwarding_range_<Rng>)
             {
                 return {begin(rng) + n, end(rng)};
             }
@@ -152,7 +152,7 @@ namespace ranges
         public:
             template<typename Rng>
             auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(
-                const requires ViewableRange<Rng> && InputRange<Rng>)
+                const requires viewable_range<Rng> && input_range<Rng>)
             {
                 return drop_exactly_fn::impl_(
                     static_cast<Rng &&>(rng), n, range_tag_of<Rng>{});
@@ -162,7 +162,7 @@ namespace ranges
         /// \relates drop_exactly_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<drop_exactly_fn>, drop_exactly)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

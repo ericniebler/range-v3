@@ -32,7 +32,7 @@
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/move.hpp>
-#include <range/v3/utility/semiregular.hpp>
+#include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/facade.hpp>
@@ -51,9 +51,9 @@ namespace ranges
         {
         private:
             friend range_access;
-            semiregular_t<C> pred_;
-            semiregular_t<P1> proj1_;
-            semiregular_t<P2> proj2_;
+            semiregular_box_t<C> pred_;
+            semiregular_box_t<P1> proj1_;
+            semiregular_box_t<P2> proj2_;
             Rng1 rng1_;
             Rng2 rng2_;
 
@@ -72,7 +72,7 @@ namespace ranges
             }
             CPP_member
             auto begin_cursor() const -> CPP_ret(cursor<true>)( //
-                requires Range<Rng1 const> && Range<Rng2 const>)
+                requires range<Rng1 const> && range<Rng2 const>)
             {
                 return {pred_,
                         proj1_,
@@ -100,9 +100,9 @@ namespace ranges
         {
         private:
             friend struct set_difference_cursor<!IsConst, Rng1, Rng2, C, P1, P2>;
-            using pred_ref_ = semiregular_ref_or_val_t<C, IsConst>;
-            using proj1_ref_ = semiregular_ref_or_val_t<P1, IsConst>;
-            using proj2_ref_ = semiregular_ref_or_val_t<P2, IsConst>;
+            using pred_ref_ = semiregular_box_ref_or_val_t<C, IsConst>;
+            using proj1_ref_ = semiregular_box_ref_or_val_t<P1, IsConst>;
+            using proj2_ref_ = semiregular_box_ref_or_val_t<P2, IsConst>;
             pred_ref_ pred_;
             proj1_ref_ proj1_;
             proj2_ref_ proj2_;
@@ -139,7 +139,7 @@ namespace ranges
         public:
             using value_type = range_value_t<constify_if<Rng1>>;
             using single_pass =
-                meta::or_c<SinglePass<iterator_t<R1>>, SinglePass<iterator_t<R2>>>;
+                meta::or_c<single_pass_iterator_<iterator_t<R1>>, single_pass_iterator_<iterator_t<R2>>>;
 
             set_difference_cursor() = default;
             set_difference_cursor(pred_ref_ pred, proj1_ref_ proj1, proj2_ref_ proj2,
@@ -180,7 +180,7 @@ namespace ranges
             }
             CPP_member
             auto equal(set_difference_cursor const & that) const -> CPP_ret(bool)( //
-                requires ForwardRange<Rng1>)
+                requires forward_range<Rng1>)
             {
                 // does not support comparing iterators from different ranges
                 return it1_ == that.it1_;
@@ -214,7 +214,7 @@ namespace ranges
                                        range_cardinality<Rng1>::value,
                                        range_cardinality<Rng2>::value)>;
 
-    namespace view
+    namespace views
     {
         struct set_difference_fn
         {
@@ -224,9 +224,9 @@ namespace ranges
             auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
                             P2 proj2 = P2{}) const
                 -> CPP_ret(set_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)( //
-                    requires ViewableRange<Rng1> && InputRange<Rng1> &&
-                        ViewableRange<Rng2> && InputRange<Rng2> &&
-                            IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
+                    requires viewable_range<Rng1> && input_range<Rng1> &&
+                        viewable_range<Rng2> && input_range<Rng2> &&
+                            indirect_relation<C, projected<iterator_t<Rng1>, P1>,
                                              projected<iterator_t<Rng2>, P2>>)
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
@@ -240,7 +240,7 @@ namespace ranges
         /// \relates set_difference_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<set_difference_fn>, set_difference)
-    } // namespace view
+    } // namespace views
     /// @}
 
     /// \cond
@@ -252,9 +252,9 @@ namespace ranges
         {
         private:
             friend struct set_intersection_cursor<!IsConst, Rng1, Rng2, C, P1, P2>;
-            using pred_ref_ = semiregular_ref_or_val_t<C, IsConst>;
-            using proj1_ref_ = semiregular_ref_or_val_t<P1, IsConst>;
-            using proj2_ref_ = semiregular_ref_or_val_t<P2, IsConst>;
+            using pred_ref_ = semiregular_box_ref_or_val_t<C, IsConst>;
+            using proj1_ref_ = semiregular_box_ref_or_val_t<P1, IsConst>;
+            using proj2_ref_ = semiregular_box_ref_or_val_t<P2, IsConst>;
             pred_ref_ pred_;
             proj1_ref_ proj1_;
             proj2_ref_ proj2_;
@@ -289,7 +289,7 @@ namespace ranges
         public:
             using value_type = range_value_t<R1>;
             using single_pass =
-                meta::or_c<SinglePass<iterator_t<R1>>, SinglePass<iterator_t<R2>>>;
+                meta::or_c<single_pass_iterator_<iterator_t<R1>>, single_pass_iterator_<iterator_t<R2>>>;
 
             set_intersection_cursor() = default;
             set_intersection_cursor(pred_ref_ pred, proj1_ref_ proj1, proj2_ref_ proj2,
@@ -331,7 +331,7 @@ namespace ranges
             }
             CPP_member
             auto equal(set_intersection_cursor const & that) const -> CPP_ret(bool)( //
-                requires ForwardRange<Rng1>)
+                requires forward_range<Rng1>)
             {
                 // does not support comparing iterators from different ranges
                 return it1_ == that.it1_;
@@ -365,7 +365,7 @@ namespace ranges
                                        range_cardinality<Rng1>::value,
                                        range_cardinality<Rng2>::value)>;
 
-    namespace view
+    namespace views
     {
         struct set_intersection_fn
         {
@@ -375,9 +375,9 @@ namespace ranges
             auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
                             P2 proj2 = P2{}) const
                 -> CPP_ret(set_intersection_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)( //
-                    requires ViewableRange<Rng1> && InputRange<Rng1> &&
-                        ViewableRange<Rng2> && InputRange<Rng2> &&
-                            IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
+                    requires viewable_range<Rng1> && input_range<Rng1> &&
+                        viewable_range<Rng2> && input_range<Rng2> &&
+                            indirect_relation<C, projected<iterator_t<Rng1>, P1>,
                                              projected<iterator_t<Rng2>, P2>>)
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
@@ -391,7 +391,7 @@ namespace ranges
         /// \relates set_intersection_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<set_intersection_fn>, set_intersection)
-    } // namespace view
+    } // namespace views
     /// @}
 
     /// \cond
@@ -403,9 +403,9 @@ namespace ranges
         {
         private:
             friend struct set_union_cursor<!IsConst, Rng1, Rng2, C, P1, P2>;
-            using pred_ref_ = semiregular_ref_or_val_t<C, IsConst>;
-            using proj1_ref_ = semiregular_ref_or_val_t<P1, IsConst>;
-            using proj2_ref_ = semiregular_ref_or_val_t<P2, IsConst>;
+            using pred_ref_ = semiregular_box_ref_or_val_t<C, IsConst>;
+            using proj1_ref_ = semiregular_box_ref_or_val_t<P1, IsConst>;
+            using proj2_ref_ = semiregular_box_ref_or_val_t<P2, IsConst>;
             pred_ref_ pred_;
             proj1_ref_ proj1_;
             proj2_ref_ proj2_;
@@ -462,7 +462,7 @@ namespace ranges
                 common_reference_t<range_rvalue_reference_t<R1>,
                                    range_rvalue_reference_t<R2>>;
             using single_pass =
-                meta::or_c<SinglePass<iterator_t<R1>>, SinglePass<iterator_t<R2>>>;
+                meta::or_c<single_pass_iterator_<iterator_t<R1>>, single_pass_iterator_<iterator_t<R2>>>;
 
             set_union_cursor() = default;
             set_union_cursor(pred_ref_ pred, proj1_ref_ proj1, proj2_ref_ proj2,
@@ -506,7 +506,7 @@ namespace ranges
             }
             CPP_member
             auto equal(set_union_cursor const & that) const -> CPP_ret(bool)( //
-                requires ForwardRange<Rng1> && ForwardRange<Rng2>)
+                requires forward_range<Rng1> && forward_range<Rng2>)
             {
                 // does not support comparing iterators from different ranges
                 return (it1_ == that.it1_) && (it2_ == that.it2_);
@@ -542,7 +542,7 @@ namespace ranges
                                        range_cardinality<Rng1>::value,
                                        range_cardinality<Rng2>::value)>;
 
-    namespace view
+    namespace views
     {
         struct set_union_fn
         {
@@ -552,14 +552,14 @@ namespace ranges
             auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
                             P2 proj2 = P2{}) const
                 -> CPP_ret(set_union_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)( //
-                    requires ViewableRange<Rng1> && InputRange<Rng1> &&
-                        ViewableRange<Rng2> && InputRange<Rng2> && Common<
+                    requires viewable_range<Rng1> && input_range<Rng1> &&
+                        viewable_range<Rng2> && input_range<Rng2> && common_with<
                             range_value_t<Rng1>, range_value_t<Rng2>> &&
-                            CommonReference<range_reference_t<Rng1>,
+                            common_reference_with<range_reference_t<Rng1>,
                                             range_reference_t<Rng2>> &&
-                                CommonReference<range_rvalue_reference_t<Rng1>,
+                                common_reference_with<range_rvalue_reference_t<Rng1>,
                                                 range_rvalue_reference_t<Rng2>> &&
-                                    IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
+                                    indirect_relation<C, projected<iterator_t<Rng1>, P1>,
                                                      projected<iterator_t<Rng2>, P2>>)
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
@@ -573,7 +573,7 @@ namespace ranges
         /// \relates set_union_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<set_union_fn>, set_union)
-    } // namespace view
+    } // namespace views
     /// @}
 
     /// \cond
@@ -586,9 +586,9 @@ namespace ranges
         private:
             friend struct set_symmetric_difference_cursor<!IsConst, Rng1, Rng2, C, P1,
                                                           P2>;
-            using pred_ref_ = semiregular_ref_or_val_t<C, IsConst>;
-            using proj1_ref_ = semiregular_ref_or_val_t<P1, IsConst>;
-            using proj2_ref_ = semiregular_ref_or_val_t<P2, IsConst>;
+            using pred_ref_ = semiregular_box_ref_or_val_t<C, IsConst>;
+            using proj1_ref_ = semiregular_box_ref_or_val_t<P1, IsConst>;
+            using proj2_ref_ = semiregular_box_ref_or_val_t<P2, IsConst>;
             pred_ref_ pred_;
             proj1_ref_ proj1_;
             proj2_ref_ proj2_;
@@ -653,7 +653,7 @@ namespace ranges
                 common_reference_t<range_rvalue_reference_t<R1>,
                                    range_rvalue_reference_t<R2>>;
             using single_pass =
-                meta::or_c<SinglePass<iterator_t<R1>>, SinglePass<iterator_t<R2>>>;
+                meta::or_c<single_pass_iterator_<iterator_t<R1>>, single_pass_iterator_<iterator_t<R2>>>;
 
             set_symmetric_difference_cursor() = default;
             set_symmetric_difference_cursor(pred_ref_ pred, proj1_ref_ proj1,
@@ -714,7 +714,7 @@ namespace ranges
             CPP_member
             auto equal(set_symmetric_difference_cursor const & that) const
                 -> CPP_ret(bool)( //
-                    requires ForwardRange<R1> && ForwardRange<R2>)
+                    requires forward_range<R1> && forward_range<R2>)
             {
                 // does not support comparing iterators from different ranges:
                 return (it1_ == that.it1_) && (it2_ == that.it2_);
@@ -752,7 +752,7 @@ namespace ranges
         detail::set_symmetric_difference_cardinality(range_cardinality<Rng1>::value,
                                                      range_cardinality<Rng2>::value)>;
 
-    namespace view
+    namespace views
     {
         struct set_symmetric_difference_fn
         {
@@ -763,14 +763,14 @@ namespace ranges
                             P2 proj2 = P2{}) const
                 -> CPP_ret(set_symmetric_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1,
                                                          P2>)( //
-                    requires ViewableRange<Rng1> && InputRange<Rng1> &&
-                        ViewableRange<Rng2> && InputRange<Rng2> && Common<
+                    requires viewable_range<Rng1> && input_range<Rng1> &&
+                        viewable_range<Rng2> && input_range<Rng2> && common_with<
                             range_value_t<Rng1>, range_value_t<Rng2>> &&
-                            CommonReference<range_reference_t<Rng1>,
+                            common_reference_with<range_reference_t<Rng1>,
                                             range_reference_t<Rng2>> &&
-                                CommonReference<range_rvalue_reference_t<Rng1>,
+                                common_reference_with<range_rvalue_reference_t<Rng1>,
                                                 range_rvalue_reference_t<Rng2>> &&
-                                    IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
+                                    indirect_relation<C, projected<iterator_t<Rng1>, P1>,
                                                      projected<iterator_t<Rng2>, P2>>)
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
@@ -785,7 +785,7 @@ namespace ranges
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<set_symmetric_difference_fn>,
                                set_symmetric_difference)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

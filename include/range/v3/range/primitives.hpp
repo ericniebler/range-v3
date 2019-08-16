@@ -60,21 +60,21 @@ namespace ranges
                 return N;
             }
 
-            // Prefer member if it returns Integral.
+            // Prefer member if it returns integral.
             template<typename R>
             static constexpr auto impl_(R && r, int) noexcept(noexcept(((R &&) r).size()))
                 -> CPP_ret(member_size_t<R>)( //
-                    requires Integral<member_size_t<R>> &&
+                    requires integral<member_size_t<R>> &&
                     (!disable_sized_range<uncvref_t<R>>))
             {
                 return ((R &&) r).size();
             }
 
-            // Use ADL if it returns Integral.
+            // Use ADL if it returns integral.
             template<typename R>
             static constexpr auto impl_(R && r, long) noexcept(noexcept(size((R &&) r)))
                 -> CPP_ret(non_member_size_t<R>)( //
-                    requires Integral<non_member_size_t<R>> &&
+                    requires integral<non_member_size_t<R>> &&
                     (!disable_sized_range<uncvref_t<R>>))
             {
                 return size((R &&) r);
@@ -83,8 +83,8 @@ namespace ranges
             template<typename R>
             static constexpr auto impl_(R && r, ...)
                 -> CPP_ret(detail::iter_size_t<_begin_::_t<R>>)( //
-                    requires ForwardIterator<_begin_::_t<R>> &&
-                        SizedSentinel<_end_::_t<R>, _begin_::_t<R>>)
+                    requires forward_iterator<_begin_::_t<R>> &&
+                        sized_sentinel_for<_end_::_t<R>, _begin_::_t<R>>)
             {
                 using size_type = detail::iter_size_t<_begin_::_t<R>>;
                 return static_cast<size_type>(ranges::end((R &&) r) -
@@ -102,7 +102,7 @@ namespace ranges
 
             template<typename T, typename Fn = fn>
             RANGES_DEPRECATED(
-                "Using a reference_wrapper as a Range is deprecated. Use view::ref "
+                "Using a reference_wrapper as a Range is deprecated. Use views::ref "
                 "instead.")
             constexpr auto
             operator()(std::reference_wrapper<T> ref) const
@@ -113,7 +113,7 @@ namespace ranges
 
             template<typename T, typename Fn = fn>
             RANGES_DEPRECATED(
-                "Using a reference_wrapper as a Range is deprecated. Use view::ref "
+                "Using a reference_wrapper as a Range is deprecated. Use views::ref "
                 "instead.")
             constexpr auto
             operator()(ranges::reference_wrapper<T> ref) const
@@ -130,9 +130,9 @@ namespace ranges
     /// to:
     ///   * `+extent_v<T>` if `T` is an array type.
     ///   * Otherwise, `+E.size()` if it is a valid expression and its type `I` models
-    ///     `Integral` and `disable_sized_range<std::remove_cvref_t<T>>` is false.
+    ///     `integral` and `disable_sized_range<std::remove_cvref_t<T>>` is false.
     ///   * Otherwise, `+size(E)` if it is a valid expression and its type `I` models
-    ///     `Integral` with overload resolution performed in a context that includes the
+    ///     `integral` with overload resolution performed in a context that includes the
     ///     declaration:
     ///     \code
     ///     template<class T> void size(T&&) = delete;
@@ -141,11 +141,11 @@ namespace ranges
     ///     `disable_sized_range<std::remove_cvref_t<T>>` is false.
     ///   * Otherwise, `static_cast<U>(ranges::end(E) - ranges::begin(E))` where `U` is
     ///     `std::make_unsigned_t<iter_difference_t<iterator_t<T>>>` if
-    ///     `iter_difference_t<iterator_t<T>>` satisfies `Integral` and
+    ///     `iter_difference_t<iterator_t<T>>` satisfies `integral` and
     ///     `iter_difference_t<iterator_t<T>>` otherwise; except that `E` is
     ///     evaluated once, if it is a valid expression and the types `I` and `S` of
-    ///     `ranges::begin(E)` and `ranges::end(E)` model `SizedSentinel<S, I>` and
-    ///     `ForwardIterator<I>`.
+    ///     `ranges::begin(E)` and `ranges::end(E)` model `sized_sentinel_for<S, I>` and
+    ///     `forward_iterator<I>`.
     ///   * Otherwise, `ranges::size(E)` is ill-formed.
     RANGES_DEFINE_CPO(_size_::fn, size)
 
@@ -179,7 +179,7 @@ namespace ranges
                              ? nullptr
                              : detail::addressof(*ranges::begin((R &&) r))))
                 -> CPP_ret(decltype(detail::addressof(*ranges::begin((R &&) r))))( //
-                    requires ContiguousIterator<_begin_::_t<R>>)
+                    requires contiguous_iterator<_begin_::_t<R>>)
             {
                 return ranges::begin((R &&) r) == ranges::end((R &&) r)
                            ? nullptr
@@ -267,7 +267,7 @@ namespace ranges
                 noexcept(bool(ranges::begin((R &&) r) == ranges::end((R &&) r))))
                 -> CPP_ret(decltype(bool(ranges::begin((R &&) r) ==
                                          ranges::end((R &&) r))))( //
-                    requires ForwardIterator<_begin_::_t<R>>)
+                    requires forward_iterator<_begin_::_t<R>>)
             {
                 return bool(ranges::begin((R &&) r) == ranges::end((R &&) r));
             }
@@ -283,7 +283,7 @@ namespace ranges
 
             template<typename T, typename Fn = fn>
             RANGES_DEPRECATED(
-                "Using a reference_wrapper as a Range is deprecated. Use view::ref "
+                "Using a reference_wrapper as a Range is deprecated. Use views::ref "
                 "instead.")
             constexpr auto
             operator()(std::reference_wrapper<T> ref) const
@@ -294,7 +294,7 @@ namespace ranges
 
             template<typename T, typename Fn = fn>
             RANGES_DEPRECATED(
-                "Using a reference_wrapper as a Range is deprecated. Use view::ref "
+                "Using a reference_wrapper as a Range is deprecated. Use views::ref "
                 "instead.")
             constexpr auto
             operator()(ranges::reference_wrapper<T> ref) const

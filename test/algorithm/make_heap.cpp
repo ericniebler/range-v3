@@ -56,7 +56,7 @@ namespace
         for (int i = 0; i < N; ++i)
             ia[i] = i;
         std::shuffle(ia, ia+N, gen);
-        CHECK(ranges::make_heap(ia, sentinel<int*>(ia+N)) == ia+N);
+        CHECK(ranges::make_heap(ia, Sentinel<int*>(ia+N)) == ia+N);
         CHECK(std::is_heap(ia, ia+N));
         delete [] ia;
     }
@@ -83,11 +83,11 @@ namespace
         for (int i = 0; i < N; ++i)
             ia[i] = i;
         std::shuffle(ia, ia+N, gen);
-        CHECK(ranges::make_heap(ranges::make_subrange(ia, sentinel<int*>(ia+N))) == ia+N);
+        CHECK(ranges::make_heap(ranges::make_subrange(ia, Sentinel<int*>(ia+N))) == ia+N);
         CHECK(std::is_heap(ia, ia+N));
 
         std::shuffle(ia, ia+N, gen);
-        CHECK(::is_dangling(ranges::make_heap(::MakeTestRange(ia, sentinel<int*>(ia+N)))));
+        CHECK(::is_dangling(ranges::make_heap(::MakeTestRange(ia, Sentinel<int*>(ia+N)))));
         CHECK(std::is_heap(ia, ia+N));
 
         delete [] ia;
@@ -110,7 +110,7 @@ namespace
         for (int i = 0; i < N; ++i)
             ia[i] = i;
         std::shuffle(ia, ia+N, gen);
-        CHECK(ranges::make_heap(ia, sentinel<int*>(ia+N), std::greater<int>()) == ia+N);
+        CHECK(ranges::make_heap(ia, Sentinel<int*>(ia+N), std::greater<int>()) == ia+N);
         CHECK(std::is_heap(ia, ia+N, std::greater<int>()));
         delete [] ia;
     }
@@ -137,11 +137,11 @@ namespace
         for (int i = 0; i < N; ++i)
             ia[i] = i;
         std::shuffle(ia, ia+N, gen);
-        CHECK(ranges::make_heap(ranges::make_subrange(ia, sentinel<int*>(ia+N)), std::greater<int>()) == ia+N);
+        CHECK(ranges::make_heap(ranges::make_subrange(ia, Sentinel<int*>(ia+N)), std::greater<int>()) == ia+N);
         CHECK(std::is_heap(ia, ia+N, std::greater<int>()));
 
         std::shuffle(ia, ia+N, gen);
-        CHECK(::is_dangling(ranges::make_heap(::MakeTestRange(ia, sentinel<int*>(ia+N)), std::greater<int>())));
+        CHECK(::is_dangling(ranges::make_heap(::MakeTestRange(ia, Sentinel<int*>(ia+N)), std::greater<int>())));
         CHECK(std::is_heap(ia, ia+N, std::greater<int>()));
 
         delete [] ia;

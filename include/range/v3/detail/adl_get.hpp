@@ -55,13 +55,13 @@ namespace ranges
             CPP_member
             constexpr CPP_ctor(forward_tuple_interface)(TupleLike && base)(    //
                 noexcept(std::is_nothrow_move_constructible<TupleLike>::value) //
-                requires MoveConstructible<TupleLike>)
+                requires move_constructible<TupleLike>)
               : TupleLike(static_cast<TupleLike &&>(base))
             {}
             CPP_member
             constexpr CPP_ctor(forward_tuple_interface)(TupleLike const & base)( //
                 noexcept(std::is_nothrow_copy_constructible<TupleLike>::value)   //
-                requires CopyConstructible<TupleLike>)
+                requires copy_constructible<TupleLike>)
               : TupleLike(base)
             {}
 #else
@@ -69,13 +69,13 @@ namespace ranges
             // that causes the declarations in the preceeding PP block to get
             // instantiated too early.
             CPP_template(typename B = TupleLike)( //
-                requires MoveConstructible<B>)    //
+                requires move_constructible<B>)    //
                 constexpr forward_tuple_interface(TupleLike && base) noexcept(
                     std::is_nothrow_move_constructible<TupleLike>::value)
               : TupleLike(static_cast<TupleLike &&>(base))
             {}
             CPP_template(typename B = TupleLike)( //
-                requires CopyConstructible<B>)    //
+                requires copy_constructible<B>)    //
                 constexpr forward_tuple_interface(TupleLike const & base) noexcept(
                     std::is_nothrow_copy_constructible<TupleLike>::value)
               : TupleLike(base)

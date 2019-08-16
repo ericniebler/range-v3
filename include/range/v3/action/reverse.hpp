@@ -38,7 +38,7 @@ namespace ranges
         public:
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(Rng)( //
-                requires BidirectionalRange<Rng> && Permutable<iterator_t<Rng>>)
+                requires bidirectional_range<Rng> && permutable<iterator_t<Rng>>)
             {
                 ranges::reverse(rng);
                 return static_cast<Rng &&>(rng);

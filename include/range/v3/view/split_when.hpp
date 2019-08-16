@@ -50,7 +50,7 @@ namespace ranges
     private:
         friend range_access;
         Rng rng_;
-        semiregular_t<Fun> fun_;
+        semiregular_box_t<Fun> fun_;
 
         template<bool IsConst>
         struct cursor
@@ -63,7 +63,7 @@ namespace ranges
             using CRng = meta::const_if_c<IsConst, Rng>;
             iterator_t<CRng> cur_;
             sentinel_t<CRng> last_;
-            using fun_ref_t = semiregular_ref_or_val_t<Fun, IsConst>;
+            using fun_ref_t = semiregular_box_ref_or_val_t<Fun, IsConst>;
             fun_ref_t fun_;
 
             struct search_pred
@@ -82,7 +82,7 @@ namespace ranges
                 indirect_view<take_while_view<iota_view<iterator_t<CRng>>, search_pred>>;
             reference_ read() const
             {
-                return reference_{{view::iota(cur_), {zero_, cur_, last_, fun_}}};
+                return reference_{{views::iota(cur_), {zero_, cur_, last_, fun_}}};
             }
             void next()
             {
@@ -135,8 +135,8 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
-            requires Const && Range<meta::const_if_c<Const, Rng>> &&
-                Invocable<Fun const &, iterator_t<meta::const_if_c<Const, Rng>>,
+            requires Const && range<meta::const_if_c<Const, Rng>> &&
+                invocable<Fun const &, iterator_t<meta::const_if_c<Const, Rng>>,
                           sentinel_t<meta::const_if_c<Const, Rng>>>)
         {
             return {fun_, ranges::begin(rng_), ranges::end(rng_)};
@@ -151,12 +151,12 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)(requires CopyConstructible<Fun>)
+    CPP_template(typename Rng, typename Fun)(requires copy_constructible<Fun>)
         split_when_view(Rng &&, Fun)
-            ->split_when_view<view::all_t<Rng>, Fun>;
+            ->split_when_view<views::all_t<Rng>, Fun>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct split_when_fn
         {
@@ -170,11 +170,11 @@ namespace ranges
             template<typename Pred>
             struct predicate_pred
             {
-                semiregular_t<Pred> pred_;
+                semiregular_box_t<Pred> pred_;
 
                 template<typename I, typename S>
                 auto operator()(I cur, S end) const -> CPP_ret(std::pair<bool, I>)( //
-                    requires Sentinel<S, I>)
+                    requires sentinel_for<S, I>)
                 {
                     auto where = ranges::find_if_not(cur, end, std::ref(pred_));
                     return {cur != where, where};
@@ -185,10 +185,10 @@ namespace ranges
             template<typename Rng, typename Fun>
             auto operator()(Rng && rng, Fun fun) const -> CPP_ret(
                 split_when_view<all_t<Rng>, Fun>)( //
-                requires ViewableRange<Rng> && ForwardRange<Rng> &&
-                    Invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                        Invocable<Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
-                            CopyConstructible<Fun> && ConvertibleTo<
+                requires viewable_range<Rng> && forward_range<Rng> &&
+                    invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> &&
+                        invocable<Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
+                            copy_constructible<Fun> && convertible_to<
                                 invoke_result_t<Fun &, iterator_t<Rng>, sentinel_t<Rng>>,
                                 std::pair<bool, iterator_t<Rng>>>)
             {
@@ -197,8 +197,8 @@ namespace ranges
             template<typename Rng, typename Fun>
             auto operator()(Rng && rng, Fun fun) const
                 -> CPP_ret(split_when_view<all_t<Rng>, predicate_pred<Fun>>)( //
-                    requires ViewableRange<Rng> && ForwardRange<Rng> && Predicate<
-                        Fun const &, range_reference_t<Rng>> && CopyConstructible<Fun>)
+                    requires viewable_range<Rng> && forward_range<Rng> && predicate<
+                        Fun const &, range_reference_t<Rng>> && copy_constructible<Fun>)
             {
                 return {all(static_cast<Rng &&>(rng)),
                         predicate_pred<Fun>{std::move(fun)}};
@@ -208,7 +208,7 @@ namespace ranges
         /// \relates split_when_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<split_when_fn>, split_when)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

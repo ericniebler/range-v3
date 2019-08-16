@@ -29,8 +29,8 @@ namespace ranges
         template<typename Cont, typename I, typename S>
         auto erase(Cont && cont, I begin, S end)                            //
             -> CPP_ret(decltype(unwrap_reference(cont).erase(begin, end)))( //
-                requires LvalueContainerLike<Cont> && ForwardIterator<I> &&
-                    Sentinel<S, I>)
+                requires lvalue_container_like<Cont> && forward_iterator<I> &&
+                    sentinel_for<S, I>)
         {
             return unwrap_reference(cont).erase(begin, end);
         }
@@ -40,7 +40,7 @@ namespace ranges
             template<typename Rng, typename I, typename S>
             auto operator()(Rng && rng, I begin, S end) const
                 -> CPP_ret(decltype(erase((Rng &&) rng, begin, end)))( //
-                    requires Range<Rng> && ForwardIterator<I> && Sentinel<S, I>)
+                    requires range<Rng> && forward_iterator<I> && sentinel_for<S, I>)
             {
                 return erase(static_cast<Rng &&>(rng), begin, end);
             }
@@ -62,12 +62,12 @@ namespace ranges
     CPP_def
     (
         template(typename Rng, typename I, typename S)
-        concept ErasableRange,
+        concept erasable_range,
             requires (Rng &&rng, I begin, S end)
             (
                 ranges::erase(static_cast<Rng &&>(rng), begin, end)
             ) &&
-            Range<Rng>
+            range<Rng>
     );
     // clang-format on
     /// @}

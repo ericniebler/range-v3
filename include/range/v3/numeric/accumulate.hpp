@@ -29,24 +29,15 @@ namespace ranges
 {
     /// \addtogroup group-numerics
     /// @{
-    // clang-format off
-    CPP_def
-    (
-        template(typename I, typename T, typename Op = plus, typename P = identity)
-        (concept Accumulateable)(I, T, Op, P),
-            InputIterator<I> &&
-            IndirectBinaryInvocable_<Op, T *, projected<I, P>> &&
-            Assignable<T&, indirect_result_t<Op &, T *, projected<I, P>>>
-    );
-    // clang-format on
-
     struct accumulate_fn
     {
         template<typename I, typename S, typename T, typename Op = plus,
                  typename P = identity>
         auto operator()(I begin, S end, T init, Op op = Op{}, P proj = P{}) const
             -> CPP_ret(T)( //
-                requires Sentinel<S, I> && Accumulateable<I, T, Op, P>)
+                requires sentinel_for<S, I> && input_iterator<I> &&
+                    indirectly_binary_invocable_<Op, T *, projected<I, P>> &&
+                    assignable_from<T&, indirect_result_t<Op &, T *, projected<I, P>>>)
         {
             for(; begin != end; ++begin)
                 init = invoke(op, init, invoke(proj, *begin));
@@ -56,7 +47,9 @@ namespace ranges
         template<typename Rng, typename T, typename Op = plus, typename P = identity>
         auto operator()(Rng && rng, T init, Op op = Op{}, P proj = P{}) const
             -> CPP_ret(T)( //
-                requires Range<Rng> && Accumulateable<iterator_t<Rng>, T, Op, P>)
+                requires input_range<Rng> &&
+                    indirectly_binary_invocable_<Op, T *, projected<iterator_t<Rng>, P>> &&
+                    assignable_from<T&, indirect_result_t<Op &, T *, projected<iterator_t<Rng>, P>>>)
         {
             return (*this)(
                 begin(rng), end(rng), std::move(init), std::move(op), std::move(proj));

@@ -33,27 +33,27 @@ void test_iter()
     static constexpr auto sa = size(ia);
     int ib[] = {1, 3, 5, 7};
     static constexpr auto sb = size(ib);
-    CHECK(rng::find_first_of(input_iterator<const int*>(ia),
-                             sentinel<const int*>(ia + sa),
-                             forward_iterator<const int*>(ib),
-                             sentinel<const int*>(ib + sb)) ==
-                             input_iterator<const int*>(ia+1));
+    CHECK(rng::find_first_of(InputIterator<const int*>(ia),
+                             Sentinel<const int*>(ia + sa),
+                             ForwardIterator<const int*>(ib),
+                             Sentinel<const int*>(ib + sb)) ==
+                             InputIterator<const int*>(ia+1));
     int ic[] = {7};
-    CHECK(rng::find_first_of(input_iterator<const int*>(ia),
-                             sentinel<const int*>(ia + sa),
-                             forward_iterator<const int*>(ic),
-                             sentinel<const int*>(ic + 1)) ==
-                             input_iterator<const int*>(ia+sa));
-    CHECK(rng::find_first_of(input_iterator<const int*>(ia),
-                             sentinel<const int*>(ia + sa),
-                             forward_iterator<const int*>(ic),
-                             sentinel<const int*>(ic)) ==
-                             input_iterator<const int*>(ia+sa));
-    CHECK(rng::find_first_of(input_iterator<const int*>(ia),
-                             sentinel<const int*>(ia),
-                             forward_iterator<const int*>(ic),
-                             sentinel<const int*>(ic+1)) ==
-                             input_iterator<const int*>(ia));
+    CHECK(rng::find_first_of(InputIterator<const int*>(ia),
+                             Sentinel<const int*>(ia + sa),
+                             ForwardIterator<const int*>(ic),
+                             Sentinel<const int*>(ic + 1)) ==
+                             InputIterator<const int*>(ia+sa));
+    CHECK(rng::find_first_of(InputIterator<const int*>(ia),
+                             Sentinel<const int*>(ia + sa),
+                             ForwardIterator<const int*>(ic),
+                             Sentinel<const int*>(ic)) ==
+                             InputIterator<const int*>(ia+sa));
+    CHECK(rng::find_first_of(InputIterator<const int*>(ia),
+                             Sentinel<const int*>(ia),
+                             ForwardIterator<const int*>(ic),
+                             Sentinel<const int*>(ic+1)) ==
+                             InputIterator<const int*>(ia));
 }
 
 void test_iter_pred()
@@ -63,31 +63,31 @@ void test_iter_pred()
     static constexpr auto sa = size(ia);
     int ib[] = {1, 3, 5, 7};
     static constexpr auto sb = size(ib);
-    CHECK(rng::find_first_of(input_iterator<const int*>(ia),
-                             sentinel<const int*>(ia + sa),
-                             forward_iterator<const int*>(ib),
-                             sentinel<const int*>(ib + sb),
+    CHECK(rng::find_first_of(InputIterator<const int*>(ia),
+                             Sentinel<const int*>(ia + sa),
+                             ForwardIterator<const int*>(ib),
+                             Sentinel<const int*>(ib + sb),
                              std::equal_to<int>()) ==
-                             input_iterator<const int*>(ia+1));
+                             InputIterator<const int*>(ia+1));
     int ic[] = {7};
-    CHECK(rng::find_first_of(input_iterator<const int*>(ia),
-                             sentinel<const int*>(ia + sa),
-                             forward_iterator<const int*>(ic),
-                             sentinel<const int*>(ic + 1),
+    CHECK(rng::find_first_of(InputIterator<const int*>(ia),
+                             Sentinel<const int*>(ia + sa),
+                             ForwardIterator<const int*>(ic),
+                             Sentinel<const int*>(ic + 1),
                              std::equal_to<int>()) ==
-                             input_iterator<const int*>(ia+sa));
-    CHECK(rng::find_first_of(input_iterator<const int*>(ia),
-                             sentinel<const int*>(ia + sa),
-                             forward_iterator<const int*>(ic),
-                             sentinel<const int*>(ic),
+                             InputIterator<const int*>(ia+sa));
+    CHECK(rng::find_first_of(InputIterator<const int*>(ia),
+                             Sentinel<const int*>(ia + sa),
+                             ForwardIterator<const int*>(ic),
+                             Sentinel<const int*>(ic),
                              std::equal_to<int>()) ==
-                             input_iterator<const int*>(ia+sa));
-    CHECK(rng::find_first_of(input_iterator<const int*>(ia),
-                             sentinel<const int*>(ia),
-                             forward_iterator<const int*>(ic),
-                             sentinel<const int*>(ic+1),
+                             InputIterator<const int*>(ia+sa));
+    CHECK(rng::find_first_of(InputIterator<const int*>(ia),
+                             Sentinel<const int*>(ia),
+                             ForwardIterator<const int*>(ic),
+                             Sentinel<const int*>(ic+1),
                              std::equal_to<int>()) ==
-                             input_iterator<const int*>(ia));
+                             InputIterator<const int*>(ia));
 }
 
 void test_rng()
@@ -97,43 +97,43 @@ void test_rng()
     static constexpr auto sa = size(ia);
     int ib[] = {1, 3, 5, 7};
     static constexpr auto sb = size(ib);
-    CHECK(rng::find_first_of(make_subrange(input_iterator<const int*>(ia),
-                             input_iterator<const int*>(ia + sa)),
-                             make_subrange(forward_iterator<const int*>(ib),
-                             forward_iterator<const int*>(ib + sb))) ==
-                             input_iterator<const int*>(ia+1));
-    CHECK(::is_dangling(rng::find_first_of(::MakeTestRange(input_iterator<const int*>(ia),
-                             input_iterator<const int*>(ia + sa)),
-                             make_subrange(forward_iterator<const int*>(ib),
-                             forward_iterator<const int*>(ib + sb)))));
+    CHECK(rng::find_first_of(make_subrange(InputIterator<const int*>(ia),
+                             InputIterator<const int*>(ia + sa)),
+                             make_subrange(ForwardIterator<const int*>(ib),
+                             ForwardIterator<const int*>(ib + sb))) ==
+                             InputIterator<const int*>(ia+1));
+    CHECK(::is_dangling(rng::find_first_of(::MakeTestRange(InputIterator<const int*>(ia),
+                             InputIterator<const int*>(ia + sa)),
+                             make_subrange(ForwardIterator<const int*>(ib),
+                             ForwardIterator<const int*>(ib + sb)))));
     int ic[] = {7};
-    CHECK(rng::find_first_of(make_subrange(input_iterator<const int*>(ia),
-                             input_iterator<const int*>(ia + sa)),
-                             make_subrange(forward_iterator<const int*>(ic),
-                             forward_iterator<const int*>(ic + 1))) ==
-                             input_iterator<const int*>(ia+sa));
-    CHECK(rng::find_first_of(make_subrange(input_iterator<const int*>(ia),
-                             input_iterator<const int*>(ia + sa)),
-                             make_subrange(forward_iterator<const int*>(ic),
-                             forward_iterator<const int*>(ic))) ==
-                             input_iterator<const int*>(ia+sa));
-    CHECK(rng::find_first_of(make_subrange(input_iterator<const int*>(ia),
-                             input_iterator<const int*>(ia)),
-                             make_subrange(forward_iterator<const int*>(ic),
-                             forward_iterator<const int*>(ic+1))) ==
-                             input_iterator<const int*>(ia));
-    CHECK(::is_dangling(rng::find_first_of(::MakeTestRange(input_iterator<const int*>(ia),
-                             input_iterator<const int*>(ia + sa)),
-                             make_subrange(forward_iterator<const int*>(ic),
-                             forward_iterator<const int*>(ic + 1)))));
-    CHECK(::is_dangling(rng::find_first_of(::MakeTestRange(input_iterator<const int*>(ia),
-                             input_iterator<const int*>(ia + sa)),
-                             make_subrange(forward_iterator<const int*>(ic),
-                             forward_iterator<const int*>(ic)))));
-    CHECK(::is_dangling(rng::find_first_of(::MakeTestRange(input_iterator<const int*>(ia),
-                             input_iterator<const int*>(ia)),
-                             make_subrange(forward_iterator<const int*>(ic),
-                             forward_iterator<const int*>(ic+1)))));
+    CHECK(rng::find_first_of(make_subrange(InputIterator<const int*>(ia),
+                             InputIterator<const int*>(ia + sa)),
+                             make_subrange(ForwardIterator<const int*>(ic),
+                             ForwardIterator<const int*>(ic + 1))) ==
+                             InputIterator<const int*>(ia+sa));
+    CHECK(rng::find_first_of(make_subrange(InputIterator<const int*>(ia),
+                             InputIterator<const int*>(ia + sa)),
+                             make_subrange(ForwardIterator<const int*>(ic),
+                             ForwardIterator<const int*>(ic))) ==
+                             InputIterator<const int*>(ia+sa));
+    CHECK(rng::find_first_of(make_subrange(InputIterator<const int*>(ia),
+                             InputIterator<const int*>(ia)),
+                             make_subrange(ForwardIterator<const int*>(ic),
+                             ForwardIterator<const int*>(ic+1))) ==
+                             InputIterator<const int*>(ia));
+    CHECK(::is_dangling(rng::find_first_of(::MakeTestRange(InputIterator<const int*>(ia),
+                             InputIterator<const int*>(ia + sa)),
+                             make_subrange(ForwardIterator<const int*>(ic),
+                             ForwardIterator<const int*>(ic + 1)))));
+    CHECK(::is_dangling(rng::find_first_of(::MakeTestRange(InputIterator<const int*>(ia),
+                             InputIterator<const int*>(ia + sa)),
+                             make_subrange(ForwardIterator<const int*>(ic),
+                             ForwardIterator<const int*>(ic)))));
+    CHECK(::is_dangling(rng::find_first_of(::MakeTestRange(InputIterator<const int*>(ia),
+                             InputIterator<const int*>(ia)),
+                             make_subrange(ForwardIterator<const int*>(ic),
+                             ForwardIterator<const int*>(ic+1)))));
 }
 
 void test_rng_pred()
@@ -143,31 +143,31 @@ void test_rng_pred()
     static constexpr auto sa = size(ia);
     int ib[] = {1, 3, 5, 7};
     static constexpr auto sb = size(ib);
-    CHECK(rng::find_first_of(make_subrange(input_iterator<const int*>(ia),
-                             input_iterator<const int*>(ia + sa)),
-                             make_subrange(forward_iterator<const int*>(ib),
-                             forward_iterator<const int*>(ib + sb)),
+    CHECK(rng::find_first_of(make_subrange(InputIterator<const int*>(ia),
+                             InputIterator<const int*>(ia + sa)),
+                             make_subrange(ForwardIterator<const int*>(ib),
+                             ForwardIterator<const int*>(ib + sb)),
                              std::equal_to<int>()) ==
-                             input_iterator<const int*>(ia+1));
+                             InputIterator<const int*>(ia+1));
     int ic[] = {7};
-    CHECK(rng::find_first_of(make_subrange(input_iterator<const int*>(ia),
-                             input_iterator<const int*>(ia + sa)),
-                             make_subrange(forward_iterator<const int*>(ic),
-                             forward_iterator<const int*>(ic + 1)),
+    CHECK(rng::find_first_of(make_subrange(InputIterator<const int*>(ia),
+                             InputIterator<const int*>(ia + sa)),
+                             make_subrange(ForwardIterator<const int*>(ic),
+                             ForwardIterator<const int*>(ic + 1)),
                              std::equal_to<int>()) ==
-                             input_iterator<const int*>(ia+sa));
-    CHECK(rng::find_first_of(make_subrange(input_iterator<const int*>(ia),
-                             input_iterator<const int*>(ia + sa)),
-                             make_subrange(forward_iterator<const int*>(ic),
-                             forward_iterator<const int*>(ic)),
+                             InputIterator<const int*>(ia+sa));
+    CHECK(rng::find_first_of(make_subrange(InputIterator<const int*>(ia),
+                             InputIterator<const int*>(ia + sa)),
+                             make_subrange(ForwardIterator<const int*>(ic),
+                             ForwardIterator<const int*>(ic)),
                              std::equal_to<int>()) ==
-                             input_iterator<const int*>(ia+sa));
-    CHECK(rng::find_first_of(make_subrange(input_iterator<const int*>(ia),
-                             input_iterator<const int*>(ia)),
-                             make_subrange(forward_iterator<const int*>(ic),
-                             forward_iterator<const int*>(ic+1)),
+                             InputIterator<const int*>(ia+sa));
+    CHECK(rng::find_first_of(make_subrange(InputIterator<const int*>(ia),
+                             InputIterator<const int*>(ia)),
+                             make_subrange(ForwardIterator<const int*>(ic),
+                             ForwardIterator<const int*>(ic+1)),
                              std::equal_to<int>()) ==
-                             input_iterator<const int*>(ia));
+                             InputIterator<const int*>(ia));
 }
 
 struct S
@@ -182,31 +182,31 @@ void test_rng_pred_proj()
     static constexpr auto sa = size(ia);
     S ib[] = {S{1}, S{3}, S{5}, S{7}};
     static constexpr auto sb = size(ib);
-    CHECK(rng::find_first_of(make_subrange(input_iterator<const S*>(ia),
-                             input_iterator<const S*>(ia + sa)),
-                             make_subrange(forward_iterator<const S*>(ib),
-                             forward_iterator<const S*>(ib + sb)),
+    CHECK(rng::find_first_of(make_subrange(InputIterator<const S*>(ia),
+                             InputIterator<const S*>(ia + sa)),
+                             make_subrange(ForwardIterator<const S*>(ib),
+                             ForwardIterator<const S*>(ib + sb)),
                              std::equal_to<int>(), &S::i, &S::i) ==
-                             input_iterator<const S*>(ia+1));
+                             InputIterator<const S*>(ia+1));
     S ic[] = {S{7}};
-    CHECK(rng::find_first_of(make_subrange(input_iterator<const S*>(ia),
-                             input_iterator<const S*>(ia + sa)),
-                             make_subrange(forward_iterator<const S*>(ic),
-                             forward_iterator<const S*>(ic + 1)),
+    CHECK(rng::find_first_of(make_subrange(InputIterator<const S*>(ia),
+                             InputIterator<const S*>(ia + sa)),
+                             make_subrange(ForwardIterator<const S*>(ic),
+                             ForwardIterator<const S*>(ic + 1)),
                              std::equal_to<int>(), &S::i, &S::i) ==
-                             input_iterator<const S*>(ia+sa));
-    CHECK(rng::find_first_of(make_subrange(input_iterator<const S*>(ia),
-                             input_iterator<const S*>(ia + sa)),
-                             make_subrange(forward_iterator<const S*>(ic),
-                             forward_iterator<const S*>(ic)),
+                             InputIterator<const S*>(ia+sa));
+    CHECK(rng::find_first_of(make_subrange(InputIterator<const S*>(ia),
+                             InputIterator<const S*>(ia + sa)),
+                             make_subrange(ForwardIterator<const S*>(ic),
+                             ForwardIterator<const S*>(ic)),
                              std::equal_to<int>(), &S::i, &S::i) ==
-                             input_iterator<const S*>(ia+sa));
-    CHECK(rng::find_first_of(make_subrange(input_iterator<const S*>(ia),
-                             input_iterator<const S*>(ia)),
-                             make_subrange(forward_iterator<const S*>(ic),
-                             forward_iterator<const S*>(ic+1)),
+                             InputIterator<const S*>(ia+sa));
+    CHECK(rng::find_first_of(make_subrange(InputIterator<const S*>(ia),
+                             InputIterator<const S*>(ia)),
+                             make_subrange(ForwardIterator<const S*>(ic),
+                             ForwardIterator<const S*>(ic+1)),
                              std::equal_to<int>(), &S::i, &S::i) ==
-                             input_iterator<const S*>(ia));
+                             InputIterator<const S*>(ia));
 }
 
 

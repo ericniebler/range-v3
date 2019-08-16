@@ -114,11 +114,11 @@ struct S
 
 int main()
 {
-    test_iter<input_iterator<const int*> >();
-    test_iter<input_iterator<const int*>, sentinel<const int*>>();
+    test_iter<InputIterator<const int*> >();
+    test_iter<InputIterator<const int*>, Sentinel<const int*>>();
 
-    test_range<input_iterator<const int*> >();
-    test_range<input_iterator<const int*>, sentinel<const int*>>();
+    test_range<InputIterator<const int*> >();
+    test_range<InputIterator<const int*>, Sentinel<const int*>>();
 
     // Test projections
     const S ia[] = {S{1}, S{3}, S{5}, S{2}, S{4}, S{6}};

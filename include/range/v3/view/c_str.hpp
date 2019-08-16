@@ -54,7 +54,7 @@ namespace ranges
 
     /// \addtogroup group-views
     /// @{
-    namespace view
+    namespace views
     {
         /// View a `\0`-terminated C string (e.g. from a const char*) as a
         /// range.
@@ -77,14 +77,14 @@ namespace ranges
                     requires detail::is_char_type<Char>::value)
             {
                 using ch_t = meta::_t<std::remove_cv<Char>>;
-                return ranges::view::delimit(sz, ch_t(0));
+                return ranges::views::delimit(sz, ch_t(0));
             }
         };
 
         /// \relates c_str_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(c_str_fn, c_str)
-    } // namespace view
+    } // namespace views
 } // namespace ranges
 
 #endif

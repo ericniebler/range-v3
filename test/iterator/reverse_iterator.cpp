@@ -236,118 +236,118 @@ int main() {
   {
 
     static_assert(
-        ranges::detail::BidirectionalCursor<
-        ranges::detail::reverse_cursor<bidirectional_iterator<const char *>>>,
+        ranges::detail::bidirectional_cursor<
+        ranges::detail::reverse_cursor<BidirectionalIterator<const char *>>>,
         "");
     static_assert(
-        ranges::detail::BidirectionalCursor<
-        ranges::detail::reverse_cursor<random_access_iterator<const char *>>>,
+        ranges::detail::bidirectional_cursor<
+        ranges::detail::reverse_cursor<RandomAccessIterator<const char *>>>,
         "");
     static_assert(
-        ranges::detail::RandomAccessCursor<
-        ranges::detail::reverse_cursor<random_access_iterator<const char *>>>,
+        ranges::detail::random_access_cursor<
+        ranges::detail::reverse_cursor<RandomAccessIterator<const char *>>>,
         "");
     static_assert(
-        ranges::BidirectionalIterator<
-            ranges::reverse_iterator<bidirectional_iterator<const char *>>>,
+        ranges::bidirectional_iterator<
+            ranges::reverse_iterator<BidirectionalIterator<const char *>>>,
         "");
     static_assert(
-        ranges::RandomAccessIterator<
-            ranges::reverse_iterator<random_access_iterator<const char *>>>,
+        ranges::random_access_iterator<
+            ranges::reverse_iterator<RandomAccessIterator<const char *>>>,
         "");
   }
   { // test
-    test<bidirectional_iterator<const char *>>();
-    test<random_access_iterator<char *>>();
+    test<BidirectionalIterator<const char *>>();
+    test<RandomAccessIterator<char *>>();
     test<char *>();
     test<const char *>();
   }
   { // test 2
     const char s[] = "123";
-    test2(bidirectional_iterator<const char *>(s));
-    test2(random_access_iterator<const char *>(s));
+    test2(BidirectionalIterator<const char *>(s));
+    test2(RandomAccessIterator<const char *>(s));
   }
   { // test3
     Derived d;
-    test3<bidirectional_iterator<Base *>>(
-        bidirectional_iterator<Derived *>(&d));
-    test3<random_access_iterator<const Base *>>(
-        random_access_iterator<Derived *>(&d));
+    test3<BidirectionalIterator<Base *>>(
+        BidirectionalIterator<Derived *>(&d));
+    test3<RandomAccessIterator<const Base *>>(
+        RandomAccessIterator<Derived *>(&d));
   }
   { // test4
     const char *s = "1234567890";
-    random_access_iterator<const char *> b(s);
-    random_access_iterator<const char *> e(s + 10);
+    RandomAccessIterator<const char *> b(s);
+    RandomAccessIterator<const char *> e(s + 10);
     while (b != e)
       test4(b++);
   }
   { // test5
     const char *s = "1234567890";
-    test5(bidirectional_iterator<const char *>(s),
-          bidirectional_iterator<const char *>(s), false);
-    test5(bidirectional_iterator<const char *>(s),
-          bidirectional_iterator<const char *>(s + 1), true);
-    test5(random_access_iterator<const char *>(s),
-          random_access_iterator<const char *>(s), false);
-    test5(random_access_iterator<const char *>(s),
-          random_access_iterator<const char *>(s + 1), true);
+    test5(BidirectionalIterator<const char *>(s),
+          BidirectionalIterator<const char *>(s), false);
+    test5(BidirectionalIterator<const char *>(s),
+          BidirectionalIterator<const char *>(s + 1), true);
+    test5(RandomAccessIterator<const char *>(s),
+          RandomAccessIterator<const char *>(s), false);
+    test5(RandomAccessIterator<const char *>(s),
+          RandomAccessIterator<const char *>(s + 1), true);
     test5(s, s, false);
     test5(s, s + 1, true);
   }
   {
     const char *s = "123";
-    test6(bidirectional_iterator<const char *>(s + 1),
-          bidirectional_iterator<const char *>(s));
-    test6(random_access_iterator<const char *>(s + 1),
-          random_access_iterator<const char *>(s));
+    test6(BidirectionalIterator<const char *>(s + 1),
+          BidirectionalIterator<const char *>(s));
+    test6(RandomAccessIterator<const char *>(s + 1),
+          RandomAccessIterator<const char *>(s));
     test6(s + 1, s);
   }
   {
     const char *s = "123";
-    test7(bidirectional_iterator<const char *>(s + 1),
-          bidirectional_iterator<const char *>(s));
-    test7(random_access_iterator<const char *>(s + 1),
-          random_access_iterator<const char *>(s));
+    test7(BidirectionalIterator<const char *>(s + 1),
+          BidirectionalIterator<const char *>(s));
+    test7(RandomAccessIterator<const char *>(s + 1),
+          RandomAccessIterator<const char *>(s));
     test7(s + 1, s);
   }
   {
     const char *s = "1234567890";
-    test8(random_access_iterator<const char *>(s + 5), 5,
-          random_access_iterator<const char *>(s));
+    test8(RandomAccessIterator<const char *>(s + 5), 5,
+          RandomAccessIterator<const char *>(s));
     test8(s + 5, 5, s);
   }
   {
     const char *s = "1234567890";
-    test9(random_access_iterator<const char *>(s + 5), 5,
-          random_access_iterator<const char *>(s));
+    test9(RandomAccessIterator<const char *>(s + 5), 5,
+          RandomAccessIterator<const char *>(s));
     test9(s + 5, 5, s);
   }
   {
     const char *s = "123";
-    test10(bidirectional_iterator<const char *>(s + 1),
-           bidirectional_iterator<const char *>(s + 2));
-    test10(random_access_iterator<const char *>(s + 1),
-           random_access_iterator<const char *>(s + 2));
+    test10(BidirectionalIterator<const char *>(s + 1),
+           BidirectionalIterator<const char *>(s + 2));
+    test10(RandomAccessIterator<const char *>(s + 1),
+           RandomAccessIterator<const char *>(s + 2));
     test10(s + 1, s + 2);
   }
   {
     const char *s = "123";
-    test11(bidirectional_iterator<const char *>(s + 1),
-           bidirectional_iterator<const char *>(s + 2));
-    test11(random_access_iterator<const char *>(s + 1),
-           random_access_iterator<const char *>(s + 2));
+    test11(BidirectionalIterator<const char *>(s + 1),
+           BidirectionalIterator<const char *>(s + 2));
+    test11(RandomAccessIterator<const char *>(s + 1),
+           RandomAccessIterator<const char *>(s + 2));
     test11(s + 1, s + 2);
   }
   {
     const char *s = "1234567890";
-    test12(random_access_iterator<const char *>(s + 5), 5,
-           random_access_iterator<const char *>(s + 10));
+    test12(RandomAccessIterator<const char *>(s + 5), 5,
+           RandomAccessIterator<const char *>(s + 10));
     test12(s + 5, 5, s + 10);
   }
   {
     const char *s = "1234567890";
-    test13(random_access_iterator<const char *>(s + 5), 5,
-           random_access_iterator<const char *>(s + 10));
+    test13(RandomAccessIterator<const char *>(s + 5), 5,
+           RandomAccessIterator<const char *>(s + 10));
     test13(s + 5, 5, s + 10);
   }
   {
@@ -357,93 +357,93 @@ int main() {
   {
     Derived d;
 
-    test15<bidirectional_iterator<Base *>>(
-        bidirectional_iterator<Derived *>(&d));
-    test15<random_access_iterator<const Base *>>(
-        random_access_iterator<Derived *>(&d));
+    test15<BidirectionalIterator<Base *>>(
+        BidirectionalIterator<Derived *>(&d));
+    test15<RandomAccessIterator<const Base *>>(
+        RandomAccessIterator<Derived *>(&d));
     test15<Base *>(&d);
   }
   {
     const char *s = "1234567890";
-    test16(bidirectional_iterator<const char *>(s),
-           bidirectional_iterator<const char *>(s), true);
-    test16(bidirectional_iterator<const char *>(s),
-           bidirectional_iterator<const char *>(s + 1), false);
-    test16(random_access_iterator<const char *>(s),
-           random_access_iterator<const char *>(s), true);
-    test16(random_access_iterator<const char *>(s),
-           random_access_iterator<const char *>(s + 1), false);
+    test16(BidirectionalIterator<const char *>(s),
+           BidirectionalIterator<const char *>(s), true);
+    test16(BidirectionalIterator<const char *>(s),
+           BidirectionalIterator<const char *>(s + 1), false);
+    test16(RandomAccessIterator<const char *>(s),
+           RandomAccessIterator<const char *>(s), true);
+    test16(RandomAccessIterator<const char *>(s),
+           RandomAccessIterator<const char *>(s + 1), false);
     test16(s, s, true);
     test16(s, s + 1, false);
   }
   {
     char s[3] = {0};
-    test17(random_access_iterator<const char *>(s),
-           random_access_iterator<char *>(s), 0);
-    random_access_iterator<char *> inp1(s);
-    test17(random_access_iterator<char *>(s),
-           random_access_iterator<const char *>(s + 1), 1);
-    test17(random_access_iterator<const char *>(s + 1),
-           random_access_iterator<char *>(s), -1);
+    test17(RandomAccessIterator<const char *>(s),
+           RandomAccessIterator<char *>(s), 0);
+    RandomAccessIterator<char *> inp1(s);
+    test17(RandomAccessIterator<char *>(s),
+           RandomAccessIterator<const char *>(s + 1), 1);
+    test17(RandomAccessIterator<const char *>(s + 1),
+           RandomAccessIterator<char *>(s), -1);
     test17(s, s, 0);
     test17(s, s + 1, 1);
     test17(s + 1, s, -1);
   }
   {
     const char *s = "1234567890";
-    test18(random_access_iterator<const char *>(s),
-           random_access_iterator<const char *>(s), false);
-    test18(random_access_iterator<const char *>(s),
-           random_access_iterator<const char *>(s + 1), true);
-    test18(random_access_iterator<const char *>(s + 1),
-           random_access_iterator<const char *>(s), false);
+    test18(RandomAccessIterator<const char *>(s),
+           RandomAccessIterator<const char *>(s), false);
+    test18(RandomAccessIterator<const char *>(s),
+           RandomAccessIterator<const char *>(s + 1), true);
+    test18(RandomAccessIterator<const char *>(s + 1),
+           RandomAccessIterator<const char *>(s), false);
     test18(s, s, false);
     test18(s, s + 1, true);
     test18(s + 1, s, false);
   }
   {
     const char *s = "1234567890";
-    test19(random_access_iterator<const char *>(s),
-           random_access_iterator<const char *>(s), true);
-    test19(random_access_iterator<const char *>(s),
-           random_access_iterator<const char *>(s + 1), true);
-    test19(random_access_iterator<const char *>(s + 1),
-           random_access_iterator<const char *>(s), false);
+    test19(RandomAccessIterator<const char *>(s),
+           RandomAccessIterator<const char *>(s), true);
+    test19(RandomAccessIterator<const char *>(s),
+           RandomAccessIterator<const char *>(s + 1), true);
+    test19(RandomAccessIterator<const char *>(s + 1),
+           RandomAccessIterator<const char *>(s), false);
     test19(s, s, true);
     test19(s, s + 1, true);
     test19(s + 1, s, false);
   }
   {
     const char *s = "1234567890";
-    test20(random_access_iterator<const char *>(s + 5), 4, '1');
+    test20(RandomAccessIterator<const char *>(s + 5), 4, '1');
     test20(s + 5, 4, '1');
   }
   {
     const char *s = "1234567890";
-    test21(random_access_iterator<const char *>(s),
-         random_access_iterator<const char *>(s), false);
-    test21(random_access_iterator<const char *>(s),
-         random_access_iterator<const char *>(s + 1), false);
-    test21(random_access_iterator<const char *>(s + 1),
-         random_access_iterator<const char *>(s), true);
+    test21(RandomAccessIterator<const char *>(s),
+         RandomAccessIterator<const char *>(s), false);
+    test21(RandomAccessIterator<const char *>(s),
+         RandomAccessIterator<const char *>(s + 1), false);
+    test21(RandomAccessIterator<const char *>(s + 1),
+         RandomAccessIterator<const char *>(s), true);
     test21(s, s, false);
     test21(s, s + 1, false);
     test21(s + 1, s, true);
   }
   {
       const char* s = "1234567890";
-      test22(random_access_iterator<const char*>(s), random_access_iterator<const char*>(s), false);
-      test22(random_access_iterator<const char*>(s), random_access_iterator<const char*>(s+1), false);
-      test22(random_access_iterator<const char*>(s+1), random_access_iterator<const char*>(s), true);
+      test22(RandomAccessIterator<const char*>(s), RandomAccessIterator<const char*>(s), false);
+      test22(RandomAccessIterator<const char*>(s), RandomAccessIterator<const char*>(s+1), false);
+      test22(RandomAccessIterator<const char*>(s+1), RandomAccessIterator<const char*>(s), true);
       test22(s, s, false);
       test22(s, s+1, false);
       test22(s+1, s, true);
   }
   {
       const char* s = "1234567890";
-      test23(random_access_iterator<const char*>(s), random_access_iterator<const char*>(s), true);
-      test23(random_access_iterator<const char*>(s), random_access_iterator<const char*>(s+1), false);
-      test23(random_access_iterator<const char*>(s+1), random_access_iterator<const char*>(s), true);
+      test23(RandomAccessIterator<const char*>(s), RandomAccessIterator<const char*>(s), true);
+      test23(RandomAccessIterator<const char*>(s), RandomAccessIterator<const char*>(s+1), false);
+      test23(RandomAccessIterator<const char*>(s+1), RandomAccessIterator<const char*>(s), true);
       test23(s, s, true);
       test23(s, s+1, false);
       test23(s+1, s, true);
@@ -472,7 +472,7 @@ int main() {
   }
   {
       const char* s = "1234567890";
-      test25(random_access_iterator<const char*>(s+5), 5, random_access_iterator<const char*>(s));
+      test25(RandomAccessIterator<const char*>(s+5), 5, RandomAccessIterator<const char*>(s));
       test25(s+5, 5, s);
   }
 

@@ -11,7 +11,7 @@ using namespace ranges;
 struct my_drop_fn
 {
 private:
-    friend view::view_access;
+    friend views::view_access;
     template<typename Int>
     static constexpr auto bind(my_drop_fn my_drop, Int n)
     {
@@ -23,10 +23,10 @@ public:
     template<typename Rng>
     auto operator()(Rng && rng, range_difference_t<Rng> n) const
     {
-        return drop_view<view::all_t<Rng>>(view::all(static_cast<Rng &&>(rng)), n);
+        return drop_view<views::all_t<Rng>>(views::all(static_cast<Rng &&>(rng)), n);
     }
 };
-RANGES_INLINE_VARIABLE(view::view<my_drop_fn>, my_drop)
+RANGES_INLINE_VARIABLE(views::view<my_drop_fn>, my_drop)
 
 /// #https://github.com/ericniebler/range-v3/issues/1169
 void constexpr_test_1169()

@@ -54,7 +54,7 @@ namespace ranges
             if(0 > i)
             {
                 // If it's not common and we know the size, faster to count from the front
-                if(RANGES_CONSTEXPR_IF(SizedRange<Rng> && !CommonRange<Rng>))
+                if(RANGES_CONSTEXPR_IF(sized_range<Rng> && !common_range<Rng>))
                     return next(ranges::begin(rng), distance(rng) + i);
                 // Otherwise, probably faster to count from the back.
                 return next(ranges::next(ranges::begin(rng), ranges::end(rng)), i);
@@ -65,7 +65,7 @@ namespace ranges
         template<typename Rng, typename Int>
         iterator_t<Rng> pos_at_(Rng && rng, Int i, input_range_tag, std::false_type)
         {
-            RANGES_EXPECT(i >= 0 || (bool)SizedRange<Rng> || (bool)ForwardRange<Rng>);
+            RANGES_EXPECT(i >= 0 || (bool)sized_range<Rng> || (bool)forward_range<Rng>);
             if(0 > i)
                 return next(ranges::begin(rng), distance(rng) + i);
             return next(ranges::begin(rng), i);
@@ -144,14 +144,14 @@ namespace ranges
             }
             template<typename BaseRng = Rng>
             auto begin() const -> CPP_ret(iterator_t<BaseRng const>)( //
-                requires Range<BaseRng const>)
+                requires range<BaseRng const>)
             {
                 return detail::pos_at_(
                     rng_, from_, range_tag_of<Rng>{}, is_infinite<Rng>{});
             }
             template<typename BaseRng = Rng>
             auto end() const -> CPP_ret(iterator_t<BaseRng const>)( //
-                requires Range<BaseRng const>)
+                requires range<BaseRng const>)
             {
                 return detail::pos_at_(
                            rng_, from_, range_tag_of<Rng>{}, is_infinite<Rng>{}) +
@@ -172,18 +172,18 @@ namespace ranges
     /// \addtogroup group-views
     /// @{
     template<typename Rng>
-    struct slice_view : detail::slice_view_<Rng, (bool)RandomAccessRange<Rng>>
+    struct slice_view : detail::slice_view_<Rng, (bool)random_access_range<Rng>>
     {
-        using detail::slice_view_<Rng, (bool)RandomAccessRange<Rng>>::slice_view_;
+        using detail::slice_view_<Rng, (bool)random_access_range<Rng>>::slice_view_;
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
     slice_view(Rng &&, range_difference_t<Rng>, range_difference_t<Rng>)
-        ->slice_view<view::all_t<Rng>>;
+        ->slice_view<views::all_t<Rng>>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct slice_fn
         {
@@ -203,24 +203,24 @@ namespace ranges
                               range_difference_t<Rng> count, random_access_range_tag,
                               common_range_tag = {})
                 -> CPP_ret(subrange<iterator_t<Rng>>)( //
-                    requires ForwardingRange_<Rng>)
+                    requires forwarding_range_<Rng>)
             {
                 auto it =
                     detail::pos_at_(rng, from, range_tag_of<Rng>{}, is_infinite<Rng>{});
                 return {it, it + count};
             }
 
-            // Overloads for the pipe syntax: rng | view::slice(from,to)
+            // Overloads for the pipe syntax: rng | views::slice(from,to)
             template<typename Int>
             static constexpr auto CPP_fun(bind)(slice_fn slice, Int from, Int to)( //
-                requires detail::IntegerLike_<Int>)
+                requires detail::integer_like_<Int>)
             {
                 return make_pipeable(bind_back(slice, from, to));
             }
             template<typename Int>
             static constexpr auto CPP_fun(bind)(slice_fn slice, Int from,
                                                 detail::from_end_<Int> to)( //
-                requires detail::IntegerLike_<Int>)
+                requires detail::integer_like_<Int>)
             {
                 return make_pipeable(bind_back(slice, from, to));
             }
@@ -228,21 +228,21 @@ namespace ranges
             static constexpr auto CPP_fun(bind)(slice_fn slice,
                                                 detail::from_end_<Int> from,
                                                 detail::from_end_<Int> to)( //
-                requires detail::IntegerLike_<Int>)
+                requires detail::integer_like_<Int>)
             {
                 return make_pipeable(bind_back(slice, from, to));
             }
             template<typename Int>
             static constexpr auto CPP_fun(bind)(slice_fn, Int from, end_fn)( //
-                requires detail::IntegerLike_<Int>)
+                requires detail::integer_like_<Int>)
             {
-                return make_pipeable(bind_back(ranges::view::drop_exactly, from));
+                return make_pipeable(bind_back(ranges::views::drop_exactly, from));
             }
             template<typename Int>
             static constexpr auto CPP_fun(bind)(slice_fn slice,
                                                 detail::from_end_<Int> from,
                                                 end_fn to)( //
-                requires detail::IntegerLike_<Int>)
+                requires detail::integer_like_<Int>)
             {
                 return make_pipeable(bind_back(slice, from, to));
             }
@@ -252,7 +252,7 @@ namespace ranges
             template<typename Rng>
             constexpr auto CPP_fun(operator())( //
                 Rng && rng, range_difference_t<Rng> from, range_difference_t<Rng> to)(
-                const requires ViewableRange<Rng> && InputRange<Rng>)
+                const requires viewable_range<Rng> && input_range<Rng>)
             {
                 RANGES_EXPECT(0 <= from && from <= to);
                 return slice_fn::impl_(
@@ -264,7 +264,7 @@ namespace ranges
             template<typename Rng>
             auto CPP_fun(operator())( //
                 Rng && rng, range_difference_t<Rng> from, detail::from_end_of_t<Rng> to)(
-                const requires ViewableRange<Rng> && InputRange<Rng> && SizedRange<Rng>)
+                const requires viewable_range<Rng> && input_range<Rng> && sized_range<Rng>)
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Can't index from the end of an infinite range!");
@@ -279,9 +279,9 @@ namespace ranges
             template<typename Rng>
             auto CPP_fun(operator())( //
                 Rng && rng, detail::from_end_of_t<Rng> from,
-                detail::from_end_of_t<Rng> to)(const requires ViewableRange<Rng> &&
-                                               (ForwardRange<Rng> ||
-                                                (InputRange<Rng> && SizedRange<Rng>)))
+                detail::from_end_of_t<Rng> to)(const requires viewable_range<Rng> &&
+                                               (forward_range<Rng> ||
+                                                (input_range<Rng> && sized_range<Rng>)))
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Can't index from the end of an infinite range!");
@@ -295,17 +295,17 @@ namespace ranges
             // slice(rng, 4, end)
             template<typename Rng>
             auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> from, end_fn)(
-                const requires ViewableRange<Rng> && InputRange<Rng>)
+                const requires viewable_range<Rng> && input_range<Rng>)
             {
                 RANGES_EXPECT(0 <= from);
-                return ranges::view::drop_exactly(static_cast<Rng &&>(rng), from);
+                return ranges::views::drop_exactly(static_cast<Rng &&>(rng), from);
             }
             // slice(rng, end-4, end)
             template<typename Rng>
             auto CPP_fun(operator())(Rng && rng, detail::from_end_of_t<Rng> from,
-                                     end_fn)(const requires ViewableRange<Rng> &&
-                                             (ForwardRange<Rng> ||
-                                              (InputRange<Rng> && SizedRange<Rng>)))
+                                     end_fn)(const requires viewable_range<Rng> &&
+                                             (forward_range<Rng> ||
+                                              (input_range<Rng> && sized_range<Rng>)))
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Can't index from the end of an infinite range!");
@@ -320,7 +320,7 @@ namespace ranges
         /// \relates _slice_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<slice_fn>, slice)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

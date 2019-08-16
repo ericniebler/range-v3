@@ -26,7 +26,7 @@
 
 namespace ranges
 {
-    namespace view
+    namespace views
     {
         /// Half-open range of indices: [from, to).
         struct indices_fn : iota_view<std::size_t>
@@ -35,13 +35,13 @@ namespace ranges
 
             template<typename Val>
             auto operator()(Val to) const -> CPP_ret(iota_view<Val, Val>)( //
-                requires Integral<Val>)
+                requires integral<Val>)
             {
                 return {Val(), to};
             }
             template<typename Val>
             auto operator()(Val from, Val to) const -> CPP_ret(iota_view<Val, Val>)( //
-                requires Integral<Val>)
+                requires integral<Val>)
             {
                 return {from, to};
             }
@@ -52,13 +52,13 @@ namespace ranges
         {
             template<typename Val>
             auto operator()(Val to) const -> CPP_ret(closed_iota_view<Val>)( //
-                requires Integral<Val>)
+                requires integral<Val>)
             {
                 return {Val(), to};
             }
             template<typename Val>
             auto operator()(Val from, Val to) const -> CPP_ret(closed_iota_view<Val>)( //
-                requires Integral<Val>)
+                requires integral<Val>)
             {
                 return {from, to};
             }
@@ -71,7 +71,7 @@ namespace ranges
         /// \relates closed_indices_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(closed_indices_fn, closed_indices)
-    } // namespace view
+    } // namespace views
 } // namespace ranges
 
 #endif // RANGES_V3_VIEW_INDICES_HPP

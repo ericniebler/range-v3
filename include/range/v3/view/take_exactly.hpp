@@ -39,12 +39,12 @@ namespace ranges
     {
         template<typename Rng>
         struct is_random_access_common_
-          : meta::bool_<(bool)RandomAccessRange<Rng> && (bool)CommonRange<Rng>>
+          : meta::bool_<(bool)random_access_range<Rng> && (bool)common_range<Rng>>
         {};
 
         // BUGBUG Per the discussion in https://github.com/ericniebler/stl2/issues/63,
-        // it's unclear if we can infer anything from RandomAccessRange<Rng> &&
-        // CommonRange<Rng>
+        // it's unclear if we can infer anything from random_access_range<Rng> &&
+        // common_range<Rng>
         template<typename Rng,
                  bool IsRandomAccessCommon /*= is_random_access_common_<Rng>::value*/>
         struct take_exactly_view_
@@ -68,7 +68,7 @@ namespace ranges
             }
             template<typename BaseRng = Rng>
             auto begin() const -> CPP_ret(counted_iterator<iterator_t<BaseRng const>>)( //
-                requires Range<BaseRng const>)
+                requires range<BaseRng const>)
             {
                 return {ranges::begin(rng_), n_};
             }
@@ -101,7 +101,7 @@ namespace ranges
               , n_(n)
             {
                 RANGES_EXPECT(n >= 0);
-                RANGES_EXPECT(!(bool)SizedRange<Rng> || n <= ranges::distance(rng_));
+                RANGES_EXPECT(!(bool)sized_range<Rng> || n <= ranges::distance(rng_));
             }
             iterator_t<Rng> begin()
             {
@@ -112,12 +112,12 @@ namespace ranges
                 return ranges::begin(rng_) + n_;
             }
             CPP_member
-            auto CPP_fun(begin)()(const requires Range<Rng const>)
+            auto CPP_fun(begin)()(const requires range<Rng const>)
             {
                 return ranges::begin(rng_);
             }
             CPP_member
-            auto CPP_fun(end)()(const requires Range<Rng const>)
+            auto CPP_fun(end)()(const requires range<Rng const>)
             {
                 return ranges::begin(rng_) + n_;
             }
@@ -138,7 +138,7 @@ namespace ranges
     template<typename Rng>
     using take_exactly_view = detail::take_exactly_view_<Rng>;
 
-    namespace view
+    namespace views
     {
         struct take_exactly_fn
         {
@@ -147,7 +147,7 @@ namespace ranges
 
             template<typename Int>
             static constexpr auto CPP_fun(bind)(take_exactly_fn take_exactly, Int n)( //
-                requires Integral<Int>)
+                requires integral<Int>)
             {
                 return make_pipeable(bind_back(take_exactly, n));
             }
@@ -162,7 +162,7 @@ namespace ranges
             static constexpr auto impl_(Rng && rng, range_difference_t<Rng> n,
                                         random_access_range_tag)
                 -> CPP_ret(subrange<iterator_t<Rng>>)( //
-                    requires ForwardingRange_<Rng>)
+                    requires forwarding_range_<Rng>)
             {
                 return {begin(rng), next(begin(rng), n)};
             }
@@ -170,7 +170,7 @@ namespace ranges
         public:
             template<typename Rng>
             constexpr auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(
-                const requires ViewableRange<Rng> && InputRange<Rng>)
+                const requires viewable_range<Rng> && input_range<Rng>)
             {
                 return take_exactly_fn::impl_(
                     static_cast<Rng &&>(rng), n, range_tag_of<Rng>{});
@@ -180,7 +180,7 @@ namespace ranges
         /// \relates take_exactly_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<take_exactly_fn>, take_exactly)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

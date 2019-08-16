@@ -44,7 +44,7 @@ namespace ranges
             compressed_tuple_<meta::list<Ts...>, meta::index_sequence<Is...>>
           : storage<Ts, Is, Ts...>...
         {
-            static_assert(Same<meta::index_sequence<Is...>,
+            static_assert(same_as<meta::index_sequence<Is...>,
                                meta::make_index_sequence<sizeof...(Is)>>,
                           "What madness is this?!?");
 
@@ -126,7 +126,7 @@ namespace ranges
         compressed_pair() = default;
 
         CPP_template(typename U, typename V)(                             //
-            requires Constructible<First, U> && Constructible<Second, V>) //
+            requires constructible_from<First, U> && constructible_from<Second, V>) //
             constexpr compressed_pair(U && u,
                                       V && v) noexcept(noexcept(First((U &&) u)) &&
                                                        noexcept(Second((V &&) v)))
@@ -161,8 +161,8 @@ namespace ranges
         }
 
         CPP_template(typename F, typename S)( //
-            requires ConvertibleTo<First const &, F> &&
-                ConvertibleTo<Second const &, S>) //
+            requires convertible_to<First const &, F> &&
+                convertible_to<Second const &, S>) //
             constexpr
             operator std::pair<F, S>() const
         {

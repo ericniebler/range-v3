@@ -138,20 +138,20 @@ void test()
 
 int main()
 {
-    test<forward_iterator<int*>, iter_call>();
-    test<bidirectional_iterator<int*>, iter_call>();
-    test<random_access_iterator<int*>, iter_call>();
+    test<ForwardIterator<int*>, iter_call>();
+    test<BidirectionalIterator<int*>, iter_call>();
+    test<RandomAccessIterator<int*>, iter_call>();
     test<int*, iter_call>();
 
-    test<forward_iterator<int*>, range_call>();
-    test<bidirectional_iterator<int*>, range_call>();
-    test<random_access_iterator<int*>, range_call>();
+    test<ForwardIterator<int*>, range_call>();
+    test<BidirectionalIterator<int*>, range_call>();
+    test<RandomAccessIterator<int*>, range_call>();
     test<int*, range_call>();
 
     // Test rvalue range
     {
         int a[] = {0, 1, 1, 1, 2, 2, 2};
-        auto r = ranges::unique(ranges::view::all(a));
+        auto r = ranges::unique(ranges::views::all(a));
         CHECK(r == a + 3);
         CHECK(a[0] == 0);
         CHECK(a[1] == 1);

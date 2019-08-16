@@ -107,20 +107,20 @@ constexpr /*c++14*/ auto test_it(Sequence1234&& a) -> bool
 template<typename Sequence1234>
 constexpr /*c++14*/ auto test_its_c(Sequence1234&& a) -> bool
 {
-    return     test_it<input_iterator<int const *>>(a)
-            && test_it<forward_iterator<int const *>>(a)
-            && test_it<bidirectional_iterator<int const *>>(a)
-            && test_it<random_access_iterator<int const *>>(a);
+    return     test_it<InputIterator<int const *>>(a)
+            && test_it<ForwardIterator<int const *>>(a)
+            && test_it<BidirectionalIterator<int const *>>(a)
+            && test_it<RandomAccessIterator<int const *>>(a);
 
 }
 
 template<typename Sequence1234>
 constexpr /*c++14*/ auto test_its(Sequence1234&& a) -> bool
 {
-    return     test_it<input_iterator<int *>>(a)
-            && test_it<forward_iterator<int *>>(a)
-            && test_it<bidirectional_iterator<int *>>(a)
-            && test_it<random_access_iterator<int *>>(a)
+    return     test_it<InputIterator<int *>>(a)
+            && test_it<ForwardIterator<int *>>(a)
+            && test_it<BidirectionalIterator<int *>>(a)
+            && test_it<RandomAccessIterator<int *>>(a)
             && test_its_c(a);
 
 }
@@ -137,8 +137,8 @@ template<typename Sequence1234>
 constexpr /*c++14*/ auto test_rits(Sequence1234&& a) -> bool
 {
     using rit = decltype(ranges::rbegin(a));
-    return     test_rit<bidirectional_iterator<rit>>(a)
-            && test_rit<random_access_iterator<rit>>(a);
+    return     test_rit<BidirectionalIterator<rit>>(a)
+            && test_rit<BidirectionalIterator<rit>>(a);
 }
 
 template<typename It, typename Sequence1234>
@@ -152,10 +152,10 @@ constexpr /*c++14*/ auto test_cit(Sequence1234&& a) -> bool
 template<typename Sequence1234>
 constexpr /*c++14*/ auto test_cits(Sequence1234&& a) -> bool
 {
-    return     test_cit<input_iterator<int const *>>(a)
-            && test_cit<forward_iterator<int const *>>(a)
-            && test_cit<bidirectional_iterator<int const *>>(a)
-            && test_cit<random_access_iterator<int const *>>(a);
+    return     test_cit<InputIterator<int const *>>(a)
+            && test_cit<ForwardIterator<int const *>>(a)
+            && test_cit<BidirectionalIterator<int const *>>(a)
+            && test_cit<RandomAccessIterator<int const *>>(a);
 }
 
 
@@ -171,8 +171,8 @@ template<typename Sequence1234>
 constexpr /*c++14*/ auto test_crits(Sequence1234&& a) -> bool
 {
     using rit = decltype(ranges::crbegin(a));
-    return     test_crit<bidirectional_iterator<rit>>(a)
-            && test_crit<random_access_iterator<rit>>(a);
+    return     test_crit<BidirectionalIterator<rit>>(a)
+            && test_crit<RandomAccessIterator<rit>>(a);
 }
 
 template<typename Sequence1234>

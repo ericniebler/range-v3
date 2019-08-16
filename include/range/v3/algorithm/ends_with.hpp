@@ -37,11 +37,11 @@ namespace ranges
         constexpr auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred = C{},
                                   P0 proj0 = P0{}, P1 proj1 = P1{}) const
             -> CPP_ret(bool)( //
-                requires((ForwardIterator<I0> && Sentinel<S0, I0>) ||
-                         (InputIterator<I0> && SizedSentinel<S0, I0>)) &&
-                ((ForwardIterator<I1> && Sentinel<S1, I1>) ||
-                 (InputIterator<I1> && SizedSentinel<S1, I1>)) &&
-                IndirectlyComparable<I0, I1, C, P0, P1>)
+                requires((forward_iterator<I0> && sentinel_for<S0, I0>) ||
+                         (input_iterator<I0> && sized_sentinel_for<S0, I0>)) &&
+                ((forward_iterator<I1> && sentinel_for<S1, I1>) ||
+                 (input_iterator<I1> && sized_sentinel_for<S1, I1>)) &&
+                indirectly_comparable<I0, I1, C, P0, P1>)
         {
             const auto drop = distance(begin0, end0) - distance(begin1, end1);
             if(drop < 0)
@@ -60,9 +60,9 @@ namespace ranges
         constexpr auto operator()(Rng0 && rng0, Rng1 && rng1, C pred = C{},
                                   P0 proj0 = P0{}, P1 proj1 = P1{}) const
             -> CPP_ret(bool)( //
-                requires(ForwardRange<Rng0> || (InputRange<Rng0> && SizedRange<Rng0>)) &&
-                (ForwardRange<Rng1> || (InputRange<Rng1> && SizedRange<Rng1>)) &&
-                IndirectlyComparable<iterator_t<Rng0>, iterator_t<Rng1>, C, P0, P1>)
+                requires(forward_range<Rng0> || (input_range<Rng0> && sized_range<Rng0>)) &&
+                (forward_range<Rng1> || (input_range<Rng1> && sized_range<Rng1>)) &&
+                indirectly_comparable<iterator_t<Rng0>, iterator_t<Rng1>, C, P0, P1>)
         {
             const auto drop = distance(rng0) - distance(rng1);
             if(drop < 0)

@@ -64,8 +64,8 @@ int main()
     CHECK(ranges::lower_bound(a, 1, less(), &std::pair<int, int>::first) == &a[2]);
     CHECK(ranges::lower_bound(c, 1, less(), &std::pair<int, int>::first) == &c[2]);
 
-    CHECK(ranges::lower_bound(ranges::view::all(a), 1, less(), &std::pair<int, int>::first) == &a[2]);
-    CHECK(ranges::lower_bound(ranges::view::all(c), 1, less(), &std::pair<int, int>::first) == &c[2]);
+    CHECK(ranges::lower_bound(ranges::views::all(a), 1, less(), &std::pair<int, int>::first) == &a[2]);
+    CHECK(ranges::lower_bound(ranges::views::all(c), 1, less(), &std::pair<int, int>::first) == &c[2]);
 #ifndef RANGES_WORKAROUND_MSVC_573728
     CHECK(::is_dangling(ranges::lower_bound(std::move(a), 1, less(), &std::pair<int, int>::first)));
     CHECK(::is_dangling(ranges::lower_bound(std::move(c), 1, less(), &std::pair<int, int>::first)));

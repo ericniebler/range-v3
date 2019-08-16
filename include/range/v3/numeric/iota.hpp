@@ -28,8 +28,8 @@ namespace ranges
     {
         template<typename O, typename S, typename T>
         auto operator()(O begin, S end, T val) const -> CPP_ret(O)( //
-            requires OutputIterator<O, T const &> && Sentinel<S, O> &&
-                WeaklyIncrementable<T>)
+            requires output_iterator<O, T const &> && sentinel_for<S, O> &&
+                weakly_incrementable<T>)
         {
             for(; begin != end; ++begin, ++val)
                 *begin = detail::as_const(val);
@@ -38,7 +38,7 @@ namespace ranges
 
         template<typename Rng, typename T>
         auto operator()(Rng && rng, T val) const -> CPP_ret(safe_iterator_t<Rng>)( //
-            requires OutputRange<Rng, T const &> && WeaklyIncrementable<T>)
+            requires output_range<Rng, T const &> && weakly_incrementable<T>)
         {
             return (*this)(begin(rng), end(rng), detail::move(val));
         }

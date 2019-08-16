@@ -295,14 +295,14 @@ With `transform_view`, we can print out the first 20 squares:
     }
 ~~~~~~~
 
-The `transform_view` defined above is an InputRange when it's wrapping an
-InputRange, a ForwardRange when it's wrapping a ForwardRange, etc. That happens
-because of smart defaults defined in the `adaptor_base` class. That frees you
+The `transform_view` defined above is an input range when it is wrapping an
+input range, a forward range when it's wrapping a forward range, etc. That happens
+because of smart defaults defined in the `adaptor_base` class that frees you
 from having to deal with a host of niggly detail when implementing iterators.
 
 *(Note: the above `transform_view` always stores a copy of the function in the
 sentinel. That is only necessary if the underlying range's sentinel type models
-BidirectionalIterator. That's a finer point that you shouldn't worry about right
+bidirectional_iterator. That's a finer point that you shouldn't worry about right
 now.)*
 
 ## view_adaptor in details
@@ -410,21 +410,21 @@ Iterator/sentinel adaptor may "override" following members:
             ++it;
         }
 
-        // !For BidirectionalIterator only!
+        // !For bidirectional iterator only!
         template<typename I>
         void prev(I &it)
         {
             --it;
         }
 
-        // !For RandomAccessIterator only!
+        // !For random access iterator only!
         template<typename I>
         void advance(I &it, difference_type_t<I> n)
         {
             it += n;
         }    
 
-        // !For SizedIterator only!
+        // !For "sized" iterators only!
         template<typename I>
         difference_type_t<I> distance_to(I const &this_iter, I const &that_iter)
         {
@@ -498,7 +498,7 @@ If you will not "override" `begin_adaptor()` or/and `end_adaptor()` in your view
 
 ## Create Custom Iterators
 
-Here is an example of Range-v3 compatible RandomAccess proxy iterator.
+Here is an example of Range-v3 compatible random access proxy iterator.
 The iterator returns a key/value pair, like the `zip` view.
 
 ~~~~~~~{.cpp}
@@ -535,7 +535,7 @@ The iterator returns a key/value pair, like the `zip` view.
             --value_iterator;
         }
 
-        // advance and distance_to are optional. Required for RandomAcess iterator
+        // advance and distance_to are optional. Required for random access iterator
         void advance(std::ptrdiff_t n) {
             key_iterator   += n;
             value_iterator += n;
@@ -612,7 +612,7 @@ iterator/sentinel pair, you can write it like this:
 
 ~~~~~~~{.cpp}
     CPP_template(class Iter, class Sent, class Comp = /*...some_default..*/)
-        (requires Sentinel<Sent, Iter>)
+        (requires sentinel_for<Sent, Iter>)
     void my_algorithm(Iter first, Sent last, Comp comp = Comp{})
     {
         // ...
@@ -623,7 +623,7 @@ You can then add an overload that take a Range:
 
 ~~~~~~~{.cpp}
     CPP_template(class Rng, class Comp = /*...some_default..*/)
-        (requires Range<Rng>)
+        (requires range<Rng>)
     void my_algorithm(Rng && rng, Comp comp = Comp{})
     {
         return my_algorithm(ranges::begin(rng), ranges::end(rng));
@@ -760,11 +760,11 @@ provides, and a blurb about how each is intended to be used.
 <DT>\link ranges::view::tail_fn `view::tail`\endlink</DT>
   <DD>Given a source range, return a new range without the first element. The range must have at least one element.</DD>
 <DT>\link ranges::view::take_fn `view::take`\endlink</DT>
-  <DD>Given a source range and an integral count, return a range consisting of the first *count* elements from the source range, or the complete range if it has fewer elements. (The result of `view::take` is not a `SizedRange`.)</DD>
+  <DD>Given a source range and an integral count, return a range consisting of the first *count* elements from the source range, or the complete range if it has fewer elements. (The result of `view::take` is not a `sized_range`.)</DD>
 <DT>\link ranges::view::take_exactly_fn `view::take_exactly`\endlink</DT>
-  <DD>Given a source range and an integral count, return a range consisting of the first *count* elements from the source range. The source range must have at least that many elements. (The result of `view::take_exactly` is a `SizedRange`.)</DD>
+  <DD>Given a source range and an integral count, return a range consisting of the first *count* elements from the source range. The source range must have at least that many elements. (The result of `view::take_exactly` is a `sized_range`.)</DD>
 <DT>\link ranges::view::take_last_fn `view::take_last`\endlink</DT>
-  <DD>Given a source range and an integral count, return a range consisting of the last *count* elements from the source range. The source range must be a `SizedRange`. If the source range does not have at least *count* elements, the full range is returned.</DD>
+  <DD>Given a source range and an integral count, return a range consisting of the last *count* elements from the source range. The source range must be a `sized_range`. If the source range does not have at least *count* elements, the full range is returned.</DD>
 <DT>\link ranges::view::take_while_fn `view::take_while`\endlink</DT>
   <DD>Given a source range and a unary predicate, return a new range consisting of the  elements from the front that satisfy the predicate.</DD>
 <DT>\link ranges::view::tokenize_fn `view::tokenize`\endlink</DT>

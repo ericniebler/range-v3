@@ -43,10 +43,10 @@ test_iter()
     const int ia[] = {1, 2, 3, 4, 6, 8, 5, 7};
     int r1[10] = {0};
     int r2[10] = {0};
-    typedef ranges::partition_copy_result<Iter, output_iterator<int*>,  int*> P;
+    typedef ranges::partition_copy_result<Iter, OutputIterator<int*>,  int*> P;
     P p = ranges::partition_copy(Iter(std::begin(ia)),
                                  Sent(std::end(ia)),
-                                 output_iterator<int*>(r1), r2, is_odd());
+                                 OutputIterator<int*>(r1), r2, is_odd());
     CHECK(p.in == Iter(std::end(ia)));
     CHECK(p.out1.base() == r1 + 4);
     CHECK(r1[0] == 1);
@@ -67,10 +67,10 @@ test_range()
     const int ia[] = {1, 2, 3, 4, 6, 8, 5, 7};
     int r1[10] = {0};
     int r2[10] = {0};
-    typedef ranges::partition_copy_result<Iter, output_iterator<int*>,  int*> P;
+    typedef ranges::partition_copy_result<Iter, OutputIterator<int*>,  int*> P;
     P p = ranges::partition_copy(::as_lvalue(ranges::make_subrange(Iter(std::begin(ia)),
                                                            Sent(std::end(ia)))),
-                                 output_iterator<int*>(r1), r2, is_odd());
+                                 OutputIterator<int*>(r1), r2, is_odd());
     CHECK(p.in == Iter(std::end(ia)));
     CHECK(p.out1.base() == r1 + 4);
     CHECK(r1[0] == 1);
@@ -152,11 +152,11 @@ void test_rvalue()
 
 int main()
 {
-    test_iter<input_iterator<const int*> >();
-    test_iter<input_iterator<const int*>, sentinel<const int*>>();
+    test_iter<InputIterator<const int*> >();
+    test_iter<InputIterator<const int*>, Sentinel<const int*>>();
 
-    test_range<input_iterator<const int*> >();
-    test_range<input_iterator<const int*>, sentinel<const int*>>();
+    test_range<InputIterator<const int*> >();
+    test_range<InputIterator<const int*>, Sentinel<const int*>>();
 
     test_proj();
     test_rvalue();

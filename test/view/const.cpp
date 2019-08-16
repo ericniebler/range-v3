@@ -27,59 +27,63 @@ int main()
 
     int rgi[] = {1, 2, 3, 4};
 
-    auto && rng = rgi | view::const_;
+    auto rng = rgi | views::const_;
     has_type<int &>(*begin(rgi));
     has_type<int const &>(*begin(rng));
-    CPP_assert(Same<range_rvalue_reference_t<decltype(rng)>, int const &&>);
-    models<CommonViewConcept>(aux::copy(rng));
-    models<SizedViewConcept>(aux::copy(rng));
-    models<RandomAccessViewConcept>(aux::copy(rng));
+    CPP_assert(same_as<range_rvalue_reference_t<decltype(rng)>, int const &&>);
+    CPP_assert(view_<decltype(rng)>);
+    CPP_assert(common_range<decltype(rng)>);
+    CPP_assert(sized_range<decltype(rng)>);
+    CPP_assert(random_access_range<decltype(rng)>);
     ::check_equal(rng, {1, 2, 3, 4});
     CHECK(&*begin(rng) == &rgi[0]);
     CHECK(rng.size() == 4u);
 
-    auto && rng2 = view::counted(forward_iterator<int*>(rgi), 4) | view::const_;
+    auto rng2 = views::counted(ForwardIterator<int*>(rgi), 4) | views::const_;
     has_type<int const &>(*begin(rng2));
-    CPP_assert(Same<range_rvalue_reference_t<decltype(rng2)>, int const &&>);
-    models<ForwardViewConcept>(aux::copy(rng2));
-    models_not<BidirectionalViewConcept>(aux::copy(rng2));
-    models_not<CommonViewConcept>(aux::copy(rng2));
-    models<SizedViewConcept>(aux::copy(rng2));
+    CPP_assert(same_as<range_rvalue_reference_t<decltype(rng2)>, int const &&>);
+    CPP_assert(view_<decltype(rng2)>);
+    CPP_assert(forward_range<decltype(rng2)>);
+    CPP_assert(!bidirectional_range<decltype(rng2)>);
+    CPP_assert(!common_range<decltype(rng2)>);
+    CPP_assert(sized_range<decltype(rng2)>);
     ::check_equal(rng2, {1, 2, 3, 4});
     CHECK(&*begin(rng2) == &rgi[0]);
     CHECK(rng2.size() == 4u);
 
-    auto zip = view::zip(rgi, rgi);
-    auto rng3 = zip | view::const_;
+    auto zip = views::zip(rgi, rgi);
+    auto rng3 = zip | views::const_;
     has_type<common_pair<int &, int &>>(*begin(zip));
     has_type<common_pair<int &&, int &&>>(iter_move(begin(zip)));
     has_type<common_pair<int const &, int const &>>(*begin(rng3));
     has_type<common_pair<int const &&, int const &&>>(iter_move(begin(rng3)));
-    models<RandomAccessViewConcept>(aux::copy(rng3));
-    models<CommonViewConcept>(aux::copy(rng3));
-    models<SizedViewConcept>(aux::copy(rng3));
+    CPP_assert(view_<decltype(rng3)>);
+    CPP_assert(random_access_range<decltype(rng3)>);
+    CPP_assert(common_range<decltype(rng3)>);
+    CPP_assert(sized_range<decltype(rng3)>);
     using P = std::pair<int,int>;
     ::check_equal(rng3, {P{1,1}, P{2,2}, P{3,3}, P{4,4}});
     CHECK(&(*begin(rng3)).first == &rgi[0]);
     CHECK(rng3.size() == 4u);
 
-    auto zip2 = view::zip(rgi, rgi) | view::move;
-    auto rng4 = zip2 | view::const_;
+    auto zip2 = views::zip(rgi, rgi) | views::move;
+    auto rng4 = zip2 | views::const_;
     has_type<common_pair<int &&, int &&>>(*begin(zip2));
     has_type<common_pair<int &&, int &&>>(iter_move(begin(zip2)));
     has_type<common_pair<int const &&, int const &&>>(*begin(rng4));
     has_type<common_pair<int const &&, int const &&>>(iter_move(begin(rng4)));
-    models<RandomAccessViewConcept>(aux::copy(rng4));
-    models<CommonViewConcept>(aux::copy(rng4));
-    models<SizedViewConcept>(aux::copy(rng4));
+    CPP_assert(view_<decltype(rng4)>);
+    CPP_assert(random_access_range<decltype(rng4)>);
+    CPP_assert(common_range<decltype(rng4)>);
+    CPP_assert(sized_range<decltype(rng4)>);
     using P = std::pair<int,int>;
     ::check_equal(rng4, {P{1,1}, P{2,2}, P{3,3}, P{4,4}});
     CHECK(&(*begin(rng4)).first == &rgi[0]);
     CHECK(rng4.size() == 4u);
 
     {
-        auto rng = debug_input_view<int>{rgi} | view::const_;
-        CPP_assert(Same<int const&, range_reference_t<decltype(rng)>>);
+        auto rng = debug_input_view<int>{rgi} | views::const_;
+        CPP_assert(same_as<int const&, range_reference_t<decltype(rng)>>);
         ::check_equal(rng, rgi);
     }
 

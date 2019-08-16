@@ -67,7 +67,7 @@ namespace ranges
         }
         CPP_member
         auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires Range<Rng const>)
+            requires range<Rng const>)
         {
             return {};
         }
@@ -77,7 +77,7 @@ namespace ranges
         }
         CPP_member
         auto end_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires Range<Rng const>)
+            requires range<Rng const>)
         {
             return {};
         }
@@ -88,12 +88,12 @@ namespace ranges
           : const_view::view_adaptor{std::move(rng)}
         {}
         CPP_member
-        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
         {
             return ranges::size(this->base());
         }
         CPP_member
-        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
         {
             return ranges::size(this->base());
         }
@@ -101,16 +101,16 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    const_view(Rng &&)->const_view<view::all_t<Rng>>;
+    const_view(Rng &&)->const_view<views::all_t<Rng>>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct const_fn
         {
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(const_view<all_t<Rng>>)( //
-                requires ViewableRange<Rng> && InputRange<Rng>)
+                requires viewable_range<Rng> && input_range<Rng>)
             {
                 return const_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -119,7 +119,7 @@ namespace ranges
         /// \relates const_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<const_fn>, const_)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

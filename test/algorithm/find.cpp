@@ -38,19 +38,19 @@ int main()
     constexpr auto s = size(ia);
 
     {
-        input_iterator<const int*> r = find(input_iterator<const int*>(ia),
-                                            input_iterator<const int*>(ia+s), 3);
+        InputIterator<const int*> r = find(InputIterator<const int*>(ia),
+                                            InputIterator<const int*>(ia+s), 3);
         CHECK(*r == 3);
-        r = find(input_iterator<const int*>(ia),
-                 input_iterator<const int*>(ia+s), 10);
-        CHECK(r == input_iterator<const int*>(ia+s));
+        r = find(InputIterator<const int*>(ia),
+                 InputIterator<const int*>(ia+s), 10);
+        CHECK(r == InputIterator<const int*>(ia+s));
 
-        r = find(input_iterator<const int*>(ia),
-                 sentinel<const int*>(ia+s), 3);
+        r = find(InputIterator<const int*>(ia),
+                 Sentinel<const int*>(ia+s), 3);
         CHECK(*r == 3);
-        r = find(input_iterator<const int*>(ia),
-                 sentinel<const int*>(ia+s), 10);
-        CHECK(r == input_iterator<const int*>(ia+s));
+        r = find(InputIterator<const int*>(ia),
+                 Sentinel<const int*>(ia+s), 10);
+        CHECK(r == InputIterator<const int*>(ia+s));
     }
 
     {
@@ -68,7 +68,7 @@ int main()
         std::vector<int> vec(begin(ia), end(ia));
         auto pj1 = find(std::move(vec), 3);
         CHECK(::is_dangling(pj1));
-        auto pj2 = find(view::all(ia), 10);
+        auto pj2 = find(views::all(ia), 10);
         CHECK(pj2 == ia+s);
     }
 

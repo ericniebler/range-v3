@@ -53,7 +53,7 @@ namespace ranges
             template<typename Rng>
             auto get_end(Rng & rng, range_difference_t<Rng> n, int)
                 -> CPP_ret(iterator_t<Rng>)( //
-                    requires RandomAccessRange<Rng> && SizedRange<Rng>)
+                    requires random_access_range<Rng> && sized_range<Rng>)
             {
                 return begin(rng) + static_cast<range_difference_t<Rng>>(
                                         drop_last_view::get_size(rng, n));
@@ -61,7 +61,7 @@ namespace ranges
             template<typename Rng>
             auto get_end(Rng & rng, range_difference_t<Rng> n, long)
                 -> CPP_ret(iterator_t<Rng>)( //
-                    requires BidirectionalRange<Rng> && CommonRange<Rng>)
+                    requires bidirectional_range<Rng> && common_range<Rng>)
             {
                 return prev(end(rng), n, begin(rng));
             }
@@ -87,26 +87,26 @@ namespace ranges
             {
                 // keep range bound
                 // Sized Bidi O(N)
-                return (RandomAccessView<Rng> && SizedView<Rng>) ||
-                               (BidirectionalView<Rng> && CommonView<Rng>) //
+                return (random_access_range<Rng> && view_<Rng> && sized_range<Rng> && view_<Rng>) ||
+                               (bidirectional_range<Rng> && view_<Rng> && common_range<Rng> && view_<Rng>) //
                            ? mode_enum::bidi                               //
-                           : SizedView<Rng>                                //
+                           : sized_range<Rng> && view_<Rng>                                //
                                  ? mode_enum::sized                        //
-                                 : ForwardView<Rng>                        //
+                                 : forward_range<Rng> && view_<Rng>                        //
                                        ? mode_enum::forward                //
                                        : mode_enum::invalid;               //
 
                 // max performance
                 // Sized Bidi O(1)
                 // Sized Bidi use mode::sized instead of mode::bidi - thus become unbound.
-                /*return (RandomAccessView<Rng> && SizedView<Rng>) ||
-                        (BidirectionalView<Rng> && CommonView<Rng>)
+                /*return (random_access_range<Rng> && view_<Rng> && sized_range<Rng> && view_<Rng>) ||
+                        (bidirectional_range<Rng> && view_<Rng> && common_range<Rng> && view_<Rng>)
                         ? mode::bidi
-                        : SizedView<Rng>
+                        : sized_range<Rng> && view_<Rng>
                             ? mode::sized
-                            : BidirectionalView<Rng> && CommonView<Rng>
+                            : bidirectional_range<Rng> && view_<Rng> && common_range<Rng> && view_<Rng>
                             ? mode::bidi
-                            : ForwardView<Rng>
+                            : forward_range<Rng> && view_<Rng>
                                 ? mode::forward
                                 : mode::invalid;*/
             }
@@ -128,8 +128,8 @@ namespace ranges
                            ? finite
                            : range_cardinality<Rng>::value> // finite at best
     {
-        CPP_assert((RandomAccessView<Rng> && SizedView<Rng>) ||
-                   (BidirectionalView<Rng> && CommonView<Rng>));
+        CPP_assert((random_access_range<Rng> && view_<Rng> && sized_range<Rng> && view_<Rng>) ||
+                   (bidirectional_range<Rng> && view_<Rng> && common_range<Rng> && view_<Rng>));
 
     private:
         friend range_access;
@@ -160,24 +160,24 @@ namespace ranges
         }
         template<typename CRng = Rng const>
         auto begin() const -> CPP_ret(iterator_t<CRng>)( //
-            requires RandomAccessRange<CRng> && SizedRange<CRng>)
+            requires random_access_range<CRng> && sized_range<CRng>)
         {
             return ranges::begin(rng_);
         }
         template<typename CRng = Rng const>
         auto end() const -> CPP_ret(iterator_t<CRng>)( //
-            requires RandomAccessRange<CRng> && SizedRange<CRng>)
+            requires random_access_range<CRng> && sized_range<CRng>)
         {
             return detail::drop_last_view::get_end(rng_, n_, 0);
         }
 
         auto CPP_fun(size)()( //
-            requires SizedRange<Rng>)
+            requires sized_range<Rng>)
         {
             return detail::drop_last_view::get_size(rng_, n_);
         }
         CPP_member
-        auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        auto CPP_fun(size)()(const requires sized_range<Rng const>)
         {
             return detail::drop_last_view::get_size(rng_, n_);
         }
@@ -200,7 +200,7 @@ namespace ranges
                          : range_cardinality<Rng>::value> // finite at best (but
                                                           // unknown is expected)
     {
-        CPP_assert(ForwardView<Rng>);
+        CPP_assert(forward_range<Rng> && view_<Rng>);
 
     private:
         friend range_access;
@@ -255,12 +255,12 @@ namespace ranges
 
         CPP_member
         auto CPP_fun(size)()( //
-            requires SizedRange<Rng>)
+            requires sized_range<Rng>)
         {
             return detail::drop_last_view::get_size(this->base(), n_);
         }
         CPP_member
-        auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        auto CPP_fun(size)()(const requires sized_range<Rng const>)
         {
             return detail::drop_last_view::get_size(this->base(), n_);
         }
@@ -270,7 +270,7 @@ namespace ranges
     struct drop_last_view<Rng, detail::drop_last_view::mode_sized>
       : view_interface<drop_last_view<Rng, detail::drop_last_view::mode_sized>, finite>
     {
-        CPP_assert(SizedView<Rng>);
+        CPP_assert(sized_range<Rng> && view_<Rng>);
 
     private:
         friend range_access;
@@ -294,7 +294,7 @@ namespace ranges
         }
         template<typename CRng = Rng const>
         auto begin() const -> CPP_ret(counted_iterator<iterator_t<CRng>>)( //
-            requires SizedRange<CRng>)
+            requires sized_range<CRng>)
         {
             return {ranges::begin(rng_), static_cast<difference_t>(size())};
         }
@@ -307,7 +307,7 @@ namespace ranges
             return detail::drop_last_view::get_size(this->base(), n_);
         }
         CPP_member
-        auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        auto CPP_fun(size)()(const requires sized_range<Rng const>)
         {
             return detail::drop_last_view::get_size(this->base(), n_);
         }
@@ -324,10 +324,10 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    drop_last_view(Rng &&, range_difference_t<Rng>)->drop_last_view<view::all_t<Rng>>;
+    drop_last_view(Rng &&, range_difference_t<Rng>)->drop_last_view<views::all_t<Rng>>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct drop_last_fn
         {
@@ -336,7 +336,7 @@ namespace ranges
 
             template<typename Int>
             static constexpr auto CPP_fun(bind)(drop_last_fn drop_last, Int n)( //
-                requires Integral<Int>)
+                requires integral<Int>)
             {
                 return make_pipeable(bind_back(drop_last, n));
             }
@@ -345,14 +345,14 @@ namespace ranges
             template<typename Rng>
             constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> CPP_ret(drop_last_view<all_t<Rng>>)( //
-                    requires SizedRange<Rng> || ForwardRange<Rng>)
+                    requires sized_range<Rng> || forward_range<Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
         };
 
         RANGES_INLINE_VARIABLE(view<drop_last_fn>, drop_last)
-    } // namespace view
+    } // namespace views
 } // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>

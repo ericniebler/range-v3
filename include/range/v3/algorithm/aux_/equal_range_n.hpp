@@ -38,8 +38,8 @@ namespace ranges
             template<typename I, typename V, typename R = less, typename P = identity>
             auto operator()(I begin, iter_difference_t<I> dist, V const & val,
                             R pred = R{}, P proj = P{}) const -> CPP_ret(subrange<I>)( //
-                requires ForwardIterator<I> &&
-                    IndirectStrictWeakOrder<R, V const *, projected<I, P>>)
+                requires forward_iterator<I> &&
+                    indirect_strict_weak_order<R, V const *, projected<I, P>>)
             {
                 if(0 < dist)
                 {

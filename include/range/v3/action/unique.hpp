@@ -38,7 +38,7 @@ namespace ranges
             friend action_access;
             template<typename C, typename P = identity>
             static auto CPP_fun(bind)(unique_fn unique, C pred, P proj = P{})( //
-                requires(!Range<C>))
+                requires(!range<C>))
             {
                 return bind_back(unique, std::move(pred), std::move(proj));
             }
@@ -47,9 +47,9 @@ namespace ranges
             template<typename Rng, typename C = equal_to, typename P = identity>
             auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
                 -> CPP_ret(Rng)( //
-                    requires ForwardRange<Rng> &&
-                        ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                            Sortable<iterator_t<Rng>, C, P>)
+                    requires forward_range<Rng> &&
+                        erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
+                            sortable<iterator_t<Rng>, C, P>)
             {
                 auto it = ranges::unique(rng, std::move(pred), std::move(proj));
                 ranges::erase(rng, it, end(rng));

@@ -37,7 +37,7 @@ namespace ranges
         template<typename I, typename F, typename P = identity>
         auto operator()(I begin, iter_difference_t<I> n, F fun, P proj = P{}) const
             -> CPP_ret(I)( //
-                requires InputIterator<I> && IndirectUnaryInvocable<F, projected<I, P>>)
+                requires input_iterator<I> && indirectly_unary_invocable<F, projected<I, P>>)
         {
             RANGES_EXPECT(0 <= n);
             auto norig = n;
@@ -50,10 +50,10 @@ namespace ranges
         template<typename Rng, typename F, typename P = identity>
         auto operator()(Rng && rng, range_difference_t<Rng> n, F fun, P proj = P{}) const
             -> CPP_ret(safe_iterator_t<Rng>)( //
-                requires InputRange<Rng> &&
-                    IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
+                requires input_range<Rng> &&
+                    indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
         {
-            if(SizedRange<Rng>)
+            if(sized_range<Rng>)
                 RANGES_EXPECT(n <= distance(rng));
 
             return (*this)(begin(rng), n, detail::move(fun), detail::move(proj));

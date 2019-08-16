@@ -69,7 +69,7 @@ namespace ranges
       , private _tagged_::adl_hook_
 #endif
     {
-        CPP_assert(Same<Base, uncvref_t<Base>>);
+        CPP_assert(same_as<Base, uncvref_t<Base>>);
         using base_t = meta::_t<detail::tagged_chain<Base, 0, Tags...>>;
 
         template<typename Other>
@@ -132,8 +132,8 @@ namespace ranges
         template<typename U>
         constexpr auto operator=(U && u) noexcept(noexcept(
             std::declval<Base &>() = static_cast<U &&>(u))) -> CPP_ret(tagged &)( //
-            requires(!defer::Same<tagged, detail::decay_t<U>>) &&
-            defer::Satisfies<Base &, std::is_assignable, U>)
+            requires(!defer::same_as<tagged, detail::decay_t<U>>) &&
+            defer::satisfies<Base &, std::is_assignable, U>)
         {
             static_cast<Base &>(*this) = static_cast<U &&>(u);
             return *this;

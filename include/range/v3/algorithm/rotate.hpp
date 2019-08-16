@@ -196,7 +196,7 @@ namespace ranges
     public:
         template<typename I, typename S>
         auto operator()(I begin, I middle, S end) const -> CPP_ret(subrange<I>)( //
-            requires Permutable<I> && Sentinel<S, I>)
+            requires permutable<I> && sentinel_for<S, I>)
         {
             if(begin == middle)
             {
@@ -212,7 +212,7 @@ namespace ranges
 
         template<typename Rng, typename I = iterator_t<Rng>>
         auto operator()(Rng && rng, I middle) const -> CPP_ret(safe_subrange_t<Rng>)( //
-            requires Range<Rng> && Permutable<I>)
+            requires range<Rng> && permutable<I>)
         {
             return (*this)(begin(rng), std::move(middle), end(rng));
         }

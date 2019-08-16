@@ -40,8 +40,8 @@ namespace ranges
         template<typename I, typename S, typename O, typename P = identity>
         auto operator()(I begin, I middle, S end, O out) const
             -> CPP_ret(rotate_copy_result<I, O>)( //
-                requires ForwardIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
-                    IndirectlyCopyable<I, O>)
+                requires forward_iterator<I> && sentinel_for<S, I> && weakly_incrementable<O> &&
+                    indirectly_copyable<I, O>)
         {
             auto res = ranges::copy(middle, std::move(end), std::move(out));
             return {std::move(res.in),
@@ -51,8 +51,8 @@ namespace ranges
         template<typename Rng, typename O, typename P = identity>
         auto operator()(Rng && rng, iterator_t<Rng> middle, O out) const
             -> CPP_ret(rotate_copy_result<safe_iterator_t<Rng>, O>)( //
-                requires Range<Rng> && WeaklyIncrementable<O> &&
-                    IndirectlyCopyable<iterator_t<Rng>, O>)
+                requires range<Rng> && weakly_incrementable<O> &&
+                    indirectly_copyable<iterator_t<Rng>, O>)
         {
             return (*this)(begin(rng), std::move(middle), end(rng), std::move(out));
         }

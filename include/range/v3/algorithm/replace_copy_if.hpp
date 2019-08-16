@@ -41,8 +41,8 @@ namespace ranges
                  typename P = identity>
         auto operator()(I begin, S end, O out, C pred, T const & new_value,
                         P proj = {}) const -> CPP_ret(replace_copy_if_result<I, O>)( //
-            requires InputIterator<I> && Sentinel<S, I> && OutputIterator<O, T const &> &&
-                IndirectUnaryPredicate<C, projected<I, P>> && IndirectlyCopyable<I, O>)
+            requires input_iterator<I> && sentinel_for<S, I> && output_iterator<O, T const &> &&
+                indirect_unary_predicate<C, projected<I, P>> && indirectly_copyable<I, O>)
         {
             for(; begin != end; ++begin, ++out)
             {
@@ -58,9 +58,9 @@ namespace ranges
         template<typename Rng, typename O, typename C, typename T, typename P = identity>
         auto operator()(Rng && rng, O out, C pred, T const & new_value, P proj = {}) const
             -> CPP_ret(replace_copy_if_result<safe_iterator_t<Rng>, O>)( //
-                requires InputRange<Rng> && OutputIterator<O, T const &> &&
-                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>> &&
-                        IndirectlyCopyable<iterator_t<Rng>, O>)
+                requires input_range<Rng> && output_iterator<O, T const &> &&
+                    indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> &&
+                        indirectly_copyable<iterator_t<Rng>, O>)
         {
             return (*this)(begin(rng),
                            end(rng),

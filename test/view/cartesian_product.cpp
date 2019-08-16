@@ -60,14 +60,14 @@ namespace std {
 
 void test_empty_set()
 {
-    auto rng = view::cartesian_product();
+    auto rng = views::cartesian_product();
     using Rng = decltype(rng);
     CPP_assert(range_cardinality<Rng>::value ==
         static_cast<cardinality>(0));
 
-    CPP_assert(RandomAccessView<Rng>);
-    CPP_assert(CommonRange<Rng>);
-    CPP_assert(SizedRange<Rng>);
+    CPP_assert(random_access_range<Rng> && view_<Rng>);
+    CPP_assert(common_range<Rng>);
+    CPP_assert(sized_range<Rng>);
     CHECK(size(rng) == 0u);
     CHECK(empty(rng));
 
@@ -80,7 +80,7 @@ void test_empty_set()
 
     std::initializer_list<common_tuple<>> control{};
     ::check_equal(rng, control);
-    ::check_equal(view::reverse(rng), view::reverse(control));
+    ::check_equal(views::reverse(rng), views::reverse(control));
 
     auto const first = begin(rng);
     auto const last = end(rng);
@@ -97,8 +97,8 @@ void test_empty_set()
 void test_empty_range()
 {
     int some_ints[] = {0,1,2,3};
-    auto e = view::empty<char>;
-    auto rng = view::cartesian_product(
+    auto e = views::empty<char>;
+    auto rng = views::cartesian_product(
         span<int, size(some_ints)>{some_ints},
         e
     );
@@ -106,9 +106,9 @@ void test_empty_range()
     CPP_assert(range_cardinality<Rng>::value ==
         static_cast<cardinality>(0));
 
-    CPP_assert(RandomAccessView<Rng>);
-    CPP_assert(CommonRange<Rng>);
-    CPP_assert(SizedRange<Rng>);
+    CPP_assert(random_access_range<Rng> && view_<Rng>);
+    CPP_assert(common_range<Rng>);
+    CPP_assert(sized_range<Rng>);
     CHECK(size(rng) == 0u);
 
     CPP_assert(std::is_same<
@@ -122,7 +122,7 @@ void test_empty_range()
     std::initializer_list<CT> control = {};
 
     ::check_equal(rng, control);
-    ::check_equal(view::reverse(rng), view::reverse(control));
+    ::check_equal(views::reverse(rng), views::reverse(control));
 
     auto const first = begin(rng);
     auto const last = end(rng);
@@ -146,22 +146,22 @@ void test_bug_820()
         CT{2, 0}, CT{2, 1}, CT{2, 2}
     };
 
-    auto x = ranges::view::iota(0) | ranges::view::take_exactly(3);
-    auto y = ranges::view::cartesian_product(x, x);
+    auto x = ranges::views::iota(0) | ranges::views::take_exactly(3);
+    auto y = ranges::views::cartesian_product(x, x);
     ::check_equal(y, control);
 }
 
 void test_bug_823()
 {
     // https://github.com/ericniebler/range-v3/issues/823
-    auto three = ranges::view::iota(0) | ranges::view::take_exactly(3);
-    CPP_assert(ranges::RandomAccessView<decltype(three)>);
-    CPP_assert(!ranges::RandomAccessView<const decltype(three)>);
+    auto three = ranges::views::iota(0) | ranges::views::take_exactly(3);
+    CPP_assert(ranges::random_access_range<decltype(three)> && ranges::view_<decltype(three)>);
+    CPP_assert(!(ranges::random_access_range<const decltype(three)> && ranges::view_<const decltype(three)>));
 
-    auto prod = ranges::view::cartesian_product(three, three);
-    CPP_assert(ranges::RandomAccessView<decltype(prod)>);
-    CPP_assert(!ranges::RandomAccessView<const decltype(prod)>);
-    CPP_assert(ranges::SizedRange<decltype(prod)>);
+    auto prod = ranges::views::cartesian_product(three, three);
+    CPP_assert(ranges::random_access_range<decltype(prod)> && ranges::view_<decltype(prod)>);
+    CPP_assert(!(ranges::random_access_range<const decltype(prod)> && ranges::view_<const decltype(prod)>));
+    CPP_assert(ranges::sized_range<decltype(prod)>);
     CHECK(ranges::size(prod) == 9u);
 
     {
@@ -173,9 +173,9 @@ void test_bug_823()
         CHECK(i == 3 * 3);
     }
 
-    auto twoD = prod | ranges::view::chunk(3);
-    CPP_assert(ranges::RandomAccessView<decltype(twoD)>);
-    CPP_assert(!ranges::RandomAccessView<const decltype(twoD)>);
+    auto twoD = prod | ranges::views::chunk(3);
+    CPP_assert(ranges::random_access_range<decltype(twoD)> && ranges::view_<decltype(twoD)>);
+    CPP_assert(!(ranges::random_access_range<const decltype(twoD)> && ranges::view_<const decltype(twoD)>));
 
     {
         int i = 0;
@@ -206,7 +206,7 @@ void test_bug_919()
     // https://github.com/ericniebler/range-v3/issues/919
     int some_ints[] = {0,1,2,3};
     char const * some_strings[] = {"John", "Paul", "George", "Ringo"};
-    auto rng = view::cartesian_product(
+    auto rng = views::cartesian_product(
         span<int, size(some_ints)>{some_ints},
         span<char const*, size(some_strings)>{some_strings}
     );
@@ -225,8 +225,8 @@ void test_bug_919()
 void test_bug_978()
 {
     int data[] = {1};
-    ranges::view::cartesian_product(
-        data | ranges::view::filter([](int){ return true; }),
+    ranges::views::cartesian_product(
+        data | ranges::views::filter([](int){ return true; }),
         data
     );
 }
@@ -235,7 +235,7 @@ int main()
 {
     int some_ints[] = {0,1,2,3};
     char const * some_strings[] = {"John", "Paul", "George", "Ringo"};
-    auto rng = view::cartesian_product(
+    auto rng = views::cartesian_product(
         span<int, size(some_ints)>{some_ints},
         span<char const*, size(some_strings)>{some_strings}
     );
@@ -244,9 +244,9 @@ int main()
         range_cardinality<decltype(some_ints)>::value *
         range_cardinality<decltype(some_strings)>::value);
 
-    CPP_assert(RandomAccessView<Rng>);
-    CPP_assert(CommonRange<Rng>);
-    CPP_assert(SizedRange<Rng>);
+    CPP_assert(random_access_range<Rng> && view_<Rng>);
+    CPP_assert(common_range<Rng>);
+    CPP_assert(sized_range<Rng>);
     CHECK(size(rng) == size(some_ints) * size(some_strings));
 
     CPP_assert(std::is_same<
@@ -265,7 +265,7 @@ int main()
     };
 
     ::check_equal(rng, control);
-    ::check_equal(view::reverse(rng), view::reverse(control));
+    ::check_equal(views::reverse(rng), views::reverse(control));
 
     auto const first = begin(rng);
     auto const last = end(rng);

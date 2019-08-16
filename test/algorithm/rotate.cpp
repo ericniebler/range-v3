@@ -253,18 +253,18 @@ void test()
 
 int main()
 {
-    test<forward_iterator<int *>>();
-    test<bidirectional_iterator<int *>>();
-    test<random_access_iterator<int *>>();
+    test<ForwardIterator<int *>>();
+    test<BidirectionalIterator<int *>>();
+    test<RandomAccessIterator<int *>>();
 
-    test<forward_iterator<int *>, sentinel<int*>>();
-    test<bidirectional_iterator<int *>, sentinel<int*>>();
-    test<random_access_iterator<int *>, sentinel<int*>>();
+    test<ForwardIterator<int *>, Sentinel<int*>>();
+    test<BidirectionalIterator<int *>, Sentinel<int*>>();
+    test<RandomAccessIterator<int *>, Sentinel<int*>>();
 
     // test rvalue ranges
     {
         int rgi[] = {0,1,2,3,4,5};
-        auto r = ranges::rotate(ranges::view::all(rgi), rgi+2);
+        auto r = ranges::rotate(ranges::views::all(rgi), rgi+2);
         CHECK(r.begin() == rgi+4);
         CHECK(r.end() == ranges::end(rgi));
         CHECK(rgi[0] == 2);

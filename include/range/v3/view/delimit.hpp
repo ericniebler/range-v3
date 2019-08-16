@@ -69,12 +69,12 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Val)(requires CopyConstructible<Val>)
+    CPP_template(typename Rng, typename Val)(requires copy_constructible<Val>)
         delimit_view(Rng &&, Val)
-            ->delimit_view<view::all_t<Rng>, Val>;
+            ->delimit_view<views::all_t<Rng>, Val>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct delimit_impl_fn
         {
@@ -90,8 +90,8 @@ namespace ranges
             template<typename Rng, typename Val>
             constexpr auto operator()(Rng && rng, Val value) const
                 -> CPP_ret(delimit_view<all_t<Rng>, Val>)( //
-                    requires ViewableRange<Rng> && InputRange<Rng> && Semiregular<Val> &&
-                        EqualityComparableWith<Val, range_reference_t<Rng>>)
+                    requires viewable_range<Rng> && input_range<Rng> && semiregular<Val> &&
+                        equality_comparable_with<Val, range_reference_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(value)};
             }
@@ -104,9 +104,9 @@ namespace ranges
             template<typename I_, typename Val, typename I = detail::decay_t<I_>>
             constexpr auto operator()(I_ && begin_, Val value) const
                 -> CPP_ret(delimit_view<subrange<I, unreachable_sentinel_t>, Val>)( //
-                    requires(!Range<I_> && ConvertibleTo<I_, I> && InputIterator<I> &&
-                             Semiregular<Val> &&
-                             EqualityComparableWith<Val, iter_reference_t<I>>))
+                    requires(!range<I_> && convertible_to<I_, I> && input_iterator<I> &&
+                             semiregular<Val> &&
+                             equality_comparable_with<Val, iter_reference_t<I>>))
             {
                 return {{static_cast<I_ &&>(begin_), {}}, std::move(value)};
             }
@@ -115,7 +115,7 @@ namespace ranges
         /// \relates delimit_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(delimit_fn, delimit)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

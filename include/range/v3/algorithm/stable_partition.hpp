@@ -285,8 +285,8 @@ namespace ranges
     public:
         template<typename I, typename S, typename C, typename P = identity>
         auto operator()(I begin, S end, C pred, P proj = P{}) const -> CPP_ret(I)( //
-            requires BidirectionalIterator<I> && Sentinel<S, I> &&
-                IndirectUnaryPredicate<C, projected<I, P>> && Permutable<I>)
+            requires bidirectional_iterator<I> && sentinel_for<S, I> &&
+                indirect_unary_predicate<C, projected<I, P>> && permutable<I>)
         {
             return stable_partition_fn::impl(std::move(begin),
                                              std::move(end),
@@ -299,8 +299,8 @@ namespace ranges
         template<typename Rng, typename C, typename P = identity>
         auto operator()(Rng && rng, C pred, P proj = P{}) const
             -> CPP_ret(safe_iterator_t<Rng>)( //
-                requires BidirectionalRange<Rng> && IndirectUnaryPredicate<
-                    C, projected<iterator_t<Rng>, P>> && Permutable<iterator_t<Rng>>)
+                requires bidirectional_range<Rng> && indirect_unary_predicate<
+                    C, projected<iterator_t<Rng>, P>> && permutable<iterator_t<Rng>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

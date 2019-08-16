@@ -121,10 +121,10 @@ int main()
     int * r = ranges::partial_sort_copy(&i, &i, &i, &i+5);
     CHECK(r == &i);
     CHECK(i == 0);
-    test<input_iterator<const int*> >();
-    test<forward_iterator<const int*> >();
-    test<bidirectional_iterator<const int*> >();
-    test<random_access_iterator<const int*> >();
+    test<InputIterator<const int*> >();
+    test<ForwardIterator<const int*> >();
+    test<BidirectionalIterator<const int*> >();
+    test<RandomAccessIterator<const int*> >();
     test<const int*>();
 
     // Check projections

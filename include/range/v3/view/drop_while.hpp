@@ -26,7 +26,7 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/optional.hpp>
-#include <range/v3/utility/semiregular.hpp>
+#include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/interface.hpp>
@@ -43,7 +43,7 @@ namespace ranges
     {
     private:
         Rng rng_;
-        semiregular_t<Pred> pred_;
+        semiregular_box_t<Pred> pred_;
         detail::non_propagating_cache<iterator_t<Rng>> begin_;
 
         iterator_t<Rng> get_begin_()
@@ -74,12 +74,12 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)(requires CopyConstructible<Fun>)
+    CPP_template(typename Rng, typename Fun)(requires copy_constructible<Fun>)
         drop_while_view(Rng &&, Fun)
-            ->drop_while_view<view::all_t<Rng>, Fun>;
+            ->drop_while_view<views::all_t<Rng>, Fun>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct drop_while_fn
         {
@@ -101,16 +101,16 @@ namespace ranges
             template<typename Rng, typename Pred>
             auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(drop_while_view<all_t<Rng>, Pred>)( //
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
+                    requires viewable_range<Rng> && input_range<Rng> &&
+                        indirect_unary_predicate<Pred, iterator_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
             template<typename Rng, typename Pred, typename Proj>
             auto operator()(Rng && rng, Pred pred, Proj proj) const
                 -> CPP_ret(drop_while_view<all_t<Rng>, composed<Pred, Proj>>)( //
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        IndirectUnaryPredicate<composed<Pred, Proj>, iterator_t<Rng>>)
+                    requires viewable_range<Rng> && input_range<Rng> &&
+                        indirect_unary_predicate<composed<Pred, Proj>, iterator_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)),
                         compose(std::move(pred), std::move(proj))};
@@ -120,17 +120,17 @@ namespace ranges
         /// \relates drop_while_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<drop_while_fn>, drop_while)
-    } // namespace view
+    } // namespace views
 
     namespace cpp20
     {
-        namespace view
+        namespace views
         {
-            using ranges::view::drop_while;
+            using ranges::views::drop_while;
         }
         CPP_template(typename Rng, typename Pred)( //
-            requires ViewableRange<Rng> && InputRange<Rng> &&
-                        IndirectUnaryPredicate<Pred, iterator_t<Rng>>)     //
+            requires viewable_range<Rng> && input_range<Rng> &&
+                        indirect_unary_predicate<Pred, iterator_t<Rng>>)     //
             using drop_while_view = ranges::drop_while_view<Rng, Pred>;
     } // namespace cpp20
     /// @}

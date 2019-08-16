@@ -31,7 +31,7 @@ namespace ranges
 {
     /// \addtogroup group-views
     /// @{
-    namespace view
+    namespace views
     {
         struct unique_fn
         {
@@ -39,7 +39,7 @@ namespace ranges
             friend view_access;
             template<typename C>
             static constexpr auto CPP_fun(bind)(unique_fn unique, C pred)( //
-                requires(!Range<C>))
+                requires(!range<C>))
             {
                 return bind_back(unique, std::move(pred));
             }
@@ -48,8 +48,8 @@ namespace ranges
             template<typename Rng, typename C = equal_to>
             constexpr auto operator()(Rng && rng, C pred = {}) const
                 -> CPP_ret(adjacent_filter_view<all_t<Rng>, logical_negate<C>>)( //
-                    requires ViewableRange<Rng> && ForwardRange<Rng> &&
-                        IndirectRelation<C, iterator_t<Rng>>)
+                    requires viewable_range<Rng> && forward_range<Rng> &&
+                        indirect_relation<C, iterator_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), not_fn(pred)};
             }
@@ -58,7 +58,7 @@ namespace ranges
         /// \relates unique_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<unique_fn>, unique)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

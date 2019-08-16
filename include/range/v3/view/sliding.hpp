@@ -48,9 +48,9 @@ namespace ranges
 
         template<typename Rng>
         using caching = std::integral_constant<
-            cache, RandomAccessRange<Rng> && SizedRange<Rng>
+            cache, random_access_range<Rng> && sized_range<Rng>
                        ? cache::none
-                       : BidirectionalRange<Rng> && CommonRange<Rng> ? cache::last
+                       : bidirectional_range<Rng> && common_range<Rng> ? cache::last
                                                                      : cache::first>;
     } // namespace sliding_view_detail
     /// \endcond
@@ -66,7 +66,7 @@ namespace ranges
         using uncounted_t =
             decltype(ranges::uncounted(std::declval<iterator_t<Rng> &>()));
 
-        template<typename Rng, bool = (bool)RandomAccessRange<Rng>>
+        template<typename Rng, bool = (bool)random_access_range<Rng>>
         struct trailing
         {
             trailing() = default;
@@ -83,7 +83,7 @@ namespace ranges
                 ++it_;
             }
             CPP_member
-            auto prev() -> CPP_ret(void)(requires BidirectionalRange<Rng>)
+            auto prev() -> CPP_ret(void)(requires bidirectional_range<Rng>)
             {
                 --it_;
             }
@@ -116,7 +116,7 @@ namespace ranges
           , private detail::non_propagating_cache<iterator_t<Rng>, sv_base<Rng>,
                                                   caching<Rng>::value != cache::none>
         {
-            CPP_assert(ForwardRange<Rng>);
+            CPP_assert(forward_range<Rng>);
             sv_base() = default;
             sv_base(Rng rng, range_difference_t<Rng> n)
               : sv_base::view_adaptor(std::move(rng))
@@ -125,14 +125,14 @@ namespace ranges
                 RANGES_ASSERT(0 < n_);
             }
             CPP_member
-            auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+            auto CPP_fun(size)()(const requires sized_range<Rng const>)
             {
                 auto const count = ranges::size(this->base());
                 auto const n = static_cast<range_size_t<Rng const>>(n_);
                 return count < n ? 0 : count - n + 1;
             }
             CPP_member
-            auto CPP_fun(size)()(requires SizedRange<Rng>)
+            auto CPP_fun(size)()(requires sized_range<Rng>)
             {
                 auto const count = ranges::size(this->base());
                 auto const n = static_cast<range_size_t<Rng>>(n_);
@@ -196,9 +196,9 @@ namespace ranges
                 return v.get_first();
             }
             auto read(iterator_t<Rng> const & it) const
-                -> decltype(view::counted(uncounted(it), n_))
+                -> decltype(views::counted(uncounted(it), n_))
             {
-                return view::counted(base_t::get(it, n_), n_);
+                return views::counted(base_t::get(it, n_), n_);
             }
             void next(iterator_t<Rng> & it)
             {
@@ -207,7 +207,7 @@ namespace ranges
             }
             CPP_member
             auto prev(iterator_t<Rng> & it) -> CPP_ret(void)( //
-                requires BidirectionalRange<Rng>)
+                requires bidirectional_range<Rng>)
             {
                 base_t::prev();
                 --it;
@@ -215,7 +215,7 @@ namespace ranges
             CPP_member
             auto advance(iterator_t<Rng> & it, range_difference_t<Rng> n)
                 -> CPP_ret(void)( //
-                    requires RandomAccessRange<Rng>)
+                    requires random_access_range<Rng>)
             {
                 it += n;
             }
@@ -225,7 +225,7 @@ namespace ranges
         {
             return {*this};
         }
-        meta::if_c<CommonRange<Rng>, adaptor, adaptor_base> end_adaptor()
+        meta::if_c<common_range<Rng>, adaptor, adaptor_base> end_adaptor()
         {
             return {*this};
         }
@@ -267,9 +267,9 @@ namespace ranges
                 return v.get_last();
             }
             auto read(iterator_t<Rng> const & it) const
-                -> decltype(view::counted(uncounted(it), n_))
+                -> decltype(views::counted(uncounted(it), n_))
             {
-                return view::counted(uncounted(it), n_);
+                return views::counted(uncounted(it), n_);
             }
         };
 
@@ -318,9 +318,9 @@ namespace ranges
                 return ranges::begin(v.base()) + (sz - offset);
             }
             auto read(iterator_t<CRng> const & it) const
-                -> decltype(view::counted(uncounted(it), n_))
+                -> decltype(views::counted(uncounted(it), n_))
             {
-                return view::counted(uncounted(it), n_);
+                return views::counted(uncounted(it), n_);
             }
         };
 
@@ -330,7 +330,7 @@ namespace ranges
         }
         CPP_member
         auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires Range<Rng const>)
+            requires range<Rng const>)
         {
             return {this->n_};
         }
@@ -340,7 +340,7 @@ namespace ranges
         }
         CPP_member
         auto end_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires Range<Rng const>)
+            requires range<Rng const>)
         {
             return {this->n_};
         }
@@ -351,20 +351,20 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    sliding_view(Rng &&, range_difference_t<Rng>)->sliding_view<view::all_t<Rng>>;
+    sliding_view(Rng &&, range_difference_t<Rng>)->sliding_view<views::all_t<Rng>>;
 #endif
 
-    namespace view
+    namespace views
     {
-        // In:  Range<T>
-        // Out: Range<Range<T>>, where each inner range has $n$ elements.
+        // In:  range<T>
+        // Out: range<range<T>>, where each inner range has $n$ elements.
         struct sliding_fn
         {
         private:
             friend view_access;
             template<typename Int>
             static constexpr auto CPP_fun(bind)(sliding_fn sliding, Int n)( //
-                requires Integral<Int>)
+                requires integral<Int>)
             {
                 return make_pipeable(bind_back(sliding, n));
             }
@@ -373,7 +373,7 @@ namespace ranges
             template<typename Rng>
             constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> CPP_ret(sliding_view<all_t<Rng>>)( //
-                    requires ViewableRange<Rng> && ForwardRange<Rng>)
+                    requires viewable_range<Rng> && forward_range<Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
@@ -382,7 +382,7 @@ namespace ranges
         /// \relates sliding_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<sliding_fn>, sliding)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

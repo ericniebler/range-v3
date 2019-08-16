@@ -29,7 +29,7 @@
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/addressof.hpp>
-#include <range/v3/utility/semiregular.hpp>
+#include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/facade.hpp>
@@ -44,12 +44,12 @@ namespace ranges
         CPP_def
         (
             template(typename Rng, typename Fun)
-            concept PartialSumViewable,
-                InputRange<Rng> &&
-                Constructible<range_value_t<Rng>, range_reference_t<Rng>> &&
-                Assignable<range_value_t<Rng> &, range_reference_t<Rng>> &&
-                IndirectBinaryInvocable_<Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
-                Assignable<
+            concept partial_sum_view_constraints,
+                input_range<Rng> &&
+                constructible_from<range_value_t<Rng>, range_reference_t<Rng>> &&
+                assignable_from<range_value_t<Rng> &, range_reference_t<Rng>> &&
+                indirectly_binary_invocable_<Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
+                assignable_from<
                     range_value_t<Rng> &,
                     indirect_result_t<Fun &, iterator_t<Rng>, iterator_t<Rng>>>
         );
@@ -65,11 +65,11 @@ namespace ranges
     {
     private:
         friend range_access;
-        CPP_assert(View<Rng>);
-        CPP_assert(detail::PartialSumViewable<Rng, Fun>);
+        CPP_assert(view_<Rng>);
+        CPP_assert(detail::partial_sum_view_constraints<Rng, Fun>);
 
         RANGES_NO_UNIQUE_ADDRESS Rng base_{};
-        RANGES_NO_UNIQUE_ADDRESS semiregular_t<Fun> fun_;
+        RANGES_NO_UNIQUE_ADDRESS semiregular_box_t<Fun> fun_;
 
         template<bool IsConst>
         struct cursor
@@ -82,10 +82,10 @@ namespace ranges
 
             Parent * parent_ = nullptr;
             RANGES_NO_UNIQUE_ADDRESS iterator_t<Base> current_{};
-            RANGES_NO_UNIQUE_ADDRESS semiregular_t<range_value_t<Rng>> sum_;
+            RANGES_NO_UNIQUE_ADDRESS semiregular_box_t<range_value_t<Rng>> sum_;
 
         public:
-            using single_pass = meta::bool_<SinglePass<iterator_t<Base>>>;
+            using single_pass = meta::bool_<single_pass_iterator_<iterator_t<Base>>>;
 
             cursor() = default;
             constexpr explicit cursor(Parent & rng)
@@ -97,7 +97,7 @@ namespace ranges
             }
             CPP_template(bool Other)( //
                 requires IsConst && (!Other) &&
-                ConvertibleTo<iterator_t<Rng> const &,
+                convertible_to<iterator_t<Rng> const &,
                               iterator_t<Base>>) //
                 constexpr cursor(cursor<Other> const & that)
               : parent_{that.parent_}
@@ -127,7 +127,7 @@ namespace ranges
             }
             CPP_member
             constexpr bool CPP_fun(equal)(cursor const & that)(
-                const requires EqualityComparable<iterator_t<Base>>)
+                const requires equality_comparable<iterator_t<Base>>)
             {
                 RANGES_EXPECT(parent_ == that.parent_);
                 return current_ == that.current_;
@@ -140,7 +140,7 @@ namespace ranges
         }
         template<typename CRng = Rng const>
         constexpr auto begin_cursor() const -> CPP_ret(cursor<true>)( //
-            requires detail::PartialSumViewable<CRng, Fun const>)
+            requires detail::partial_sum_view_constraints<CRng, Fun const>)
         {
             return cursor<true>{*this};
         }
@@ -154,24 +154,24 @@ namespace ranges
           , fun_(std::move(fun))
         {}
         CPP_member
-        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
         {
             return ranges::size(base_);
         }
         CPP_member
-        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
         {
             return ranges::size(base_);
         }
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)(requires CopyConstructible<Fun>)
+    CPP_template(typename Rng, typename Fun)(requires copy_constructible<Fun>)
         partial_sum_view(Rng &&, Fun)
-            ->partial_sum_view<view::all_t<Rng>, Fun>;
+            ->partial_sum_view<views::all_t<Rng>, Fun>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct partial_sum_fn
         {
@@ -184,8 +184,8 @@ namespace ranges
             }
             template<typename Fun = plus>
             RANGES_DEPRECATED(
-                "Use \"ranges::view::partial_sum\" instead of "
-                "\"ranges::view::partial_sum()\".")
+                "Use \"ranges::views::partial_sum\" instead of "
+                "\"ranges::views::partial_sum()\".")
             static constexpr auto bind(partial_sum_fn partial_sum)
             {
                 return make_pipeable(bind_back(partial_sum, Fun{}));
@@ -195,7 +195,7 @@ namespace ranges
             template<typename Rng, typename Fun = plus>
             constexpr auto operator()(Rng && rng, Fun fun = {}) const
                 -> CPP_ret(partial_sum_view<all_t<Rng>, Fun>)( //
-                    requires detail::PartialSumViewable<all_t<Rng>, Fun>)
+                    requires detail::partial_sum_view_constraints<all_t<Rng>, Fun>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
@@ -204,7 +204,7 @@ namespace ranges
         /// \relates partial_sum_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<partial_sum_fn>, partial_sum)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

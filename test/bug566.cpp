@@ -25,7 +25,7 @@ int main()
     data.emplace_back(std::unique_ptr<int>(new int(5)));
     data.emplace_back(std::unique_ptr<int>(new int(4)));
 
-    auto rng = data | view::move | view::for_each([](std::unique_ptr<int> ptr)
+    auto rng = data | views::move | views::for_each([](std::unique_ptr<int> ptr)
     {
         return yield(*ptr);
     });

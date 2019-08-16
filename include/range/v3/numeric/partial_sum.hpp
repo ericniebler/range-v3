@@ -57,10 +57,10 @@ namespace ranges
     CPP_def
     (
         template(typename I, typename BOp)
-        concept IndirectSemigroup,
-            Readable<I> &&
-            Copyable<iter_value_t<I>> &&
-            IndirectRegularBinaryInvocable_<
+        concept indirect_semigroup,
+            readable<I> &&
+            copyable<iter_value_t<I>> &&
+            indirectly_regular_binary_invocable_<
                 composed<coerce<iter_value_t<I>>, BOp>,
                 iter_value_t<I>*, I>
     );
@@ -68,12 +68,12 @@ namespace ranges
     CPP_def
     (
         template(typename I, typename O, typename BOp = plus, typename P = identity)
-        (concept PartialSummable)(I, O, BOp, P),
-            InputIterator<I> &&
-            IndirectSemigroup<
+        (concept partial_sum_constraints)(I, O, BOp, P),
+            input_iterator<I> &&
+            indirect_semigroup<
                 projected<projected<I, detail::as_value_type_t<I>>, P>,
                 BOp> &&
-            OutputIterator<
+            output_iterator<
                 O,
                 iter_value_t<
                     projected<projected<I, detail::as_value_type_t<I>>, P>> const &>
@@ -89,7 +89,7 @@ namespace ranges
                  typename P = identity>
         auto operator()(I begin, S1 end, O result, S2 end_result, BOp bop = BOp{},
                         P proj = P{}) const -> CPP_ret(partial_sum_result<I, O>)( //
-            requires Sentinel<S1, I> && Sentinel<S2, O> && PartialSummable<I, O, BOp, P>)
+            requires sentinel_for<S1, I> && sentinel_for<S2, O> && partial_sum_constraints<I, O, BOp, P>)
         {
             using X = projected<projected<I, detail::as_value_type_t<I>>, P>;
             coerce<iter_value_t<I>> val_i;
@@ -114,7 +114,7 @@ namespace ranges
                  typename P = identity>
         auto operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(partial_sum_result<I, O>)( //
-                requires Sentinel<S, I> && PartialSummable<I, O, BOp, P>)
+                requires sentinel_for<S, I> && partial_sum_constraints<I, O, BOp, P>)
         {
             return (*this)(std::move(begin),
                            std::move(end),
@@ -128,7 +128,7 @@ namespace ranges
                  typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>>
         auto operator()(Rng && rng, ORef && result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(partial_sum_result<safe_iterator_t<Rng>, O>)( //
-                requires Range<Rng> && PartialSummable<I, O, BOp, P>)
+                requires range<Rng> && partial_sum_constraints<I, O, BOp, P>)
         {
             return (*this)(begin(rng),
                            end(rng),
@@ -142,7 +142,7 @@ namespace ranges
         auto operator()(Rng && rng, ORng && result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(
                 partial_sum_result<safe_iterator_t<Rng>, safe_iterator_t<ORng>>)( //
-                requires Range<Rng> && Range<ORng> && PartialSummable<I, O, BOp, P>)
+                requires range<Rng> && range<ORng> && partial_sum_constraints<I, O, BOp, P>)
         {
             return (*this)(begin(rng),
                            end(rng),

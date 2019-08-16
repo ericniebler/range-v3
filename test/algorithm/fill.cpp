@@ -78,23 +78,23 @@ test_int()
 
 int main()
 {
-    test_char<forward_iterator<char*> >();
-    test_char<bidirectional_iterator<char*> >();
-    test_char<random_access_iterator<char*> >();
+    test_char<ForwardIterator<char*> >();
+    test_char<BidirectionalIterator<char*> >();
+    test_char<RandomAccessIterator<char*> >();
     test_char<char*>();
 
-    test_char<forward_iterator<char*>, sentinel<char*> >();
-    test_char<bidirectional_iterator<char*>, sentinel<char*> >();
-    test_char<random_access_iterator<char*>, sentinel<char*> >();
+    test_char<ForwardIterator<char*>, Sentinel<char*> >();
+    test_char<BidirectionalIterator<char*>, Sentinel<char*> >();
+    test_char<RandomAccessIterator<char*>, Sentinel<char*> >();
 
-    test_int<forward_iterator<int*> >();
-    test_int<bidirectional_iterator<int*> >();
-    test_int<random_access_iterator<int*> >();
+    test_int<ForwardIterator<int*> >();
+    test_int<BidirectionalIterator<int*> >();
+    test_int<RandomAccessIterator<int*> >();
     test_int<int*>();
 
-    test_int<forward_iterator<int*>, sentinel<int*> >();
-    test_int<bidirectional_iterator<int*>, sentinel<int*> >();
-    test_int<random_access_iterator<int*>, sentinel<int*> >();
+    test_int<ForwardIterator<int*>, Sentinel<int*> >();
+    test_int<BidirectionalIterator<int*>, Sentinel<int*> >();
+    test_int<RandomAccessIterator<int*>, Sentinel<int*> >();
 
     return ::test_result();
 }

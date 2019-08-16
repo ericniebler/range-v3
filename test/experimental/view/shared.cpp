@@ -33,7 +33,7 @@ template<typename T>
 void check_shared_contents()
 {
     // build two instances sharing the same range
-    experimental::shared_view<T> view1 = experimental::view::shared(T{1, 1, 1, 2, 3, 4, 4});
+    experimental::shared_view<T> view1 = experimental::views::shared(T{1, 1, 1, 2, 3, 4, 4});
     experimental::shared_view<T> view2 = view1;
 
     // check the length of the views
@@ -42,9 +42,9 @@ void check_shared_contents()
 
     // check the stored numbers
     auto check_values = [](experimental::shared_view<T> & rng) {
-      ::check_equal(view::cycle(rng) | view::take(10), {1, 1, 1, 2, 3, 4, 4, 1, 1, 1});
-      ::check_equal(view::all(rng) | view::take(5), {1, 1, 1, 2, 3});
-      ::check_equal(rng | view::take(5), {1, 1, 1, 2, 3});
+      ::check_equal(views::cycle(rng) | views::take(10), {1, 1, 1, 2, 3, 4, 4, 1, 1, 1});
+      ::check_equal(views::all(rng) | views::take(5), {1, 1, 1, 2, 3});
+      ::check_equal(rng | views::take(5), {1, 1, 1, 2, 3});
       ::check_equal(rng, {1, 1, 1, 2, 3, 4, 4});
     };
     check_values(view1);
@@ -67,21 +67,21 @@ int main()
     {
         // check the piped construction from an rvalue
         std::vector<int> base_vec = {1, 2, 2, 8, 2, 7};
-        auto vec_view = std::move(base_vec) | experimental::view::shared;
+        auto vec_view = std::move(base_vec) | experimental::views::shared;
         CHECK(vec_view.size() == 6u);
         ::check_equal(vec_view, {1, 2, 2, 8, 2, 7});
     }
 
     {
         // test bidirectional range
-        auto list_view = std::list<int>{1, 2, 3} | experimental::view::shared;
+        auto list_view = std::list<int>{1, 2, 3} | experimental::views::shared;
 
         CHECK(list_view.size() == 3u);
         has_type<int &>(*begin(list_view));
-        ::models<SizedRangeConcept>(list_view);
-        ::models<CommonRangeConcept>(list_view);
-        ::models<BidirectionalRangeConcept>(list_view);
-        ::models_not<RandomAccessRangeConcept>(list_view);
+        CPP_assert(sized_range<decltype(list_view)>);
+        CPP_assert(common_range<decltype(list_view)>);
+        CPP_assert(bidirectional_range<decltype(list_view)>);
+        CPP_assert(!random_access_range<decltype(list_view)>);
 
         // test bidirectional range iterator
         CHECK(*begin(list_view) == 1);
@@ -90,53 +90,53 @@ int main()
 
     {
         // test random access range
-        auto vec_view = std::vector<int>{1, 2, 3} | experimental::view::shared;
+        auto vec_view = std::vector<int>{1, 2, 3} | experimental::views::shared;
 
         CHECK(vec_view.size() == 3u);
         has_type<int &>(*begin(vec_view));
-        ::models<SizedRangeConcept>(vec_view);
-        ::models<CommonRangeConcept>(vec_view);
-        ::models<RandomAccessRangeConcept>(vec_view);
+        CPP_assert(sized_range<decltype(vec_view)>);
+        CPP_assert(common_range<decltype(vec_view)>);
+        CPP_assert(random_access_range<decltype(vec_view)>);
         CHECK(vec_view[0] == 1);
         CHECK(vec_view[1] == 2);
         CHECK(vec_view[2] == 3);
     }
 
     {
-        // check temporary value in view::transform
+        // check temporary value in views::transform
         auto f = [](unsigned a){ return std::vector<unsigned>(a, a); };
 
         auto vec_view =
-            view::iota(1u)
-          | view::transform(f)
-          | view::transform(experimental::view::shared)
-          | view::join
-          | view::take(10);
+            views::iota(1u)
+          | views::transform(f)
+          | views::transform(experimental::views::shared)
+          | views::join
+          | views::take(10);
 
         ::check_equal(vec_view, {1u, 2u, 2u, 3u, 3u, 3u, 4u, 4u, 4u, 4u});
     }
 
     {
-        // check temporary value in view::for_each
+        // check temporary value in views::for_each
         std::vector<int> base_vec{1, 2, 3};
         auto vec_view =
-            view::repeat(base_vec)
-          | view::for_each([](std::vector<int> tmp) {
-                return yield_from(std::move(tmp) | experimental::view::shared | view::reverse);
+            views::repeat(base_vec)
+          | views::for_each([](std::vector<int> tmp) {
+                return yield_from(std::move(tmp) | experimental::views::shared | views::reverse);
             })
-          | view::take(7);
+          | views::take(7);
         ::check_equal(vec_view, {3, 2, 1, 3, 2, 1, 3});
     }
 
     {
-        // check temporary value in view::for_each without the yield_from
+        // check temporary value in views::for_each without the yield_from
         std::vector<int> base_vec{1, 2, 3};
         auto vec_view =
-            view::repeat(base_vec)
-          | view::for_each([](std::vector<int> tmp) {
-                return std::move(tmp) | experimental::view::shared | view::reverse;
+            views::repeat(base_vec)
+          | views::for_each([](std::vector<int> tmp) {
+                return std::move(tmp) | experimental::views::shared | views::reverse;
             })
-          | view::take(7);
+          | views::take(7);
         ::check_equal(vec_view, {3, 2, 1, 3, 2, 1, 3});
     }
 

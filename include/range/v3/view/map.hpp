@@ -26,7 +26,7 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/view.hpp>
 
-// TODO: Reuse subrange's PairLike concept here and have get_first and get_second
+// TODO: Reuse subrange's pair_like concept here and have get_first and get_second
 // dispatch through get<>()
 
 namespace ranges
@@ -43,7 +43,7 @@ namespace ranges
         template<typename T>
         constexpr auto get_first_second_helper(T & t, std::false_type) noexcept(
             std::is_nothrow_move_constructible<T>::value) -> CPP_ret(T)( //
-            requires MoveConstructible<T>)
+            requires move_constructible<T>)
         {
             return std::move(t);
         }
@@ -82,9 +82,9 @@ namespace ranges
         CPP_def
         (
             template(typename T)
-            concept PairLike,
-                Invocable<get_first const &, T> &&
-                Invocable<get_second const &, T>
+            concept kv_pair_like_,
+                invocable<get_first const &, T> &&
+                invocable<get_second const &, T>
         );
         // clang-format on
     } // namespace detail
@@ -92,14 +92,14 @@ namespace ranges
 
     /// \addtogroup group-views
     /// @{
-    namespace view
+    namespace views
     {
         struct keys_fn
         {
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(keys_range_view<all_t<Rng>>)( //
-                requires ViewableRange<Rng> && InputRange<Rng> &&
-                    detail::PairLike<range_reference_t<Rng>>)
+                requires viewable_range<Rng> && input_range<Rng> &&
+                    detail::kv_pair_like_<range_reference_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), detail::get_first{}};
             }
@@ -109,8 +109,8 @@ namespace ranges
         {
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(values_view<all_t<Rng>>)( //
-                requires ViewableRange<Rng> && InputRange<Rng> &&
-                    detail::PairLike<range_reference_t<Rng>>)
+                requires viewable_range<Rng> && input_range<Rng> &&
+                    detail::kv_pair_like_<range_reference_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), detail::get_second{}};
             }
@@ -123,14 +123,14 @@ namespace ranges
         /// \relates values_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<values_fn>, values)
-    } // namespace view
+    } // namespace views
 
     namespace cpp20
     {
-        namespace view
+        namespace views
         {
-            using ranges::view::keys;
-            using ranges::view::values;
+            using ranges::views::keys;
+            using ranges::views::values;
         }
         // TODO(@cjdb): provide implementation for elements_view
     } // namespace cpp20

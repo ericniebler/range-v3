@@ -40,16 +40,16 @@ public:
 
     CPP_member
     auto CPP_fun(size)() (
-        requires SizedRange<Rng>)
+        requires sized_range<Rng>)
     {
         return ranges::size(this->base());
     }
 };
 
 template<class Rng>
-view_non_const_only<view::all_t<Rng>> non_const_only(Rng &&rng)
+view_non_const_only<views::all_t<Rng>> non_const_only(Rng &&rng)
 {
-    return view_non_const_only<view::all_t<Rng>>{view::all(static_cast<Rng&&>(rng))};
+    return view_non_const_only<views::all_t<Rng>>{views::all(static_cast<Rng&&>(rng))};
 }
 
 template<class Rng>
@@ -62,17 +62,17 @@ void test_range(Rng&& src)
     }
     {
         auto src_ = src;
-        auto list = src_ | view::drop_last(2);
+        auto list = src_ | views::drop_last(2);
         ::check_equal(list, {1,2});
     }
     {
         auto src_ = src;
-        auto list = src_ | view::drop_last(0);
+        auto list = src_ | views::drop_last(0);
         ::check_equal(list, {1,2,3,4});
     }
     {
         auto src_ = src;
-        auto list = src_ | view::drop_last(4);
+        auto list = src_ | views::drop_last(4);
         CHECK(list.empty());
     }
 }
@@ -80,28 +80,28 @@ void test_range(Rng&& src)
 template<class Rng>
 void test_size(Rng&& src)
 {
-    CHECK( (src | view::drop_last(0)).size() == std::size_t(4) );
-    CHECK( (src | view::drop_last(2)).size() == std::size_t(2) );
-    CHECK( (src | view::drop_last(4)).size() == std::size_t(0) );
+    CHECK( (src | views::drop_last(0)).size() == std::size_t(4) );
+    CHECK( (src | views::drop_last(2)).size() == std::size_t(2) );
+    CHECK( (src | views::drop_last(4)).size() == std::size_t(0) );
 }
 
 template<class Rng>
 void test_non_convert_range(Rng&& src)
 {
     // test non-convertible const<=>non-const range
-    test_range(src | view::transform([](const int& i) -> const int& {return i;}));
+    test_range(src | views::transform([](const int& i) -> const int& {return i;}));
 }
 
 void random_acccess_test()
 {
     using Src = std::vector<int>;
     static_assert(
-        ranges::RandomAccessRange<Src>
+        ranges::random_access_range<Src>
         , "Must be exactly RA.");
     static_assert(
         std::is_same<
-            drop_last_view<view::all_t<Src&>>,
-            drop_last_view<view::all_t<Src&>, detail::drop_last_view::mode_bidi>
+            drop_last_view<views::all_t<Src&>>,
+            drop_last_view<views::all_t<Src&>, detail::drop_last_view::mode_bidi>
         >::value
         , "Must have correct view.");
 
@@ -117,16 +117,16 @@ void bidirectional_test()
 {
     using Src = std::list<int>;
     static_assert(
-        !ranges::RandomAccessRange<Src> &&
-        ranges::BidirectionalRange<Src>
+        !ranges::random_access_range<Src> &&
+        ranges::bidirectional_range<Src>
         , "Must be exactly bidirectional.");
     static_assert(
         std::is_same<
             /* mode_sized for max_performance profile.
              * mode_bidi  for compatible profile.
              * See aux::drop_last::get_mode */
-            drop_last_view<view::all_t<Src&>>,
-            drop_last_view<view::all_t<Src&>, detail::drop_last_view::mode_bidi>
+            drop_last_view<views::all_t<Src&>>,
+            drop_last_view<views::all_t<Src&>, detail::drop_last_view::mode_bidi>
         >::value
         , "Must have correct view.");
 
@@ -142,13 +142,13 @@ void forward_test()
 {
     using Src = std::forward_list<int>;
     static_assert(
-        !ranges::BidirectionalRange<Src> &&
-        ranges::ForwardRange<Src>
+        !ranges::bidirectional_range<Src> &&
+        ranges::forward_range<Src>
         , "Must be exactly forward.");
     static_assert(
         std::is_same<
-            drop_last_view<view::all_t<Src&>>,
-            drop_last_view<view::all_t<Src&>, detail::drop_last_view::mode_forward>
+            drop_last_view<views::all_t<Src&>>,
+            drop_last_view<views::all_t<Src&>, detail::drop_last_view::mode_forward>
         >::value
         , "Must have correct view.");
 
@@ -156,24 +156,24 @@ void forward_test()
 
     test_range(src);
     test_range(non_const_only(src));
-    test_size(src | view::take_exactly(4));
+    test_size(src | views::take_exactly(4));
     test_non_convert_range(src);
 }
 
 void sized_test()
 {
     int i = 0;
-    auto src  = view::generate_n([i]() mutable -> int { return ++i;}, 4);
+    auto src  = views::generate_n([i]() mutable -> int { return ++i;}, 4);
     using Src = decltype(src);
     static_assert(
-        !ranges::ForwardRange<Src> &&
-        ranges::InputRange<Src>
+        !ranges::forward_range<Src> &&
+        ranges::input_range<Src>
         , "Must be exactly input.");
 
     static_assert(
         std::is_same<
-            drop_last_view<view::all_t<Src>>,
-            drop_last_view<view::all_t<Src>, detail::drop_last_view::mode_sized>
+            drop_last_view<views::all_t<Src>>,
+            drop_last_view<views::all_t<Src>, detail::drop_last_view::mode_sized>
         >::value
         , "Must have correct view.");
 

@@ -26,10 +26,10 @@ int main()
         push_back(v, {1,2,3});
         ::check_equal(v, {1,2,3});
 
-        push_back(v, view::iota(10) | view::take(3));
+        push_back(v, views::iota(10) | views::take(3));
         ::check_equal(v, {1,2,3,10,11,12});
 
-        push_back(v, view::iota(10) | view::take(3));
+        push_back(v, views::iota(10) | views::take(3));
         ::check_equal(v, {1,2,3,10,11,12,10,11,12});
 
         int rg[] = {9,8,7};
@@ -40,7 +40,7 @@ int main()
 
         std::list<int> s;
         push_back(s,
-            view::ints|view::take(10)|view::for_each([](int i){return yield_if(i%2==0,i);}));
+            views::ints|views::take(10)|views::for_each([](int i){return yield_if(i%2==0,i);}));
         ::check_equal(s, {0,2,4,6,8});
         push_back(s, 10);
         ::check_equal(s, {0,2,4,6,8,10});
@@ -51,10 +51,10 @@ int main()
         v = std::move(v) | push_back({1,2,3});
         ::check_equal(v, {1,2,3});
 
-        v = std::move(v) | push_back(view::iota(10) | view::take(3));
+        v = std::move(v) | push_back(views::iota(10) | views::take(3));
         ::check_equal(v, {1,2,3,10,11,12});
 
-        v = std::move(v) | push_back(view::iota(10) | view::take(3));
+        v = std::move(v) | push_back(views::iota(10) | views::take(3));
         ::check_equal(v, {1,2,3,10,11,12,10,11,12});
 
         int rg[] = {9,8,7};
@@ -65,7 +65,7 @@ int main()
 
         std::list<int> s;
         s = std::move(s) | push_back(
-            view::ints|view::take(10)|view::for_each([](int i){return yield_if(i%2==0,i);}));
+            views::ints|views::take(10)|views::for_each([](int i){return yield_if(i%2==0,i);}));
         ::check_equal(s, {0,2,4,6,8});
         s = std::move(s) | push_back(10);
         ::check_equal(s, {0,2,4,6,8,10});
@@ -76,10 +76,10 @@ int main()
         v |= push_back({1,2,3});
         ::check_equal(v, {1,2,3});
 
-        v |= push_back(view::iota(10) | view::take(3));
+        v |= push_back(views::iota(10) | views::take(3));
         ::check_equal(v, {1,2,3,10,11,12});
 
-        v |= push_back(view::iota(10) | view::take(3));
+        v |= push_back(views::iota(10) | views::take(3));
         ::check_equal(v, {1,2,3,10,11,12,10,11,12});
 
         int rg[] = {9,8,7};
@@ -90,7 +90,7 @@ int main()
 
         std::list<int> s;
         s |= push_back(
-            view::ints|view::take(10)|view::for_each([](int i){return yield_if(i%2==0,i);}));
+            views::ints|views::take(10)|views::for_each([](int i){return yield_if(i%2==0,i);}));
         ::check_equal(s, {0,2,4,6,8});
         s |= push_back(10);
         ::check_equal(s, {0,2,4,6,8,10});

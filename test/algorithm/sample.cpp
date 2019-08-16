@@ -38,7 +38,7 @@ namespace
     template<typename I, typename S>
     auto in_sequence(I first, I mid, S last) ->
         CPP_ret(bool)(
-            requires ranges::Sentinel<S, I>)
+            requires ranges::sentinel_for<S, I>)
     {
         for (; first != mid; ++first)
             RANGES_ENSURE(first != last);
@@ -59,8 +59,8 @@ int main()
         std::minstd_rand g1, g2 = g1;
 
         {
-            auto result = ranges::sample(random_access_iterator<int*>(i.data()),
-                sentinel<int*>(i.data()+N), a.begin(), K, g1);
+            auto result = ranges::sample(RandomAccessIterator<int*>(i.data()),
+                Sentinel<int*>(i.data()+N), a.begin(), K, g1);
             CHECK(in_sequence(i.data(), result.in.base(), i.data() + N));
             CHECK(result.out == a.end());
             CHECK(!ranges::equal(a, c));
@@ -87,7 +87,7 @@ int main()
         ranges::iota(i, 0);
         std::array<int, K> a{}, b{}, c{};
         std::minstd_rand g1, g2 = g1;
-        auto rng = ranges::make_subrange(random_access_iterator<int*>(i.data()), sentinel<int*>(i.data() + N));
+        auto rng = ranges::make_subrange(RandomAccessIterator<int*>(i.data()), Sentinel<int*>(i.data() + N));
 
         {
             auto result = ranges::sample(rng, a.begin(), K, g1);
@@ -126,8 +126,8 @@ int main()
         std::array<int, K> a{}, b{}, c{};
 
         {
-            auto result = ranges::sample(random_access_iterator<int*>(i.data()),
-                sentinel<int*>(i.data() + N), a.begin(), K);
+            auto result = ranges::sample(RandomAccessIterator<int*>(i.data()),
+                Sentinel<int*>(i.data() + N), a.begin(), K);
             CHECK(in_sequence(i.data(), result.in.base(), i.data() + N));
             CHECK(result.out == a.end());
             CHECK(!ranges::equal(a, b));
@@ -147,11 +147,11 @@ int main()
         std::array<MoveOnlyString, 4> dest;
         auto result = ranges::sample(ranges::make_move_iterator(source.begin()),
             ranges::make_move_sentinel(source.end()),
-            forward_iterator<MoveOnlyString*>(dest.data()), dest.size());
+            ForwardIterator<MoveOnlyString*>(dest.data()), dest.size());
         CHECK(in_sequence(ranges::make_move_iterator(source.begin()),
             result.in,
             ranges::make_move_sentinel(source.end())));
-        CHECK(result.out == forward_iterator<MoveOnlyString*>(dest.data() + dest.size()));
+        CHECK(result.out == ForwardIterator<MoveOnlyString*>(dest.data() + dest.size()));
     }
 
     {
@@ -161,8 +161,8 @@ int main()
         std::minstd_rand g1, g2 = g1;
 
         {
-            auto result = ranges::sample(random_access_iterator<int*>(i.data()),
-                sentinel<int*>(i.data()+N), a, g1);
+            auto result = ranges::sample(RandomAccessIterator<int*>(i.data()),
+                Sentinel<int*>(i.data()+N), a, g1);
             CHECK(in_sequence(i.data(), result.in.base(), i.data() + N));
             CHECK(result.out == a.end());
             CHECK(!ranges::equal(a, c));
@@ -189,7 +189,7 @@ int main()
         ranges::iota(i, 0);
         std::array<int, K> a{}, b{}, c{};
         std::minstd_rand g1, g2 = g1;
-        auto rng = ranges::make_subrange(random_access_iterator<int*>(i.data()), sentinel<int*>(i.data() + N));
+        auto rng = ranges::make_subrange(RandomAccessIterator<int*>(i.data()), Sentinel<int*>(i.data() + N));
 
         {
             auto result = ranges::sample(rng, a, g1);
@@ -228,8 +228,8 @@ int main()
         std::array<int, K> a{}, b{}, c{};
 
         {
-            auto result = ranges::sample(random_access_iterator<int*>(i.data()),
-                sentinel<int*>(i.data() + N), a);
+            auto result = ranges::sample(RandomAccessIterator<int*>(i.data()),
+                Sentinel<int*>(i.data() + N), a);
             CHECK(in_sequence(i.data(), result.in.base(), i.data() + N));
             CHECK(result.out == a.end());
             CHECK(!ranges::equal(a, b));
@@ -248,8 +248,8 @@ int main()
         std::array<MoveOnlyString, 10> source;
         std::array<MoveOnlyString, 4> dest;
         auto out = ranges::make_subrange(
-            forward_iterator<MoveOnlyString*>(dest.data()),
-            sentinel<MoveOnlyString*, true>(dest.data() + dest.size()));
+            ForwardIterator<MoveOnlyString*>(dest.data()),
+            Sentinel<MoveOnlyString*, true>(dest.data() + dest.size()));
         auto result = ranges::sample(ranges::make_move_iterator(source.begin()),
             ranges::make_move_sentinel(source.end()), out);
         CHECK(in_sequence(source.begin(), result.in.base(), source.end()));

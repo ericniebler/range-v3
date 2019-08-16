@@ -35,7 +35,7 @@ namespace ranges
     {
         template<typename Rng>
         using join_action_value_t_ =
-            meta::if_c<(bool)ranges::Container<range_value_t<Rng>>, range_value_t<Rng>,
+            meta::if_c<(bool)ranges::container<range_value_t<Rng>>, range_value_t<Rng>,
                        std::vector<range_value_t<range_value_t<Rng>>>>;
 
         struct join_fn
@@ -43,8 +43,8 @@ namespace ranges
         public:
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(join_action_value_t_<Rng>)( //
-                requires InputRange<Rng> && InputRange<range_value_t<Rng>> &&
-                    Semiregular<join_action_value_t_<Rng>>)
+                requires input_range<Rng> && input_range<range_value_t<Rng>> &&
+                    semiregular<join_action_value_t_<Rng>>)
             {
                 join_action_value_t_<Rng> ret;
                 auto end = ranges::end(rng);

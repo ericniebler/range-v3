@@ -71,7 +71,7 @@ void test2()
 {
     // Test ranges::generate with a genuine output range
     std::vector<int> v;
-    auto rng = ranges::view::counted(ranges::back_inserter(v), 5);
+    auto rng = ranges::views::counted(ranges::back_inserter(v), 5);
     ranges::generate(rng, gen_test(1));
     CHECK(v.size() == 5u);
     CHECK(v[0] == 1);
@@ -83,14 +83,14 @@ void test2()
 
 int main()
 {
-    test<forward_iterator<int*> >();
-    test<bidirectional_iterator<int*> >();
-    test<random_access_iterator<int*> >();
+    test<ForwardIterator<int*> >();
+    test<BidirectionalIterator<int*> >();
+    test<RandomAccessIterator<int*> >();
     test<int*>();
 
-    test<forward_iterator<int*>, sentinel<int*> >();
-    test<bidirectional_iterator<int*>, sentinel<int*> >();
-    test<random_access_iterator<int*>, sentinel<int*> >();
+    test<ForwardIterator<int*>, Sentinel<int*> >();
+    test<BidirectionalIterator<int*>, Sentinel<int*> >();
+    test<RandomAccessIterator<int*>, Sentinel<int*> >();
 
     test2();
 

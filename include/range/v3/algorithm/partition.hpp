@@ -94,8 +94,8 @@ namespace ranges
     public:
         template<typename I, typename S, typename C, typename P = identity>
         auto operator()(I begin, S end, C pred, P proj = P{}) const -> CPP_ret(I)( //
-            requires Permutable<I> && Sentinel<S, I> &&
-                IndirectUnaryPredicate<C, projected<I, P>>)
+            requires permutable<I> && sentinel_for<S, I> &&
+                indirect_unary_predicate<C, projected<I, P>>)
         {
             return partition_fn::impl(std::move(begin),
                                       std::move(end),
@@ -107,8 +107,8 @@ namespace ranges
         template<typename Rng, typename C, typename P = identity>
         auto operator()(Rng && rng, C pred, P proj = P{}) const
             -> CPP_ret(safe_iterator_t<Rng>)( //
-                requires ForwardRange<Rng> && Permutable<iterator_t<Rng>> &&
-                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+                requires forward_range<Rng> && permutable<iterator_t<Rng>> &&
+                    indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
         {
             return partition_fn::impl(begin(rng),
                                       end(rng),

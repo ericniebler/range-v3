@@ -38,16 +38,16 @@ namespace ranges
         /// range-based version of the \c find_if_not std algorithm
         ///
         /// \pre `Rng` is a model of the `Range` concept
-        /// \pre `I` is a model of the `InputIterator` concept
-        /// \pre `S` is a model of the `Sentinel<I>` concept
-        /// \pre `P` is a model of the `Invocable<V>` concept, where `V` is the
+        /// \pre `I` is a model of the `input_iterator` concept
+        /// \pre `S` is a model of the `sentinel_for<I>` concept
+        /// \pre `P` is a model of the `invocable<V>` concept, where `V` is the
         ///      value type of I.
-        /// \pre `F` models `Predicate<X>`, where `X` is the result type
-        ///      of `Invocable<P, V>`
+        /// \pre `F` models `predicate<X>`, where `X` is the result type
+        ///      of `invocable<P, V>`
         template<typename I, typename S, typename F, typename P = identity>
         auto operator()(I begin, S end, F pred, P proj = P{}) const -> CPP_ret(I)( //
-            requires InputIterator<I> && Sentinel<S, I> &&
-                IndirectUnaryPredicate<F, projected<I, P>>)
+            requires input_iterator<I> && sentinel_for<S, I> &&
+                indirect_unary_predicate<F, projected<I, P>>)
         {
             for(; begin != end; ++begin)
                 if(!invoke(pred, invoke(proj, *begin)))
@@ -59,8 +59,8 @@ namespace ranges
         template<typename Rng, typename F, typename P = identity>
         auto operator()(Rng && rng, F pred, P proj = P{}) const
             -> CPP_ret(safe_iterator_t<Rng>)( //
-                requires InputRange<Rng> &&
-                    IndirectUnaryPredicate<F, projected<iterator_t<Rng>, P>>)
+                requires input_range<Rng> &&
+                    indirect_unary_predicate<F, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

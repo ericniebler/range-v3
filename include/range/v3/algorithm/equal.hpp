@@ -55,8 +55,8 @@ namespace ranges
         constexpr auto
         operator()(I0 begin0, S0 end0, I1 begin1, C pred = C{}, P0 proj0 = P0{},
                    P1 proj1 = P1{}) const -> CPP_ret(bool)( //
-            requires InputIterator<I0> && Sentinel<S0, I0> && InputIterator<I1> &&
-                IndirectlyComparable<I0, I1, C, P0, P1>)
+            requires input_iterator<I0> && sentinel_for<S0, I0> && input_iterator<I1> &&
+                indirectly_comparable<I0, I1, C, P0, P1>)
         {
             for(; begin0 != end0; ++begin0, ++begin1)
                 if(!invoke(pred, invoke(proj0, *begin0), invoke(proj1, *begin1)))
@@ -69,10 +69,10 @@ namespace ranges
         constexpr auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred = C{},
                                   P0 proj0 = P0{}, P1 proj1 = P1{}) const
             -> CPP_ret(bool)( //
-                requires InputIterator<I0> && Sentinel<S0, I0> && InputIterator<I1> &&
-                    Sentinel<S1, I1> && IndirectlyComparable<I0, I1, C, P0, P1>)
+                requires input_iterator<I0> && sentinel_for<S0, I0> && input_iterator<I1> &&
+                    sentinel_for<S1, I1> && indirectly_comparable<I0, I1, C, P0, P1>)
         {
-            if(RANGES_CONSTEXPR_IF(SizedSentinel<S0, I0> && SizedSentinel<S1, I1>))
+            if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S0, I0> && sized_sentinel_for<S1, I1>))
                 if(distance(begin0, end0) != distance(begin1, end1))
                     return false;
             return this->nocheck(std::move(begin0),
@@ -92,8 +92,8 @@ namespace ranges
         constexpr auto
         operator()(Rng0 && rng0, I1Ref && begin1, C pred = C{}, P0 proj0 = P0{},
                    P1 proj1 = P1{}) const -> CPP_ret(bool)( //
-            requires InputRange<Rng0> && InputIterator<uncvref_t<I1Ref>> &&
-                IndirectlyComparable<iterator_t<Rng0>, uncvref_t<I1Ref>, C, P0, P1>)
+            requires input_range<Rng0> && input_iterator<uncvref_t<I1Ref>> &&
+                indirectly_comparable<iterator_t<Rng0>, uncvref_t<I1Ref>, C, P0, P1>)
         {
             RANGES_DIAGNOSTIC_PUSH
             RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
@@ -111,10 +111,10 @@ namespace ranges
         constexpr auto operator()(Rng0 && rng0, Rng1 && rng1, C pred = C{},
                                   P0 proj0 = P0{}, P1 proj1 = P1{}) const
             -> CPP_ret(bool)( //
-                requires InputRange<Rng0> && InputRange<Rng1> &&
-                    IndirectlyComparable<iterator_t<Rng0>, iterator_t<Rng1>, C, P0, P1>)
+                requires input_range<Rng0> && input_range<Rng1> &&
+                    indirectly_comparable<iterator_t<Rng0>, iterator_t<Rng1>, C, P0, P1>)
         {
-            if(RANGES_CONSTEXPR_IF(SizedRange<Rng0> && SizedRange<Rng1>))
+            if(RANGES_CONSTEXPR_IF(sized_range<Rng0> && sized_range<Rng1>))
                 if(distance(rng0) != distance(rng1))
                     return false;
             return this->nocheck(begin(rng0),
