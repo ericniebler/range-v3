@@ -57,7 +57,7 @@ int main()
 
     std::fill_n(out, size(out), std::make_pair(0, 0));
 
-    using ranges::view::delimit;
+    using ranges::views::delimit;
     {
         char const *sz = "hello world";
         char buf[50];

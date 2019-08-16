@@ -33,7 +33,7 @@ namespace ranges
     {
         template<typename I, typename S>
         using common_iterator_impl_t =
-            enable_if_t<(bool)(Iterator<I> && Sentinel<S, I>), common_iterator<I, S>>;
+            enable_if_t<(bool)(input_or_output_iterator<I> && sentinel_for<S, I>), common_iterator<I, S>>;
     }
     /// \endcond
 

@@ -34,7 +34,7 @@ namespace ranges
         /// Implicit converting constructor; ignores argument
         template<typename T>
         constexpr CPP_ctor(dangling)(T &&)( //
-            requires NotSameAs_<T, dangling>)
+            requires not_same_as_<T, dangling>)
         {}
     };
 
@@ -42,8 +42,8 @@ namespace ranges
     namespace detail
     {
         CPP_template(class R, class U)( //
-            requires Range<R>)          //
-            using maybe_dangling_ = if_then_t<ForwardingRange_<R>, U, dangling>;
+            requires range<R>)          //
+            using maybe_dangling_ = if_then_t<forwarding_range_<R>, U, dangling>;
     }
     /// \endcond
 

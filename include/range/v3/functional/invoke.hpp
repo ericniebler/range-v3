@@ -52,7 +52,7 @@ namespace ranges
         CPP_def
         (
             template(typename T)
-            concept Dereferenceable_,
+            concept dereferenceable_,
                 requires (T &&t)
                 (
                     detail::can_reference_(*static_cast<T &&>(t))
@@ -84,14 +84,14 @@ namespace ranges
         template<class, class T1>
         constexpr static decltype(auto) CPP_fun(coerce)(T1 && t1, long)( //
             noexcept(noexcept(*static_cast<T1 &&>(t1)))                  //
-            requires detail::Dereferenceable_<T1>)
+            requires detail::dereferenceable_<T1>)
         {
             return *static_cast<T1 &&>(t1);
         }
 
         template<class T, class T1>
         constexpr static auto coerce(T1 && t1, int) noexcept -> CPP_ret(T1 &&)( //
-            requires DerivedFrom<detail::decay_t<T1>, T>)
+            requires derived_from<detail::decay_t<T1>, T>)
         {
             return static_cast<T1 &&>(t1);
         }

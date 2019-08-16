@@ -24,7 +24,7 @@ int main()
     using namespace ranges;
 
     {
-        auto v = view::ints(1,21) | to<std::vector>();
+        auto v = views::ints(1,21) | to<std::vector>();
         std::vector<std::vector<int>> rgv = action::split(v, 10);
         CHECK(rgv.size() == 2u);
         ::check_equal(rgv[0], {1,2,3,4,5,6,7,8,9});
@@ -47,7 +47,7 @@ int main()
 
     {
         std::string s{"This is his face"};
-        std::vector<std::string> rgs = action::split(s, view::c_str(" "));
+        std::vector<std::string> rgs = action::split(s, views::c_str(" "));
         CHECK(rgs.size() == 4u);
         CHECK(rgs[0] == "This");
         CHECK(rgs[1] == "is");
@@ -56,7 +56,7 @@ int main()
     }
 
     {
-        auto rgi = view::ints(1,21);
+        auto rgi = views::ints(1,21);
         std::vector<std::vector<int>> rgv3 = action::split(rgi, 10);
         CHECK(rgv3.size() == 2u);
         ::check_equal(rgv3[0], {1,2,3,4,5,6,7,8,9});

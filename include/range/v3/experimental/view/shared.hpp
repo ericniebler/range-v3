@@ -54,7 +54,7 @@ namespace ranges
             }
 
             CPP_member
-            auto CPP_fun(size)()(const requires SizedRange<Rng>)
+            auto CPP_fun(size)()(const requires sized_range<Rng>)
             {
                 return ranges::size(*rng_ptr_);
             }
@@ -63,14 +63,14 @@ namespace ranges
         /// \relates all
         /// \addtogroup group-views
         /// @{
-        namespace view
+        namespace views
         {
             struct shared_fn : pipeable<shared_fn>
             {
             public:
                 template<typename Rng>
                 auto operator()(Rng && t) const -> CPP_ret(shared_view<Rng>)( //
-                    requires Range<Rng> && (!View<Rng>)&&(!std::is_reference<Rng>::value))
+                    requires range<Rng> && (!view_<Rng>)&&(!std::is_reference<Rng>::value))
                 {
                     return shared_view<Rng>{std::move(t)};
                 }
@@ -83,7 +83,7 @@ namespace ranges
             template<typename Rng>
             using shared_t = detail::decay_t<decltype(shared(std::declval<Rng>()))>;
 
-        } // namespace view
+        } // namespace views
         /// @}
     } // namespace experimental
 } // namespace ranges

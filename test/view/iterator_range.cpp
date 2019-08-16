@@ -28,7 +28,8 @@ int main()
 
     using namespace ranges;
     iterator_range<std::vector<int>::iterator> r0 {vi.begin(), vi.end()};
-    ::models<SizedViewConcept>(aux::copy(r0));
+    CPP_assert(view_<decltype(r0)>);
+    CPP_assert(sized_range<decltype(r0)>);
     CHECK(r0.size() == 4u);
     CHECK(r0.begin() == vi.begin());
     CHECK(r0.end() == vi.end());
@@ -42,8 +43,8 @@ int main()
     CHECK(p0.second == vi.end());
 
     iterator_range<std::vector<int>::iterator, unreachable_sentinel_t> r1 { r0.begin(), {} };
-    ::models<ViewConcept>(aux::copy(r1));
-    ::models_not<SizedViewConcept>(aux::copy(r1));
+    CPP_assert(view_<decltype(r1)>);
+    CPP_assert(!sized_range<decltype(r1)>);
     CHECK(r1.begin() == vi.begin()+1);
     r1.end() = unreachable;
 
@@ -64,7 +65,8 @@ int main()
 
     std::list<int> li{1,2,3,4};
     sized_iterator_range<std::list<int>::iterator> l0 {li.begin(), li.end(), li.size()};
-    ::models<SizedViewConcept>(aux::copy(l0));
+    CPP_assert(view_<decltype(l0)>);
+    CPP_assert(sized_range<decltype(l0)>);
     CHECK(l0.begin() == li.begin());
     CHECK(l0.end() == li.end());
     CHECK(l0.size() == li.size());

@@ -55,7 +55,7 @@ namespace ranges
     public:
         template<typename I, typename S>
         auto operator()(I begin, S end_) const -> CPP_ret(I)( //
-            requires BidirectionalIterator<I> && Sentinel<S, I> && Permutable<I>)
+            requires bidirectional_iterator<I> && sentinel_for<S, I> && permutable<I>)
         {
             I end = ranges::next(begin, end_);
             reverse_fn::impl(begin, end, iterator_tag_of<I>{});
@@ -64,7 +64,7 @@ namespace ranges
 
         template<typename Rng, typename I = iterator_t<Rng>>
         auto operator()(Rng && rng) const -> CPP_ret(safe_iterator_t<Rng>)( //
-            requires BidirectionalRange<Rng> && Permutable<I>)
+            requires bidirectional_range<Rng> && permutable<I>)
         {
             return (*this)(begin(rng), end(rng));
         }

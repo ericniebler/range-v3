@@ -373,14 +373,14 @@ struct A { int a; };
 
 int main()
 {
-    test<iter_call<forward_iterator<const int *>>>();
-    test<iter_call<bidirectional_iterator<const int *>>>();
-    test<iter_call<random_access_iterator<const int *>>>();
+    test<iter_call<ForwardIterator<const int *>>>();
+    test<iter_call<BidirectionalIterator<const int *>>>();
+    test<iter_call<RandomAccessIterator<const int *>>>();
     test<iter_call<const int *>>();
 
-    test<range_call<forward_iterator<const int *>>>();
-    test<range_call<bidirectional_iterator<const int *>>>();
-    test<range_call<random_access_iterator<const int *>>>();
+    test<range_call<ForwardIterator<const int *>>>();
+    test<range_call<BidirectionalIterator<const int *>>>();
+    test<range_call<RandomAccessIterator<const int *>>>();
     test<range_call<const int *>>();
 
     /// Projection test:

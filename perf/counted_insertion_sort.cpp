@@ -123,7 +123,7 @@ void insertion_sort(Rng && rng)
 std::unique_ptr<int> data(int i)
 {
     std::unique_ptr<int> a(new int[i]);
-    auto rng = ranges::view::counted(a.get(), i);
+    auto rng = ranges::views::counted(a.get(), i);
     ranges::iota(rng, 0);
     return a;
 }
@@ -131,7 +131,7 @@ std::unique_ptr<int> data(int i)
 template<typename Gen>
 void shuffle(int *a, int i, Gen && rand)
 {
-    auto rng = ranges::view::counted(a, i);
+    auto rng = ranges::views::counted(a, i);
     rng |= ranges::action::shuffle(std::forward<Gen>(rand));
 }
 
@@ -163,7 +163,7 @@ void benchmark_counted(int i)
     {
         ::shuffle(a.get(), i, gen);
         timer t;
-        insertion_sort(ranges::view::counted(I{a.get()}, i));
+        insertion_sort(ranges::views::counted(I{a.get()}, i));
         ms += t.elapsed();
     }
     std::cout << to_millis(ms/cloops) << std::endl;

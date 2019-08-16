@@ -26,28 +26,28 @@ namespace ranges
         template<typename I>
         friend constexpr auto operator==(I const &, unreachable_sentinel_t) noexcept
             -> CPP_broken_friend_ret(bool)( //
-                requires WeaklyIncrementable<I>)
+                requires weakly_incrementable<I>)
         {
             return false;
         }
         template<typename I>
         friend constexpr auto operator==(unreachable_sentinel_t, I const &) noexcept
             -> CPP_broken_friend_ret(bool)( //
-                requires WeaklyIncrementable<I>)
+                requires weakly_incrementable<I>)
         {
             return false;
         }
         template<typename I>
         friend constexpr auto operator!=(I const &, unreachable_sentinel_t) noexcept
             -> CPP_broken_friend_ret(bool)( //
-                requires WeaklyIncrementable<I>)
+                requires weakly_incrementable<I>)
         {
             return true;
         }
         template<typename I>
         friend constexpr auto operator!=(unreachable_sentinel_t, I const &) noexcept
             -> CPP_broken_friend_ret(bool)( //
-                requires WeaklyIncrementable<I>)
+                requires weakly_incrementable<I>)
         {
             return true;
         }

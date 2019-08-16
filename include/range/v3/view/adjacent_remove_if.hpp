@@ -25,7 +25,7 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/optional.hpp>
-#include <range/v3/utility/semiregular.hpp>
+#include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
@@ -38,7 +38,7 @@ namespace ranges
     struct RANGES_EMPTY_BASES adjacent_remove_if_view
       : view_adaptor<adjacent_remove_if_view<Rng, Pred>, Rng,
                      is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
-      , private box<semiregular_t<Pred>, adjacent_remove_if_view<Rng, Pred>>
+      , private box<semiregular_box_t<Pred>, adjacent_remove_if_view<Rng, Pred>>
     {
         adjacent_remove_if_view() = default;
         constexpr adjacent_remove_if_view(Rng rng, Pred pred)
@@ -70,7 +70,7 @@ namespace ranges
             }
             CPP_member
             constexpr auto prev(iterator_t<Rng> & it) const -> CPP_ret(void)( //
-                requires BidirectionalRange<Rng>)
+                requires bidirectional_range<Rng>)
             {
                 rng_->satisfy_reverse(it);
             }
@@ -84,15 +84,15 @@ namespace ranges
         }
         CPP_member
         constexpr auto end_adaptor() -> CPP_ret(adaptor)( //
-            requires CommonRange<Rng>)
+            requires common_range<Rng>)
         {
-            if(BidirectionalRange<Rng>)
+            if(bidirectional_range<Rng>)
                 cache_begin();
             return {*this};
         }
         CPP_member
         constexpr auto end_adaptor() noexcept -> CPP_ret(adaptor_base)( //
-            requires(!CommonRange<Rng>))
+            requires(!common_range<Rng>))
         {
             return {};
         }
@@ -135,12 +135,12 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)(requires CopyConstructible<Rng>)
+    CPP_template(typename Rng, typename Fun)(requires copy_constructible<Rng>)
         adjacent_remove_if_view(Rng &&, Fun)
-            ->adjacent_remove_if_view<view::all_t<Rng>, Fun>;
+            ->adjacent_remove_if_view<views::all_t<Rng>, Fun>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct adjacent_remove_if_fn
         {
@@ -157,8 +157,8 @@ namespace ranges
             template<typename Rng, typename Pred>
             constexpr auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(adjacent_remove_if_view<all_t<Rng>, Pred>)( //
-                    requires ViewableRange<Rng> && ForwardRange<Rng> &&
-                        IndirectBinaryPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>)
+                    requires viewable_range<Rng> && forward_range<Rng> &&
+                        indirect_binary_predicate_<Pred, iterator_t<Rng>, iterator_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
@@ -167,7 +167,7 @@ namespace ranges
         /// \relates adjacent_remove_if_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<adjacent_remove_if_fn>, adjacent_remove_if)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

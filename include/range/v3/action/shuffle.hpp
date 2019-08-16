@@ -37,13 +37,13 @@ namespace ranges
             friend action_access;
             template<typename Gen>
             static auto CPP_fun(bind)(shuffle_fn shuffle, Gen && gen)( //
-                requires UniformRandomNumberGenerator<Gen>)
+                requires uniform_random_bit_generator<Gen>)
             {
                 return bind_back(shuffle, static_cast<Gen &&>(gen));
             }
             template<typename Gen>
             static auto CPP_fun(bind)(shuffle_fn shuffle, Gen & gen)( //
-                requires UniformRandomNumberGenerator<Gen>)
+                requires uniform_random_bit_generator<Gen>)
             {
                 return bind_back(
                     [shuffle](auto && rng, Gen * gen)
@@ -56,9 +56,9 @@ namespace ranges
         public:
             template<typename Rng, typename Gen>
             auto operator()(Rng && rng, Gen && gen) const -> CPP_ret(Rng)( //
-                requires RandomAccessRange<Rng> && Permutable<iterator_t<Rng>> &&
-                    UniformRandomNumberGenerator<Gen> &&
-                        ConvertibleTo<invoke_result_t<Gen &>, range_difference_t<Rng>>)
+                requires random_access_range<Rng> && permutable<iterator_t<Rng>> &&
+                    uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+                        convertible_to<invoke_result_t<Gen &>, range_difference_t<Rng>>)
             {
                 ranges::shuffle(rng, static_cast<Gen &&>(gen));
                 return static_cast<Rng &&>(rng);

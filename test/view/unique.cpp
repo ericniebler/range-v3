@@ -62,45 +62,49 @@ int main()
         int rgi[] = {1, 1, 1, 2, 3, 4, 4};
         std::vector<int> out;
 
-        auto rng = rgi | view::unique;
+        auto rng = rgi | views::unique;
         has_type<int &>(*begin(rng));
-        models<BidirectionalViewConcept>(aux::copy(rng));
-        models_not<RandomAccessRangeConcept>(rng);
-        models<CommonRangeConcept>(rng);
-        models_not<SizedRangeConcept>(rng);
-        CPP_assert(Range<decltype(rng) const>);
+        CPP_assert(view_<decltype(rng)>);
+        CPP_assert(bidirectional_range<decltype(rng)>);
+        CPP_assert(!random_access_range<decltype(rng)>);
+        CPP_assert(common_range<decltype(rng)>);
+        CPP_assert(!sized_range<decltype(rng)>);
+        CPP_assert(range<decltype(rng) const>);
         copy(rng, ranges::back_inserter(out));
         ::check_equal(out, {1, 2, 3, 4});
-        ::check_equal(view::reverse(out), {4, 3, 2, 1});
+        ::check_equal(views::reverse(out), {4, 3, 2, 1});
     }
 
     {
         std::vector<ci_string> rgs{"hello", "HELLO", "bye", "Bye", "BYE"};
-        auto rng = rgs | view::unique;
+        auto rng = rgs | views::unique;
         has_type<ci_string &>(*begin(rng));
-        models<BidirectionalViewConcept>(aux::copy(rng));
-        models_not<RandomAccessRangeConcept>(rng);
-        models<CommonRangeConcept>(rng);
-        models_not<SizedRangeConcept>(rng);
-        CPP_assert(Range<decltype(rng) const>);
-        auto fs = rng | view::transform([](ci_string s){return std::string(s.data(), s.size());});
-        models<BidirectionalViewConcept>(aux::copy(fs));
+        CPP_assert(view_<decltype(rng)>);
+        CPP_assert(bidirectional_range<decltype(rng)>);
+        CPP_assert(!random_access_range<decltype(rng)>);
+        CPP_assert(common_range<decltype(rng)>);
+        CPP_assert(!sized_range<decltype(rng)>);
+        CPP_assert(range<decltype(rng) const>);
+        auto fs = rng | views::transform([](ci_string s){return std::string(s.data(), s.size());});
+        CPP_assert(view_<decltype(fs)>);
+        CPP_assert(bidirectional_range<decltype(fs)>);
         ::check_equal(fs, {"hello","bye"});
-        ::check_equal(view::reverse(fs), {"bye","hello"});
+        ::check_equal(views::reverse(fs), {"bye","hello"});
     }
 
     {
         int const rgi[] = {1, 1, 1, 2, 3, 4, 4, 42, 7};
-        auto rng0 = view::delimit(rgi, 42) | view::reverse;
+        auto rng0 = views::delimit(rgi, 42) | views::reverse;
         // rng0 is mutable-only...
-        CPP_assert(ForwardRange<decltype(rng0)>);
-        CPP_assert(!ForwardRange<decltype(rng0) const>);
+        CPP_assert(forward_range<decltype(rng0)>);
+        CPP_assert(!forward_range<decltype(rng0) const>);
         // ...and composable
-        auto rng = rng0 | view::unique(equal_to{});
-        models<BidirectionalViewConcept>(aux::copy(rng));
-        models_not<RandomAccessRangeConcept>(rng);
-        models<CommonRangeConcept>(rng);
-        models_not<SizedRangeConcept>(rng);
+        auto rng = rng0 | views::unique(equal_to{});
+        CPP_assert(view_<decltype(rng)>);
+        CPP_assert(bidirectional_range<decltype(rng)>);
+        CPP_assert(!random_access_range<decltype(rng)>);
+        CPP_assert(common_range<decltype(rng)>);
+        CPP_assert(!sized_range<decltype(rng)>);
         ::check_equal(rng, {4, 3, 2, 1});
     }
 
@@ -116,31 +120,34 @@ int main()
         };
 
         std::vector<std::string> rgs{"hello", "HELLO", "bye", "Bye", "BYE"};
-        auto rng = rgs | view::unique(caseInsensitiveCompare);
+        auto rng = rgs | views::unique(caseInsensitiveCompare);
         has_type<std::string &>(*begin(rng));
-        models<BidirectionalViewConcept>(aux::copy(rng));
-        models_not<RandomAccessRangeConcept>(rng);
-        models<CommonRangeConcept>(rng);
-        models_not<SizedRangeConcept>(rng);
-        CPP_assert(Range<decltype(rng) const>);
-        models<BidirectionalViewConcept>(aux::copy(rng));
+        CPP_assert(view_<decltype(rng)>);
+        CPP_assert(bidirectional_range<decltype(rng)>);
+        CPP_assert(!random_access_range<decltype(rng)>);
+        CPP_assert(common_range<decltype(rng)>);
+        CPP_assert(!sized_range<decltype(rng)>);
+        CPP_assert(range<decltype(rng) const>);
+        CPP_assert(view_<decltype(rng)>);
+        CPP_assert(bidirectional_range<decltype(rng)>);
         ::check_equal(rng, {"hello","bye"});
-        ::check_equal(view::reverse(rng), {"bye","hello"});
+        ::check_equal(views::reverse(rng), {"bye","hello"});
     }
 
     {
         int const rgi[] = {-1, 1, -1, 2, 3, 4, -4, 42, 7};
-        auto rng0 = view::delimit(rgi, 42) | view::reverse;
+        auto rng0 = views::delimit(rgi, 42) | views::reverse;
         // rng0 is mutable-only...
-        CPP_assert(ForwardRange<decltype(rng0)>);
-        CPP_assert(!ForwardRange<decltype(rng0) const>);
+        CPP_assert(forward_range<decltype(rng0)>);
+        CPP_assert(!forward_range<decltype(rng0) const>);
         // ...and composable
-        auto rng = rng0 | view::unique([](const int& n1, const int& n2){ return n1==n2 || n1==-n2; })
-                        | view::transform([](const int& n){ return n > 0 ? n: -n;});
-        models<BidirectionalViewConcept>(aux::copy(rng));
-        models_not<RandomAccessRangeConcept>(rng);
-        models<CommonRangeConcept>(rng);
-        models_not<SizedRangeConcept>(rng);
+        auto rng = rng0 | views::unique([](const int& n1, const int& n2){ return n1==n2 || n1==-n2; })
+                        | views::transform([](const int& n){ return n > 0 ? n: -n;});
+        CPP_assert(view_<decltype(rng)>);
+        CPP_assert(bidirectional_range<decltype(rng)>);
+        CPP_assert(!random_access_range<decltype(rng)>);
+        CPP_assert(common_range<decltype(rng)>);
+        CPP_assert(!sized_range<decltype(rng)>);
         ::check_equal(rng, {4, 3, 2, 1});
     }
 

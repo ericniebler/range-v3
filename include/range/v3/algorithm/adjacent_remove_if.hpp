@@ -41,13 +41,13 @@ namespace ranges
         ///
         /// range-based version of the \c adjacent_remove_if algorithm
         ///
-        /// \pre `Rng` is a model of the `ForwardRange` concept.
+        /// \pre `Rng` is a model of the `forward_range` concept.
         /// \pre `Pred` is a model of the `BinaryPredicate` concept.
         template<typename I, typename S, typename Pred, typename Proj = identity>
         auto operator()(I first, S last, Pred pred = {}, Proj proj = {}) const
             -> CPP_ret(I)( //
-                requires Permutable<I> && Sentinel<S, I> &&
-                    IndirectRelation<Pred, projected<I, Proj>>)
+                requires permutable<I> && sentinel_for<S, I> &&
+                    indirect_relation<Pred, projected<I, Proj>>)
         {
             first = adjacent_find(std::move(first), last, std::ref(pred), std::ref(proj));
             if(first == last)
@@ -72,8 +72,8 @@ namespace ranges
         template<typename Rng, typename Pred, typename Proj = identity>
         auto operator()(Rng && rng, Pred pred,
                         Proj proj = {}) const -> CPP_ret(safe_iterator_t<Rng>)( //
-            requires ForwardRange<Rng> && IndirectRelation<
-                Pred, projected<iterator_t<Rng>, Proj>> && Permutable<iterator_t<Rng>>)
+            requires forward_range<Rng> && indirect_relation<
+                Pred, projected<iterator_t<Rng>, Proj>> && permutable<iterator_t<Rng>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

@@ -27,7 +27,7 @@ using std::begin;
 template<class RangeT>
 void test_enumerate_with(RangeT &&range)
 {
-    auto enumerated_range = ranges::view::enumerate(range);
+    auto enumerated_range = ranges::views::enumerate(range);
 
     std::size_t idx_ref = 0;
     auto it_ref = begin( range );
@@ -76,29 +76,29 @@ int main()
     }
 
     {
-        auto range = ranges::view::iota(0, 0);
+        auto range = ranges::views::iota(0, 0);
         test_enumerate_with(range);
 
-        range = ranges::view::iota(-10000, 10000);
+        range = ranges::views::iota(-10000, 10000);
         test_enumerate_with(range);
     }
 
     {
-        auto range = ranges::view::iota((std::uintmax_t)0, (std::uintmax_t)0);
+        auto range = ranges::views::iota((std::uintmax_t)0, (std::uintmax_t)0);
         test_enumerate_with(range);
 
-        auto range2 = ranges::view::iota((std::intmax_t) -10000, (std::intmax_t) 10000);
+        auto range2 = ranges::views::iota((std::intmax_t) -10000, (std::intmax_t) 10000);
         test_enumerate_with(range2);
     }
 
     // https://github.com/ericniebler/range-v3/issues/1141
     {
         using namespace ranges;
-        auto x = view::indices( std::uintmax_t( 100 ) )
-          | view::transform([](std::uintmax_t) { return "";})
-          | view::enumerate;
+        auto x = views::indices( std::uintmax_t( 100 ) )
+          | views::transform([](std::uintmax_t) { return "";})
+          | views::enumerate;
         using X = decltype(x);
-        CPP_assert(Same<range_difference_t<X>, detail::diffmax_t>);
-        CPP_assert(Same<range_value_t<X>, std::pair<detail::diffmax_t, char const*>>);
+        CPP_assert(same_as<range_difference_t<X>, detail::diffmax_t>);
+        CPP_assert(same_as<range_value_t<X>, std::pair<detail::diffmax_t, char const*>>);
     }
 }

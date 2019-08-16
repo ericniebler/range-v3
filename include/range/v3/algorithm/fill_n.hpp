@@ -33,7 +33,7 @@ namespace ranges
         template<typename O, typename V>
         auto operator()(O begin, iter_difference_t<O> n, V const & val) const
             -> CPP_ret(O)( //
-                requires OutputIterator<O, V const &>)
+                requires output_iterator<O, V const &>)
         {
             RANGES_EXPECT(n >= 0);
             auto norig = n;

@@ -74,11 +74,11 @@ namespace ranges
         auto operator()(I first, S last, O out, iter_difference_t<O> const n,
                         Gen && gen = detail::get_random_engine()) const
             -> CPP_ret(sample_result<I, O>)( //
-                requires InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
-                    IndirectlyCopyable<I, O> && UniformRandomNumberGenerator<Gen> &&
-                (RandomAccessIterator<O> || ForwardIterator<I> || SizedSentinel<S, I>))
+                requires input_iterator<I> && sentinel_for<S, I> && weakly_incrementable<O> &&
+                    indirectly_copyable<I, O> && uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+                (random_access_iterator<O> || forward_iterator<I> || sized_sentinel_for<S, I>))
         {
-            if(RANGES_CONSTEXPR_IF(ForwardIterator<I> || SizedSentinel<S, I>))
+            if(RANGES_CONSTEXPR_IF(forward_iterator<I> || sized_sentinel_for<S, I>))
             {
                 auto const k = distance(first, last);
                 return sample_fn::sized_impl(std::move(first),
@@ -125,14 +125,14 @@ namespace ranges
         auto operator()(I first, S last, ORng && out,
                         Gen && gen = detail::get_random_engine()) const
             -> CPP_ret(sample_result<I, safe_iterator_t<ORng>>)( //
-                requires InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<
-                    iterator_t<ORng>> && IndirectlyCopyable<I, iterator_t<ORng>> &&
-                    UniformRandomNumberGenerator<Gen> &&
-                (ForwardRange<ORng> ||
-                 SizedRange<ORng>)&&(RandomAccessIterator<iterator_t<ORng>> ||
-                                     ForwardIterator<I> || SizedSentinel<S, I>))
+                requires input_iterator<I> && sentinel_for<S, I> && weakly_incrementable<
+                    iterator_t<ORng>> && indirectly_copyable<I, iterator_t<ORng>> &&
+                    uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+                (forward_range<ORng> ||
+                 sized_range<ORng>)&&(random_access_iterator<iterator_t<ORng>> ||
+                                     forward_iterator<I> || sized_sentinel_for<S, I>))
         {
-            if(RANGES_CONSTEXPR_IF(ForwardIterator<I> || SizedSentinel<S, I>))
+            if(RANGES_CONSTEXPR_IF(forward_iterator<I> || sized_sentinel_for<S, I>))
             {
                 auto k = distance(first, last);
                 return sample_fn::sized_impl(std::move(first),
@@ -156,11 +156,11 @@ namespace ranges
         auto operator()(Rng && rng, O out, iter_difference_t<O> const n,
                         Gen && gen = detail::get_random_engine()) const
             -> CPP_ret(sample_result<safe_iterator_t<Rng>, O>)( //
-                requires InputRange<Rng> && WeaklyIncrementable<O> && IndirectlyCopyable<
-                    iterator_t<Rng>, O> && UniformRandomNumberGenerator<Gen> &&
-                (RandomAccessIterator<O> || ForwardRange<Rng> || SizedRange<Rng>))
+                requires input_range<Rng> && weakly_incrementable<O> && indirectly_copyable<
+                    iterator_t<Rng>, O> && uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+                (random_access_iterator<O> || forward_range<Rng> || sized_range<Rng>))
         {
-            if(RANGES_CONSTEXPR_IF(ForwardRange<Rng> || SizedRange<Rng>))
+            if(RANGES_CONSTEXPR_IF(forward_range<Rng> || sized_range<Rng>))
             {
                 return sample_fn::sized_impl(begin(rng),
                                              end(rng),
@@ -181,13 +181,13 @@ namespace ranges
         auto operator()(IRng && rng, ORng && out,
                         Gen && gen = detail::get_random_engine()) const
             -> CPP_ret(sample_result<safe_iterator_t<IRng>, safe_iterator_t<ORng>>)( //
-                requires InputRange<IRng> && Range<ORng> &&
-                    IndirectlyCopyable<iterator_t<IRng>, iterator_t<ORng>> &&
-                        UniformRandomNumberGenerator<Gen> &&
-                (RandomAccessIterator<iterator_t<ORng>> || ForwardRange<IRng> ||
-                 SizedRange<IRng>)&&(ForwardRange<ORng> || SizedRange<ORng>))
+                requires input_range<IRng> && range<ORng> &&
+                    indirectly_copyable<iterator_t<IRng>, iterator_t<ORng>> &&
+                        uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+                (random_access_iterator<iterator_t<ORng>> || forward_range<IRng> ||
+                 sized_range<IRng>)&&(forward_range<ORng> || sized_range<ORng>))
         {
-            if(RANGES_CONSTEXPR_IF(ForwardRange<IRng> || SizedRange<IRng>))
+            if(RANGES_CONSTEXPR_IF(forward_range<IRng> || sized_range<IRng>))
             {
                 return sample_fn::sized_impl(begin(rng),
                                              end(rng),

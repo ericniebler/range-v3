@@ -30,15 +30,15 @@ int main()
 
     // [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...]
     auto v =
-        view::for_each(view::ints(1,100), [](int i){
-            return yield_from(view::repeat_n(i,i));
+        views::for_each(views::ints(1,100), [](int i){
+            return yield_from(views::repeat_n(i,i));
         }) | to<std::vector>();
-    check_equal(view::take(v, 15), {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
+    check_equal(views::take(v, 15), {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
     v |= action::shuffle(gen);
     CHECK(!is_sorted(v));
 
     v |= action::sort | action::unique;
-    CHECK(equal(v, view::ints(1,100)));
+    CHECK(equal(v, views::ints(1,100)));
 
     return ::test_result();
 }

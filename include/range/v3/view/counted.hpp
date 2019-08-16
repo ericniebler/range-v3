@@ -64,21 +64,21 @@ namespace ranges
     counted_view(I, iter_difference_t<I>)->counted_view<I>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct cpp20_counted_fn
         {
             template<typename I>
             auto operator()(I it, iter_difference_t<I> n) const
                 -> CPP_ret(subrange<counted_iterator<I>, default_sentinel_t>)( //
-                    requires Iterator<I> && (!RandomAccessIterator<I>))
+                    requires input_or_output_iterator<I> && (!random_access_iterator<I>))
             {
                 return {make_counted_iterator(std::move(it), n), default_sentinel};
             }
             template<typename I>
             auto operator()(I it, iter_difference_t<I> n) const
                 -> CPP_ret(subrange<I>)( //
-                    requires RandomAccessIterator<I>)
+                    requires random_access_iterator<I>)
             {
                 return {it, it + n};
             }
@@ -89,14 +89,14 @@ namespace ranges
             template<typename I>
             auto operator()(I it, iter_difference_t<I> n) const
                 -> CPP_ret(counted_view<I>)( //
-                    requires Iterator<I> && (!RandomAccessIterator<I>))
+                    requires input_or_output_iterator<I> && (!random_access_iterator<I>))
             {
                 return {std::move(it), n};
             }
             template<typename I>
             auto operator()(I it, iter_difference_t<I> n) const
                 -> CPP_ret(subrange<I>)( //
-                    requires RandomAccessIterator<I>)
+                    requires random_access_iterator<I>)
             {
                 return {it, it + n};
             }
@@ -105,13 +105,13 @@ namespace ranges
         /// \relates counted_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(counted_fn, counted)
-    } // namespace view
+    } // namespace views
 
     namespace cpp20
     {
-        namespace view
+        namespace views
         {
-            RANGES_INLINE_VARIABLE(ranges::view::cpp20_counted_fn, counted)
+            RANGES_INLINE_VARIABLE(ranges::views::cpp20_counted_fn, counted)
         }
     } // namespace cpp20
     /// @}

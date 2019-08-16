@@ -33,7 +33,7 @@
 
 namespace ranges
 {
-    namespace view
+    namespace views
     {
         /// Lazily applies an unary function to each element in the source
         /// range that returns another range (possibly empty), flattening
@@ -51,8 +51,8 @@ namespace ranges
         public:
             template<typename Rng, typename Fun>
             constexpr auto CPP_fun(operator())(Rng && rng, Fun fun)(
-                const requires ViewableRange<Rng> && TransformableRange<Rng, Fun> &&
-                    JoinableRange<transform_view<all_t<Rng>, Fun>>)
+                const requires viewable_range<Rng> && transformable_range<Rng, Fun> &&
+                    joinable_range<transform_view<all_t<Rng>, Fun>>)
             {
                 return join(transform(static_cast<Rng &&>(rng), std::move(fun)));
             }
@@ -61,15 +61,15 @@ namespace ranges
         /// \relates for_each_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<for_each_fn>, for_each)
-    } // namespace view
+    } // namespace views
 
     struct yield_fn
     {
         template<typename V>
         auto operator()(V v) const -> CPP_ret(single_view<V>)( //
-            requires CopyConstructible<V>)
+            requires copy_constructible<V>)
         {
-            return view::single(std::move(v));
+            return views::single(std::move(v));
         }
     };
 
@@ -81,7 +81,7 @@ namespace ranges
     {
         template<typename Rng>
         auto operator()(Rng rng) const -> CPP_ret(Rng)( //
-            requires View<Rng>)
+            requires view_<Rng>)
         {
             return rng;
         }
@@ -96,7 +96,7 @@ namespace ranges
         template<typename V>
         repeat_n_view<V> operator()(bool b, V v) const
         {
-            return view::repeat_n(std::move(v), b ? 1 : 0);
+            return views::repeat_n(std::move(v), b ? 1 : 0);
         }
     };
 
@@ -108,9 +108,9 @@ namespace ranges
     {
         template<typename F>
         auto operator()(bool b, F f) const -> CPP_ret(generate_n_view<F>)( //
-            requires Invocable<F &>)
+            requires invocable<F &>)
         {
-            return view::generate_n(std::move(f), b ? 1 : 0);
+            return views::generate_n(std::move(f), b ? 1 : 0);
         }
     };
 
@@ -121,12 +121,12 @@ namespace ranges
 
     /// \cond
     CPP_template(typename Rng, typename Fun)( //
-        requires ViewableRange<Rng> && view::TransformableRange<Rng, Fun> &&
-            InputRange<invoke_result_t<Fun &, range_reference_t<Rng>>>) //
+        requires viewable_range<Rng> && views::transformable_range<Rng, Fun> &&
+            input_range<invoke_result_t<Fun &, range_reference_t<Rng>>>) //
         auto
         operator>>=(Rng && rng, Fun fun)
     {
-        return view::for_each(static_cast<Rng &&>(rng), std::move(fun));
+        return views::for_each(static_cast<Rng &&>(rng), std::move(fun));
     }
     /// \endcond
 } // namespace ranges

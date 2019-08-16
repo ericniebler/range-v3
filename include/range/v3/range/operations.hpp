@@ -36,7 +36,7 @@ namespace ranges
         template<typename Rng>
         constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
             -> CPP_ret(range_reference_t<Rng>)( //
-                requires RandomAccessRange<Rng> && SizedRange<Rng>)
+                requires random_access_range<Rng> && sized_range<Rng>)
         {
             // Workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67371 in GCC 5
             check_throw(rng, n);
@@ -67,11 +67,11 @@ namespace ranges
         template<typename Rng, typename Int>
         constexpr auto operator()(Rng && rng, Int n) const
             -> CPP_ret(range_reference_t<Rng>)( //
-                requires RandomAccessRange<Rng> && Integral<Int>)
+                requires random_access_range<Rng> && integral<Int>)
         {
             using D = range_difference_t<Rng>;
             RANGES_EXPECT(0 <= static_cast<D>(n));
-            RANGES_EXPECT(!(bool)SizedRange<Rng> ||
+            RANGES_EXPECT(!(bool)sized_range<Rng> ||
                           static_cast<D>(n) < ranges::distance(rng));
             return ranges::begin(rng)[static_cast<D>(n)];
         }
@@ -89,7 +89,7 @@ namespace ranges
         /// \return `*prev(end(rng))`
         template<typename Rng>
         constexpr auto operator()(Rng && rng) const -> CPP_ret(range_reference_t<Rng>)( //
-            requires CommonRange<Rng> && BidirectionalRange<Rng>)
+            requires common_range<Rng> && bidirectional_range<Rng>)
         {
             return *prev(end(rng));
         }
@@ -105,7 +105,7 @@ namespace ranges
         /// \return `*begin(rng)`
         template<typename Rng>
         constexpr auto operator()(Rng && rng) const -> CPP_ret(range_reference_t<Rng>)( //
-            requires ForwardRange<Rng>)
+            requires forward_range<Rng>)
         {
             return *begin(rng);
         }

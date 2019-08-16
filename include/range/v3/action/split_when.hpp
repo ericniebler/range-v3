@@ -40,7 +40,7 @@ namespace ranges
         {
         private:
             template<typename Rng>
-            using split_value_t = meta::if_c<(bool)ranges::Container<Rng>, uncvref_t<Rng>,
+            using split_value_t = meta::if_c<(bool)ranges::container<Rng>, uncvref_t<Rng>,
                                              std::vector<range_value_t<Rng>>>;
 
         public:
@@ -49,24 +49,24 @@ namespace ranges
             template<typename Rng, typename Fun>
             auto operator()(Rng && rng, Fun fun) const       //
                 -> CPP_ret(std::vector<split_value_t<Rng>>)( //
-                    requires ForwardRange<Rng> &&            //
-                        Invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> && Invocable<
+                    requires forward_range<Rng> &&            //
+                        invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> && invocable<
                             Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
-                            CopyConstructible<Fun> && ConvertibleTo<
+                            copy_constructible<Fun> && convertible_to<
                                 invoke_result_t<Fun &, iterator_t<Rng>, sentinel_t<Rng>>,
                                 std::pair<bool, iterator_t<Rng>>>)
             {
-                return view::split_when(rng, std::move(fun)) |
-                       view::transform(to<split_value_t<Rng>>()) | to_vector;
+                return views::split_when(rng, std::move(fun)) |
+                       views::transform(to<split_value_t<Rng>>()) | to_vector;
             }
             template<typename Rng, typename Fun>
             auto operator()(Rng && rng, Fun fun) const
                 -> CPP_ret(std::vector<split_value_t<Rng>>)( //
-                    requires ForwardRange<Rng> && Predicate<
-                        Fun const &, range_reference_t<Rng>> && CopyConstructible<Fun>)
+                    requires forward_range<Rng> && predicate<
+                        Fun const &, range_reference_t<Rng>> && copy_constructible<Fun>)
             {
-                return view::split_when(rng, std::move(fun)) |
-                       view::transform(to<split_value_t<Rng>>()) | to_vector;
+                return views::split_when(rng, std::move(fun)) |
+                       views::transform(to<split_value_t<Rng>>()) | to_vector;
             }
         };
 

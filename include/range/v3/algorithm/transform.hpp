@@ -47,9 +47,9 @@ namespace ranges
         template<typename I, typename S, typename O, typename F, typename P = identity>
         auto operator()(I begin, S end, O out, F fun, P proj = P{}) const
             -> CPP_ret(unary_transform_result<I, O>)( //
-                requires InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
-                    CopyConstructible<F> &&
-                        Writable<O, indirect_result_t<F &, projected<I, P>>>)
+                requires input_iterator<I> && sentinel_for<S, I> && weakly_incrementable<O> &&
+                    copy_constructible<F> &&
+                        writable<O, indirect_result_t<F &, projected<I, P>>>)
         {
             for(; begin != end; ++begin, ++out)
                 *out = invoke(fun, invoke(proj, *begin));
@@ -59,8 +59,8 @@ namespace ranges
         template<typename Rng, typename O, typename F, typename P = identity>
         auto operator()(Rng && rng, O out, F fun, P proj = P{}) const -> CPP_ret(
             unary_transform_result<safe_iterator_t<Rng>, O>)( //
-            requires InputRange<Rng> && WeaklyIncrementable<O> && CopyConstructible<F> &&
-                Writable<O, indirect_result_t<F &, projected<iterator_t<Rng>, P>>>)
+            requires input_range<Rng> && weakly_incrementable<O> && copy_constructible<F> &&
+                writable<O, indirect_result_t<F &, projected<iterator_t<Rng>, P>>>)
         {
             return (*this)(
                 begin(rng), end(rng), std::move(out), std::move(fun), std::move(proj));
@@ -72,9 +72,9 @@ namespace ranges
         auto operator()(
             I0 begin0, S0 end0, I1 begin1, S1 end1, O out, F fun, P0 proj0 = P0{},
             P1 proj1 = P1{}) const -> CPP_ret(binary_transform_result<I0, I1, O>)( //
-            requires InputIterator<I0> && Sentinel<S0, I0> && InputIterator<I1> &&
-                Sentinel<S1, I1> && WeaklyIncrementable<O> && CopyConstructible<F> &&
-                    Writable<
+            requires input_iterator<I0> && sentinel_for<S0, I0> && input_iterator<I1> &&
+                sentinel_for<S1, I1> && weakly_incrementable<O> && copy_constructible<F> &&
+                    writable<
                         O, indirect_result_t<F &, projected<I0, P0>, projected<I1, P1>>>)
         {
             for(; begin0 != end0 && begin1 != end1; ++begin0, ++begin1, ++out)
@@ -89,8 +89,8 @@ namespace ranges
             -> CPP_ret(
                 binary_transform_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>,
                                         O>)( //
-                requires InputRange<Rng0> && InputRange<Rng1> && WeaklyIncrementable<O> &&
-                    CopyConstructible<F> && Writable<
+                requires input_range<Rng0> && input_range<Rng1> && weakly_incrementable<O> &&
+                    copy_constructible<F> && writable<
                         O, indirect_result_t<F &, projected<iterator_t<Rng0>, P0>,
                                              projected<iterator_t<Rng1>, P1>>>)
         {
@@ -114,8 +114,8 @@ namespace ranges
         operator()(I0 begin0, S0 end0, I1 begin1, O out, F fun, P0 proj0 = P0{},
                    P1 proj1 = P1{}) const
             -> CPP_ret(binary_transform_result<I0, I1, O>)( //
-                requires InputIterator<I0> && Sentinel<S0, I0> && InputIterator<I1> &&
-                    WeaklyIncrementable<O> && CopyConstructible<F> && Writable<
+                requires input_iterator<I0> && sentinel_for<S0, I0> && input_iterator<I1> &&
+                    weakly_incrementable<O> && copy_constructible<F> && writable<
                         O, indirect_result_t<F &, projected<I0, P0>, projected<I1, P1>>>)
         {
             return (*this)(std::move(begin0),
@@ -138,8 +138,8 @@ namespace ranges
                    P1 proj1 = P1{}) const
             -> CPP_ret(
                 binary_transform_result<safe_iterator_t<Rng0>, uncvref_t<I1Ref>, O>)( //
-                requires InputRange<Rng0> && InputIterator<uncvref_t<I1Ref>> &&
-                    WeaklyIncrementable<O> && CopyConstructible<F> && Writable<
+                requires input_range<Rng0> && input_iterator<uncvref_t<I1Ref>> &&
+                    weakly_incrementable<O> && copy_constructible<F> && writable<
                         O, indirect_result_t<F &, projected<iterator_t<Rng0>, P0>,
                                              projected<uncvref_t<I1Ref>, P1>>>)
         {

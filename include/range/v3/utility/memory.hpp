@@ -104,7 +104,7 @@ namespace ranges
     struct raw_storage_iterator
     {
     private:
-        CPP_assert(OutputIterator<O, Val>);
+        CPP_assert(output_iterator<O, Val>);
         CPP_assert(std::is_lvalue_reference<iter_reference_t<O>>());
         O out_;
 
@@ -120,14 +120,14 @@ namespace ranges
         }
         CPP_member
         auto operator=(Val const & val) -> CPP_ret(raw_storage_iterator &)( //
-            requires CopyConstructible<Val>)
+            requires copy_constructible<Val>)
         {
             ::new((void *)std::addressof(*out_)) Val(val);
             return *this;
         }
         CPP_member
         auto operator=(Val && val) -> CPP_ret(raw_storage_iterator &)( //
-            requires MoveConstructible<Val>)
+            requires move_constructible<Val>)
         {
             ::new((void *)std::addressof(*out_)) Val(std::move(val));
             return *this;
@@ -139,13 +139,13 @@ namespace ranges
         }
         CPP_member
         auto operator++(int) -> CPP_ret(void)( //
-            requires(!ForwardIterator<O>))
+            requires(!forward_iterator<O>))
         {
             ++out_;
         }
         CPP_member
         auto operator++(int) -> CPP_ret(raw_storage_iterator)( //
-            requires ForwardIterator<O>)
+            requires forward_iterator<O>)
         {
             auto tmp = *this;
             ++out_;
@@ -161,7 +161,7 @@ namespace ranges
     struct iterator_wrapper
     {
     private:
-        CPP_assert(Iterator<I>);
+        CPP_assert(input_or_output_iterator<I>);
         mutable I * i_ = nullptr;
 
     public:
@@ -205,14 +205,14 @@ namespace ranges
 
     template<typename I>
     auto iter_ref(I & i) -> CPP_ret(iterator_wrapper<I>)( //
-        requires Iterator<I>)
+        requires input_or_output_iterator<I>)
     {
         return i;
     }
 
     template<typename I>
     struct readable_traits<iterator_wrapper<I>>
-      : meta::if_c<(bool)InputIterator<I>, readable_traits<I>, meta::nil_>
+      : meta::if_c<(bool)input_iterator<I>, readable_traits<I>, meta::nil_>
     {};
 
     template<typename Val>

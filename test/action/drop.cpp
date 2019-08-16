@@ -19,7 +19,7 @@ int main()
 {
     using namespace ranges;
 
-    auto v = view::ints(1,21) | to<std::vector>();
+    auto v = views::ints(1,21) | to<std::vector>();
     auto & v2 = action::drop(v, 3);
     CHECK(&v2 == &v);
     CHECK(v.size() == 17u);

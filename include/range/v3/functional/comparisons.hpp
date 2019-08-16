@@ -26,7 +26,7 @@ namespace ranges
     {
         template<typename T, typename U>
         constexpr auto operator()(T && t, U && u) const -> CPP_ret(bool)( //
-            requires EqualityComparableWith<T, U>)
+            requires equality_comparable_with<T, U>)
         {
             return (T &&) t == (U &&) u;
         }
@@ -37,7 +37,7 @@ namespace ranges
     {
         template<typename T, typename U>
         constexpr auto operator()(T && t, U && u) const -> CPP_ret(bool)( //
-            requires EqualityComparableWith<T, U>)
+            requires equality_comparable_with<T, U>)
         {
             return !equal_to{}((T &&) t, (U &&) u);
         }
@@ -48,7 +48,7 @@ namespace ranges
     {
         template<typename T, typename U>
         constexpr auto operator()(T && t, U && u) const -> CPP_ret(bool)( //
-            requires StrictTotallyOrderedWith<T, U>)
+            requires totally_ordered_with<T, U>)
         {
             return (T &&) t < (U &&) u;
         }
@@ -59,7 +59,7 @@ namespace ranges
     {
         template<typename T, typename U>
         constexpr auto operator()(T && t, U && u) const -> CPP_ret(bool)( //
-            requires StrictTotallyOrderedWith<T, U>)
+            requires totally_ordered_with<T, U>)
         {
             return !less{}((U &&) u, (T &&) t);
         }
@@ -70,7 +70,7 @@ namespace ranges
     {
         template<typename T, typename U>
         constexpr auto operator()(T && t, U && u) const -> CPP_ret(bool)( //
-            requires StrictTotallyOrderedWith<T, U>)
+            requires totally_ordered_with<T, U>)
         {
             return !less{}((T &&) t, (U &&) u);
         }
@@ -81,7 +81,7 @@ namespace ranges
     {
         template<typename T, typename U>
         constexpr auto operator()(T && t, U && u) const -> CPP_ret(bool)( //
-            requires StrictTotallyOrderedWith<T, U>)
+            requires totally_ordered_with<T, U>)
         {
             return less{}((U &&) u, (T &&) t);
         }

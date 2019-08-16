@@ -84,7 +84,7 @@ namespace ranges
 
     /// \addtogroup group-views
     /// @{
-    namespace view
+    namespace views
     {
         struct replace_fn
         {
@@ -93,7 +93,7 @@ namespace ranges
             template<typename Val1, typename Val2>
             static constexpr auto CPP_fun(bind)(replace_fn replace, Val1 old_value,
                                                 Val2 new_value)( //
-                requires Same<detail::decay_t<unwrap_reference_t<Val1>>,
+                requires same_as<detail::decay_t<unwrap_reference_t<Val1>>,
                               detail::decay_t<unwrap_reference_t<Val2>>>)
             {
                 return make_pipeable(
@@ -106,16 +106,16 @@ namespace ranges
                                       Val2 && new_value) const
                 -> CPP_ret(replace_view<all_t<Rng>, detail::decay_t<Val1>,
                                         detail::decay_t<Val2>>)( //
-                    requires ViewableRange<Rng> && InputRange<Rng> && Same<
+                    requires viewable_range<Rng> && input_range<Rng> && same_as<
                         detail::decay_t<unwrap_reference_t<Val1>>,
                         detail::decay_t<unwrap_reference_t<Val2>>> &&
-                        EqualityComparableWith<detail::decay_t<unwrap_reference_t<Val1>>,
+                        equality_comparable_with<detail::decay_t<unwrap_reference_t<Val1>>,
                                                range_value_t<Rng>> &&
-                            Common<detail::decay_t<unwrap_reference_t<Val2 const &>>,
+                            common_with<detail::decay_t<unwrap_reference_t<Val2 const &>>,
                                    range_value_t<Rng>> &&
-                                CommonReference<unwrap_reference_t<Val2 const &>,
+                                common_reference_with<unwrap_reference_t<Val2 const &>,
                                                 range_reference_t<Rng>> &&
-                                    CommonReference<unwrap_reference_t<Val2 const &>,
+                                    common_reference_with<unwrap_reference_t<Val2 const &>,
                                                     range_rvalue_reference_t<Rng>>)
             {
                 return {
@@ -127,7 +127,7 @@ namespace ranges
         /// \relates replace_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<replace_fn>, replace)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

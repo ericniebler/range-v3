@@ -21,23 +21,23 @@ int main()
     using namespace ranges;
 
     int rgi[6];
-    ::models<RangeConcept>(rgi);
-    ::models_not<SemiContainerConcept>(rgi);
+    CPP_assert(range<decltype(rgi)>);
+    CPP_assert(!semi_container<decltype(rgi)>);
 
     std::array<int, 6> a;
-    ::models<SemiContainerConcept>(a);
-    ::models_not<ContainerConcept>(a);
+    CPP_assert(semi_container<decltype(a)>);
+    CPP_assert(!container<decltype(a)>);
 
     std::vector<int> v;
-    ::models<ContainerConcept>(v);
+    CPP_assert(container<decltype(v)>);
 
     std::vector<std::unique_ptr<int>> v2;
-    ::models<ContainerConcept>(v2);
+    CPP_assert(container<decltype(v2)>);
 
-    ::models<LvalueContainerLikeConcept>(v2);
-    ::models_not<LvalueContainerLikeConcept>(std::move(v2));
+    CPP_assert(lvalue_container_like<decltype((v2))>);
+    CPP_assert(!lvalue_container_like<decltype(std::move(v2))>);
 
-    ::models<LvalueContainerLikeConcept>(view::ref(v2));
+    CPP_assert(lvalue_container_like<decltype(views::ref(v2))>);
 
     return ::test_result();
 }

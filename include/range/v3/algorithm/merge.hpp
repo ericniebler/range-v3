@@ -59,8 +59,8 @@ namespace ranges
         auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, C pred = C{},
                         P0 proj0 = P0{}, P1 proj1 = P1{}) const
             -> CPP_ret(merge_result<I0, I1, O>)( //
-                requires Sentinel<S0, I0> && Sentinel<S1, I1> &&
-                    Mergeable<I0, I1, O, C, P0, P1>)
+                requires sentinel_for<S0, I0> && sentinel_for<S1, I1> &&
+                    mergeable<I0, I1, O, C, P0, P1>)
         {
             for(; begin0 != end0 && begin1 != end1; ++out)
             {
@@ -85,8 +85,8 @@ namespace ranges
         auto operator()(Rng0 && rng0, Rng1 && rng1, O out, C pred = C{}, P0 proj0 = P0{},
                         P1 proj1 = P1{}) const
             -> CPP_ret(merge_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>, O>)( //
-                requires Range<Rng0> && Range<Rng1> &&
-                    Mergeable<iterator_t<Rng0>, iterator_t<Rng1>, O, C, P0, P1>)
+                requires range<Rng0> && range<Rng1> &&
+                    mergeable<iterator_t<Rng0>, iterator_t<Rng1>, O, C, P0, P1>)
         {
             return (*this)(begin(rng0),
                            end(rng0),

@@ -36,7 +36,7 @@ namespace ranges
             friend action_access;
             template<typename Int>
             static auto CPP_fun(bind)(take_fn take, Int n)( //
-                requires Integral<Int>)
+                requires integral<Int>)
             {
                 return bind_back(take, n);
             }
@@ -45,8 +45,8 @@ namespace ranges
             template<typename Rng>
             auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> CPP_ret(Rng)( //
-                    requires ForwardRange<Rng> &&
-                        ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>>)
+                    requires forward_range<Rng> &&
+                        erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>>)
             {
                 RANGES_EXPECT(n >= 0);
                 ranges::action::erase(

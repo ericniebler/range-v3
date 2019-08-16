@@ -27,42 +27,43 @@ int main()
         {"this", 0},
         {"that", 1},
         {"other", 2}};
-    auto && keys = m | view::keys;
+    auto keys = m | views::keys;
     has_type<std::string const &>(*begin(keys));
-    models<SizedViewConcept>(aux::copy(keys));
-    models<CommonViewConcept>(aux::copy(keys));
-    models<BidirectionalIteratorConcept>(begin(keys));
+    CPP_assert(view_<decltype(keys)>);
+    CPP_assert(sized_range<decltype(keys)>);
+    CPP_assert(common_range<decltype(keys)>);
+    CPP_assert(bidirectional_iterator<decltype(begin(keys))>);
     CHECK(&*begin(keys) == &m.begin()->first);
     ::check_equal(keys, {"other", "that", "this"});
 
-    auto && values = m | view::values;
+    auto values = m | views::values;
     has_type<int &>(*begin(values));
-    models<SizedViewConcept>(aux::copy(values));
-    models<CommonViewConcept>(aux::copy(values));
-    models<BidirectionalIteratorConcept>(begin(values));
+    CPP_assert(sized_range<decltype(values)>);
+    CPP_assert(common_range<decltype(values)>);
+    CPP_assert(bidirectional_iterator<decltype(begin(values))>);
     CHECK(&*begin(values) == &m.begin()->second);
     ::check_equal(values, {2, 1, 0});
 
     {
         // regression test for #526
         auto f = detail::get_first{};
-        CPP_assert(Same<int, decltype(f(std::declval<std::pair<int,int>>()))>);
-        CPP_assert(Same<int&, decltype(f(std::declval<std::pair<int,int>&>()))>);
-        CPP_assert(Same<int&, decltype(f(std::declval<std::pair<int&,int&>>()))>);
-        CPP_assert(Same<int&, decltype(f(std::declval<std::pair<int&,int&>&>()))>);
-        CPP_assert(Same<int, decltype(f(std::declval<std::pair<int&&,int&&>>()))>);
-        CPP_assert(Same<int&, decltype(f(std::declval<std::pair<int&&,int&&>&>()))>);
+        CPP_assert(same_as<int, decltype(f(std::declval<std::pair<int,int>>()))>);
+        CPP_assert(same_as<int&, decltype(f(std::declval<std::pair<int,int>&>()))>);
+        CPP_assert(same_as<int&, decltype(f(std::declval<std::pair<int&,int&>>()))>);
+        CPP_assert(same_as<int&, decltype(f(std::declval<std::pair<int&,int&>&>()))>);
+        CPP_assert(same_as<int, decltype(f(std::declval<std::pair<int&&,int&&>>()))>);
+        CPP_assert(same_as<int&, decltype(f(std::declval<std::pair<int&&,int&&>&>()))>);
 
         std::vector<int> xs = {42, 100, -1234};
-        auto exs = view::zip(view::ints, xs);
-        ::check_equal(view::keys(exs), {0, 1, 2});
+        auto exs = views::zip(views::ints, xs);
+        ::check_equal(views::keys(exs), {0, 1, 2});
     }
 
     {
         std::pair<int, int> const data[] = {{0, 2}, {1, 1}, {2, 0}};
-        auto key_range = debug_input_view<std::pair<int, int> const>{data} | view::keys;
+        auto key_range = debug_input_view<std::pair<int, int> const>{data} | views::keys;
         check_equal(key_range, {0,1,2});
-        auto value_range = debug_input_view<std::pair<int, int> const>{data} | view::values;
+        auto value_range = debug_input_view<std::pair<int, int> const>{data} | views::values;
         check_equal(value_range, {2,1,0});
     }
 

@@ -128,157 +128,157 @@ struct U
 int main()
 {
 #ifdef SET_DIFFERENCE_1
-    test<input_iterator<const int*>, input_iterator<const int*>, output_iterator<int*> >();
-    test<input_iterator<const int*>, input_iterator<const int*>, forward_iterator<int*> >();
-    test<input_iterator<const int*>, input_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<input_iterator<const int*>, input_iterator<const int*>, random_access_iterator<int*> >();
-    test<input_iterator<const int*>, input_iterator<const int*>, int*>();
+    test<InputIterator<const int*>, InputIterator<const int*>, OutputIterator<int*> >();
+    test<InputIterator<const int*>, InputIterator<const int*>, ForwardIterator<int*> >();
+    test<InputIterator<const int*>, InputIterator<const int*>, BidirectionalIterator<int*> >();
+    test<InputIterator<const int*>, InputIterator<const int*>, RandomAccessIterator<int*> >();
+    test<InputIterator<const int*>, InputIterator<const int*>, int*>();
 
-    test<input_iterator<const int*>, forward_iterator<const int*>, output_iterator<int*> >();
-    test<input_iterator<const int*>, forward_iterator<const int*>, forward_iterator<int*> >();
-    test<input_iterator<const int*>, forward_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<input_iterator<const int*>, forward_iterator<const int*>, random_access_iterator<int*> >();
-    test<input_iterator<const int*>, forward_iterator<const int*>, int*>();
+    test<InputIterator<const int*>, ForwardIterator<const int*>, OutputIterator<int*> >();
+    test<InputIterator<const int*>, ForwardIterator<const int*>, ForwardIterator<int*> >();
+    test<InputIterator<const int*>, ForwardIterator<const int*>, BidirectionalIterator<int*> >();
+    test<InputIterator<const int*>, ForwardIterator<const int*>, RandomAccessIterator<int*> >();
+    test<InputIterator<const int*>, ForwardIterator<const int*>, int*>();
 
-    test<input_iterator<const int*>, bidirectional_iterator<const int*>, output_iterator<int*> >();
-    test<input_iterator<const int*>, bidirectional_iterator<const int*>, forward_iterator<int*> >();
-    test<input_iterator<const int*>, bidirectional_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<input_iterator<const int*>, bidirectional_iterator<const int*>, random_access_iterator<int*> >();
-    test<input_iterator<const int*>, bidirectional_iterator<const int*>, int*>();
+    test<InputIterator<const int*>, BidirectionalIterator<const int*>, OutputIterator<int*> >();
+    test<InputIterator<const int*>, BidirectionalIterator<const int*>, ForwardIterator<int*> >();
+    test<InputIterator<const int*>, BidirectionalIterator<const int*>, BidirectionalIterator<int*> >();
+    test<InputIterator<const int*>, BidirectionalIterator<const int*>, RandomAccessIterator<int*> >();
+    test<InputIterator<const int*>, BidirectionalIterator<const int*>, int*>();
 
-    test<input_iterator<const int*>, random_access_iterator<const int*>, output_iterator<int*> >();
-    test<input_iterator<const int*>, random_access_iterator<const int*>, forward_iterator<int*> >();
-    test<input_iterator<const int*>, random_access_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<input_iterator<const int*>, random_access_iterator<const int*>, random_access_iterator<int*> >();
-    test<input_iterator<const int*>, random_access_iterator<const int*>, int*>();
+    test<InputIterator<const int*>, RandomAccessIterator<const int*>, OutputIterator<int*> >();
+    test<InputIterator<const int*>, RandomAccessIterator<const int*>, ForwardIterator<int*> >();
+    test<InputIterator<const int*>, RandomAccessIterator<const int*>, BidirectionalIterator<int*> >();
+    test<InputIterator<const int*>, RandomAccessIterator<const int*>, RandomAccessIterator<int*> >();
+    test<InputIterator<const int*>, RandomAccessIterator<const int*>, int*>();
 
-    test<input_iterator<const int*>, const int*, output_iterator<int*> >();
-    test<input_iterator<const int*>, const int*, forward_iterator<int*> >();
-    test<input_iterator<const int*>, const int*, bidirectional_iterator<int*> >();
-    test<input_iterator<const int*>, const int*, random_access_iterator<int*> >();
-    test<input_iterator<const int*>, const int*, int*>();
+    test<InputIterator<const int*>, const int*, OutputIterator<int*> >();
+    test<InputIterator<const int*>, const int*, ForwardIterator<int*> >();
+    test<InputIterator<const int*>, const int*, BidirectionalIterator<int*> >();
+    test<InputIterator<const int*>, const int*, RandomAccessIterator<int*> >();
+    test<InputIterator<const int*>, const int*, int*>();
 #endif
 #ifdef SET_DIFFERENCE_2
-    test<forward_iterator<const int*>, input_iterator<const int*>, output_iterator<int*> >();
-    test<forward_iterator<const int*>, input_iterator<const int*>, forward_iterator<int*> >();
-    test<forward_iterator<const int*>, input_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<forward_iterator<const int*>, input_iterator<const int*>, random_access_iterator<int*> >();
-    test<forward_iterator<const int*>, input_iterator<const int*>, int*>();
+    test<ForwardIterator<const int*>, InputIterator<const int*>, OutputIterator<int*> >();
+    test<ForwardIterator<const int*>, InputIterator<const int*>, ForwardIterator<int*> >();
+    test<ForwardIterator<const int*>, InputIterator<const int*>, BidirectionalIterator<int*> >();
+    test<ForwardIterator<const int*>, InputIterator<const int*>, RandomAccessIterator<int*> >();
+    test<ForwardIterator<const int*>, InputIterator<const int*>, int*>();
 
-    test<forward_iterator<const int*>, forward_iterator<const int*>, output_iterator<int*> >();
-    test<forward_iterator<const int*>, forward_iterator<const int*>, forward_iterator<int*> >();
-    test<forward_iterator<const int*>, forward_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<forward_iterator<const int*>, forward_iterator<const int*>, random_access_iterator<int*> >();
-    test<forward_iterator<const int*>, forward_iterator<const int*>, int*>();
+    test<ForwardIterator<const int*>, ForwardIterator<const int*>, OutputIterator<int*> >();
+    test<ForwardIterator<const int*>, ForwardIterator<const int*>, ForwardIterator<int*> >();
+    test<ForwardIterator<const int*>, ForwardIterator<const int*>, BidirectionalIterator<int*> >();
+    test<ForwardIterator<const int*>, ForwardIterator<const int*>, RandomAccessIterator<int*> >();
+    test<ForwardIterator<const int*>, ForwardIterator<const int*>, int*>();
 
-    test<forward_iterator<const int*>, bidirectional_iterator<const int*>, output_iterator<int*> >();
-    test<forward_iterator<const int*>, bidirectional_iterator<const int*>, forward_iterator<int*> >();
-    test<forward_iterator<const int*>, bidirectional_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<forward_iterator<const int*>, bidirectional_iterator<const int*>, random_access_iterator<int*> >();
-    test<forward_iterator<const int*>, bidirectional_iterator<const int*>, int*>();
+    test<ForwardIterator<const int*>, BidirectionalIterator<const int*>, OutputIterator<int*> >();
+    test<ForwardIterator<const int*>, BidirectionalIterator<const int*>, ForwardIterator<int*> >();
+    test<ForwardIterator<const int*>, BidirectionalIterator<const int*>, BidirectionalIterator<int*> >();
+    test<ForwardIterator<const int*>, BidirectionalIterator<const int*>, RandomAccessIterator<int*> >();
+    test<ForwardIterator<const int*>, BidirectionalIterator<const int*>, int*>();
 
-    test<forward_iterator<const int*>, random_access_iterator<const int*>, output_iterator<int*> >();
-    test<forward_iterator<const int*>, random_access_iterator<const int*>, forward_iterator<int*> >();
-    test<forward_iterator<const int*>, random_access_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<forward_iterator<const int*>, random_access_iterator<const int*>, random_access_iterator<int*> >();
-    test<forward_iterator<const int*>, random_access_iterator<const int*>, int*>();
+    test<ForwardIterator<const int*>, RandomAccessIterator<const int*>, OutputIterator<int*> >();
+    test<ForwardIterator<const int*>, RandomAccessIterator<const int*>, ForwardIterator<int*> >();
+    test<ForwardIterator<const int*>, RandomAccessIterator<const int*>, BidirectionalIterator<int*> >();
+    test<ForwardIterator<const int*>, RandomAccessIterator<const int*>, RandomAccessIterator<int*> >();
+    test<ForwardIterator<const int*>, RandomAccessIterator<const int*>, int*>();
 
-    test<forward_iterator<const int*>, const int*, output_iterator<int*> >();
-    test<forward_iterator<const int*>, const int*, forward_iterator<int*> >();
-    test<forward_iterator<const int*>, const int*, bidirectional_iterator<int*> >();
-    test<forward_iterator<const int*>, const int*, random_access_iterator<int*> >();
-    test<forward_iterator<const int*>, const int*, int*>();
+    test<ForwardIterator<const int*>, const int*, OutputIterator<int*> >();
+    test<ForwardIterator<const int*>, const int*, ForwardIterator<int*> >();
+    test<ForwardIterator<const int*>, const int*, BidirectionalIterator<int*> >();
+    test<ForwardIterator<const int*>, const int*, RandomAccessIterator<int*> >();
+    test<ForwardIterator<const int*>, const int*, int*>();
 #endif
 #ifdef SET_DIFFERENCE_3
-    test<bidirectional_iterator<const int*>, input_iterator<const int*>, output_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, input_iterator<const int*>, forward_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, input_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, input_iterator<const int*>, random_access_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, input_iterator<const int*>, int*>();
+    test<BidirectionalIterator<const int*>, InputIterator<const int*>, OutputIterator<int*> >();
+    test<BidirectionalIterator<const int*>, InputIterator<const int*>, ForwardIterator<int*> >();
+    test<BidirectionalIterator<const int*>, InputIterator<const int*>, BidirectionalIterator<int*> >();
+    test<BidirectionalIterator<const int*>, InputIterator<const int*>, RandomAccessIterator<int*> >();
+    test<BidirectionalIterator<const int*>, InputIterator<const int*>, int*>();
 
-    test<bidirectional_iterator<const int*>, forward_iterator<const int*>, output_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, forward_iterator<const int*>, forward_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, forward_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, forward_iterator<const int*>, random_access_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, forward_iterator<const int*>, int*>();
+    test<BidirectionalIterator<const int*>, ForwardIterator<const int*>, OutputIterator<int*> >();
+    test<BidirectionalIterator<const int*>, ForwardIterator<const int*>, ForwardIterator<int*> >();
+    test<BidirectionalIterator<const int*>, ForwardIterator<const int*>, BidirectionalIterator<int*> >();
+    test<BidirectionalIterator<const int*>, ForwardIterator<const int*>, RandomAccessIterator<int*> >();
+    test<BidirectionalIterator<const int*>, ForwardIterator<const int*>, int*>();
 
-    test<bidirectional_iterator<const int*>, bidirectional_iterator<const int*>, output_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, bidirectional_iterator<const int*>, forward_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, bidirectional_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, bidirectional_iterator<const int*>, random_access_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, bidirectional_iterator<const int*>, int*>();
+    test<BidirectionalIterator<const int*>, BidirectionalIterator<const int*>, OutputIterator<int*> >();
+    test<BidirectionalIterator<const int*>, BidirectionalIterator<const int*>, ForwardIterator<int*> >();
+    test<BidirectionalIterator<const int*>, BidirectionalIterator<const int*>, BidirectionalIterator<int*> >();
+    test<BidirectionalIterator<const int*>, BidirectionalIterator<const int*>, RandomAccessIterator<int*> >();
+    test<BidirectionalIterator<const int*>, BidirectionalIterator<const int*>, int*>();
 
-    test<bidirectional_iterator<const int*>, random_access_iterator<const int*>, output_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, random_access_iterator<const int*>, forward_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, random_access_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, random_access_iterator<const int*>, random_access_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, random_access_iterator<const int*>, int*>();
+    test<BidirectionalIterator<const int*>, RandomAccessIterator<const int*>, OutputIterator<int*> >();
+    test<BidirectionalIterator<const int*>, RandomAccessIterator<const int*>, ForwardIterator<int*> >();
+    test<BidirectionalIterator<const int*>, RandomAccessIterator<const int*>, BidirectionalIterator<int*> >();
+    test<BidirectionalIterator<const int*>, RandomAccessIterator<const int*>, RandomAccessIterator<int*> >();
+    test<BidirectionalIterator<const int*>, RandomAccessIterator<const int*>, int*>();
 
-    test<bidirectional_iterator<const int*>, const int*, output_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, const int*, forward_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, const int*, bidirectional_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, const int*, random_access_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, const int*, int*>();
+    test<BidirectionalIterator<const int*>, const int*, OutputIterator<int*> >();
+    test<BidirectionalIterator<const int*>, const int*, ForwardIterator<int*> >();
+    test<BidirectionalIterator<const int*>, const int*, BidirectionalIterator<int*> >();
+    test<BidirectionalIterator<const int*>, const int*, RandomAccessIterator<int*> >();
+    test<BidirectionalIterator<const int*>, const int*, int*>();
 #endif
 #ifdef SET_DIFFERENCE_4
-    test<random_access_iterator<const int*>, input_iterator<const int*>, output_iterator<int*> >();
-    test<random_access_iterator<const int*>, input_iterator<const int*>, forward_iterator<int*> >();
-    test<random_access_iterator<const int*>, input_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<random_access_iterator<const int*>, input_iterator<const int*>, random_access_iterator<int*> >();
-    test<random_access_iterator<const int*>, input_iterator<const int*>, int*>();
+    test<RandomAccessIterator<const int*>, InputIterator<const int*>, OutputIterator<int*> >();
+    test<RandomAccessIterator<const int*>, InputIterator<const int*>, ForwardIterator<int*> >();
+    test<RandomAccessIterator<const int*>, InputIterator<const int*>, BidirectionalIterator<int*> >();
+    test<RandomAccessIterator<const int*>, InputIterator<const int*>, RandomAccessIterator<int*> >();
+    test<RandomAccessIterator<const int*>, InputIterator<const int*>, int*>();
 
-    test<random_access_iterator<const int*>, forward_iterator<const int*>, output_iterator<int*> >();
-    test<random_access_iterator<const int*>, forward_iterator<const int*>, forward_iterator<int*> >();
-    test<random_access_iterator<const int*>, forward_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<random_access_iterator<const int*>, forward_iterator<const int*>, random_access_iterator<int*> >();
-    test<random_access_iterator<const int*>, forward_iterator<const int*>, int*>();
+    test<RandomAccessIterator<const int*>, ForwardIterator<const int*>, OutputIterator<int*> >();
+    test<RandomAccessIterator<const int*>, ForwardIterator<const int*>, ForwardIterator<int*> >();
+    test<RandomAccessIterator<const int*>, ForwardIterator<const int*>, BidirectionalIterator<int*> >();
+    test<RandomAccessIterator<const int*>, ForwardIterator<const int*>, RandomAccessIterator<int*> >();
+    test<RandomAccessIterator<const int*>, ForwardIterator<const int*>, int*>();
 
-    test<random_access_iterator<const int*>, bidirectional_iterator<const int*>, output_iterator<int*> >();
-    test<random_access_iterator<const int*>, bidirectional_iterator<const int*>, forward_iterator<int*> >();
-    test<random_access_iterator<const int*>, bidirectional_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<random_access_iterator<const int*>, bidirectional_iterator<const int*>, random_access_iterator<int*> >();
-    test<random_access_iterator<const int*>, bidirectional_iterator<const int*>, int*>();
+    test<RandomAccessIterator<const int*>, BidirectionalIterator<const int*>, OutputIterator<int*> >();
+    test<RandomAccessIterator<const int*>, BidirectionalIterator<const int*>, ForwardIterator<int*> >();
+    test<RandomAccessIterator<const int*>, BidirectionalIterator<const int*>, BidirectionalIterator<int*> >();
+    test<RandomAccessIterator<const int*>, BidirectionalIterator<const int*>, RandomAccessIterator<int*> >();
+    test<RandomAccessIterator<const int*>, BidirectionalIterator<const int*>, int*>();
 
-    test<random_access_iterator<const int*>, random_access_iterator<const int*>, output_iterator<int*> >();
-    test<random_access_iterator<const int*>, random_access_iterator<const int*>, forward_iterator<int*> >();
-    test<random_access_iterator<const int*>, random_access_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<random_access_iterator<const int*>, random_access_iterator<const int*>, random_access_iterator<int*> >();
-    test<random_access_iterator<const int*>, random_access_iterator<const int*>, int*>();
+    test<RandomAccessIterator<const int*>, RandomAccessIterator<const int*>, OutputIterator<int*> >();
+    test<RandomAccessIterator<const int*>, RandomAccessIterator<const int*>, ForwardIterator<int*> >();
+    test<RandomAccessIterator<const int*>, RandomAccessIterator<const int*>, BidirectionalIterator<int*> >();
+    test<RandomAccessIterator<const int*>, RandomAccessIterator<const int*>, RandomAccessIterator<int*> >();
+    test<RandomAccessIterator<const int*>, RandomAccessIterator<const int*>, int*>();
 
-    test<random_access_iterator<const int*>, const int*, output_iterator<int*> >();
-    test<random_access_iterator<const int*>, const int*, forward_iterator<int*> >();
-    test<random_access_iterator<const int*>, const int*, bidirectional_iterator<int*> >();
-    test<random_access_iterator<const int*>, const int*, random_access_iterator<int*> >();
-    test<random_access_iterator<const int*>, const int*, int*>();
+    test<RandomAccessIterator<const int*>, const int*, OutputIterator<int*> >();
+    test<RandomAccessIterator<const int*>, const int*, ForwardIterator<int*> >();
+    test<RandomAccessIterator<const int*>, const int*, BidirectionalIterator<int*> >();
+    test<RandomAccessIterator<const int*>, const int*, RandomAccessIterator<int*> >();
+    test<RandomAccessIterator<const int*>, const int*, int*>();
 #endif
 #ifdef SET_DIFFERENCE_5
-    test<const int*, input_iterator<const int*>, output_iterator<int*> >();
-    test<const int*, input_iterator<const int*>, bidirectional_iterator<int*> >();    test<const int*, input_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<const int*, input_iterator<const int*>, random_access_iterator<int*> >();
-    test<const int*, input_iterator<const int*>, int*>();
+    test<const int*, InputIterator<const int*>, OutputIterator<int*> >();
+    test<const int*, InputIterator<const int*>, BidirectionalIterator<int*> >();    test<const int*, InputIterator<const int*>, BidirectionalIterator<int*> >();
+    test<const int*, InputIterator<const int*>, RandomAccessIterator<int*> >();
+    test<const int*, InputIterator<const int*>, int*>();
 
-    test<const int*, forward_iterator<const int*>, output_iterator<int*> >();
-    test<const int*, forward_iterator<const int*>, forward_iterator<int*> >();
-    test<const int*, forward_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<const int*, forward_iterator<const int*>, random_access_iterator<int*> >();
-    test<const int*, forward_iterator<const int*>, int*>();
+    test<const int*, ForwardIterator<const int*>, OutputIterator<int*> >();
+    test<const int*, ForwardIterator<const int*>, ForwardIterator<int*> >();
+    test<const int*, ForwardIterator<const int*>, BidirectionalIterator<int*> >();
+    test<const int*, ForwardIterator<const int*>, RandomAccessIterator<int*> >();
+    test<const int*, ForwardIterator<const int*>, int*>();
 
-    test<const int*, bidirectional_iterator<const int*>, output_iterator<int*> >();
-    test<const int*, bidirectional_iterator<const int*>, forward_iterator<int*> >();
-    test<const int*, bidirectional_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<const int*, bidirectional_iterator<const int*>, random_access_iterator<int*> >();
-    test<const int*, bidirectional_iterator<const int*>, int*>();
+    test<const int*, BidirectionalIterator<const int*>, OutputIterator<int*> >();
+    test<const int*, BidirectionalIterator<const int*>, ForwardIterator<int*> >();
+    test<const int*, BidirectionalIterator<const int*>, BidirectionalIterator<int*> >();
+    test<const int*, BidirectionalIterator<const int*>, RandomAccessIterator<int*> >();
+    test<const int*, BidirectionalIterator<const int*>, int*>();
 
-    test<const int*, random_access_iterator<const int*>, output_iterator<int*> >();
-    test<const int*, random_access_iterator<const int*>, forward_iterator<int*> >();
-    test<const int*, random_access_iterator<const int*>, bidirectional_iterator<int*> >();
-    test<const int*, random_access_iterator<const int*>, random_access_iterator<int*> >();
-    test<const int*, random_access_iterator<const int*>, int*>();
+    test<const int*, RandomAccessIterator<const int*>, OutputIterator<int*> >();
+    test<const int*, RandomAccessIterator<const int*>, ForwardIterator<int*> >();
+    test<const int*, RandomAccessIterator<const int*>, BidirectionalIterator<int*> >();
+    test<const int*, RandomAccessIterator<const int*>, RandomAccessIterator<int*> >();
+    test<const int*, RandomAccessIterator<const int*>, int*>();
 
-    test<const int*, const int*, output_iterator<int*> >();
-    test<const int*, const int*, forward_iterator<int*> >();
-    test<const int*, const int*, bidirectional_iterator<int*> >();
-    test<const int*, const int*, random_access_iterator<int*> >();
+    test<const int*, const int*, OutputIterator<int*> >();
+    test<const int*, const int*, ForwardIterator<int*> >();
+    test<const int*, const int*, BidirectionalIterator<int*> >();
+    test<const int*, const int*, RandomAccessIterator<int*> >();
     test<const int*, const int*, int*>();
 #endif
 #ifdef SET_DIFFERENCE_6
@@ -315,7 +315,7 @@ int main()
         int ir[] = {1, 2, 3, 3, 3, 4, 4};
         static const int sr = sizeof(ir)/sizeof(ir[0]);
 
-        auto res = ranges::set_difference(std::move(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
+        auto res = ranges::set_difference(std::move(ia), ranges::views::all(ib), ic, std::less<int>(), &S::i, &T::j);
 #ifndef RANGES_WORKAROUND_MSVC_573728
         CHECK(::is_dangling(res.in1));
 #endif // RANGES_WORKAROUND_MSVC_573728
@@ -325,14 +325,14 @@ int main()
         ranges::fill(ic, U{0});
         int irr[] = {6};
         static const int srr = sizeof(irr)/sizeof(irr[0]);
-        auto res2 = ranges::set_difference(ranges::view::all(ib), ranges::view::all(ia), ic, std::less<int>(), &T::j, &S::i);
+        auto res2 = ranges::set_difference(ranges::views::all(ib), ranges::views::all(ia), ic, std::less<int>(), &T::j, &S::i);
         CHECK((res2.in1 - ib) == sb);
         CHECK((res2.out - ic) == srr);
         CHECK(ranges::lexicographical_compare(ic, res2.out, ir, irr+srr, std::less<int>(), &U::k) == false);
 
         ranges::fill(ic, U{0});
         std::vector<S> vec{S{1}, S{2}, S{2}, S{3}, S{3}, S{3}, S{4}, S{4}, S{4}, S{4}};
-        auto res3 = ranges::set_difference(std::move(vec), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
+        auto res3 = ranges::set_difference(std::move(vec), ranges::views::all(ib), ic, std::less<int>(), &S::i, &T::j);
         CHECK(::is_dangling(res3.in1));
         CHECK((res3.out - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, res3.out, ir, ir+sr, std::less<int>(), &U::k) == false);

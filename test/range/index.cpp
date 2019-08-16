@@ -38,8 +38,8 @@ int main()
         }
         catch(std::out_of_range const& e)
         {
-            CHECK(ranges::equal(ranges::view::c_str(e.what()),
-                                ranges::view::c_str("ranges::at")));
+            CHECK(ranges::equal(ranges::views::c_str(e.what()),
+                                ranges::views::c_str("ranges::at")));
         }
 
         try
@@ -49,8 +49,8 @@ int main()
         }
         catch(std::out_of_range const& e)
         {
-            CHECK(ranges::equal(ranges::view::c_str(e.what()),
-                                ranges::view::c_str("ranges::at")));
+            CHECK(ranges::equal(ranges::views::c_str(e.what()),
+                                ranges::views::c_str("ranges::at")));
         }
 
         auto viv = ranges::make_subrange(vi.begin(), vi.end());
@@ -66,8 +66,8 @@ int main()
         }
         catch(std::out_of_range const& e)
         {
-            CHECK(ranges::equal(ranges::view::c_str(e.what()),
-                                ranges::view::c_str("view_interface::at")));
+            CHECK(ranges::equal(ranges::views::c_str(e.what()),
+                                ranges::views::c_str("view_interface::at")));
         }
 
         try
@@ -77,8 +77,8 @@ int main()
         }
         catch(std::out_of_range const& e)
         {
-            CHECK(ranges::equal(ranges::view::c_str(e.what()),
-                                ranges::view::c_str("view_interface::at")));
+            CHECK(ranges::equal(ranges::views::c_str(e.what()),
+                                ranges::views::c_str("view_interface::at")));
         }
 
         const auto cviv = viv;
@@ -94,8 +94,8 @@ int main()
         }
         catch(std::out_of_range const& e)
         {
-            CHECK(ranges::equal(ranges::view::c_str(e.what()),
-                                ranges::view::c_str("view_interface::at")));
+            CHECK(ranges::equal(ranges::views::c_str(e.what()),
+                                ranges::views::c_str("view_interface::at")));
         }
 
         try
@@ -105,13 +105,13 @@ int main()
         }
         catch(std::out_of_range const& e)
         {
-            CHECK(ranges::equal(ranges::view::c_str(e.what()),
-                                ranges::view::c_str("view_interface::at")));
+            CHECK(ranges::equal(ranges::views::c_str(e.what()),
+                                ranges::views::c_str("view_interface::at")));
         }
     }
 
     {
-        auto rng = ranges::view::ints(std::int64_t{0}, std::numeric_limits<std::int64_t>::max());
+        auto rng = ranges::views::ints(std::int64_t{0}, std::numeric_limits<std::int64_t>::max());
         CHECK(ranges::index(rng, std::numeric_limits<std::int64_t>::max() - 1) ==
               std::numeric_limits<std::int64_t>::max() - 1);
         CHECK(ranges::at(rng, std::numeric_limits<std::int64_t>::max() - 1) ==

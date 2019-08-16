@@ -23,7 +23,7 @@ int main()
     std::vector<std::shared_ptr<int>> vp;
     for(int i = 0; i < 10; ++i)
         vp.push_back(std::make_shared<int>(i));
-    auto && rng = vp | view::indirect;
+    auto && rng = vp | views::indirect;
     CHECK(&*begin(rng) == vp[0].get());
     ::check_equal(rng, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
 
@@ -33,7 +33,7 @@ int main()
             some_ints + 0, some_ints + 1, some_ints + 2, some_ints + 3
         };
         auto make_range = [&]{
-            return debug_input_view<int const *>{some_int_pointers} | view::indirect;
+            return debug_input_view<int const *>{some_int_pointers} | views::indirect;
         };
         auto rng = make_range();
         ::check_equal(rng, some_ints);
@@ -52,7 +52,7 @@ int main()
 
             auto list()
             {
-                return m_list | ranges::view::indirect;
+                return m_list | ranges::views::indirect;
             }
         };
 
@@ -66,8 +66,8 @@ int main()
     {
         // regression test for #952
         int some_ints[42]{};
-        auto a = some_ints | view::transform([](int& i) { return &i; })
-                           | view::indirect;
+        auto a = some_ints | views::transform([](int& i) { return &i; })
+                           | views::indirect;
         (void) a.begin();
     }
 

@@ -20,7 +20,7 @@
 
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range/concepts.hpp>
-#include <range/v3/utility/semiregular.hpp>
+#include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
 
@@ -41,7 +41,7 @@ namespace ranges
     {
     private:
         friend range_access;
-        semiregular_t<Val> value_;
+        semiregular_box_t<Val> value_;
         std::ptrdiff_t n_;
 
         struct cursor
@@ -103,14 +103,14 @@ namespace ranges
         }
     };
 
-    namespace view
+    namespace views
     {
         struct repeat_n_fn
         {
             template<typename Val>
             auto operator()(Val value, std::ptrdiff_t n) const
                 -> CPP_ret(repeat_n_view<Val>)( //
-                    requires CopyConstructible<Val>)
+                    requires copy_constructible<Val>)
             {
                 return repeat_n_view<Val>{std::move(value), n};
             }
@@ -119,7 +119,7 @@ namespace ranges
         /// \relates repeat_n_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(repeat_n_fn, repeat_n)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

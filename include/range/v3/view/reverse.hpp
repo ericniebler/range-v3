@@ -42,10 +42,10 @@ namespace ranges
     struct RANGES_EMPTY_BASES reverse_view
       : view_interface<reverse_view<Rng>, range_cardinality<Rng>::value>
       , private detail::non_propagating_cache<iterator_t<Rng>, reverse_view<Rng>,
-                                              !CommonRange<Rng>>
+                                              !common_range<Rng>>
     {
     private:
-        CPP_assert(BidirectionalRange<Rng>);
+        CPP_assert(bidirectional_range<Rng>);
         Rng rng_;
         constexpr reverse_iterator<iterator_t<Rng>> begin_(std::true_type)
         {
@@ -72,12 +72,12 @@ namespace ranges
         }
         constexpr reverse_iterator<iterator_t<Rng>> begin()
         {
-            return begin_(meta::bool_<(bool)CommonRange<Rng>>{});
+            return begin_(meta::bool_<(bool)common_range<Rng>>{});
         }
         template<bool Const = true>
         constexpr auto begin() const
             -> CPP_ret(reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>>)( //
-                requires Const && CommonRange<meta::const_if_c<Const, Rng>>)
+                requires Const && common_range<meta::const_if_c<Const, Rng>>)
         {
             return make_reverse_iterator(ranges::end(rng_));
         }
@@ -88,17 +88,17 @@ namespace ranges
         template<bool Const = true>
         constexpr auto end() const
             -> CPP_ret(reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>>)( //
-                requires Const && CommonRange<meta::const_if_c<Const, Rng>>)
+                requires Const && common_range<meta::const_if_c<Const, Rng>>)
         {
             return make_reverse_iterator(ranges::begin(rng_));
         }
         CPP_member
-        constexpr auto CPP_fun(size)()(requires SizedRange<Rng>)
+        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
         {
             return ranges::size(rng_);
         }
         CPP_member
-        constexpr auto CPP_fun(size)()(const requires SizedRange<Rng const>)
+        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
         {
             return ranges::size(rng_);
         }
@@ -107,9 +107,9 @@ namespace ranges
     template<typename Rng>
     struct reverse_view<reverse_view<Rng>> : Rng
     {
-        CPP_assert(BidirectionalRange<Rng>);
+        CPP_assert(bidirectional_range<Rng>);
         CPP_assert(
-            Same<detail::decay_t<decltype(std::declval<reverse_view<Rng>>().base())>,
+            same_as<detail::decay_t<decltype(std::declval<reverse_view<Rng>>().base())>,
                  Rng>);
 
         reverse_view() = default;
@@ -125,20 +125,20 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    reverse_view(Rng &&)->reverse_view<view::all_t<Rng>>;
+    reverse_view(Rng &&)->reverse_view<views::all_t<Rng>>;
 
     template<typename Rng>
     reverse_view(reverse_view<Rng>)->reverse_view<reverse_view<Rng>>;
 #endif
 
-    namespace view
+    namespace views
     {
         struct reverse_fn
         {
             template<typename Rng>
             constexpr auto operator()(Rng && rng) const
                 -> CPP_ret(reverse_view<all_t<Rng>>)( //
-                    requires ViewableRange<Rng> && BidirectionalRange<Rng>)
+                    requires viewable_range<Rng> && bidirectional_range<Rng>)
             {
                 return reverse_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -147,16 +147,16 @@ namespace ranges
         /// \relates reverse_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<reverse_fn>, reverse)
-    } // namespace view
+    } // namespace views
 
     namespace cpp20
     {
-        namespace view
+        namespace views
         {
-            using ranges::view::reverse;
+            using ranges::views::reverse;
         }
         CPP_template(typename Rng)(                        //
-            requires View<Rng> && BidirectionalRange<Rng>) //
+            requires view_<Rng> && bidirectional_range<Rng>) //
             using reverse_view = ranges::reverse_view<Rng>;
     } // namespace cpp20
     /// @}

@@ -29,7 +29,7 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/utility/optional.hpp>
-#include <range/v3/utility/semiregular.hpp>
+#include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/interface.hpp>
 #include <range/v3/view/view.hpp>
@@ -43,13 +43,13 @@ namespace ranges
     {
     private:
         Rng rng_;
-        semiregular_t<Pred> pred_;
+        semiregular_box_t<Pred> pred_;
         detail::non_propagating_cache<iterator_t<Rng>> begin_;
         detail::non_propagating_cache<iterator_t<Rng>> end_;
 
     public:
-        CPP_assert(BidirectionalView<Rng> &&
-                       IndirectUnaryPredicate<Pred, iterator_t<Rng>> && CommonRange<Rng>);
+        CPP_assert(bidirectional_range<Rng> && view_<Rng> &&
+                       indirect_unary_predicate<Pred, iterator_t<Rng>> && common_range<Rng>);
 
         trim_view() = default;
         constexpr trim_view(Rng rng, Pred pred)
@@ -88,13 +88,13 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng, typename Pred>
-    trim_view(Rng &&, Pred)->trim_view<view::all_t<Rng>, Pred>;
+    trim_view(Rng &&, Pred)->trim_view<views::all_t<Rng>, Pred>;
 #endif
 
     template<typename Rng, typename Pred>
     RANGES_INLINE_VAR constexpr bool disable_sized_range<trim_view<Rng, Pred>> = true;
 
-    namespace view
+    namespace views
     {
         struct trim_fn
         {
@@ -115,17 +115,17 @@ namespace ranges
             template<typename Rng, typename Pred>
             constexpr auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(trim_view<all_t<Rng>, Pred>)( //
-                    requires ViewableRange<Rng> && BidirectionalRange<Rng> &&
-                        IndirectUnaryPredicate<Pred, iterator_t<Rng>> && CommonRange<Rng>)
+                    requires viewable_range<Rng> && bidirectional_range<Rng> &&
+                        indirect_unary_predicate<Pred, iterator_t<Rng>> && common_range<Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
             template<typename Rng, typename Pred, typename Proj>
             constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
                 -> CPP_ret(trim_view<all_t<Rng>, composed<Pred, Proj>>)( //
-                    requires ViewableRange<Rng> && BidirectionalRange<Rng> &&
-                        IndirectUnaryPredicate<composed<Pred, Proj>, iterator_t<Rng>> &&
-                            CommonRange<Rng>)
+                    requires viewable_range<Rng> && bidirectional_range<Rng> &&
+                        indirect_unary_predicate<composed<Pred, Proj>, iterator_t<Rng>> &&
+                            common_range<Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)),
                         compose(std::move(pred), std::move(proj))};
@@ -135,7 +135,7 @@ namespace ranges
         /// \relates trim_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<trim_fn>, trim)
-    } // namespace view
+    } // namespace views
     /// @}
 } // namespace ranges
 

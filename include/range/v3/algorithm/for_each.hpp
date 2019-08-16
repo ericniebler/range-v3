@@ -40,8 +40,8 @@ namespace ranges
         template<typename I, typename S, typename F, typename P = identity>
         auto operator()(I begin, S end, F fun, P proj = P{}) const
             -> CPP_ret(for_each_result<I, F>)( //
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    IndirectUnaryInvocable<F, projected<I, P>>)
+                requires input_iterator<I> && sentinel_for<S, I> &&
+                    indirectly_unary_invocable<F, projected<I, P>>)
         {
             for(; begin != end; ++begin)
             {
@@ -53,8 +53,8 @@ namespace ranges
         template<typename Rng, typename F, typename P = identity>
         auto operator()(Rng && rng, F fun, P proj = P{}) const
             -> CPP_ret(for_each_result<safe_iterator_t<Rng>, F>)( //
-                requires InputRange<Rng> &&
-                    IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
+                requires input_range<Rng> &&
+                    indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
         {
             return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in,
                     detail::move(fun)};

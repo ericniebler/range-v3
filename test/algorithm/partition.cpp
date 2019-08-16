@@ -184,21 +184,21 @@ namespace
 
 int main()
 {
-    test_iter<forward_iterator<int*> >();
-    test_iter<bidirectional_iterator<int*> >();
-    test_iter<random_access_iterator<int*> >();
+    test_iter<ForwardIterator<int*> >();
+    test_iter<BidirectionalIterator<int*> >();
+    test_iter<RandomAccessIterator<int*> >();
     test_iter<int*>();
-    test_iter<forward_iterator<int*>, sentinel<int*> >();
-    test_iter<bidirectional_iterator<int*>, sentinel<int*> >();
-    test_iter<random_access_iterator<int*>, sentinel<int*> >();
+    test_iter<ForwardIterator<int*>, Sentinel<int*> >();
+    test_iter<BidirectionalIterator<int*>, Sentinel<int*> >();
+    test_iter<RandomAccessIterator<int*>, Sentinel<int*> >();
 
-    test_range<forward_iterator<int*> >();
-    test_range<bidirectional_iterator<int*> >();
-    test_range<random_access_iterator<int*> >();
+    test_range<ForwardIterator<int*> >();
+    test_range<BidirectionalIterator<int*> >();
+    test_range<RandomAccessIterator<int*> >();
     test_range<int*>();
-    test_range<forward_iterator<int*>, sentinel<int*> >();
-    test_range<bidirectional_iterator<int*>, sentinel<int*> >();
-    test_range<random_access_iterator<int*>, sentinel<int*> >();
+    test_range<ForwardIterator<int*>, Sentinel<int*> >();
+    test_range<BidirectionalIterator<int*>, Sentinel<int*> >();
+    test_range<RandomAccessIterator<int*>, Sentinel<int*> >();
 
     // Test projections
     S ia[] = {S{1}, S{2}, S{3}, S{4}, S{5}, S{6}, S{7}, S{8} ,S{9}};

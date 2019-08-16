@@ -46,7 +46,7 @@ int main()
         insert(v, v.end(), {1,2,3});
         ::check_equal(v, {42,1,2,3});
 
-        insert(v, v.begin(), view::ints | view::take(3));
+        insert(v, v.begin(), views::ints | views::take(3));
         ::check_equal(v, {0,1,2,42,1,2,3});
 
         int rg[] = {9,8,7};
@@ -59,24 +59,24 @@ int main()
     {
         std::set<int> s;
         insert(s,
-            view::ints|view::take(10)|view::for_each([](int i){return yield_if(i%2==0,i);}));
+            views::ints|views::take(10)|views::for_each([](int i){return yield_if(i%2==0,i);}));
         ::check_equal(s, {0,2,4,6,8});
         auto j = insert(s, 10);
         CHECK(j.first == prev(s.end()));
         CHECK(j.second == true);
         ::check_equal(s, {0,2,4,6,8,10});
 
-        insert(view::ref(s), 12);
+        insert(views::ref(s), 12);
         ::check_equal(s, {0,2,4,6,8,10,12});
     }
 
     {
         const std::size_t N = 1024;
         vector_like<int> vl;
-        insert(vl, vl.end(), view::iota(0, int{N}));
+        insert(vl, vl.end(), views::iota(0, int{N}));
         CHECK(vl.reservation_count == 1u);
         CHECK(vl.last_reservation == N);
-        auto r = view::iota(0, int{2 * N});
+        auto r = views::iota(0, int{2 * N});
         insert(vl, vl.begin() + 42, begin(r), end(r));
         CHECK(vl.reservation_count == 2u);
         CHECK(vl.last_reservation == 3 * N);

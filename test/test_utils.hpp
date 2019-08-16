@@ -33,21 +33,21 @@ RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_THIS_CAPTURE
 CPP_def
 (
     template(typename T, typename U)
-    concept BothRanges,
-        ranges::InputRange<T> && ranges::InputRange<U>
+    concept both_ranges,
+        ranges::input_range<T> && ranges::input_range<U>
 );
 
 struct check_equal_fn
 {
     CPP_template(typename T, typename U)(
-        requires (!BothRanges<T, U>))
+        requires (!both_ranges<T, U>))
     void operator()(T &&actual, U &&expected) const
     {
         CHECK((T &&) actual == (U &&) expected);
     }
 
     CPP_template(typename Rng1, typename Rng2)(
-        requires BothRanges<Rng1, Rng2>)
+        requires both_ranges<Rng1, Rng2>)
     void operator()(Rng1 &&actual, Rng2 &&expected) const
     {
         auto begin0 = ranges::begin(actual);
@@ -61,7 +61,7 @@ struct check_equal_fn
     }
 
     CPP_template(typename Rng, typename Val)(
-        requires ranges::InputRange<Rng>)
+        requires ranges::input_range<Rng>)
     void operator()(Rng &&actual, std::initializer_list<Val> && expected) const
     {
         (*this)(actual, expected);
@@ -77,18 +77,6 @@ template<typename Expected, typename Actual>
 void has_type(Actual &&)
 {
     static_assert(std::is_same<Expected, Actual>::value, "Not the same");
-}
-
-template<typename Concept, typename ...Types>
-void models(Types &&...)
-{
-    static_assert((bool) concepts::is_satisfied_by<Concept, Types...>(), "");
-}
-
-template<typename Concept, typename ...Types>
-void models_not(Types &&...)
-{
-    static_assert(!(bool) concepts::is_satisfied_by<Concept, Types...>(), "");
 }
 
 template<typename T>

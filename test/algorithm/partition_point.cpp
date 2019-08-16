@@ -158,49 +158,49 @@ test_counted()
 {
     {
         const int ia[] = {2, 4, 6, 8, 10};
-        CHECK(ranges::partition_point(::as_lvalue(ranges::view::counted(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(::as_lvalue(ranges::views::counted(Iter(ranges::begin(ia)),
                                                                         ranges::size(ia))),
                                       is_odd()) == ranges::counted_iterator<Iter>(Iter(ia), ranges::size(ia)));
     }
     {
         const int ia[] = {1, 2, 4, 6, 8};
-        CHECK(ranges::partition_point(::as_lvalue(ranges::view::counted(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(::as_lvalue(ranges::views::counted(Iter(ranges::begin(ia)),
                                                                         ranges::size(ia))),
                                       is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 1), ranges::size(ia) - 1));
     }
     {
         const int ia[] = {1, 3, 2, 4, 6};
-        CHECK(ranges::partition_point(::as_lvalue(ranges::view::counted(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(::as_lvalue(ranges::views::counted(Iter(ranges::begin(ia)),
                                                                         ranges::size(ia))),
                                       is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 2), ranges::size(ia) - 2));
     }
     {
         const int ia[] = {1, 3, 5, 2, 4, 6};
-        CHECK(ranges::partition_point(::as_lvalue(ranges::view::counted(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(::as_lvalue(ranges::views::counted(Iter(ranges::begin(ia)),
                                                                         ranges::size(ia))),
                                       is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 3), ranges::size(ia) - 3));
     }
     {
         const int ia[] = {1, 3, 5, 7, 2, 4};
-        CHECK(ranges::partition_point(::as_lvalue(ranges::view::counted(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(::as_lvalue(ranges::views::counted(Iter(ranges::begin(ia)),
                                                                         ranges::size(ia))),
                                       is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 4), ranges::size(ia) - 4));
     }
     {
         const int ia[] = {1, 3, 5, 7, 9, 2};
-        CHECK(ranges::partition_point(::as_lvalue(ranges::view::counted(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(::as_lvalue(ranges::views::counted(Iter(ranges::begin(ia)),
                                                                         ranges::size(ia))),
                                       is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 5), ranges::size(ia) - 5));
     }
     {
         const int ia[] = {1, 3, 5, 7, 9, 11};
-        CHECK(ranges::partition_point(::as_lvalue(ranges::view::counted(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(::as_lvalue(ranges::views::counted(Iter(ranges::begin(ia)),
                                                                         ranges::size(ia))),
                                       is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 6), ranges::size(ia) - 6));
     }
     {
         const int ia[] = {1, 3, 5, 2, 4, 6, 7};
-        CHECK(ranges::partition_point(::as_lvalue(ranges::view::counted(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(::as_lvalue(ranges::views::counted(Iter(ranges::begin(ia)),
                                                                         0)),
                                       is_odd()) == ranges::counted_iterator<Iter>(Iter(ia), 0));
     }
@@ -213,13 +213,13 @@ struct S
 
 int main()
 {
-    test_iter<forward_iterator<const int*> >();
-    test_iter<forward_iterator<const int*>, sentinel<const int*>>();
+    test_iter<ForwardIterator<const int*> >();
+    test_iter<ForwardIterator<const int*>, Sentinel<const int*>>();
 
-    test_range<forward_iterator<const int*> >();
-    test_range<forward_iterator<const int*>, sentinel<const int*>>();
+    test_range<ForwardIterator<const int*> >();
+    test_range<ForwardIterator<const int*>, Sentinel<const int*>>();
 
-    test_counted<forward_iterator<const int*> >();
+    test_counted<ForwardIterator<const int*> >();
 
     // Test projections
     const S ia[] = {S{1}, S{3}, S{5}, S{2}, S{4}, S{6}};

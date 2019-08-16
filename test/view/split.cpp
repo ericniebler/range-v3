@@ -66,7 +66,7 @@ void moar_tests()
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
         split_view sv{greeting, pattern};
 #else
-        split_view<view::all_t<std::string&>, view::all_t<std::string&>> sv{greeting, pattern};
+        split_view<views::all_t<std::string&>, views::all_t<std::string&>> sv{greeting, pattern};
 #endif
         auto i = sv.begin();
         check_equal(*i, {'n','o','w'});
@@ -83,15 +83,15 @@ void moar_tests()
         CHECK(i == sv.end());
 
         using R = decltype(sv);
-        CPP_assert(ForwardRange<R>);
-        CPP_assert(ForwardRange<R const>);
+        CPP_assert(forward_range<R>);
+        CPP_assert(forward_range<R const>);
     }
 
     {
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
         split_view sv{greeting, ' '};
 #else
-        split_view<view::all_t<std::string&>, single_view<char>> sv{greeting, ' '};
+        split_view<views::all_t<std::string&>, single_view<char>> sv{greeting, ' '};
 #endif
         auto i = sv.begin();
         CHECK(i != sv.end());
@@ -109,8 +109,8 @@ void moar_tests()
         CHECK(i == sv.end());
 
         using R = decltype(sv);
-        CPP_assert(ForwardRange<R>);
-        CPP_assert(ForwardRange<R const>);
+        CPP_assert(forward_range<R>);
+        CPP_assert(forward_range<R const>);
     }
 
     {
@@ -125,7 +125,7 @@ void moar_tests()
             std::istreambuf_iterator<char>{});
 #endif
 
-        auto sv = view::split(rng, ' ');
+        auto sv = views::split(rng, ' ');
         auto i = sv.begin();
         CHECK(i != sv.end());
         check_equal(*i, {'n','o','w'});
@@ -142,14 +142,14 @@ void moar_tests()
         CHECK(i == sv.end());
 
         using R = decltype(sv);
-        CPP_assert(InputRange<R>);
-        CPP_assert(!ForwardRange<R>);
-        CPP_assert(!InputRange<R const>);
+        CPP_assert(input_range<R>);
+        CPP_assert(!forward_range<R>);
+        CPP_assert(!input_range<R const>);
     }
 
     {
         std::string list{"eggs,milk,,butter"};
-        auto sv = view::split(list, ',');
+        auto sv = views::split(list, ',');
         auto i = sv.begin();
         CHECK(i != sv.end());
         check_equal(*i, {'e','g','g','s'});
@@ -158,7 +158,7 @@ void moar_tests()
         check_equal(*i, {'m','i','l','k'});
         ++i;
         CHECK(i != sv.end());
-        check_equal(*i, view::empty<char>);
+        check_equal(*i, views::empty<char>);
         ++i;
         CHECK(i != sv.end());
         check_equal(*i, {'b','u','t','t','e','r'});
@@ -172,7 +172,7 @@ void moar_tests()
         auto rng = make_subrange(
             std::istreambuf_iterator<char>{sin},
             std::istreambuf_iterator<char>{});
-        auto sv = rng | view::split(',');
+        auto sv = rng | views::split(',');
         auto i = sv.begin();
         CHECK(i != sv.end());
         check_equal(*i, {'e','g','g','s'});
@@ -181,7 +181,7 @@ void moar_tests()
         check_equal(*i, {'m','i','l','k'});
         ++i;
         CHECK(i != sv.end());
-        check_equal(*i, view::empty<char>);
+        check_equal(*i, views::empty<char>);
         ++i;
         CHECK(i != sv.end());
         check_equal(*i, {'b','u','t','t','e','r'});
@@ -191,7 +191,7 @@ void moar_tests()
 
     {
         std::string hello("hello");
-        auto sv = view::split(hello, view::empty<char>);
+        auto sv = views::split(hello, views::empty<char>);
         auto i = sv.begin();
         CHECK(i != sv.end());
         check_equal(*i, single_view<char>{'h'});
@@ -217,7 +217,7 @@ void moar_tests()
         auto rng = make_subrange(
             std::istreambuf_iterator<char>{sin},
             std::istreambuf_iterator<char>{});
-        auto sv = view::split(rng, view::empty<char>);
+        auto sv = views::split(rng, views::empty<char>);
         auto i = sv.begin();
         CHECK(i != sv.end());
         check_equal(*i, single_view<char>{'h'});
@@ -239,7 +239,7 @@ void moar_tests()
 
     {
         std::string hello{"hello"};
-        auto sv = view::split(hello, view::empty<char>);
+        auto sv = views::split(hello, views::empty<char>);
         auto i = sv.begin();
         CHECK(i != sv.end());
         ++i;
@@ -262,7 +262,7 @@ void moar_tests()
         auto rng = make_subrange(
             std::istreambuf_iterator<char>{sin},
             std::istreambuf_iterator<char>{});
-        auto sv = view::split(rng, view::empty<char>);
+        auto sv = views::split(rng, views::empty<char>);
         auto i = sv.begin();
         CHECK(i != sv.end());
         ++i;
@@ -286,7 +286,7 @@ int main()
 
     {
         std::string str("Now is the time for all good men to come to the aid of their country.");
-        auto rng = view::split(str, ' ');
+        auto rng = views::split(str, ' ');
         CHECK(distance(rng) == 16);
         if(distance(rng) == 16)
         {
@@ -311,7 +311,7 @@ int main()
 
     {
         std::string str("Now is the time for all good men to come to the aid of their country.");
-        auto rng = view::split(str, c_str(" "));
+        auto rng = views::split(str, c_str(" "));
         CHECK(distance(rng) == 16);
         if(distance(rng) == 16)
         {
@@ -336,7 +336,7 @@ int main()
 
     {
         std::string str("Now is the time for all ggood men to come to the aid of their country.");
-        auto rng = view::split_when(str, starts_with_g{});
+        auto rng = views::split_when(str, starts_with_g{});
         CHECK(distance(rng) == 3);
         if(distance(rng) == 3)
         {
@@ -348,8 +348,8 @@ int main()
 
     {
         std::string str("Now is the time for all ggood men to come to the aid of their country.");
-        forward_iterator<std::string::iterator> i {str.begin()};
-        auto rng = view::counted(i, str.size()) | view::split_when(starts_with_g{});
+        ForwardIterator<std::string::iterator> i {str.begin()};
+        auto rng = views::counted(i, str.size()) | views::split_when(starts_with_g{});
         CHECK(distance(rng) == 3);
         if(distance(rng) == 3)
         {
@@ -361,7 +361,7 @@ int main()
 
     {
         std::string str("meow");
-        auto rng = view::split(str, view::empty<char>);
+        auto rng = views::split(str, views::empty<char>);
         CHECK(distance(rng) == 4);
         if(distance(rng) == 4)
         {
@@ -374,8 +374,8 @@ int main()
 
     {
         int a[] = {0, 2, 3, 1, 4, 5, 1, 6, 7};
-        auto rng = a | view::remove_if([](int i) { return i % 2 == 0; });
-        auto srng = view::split(rng, 1);
+        auto rng = a | views::remove_if([](int i) { return i % 2 == 0; });
+        auto srng = views::split(rng, 1);
         CHECK(distance(srng) == 3);
         check_equal(*begin(srng), {3});
         check_equal(*next(begin(srng), 1), {5});
@@ -384,7 +384,7 @@ int main()
 
     {
         std::string str("now  is \t the\ttime");
-        auto rng = view::split_when(str, (int(*)(int))&std::isspace);
+        auto rng = views::split_when(str, (int(*)(int))&std::isspace);
         CHECK(distance(rng) == 4);
         if(distance(rng) == 4)
         {
@@ -397,13 +397,13 @@ int main()
 
     {   // Regression test for https://stackoverflow.com/questions/49015671
         auto const str = "quick brown fox";
-        auto rng = view::c_str(str) | view::split(' ');
-        CPP_assert(ForwardRange<decltype(rng)>);
+        auto rng = views::c_str(str) | views::split(' ');
+        CPP_assert(forward_range<decltype(rng)>);
     }
 
     {   // Regression test for #986
         std::string s;
-        s | ranges::view::split_when([](char) { return true; });
+        s | ranges::views::split_when([](char) { return true; });
     }
 
     moar_tests();
@@ -413,8 +413,8 @@ int main()
             return std::make_pair(next(first) != last, first);
         };
 
-        auto escapes = view::split_when(view::c_str(R"(\t)"), is_escape);
-        CPP_assert(ForwardRange<decltype(escapes)>);
+        auto escapes = views::split_when(views::c_str(R"(\t)"), is_escape);
+        CPP_assert(forward_range<decltype(escapes)>);
 
         auto const first = begin(escapes);
         CHECK(first != end(escapes));

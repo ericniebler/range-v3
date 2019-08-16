@@ -172,33 +172,33 @@ std::ostream &operator<<(std::ostream& sout, std::pair<int, c_str> p)
 
 int main()
 {
-    test_iter<bidirectional_iterator<int*> >();
-    test_iter<random_access_iterator<int*> >();
+    test_iter<BidirectionalIterator<int*> >();
+    test_iter<RandomAccessIterator<int*> >();
     test_iter<int*>();
 
-    test_iter<bidirectional_iterator<int*>, sentinel<int*> >();
-    test_iter<random_access_iterator<int*>, sentinel<int*> >();
+    test_iter<BidirectionalIterator<int*>, Sentinel<int*> >();
+    test_iter<RandomAccessIterator<int*>, Sentinel<int*> >();
 
-    test_iter_comp<bidirectional_iterator<int*> >();
-    test_iter_comp<random_access_iterator<int*> >();
+    test_iter_comp<BidirectionalIterator<int*> >();
+    test_iter_comp<RandomAccessIterator<int*> >();
     test_iter_comp<int*>();
 
-    test_iter_comp<bidirectional_iterator<int*>, sentinel<int*> >();
-    test_iter_comp<random_access_iterator<int*>, sentinel<int*> >();
+    test_iter_comp<BidirectionalIterator<int*>, Sentinel<int*> >();
+    test_iter_comp<RandomAccessIterator<int*>, Sentinel<int*> >();
 
-    test_range<bidirectional_iterator<int*> >();
-    test_range<random_access_iterator<int*> >();
+    test_range<BidirectionalIterator<int*> >();
+    test_range<RandomAccessIterator<int*> >();
     test_range<int*>();
 
-    test_range<bidirectional_iterator<int*>, sentinel<int*> >();
-    test_range<random_access_iterator<int*>, sentinel<int*> >();
+    test_range<BidirectionalIterator<int*>, Sentinel<int*> >();
+    test_range<RandomAccessIterator<int*>, Sentinel<int*> >();
 
-    test_range_comp<bidirectional_iterator<int*> >();
-    test_range_comp<random_access_iterator<int*> >();
+    test_range_comp<BidirectionalIterator<int*> >();
+    test_range_comp<RandomAccessIterator<int*> >();
     test_range_comp<int*>();
 
-    test_range_comp<bidirectional_iterator<int*>, sentinel<int*> >();
-    test_range_comp<random_access_iterator<int*>, sentinel<int*> >();
+    test_range_comp<BidirectionalIterator<int*>, Sentinel<int*> >();
+    test_range_comp<RandomAccessIterator<int*>, Sentinel<int*> >();
 
     // Test projection
 

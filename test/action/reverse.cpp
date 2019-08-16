@@ -23,8 +23,8 @@ int main()
 {
     // [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...]
     auto v =
-        view::for_each(view::ints(1,6), [](int i){
-            return yield_from(view::repeat_n(i,i));
+        views::for_each(views::ints(1,6), [](int i){
+            return yield_from(views::repeat_n(i,i));
         }) | to<std::vector>();
     check_equal(v, {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
 

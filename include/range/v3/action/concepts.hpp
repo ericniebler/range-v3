@@ -50,24 +50,24 @@ namespace ranges
     /// \addtogroup group-range
     /// @{
 
-    // std::array is a SemiContainer, native arrays are not.
+    // std::array is a semi_container, native arrays are not.
     // clang-format off
     CPP_def
     (
         template(typename T)
-        concept SemiContainer,
-            ForwardRange<T> && DefaultConstructible<uncvref_t<T>> &&
-            Movable<uncvref_t<T>> &&
-            !View<T>
+        concept semi_container,
+            forward_range<T> && default_constructible<uncvref_t<T>> &&
+            movable<uncvref_t<T>> &&
+            !view_<T>
     );
 
-    // std::vector is a Container, std::array is not
+    // std::vector is a container, std::array is not
     CPP_def
     (
         template(typename T)
-        concept Container,
-            SemiContainer<T> &&
-            Constructible<
+        concept container,
+            semi_container<T> &&
+            constructible_from<
                 uncvref_t<T>,
                 detail::movable_input_iterator<range_value_t<T>>,
                 detail::movable_input_iterator<range_value_t<T>>>
@@ -76,34 +76,34 @@ namespace ranges
     CPP_def
     (
         template(typename C)
-        concept Reservable,
+        concept reservable,
             requires (C &c, C const &cc, range_size_t<C> s)
             (
                 c.reserve(s),
                 cc.capacity(),
                 cc.max_size(),
-                concepts::requires_<Same<decltype(cc.capacity()), range_size_t<C>>>,
-                concepts::requires_<Same<decltype(cc.max_size()), range_size_t<C>>>
+                concepts::requires_<same_as<decltype(cc.capacity()), range_size_t<C>>>,
+                concepts::requires_<same_as<decltype(cc.max_size()), range_size_t<C>>>
             ) &&
-            Container<C> && SizedRange<C>
+            container<C> && sized_range<C>
     );
 
     CPP_def
     (
         template(typename C, typename I)
-        concept ReserveAndAssignable,
+        concept reservable_with_assign,
             requires (C &c, I i)
             (
                 c.assign(i, i)
             ) &&
-            Reservable<C> && InputIterator<I>
+            reservable<C> && input_iterator<I>
     );
 
     CPP_def
     (
         template(typename C)
-        concept RandomAccessReservable,
-            Reservable<C> && RandomAccessRange<C>
+        concept random_access_reservable,
+            reservable<C> && random_access_range<C>
     );
     // clang-format on
 
@@ -112,7 +112,7 @@ namespace ranges
     {
         template<typename T>
         auto is_lvalue_container_like(T &) noexcept -> CPP_ret(std::true_type)( //
-            requires Container<T>)
+            requires container<T>)
         {
             return {};
         }
@@ -120,7 +120,7 @@ namespace ranges
         template<typename T>
         auto is_lvalue_container_like(reference_wrapper<T>) noexcept
             -> CPP_ret(meta::not_<std::is_rvalue_reference<T>>)( //
-                requires Container<T>)
+                requires container<T>)
         {
             return {};
         }
@@ -128,17 +128,22 @@ namespace ranges
         template<typename T>
         auto is_lvalue_container_like(std::reference_wrapper<T>) noexcept
             -> CPP_ret(std::true_type)( //
-                requires Container<T>)
+                requires container<T>)
         {
             return {};
         }
 
         template<typename T>
         auto is_lvalue_container_like(ref_view<T>) noexcept -> CPP_ret(std::true_type)( //
-            requires Container<T>)
+            requires container<T>)
         {
             return {};
         }
+
+        template<typename T>
+        using is_lvalue_container_like_t =
+            decltype(detail::is_lvalue_container_like(std::declval<T>()));
+
     } // namespace detail
     /// \endcond
 
@@ -146,13 +151,10 @@ namespace ranges
     CPP_def
     (
         template(typename T)
-        concept LvalueContainerLike,
-            requires (T &&t)
-            (
-                concepts::implicitly_convertible_to<std::true_type>(
-                    detail::is_lvalue_container_like((T &&) t))
-            ) &&
-            ForwardRange<T>
+        concept lvalue_container_like,
+            implicitly_convertible_to<detail::is_lvalue_container_like_t<T>,
+                                      std::true_type> &&
+            forward_range<T>
     );
     // clang-format on
     /// @}

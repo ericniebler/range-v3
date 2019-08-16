@@ -223,9 +223,9 @@ namespace
             return a.i_ >= b.i_;
         }
     };
-    CPP_assert(ranges::DefaultConstructible<Int>);
-    CPP_assert(ranges::Movable<Int>);
-    CPP_assert(ranges::StrictTotallyOrdered<Int>);
+    CPP_assert(ranges::default_constructible<Int>);
+    CPP_assert(ranges::movable<Int>);
+    CPP_assert(ranges::totally_ordered<Int>);
 }
 
 int main()
@@ -288,7 +288,7 @@ int main()
             v[i].i = (int)v.size() - i - 1;
             v[i].j = i;
         }
-        CHECK(ranges::sort(ranges::view::all(v), std::less<int>{}, &S::i) == v.end());
+        CHECK(ranges::sort(ranges::views::all(v), std::less<int>{}, &S::i) == v.end());
         for(int i = 0; (std::size_t)i < v.size(); ++i)
         {
             CHECK(v[i].i == i);
@@ -314,12 +314,12 @@ int main()
     {
         using namespace ranges;
         auto v0 =
-            view::for_each(view::ints(1,6) | view::reverse, [](int i){
-                return ranges::yield_from(view::repeat_n(i,i));
+            views::for_each(views::ints(1,6) | views::reverse, [](int i){
+                return ranges::yield_from(views::repeat_n(i,i));
             }) | to<std::vector>();
         auto v1 = ranges::to<std::vector<Int>>(
             {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
-        auto rng = view::zip(v0, v1);
+        auto rng = views::zip(v0, v1);
         ::check_equal(v0,{5,5,5,5,5,4,4,4,4,3,3,3,2,2,1});
         ::check_equal(v1,{1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
         using Rng = decltype(rng);

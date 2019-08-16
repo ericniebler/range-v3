@@ -35,7 +35,7 @@ struct Int
 };
 
 CPP_template(typename I)(
-    requires ranges::Integral<I>)
+    requires ranges::integral<I>)
 void test_iota_distance()
 {
     using namespace ranges;
@@ -58,80 +58,86 @@ int main()
     using namespace ranges;
 
     {
-        CPP_assert(RandomAccessRange<decltype(view::iota((unsigned short)0))>);
-        CPP_assert(RandomAccessRange<decltype(view::iota(0))>);
-        static_assert(is_infinite<decltype(view::iota(0))>::value, "");
-        static_assert(is_infinite<decltype(view::drop_exactly(view::iota(0),0))>::value, "");
-        static_assert(!SizedRange<decltype(view::iota(0))>, "");
+        CPP_assert(random_access_range<decltype(views::iota((unsigned short)0))>);
+        CPP_assert(random_access_range<decltype(views::iota(0))>);
+        static_assert(is_infinite<decltype(views::iota(0))>::value, "");
+        static_assert(is_infinite<decltype(views::drop_exactly(views::iota(0),0))>::value, "");
+        static_assert(!sized_range<decltype(views::iota(0))>, "");
     }
 
     char const *sz = "hello world";
-    ::check_equal(view::iota(forward_iterator<char const*>(sz)) | view::take(10) | view::indirect,
+    ::check_equal(views::iota(ForwardIterator<char const*>(sz)) | views::take(10) | views::indirect,
         {'h','e','l','l','o',' ','w','o','r','l'});
 
-    ::check_equal(view::ints | view::take(10), {0,1,2,3,4,5,6,7,8,9});
-    ::check_equal(view::ints(0,unreachable) | view::take(10), {0,1,2,3,4,5,6,7,8,9});
-    ::check_equal(view::ints(0,9), {0,1,2,3,4,5,6,7,8});
-    ::check_equal(view::closed_indices(0,9), {0,1,2,3,4,5,6,7,8,9});
-    ::check_equal(view::ints(1,10), {1,2,3,4,5,6,7,8,9});
-    ::check_equal(view::closed_indices(1,10), {1,2,3,4,5,6,7,8,9,10});
+    ::check_equal(views::ints | views::take(10), {0,1,2,3,4,5,6,7,8,9});
+    ::check_equal(views::ints(0,unreachable) | views::take(10), {0,1,2,3,4,5,6,7,8,9});
+    ::check_equal(views::ints(0,9), {0,1,2,3,4,5,6,7,8});
+    ::check_equal(views::closed_indices(0,9), {0,1,2,3,4,5,6,7,8,9});
+    ::check_equal(views::ints(1,10), {1,2,3,4,5,6,7,8,9});
+    ::check_equal(views::closed_indices(1,10), {1,2,3,4,5,6,7,8,9,10});
 
-    auto chars = view::ints(std::numeric_limits<signed char>::min(),
+    auto chars = views::ints(std::numeric_limits<signed char>::min(),
                             std::numeric_limits<signed char>::max());
-    CPP_assert(RandomAccessRange<decltype(chars)>);
-    CPP_assert(Same<int, range_difference_t<decltype(chars)>>);
-    ::models<RandomAccessViewConcept>(aux::copy(chars));
-    models<CommonViewConcept>(aux::copy(chars));
+    CPP_assert(random_access_range<decltype(chars)>);
+    CPP_assert(same_as<int, range_difference_t<decltype(chars)>>);
+    CPP_assert(view_<decltype(chars)>);
+    CPP_assert(random_access_range<decltype(chars)>);
+    CPP_assert(common_range<decltype(chars)>);
     CHECK(distance(chars.begin(), chars.end()) == (long) CHAR_MAX - (long) CHAR_MIN);
     CHECK(chars.size() == (unsigned)((long) CHAR_MAX - (long) CHAR_MIN));
 
-    auto ushorts = view::ints(std::numeric_limits<unsigned short>::min(),
+    auto ushorts = views::ints(std::numeric_limits<unsigned short>::min(),
                               std::numeric_limits<unsigned short>::max());
-    models<CommonViewConcept>(aux::copy(ushorts));
-    CPP_assert(Same<int, range_difference_t<decltype(ushorts)>>);
-    CPP_assert(Same<unsigned int, range_size_t<decltype(ushorts)>>);
+    CPP_assert(view_<decltype(ushorts)>);
+    CPP_assert(common_range<decltype(ushorts)>);
+    CPP_assert(same_as<int, range_difference_t<decltype(ushorts)>>);
+    CPP_assert(same_as<unsigned int, range_size_t<decltype(ushorts)>>);
     CHECK(distance(ushorts.begin(), ushorts.end()) == (int) USHRT_MAX);
     CHECK(ushorts.size() == (unsigned) USHRT_MAX);
 
-    auto uints = view::closed_indices(
+    auto uints = views::closed_indices(
         std::numeric_limits<std::uint_least32_t>::min(),
         std::numeric_limits<std::uint_least32_t>::max() - 1);
-    models<CommonViewConcept>(aux::copy(uints));
-    CPP_assert(Same<std::int_fast64_t, range_difference_t<decltype(uints)>>);
-    CPP_assert(Same<std::uint_fast64_t, range_size_t<decltype(uints)>>);
+    CPP_assert(view_<decltype(uints)>);
+    CPP_assert(common_range<decltype(uints)>);
+    CPP_assert(same_as<std::int_fast64_t, range_difference_t<decltype(uints)>>);
+    CPP_assert(same_as<std::uint_fast64_t, range_size_t<decltype(uints)>>);
     CHECK(uints.size() == std::numeric_limits<std::uint32_t>::max());
 
-    auto ints = view::closed_indices(
+    auto ints = views::closed_indices(
         std::numeric_limits<std::int_least32_t>::min(),
         std::numeric_limits<std::int_least32_t>::max() - 1);
-    CPP_assert(Same<std::int_fast64_t, range_difference_t<decltype(ints)>>);
-    CPP_assert(Same<std::uint_fast64_t, range_size_t<decltype(ints)>>);
+    CPP_assert(same_as<std::int_fast64_t, range_difference_t<decltype(ints)>>);
+    CPP_assert(same_as<std::uint_fast64_t, range_size_t<decltype(ints)>>);
     CHECK(ints.size() == std::numeric_limits<std::uint32_t>::max());
 
-    auto sints = view::ints(std::numeric_limits<int>::min(),
+    auto sints = views::ints(std::numeric_limits<int>::min(),
                             std::numeric_limits<int>::max());
-    CPP_assert(RandomAccessRange<decltype(sints)>);
-    CPP_assert(Same<std::int_fast64_t, range_difference_t<decltype(sints)>>);
-    ::models<RandomAccessViewConcept>(aux::copy(sints));
-    models<CommonViewConcept>(aux::copy(sints));
+    CPP_assert(random_access_range<decltype(sints)>);
+    CPP_assert(same_as<std::int_fast64_t, range_difference_t<decltype(sints)>>);
+    CPP_assert(view_<decltype(sints)>);
+    CPP_assert(random_access_range<decltype(sints)>);
+    CPP_assert(common_range<decltype(sints)>);
     CHECK(distance(sints.begin(), sints.end()) == (std::int_fast64_t) INT_MAX - (std::int_fast64_t) INT_MIN);
     CHECK(sints.size() == (std::uint_fast64_t)((std::int_fast64_t) INT_MAX - (std::int_fast64_t) INT_MIN));
 
     {
-        auto ints = view::closed_iota(Int{0}, Int{10});
+        auto ints = views::closed_iota(Int{0}, Int{10});
         ::check_equal(ints, {Int{0},Int{1},Int{2},Int{3},Int{4},Int{5},Int{6},Int{7},Int{8},Int{9},Int{10}});
-        models<CommonViewConcept>(aux::copy(ints));
-        models_not<SizedViewConcept>(aux::copy(ints));
-        models<ForwardViewConcept>(aux::copy(ints));
-        models_not<BidirectionalViewConcept>(aux::copy(ints));
+        CPP_assert(view_<decltype(ints)>);
+        CPP_assert(common_range<decltype(ints)>);
+        CPP_assert(!sized_range<decltype(ints)>);
+        CPP_assert(forward_range<decltype(ints)>);
+        CPP_assert(!bidirectional_range<decltype(ints)>);
     }
 
     {
-        auto ints = view::closed_iota(0, 10);
+        auto ints = views::closed_iota(0, 10);
         ::check_equal(ints, {0,1,2,3,4,5,6,7,8,9,10});
-        models<CommonViewConcept>(aux::copy(ints));
-        models<SizedViewConcept>(aux::copy(ints));
-        models<RandomAccessViewConcept>(aux::copy(ints));
+        CPP_assert(view_<decltype(ints)>);
+        CPP_assert(common_range<decltype(ints)>);
+        CPP_assert(sized_range<decltype(ints)>);
+        CPP_assert(random_access_range<decltype(ints)>);
         CHECK(size(ints) == 11u);
         auto it = ints.begin(), e = ints.end(), be = e;
         --be;
@@ -187,8 +193,8 @@ int main()
 
     {
         // https://github.com/ericniebler/range-v3/issues/506
-        auto cstr = view::c_str((const char*)"hello world");
-        auto cstr2 = view::iota(cstr.begin(), cstr.end()) | view::indirect;
+        auto cstr = views::c_str((const char*)"hello world");
+        auto cstr2 = views::iota(cstr.begin(), cstr.end()) | views::indirect;
         ::check_equal(cstr2, std::string("hello world"));
         auto i = cstr2.begin();
         i += 4;
@@ -196,14 +202,14 @@ int main()
         CHECK((i - cstr2.begin()) == 4);
     }
 
-    {  // test view::indices/closed_indices
-        ::check_equal(view::indices | view::take(10), std::initializer_list<std::size_t>{0,1,2,3,4,5,6,7,8,9});
+    {  // test views::indices/closed_indices
+        ::check_equal(views::indices | views::take(10), std::initializer_list<std::size_t>{0,1,2,3,4,5,6,7,8,9});
 
-        ::check_equal(view::indices(0, 10), {0,1,2,3,4,5,6,7,8,9});
-        ::check_equal(view::closed_indices(0, 10), {0,1,2,3,4,5,6,7,8,9,10});
+        ::check_equal(views::indices(0, 10), {0,1,2,3,4,5,6,7,8,9});
+        ::check_equal(views::closed_indices(0, 10), {0,1,2,3,4,5,6,7,8,9,10});
 
-        ::check_equal(view::indices(10), {0,1,2,3,4,5,6,7,8,9});
-        ::check_equal(view::closed_indices(10), {0,1,2,3,4,5,6,7,8,9,10});
+        ::check_equal(views::indices(10), {0,1,2,3,4,5,6,7,8,9});
+        ::check_equal(views::closed_indices(10), {0,1,2,3,4,5,6,7,8,9,10});
     }
 
     return ::test_result();

@@ -73,9 +73,10 @@ int main()
 {
     using namespace ranges;
     auto r = MyRange{};
-    ::models<CommonViewConcept>(aux::copy(r));
-    ::models<SizedViewConcept>(aux::copy(r));
-    ::models<RandomAccessViewConcept>(aux::copy(r));
+    CPP_assert(view_<decltype(r)>);
+    CPP_assert(common_range<decltype(r)>);
+    CPP_assert(sized_range<decltype(r)>);
+    CPP_assert(random_access_range<decltype(r)>);
     ::check_equal(r, {1, 2, 3, 4, 5, 6, 7});
 
     CHECK(7u == r.size());

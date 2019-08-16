@@ -41,29 +41,27 @@ using maybe_sized_generator = meta::if_c<Condition,
     meta::quote<ranges::experimental::sized_generator>,
     meta::quote<ranges::experimental::generator>>;
 
-CPP_def
-(
-    template(typename Rng)
-    concept CoroConcept,
-        ranges::InputRange<Rng> &&
-        (std::is_reference<ranges::range_reference_t<Rng>>::value ||
-            ranges::CopyConstructible<ranges::range_reference_t<Rng>>)
-);
+template<typename T>
+constexpr bool is_copy_constructible_or_ref() noexcept
+{
+    return std::is_reference<T>::value ||(bool) ranges::copy_constructible<T>;
+}
 
 struct coro_fn
 {
 private:
     template<typename V>
     using generator_for = meta::invoke<
-        maybe_sized_generator<(bool) ranges::SizedRange<V>>,
+        maybe_sized_generator<(bool) ranges::sized_range<V>>,
         ranges::range_reference_t<V>,
         ranges::range_value_t<V>>;
 
     CPP_template(typename V)(
-        requires CoroConcept<V> && ranges::View<V>)
+        requires ranges::input_range<V> && ranges::view_<V> &&
+            is_copy_constructible_or_ref<ranges::range_reference_t<V>>())
     static generator_for<V> impl(V v)
     {
-        if /* constexpr */ (ranges::SizedRange<V>)
+        if /* constexpr */ (ranges::sized_range<V>)
             co_await static_cast<ranges::experimental::generator_size>((std::size_t)ranges::distance(v));
         auto first = ranges::begin(v);
         auto const last = ranges::end(v);
@@ -75,10 +73,11 @@ public:
         requires (
             !meta::is<ranges::uncvref_t<Rng>, ranges::experimental::generator>::value &&
             !meta::is<ranges::uncvref_t<Rng>, ranges::experimental::sized_generator>::value &&
-            CoroConcept<Rng>))
-    generator_for<ranges::view::all_t<Rng>> operator()(Rng &&rng) const
+            ranges::input_range<Rng> &&
+            is_copy_constructible_or_ref<ranges::range_reference_t<Rng>>()))
+    generator_for<ranges::views::all_t<Rng>> operator()(Rng &&rng) const
     {
-        return impl(ranges::view::all(static_cast<Rng &&>(rng)));
+        return impl(ranges::views::all(static_cast<Rng &&>(rng)));
     }
     template<typename R, typename V>
     ranges::experimental::generator<R, V>
@@ -101,7 +100,7 @@ inline namespace function_objects
 
 auto f(int const n)
 {
-    return ::coro(ranges::view::iota(0, n));
+    return ::coro(ranges::views::iota(0, n));
 }
 
 ranges::experimental::sized_generator<int> g(int const n)
@@ -119,7 +118,7 @@ ranges::experimental::sized_generator<int &> h(int const n)
 }
 
 CPP_template(class T)(
-    requires ranges::WeaklyIncrementable<T>)
+    requires ranges::weakly_incrementable<T>)
 ranges::experimental::generator<T> iota_generator(T t)
 {
     for (;; ++t)
@@ -127,9 +126,9 @@ ranges::experimental::generator<T> iota_generator(T t)
 }
 
 CPP_template(class T, class S)(
-    requires ranges::WeaklyIncrementable<T> &&
-        ranges::detail::WeaklyEqualityComparableWith_<T, S> &&
-        (!ranges::SizedSentinel<S, T>) && !(ranges::Integral<T> && ranges::Integral<S>))
+    requires ranges::weakly_incrementable<T> &&
+        ranges::detail::weakly_equality_comparable_with_<T, S> &&
+        (!ranges::sized_sentinel_for<S, T>) && !(ranges::integral<T> && ranges::integral<S>))
 ranges::experimental::generator<T> iota_generator(T t, S const s)
 {
     for (; t != s; ++t)
@@ -137,7 +136,7 @@ ranges::experimental::generator<T> iota_generator(T t, S const s)
 }
 
 CPP_template(class T, class S)(
-    requires ranges::SizedSentinel<S, T> || (ranges::Integral<T> && ranges::Integral<S>))
+    requires ranges::sized_sentinel_for<S, T> || (ranges::integral<T> && ranges::integral<S>))
 ranges::experimental::sized_generator<T> iota_generator(T t, S const s)
 {
     co_await static_cast<ranges::experimental::generator_size>((std::size_t) (s - t));
@@ -146,8 +145,8 @@ ranges::experimental::sized_generator<T> iota_generator(T t, S const s)
 }
 
 CPP_template(class V, class F)(
-    requires ranges::InputView<V> &&
-        ranges::IndirectUnaryPredicate<F, ranges::iterator_t<V>>)
+    requires ranges::input_range<V> && ranges::view_<V> &&
+        ranges::indirect_unary_predicate<F, ranges::iterator_t<V>>)
 ranges::experimental::generator<ranges::range_reference_t<V>, ranges::range_value_t<V>>
 filter(V view, F f)
 {
@@ -159,14 +158,14 @@ filter(V view, F f)
 }
 
 CPP_template(class V, class F)(
-    requires ranges::InputView<V> &&
-        ranges::IndirectUnaryInvocable<F, ranges::iterator_t<V>>)
+    requires ranges::input_range<V> && ranges::view_<V> &&
+        ranges::indirectly_unary_invocable<F, ranges::iterator_t<V>>)
 meta::invoke<
-    maybe_sized_generator<(bool) ranges::SizedRange<V>>,
+    maybe_sized_generator<(bool) ranges::sized_range<V>>,
     ranges::indirect_result_t<F &, ranges::iterator_t<V>>>
 transform(V view, F f)
 {
-    if /* constexpr */ (ranges::SizedRange<V>)
+    if /* constexpr */ (ranges::sized_range<V>)
         co_await static_cast<ranges::experimental::generator_size>((std::size_t) ranges::distance(view));
     RANGES_FOR(auto &&i, view)
         co_yield ranges::invoke(f, i);
@@ -211,20 +210,20 @@ int main()
 #ifndef RANGES_WORKAROUND_MSVC_835948
     {
         auto rng = ::iota_generator(0, 10);
-        ::models<SizedRangeConcept>(rng);
+        CPP_assert(sized_range<decltype(rng)>);
         CHECK(size(rng) == 10u);
         ::check_equal(rng, {0,1,2,3,4,5,6,7,8,9});
     }
     {
         auto rng = ::coro(::coro(::coro(::iota_generator(0, 10))));
         ::has_type<decltype(::iota_generator(0, 10)) &>(rng);
-        ::models<SizedRangeConcept>(rng);
+        CPP_assert(sized_range<decltype(rng)>);
         CHECK(size(rng) == 10u);
         ::check_equal(rng, {0,1,2,3,4,5,6,7,8,9});
     }
     {
-        auto rng = ::coro(view::ints | view::filter(even) | view::take_exactly(10));
-        ::models<SizedRangeConcept>(rng);
+        auto rng = ::coro(views::ints | views::filter(even) | views::take_exactly(10));
+        CPP_assert(sized_range<decltype(rng)>);
         CHECK(size(rng) == 10u);
         ::check_equal(rng, {0,2,4,6,8,10,12,14,16,18});
     }
@@ -234,8 +233,8 @@ int main()
         MoveInt b[3];
         CHECK(equal(a, control, std::equal_to<int>{}, &MoveInt::i_));
         CHECK(count(b, 42, &MoveInt::i_) == 3);
-        auto rng = ::coro(view::move(a));
-        ::models<SizedRangeConcept>(rng);
+        auto rng = ::coro(views::move(a));
+        CPP_assert(sized_range<decltype(rng)>);
         CHECK(size(rng) == 3u);
         copy(rng, b);
         CHECK(equal(b, control, std::equal_to<int>{}, &MoveInt::i_));
@@ -244,7 +243,7 @@ int main()
     {
         int some_ints[] = {0,1,2};
         auto rng = ::coro(some_ints);
-        ::models<SizedRangeConcept>(rng);
+        CPP_assert(sized_range<decltype(rng)>);
         CHECK(size(rng) == 3u);
         auto i = begin(rng);
         auto e = end(rng);
@@ -262,7 +261,7 @@ int main()
     {
         std::vector<bool> vec(3, false);
         auto rng = ::coro(vec);
-        ::models<SizedRangeConcept>(rng);
+        CPP_assert(sized_range<decltype(rng)>);
         CHECK(size(rng) == 3u);
         ::check_equal(rng, {false,false,false});
     }
@@ -271,12 +270,12 @@ int main()
     ::check_equal(f(42), h(42));
 
     {
-        auto rng = h(20) | view::transform([](int &x) { return ++x; });
+        auto rng = h(20) | views::transform([](int &x) { return ++x; });
         ::check_equal(rng, {1,3,5,7,9,11,13,15,17,19});
     }
 
     {
-        auto rng = f(20) | view::filter(even);
+        auto rng = f(20) | views::filter(even);
         ::check_equal(rng, {0,2,4,6,8,10,12,14,16,18});
     }
 #endif // RANGES_WORKAROUND_MSVC_835948

@@ -128,45 +128,45 @@ namespace ranges
             // clang-format on
             template<typename I>
             static auto equal(I const & it0, I const & it1) -> CPP_ret(bool)( //
-                requires EqualityComparable<I>)
+                requires equality_comparable<I>)
         {
             return it0 == it1;
         }
         template<typename I>
         static auto read(I const & it, detail::adaptor_base_current_mem_fn = {}) noexcept(
             noexcept(iter_reference_t<I>(*it))) -> CPP_ret(iter_reference_t<I>)( //
-            requires Iterator<I>)
+            requires input_or_output_iterator<I>)
         {
             return *it;
         }
         template<typename I>
         static auto next(I & it) -> CPP_ret(void)( //
-            requires Iterator<I>)
+            requires input_or_output_iterator<I>)
         {
             ++it;
         }
         template<typename I>
         static auto prev(I & it) -> CPP_ret(void)( //
-            requires BidirectionalIterator<I>)
+            requires bidirectional_iterator<I>)
         {
             --it;
         }
         template<typename I>
         static auto advance(I & it, iter_difference_t<I> n) -> CPP_ret(void)( //
-            requires RandomAccessIterator<I>)
+            requires random_access_iterator<I>)
         {
             it += n;
         }
         template<typename I>
         static auto distance_to(I const & it0, I const & it1)
             -> CPP_ret(iter_difference_t<I>)( //
-                requires SizedSentinel<I, I>)
+                requires sized_sentinel_for<I, I>)
         {
             return it1 - it0;
         }
         template<typename I, typename S>
         static constexpr auto empty(I const & it, S const & end) -> CPP_ret(bool)( //
-            requires Sentinel<S, I>)
+            requires sentinel_for<S, I>)
         {
             return it == end;
         }
@@ -242,7 +242,7 @@ namespace ranges
         friend range_access;
         using base_t = detail::adaptor_value_type_<BaseIter, Adapt>;
         using single_pass = meta::bool_<(bool)range_access::single_pass_t<Adapt>() ||
-                                        (bool)SinglePass<BaseIter>>;
+                                        (bool)single_pass_iterator_<BaseIter>>;
 
         struct basic_adaptor_mixin : basic_mixin<adaptor_cursor>
         {
@@ -282,7 +282,7 @@ namespace ranges
             noexcept(std::declval<A const &>().read(std::declval<BaseIter const &>())))
         {
             using V = range_access::cursor_value_t<adaptor_cursor>;
-            static_assert(CommonReference<R &&, V &>,
+            static_assert(common_reference_with<R &&, V &>,
                           "In your adaptor, you've specified a value type that does not "
                           "share a common reference type with the return type of read.");
             return this->data_.second().read(this->data_.first());
@@ -382,11 +382,11 @@ namespace ranges
             using V = range_access::cursor_value_t<adaptor_cursor>;
             using R = decltype(this->data_.second().read(this->data_.first()));
             static_assert(
-                CommonReference<X &&, V const &>,
+                common_reference_with<X &&, V const &>,
                 "In your adaptor, the result of your iter_move member function does "
                 "not share a common reference with your value type.");
             static_assert(
-                CommonReference<R &&, X &&>,
+                common_reference_with<R &&, X &&>,
                 "In your adaptor, the result of your iter_move member function does "
                 "not share a common reference with the result of your read member "
                 "function.");
@@ -415,7 +415,7 @@ namespace ranges
         {
             using V = range_access::cursor_value_t<adaptor_cursor>;
             static_assert(
-                CommonReference<X &&, V const &>,
+                common_reference_with<X &&, V const &>,
                 "In your adaptor, you've specified a value type that does not share a "
                 "common "
                 "reference type with the result of moving the result of the read member "
@@ -443,8 +443,8 @@ namespace ranges
 
     template<typename D>
     using adaptor_sentinel_t = meta::if_c<
-        Same<detail::adapted_iterator_t<D>, detail::adapted_sentinel_t<D>> &&
-            Same<detail::begin_adaptor_t<D>, detail::end_adaptor_t<D>>,
+        same_as<detail::adapted_iterator_t<D>, detail::adapted_sentinel_t<D>> &&
+            same_as<detail::begin_adaptor_t<D>, detail::end_adaptor_t<D>>,
         adaptor_cursor_t<D>,
         adaptor_sentinel<detail::adapted_sentinel_t<D>, detail::end_adaptor_t<D>>>;
 
@@ -456,8 +456,8 @@ namespace ranges
         friend Derived;
         friend range_access;
         friend adaptor_base;
-        CPP_assert(ViewableRange<BaseRng>);
-        using base_range_t = view::all_t<BaseRng>;
+        CPP_assert(viewable_range<BaseRng>);
+        using base_range_t = views::all_t<BaseRng>;
         using view_facade<Derived, Cardinality>::derived;
 
         base_range_t rng_;
@@ -484,7 +484,7 @@ namespace ranges
         constexpr auto begin_cursor() noexcept(
             noexcept(view_adaptor::begin_cursor_(std::declval<D &>())))
             -> CPP_ret(decltype(view_adaptor::begin_cursor_(std::declval<D &>())))( //
-                requires Same<D, Derived>)
+                requires same_as<D, Derived>)
         {
             return view_adaptor::begin_cursor_(derived());
         }
@@ -493,7 +493,7 @@ namespace ranges
             noexcept(noexcept(view_adaptor::begin_cursor_(std::declval<D const &>())))
                 -> CPP_ret(
                     decltype(view_adaptor::begin_cursor_(std::declval<D const &>())))( //
-                    requires Same<D, Derived> && Range<base_range_t const>)
+                    requires same_as<D, Derived> && range<base_range_t const>)
         {
             return view_adaptor::begin_cursor_(derived());
         }
@@ -511,7 +511,7 @@ namespace ranges
         constexpr auto end_cursor() noexcept(
             noexcept(view_adaptor::end_cursor_(std::declval<D &>())))
             -> CPP_ret(decltype(view_adaptor::end_cursor_(std::declval<D &>())))( //
-                requires Same<D, Derived>)
+                requires same_as<D, Derived>)
         {
             return view_adaptor::end_cursor_(derived());
         }
@@ -519,7 +519,7 @@ namespace ranges
         constexpr auto end_cursor() const noexcept(
             noexcept(view_adaptor::end_cursor_(std::declval<D const &>())))
             -> CPP_ret(decltype(view_adaptor::end_cursor_(std::declval<D const &>())))( //
-                requires Same<D, Derived> && Range<base_range_t const>)
+                requires same_as<D, Derived> && range<base_range_t const>)
         {
             return view_adaptor::end_cursor_(derived());
         }
@@ -534,7 +534,7 @@ namespace ranges
         view_adaptor & operator=(view_adaptor &&) = default;
         view_adaptor & operator=(view_adaptor const &) = default;
         explicit constexpr view_adaptor(BaseRng && rng)
-          : rng_(view::all(static_cast<BaseRng &&>(rng)))
+          : rng_(views::all(static_cast<BaseRng &&>(rng)))
         {}
         constexpr base_range_t & base() noexcept
         {

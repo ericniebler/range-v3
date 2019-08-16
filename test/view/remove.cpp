@@ -24,7 +24,7 @@ using namespace ranges;
 void test_straight()
 {
     std::vector<int> vec = {1,2,3,4,5};
-    auto out = vec | view::remove(2);
+    auto out = vec | views::remove(2);
 
     ::check_equal(out, {1,3,4,5});
 }
@@ -40,7 +40,7 @@ bool operator==(Int left, Int right)
 void test_proj()
 {
     const std::vector<Int> vec{ Int{1}, Int{2}, Int{3}, Int{4}, Int{5} };
-    auto out = vec | view::remove(2, &Int::i);
+    auto out = vec | views::remove(2, &Int::i);
 
     ::check_equal(out, {Int{1}, Int{3}, Int{4}, Int{5}});
 }

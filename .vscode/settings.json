@@ -72,7 +72,9 @@
         "locale": "cpp",
         "random": "cpp",
         "__node_handle": "cpp",
-        "__tree": "cpp"
+        "__tree": "cpp",
+        "climits": "cpp",
+        "__memory": "cpp"
     },
     "C_Cpp.configurationWarnings": "Disabled"
 }

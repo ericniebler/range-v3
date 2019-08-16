@@ -35,7 +35,7 @@ ranges::subrange<char const*> c_str(char const (&sz)[N])
 ranges::delimit_view<ranges::subrange<char const *, ranges::unreachable_sentinel_t>, char>
 c_str_(char const *sz)
 {
-    return ranges::view::delimit(sz, '\0');
+    return ranges::views::delimit(sz, '\0');
 }
 
 int main()
@@ -43,66 +43,66 @@ int main()
     using namespace ranges;
 
     {
-        auto r0 = view::intersperse(c_str("abcde"), ',');
-        models<CommonRangeConcept>(r0);
+        auto r0 = views::intersperse(c_str("abcde"), ',');
+        CPP_assert(common_range<decltype(r0)>);
         CHECK((r0.end() - r0.begin()) == 9);
         CHECK(to<std::string>(r0) == "a,b,c,d,e");
         CHECK(r0.size() == 9u);
 
-        auto r1 = view::intersperse(c_str(""), ',');
-        models<CommonRangeConcept>(r1);
+        auto r1 = views::intersperse(c_str(""), ',');
+        CPP_assert(common_range<decltype(r1)>);
         CHECK(to<std::string>(r1) == "");
         CHECK(r1.size() == 0u);
 
-        auto r2 = view::intersperse(c_str("a"), ',');
-        models<CommonRangeConcept>(r2);
+        auto r2 = views::intersperse(c_str("a"), ',');
+        CPP_assert(common_range<decltype(r2)>);
         CHECK(to<std::string>(r2) == "a");
         CHECK(r2.size() == 1u);
 
-        auto r3 = view::intersperse(c_str("ab"), ',');
-        models<CommonRangeConcept>(r3);
+        auto r3 = views::intersperse(c_str("ab"), ',');
+        CPP_assert(common_range<decltype(r3)>);
         CHECK(to<std::string>(r3) == "a,b");
         CHECK(r3.size() == 3u);
     }
 
     {
-        auto r0 = view::intersperse(c_str("abcde"), ',') | view::reverse;
-        models<CommonRangeConcept>(r0);
+        auto r0 = views::intersperse(c_str("abcde"), ',') | views::reverse;
+        CPP_assert(common_range<decltype(r0)>);
         CHECK(to<std::string>(r0) == "e,d,c,b,a");
 
-        auto r1 = view::intersperse(c_str(""), ',') | view::reverse;
-        models<CommonRangeConcept>(r1);
+        auto r1 = views::intersperse(c_str(""), ',') | views::reverse;
+        CPP_assert(common_range<decltype(r1)>);
         CHECK(to<std::string>(r1) == "");
 
-        auto r2 = view::intersperse(c_str("a"), ',') | view::reverse;
-        models<CommonRangeConcept>(r2);
+        auto r2 = views::intersperse(c_str("a"), ',') | views::reverse;
+        CPP_assert(common_range<decltype(r2)>);
         CHECK(to<std::string>(r2) == "a");
 
-        auto r3 = view::intersperse(c_str("ab"), ',') | view::reverse;
-        models<CommonRangeConcept>(r3);
+        auto r3 = views::intersperse(c_str("ab"), ',') | views::reverse;
+        CPP_assert(common_range<decltype(r3)>);
         CHECK(to<std::string>(r3) == "b,a");
     }
 
     {
-        auto r0 = view::intersperse(c_str_("abcde"), ',');
-        models_not<CommonRangeConcept>(r0);
+        auto r0 = views::intersperse(c_str_("abcde"), ',');
+        CPP_assert(!common_range<decltype(r0)>);
         CHECK(to<std::string>(r0) == "a,b,c,d,e");
 
-        auto r1 = view::intersperse(c_str_(""), ',');
-        models_not<CommonRangeConcept>(r1);
+        auto r1 = views::intersperse(c_str_(""), ',');
+        CPP_assert(!common_range<decltype(r1)>);
         CHECK(to<std::string>(r1) == "");
 
-        auto r2 = view::intersperse(c_str_("a"), ',');
-        models_not<CommonRangeConcept>(r2);
+        auto r2 = views::intersperse(c_str_("a"), ',');
+        CPP_assert(!common_range<decltype(r2)>);
         CHECK(to<std::string>(r2) == "a");
 
-        auto r3 = view::intersperse(c_str_("ab"), ',');
-        models_not<CommonRangeConcept>(r3);
+        auto r3 = views::intersperse(c_str_("ab"), ',');
+        CPP_assert(!common_range<decltype(r3)>);
         CHECK(to<std::string>(r3) == "a,b");
     }
 
     {
-        auto r0 = view::intersperse(c_str("abcde"), ',');
+        auto r0 = views::intersperse(c_str("abcde"), ',');
         auto it = r0.begin();
         CHECK(*(it+0) == 'a');
         CHECK(*(it+1) == ',');
@@ -152,13 +152,13 @@ int main()
 
     {
         std::stringstream str{"1 2 3 4 5"};
-        auto r0 = istream<int>(str) | view::intersperse(42);
+        auto r0 = istream<int>(str) | views::intersperse(42);
         check_equal(r0, {1,42,2,42,3,42,4,42,5});
     }
 
     {
         int const some_ints[] = {1,2,3,4,5};
-        auto rng = debug_input_view<int const>{some_ints} | view::intersperse(42);
+        auto rng = debug_input_view<int const>{some_ints} | views::intersperse(42);
         check_equal(rng, {1,42,2,42,3,42,4,42,5});
     }
 

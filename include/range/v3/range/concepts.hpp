@@ -77,7 +77,7 @@ namespace ranges
     CPP_def
     (
         template(typename T)
-        concept RangeImpl_,
+        concept range_impl_,
             requires(T &&t) (
                 ranges::begin(static_cast<T &&>(t)), // not necessarily equality-preserving
                 ranges::end(static_cast<T &&>(t))
@@ -88,24 +88,24 @@ namespace ranges
     CPP_def
     (
         template(typename T)
-        concept Range,
-            RangeImpl_<T &>
+        concept range,
+            range_impl_<T &>
     );
 
     /// \cond
     CPP_def
     (
         template(typename T)
-        concept ForwardingRange_,
-            Range<T> && RangeImpl_<T>
+        concept forwarding_range_,
+            range<T> && range_impl_<T>
     );
     /// \endcond
 
     CPP_def
     (
         template(typename T, typename V)
-        concept OutputRange,
-            Range<T> && OutputIterator<iterator_t<T>, V>
+        concept output_range,
+            range<T> && output_iterator<iterator_t<T>, V>
     );
 
     /// \cond
@@ -113,16 +113,16 @@ namespace ranges
     CPP_def
     (
         template(typename T)
-        concept InputRange_,
-            InputIterator<iterator_t<T>>
+        concept input_range_,
+            input_iterator<iterator_t<T>>
     );
     /// \endcond
 
     CPP_def
     (
         template(typename T)
-        concept InputRange,
-            Range<T> && InputRange_<T>
+        concept input_range,
+            range<T> && input_range_<T>
     );
 
     /// \cond
@@ -130,16 +130,16 @@ namespace ranges
     CPP_def
     (
         template(typename T)
-        concept ForwardRange_,
-            ForwardIterator<iterator_t<T>>
+        concept forward_range_,
+            forward_iterator<iterator_t<T>>
     );
     /// \endcond
 
     CPP_def
     (
         template(typename T)
-        concept ForwardRange,
-            InputRange<T> && ForwardRange_<T>
+        concept forward_range,
+            input_range<T> && forward_range_<T>
     );
 
     /// \cond
@@ -147,16 +147,16 @@ namespace ranges
     CPP_def
     (
         template(typename T)
-        concept BidirectionalRange_,
-            BidirectionalIterator<iterator_t<T>>
+        concept bidirectional_range_,
+            bidirectional_iterator<iterator_t<T>>
     );
     /// \endcond
 
     CPP_def
     (
         template(typename T)
-        concept BidirectionalRange,
-            ForwardRange<T> && BidirectionalRange_<T>
+        concept bidirectional_range,
+            forward_range<T> && bidirectional_range_<T>
     );
 
     /// \cond
@@ -164,16 +164,16 @@ namespace ranges
     CPP_def
     (
         template(typename T)
-        concept RandomAccessRange_,
-            RandomAccessIterator<iterator_t<T>>
+        concept random_access_range_,
+            random_access_iterator<iterator_t<T>>
     );
     /// \endcond
 
     CPP_def
     (
         template(typename T)
-        concept RandomAccessRange,
-            BidirectionalRange<T> && RandomAccessRange_<T>
+        concept random_access_range,
+            bidirectional_range<T> && random_access_range_<T>
     );
     // clang-format on
 
@@ -194,17 +194,17 @@ namespace ranges
     CPP_def
     (
         template(typename T)
-        concept ContiguousRange_,
-            ContiguousIterator<iterator_t<T>> &&
-            Same<detail::data_t<T>, meta::_t<std::add_pointer<iter_reference_t<iterator_t<T>>>>>
+        concept contiguous_range_,
+            contiguous_iterator<iterator_t<T>> &&
+            same_as<detail::data_t<T>, meta::_t<std::add_pointer<iter_reference_t<iterator_t<T>>>>>
     );
     /// \endcond
 
     CPP_def
     (
         template(typename T)
-        concept ContiguousRange,
-            RandomAccessRange<T> && ContiguousRange_<T>
+        concept contiguous_range,
+            random_access_range<T> && contiguous_range_<T>
     );
 
     /// \cond
@@ -212,37 +212,37 @@ namespace ranges
     CPP_def
     (
         template(typename T)
-        concept CommonRange_,
-            Same<iterator_t<T>, sentinel_t<T>>
+        concept common_range_,
+            same_as<iterator_t<T>, sentinel_t<T>>
     );
     /// \endcond
 
     CPP_def
     (
         template(typename T)
-        concept CommonRange,
-            Range<T> && CommonRange_<T>
+        concept common_range,
+            range<T> && common_range_<T>
     );
 
     /// \cond
     CPP_def
     (
         template(typename T)
-        concept BoundedRange,
-            CommonRange<T>
+        concept bounded_range,
+            common_range<T>
     );
     /// \endcond
 
     CPP_def
     (
         template(typename T)
-        concept SizedRange,
+        concept sized_range,
             requires (T &t)
             (
                 ranges::size(t)
             ) &&
-            Range<T> &&
-            detail::IntegerLike_<range_size_t<T>> &&
+            range<T> &&
+            detail::integer_like_<range_size_t<T>> &&
             !disable_sized_range<uncvref_t<T>>
     );
     // clang-format on
@@ -256,7 +256,7 @@ namespace ranges
 
             template<typename T>
             static constexpr auto test(T const *) -> CPP_ret(bool)( //
-                requires Range<T> && Range<T const>)
+                requires range<T> && range<T const>)
             {
                 return RANGES_IS_SAME(iter_reference_t<iterator_t<T>>,
                                       iter_reference_t<iterator_t<T const>>);
@@ -341,163 +341,84 @@ namespace ranges
     CPP_def
     (
         template(typename T)
-        concept View,
-            Range<T> &&
-            Semiregular<T> &&
+        concept view_,
+            range<T> &&
+            semiregular<T> &&
             enable_view<T>
     );
 
-    /// \cond
-    // Non-standard, avoid using
-    CPP_def
-    (
-        template(typename T, typename V)
-        concept OutputView,
-            View<T> && OutputRange<T, V>
-    );
-
     CPP_def
     (
         template(typename T)
-        concept InputView,
-            View<T> && InputRange<T>
-    );
-
-    CPP_def
-    (
-        template(typename T)
-        concept ForwardView,
-            View<T> && ForwardRange<T>
-    );
-
-    CPP_def
-    (
-        template(typename T)
-        concept BidirectionalView,
-            View<T> && BidirectionalRange<T>
-    );
-
-    CPP_def
-    (
-        template(typename T)
-        concept RandomAccessView,
-            View<T> && RandomAccessRange<T>
-    );
-
-    CPP_def
-    (
-        template(typename T)
-        concept ContiguousView,
-            RandomAccessView<T> && ContiguousRange<T>
-    );
-    /// \endcond
-
-    // Additional concepts for checking additional orthogonal properties
-    CPP_def
-    (
-        template(typename T)
-        concept CommonView,
-            View<T> && CommonRange<T>
-    );
-
-    /// \cond
-    CPP_def
-    (
-        template(typename T)
-        concept BoundedView,
-            CommonView<T>
-    );
-    /// \endcond
-
-    CPP_def
-    (
-        template(typename T)
-        concept SizedView,
-            View<T> && SizedRange<T>
-    );
-
-    // Not to spec because of move-only Views.
-    CPP_def
-    (
-        template(typename T)
-        concept ViewableRange,
-            Range<T> &&
-            (ForwardingRange_<T> || View<detail::decay_t<T>>)
+        concept viewable_range,
+            range<T> &&
+            (forwarding_range_<T> || view_<detail::decay_t<T>>)
     );
     // clang-format on
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // range_tag
-    using range_tag = ::concepts::tag<RangeConcept>;
-    using input_range_tag = ::concepts::tag<InputRangeConcept, range_tag>;
-    using forward_range_tag = ::concepts::tag<ForwardRangeConcept, input_range_tag>;
+    using range_tag = ::concepts::tag<range_concept>;
+    using input_range_tag = ::concepts::tag<input_range_concept, range_tag>;
+    using forward_range_tag = ::concepts::tag<forward_range_concept, input_range_tag>;
     using bidirectional_range_tag =
-        ::concepts::tag<BidirectionalRangeConcept, forward_range_tag>;
+        ::concepts::tag<bidirectional_range_concept, forward_range_tag>;
     using random_access_range_tag =
-        ::concepts::tag<RandomAccessRangeConcept, bidirectional_range_tag>;
+        ::concepts::tag<random_access_range_concept, bidirectional_range_tag>;
     using contiguous_range_tag =
-        ::concepts::tag<ContiguousRangeConcept, random_access_range_tag>;
+        ::concepts::tag<contiguous_range_concept, random_access_range_tag>;
 
     template<typename T>
     using range_tag_of =
-        ::concepts::tag_of<meta::list<ContiguousRangeConcept, RandomAccessRangeConcept,
-                                      BidirectionalRangeConcept, ForwardRangeConcept,
-                                      InputRangeConcept, RangeConcept>,
+        ::concepts::tag_of<meta::list<contiguous_range_concept, random_access_range_concept,
+                                      bidirectional_range_concept, forward_range_concept,
+                                      input_range_concept, range_concept>,
                            T>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // common_range_tag_of
-    using common_range_tag = ::concepts::tag<CommonRangeConcept, range_tag>;
+    using common_range_tag = ::concepts::tag<common_range_concept, range_tag>;
 
     template<typename T>
     using common_range_tag_of =
-        ::concepts::tag_of<meta::list<CommonRangeConcept, RangeConcept>, T>;
+        ::concepts::tag_of<meta::list<common_range_concept, range_concept>, T>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // sized_range_concept
-    using sized_range_tag = ::concepts::tag<SizedRangeConcept, range_tag>;
+    using sized_range_tag = ::concepts::tag<sized_range_concept, range_tag>;
 
     template<typename T>
     using sized_range_tag_of =
-        ::concepts::tag_of<meta::list<SizedRangeConcept, RangeConcept>, T>;
+        ::concepts::tag_of<meta::list<sized_range_concept, range_concept>, T>;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    // common_view_tag_of
-    using view_tag = ::concepts::tag<ViewConcept, range_tag>;
-    using common_view_tag = ::concepts::tag<CommonViewConcept, view_tag>;
-
-    template<typename T>
-    using common_view_tag_of =
-        ::concepts::tag_of<meta::list<CommonViewConcept, ViewConcept, RangeConcept>, T>;
-
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    // sized_view_tag_of
-    using sized_view_tag = ::concepts::tag<SizedViewConcept, view_tag>;
-
-    template<typename T>
-    using sized_view_tag_of =
-        ::concepts::tag_of<meta::list<SizedViewConcept, ViewConcept, RangeConcept>, T>;
-
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    // view_concept
-    template<typename T>
-    using view_tag_of = ::concepts::tag_of<meta::list<ViewConcept, RangeConcept>, T>;
+    /// \cond
+    namespace view_detail_
+    {
+        // clang-format off
+        CPP_def
+        (
+            template(typename T)
+            concept view,
+                ranges::view_<T>
+        );
+        // clang-format on
+    }
+    /// \endcond
 
     namespace cpp20
     {
-        using ranges::Range;
-        using ranges::SizedRange;
-        // Specialize this is namespace ranges::
-        using ranges::BidirectionalRange;
-        using ranges::CommonRange;
-        using ranges::ContiguousRange;
+        using ranges::range;
+        using ranges::sized_range;
+        using ranges::bidirectional_range;
+        using ranges::common_range;
+        using ranges::contiguous_range;
         using ranges::enable_view;
-        using ranges::ForwardRange;
-        using ranges::InputRange;
-        using ranges::OutputRange;
-        using ranges::RandomAccessRange;
-        using ranges::View;
-        using ranges::ViewableRange;
+        using ranges::forward_range;
+        using ranges::input_range;
+        using ranges::output_range;
+        using ranges::random_access_range;
+        using ranges::view_detail_::view;
+        using ranges::viewable_range;
     } // namespace cpp20
     /// @}
 } // namespace ranges

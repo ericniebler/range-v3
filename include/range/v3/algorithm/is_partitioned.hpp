@@ -42,8 +42,8 @@ namespace ranges
     {
         template<typename I, typename S, typename C, typename P = identity>
         auto operator()(I begin, S end, C pred, P proj = P{}) const -> CPP_ret(bool)( //
-            requires InputIterator<I> && Sentinel<S, I> &&
-                IndirectUnaryPredicate<C, projected<I, P>>)
+            requires input_iterator<I> && sentinel_for<S, I> &&
+                indirect_unary_predicate<C, projected<I, P>>)
         {
             for(; begin != end; ++begin)
                 if(!invoke(pred, invoke(proj, *begin)))
@@ -56,8 +56,8 @@ namespace ranges
 
         template<typename Rng, typename C, typename P = identity>
         auto operator()(Rng && rng, C pred, P proj = P{}) const -> CPP_ret(bool)( //
-            requires InputRange<Rng> &&
-                IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+            requires input_range<Rng> &&
+                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

@@ -176,7 +176,7 @@ namespace ranges
         //    reseat the references, assignment happens *through* the references.
 
         // Q: But I have an iterator whose operator* returns an rvalue
-        //    std::reference_wrapper<T>. How do I make it model IndirectlySwappable?
+        //    std::reference_wrapper<T>. How do I make it model indirectly_swappable?
         // A: With an overload of iter_swap.
 
         // Intentionally create an ambiguity with std::iter_swap, which is
@@ -212,7 +212,7 @@ namespace ranges
                 (void)iter_swap((T &&) t, (U &&) u);
             }
 
-            // *Otherwise*, for Readable types with swappable reference
+            // *Otherwise*, for readable types with swappable reference
             // types, call ranges::swap(*a, *b)
             template<typename I0, typename I1>
             constexpr detail::enable_if_t<
@@ -223,8 +223,8 @@ namespace ranges
                 ranges::swap(*a, *b);
             }
 
-            // *Otherwise*, for Readable types that are mutually
-            // IndirectlyMovableStorable, implement as:
+            // *Otherwise*, for readable types that are mutually
+            // indirectly_movable_storable, implement as:
             //      iter_value_t<T0> tmp = iter_move(a);
             //      *a = iter_move(b);
             //      *b = std::move(tmp);

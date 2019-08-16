@@ -32,12 +32,12 @@ struct MoveOnlyReadable
     value_type operator*() const;
 };
 
-CPP_assert(Readable<MoveOnlyReadable>);
+CPP_assert(readable<MoveOnlyReadable>);
 
 void test_insert_iterator()
 {
-    CPP_assert(OutputIterator<insert_iterator<std::vector<int>>, int&&>);
-    CPP_assert(!EqualityComparable<insert_iterator<std::vector<int>>>);
+    CPP_assert(output_iterator<insert_iterator<std::vector<int>>, int&&>);
+    CPP_assert(!equality_comparable<insert_iterator<std::vector<int>>>);
     std::vector<int> vi{5,6,7,8};
     copy(std::initializer_list<int>{1,2,3,4}, inserter(vi, vi.begin()+2));
     ::check_equal(vi, {5,6,1,2,3,4,7,8});
@@ -64,15 +64,15 @@ void test_move_iterator()
     std::vector<MoveOnlyString> out;
     auto first = ranges::make_move_iterator(in.begin());
     using I = decltype(first);
-    CPP_assert(InputIterator<I>);
-    CPP_assert(!ForwardIterator<I>);
-    CPP_assert(Same<I, ranges::move_iterator<std::vector<MoveOnlyString>::iterator>>);
+    CPP_assert(input_iterator<I>);
+    CPP_assert(!forward_iterator<I>);
+    CPP_assert(same_as<I, ranges::move_iterator<std::vector<MoveOnlyString>::iterator>>);
     auto last = ranges::make_move_sentinel(in.end());
     using S = decltype(last);
-    CPP_assert(Sentinel<S, I>);
-    CPP_assert(SizedSentinel<I, I>);
+    CPP_assert(sentinel_for<S, I>);
+    CPP_assert(sized_sentinel_for<I, I>);
     CHECK((first - first) == 0);
-    CPP_assert(SizedSentinel<S, I>);
+    CPP_assert(sized_sentinel_for<S, I>);
     CHECK(static_cast<std::size_t>(last - first) == in.size());
     ranges::copy(first, last, ranges::back_inserter(out));
     ::check_equal(in, {"","","",""});
@@ -84,12 +84,12 @@ using RI = std::reverse_iterator<I>;
 
 void issue_420_regression()
 {
-    // Verify that SizedSentinel<std::reverse_iterator<S>, std::reverse_iterator<I>>
-    // properly requires SizedSentinel<I, S>
-    CPP_assert(SizedSentinel<RI<int*>, RI<int*>>);
-    CPP_assert(!SizedSentinel<RI<int*>, RI<float*>>);
-    using BI = bidirectional_iterator<int*>;
-    CPP_assert(!SizedSentinel<RI<BI>, RI<BI>>);
+    // Verify that sized_sentinel_for<std::reverse_iterator<S>, std::reverse_iterator<I>>
+    // properly requires sized_sentinel_for<I, S>
+    CPP_assert(sized_sentinel_for<RI<int*>, RI<int*>>);
+    CPP_assert(!sized_sentinel_for<RI<int*>, RI<float*>>);
+    using BI = BidirectionalIterator<int*>;
+    CPP_assert(!sized_sentinel_for<RI<BI>, RI<BI>>);
 }
 
 struct value_type_tester_thingy {};
@@ -109,15 +109,15 @@ template<typename T>
 struct with_element_type { using element_type = T; };
 
 // arrays of known bound
-CPP_assert(Same<int, ranges::readable_traits<int[4]>::value_type>);
-CPP_assert(Same<int, ranges::readable_traits<const int[4]>::value_type>);
-CPP_assert(Same<int*, ranges::readable_traits<int*[4]>::value_type>);
-CPP_assert(Same<with_value_type<int>, ranges::readable_traits<with_value_type<int>[4]>::value_type>);
+CPP_assert(same_as<int, ranges::readable_traits<int[4]>::value_type>);
+CPP_assert(same_as<int, ranges::readable_traits<const int[4]>::value_type>);
+CPP_assert(same_as<int*, ranges::readable_traits<int*[4]>::value_type>);
+CPP_assert(same_as<with_value_type<int>, ranges::readable_traits<with_value_type<int>[4]>::value_type>);
 
 #if !defined(__GNUC__) || defined(__clang__)
 // arrays of unknown bound
-CPP_assert(Same<int, ranges::readable_traits<int[]>::value_type>);
-CPP_assert(Same<int, ranges::readable_traits<const int[]>::value_type>);
+CPP_assert(same_as<int, ranges::readable_traits<int[]>::value_type>);
+CPP_assert(same_as<int, ranges::readable_traits<const int[]>::value_type>);
 #endif
 
 template<typename T>
@@ -126,35 +126,35 @@ template<typename T>
 using readable_traits_value_type = meta::defer<readable_traits_value_type_t, T>;
 
 // object pointer types
-CPP_assert(Same<int, ranges::readable_traits<int*>::value_type>);
-CPP_assert(Same<int, ranges::readable_traits<int*const>::value_type>);
-CPP_assert(Same<int, ranges::readable_traits<int const*>::value_type>);
-CPP_assert(Same<int, ranges::readable_traits<int const*const>::value_type>);
-CPP_assert(Same<int[4], ranges::readable_traits<int(*)[4]>::value_type>);
-CPP_assert(Same<int[4], ranges::readable_traits<const int(*)[4]>::value_type>);
+CPP_assert(same_as<int, ranges::readable_traits<int*>::value_type>);
+CPP_assert(same_as<int, ranges::readable_traits<int*const>::value_type>);
+CPP_assert(same_as<int, ranges::readable_traits<int const*>::value_type>);
+CPP_assert(same_as<int, ranges::readable_traits<int const*const>::value_type>);
+CPP_assert(same_as<int[4], ranges::readable_traits<int(*)[4]>::value_type>);
+CPP_assert(same_as<int[4], ranges::readable_traits<const int(*)[4]>::value_type>);
 struct incomplete;
-CPP_assert(Same<incomplete, ranges::readable_traits<incomplete*>::value_type>);
+CPP_assert(same_as<incomplete, ranges::readable_traits<incomplete*>::value_type>);
 static_assert(!meta::is_trait<readable_traits_value_type<void*>>::value, "");
 static_assert(!meta::is_trait<readable_traits_value_type<void const*>>::value, "");
 
 // class types with member value_type
-CPP_assert(Same<int, ranges::readable_traits<with_value_type<int>>::value_type>);
-CPP_assert(Same<int, ranges::readable_traits<with_value_type<int> const>::value_type>);
-CPP_assert(Same<int, ranges::readable_traits<value_type_tester_thingy>::value_type>);
-CPP_assert(Same<int, ranges::readable_traits<value_type_tester_thingy const>::value_type>);
-CPP_assert(Same<int[4], ranges::readable_traits<with_value_type<int[4]>>::value_type>);
-CPP_assert(Same<int[4], ranges::readable_traits<with_value_type<int[4]> const>::value_type>);
+CPP_assert(same_as<int, ranges::readable_traits<with_value_type<int>>::value_type>);
+CPP_assert(same_as<int, ranges::readable_traits<with_value_type<int> const>::value_type>);
+CPP_assert(same_as<int, ranges::readable_traits<value_type_tester_thingy>::value_type>);
+CPP_assert(same_as<int, ranges::readable_traits<value_type_tester_thingy const>::value_type>);
+CPP_assert(same_as<int[4], ranges::readable_traits<with_value_type<int[4]>>::value_type>);
+CPP_assert(same_as<int[4], ranges::readable_traits<with_value_type<int[4]> const>::value_type>);
 static_assert(!meta::is_trait<readable_traits_value_type<with_value_type<void>>>::value, "");
 static_assert(!meta::is_trait<readable_traits_value_type<with_value_type<int(int)>>>::value, "");
 static_assert(!meta::is_trait<readable_traits_value_type<with_value_type<int&>>>::value, "");
 
 // class types with member element_type
-CPP_assert(Same<int, ranges::readable_traits<with_element_type<int>>::value_type>);
-CPP_assert(Same<int, ranges::readable_traits<with_element_type<int> const>::value_type>);
-CPP_assert(Same<int, ranges::readable_traits<with_element_type<int const>>::value_type>);
-CPP_assert(Same<int[4], ranges::readable_traits<with_element_type<int[4]>>::value_type>);
-CPP_assert(Same<int[4], ranges::readable_traits<with_element_type<int[4]> const>::value_type>);
-CPP_assert(Same<int[4], ranges::readable_traits<with_element_type<int const[4]>>::value_type>);
+CPP_assert(same_as<int, ranges::readable_traits<with_element_type<int>>::value_type>);
+CPP_assert(same_as<int, ranges::readable_traits<with_element_type<int> const>::value_type>);
+CPP_assert(same_as<int, ranges::readable_traits<with_element_type<int const>>::value_type>);
+CPP_assert(same_as<int[4], ranges::readable_traits<with_element_type<int[4]>>::value_type>);
+CPP_assert(same_as<int[4], ranges::readable_traits<with_element_type<int[4]> const>::value_type>);
+CPP_assert(same_as<int[4], ranges::readable_traits<with_element_type<int const[4]>>::value_type>);
 static_assert(!meta::is_trait<readable_traits_value_type<with_element_type<void>>>::value, "");
 static_assert(!meta::is_trait<readable_traits_value_type<with_element_type<void const>>>::value, "");
 static_assert(!meta::is_trait<readable_traits_value_type<with_element_type<void> const>>::value, "");
@@ -172,10 +172,10 @@ static_assert(!meta::is_trait<readable_traits_value_type<int*&&>>::value, "");
 static_assert(!meta::is_trait<readable_traits_value_type<int(&)(int)>>::value, "");
 static_assert(!meta::is_trait<readable_traits_value_type<std::ostream&>>::value, "");
 
-CPP_assert(IndirectlySwappable<int *, int *>);
-CPP_assert(IndirectlyMovable<int const *, int *>);
-CPP_assert(!IndirectlySwappable<int const *, int const *>);
-CPP_assert(!IndirectlyMovable<int const *, int const *>);
+CPP_assert(indirectly_swappable<int *, int *>);
+CPP_assert(indirectly_movable<int const *, int *>);
+CPP_assert(!indirectly_swappable<int const *, int const *>);
+CPP_assert(!indirectly_movable<int const *, int const *>);
 
 namespace Boost
 {
@@ -222,11 +222,11 @@ namespace std
         using reference = int&;
         using pointer = int*;
         using difference_type = ptrdiff_t;
-        using iterator_category = input_iterator_tag;
+        using iterator_category = InputIterator_tag;
     };
 }
 
-static_assert(ranges::InputIterator<X>, "");
+static_assert(ranges::input_iterator<X>, "");
 
 struct Y
 {
@@ -283,7 +283,7 @@ namespace std
         using difference_type = ::WouldBeFwd::difference_type;
         using reference = iter_reference_t<::WouldBeFwd>;
         using pointer = add_pointer_t<reference>;
-        // Explicit opt-out of stl2's ForwardIterator concept:
+        // Explicit opt-out of stl2's forward_iterator concept:
         using iterator_category = std::input_iterator_tag; // STL1-style iterator category
     };
 }
@@ -316,7 +316,7 @@ namespace std
         using reference = value_type;
         using pointer = value_type*;
         using iterator_category = std::input_iterator_tag; // STL1-style iterator category
-        // Explicit opt-out of stl2's BidirectionalIterator concept:
+        // Explicit opt-out of stl2's bidirectional_iterator concept:
         using iterator_concept = std::forward_iterator_tag; // STL2-style iterator category
     };
 }
@@ -387,26 +387,26 @@ void deep_integration_test()
                           std::bidirectional_iterator_tag>::value, "");
 #endif
 
-    static_assert(ranges::InputIterator<WouldBeFwd>, "");
-    static_assert(!ranges::ForwardIterator<WouldBeFwd>, "");
+    static_assert(ranges::input_iterator<WouldBeFwd>, "");
+    static_assert(!ranges::forward_iterator<WouldBeFwd>, "");
     static_assert(is_same<iterator_traits<WouldBeFwd>::iterator_category,
                            std::input_iterator_tag>::value, "");
 
-    static_assert(ranges::ForwardIterator<WouldBeBidi>, "");
-    static_assert(!ranges::BidirectionalIterator<WouldBeBidi>, "");
+    static_assert(ranges::forward_iterator<WouldBeBidi>, "");
+    static_assert(!ranges::bidirectional_iterator<WouldBeBidi>, "");
     static_assert(is_same<iterator_traits<WouldBeBidi>::iterator_category,
                           std::input_iterator_tag>::value, "");
 
-    static_assert(ranges::Iterator<OutIter>, "");
-    static_assert(!ranges::InputIterator<OutIter>, "");
+    static_assert(ranges::input_or_output_iterator<OutIter>, "");
+    static_assert(!ranges::input_iterator<OutIter>, "");
     static_assert(is_same<iterator_traits<OutIter>::difference_type,
                           std::ptrdiff_t>::value, "");
     static_assert(is_same<iterator_traits<OutIter>::iterator_category,
                           std::output_iterator_tag>::value, "");
 
-    static_assert(ranges::ContiguousIterator<int volatile *>, "");
+    static_assert(ranges::contiguous_iterator<int volatile *>, "");
 
-    static_assert(ranges::ForwardIterator<bool_iterator>, "");
+    static_assert(ranges::forward_iterator<bool_iterator>, "");
     static_assert(is_same<iterator_traits<bool_iterator>::iterator_category,
                           std::input_iterator_tag>::value, "");
     // static_assert(_Cpp98InputIterator<int volatile*>);
@@ -438,7 +438,7 @@ int main()
 
     {
         struct S { using value_type = int; };
-        CPP_assert(Same<int, ranges::readable_traits<S const>::value_type>);
+        CPP_assert(same_as<int, ranges::readable_traits<S const>::value_type>);
     }
 
     return ::test_result();

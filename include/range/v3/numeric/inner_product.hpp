@@ -37,23 +37,23 @@ namespace ranges
     (
         template(typename I1, typename I2, typename T, typename BOp1 = plus,
             typename BOp2 = multiplies, typename P1 = identity, typename P2 = identity)
-        (concept InnerProductable)(I1, I2, T, BOp1, BOp2, P1, P2),
-            InputIterator<I1> &&
-            InputIterator<I2> &&
-            Invocable<P1&, iter_value_t<I1>> &&
-            Invocable<P2&, iter_value_t<I2>> &&
-            Invocable<
+        (concept inner_product_constraints)(I1, I2, T, BOp1, BOp2, P1, P2),
+            input_iterator<I1> &&
+            input_iterator<I2> &&
+            invocable<P1&, iter_value_t<I1>> &&
+            invocable<P2&, iter_value_t<I2>> &&
+            invocable<
                 BOp2&,
                 invoke_result_t<P1&, iter_value_t<I1>>,
                 invoke_result_t<P2&, iter_value_t<I2>>> &&
-            Invocable<
+            invocable<
                 BOp1&,
                 T,
                 invoke_result_t<
                     BOp2&,
                     invoke_result_t<P1&, iter_value_t<I1>>,
                     invoke_result_t<P2&, iter_value_t<I2>>>> &&
-            Assignable<
+            assignable_from<
                 T&,
                 invoke_result_t<
                     BOp1&,
@@ -73,8 +73,8 @@ namespace ranges
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, T init,
                         BOp1 bop1 = BOp1{}, BOp2 bop2 = BOp2{}, P1 proj1 = P1{},
                         P2 proj2 = P2{}) const -> CPP_ret(T)( //
-            requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
-                InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>)
+            requires sentinel_for<S1, I1> && sentinel_for<S2, I2> &&
+                inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
         {
             for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
                 init =
@@ -90,7 +90,7 @@ namespace ranges
         auto operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
                         BOp2 bop2 = BOp2{}, P1 proj1 = P1{},
                         P2 proj2 = P2{}) const -> CPP_ret(T)( //
-            requires Sentinel<S1, I1> && InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>)
+            requires sentinel_for<S1, I1> && inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
         {
             return (*this)(std::move(begin1),
                            std::move(end1),
@@ -110,8 +110,8 @@ namespace ranges
         auto operator()(Rng1 && rng1, I2Ref && begin2, T init, BOp1 bop1 = BOp1{},
                         BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             -> CPP_ret(T)( //
-                requires Range<Rng1> && Iterator<I2> &&
-                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>)
+                requires range<Rng1> &&
+                    inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
         {
             return (*this)(begin(rng1),
                            end(rng1),
@@ -130,8 +130,8 @@ namespace ranges
         auto operator()(Rng1 && rng1, Rng2 && rng2, T init, BOp1 bop1 = BOp1{},
                         BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             -> CPP_ret(T)( //
-                requires Range<Rng1> && Range<Rng2> &&
-                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>)
+                requires range<Rng1> && range<Rng2> &&
+                    inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
         {
             return (*this)(begin(rng1),
                            end(rng1),

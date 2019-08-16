@@ -51,8 +51,8 @@ namespace
         for(int i = 0; i < N; ++i)
             array[i] = i;
 
-        using I = random_access_iterator<int*>;
-        using S = sentinel<int*>;
+        using I = RandomAccessIterator<int*>;
+        using S = Sentinel<int*>;
 
         std::shuffle(array, array+N, gen);
         int *res = ranges::partial_sort(array, array+M, array+N);

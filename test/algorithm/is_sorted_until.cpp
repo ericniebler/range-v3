@@ -376,14 +376,14 @@ struct A { int a; };
 
 int main()
 {
-    test<forward_iterator<const int*>, iter_call>();
-    test<bidirectional_iterator<const int*>, iter_call>();
-    test<random_access_iterator<const int*>, iter_call>();
+    test<ForwardIterator<const int*>, iter_call>();
+    test<BidirectionalIterator<const int*>, iter_call>();
+    test<RandomAccessIterator<const int*>, iter_call>();
     test<const int*, iter_call>();
 
-    test<forward_iterator<const int*>, range_call>();
-    test<bidirectional_iterator<const int*>, range_call>();
-    test<random_access_iterator<const int*>, range_call>();
+    test<ForwardIterator<const int*>, range_call>();
+    test<BidirectionalIterator<const int*>, range_call>();
+    test<RandomAccessIterator<const int*>, range_call>();
     test<const int*, range_call>();
 
     /// Initializer list test:

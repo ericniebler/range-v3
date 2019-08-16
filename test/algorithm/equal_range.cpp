@@ -84,7 +84,7 @@ template<class Iter, class Sent = Iter>
 void
 test()
 {
-    using namespace ranges::view;
+    using namespace ranges::views;
     static constexpr unsigned M = 10;
     std::vector<int> v;
     auto input = ints | take(100) | transform([](int i){return repeat_n(i,M);}) | join;
@@ -100,14 +100,14 @@ int main()
         for (int x = -1; x <= 4; ++x)
             test(d, e, x);
 
-    test<forward_iterator<const int*> >();
-    test<bidirectional_iterator<const int*> >();
-    test<random_access_iterator<const int*> >();
+    test<ForwardIterator<const int*> >();
+    test<BidirectionalIterator<const int*> >();
+    test<RandomAccessIterator<const int*> >();
     test<const int*>();
 
-    test<forward_iterator<const int*>, sentinel<const int*> >();
-    test<bidirectional_iterator<const int*>, sentinel<const int*> >();
-    test<random_access_iterator<const int*>, sentinel<const int*> >();
+    test<ForwardIterator<const int*>, Sentinel<const int*> >();
+    test<BidirectionalIterator<const int*>, Sentinel<const int*> >();
+    test<RandomAccessIterator<const int*>, Sentinel<const int*> >();
 
     {
         struct foo { int i; };

@@ -218,7 +218,7 @@ namespace concepts
     /// @{
     ///
 
-    /// Users should specialize this to hook the \c Common concept
+    /// Users should specialize this to hook the \c common_with concept
     /// until \c std gets a SFINAE-friendly \c std::common_type and there's
     /// some sane way to deal with cv and ref qualifiers.
     template<typename ...Ts>
@@ -253,7 +253,7 @@ namespace concepts
     /// @{
     ///
 
-    /// Users can specialize this to hook the \c CommonReference concept.
+    /// Users can specialize this to hook the \c common_reference_with concept.
     /// \sa `common_reference`
     template<
         typename T,
@@ -333,7 +333,7 @@ namespace concepts
     }
     /// \endcond
 
-    /// Users can specialize this to hook the \c CommonReference concept.
+    /// Users can specialize this to hook the \c common_reference_with concept.
     /// \sa `basic_common_reference`
     template<typename ...Ts>
     struct common_reference

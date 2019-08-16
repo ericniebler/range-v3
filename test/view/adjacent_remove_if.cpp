@@ -31,60 +31,65 @@ int main()
     int const rgi[] = {1, 1, 1, 2, 3, 4, 4};
     std::vector<int> out;
 
-    auto && rng = rgi | view::adjacent_remove_if(std::equal_to<int>{});
+    auto rng = rgi | views::adjacent_remove_if(std::equal_to<int>{});
     has_type<int const &>(*begin(rng));
-    models<CommonViewConcept>(aux::copy(rng));
-    models_not<SizedViewConcept>(aux::copy(rng));
-    models<BidirectionalIteratorConcept>(begin(rng));
-    models_not<RandomAccessIteratorConcept>(begin(rng));
-    CPP_assert(OutputIterator<decltype(ranges::back_inserter(out)), int>);
-    CPP_assert(!EqualityComparable<decltype(ranges::back_inserter(out))>);
+    CPP_assert(view_<decltype(rng)>);
+    CPP_assert(common_range<decltype(rng)>);
+    CPP_assert(!sized_range<decltype(rng)>);
+    CPP_assert(bidirectional_iterator<decltype(begin(rng))>);
+    CPP_assert(!random_access_iterator<decltype(begin(rng))>);
+    CPP_assert(output_iterator<decltype(ranges::back_inserter(out)), int>);
+    CPP_assert(!equality_comparable<decltype(ranges::back_inserter(out))>);
     copy(rng, ranges::back_inserter(out));
     ::check_equal(out, {1, 2, 3, 4});
 
-    auto && rng2 = view::counted(rgi, 7)
-      | view::adjacent_remove_if([&](int i, int j) { return i == j; });
+    auto rng2 = views::counted(rgi, 7)
+      | views::adjacent_remove_if([&](int i, int j) { return i == j; });
     has_type<int const &>(*begin(rng2));
-    models<ForwardViewConcept>(aux::copy(rng2));
-    models<CommonViewConcept>(aux::copy(rng2));
-    models_not<SizedViewConcept>(aux::copy(rng2));
-    models<BidirectionalIteratorConcept>(begin(rng2));
-    models_not<RandomAccessIteratorConcept>(begin(rng2));
+    CPP_assert(view_<decltype(rng2)>);
+    CPP_assert(forward_range<decltype(rng2)>);
+    CPP_assert(common_range<decltype(rng2)>);
+    CPP_assert(!sized_range<decltype(rng2)>);
+    CPP_assert(bidirectional_iterator<decltype(begin(rng2))>);
+    CPP_assert(!random_access_iterator<decltype(begin(rng2))>);
     ::check_equal(rng2, {1, 2, 3, 4});
 
-    auto && rng3 = view::counted(forward_iterator<int const*>(rgi), 7) | view::adjacent_remove_if(std::equal_to<int>{});
+    auto rng3 = views::counted(ForwardIterator<int const*>(rgi), 7) | views::adjacent_remove_if(std::equal_to<int>{});
     has_type<int const &>(*begin(rng3));
-    models<ForwardViewConcept>(aux::copy(rng3));
-    models_not<CommonViewConcept>(aux::copy(rng3));
-    models_not<SizedViewConcept>(aux::copy(rng3));
-    models<ForwardIteratorConcept>(begin(rng3));
-    models_not<BidirectionalIteratorConcept>(begin(rng3));
+    CPP_assert(view_<decltype(rng3)>);
+    CPP_assert(forward_range<decltype(rng3)>);
+    CPP_assert(!common_range<decltype(rng3)>);
+    CPP_assert(!sized_range<decltype(rng3)>);
+    CPP_assert(forward_iterator<decltype(begin(rng3))>);
+    CPP_assert(!bidirectional_iterator<decltype(begin(rng3))>);
     ::check_equal(rng3, {1, 2, 3, 4});
 
-    auto && rng4 = view::counted(forward_iterator<int const*>(rgi), 7)
-      | view::adjacent_remove_if([](int,int){return true;});
+    auto rng4 = views::counted(ForwardIterator<int const*>(rgi), 7)
+      | views::adjacent_remove_if([](int,int){return true;});
     has_type<int const &>(*begin(rng4));
     CHECK(*begin(rng4) == 4);
-    models<ForwardViewConcept>(aux::copy(rng4));
-    models_not<CommonViewConcept>(aux::copy(rng4));
-    models_not<SizedViewConcept>(aux::copy(rng4));
-    models<ForwardIteratorConcept>(begin(rng4));
-    models_not<BidirectionalIteratorConcept>(begin(rng4));
+    CPP_assert(view_<decltype(rng4)>);
+    CPP_assert(forward_range<decltype(rng4)>);
+    CPP_assert(!common_range<decltype(rng4)>);
+    CPP_assert(!sized_range<decltype(rng4)>);
+    CPP_assert(forward_iterator<decltype(begin(rng4))>);
+    CPP_assert(!bidirectional_iterator<decltype(begin(rng4))>);
     ::check_equal(rng4, {4});
 
     auto is_odd_then_even = [](int i, int j){return 1==i%2 && 0 == j%2;};
-    auto && rng5 = view::iota(0, 11) | view::adjacent_remove_if(is_odd_then_even);
+    auto rng5 = views::iota(0, 11) | views::adjacent_remove_if(is_odd_then_even);
     has_type<int>(*begin(rng5));
-    models<ForwardViewConcept>(aux::copy(rng5));
-    models<CommonViewConcept>(aux::copy(rng5));
-    models_not<SizedViewConcept>(aux::copy(rng5));
-    models<BidirectionalIteratorConcept>(begin(rng5));
-    models_not<RandomAccessIteratorConcept>(begin(rng5));
+    CPP_assert(view_<decltype(rng5)>);
+    CPP_assert(forward_range<decltype(rng5)>);
+    CPP_assert(common_range<decltype(rng5)>);
+    CPP_assert(!sized_range<decltype(rng5)>);
+    CPP_assert(bidirectional_iterator<decltype(begin(rng5))>);
+    CPP_assert(!random_access_iterator<decltype(begin(rng5))>);
     ::check_equal(rng5, {0,2,4,6,8,10});
 
     {
         // Verify that forward and backward traversal both select the same elements.
-        auto rng = view::adjacent_remove_if(rgi, std::equal_to<int>{});
+        auto rng = views::adjacent_remove_if(rgi, std::equal_to<int>{});
         std::vector<int const*> pointers;
         for(auto& i : rng)
             pointers.push_back(&i);

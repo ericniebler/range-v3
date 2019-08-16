@@ -83,7 +83,7 @@ namespace begin_testing
     CPP_def
     (
         template(class R)
-        concept CanBegin,
+        concept can_begin,
             requires(R&& r) (
                 ranges::begin((R&&)r)
             )
@@ -91,7 +91,7 @@ namespace begin_testing
     CPP_def
     (
         template(class R)
-        concept CanCBegin,
+        concept can_cbegin,
             requires(R&& r) (
                 ranges::cbegin((R&&)r)
             )
@@ -117,94 +117,94 @@ namespace begin_testing
     void test()
     {
         // Valid
-        CPP_assert(CanBegin<int(&)[2]>);
-        CPP_assert(ranges::Same<decltype(ranges::begin(std::declval<int(&)[2]>())), int*>);
-        CPP_assert(CanBegin<int const(&)[2]>);
-        CPP_assert(ranges::Same<decltype(ranges::begin(std::declval<int const(&)[2]>())), int const *>);
+        CPP_assert(can_begin<int(&)[2]>);
+        CPP_assert(ranges::same_as<decltype(ranges::begin(std::declval<int(&)[2]>())), int*>);
+        CPP_assert(can_begin<int const(&)[2]>);
+        CPP_assert(ranges::same_as<decltype(ranges::begin(std::declval<int const(&)[2]>())), int const *>);
 
-        CPP_assert(CanCBegin<int(&)[2]>);
-        CPP_assert(ranges::Same<decltype(ranges::cbegin(std::declval<int(&)[2]>())), int const *>);
-        CPP_assert(CanCBegin<int const(&)[2]>);
-        CPP_assert(ranges::Same<decltype(ranges::cbegin(std::declval<int const(&)[2]>())), int const *>);
+        CPP_assert(can_cbegin<int(&)[2]>);
+        CPP_assert(ranges::same_as<decltype(ranges::cbegin(std::declval<int(&)[2]>())), int const *>);
+        CPP_assert(can_cbegin<int const(&)[2]>);
+        CPP_assert(ranges::same_as<decltype(ranges::cbegin(std::declval<int const(&)[2]>())), int const *>);
 
 #ifndef RANGES_WORKAROUND_MSVC_573728
         // Ill-formed: array rvalue
-        CPP_assert(!CanBegin<int(&&)[2]>);
-        CPP_assert(!CanBegin<int const(&&)[2]>);
+        CPP_assert(!can_begin<int(&&)[2]>);
+        CPP_assert(!can_begin<int const(&&)[2]>);
 
-        CPP_assert(!CanCBegin<int(&&)[2]>);
-        CPP_assert(!CanCBegin<int const(&&)[2]>);
+        CPP_assert(!can_cbegin<int(&&)[2]>);
+        CPP_assert(!can_cbegin<int const(&&)[2]>);
 #endif // RANGES_WORKAROUND_MSVC_573728
 
         // Valid: only member begin
-        CPP_assert(CanBegin<A&>);
-        CPP_assert(!CanBegin<A>);
-        CPP_assert(ranges::Same<decltype(ranges::begin(std::declval<A&>())), int*>);
-        CPP_assert(CanBegin<const A&>);
-        CPP_assert(!CanBegin<const A>);
-        CPP_assert(ranges::Same<decltype(ranges::begin(std::declval<const A&>())), int const *>);
+        CPP_assert(can_begin<A&>);
+        CPP_assert(!can_begin<A>);
+        CPP_assert(ranges::same_as<decltype(ranges::begin(std::declval<A&>())), int*>);
+        CPP_assert(can_begin<const A&>);
+        CPP_assert(!can_begin<const A>);
+        CPP_assert(ranges::same_as<decltype(ranges::begin(std::declval<const A&>())), int const *>);
 
         // Valid: Both member and non-member begin, but non-member returns non-Iterator.
-        CPP_assert(CanBegin<B&>);
-        CPP_assert(!CanBegin<B>);
-        CPP_assert(ranges::Same<decltype(ranges::begin(std::declval<B&>())), int*>);
-        CPP_assert(CanBegin<const B&>);
-        CPP_assert(!CanBegin<const B>);
-        CPP_assert(ranges::Same<decltype(ranges::begin(std::declval<const B&>())), int const *>);
+        CPP_assert(can_begin<B&>);
+        CPP_assert(!can_begin<B>);
+        CPP_assert(ranges::same_as<decltype(ranges::begin(std::declval<B&>())), int*>);
+        CPP_assert(can_begin<const B&>);
+        CPP_assert(!can_begin<const B>);
+        CPP_assert(ranges::same_as<decltype(ranges::begin(std::declval<const B&>())), int const *>);
 
         // Valid: Both member and non-member begin, but non-member returns non-Iterator.
-        CPP_assert(CanBegin<C&>);
-        CPP_assert(!CanBegin<C>);
-        CPP_assert(CanBegin<const C&>);
-        CPP_assert(!CanBegin<const C>);
+        CPP_assert(can_begin<C&>);
+        CPP_assert(!can_begin<C>);
+        CPP_assert(can_begin<const C&>);
+        CPP_assert(!can_begin<const C>);
 
         // Valid: Prefer member begin
-        CPP_assert(CanBegin<D&>);
-        CPP_assert(!CanBegin<D>);
-        CPP_assert(ranges::Same<int*, decltype(ranges::begin(std::declval<D&>()))>);
-        CPP_assert(CanBegin<const D&>);
-        CPP_assert(!CanBegin<const D>);
-        CPP_assert(ranges::Same<int const *, decltype(ranges::begin(std::declval<const D&>()))>);
+        CPP_assert(can_begin<D&>);
+        CPP_assert(!can_begin<D>);
+        CPP_assert(ranges::same_as<int*, decltype(ranges::begin(std::declval<D&>()))>);
+        CPP_assert(can_begin<const D&>);
+        CPP_assert(!can_begin<const D>);
+        CPP_assert(ranges::same_as<int const *, decltype(ranges::begin(std::declval<const D&>()))>);
 
         {
             using T = std::initializer_list<int>;
             // Valid: begin accepts lvalue initializer_list
-            CPP_assert(ranges::Same<int const *, decltype(ranges::begin(std::declval<T&>()))>);
-            CPP_assert(ranges::Same<int const *, decltype(ranges::begin(std::declval<const T&>()))>);
-            CPP_assert(!CanBegin<T>);
-            CPP_assert(!CanBegin<T const>);
+            CPP_assert(ranges::same_as<int const *, decltype(ranges::begin(std::declval<T&>()))>);
+            CPP_assert(ranges::same_as<int const *, decltype(ranges::begin(std::declval<const T&>()))>);
+            CPP_assert(!can_begin<T>);
+            CPP_assert(!can_begin<T const>);
         }
 
-        CPP_assert(CanBegin<ranges::subrange<int*, int*>&>);
-        CPP_assert(CanBegin<const ranges::subrange<int*, int*>&>);
-        CPP_assert(CanBegin<ranges::subrange<int*, int*>>);
-        CPP_assert(CanBegin<const ranges::subrange<int*, int*>>);
+        CPP_assert(can_begin<ranges::subrange<int*, int*>&>);
+        CPP_assert(can_begin<const ranges::subrange<int*, int*>&>);
+        CPP_assert(can_begin<ranges::subrange<int*, int*>>);
+        CPP_assert(can_begin<const ranges::subrange<int*, int*>>);
 
-        CPP_assert(CanCBegin<ranges::subrange<int*, int*>&>);
-        CPP_assert(CanCBegin<const ranges::subrange<int*, int*>&>);
-        CPP_assert(CanCBegin<ranges::subrange<int*, int*>>);
-        CPP_assert(CanCBegin<const ranges::subrange<int*, int*>>);
+        CPP_assert(can_cbegin<ranges::subrange<int*, int*>&>);
+        CPP_assert(can_cbegin<const ranges::subrange<int*, int*>&>);
+        CPP_assert(can_cbegin<ranges::subrange<int*, int*>>);
+        CPP_assert(can_cbegin<const ranges::subrange<int*, int*>>);
 
-        CPP_assert(CanBegin<ranges::ref_view<int[5]>&>);
-        CPP_assert(CanBegin<const ranges::ref_view<int[5]>&>);
-        CPP_assert(CanBegin<ranges::ref_view<int[5]>>);
-        CPP_assert(CanBegin<const ranges::ref_view<int[5]>>);
+        CPP_assert(can_begin<ranges::ref_view<int[5]>&>);
+        CPP_assert(can_begin<const ranges::ref_view<int[5]>&>);
+        CPP_assert(can_begin<ranges::ref_view<int[5]>>);
+        CPP_assert(can_begin<const ranges::ref_view<int[5]>>);
 
-        CPP_assert(CanCBegin<ranges::ref_view<int[5]>&>);
-        CPP_assert(CanCBegin<const ranges::ref_view<int[5]>&>);
-        CPP_assert(CanCBegin<ranges::ref_view<int[5]>>);
-        CPP_assert(CanCBegin<const ranges::ref_view<int[5]>>);
+        CPP_assert(can_cbegin<ranges::ref_view<int[5]>&>);
+        CPP_assert(can_cbegin<const ranges::ref_view<int[5]>&>);
+        CPP_assert(can_cbegin<ranges::ref_view<int[5]>>);
+        CPP_assert(can_cbegin<const ranges::ref_view<int[5]>>);
 
         // TODO
-        // CPP_assert(CanBegin<ranges::iota_view<int, int>&>);
-        // CPP_assert(CanBegin<const ranges::iota_view<int, int>&>);
-        // CPP_assert(CanBegin<ranges::iota_view<int, int>>);
-        // CPP_assert(CanBegin<const ranges::iota_view<int, int>>);
+        // CPP_assert(can_begin<ranges::iota_view<int, int>&>);
+        // CPP_assert(can_begin<const ranges::iota_view<int, int>&>);
+        // CPP_assert(can_begin<ranges::iota_view<int, int>>);
+        // CPP_assert(can_begin<const ranges::iota_view<int, int>>);
 
-        // CPP_assert(CanCBegin<ranges::iota_view<int, int>&>);
-        // CPP_assert(CanCBegin<const ranges::iota_view<int, int>&>);
-        // CPP_assert(CanCBegin<ranges::iota_view<int, int>>);
-        // CPP_assert(CanCBegin<const ranges::iota_view<int, int>>);
+        // CPP_assert(can_cbegin<ranges::iota_view<int, int>&>);
+        // CPP_assert(can_cbegin<const ranges::iota_view<int, int>&>);
+        // CPP_assert(can_cbegin<ranges::iota_view<int, int>>);
+        // CPP_assert(can_cbegin<const ranges::iota_view<int, int>>);
     }
 } // namespace begin_testing
 
@@ -232,23 +232,23 @@ namespace X
 
 using I = int*;
 using CI = int const *;
-CPP_assert(ranges::Iterator<I>);
-CPP_assert(ranges::Iterator<CI>);
+CPP_assert(ranges::input_or_output_iterator<I>);
+CPP_assert(ranges::input_or_output_iterator<CI>);
 
 #if defined(__cpp_lib_string_view) && __cpp_lib_string_view > 0
 void test_string_view_p0970()
 {
     // basic_string_views are non-dangling
     using I = ranges::iterator_t<std::string_view>;
-    CPP_assert(ranges::Same<I, decltype(ranges::begin(std::declval<std::string_view>()))>);
-    CPP_assert(ranges::Same<I, decltype(ranges::end(std::declval<std::string_view>()))>);
-    CPP_assert(ranges::Same<I, decltype(ranges::begin(std::declval<const std::string_view>()))>);
-    CPP_assert(ranges::Same<I, decltype(ranges::end(std::declval<const std::string_view>()))>);
+    CPP_assert(ranges::same_as<I, decltype(ranges::begin(std::declval<std::string_view>()))>);
+    CPP_assert(ranges::same_as<I, decltype(ranges::end(std::declval<std::string_view>()))>);
+    CPP_assert(ranges::same_as<I, decltype(ranges::begin(std::declval<const std::string_view>()))>);
+    CPP_assert(ranges::same_as<I, decltype(ranges::end(std::declval<const std::string_view>()))>);
 
     {
         const char hw[] = "Hello, World!";
         auto result = ranges::find(std::string_view{hw}, 'W');
-        CPP_assert(ranges::Same<I, decltype(result)>);
+        CPP_assert(ranges::same_as<I, decltype(result)>);
         CHECK(result == std::string_view{hw}.begin() + 7);
     }
 }
@@ -259,19 +259,19 @@ int main()
     using namespace ranges;
 
     static constexpr X::array<int, 4> some_ints = {{0,1,2,3}};
-    CPP_assert(begin_testing::CanBegin<X::array<int, 4> &>);
-    CPP_assert(begin_testing::CanBegin<X::array<int, 4> const &>);
-    CPP_assert(!begin_testing::CanBegin<X::array<int, 4>>);
-    CPP_assert(!begin_testing::CanBegin<X::array<int, 4> const>);
-    CPP_assert(begin_testing::CanCBegin<X::array<int, 4> &>);
-    CPP_assert(begin_testing::CanCBegin<X::array<int, 4> const &>);
-    CPP_assert(!begin_testing::CanCBegin<X::array<int, 4>>);
-    CPP_assert(!begin_testing::CanCBegin<X::array<int, 4> const>);
+    CPP_assert(begin_testing::can_begin<X::array<int, 4> &>);
+    CPP_assert(begin_testing::can_begin<X::array<int, 4> const &>);
+    CPP_assert(!begin_testing::can_begin<X::array<int, 4>>);
+    CPP_assert(!begin_testing::can_begin<X::array<int, 4> const>);
+    CPP_assert(begin_testing::can_cbegin<X::array<int, 4> &>);
+    CPP_assert(begin_testing::can_cbegin<X::array<int, 4> const &>);
+    CPP_assert(!begin_testing::can_cbegin<X::array<int, 4>>);
+    CPP_assert(!begin_testing::can_cbegin<X::array<int, 4> const>);
 
     constexpr auto first = begin(some_ints);
     constexpr auto last = end(some_ints);
-    CPP_assert(ranges::Same<const CI, decltype(first)>);
-    CPP_assert(ranges::Same<const CI, decltype(last)>);
+    CPP_assert(ranges::same_as<const CI, decltype(first)>);
+    CPP_assert(ranges::same_as<const CI, decltype(last)>);
     static_assert(first == cbegin(some_ints), "");
     static_assert(last == cend(some_ints), "");
 

@@ -17,24 +17,24 @@ int main ()
     {
         constexpr std::size_t N = 32;
         std::array<int, N> tmp;
-        auto rng = pop | view::sample(N, engine);
+        auto rng = pop | views::sample(N, engine);
         using Rng = decltype(rng);
-        CPP_assert(InputView<Rng>);
-        CPP_assert(!ForwardRange<Rng>);
+        CPP_assert(input_range<Rng> && view_<Rng>);
+        CPP_assert(!forward_range<Rng>);
         ranges::copy(rng, tmp.begin());
-        rng = pop | view::sample(N, engine);
+        rng = pop | views::sample(N, engine);
         CHECK(!ranges::equal(rng, tmp));
         engine = decltype(engine){};
-        rng = pop | view::sample(N, engine);
+        rng = pop | views::sample(N, engine);
         CHECK(ranges::equal(rng, tmp));
     }
 
     {
         int const some_ints[] = {0,1,2,3,4,5,6,7,8};
-        auto rng = debug_input_view<int const>{some_ints} | view::sample(4, engine);
+        auto rng = debug_input_view<int const>{some_ints} | views::sample(4, engine);
         using Rng = decltype(rng);
-        CPP_assert(InputView<Rng>);
-        CPP_assert(!ForwardRange<Rng>);
+        CPP_assert(input_range<Rng> && view_<Rng>);
+        CPP_assert(!forward_range<Rng>);
         CHECK(ranges::distance(rng) == 4);
     }
 

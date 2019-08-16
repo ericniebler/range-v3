@@ -38,23 +38,23 @@ int main()
     constexpr auto s = size(ia);
 
     {
-        input_iterator<const int*> r = find_if(input_iterator<const int*>(ia),
-                                              input_iterator<const int*>(ia + s),
+        InputIterator<const int*> r = find_if(InputIterator<const int*>(ia),
+                                              InputIterator<const int*>(ia + s),
                                               [](int i){return i == 3;});
         CHECK(*r == 3);
-        r = find_if(input_iterator<const int*>(ia),
-                    input_iterator<const int*>(ia+s),
+        r = find_if(InputIterator<const int*>(ia),
+                    InputIterator<const int*>(ia+s),
                     [](int i){return i == 10;});
-        CHECK(r == input_iterator<const int*>(ia+s));
+        CHECK(r == InputIterator<const int*>(ia+s));
 
-        r = find_if(input_iterator<const int*>(ia),
-                    sentinel<const int*>(ia+s),
+        r = find_if(InputIterator<const int*>(ia),
+                    Sentinel<const int*>(ia+s),
                     [](int i){return i == 3;});
         CHECK(*r == 3);
-        r = find_if(input_iterator<const int*>(ia),
-                    sentinel<const int*>(ia+s),
+        r = find_if(InputIterator<const int*>(ia),
+                    Sentinel<const int*>(ia+s),
                     [](int i){return i == 10;});
-        CHECK(r == input_iterator<const int*>(ia+s));
+        CHECK(r == InputIterator<const int*>(ia+s));
     }
 
     {
@@ -82,7 +82,7 @@ int main()
     }
 
     {
-        auto* ignore = find_if(ranges::view::all(ia), [](int i){return i == 10;});
+        auto* ignore = find_if(ranges::views::all(ia), [](int i){return i == 10;});
         (void)ignore;
     }
 

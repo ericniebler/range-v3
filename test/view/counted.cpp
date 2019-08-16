@@ -32,15 +32,15 @@ int main()
 
     {
         int rgi[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        auto rng = view::counted(forward_iterator<int*>{rgi}, 10);
+        auto rng = views::counted(ForwardIterator<int*>{rgi}, 10);
         rng.size();
-        CPP_assert(SizedView<decltype(rng)>);
+        CPP_assert(sized_range<decltype(rng)> && view_<decltype(rng)>);
         auto i = rng.begin();
         auto b = i.base();
         auto c = i.count();
         decltype(i) j{b, c};
         ::check_equal(rng, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-        static_assert(std::is_same<decltype(i), counted_iterator<forward_iterator<int*>>>::value, "");
+        static_assert(std::is_same<decltype(i), counted_iterator<ForwardIterator<int*>>>::value, "");
     }
 
     {
@@ -66,7 +66,7 @@ int main()
     {
         // Regression test: ensure that we can post-increment a counted_iterator<I>
         // when decltype(declval<I &>()++) is void.
-        CPP_assert(ranges::InputIterator<fortytwo_erator>);
+        CPP_assert(ranges::input_iterator<fortytwo_erator>);
         ranges::counted_iterator<fortytwo_erator> c{{}, 42};
         c++;
     }

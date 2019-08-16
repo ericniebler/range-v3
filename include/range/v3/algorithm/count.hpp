@@ -35,8 +35,8 @@ namespace ranges
         template<typename I, typename S, typename V, typename P = identity>
         auto operator()(I begin, S end, V const & val, P proj = P{}) const
             -> CPP_ret(iter_difference_t<I>)( //
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    IndirectRelation<equal_to, projected<I, P>, V const *>)
+                requires input_iterator<I> && sentinel_for<S, I> &&
+                    indirect_relation<equal_to, projected<I, P>, V const *>)
         {
             iter_difference_t<I> n = 0;
             for(; begin != end; ++begin)
@@ -48,8 +48,8 @@ namespace ranges
         template<typename Rng, typename V, typename P = identity>
         auto operator()(Rng && rng, V const & val, P proj = P{}) const
             -> CPP_ret(iter_difference_t<iterator_t<Rng>>)( //
-                requires InputRange<Rng> &&
-                    IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
+                requires input_range<Rng> &&
+                    indirect_relation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
         {
             return (*this)(begin(rng), end(rng), val, std::move(proj));
         }

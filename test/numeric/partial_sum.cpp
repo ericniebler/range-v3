@@ -101,34 +101,34 @@ template<class InIter, class OutIter, class InSent = InIter> void test()
 
 int main()
 {
-    test<input_iterator<const int *>, input_iterator<int *>>();
-    test<input_iterator<const int *>, forward_iterator<int *>>();
-    test<input_iterator<const int *>, bidirectional_iterator<int *>>();
-    test<input_iterator<const int *>, random_access_iterator<int *>>();
-    test<input_iterator<const int *>, int *>();
+    test<InputIterator<const int *>, InputIterator<int *>>();
+    test<InputIterator<const int *>, ForwardIterator<int *>>();
+    test<InputIterator<const int *>, BidirectionalIterator<int *>>();
+    test<InputIterator<const int *>, RandomAccessIterator<int *>>();
+    test<InputIterator<const int *>, int *>();
 
-    test<forward_iterator<const int *>, input_iterator<int *>>();
-    test<forward_iterator<const int *>, forward_iterator<int *>>();
-    test<forward_iterator<const int *>, bidirectional_iterator<int *>>();
-    test<forward_iterator<const int *>, random_access_iterator<int *>>();
-    test<forward_iterator<const int *>, int *>();
+    test<ForwardIterator<const int *>, InputIterator<int *>>();
+    test<ForwardIterator<const int *>, ForwardIterator<int *>>();
+    test<ForwardIterator<const int *>, BidirectionalIterator<int *>>();
+    test<ForwardIterator<const int *>, RandomAccessIterator<int *>>();
+    test<ForwardIterator<const int *>, int *>();
 
-    test<bidirectional_iterator<const int *>, input_iterator<int *>>();
-    test<bidirectional_iterator<const int *>, forward_iterator<int *>>();
-    test<bidirectional_iterator<const int *>, bidirectional_iterator<int *>>();
-    test<bidirectional_iterator<const int *>, random_access_iterator<int *>>();
-    test<bidirectional_iterator<const int *>, int *>();
+    test<BidirectionalIterator<const int *>, InputIterator<int *>>();
+    test<BidirectionalIterator<const int *>, ForwardIterator<int *>>();
+    test<BidirectionalIterator<const int *>, BidirectionalIterator<int *>>();
+    test<BidirectionalIterator<const int *>, RandomAccessIterator<int *>>();
+    test<BidirectionalIterator<const int *>, int *>();
 
-    test<random_access_iterator<const int *>, input_iterator<int *>>();
-    test<random_access_iterator<const int *>, forward_iterator<int *>>();
-    test<random_access_iterator<const int *>, bidirectional_iterator<int *>>();
-    test<random_access_iterator<const int *>, random_access_iterator<int *>>();
-    test<random_access_iterator<const int *>, int *>();
+    test<RandomAccessIterator<const int *>, InputIterator<int *>>();
+    test<RandomAccessIterator<const int *>, ForwardIterator<int *>>();
+    test<RandomAccessIterator<const int *>, BidirectionalIterator<int *>>();
+    test<RandomAccessIterator<const int *>, RandomAccessIterator<int *>>();
+    test<RandomAccessIterator<const int *>, int *>();
 
-    test<const int *, input_iterator<int *>>();
-    test<const int *, forward_iterator<int *>>();
-    test<const int *, bidirectional_iterator<int *>>();
-    test<const int *, random_access_iterator<int *>>();
+    test<const int *, InputIterator<int *>>();
+    test<const int *, ForwardIterator<int *>>();
+    test<const int *, BidirectionalIterator<int *>>();
+    test<const int *, RandomAccessIterator<int *>>();
     test<const int *, int *>();
 
     using ranges::partial_sum;
@@ -183,7 +183,7 @@ int main()
         int ir[] = {1, 2, 6, 24, 120};
         const unsigned s = sizeof(ir) / sizeof(ir[0]);
         int ic[s] = {0};
-        auto rng = view::zip(ia, ib);
+        auto rng = views::zip(ia, ib);
         using CR = iter_common_reference_t<iterator_t<decltype(rng)>>;
         auto r = partial_sum(rng, ic, std::multiplies<int>(), [](CR p) {return p.first;});
         CHECK(base(r.in) == ranges::begin(rng) + s);

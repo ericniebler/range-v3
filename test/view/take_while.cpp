@@ -31,56 +31,57 @@ bool operator==(my_data left, my_data right)
 int main()
 {
     using namespace ranges;
-    auto rng0 = view::iota(10) | view::take_while([](int i) { return i != 25; });
+    auto rng0 = views::iota(10) | views::take_while([](int i) { return i != 25; });
     ::check_equal(rng0, {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24});
-    ::models<ViewConcept>(aux::copy(rng0));
-    ::models_not<CommonViewConcept>(aux::copy(rng0));
-    ::models<RandomAccessIteratorConcept>(rng0.begin());
+    CPP_assert(view_<decltype(rng0)>);
+    CPP_assert(!common_range<decltype(rng0)>);
+    CPP_assert(random_access_iterator<decltype(rng0.begin())>);
 
     std::vector<int> vi{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    auto rng1 = vi | view::take_while([](int i) { return i != 50; });
-    ::models<RandomAccessViewConcept>(aux::copy(rng1));
+    auto rng1 = vi | views::take_while([](int i) { return i != 50; });
+    CPP_assert(view_<decltype(rng1)>);
+    CPP_assert(random_access_range<decltype(rng1)>);
     ::check_equal(rng1, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
 
     // Check with a mutable predicate
     int rgi[] = {0,1,2,3,4,5,6,7,8,9};
     int cnt = 0;
-    auto mutable_only = view::take_while(rgi, [cnt](int) mutable { return ++cnt <= 5;});
+    auto mutable_only = views::take_while(rgi, [cnt](int) mutable { return ++cnt <= 5;});
     ::check_equal(mutable_only, {0,1,2,3,4});
-    CPP_assert(View<decltype(mutable_only)>);
-    CPP_assert(!View<decltype(mutable_only) const>);
+    CPP_assert(view_<decltype(mutable_only)>);
+    CPP_assert(!view_<decltype(mutable_only) const>);
 
     {
-        auto ns = view::generate([]() mutable {
+        auto ns = views::generate([]() mutable {
             static int N;
             return ++N;
         });
-        auto rng = ns | view::take_while([](int i) { return i < 5; });
+        auto rng = ns | views::take_while([](int i) { return i < 5; });
         ::check_equal(rng, {1,2,3,4});
     }
 
     {
-        auto ns = view::generate([]() mutable {
+        auto ns = views::generate([]() mutable {
             static int N;
             return ++N;
         });
-        auto rng = ns | view::take_while([](int i) mutable { return i < 5; });
+        auto rng = ns | views::take_while([](int i) mutable { return i < 5; });
         ::check_equal(rng, {1,2,3,4});
     }
 
     {
-        auto rng = debug_input_view<int const>{rgi} | view::take_while([](int i) {
+        auto rng = debug_input_view<int const>{rgi} | views::take_while([](int i) {
             return i != 5;
         });
         ::check_equal(rng, {0,1,2,3,4});
     }
 
     {
-        auto ns = view::generate([]() {
+        auto ns = views::generate([]() {
             static int N;
             return my_data{++N};
         });
-        auto rng = ns | view::take_while([](int i) { return i < 5; },
+        auto rng = ns | views::take_while([](int i) { return i < 5; },
                                          &my_data::i);
         ::check_equal(rng, std::vector<my_data>{{1},{2},{3},{4}});
     }

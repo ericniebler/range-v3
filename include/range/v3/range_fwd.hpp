@@ -14,10 +14,10 @@
 #ifndef RANGES_V3_RANGE_FWD_HPP
 #define RANGES_V3_RANGE_FWD_HPP
 
-#include <climits>
-#include <iterator>
 #include <type_traits>
 #include <utility>
+
+#include <concepts/concepts.hpp>
 
 #include <meta/meta.hpp>
 
@@ -55,6 +55,9 @@ RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 namespace ranges
 {
     /// \cond
+    namespace views
+    {}
+
 // GCC either fails to accept an attribute on a namespace, or else
 // it ignores the deprecation attribute. Frustrating.
 #if(RANGES_CXX_VER < RANGES_CXX_STD_17 || defined(__GNUC__) && !defined(__clang__))
@@ -62,12 +65,21 @@ namespace ranges
     {
         using namespace ranges;
     }
+
+    namespace view = views;
 #else
     inline namespace RANGES_DEPRECATED(
         "The name ranges::v3 namespace is deprecated. "
         "Please discontinue using it.") v3
     {
         using namespace ranges;
+    }
+
+    namespace RANGES_DEPRECATED(
+        "The ranges::view namespace has been renamed to ranges::views. "
+        "(Sorry!)") view
+    {
+        using namespace views;
     }
 #endif
 
@@ -113,7 +125,7 @@ namespace ranges
         struct action;
     }
 
-    namespace view
+    namespace views
     {
         template<typename View>
         struct view;
@@ -453,7 +465,7 @@ namespace ranges
     template<typename Rng, typename Pred>
     struct RANGES_EMPTY_BASES adjacent_filter_view;
 
-    namespace view
+    namespace views
     {
         struct adjacent_filter_fn;
     }
@@ -461,12 +473,12 @@ namespace ranges
     template<typename Rng, typename Pred>
     struct RANGES_EMPTY_BASES adjacent_remove_if_view;
 
-    namespace view
+    namespace views
     {
         struct adjacent_remove_if_fn;
     }
 
-    namespace view
+    namespace views
     {
         struct all_fn;
     }
@@ -474,7 +486,7 @@ namespace ranges
     template<typename Rng>
     struct const_view;
 
-    namespace view
+    namespace views
     {
         struct const_fn;
     }
@@ -482,7 +494,7 @@ namespace ranges
     template<typename I>
     struct counted_view;
 
-    namespace view
+    namespace views
     {
         struct counted_fn;
     }
@@ -498,7 +510,7 @@ namespace ranges
     template<typename Rng, bool = (bool)is_infinite<Rng>()>
     struct RANGES_EMPTY_BASES cycled_view;
 
-    namespace view
+    namespace views
     {
         struct cycle_fn;
     }
@@ -517,7 +529,7 @@ namespace ranges
     template<typename T>
     struct empty_view;
 
-    namespace view
+    namespace views
     {
         struct empty_fn;
     }
@@ -525,7 +537,7 @@ namespace ranges
     template<typename Rng, typename Fun>
     struct group_by_view;
 
-    namespace view
+    namespace views
     {
         struct group_by_fn;
     }
@@ -533,7 +545,7 @@ namespace ranges
     template<typename Rng>
     struct indirect_view;
 
-    namespace view
+    namespace views
     {
         struct indirect_fn;
     }
@@ -546,11 +558,11 @@ namespace ranges
     template<typename From, typename To = From>
     struct closed_iota_view;
 
-    namespace view
+    namespace views
     {
         struct iota_fn;
         struct closed_iota_fn;
-    } // namespace view
+    } // namespace views
 
     template<typename Rng>
     struct join_view;
@@ -558,7 +570,7 @@ namespace ranges
     template<typename Rng, typename ValRng>
     struct join_with_view;
 
-    namespace view
+    namespace views
     {
         struct join_fn;
     }
@@ -566,7 +578,7 @@ namespace ranges
     template<typename... Rngs>
     struct concat_view;
 
-    namespace view
+    namespace views
     {
         struct concat_fn;
     }
@@ -574,7 +586,7 @@ namespace ranges
     template<typename Rng, typename Fun>
     struct partial_sum_view;
 
-    namespace view
+    namespace views
     {
         struct partial_sum_fn;
     }
@@ -582,7 +594,7 @@ namespace ranges
     template<typename Rng>
     struct move_view;
 
-    namespace view
+    namespace views
     {
         struct move_fn;
     }
@@ -590,7 +602,7 @@ namespace ranges
     template<typename Rng>
     struct ref_view;
 
-    namespace view
+    namespace views
     {
         struct ref_fn;
     }
@@ -598,7 +610,7 @@ namespace ranges
     template<typename Val>
     struct repeat_view;
 
-    namespace view
+    namespace views
     {
         struct repeat_fn;
     }
@@ -606,7 +618,7 @@ namespace ranges
     template<typename Rng>
     struct RANGES_EMPTY_BASES reverse_view;
 
-    namespace view
+    namespace views
     {
         struct reverse_fn;
     }
@@ -614,7 +626,7 @@ namespace ranges
     template<typename Rng>
     struct slice_view;
 
-    namespace view
+    namespace views
     {
         struct slice_fn;
     }
@@ -622,7 +634,7 @@ namespace ranges
     // template<typename Rng, typename Fun>
     // struct split_view;
 
-    // namespace view
+    // namespace views
     // {
     //     struct split_fn;
     // }
@@ -630,7 +642,7 @@ namespace ranges
     template<typename Rng>
     struct single_view;
 
-    namespace view
+    namespace views
     {
         struct single_fn;
     }
@@ -638,7 +650,7 @@ namespace ranges
     template<typename Rng>
     struct stride_view;
 
-    namespace view
+    namespace views
     {
         struct stride_fn;
     }
@@ -646,7 +658,7 @@ namespace ranges
     template<typename Rng>
     struct take_view;
 
-    namespace view
+    namespace views
     {
         struct take_fn;
     }
@@ -666,7 +678,7 @@ namespace ranges
     template<typename Rng>
     using take_exactly_view = detail::take_exactly_view_<Rng>;
 
-    namespace view
+    namespace views
     {
         struct take_exactly_fn;
     }
@@ -677,16 +689,16 @@ namespace ranges
     template<typename Rng, typename Pred>
     struct take_while_view;
 
-    namespace view
+    namespace views
     {
         struct iter_take_while_fn;
         struct take_while_fn;
-    } // namespace view
+    } // namespace views
 
     template<typename Rng, typename Regex, typename SubMatchRange>
     struct tokenize_view;
 
-    namespace view
+    namespace views
     {
         struct tokenize_fn;
     }
@@ -697,7 +709,7 @@ namespace ranges
     template<typename Rng, typename Fun>
     struct transform_view;
 
-    namespace view
+    namespace views
     {
         struct transform_fn;
     }
@@ -708,17 +720,17 @@ namespace ranges
     template<typename Rng, typename Pred, typename Val>
     using replace_if_view = iter_transform_view<Rng, detail::replacer_if_fn<Pred, Val>>;
 
-    namespace view
+    namespace views
     {
         struct replace_fn;
 
         struct replace_if_fn;
-    } // namespace view
+    } // namespace views
 
     template<typename Rng, typename Pred>
     struct trim_view;
 
-    namespace view
+    namespace views
     {
         struct trim_fn;
     }
@@ -726,7 +738,7 @@ namespace ranges
     template<typename I>
     struct unbounded_view;
 
-    namespace view
+    namespace views
     {
         struct unbounded_fn;
     }
@@ -734,7 +746,7 @@ namespace ranges
     template<typename Rng>
     using unique_view = adjacent_filter_view<Rng, logical_negate<equal_to>>;
 
-    namespace view
+    namespace views
     {
         struct unique_fn;
     }
@@ -745,12 +757,12 @@ namespace ranges
     template<typename Rng>
     using values_view = transform_view<Rng, detail::get_second>;
 
-    namespace view
+    namespace views
     {
         struct keys_fn;
 
         struct values_fn;
-    } // namespace view
+    } // namespace views
 
     template<typename Fun, typename... Rngs>
     struct iter_zip_with_view;
@@ -761,38 +773,25 @@ namespace ranges
     template<typename... Rngs>
     struct zip_view;
 
-    namespace view
+    namespace views
     {
         struct iter_zip_with_fn;
 
         struct zip_with_fn;
 
         struct zip_fn;
-    } // namespace view
+    } // namespace views
 } // namespace ranges
-
-/// \cond
-namespace concepts
-{
-    inline namespace defs
-    {
-        namespace lazy
-        {
-        }
-        namespace defer
-        {
-        }
-    } // namespace defs
-} // namespace concepts
 
 namespace ranges
 {
     namespace concepts = ::concepts;
     using namespace ::concepts::defs;
-    namespace lazy
-    {
-        using namespace ::concepts::defs::lazy;
-    }
+    using ::concepts::and_v;
+    // namespace lazy
+    // {
+    //     using namespace ::concepts::defs::lazy;
+    // }
     namespace defer
     {
         using namespace ::concepts::defs::defer;

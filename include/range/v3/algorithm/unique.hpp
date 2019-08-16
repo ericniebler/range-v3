@@ -40,15 +40,15 @@ namespace ranges
         ///
         /// range-based version of the \c unique std algorithm
         ///
-        /// \pre `Rng` is a model of the `ForwardView` concept
-        /// \pre `I` is a model of the `ForwardIterator` concept
-        /// \pre `S` is a model of the `Sentinel` concept
-        /// \pre `C` is a model of the `Relation` concept
+        /// \pre `Rng` is a model of the `forward_range` concept
+        /// \pre `I` is a model of the `forward_iterator` concept
+        /// \pre `S` is a model of the `sentinel_for` concept
+        /// \pre `C` is a model of the `relation` concept
         ///
         template<typename I, typename S, typename C = equal_to, typename P = identity>
         auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             -> CPP_ret(I)( //
-                requires Sortable<I, C, P> && Sentinel<S, I>)
+                requires sortable<I, C, P> && sentinel_for<S, I>)
         {
             begin = adjacent_find(std::move(begin), end, std::ref(pred), std::ref(proj));
 
@@ -65,7 +65,7 @@ namespace ranges
         template<typename Rng, typename C = equal_to, typename P = identity>
         auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
             -> CPP_ret(safe_iterator_t<Rng>)( //
-                requires Sortable<iterator_t<Rng>, C, P> && Range<Rng>)
+                requires sortable<iterator_t<Rng>, C, P> && range<Rng>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
