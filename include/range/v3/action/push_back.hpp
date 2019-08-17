@@ -72,7 +72,7 @@ namespace ranges
         struct push_back_fn
         {
         private:
-            friend action::action_access;
+            friend actions::action_access;
             template<typename T>
             static auto bind(push_back_fn push_back, T && val)
             {
@@ -102,15 +102,15 @@ namespace ranges
     } // namespace adl_push_back_detail
     /// \endcond
 
-    namespace action
+    namespace actions
     {
         /// \ingroup group-actions
         RANGES_INLINE_VARIABLE(
             detail::with_braced_init_args<action<adl_push_back_detail::push_back_fn>>,
             push_back)
-    } // namespace action
+    } // namespace actions
 
-    using action::push_back;
+    using actions::push_back;
 } // namespace ranges
 
 #endif

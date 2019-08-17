@@ -20,23 +20,23 @@ int main()
     using namespace ranges;
 
     auto v = views::ints(1,21) | to<std::vector>();
-    auto & v2 = action::take(v, 17);
+    auto & v2 = actions::take(v, 17);
     CHECK(&v2 == &v);
     CHECK(v.size() == 17u);
     CHECK(v.back() == 17);
 
-    v = std::move(v) | action::take(14);
+    v = std::move(v) | actions::take(14);
     CHECK(v.size() == 14u);
     CHECK(v.back() == 14);
 
-    v |= action::take(11);
+    v |= actions::take(11);
     CHECK(v.size() == 11u);
     CHECK(v.back() == 11);
 
-    v |= action::take(100);
+    v |= actions::take(100);
     CHECK(v.size() == 11u);
 
-    v |= action::take(0);
+    v |= actions::take(0);
     CHECK(v.size() == 0u);
 
     return ::test_result();

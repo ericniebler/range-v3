@@ -32,7 +32,7 @@ namespace ranges
 
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         struct remove_if_fn
         {
@@ -62,7 +62,7 @@ namespace ranges
         /// \ingroup group-actions
         /// \sa action
         RANGES_INLINE_VARIABLE(action<remove_if_fn>, remove_if)
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

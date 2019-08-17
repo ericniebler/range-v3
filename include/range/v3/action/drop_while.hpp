@@ -28,7 +28,7 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         struct drop_while_fn
         {
@@ -48,7 +48,7 @@ namespace ranges
                     indirect_unary_predicate<Fun, iterator_t<Rng>> &&
                         erasable_range<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
             {
-                ranges::action::erase(
+                ranges::actions::erase(
                     rng, begin(rng), find_if_not(begin(rng), end(rng), std::move(fun)));
                 return static_cast<Rng &&>(rng);
             }
@@ -58,7 +58,7 @@ namespace ranges
         /// \relates drop_while_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<drop_while_fn>, drop_while)
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

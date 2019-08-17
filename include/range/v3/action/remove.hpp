@@ -29,7 +29,7 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         struct remove_fn
         {
@@ -65,7 +65,7 @@ namespace ranges
         /// \sa action
         /// \sa with_braced_init_args
         RANGES_INLINE_VARIABLE(action<remove_fn>, remove)
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

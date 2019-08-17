@@ -22,11 +22,11 @@ int main()
     using namespace ranges;
 
     std::vector<std::string> v {"hello"," ","world"};
-    auto s = v | move | action::join;
+    auto s = v | move | actions::join;
     static_assert(std::is_same<decltype(s), std::string>::value, "");
     CHECK(s == "hello world");
 
-    auto s2 = v | views::transform(views::all) | action::join;
+    auto s2 = v | views::transform(views::all) | actions::join;
     static_assert(std::is_same<decltype(s2), std::vector<char>>::value, "");
     CHECK(std::string(s2.begin(), s2.end()) == "hello world");
 

@@ -34,7 +34,7 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         struct split_when_fn
         {
@@ -74,7 +74,7 @@ namespace ranges
         /// \relates split_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<split_when_fn>, split_when)
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

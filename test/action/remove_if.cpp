@@ -21,11 +21,11 @@ int main()
     using namespace ranges;
 
     auto v = views::ints(1,21) | to<std::vector>();
-    auto & v2 = action::remove_if(v, [](int i){return i % 2 == 0;});
+    auto & v2 = actions::remove_if(v, [](int i){return i % 2 == 0;});
     CHECK(&v2 == &v);
     check_equal(v, {1,3,5,7,9,11,13,15,17,19});
 
-    auto && v3 = v | move | action::remove_if(std::bind(std::less<int>{}, std::placeholders::_1, 10));
+    auto && v3 = v | move | actions::remove_if(std::bind(std::less<int>{}, std::placeholders::_1, 10));
     check_equal(v3, {11,13,15,17,19});
 
     return ::test_result();

@@ -287,7 +287,7 @@ namespace ranges
     /// \ingroup group-actions
     RANGES_INLINE_VARIABLE(adl_insert_detail::insert_fn, insert)
 
-    namespace action
+    namespace actions
     {
         using ranges::insert;
     }

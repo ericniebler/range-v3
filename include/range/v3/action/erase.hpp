@@ -51,7 +51,7 @@ namespace ranges
     /// \ingroup group-actions
     RANGES_INLINE_VARIABLE(adl_erase_detail::erase_fn, erase)
 
-    namespace action
+    namespace actions
     {
         using ranges::erase;
     }

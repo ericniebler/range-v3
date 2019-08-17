@@ -30,7 +30,7 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         struct unique_fn
         {
@@ -61,7 +61,7 @@ namespace ranges
         /// \relates unique_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<unique_fn>, unique)
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

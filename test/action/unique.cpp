@@ -34,10 +34,10 @@ int main()
             return yield_from(views::repeat_n(i,i));
         }) | to<std::vector>();
     check_equal(views::take(v, 15), {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
-    v |= action::shuffle(gen);
+    v |= actions::shuffle(gen);
     CHECK(!is_sorted(v));
 
-    v |= action::sort | action::unique;
+    v |= actions::sort | actions::unique;
     CHECK(equal(v, views::ints(1,100)));
 
     return ::test_result();

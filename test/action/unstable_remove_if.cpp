@@ -32,76 +32,76 @@ void logic_test()
     // empty
     {
         std::vector<int> vec;
-        vec |= action::unstable_remove_if([](int) { return true; });
+        vec |= actions::unstable_remove_if([](int) { return true; });
         CHECK(vec.empty());
     }
 
     // all stay
     {
         std::vector<int> vec = make_vector();
-        vec |= action::unstable_remove_if([](int) { return false; });
+        vec |= actions::unstable_remove_if([](int) { return false; });
         check_equal(vec, {1,2,3,4,5});
     }
 
     // all remove
     {
         std::vector<int> vec = make_vector();
-        vec |= action::unstable_remove_if([](int) { return true; });
+        vec |= actions::unstable_remove_if([](int) { return true; });
         CHECK(vec.empty());
     }
 
     // remove one in the middle
     {
         std::vector<int> vec = make_vector();
-        vec |= action::unstable_remove_if([](int i) { return i == 2; });
+        vec |= actions::unstable_remove_if([](int i) { return i == 2; });
         check_equal(vec, {1,5,3,4});
     }
 
     // remove first
     {
         std::vector<int> vec = make_vector();
-        vec |= action::unstable_remove_if([](int i) { return i == 1; });
+        vec |= actions::unstable_remove_if([](int i) { return i == 1; });
         check_equal(vec, {5,2,3,4});
     }
 
     // remove last
     {
         std::vector<int> vec = make_vector();
-        vec |= action::unstable_remove_if([](int i) { return i == 5; });
+        vec |= actions::unstable_remove_if([](int i) { return i == 5; });
         check_equal(vec, {1,2,3,4});
     }
 
     // remove group in the middle
     {
         std::vector<int> vec = make_vector();
-        vec |= action::unstable_remove_if([](int i) { return i == 2 || i == 3 || i == 4; });
+        vec |= actions::unstable_remove_if([](int i) { return i == 2 || i == 3 || i == 4; });
         check_equal(vec, {1,5});
     }
 
     // remove group in the begin
     {
         std::vector<int> vec = make_vector();
-        vec |= action::unstable_remove_if([](int i) { return i == 1 || i == 2 || i == 3; });
+        vec |= actions::unstable_remove_if([](int i) { return i == 1 || i == 2 || i == 3; });
         check_equal(vec, {5,4});
     }
 
     // remove group in the end
     {
         std::vector<int> vec = make_vector();
-        vec |= action::unstable_remove_if([](int i) { return i == 3 || i == 4 || i == 5; });
+        vec |= actions::unstable_remove_if([](int i) { return i == 3 || i == 4 || i == 5; });
         check_equal(vec, {1,2});
     }
 
     // remains one in the middle
     {
         std::vector<int> vec = make_vector();
-        vec |= action::unstable_remove_if([](int i) { return i != 3; });
+        vec |= actions::unstable_remove_if([](int i) { return i != 3; });
         check_equal(vec, {3});
     }
     // remains group in the middle
     {
         std::vector<int> vec = make_vector();
-        vec |= action::unstable_remove_if([](int i) { return (i != 3) && (i != 4); });
+        vec |= actions::unstable_remove_if([](int i) { return (i != 3) && (i != 4); });
         check_equal(vec, {4,3});
     }
 }
@@ -196,12 +196,12 @@ public:
         {
             const int value = distr(eng);
             const auto pred = [value](Int i) { return i.value == value; };
-            unordered_list |= action::unstable_remove_if(pred);
-            ordered_list |= action::remove_if(pred);
+            unordered_list |= actions::unstable_remove_if(pred);
+            ordered_list |= actions::remove_if(pred);
         }
 
         // compare
-        unordered_list |= action::sort;
+        unordered_list |= actions::sort;
         CHECK(ordered_list == unordered_list);
     }
 };

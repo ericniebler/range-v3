@@ -137,7 +137,7 @@ int main()
 
     {
         auto vec0 = views::ints | views::transform([](int i) { return i * i; }) |
-                    views::take(10) | to_vector | action::sort(std::greater<int>{});
+                    views::take(10) | to_vector | actions::sort(std::greater<int>{});
         CPP_assert(same_as<decltype(vec0), std::vector<int>>);
         ::check_equal(vec0, {81, 64, 49, 36, 25, 16, 9, 4, 1, 0});
     }
@@ -145,7 +145,7 @@ int main()
     {
         auto vec1 = views::ints | views::transform([](int i) { return i * i; }) |
                     views::take(10) | to<std::vector<long>>() |
-                    action::sort(std::greater<long>{});
+                    actions::sort(std::greater<long>{});
         CPP_assert(same_as<decltype(vec1), std::vector<long>>);
         ::check_equal(vec1, {81, 64, 49, 36, 25, 16, 9, 4, 1, 0});
     }
@@ -154,7 +154,7 @@ int main()
     {
         auto vec2 = views::ints | views::transform([](int i) { return i * i; }) |
                     views::take(10) | to<std::vector<long>> |
-                    action::sort(std::greater<long>{});
+                    actions::sort(std::greater<long>{});
         CPP_assert(same_as<decltype(vec2), std::vector<long>>);
         ::check_equal(vec2, {81, 64, 49, 36, 25, 16, 9, 4, 1, 0});
     }

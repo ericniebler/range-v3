@@ -32,7 +32,7 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         struct action_access
         {
@@ -118,7 +118,7 @@ namespace ranges
             views::ref(rng) | action;
             return rng;
         }
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

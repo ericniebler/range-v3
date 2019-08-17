@@ -33,7 +33,7 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
-    namespace action
+    namespace actions
     {
         struct split_fn
         {
@@ -71,7 +71,7 @@ namespace ranges
         /// \relates split_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<split_fn>, split)
-    } // namespace action
+    } // namespace actions
     /// @}
 } // namespace ranges
 

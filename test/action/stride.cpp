@@ -24,22 +24,22 @@ int main()
 
     auto v = views::ints(0,100) | to<std::vector>();
 
-    auto v2 = v | copy | action::stride(10);
+    auto v2 = v | copy | actions::stride(10);
     CHECK(size(v2) == 10u);
     CPP_assert(same_as<decltype(v), decltype(v2)>);
     ::check_equal(v2, {0,10,20,30,40,50,60,70,80,90});
 
-    v2 = v2 | move | action::stride(4);
+    v2 = v2 | move | actions::stride(4);
     ::check_equal(v2, {0,40,80});
 
-    v2 |= action::stride(2);
+    v2 |= actions::stride(2);
     ::check_equal(v2, {0,80});
-    v2 |= action::stride(1);
+    v2 |= actions::stride(1);
     ::check_equal(v2, {0,80});
-    v2 |= action::stride(10);
+    v2 |= actions::stride(10);
     ::check_equal(v2, {0});
 
-    auto & v3 = action::stride(v, 30);
+    auto & v3 = actions::stride(v, 30);
     CHECK(&v3 == &v);
     ::check_equal(v, {0,30,60,90});
 
