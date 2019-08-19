@@ -270,11 +270,11 @@ namespace ranges
 
         public:
             template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(container_t<Rng>)(          //
+            auto operator()(Rng && rng) const -> CPP_ret(container_t<Rng>)(           //
                 requires input_range<Rng> &&                                          //
-                bool(!defer::convertible_to_container_container<Rng,                 //
-                                                                container_t<Rng>> && //
-                     defer::convertible_to_container<Rng, container_t<Rng>>))
+                (bool(!defer::convertible_to_container_container<Rng,                 //
+                                                                 container_t<Rng>> && //
+                      defer::convertible_to_container<Rng, container_t<Rng>>)))
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Attempt to convert an infinite range to a container.");
