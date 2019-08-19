@@ -888,7 +888,7 @@ namespace concepts
         (
             template(typename T, typename U)
             concept derived_from,
-                std::is_base_of<U, T>::value &&
+                META_IS_BASE_OF(U, T) &&
                 convertible_to<T const volatile *, U const volatile *>
         );
 
@@ -1053,7 +1053,7 @@ namespace concepts
             template(typename T, typename... Args)
             (concept constructible_from)(T, Args...),
                 destructible<T> &&
-                std::is_constructible<T, Args...>::value
+                META_IS_CONSTRUCTIBLE(T, Args...)
         );
 
         CPP_def

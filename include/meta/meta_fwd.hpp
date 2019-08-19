@@ -174,6 +174,24 @@
 #define META_IS_SAME(...) std::is_same<__VA_ARGS__>::value
 #endif
 
+#if defined(__GNUC__)
+#define META_IS_BASE_OF(...) __is_base_of(__VA_ARGS__)
+#elif META_CXX_TRAIT_VARIABLE_TEMPLATES
+#define META_IS_BASE_OF(...) std::is_base_of_v<__VA_ARGS__>
+#else
+#define META_IS_BASE_OF(...) std::is_base_of<__VA_ARGS__>::value
+#endif
+
+#if defined(__clang__)
+#define META_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
+#elif defined(__GNUC__) && __GNUC__ >= 8
+#define META_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
+#elif META_CXX_TRAIT_VARIABLE_TEMPLATES
+#define META_IS_CONSTRUCTIBLE(...) std::is_constructible_v<__VA_ARGS__>
+#else
+#define META_IS_CONSTRUCTIBLE(...) std::is_constructible<__VA_ARGS__>::value
+#endif
+
 /// \cond
 // Non-portable forward declarations of standard containers
 #ifdef _LIBCPP_VERSION

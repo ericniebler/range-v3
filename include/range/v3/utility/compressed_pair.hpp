@@ -52,7 +52,7 @@ namespace ranges
 
             template<
                 typename... Args,
-                meta::if_<meta::strict_and<std::is_constructible<Ts, Args>...>, int> = 0>
+                meta::if_<meta::and_c<META_IS_CONSTRUCTIBLE(Ts, Args)...>, int> = 0>
             constexpr compressed_tuple_(Args &&... args) noexcept(
                 meta::strict_and<std::is_nothrow_constructible<storage<Ts, Is, Ts...>,
                                                                Args>...>::value)
@@ -60,7 +60,7 @@ namespace ranges
             {}
 
             template<typename... Us,
-                     meta::if_<meta::strict_and<std::is_constructible<Us, Ts const &>...>,
+                     meta::if_<meta::and_c<META_IS_CONSTRUCTIBLE(Us, Ts const &)...>,
                                int> = 0>
             constexpr operator std::tuple<Us...>() const noexcept(
                 meta::strict_and<std::is_nothrow_constructible<Us, Ts const &>...>::value)

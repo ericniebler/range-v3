@@ -121,8 +121,7 @@ namespace ranges
 
     struct make_pipeable_fn;
 
-    template<typename Derived>
-    struct pipeable;
+    struct pipeable_base;
 
     template<typename First, typename Second>
     struct composed;

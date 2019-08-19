@@ -3100,7 +3100,7 @@ namespace meta
         };
 
         template <typename... Set, typename T>
-        struct in_<list<Set...>, T> : std::is_base_of<id<T>, inherit<list<id<Set>...>>>
+        struct in_<list<Set...>, T> : bool_<META_IS_BASE_OF(id<T>, inherit<list<id<Set>...>>)>
         {
         };
 

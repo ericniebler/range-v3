@@ -32,7 +32,7 @@ namespace ranges
     /// @{
     namespace views
     {
-        struct all_fn : pipeable<all_fn>
+        struct all_fn : pipeable_base
         {
         private:
             /// If it's a view already, pass it though.
