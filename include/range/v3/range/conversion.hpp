@@ -206,8 +206,8 @@ namespace ranges
             template(typename Rng, typename Cont)
             concept convertible_to_container_container_impl_,
                 range<Cont> && (!view_<Cont>) && move_constructible<Cont> &&
-                bool(ranges::defer::range<range_value_t<Cont>> &&
-                    !ranges::defer::view_<range_value_t<Cont>>) &&
+                (bool(ranges::defer::range<range_value_t<Cont>> &&
+                    !ranges::defer::view_<range_value_t<Cont>>)) &&
                 // Test that each element of the input range can be ranges::to<>
                 // to the output container.
                 invocable<

@@ -32,7 +32,6 @@ namespace ranges
     template<typename T>
     RANGES_INLINE_VAR constexpr bool is_pipeable_v<T &> = META_IS_BASE_OF(pipeable_base,
                                                                           T);
-
     template<typename T>
     RANGES_INLINE_VAR constexpr bool is_pipeable_v<T &&> = META_IS_BASE_OF(pipeable_base,
                                                                            T);
