@@ -123,7 +123,7 @@ namespace ranges
         // clang-format on
     };
 
-    struct ref_fn : pipeable<ref_fn>
+    struct ref_fn : pipeable_base
     {
         template<typename T>
         auto operator()(T & t) const -> CPP_ret(reference_wrapper<T>)( //

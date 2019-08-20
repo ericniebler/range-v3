@@ -65,7 +65,7 @@ namespace ranges
         /// @{
         namespace views
         {
-            struct shared_fn : pipeable<shared_fn>
+            struct shared_fn : pipeable_base
             {
             public:
                 template<typename Rng>

@@ -63,7 +63,7 @@ namespace ranges
         RANGES_INLINE_VARIABLE(make_action_fn, make_action)
 
         template<typename Action>
-        struct action : pipeable<action<Action>>
+        struct action : pipeable_base
         {
         private:
             Action action_;

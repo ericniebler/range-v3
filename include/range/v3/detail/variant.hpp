@@ -84,10 +84,18 @@ namespace ranges
     };
 
     template<typename T, std::size_t Index>
-    struct indexed_element : private reference_wrapper<T>
+    struct indexed_element
     {
-        using reference_wrapper<T>::reference_wrapper;
-        using reference_wrapper<T>::get;
+    private:
+        reference_wrapper<T> ref_;
+    public:
+        constexpr indexed_element(reference_wrapper<T> ref) noexcept
+          : ref_(ref)
+        {}
+        constexpr decltype(auto) get() const noexcept
+        {
+            return ref_.get();
+        }
     };
     template<std::size_t Index>
     struct indexed_element<void, Index>
@@ -173,41 +181,35 @@ namespace ranges
         struct indexed_datum<T[N], Index>;
 
         template<typename T, typename Index>
-        struct indexed_datum<T &, Index> : private reference_wrapper<T &>
+        struct indexed_datum<T &, Index>
         {
+        private:
             template<typename, typename>
             friend struct indexed_datum;
-            indexed_datum() = delete;
-            using reference_wrapper<T &>::reference_wrapper;
-            template<typename U>
-            constexpr CPP_ctor(indexed_datum)(indexed_datum<U &, Index> that)(
-                noexcept(true) //
-                requires(!same_as<T, U>) &&
-                convertible_to<U &, T &>)
-              : reference_wrapper<T &>(that.get())
+            reference_wrapper<T &> ref_;
+        public:
+            constexpr indexed_datum(reference_wrapper<T &> ref) noexcept
+              : ref_(ref)
             {}
             constexpr indexed_element<T &, Index::value> ref() const noexcept
             {
-                return {this->get()};
+                return {ref_.get()};
             }
         };
         template<typename T, typename Index>
-        struct indexed_datum<T &&, Index> : private reference_wrapper<T &&>
+        struct indexed_datum<T &&, Index>
         {
+        private:
             template<typename, typename>
             friend struct indexed_datum;
-            indexed_datum() = delete;
-            using reference_wrapper<T &&>::reference_wrapper;
-            template<typename U>
-            constexpr CPP_ctor(indexed_datum)(indexed_datum<U &&, Index> that)(
-                noexcept(true) //
-                requires(!same_as<T, U>) &&
-                convertible_to<U &&, T &&>)
-              : reference_wrapper<T &&>(that.get())
+            reference_wrapper<T &&> ref_;
+        public:
+            constexpr indexed_datum(reference_wrapper<T &&> ref) noexcept
+              : ref_(ref)
             {}
             constexpr indexed_element<T &&, Index::value> ref() const noexcept
             {
-                return {this->get()};
+                return {ref_.get()};
             }
         };
         template<typename Index>

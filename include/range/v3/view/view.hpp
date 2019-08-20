@@ -103,7 +103,7 @@ namespace ranges
         RANGES_INLINE_VARIABLE(make_view_fn, make_view)
 
         template<typename View>
-        struct view : pipeable<view<View>>
+        struct view : pipeable_base
         {
         private:
             View view_;

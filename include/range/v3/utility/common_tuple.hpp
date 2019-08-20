@@ -47,7 +47,7 @@ namespace ranges
         inline constexpr bool argstructible = false;
         template<std::size_t N, typename... Ts, typename... Us>
         inline constexpr bool argstructible<args_<N, Ts...>, args_<N, Us...>> =
-            (std::is_constructible_v<Ts, Us> && ...);
+            (META_IS_CONSTRUCTIBLE(Ts, Us) && ...);
 
         template<typename, typename>
         inline constexpr bool argsignable = false;
@@ -65,7 +65,7 @@ namespace ranges
                                        argstructible<args_, args_<N, Us...>>
 #else  // ^^^ workaround / no workaround vvv
                                        meta::and_c<
-                                           std::is_constructible<Ts, Us>::value...>::value
+                                           META_IS_CONSTRUCTIBLE(Ts, Us)...>::value
 #endif // RANGES_WORKAROUND_MSVC_786312
                                        > * = nullptr)
             {}
