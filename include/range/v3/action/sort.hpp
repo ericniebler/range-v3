@@ -36,7 +36,7 @@ namespace ranges
         private:
             friend action_access;
             template<typename C, typename P = identity>
-            static auto CPP_fun(bind)(sort_fn sort, C pred, P proj = P{})( //
+            static auto CPP_fun(bind)(sort_fn sort, C pred, P proj = {})( //
                 requires(!range<C>))
             {
                 return bind_back(sort, std::move(pred), std::move(proj));
@@ -44,7 +44,7 @@ namespace ranges
 
         public:
             template<typename Rng, typename C = less, typename P = identity>
-            auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
+            auto operator()(Rng && rng, C pred = {}, P proj = {}) const
                 -> CPP_ret(Rng)( //
                     requires forward_range<Rng> && sortable<iterator_t<Rng>, C, P>)
             {

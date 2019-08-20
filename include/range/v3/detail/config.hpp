@@ -259,6 +259,9 @@ namespace ranges
                                       // deleted function
 #define RANGES_WORKAROUND_MSVC_934264 // Explicitly-defaulted inherited default
                                       // constructor is not correctly implicitly constexpr
+#if _MSVC_LANG <= 201703L
+#define RANGES_WORKAROUND_MSVC_OLD_LAMBDA
+#endif
 
 #elif defined(__GNUC__) || defined(__clang__)
 #define RANGES_PRAGMA(X) _Pragma(#X)

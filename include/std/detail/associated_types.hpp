@@ -34,6 +34,15 @@ namespace ranges
         template<typename T, typename...>
         using always_ = T;
 
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(__EDG__)
+        // MSVC laughs at your silly micro-optimizations and implements
+        // conditional_t, enable_if_t, is_object_v, and is_integral_v in the
+        // compiler.
+        template<bool B, typename T, typename U>
+        using if_then_t = std::conditional_t<B, T, U>;
+        using std::enable_if;
+        using std::enable_if_t;
+#else  // ^^^ MSVC / not MSVC vvv
         template<bool>
         struct if_then
         {
@@ -61,13 +70,10 @@ namespace ranges
         template<bool B, typename T = void>
         using enable_if_t = typename enable_if<B>::template apply<T>;
 
+#ifndef __clang__
+        // NB: insufficient for MSVC, which (non-conformingly) allows function
+        // pointers to implicitly convert to void*.
         void is_objptr_(void const volatile *);
-#ifdef _MSC_VER
-        // Microsoft's compiler permits function pointers to implicitly
-        // convert to void*.
-        template<class R, class... Args>
-        void is_objptr_(R (*)(Args...)) = delete;
-#endif
 
         // std::is_object, optimized for compile time.
         template<typename T>
@@ -81,6 +87,7 @@ namespace ranges
         {
             return (void)p, (void)q, true;
         }
+#endif // !__clang__
 
         template<typename T>
         constexpr bool is_integral_(...)
@@ -100,6 +107,7 @@ namespace ranges
             return false;
         }
 #endif
+#endif // detect MSVC
 
         template<typename T>
         struct with_difference_type_
@@ -118,11 +126,11 @@ namespace ranges
         template<typename T>
         struct incrementable_traits_2_<
             T,
-#ifdef RANGES_WORKAROUND_MSVC_785522
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(__EDG__)
             std::enable_if_t<std::is_integral_v<difference_result_t<T>>>>
-#else  // ^^^ workaround / no workaround vvv
+#else  // ^^^ MSVC / not MSVC vvv
             always_<void, int[is_integral_<difference_result_t<T>>(0)]>>
-#endif // RANGES_WORKAROUND_MSVC_785522
+#endif // detect MSVC
         {
             using difference_type = std::make_signed_t<difference_result_t<T>>;
         };
@@ -133,7 +141,13 @@ namespace ranges
 
         template<typename T>
         struct incrementable_traits_1_<T *>
+#ifdef __clang__
+          : if_then_t<__is_object(T), with_difference_type_<std::ptrdiff_t>, nil_>
+#elif defined(_MSC_VER) && !defined(__EDG__)
+          : std::conditional_t<std::is_object_v<T>, with_difference_type_<std::ptrdiff_t>, nil_>
+#else // ^^^ MSVC / not MSVC vvv
           : if_then_t<is_object_<T>(0), with_difference_type_<std::ptrdiff_t>, nil_>
+#endif // detect MSVC
         {};
 
         template<typename T>
@@ -155,7 +169,13 @@ namespace ranges
     /// \cond
     namespace detail
     {
+#ifdef __clang__
+        template<typename T, bool = __is_object(T)>
+#elif defined(_MSC_VER) && !defined(__EDG__)
+        template<typename T, bool = std::is_object_v<T>>
+#else // ^^^ MSVC / not MSVC vvv
         template<typename T, bool = is_object_<T>(0)>
+#endif // detect MSVC
         struct with_value_type_
         {};
         template<typename T>
