@@ -78,17 +78,33 @@ namespace ranges
             {
                 return bind_back(push_back, static_cast<T &&>(val));
             }
+#ifdef RANGES_WORKAROUND_MSVC_OLD_LAMBDA
             template<typename T, std::size_t N>
-            static auto bind(push_back_fn push_back, T (&val)[N])
+            struct lamduh
             {
-                return bind_back(
-                    [push_back](auto && rng, T(*val)[N])
-                        -> invoke_result_t<push_back_fn, decltype(rng), T(&)[N]> {
-                        return push_back(static_cast<decltype(rng)>(rng), *val);
-                    },
-                    &val);
-            }
+                T (&val_)[N];
 
+                template<typename Rng>
+                auto operator()(Rng && rng) const
+                    -> invoke_result_t<push_back_fn, Rng, T(&)[N]> {
+                    return push_back_fn{}(static_cast<Rng &&>(rng), val_);
+                }
+            };
+            template<typename T, std::size_t N>
+            static lamduh<T, N> bind(push_back_fn, T (&val)[N])
+            {
+                return {val};
+            }
+#else // ^^^ workaround / no workaround vvv
+            template<typename T, std::size_t N>
+            static auto bind(push_back_fn, T (&val)[N])
+            {
+                return [&val](auto && rng)
+                    -> invoke_result_t<push_back_fn, decltype(rng), T(&)[N]> {
+                    return push_back_fn{}(static_cast<decltype(rng)>(rng), val);
+                };
+            }
+#endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
         public:
             template<typename Rng, typename T>
             auto operator()(Rng && rng, T && t) const -> CPP_ret(Rng)( //

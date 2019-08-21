@@ -532,16 +532,33 @@ namespace ranges
             {
                 return make_pipeable(bind_back(join, static_cast<T &&>(t)));
             }
+#ifdef RANGES_WORKAROUND_MSVC_OLD_LAMBDA
             template<typename T, std::size_t N>
-            static auto bind(join_fn join, T (&val)[N])
+            struct lamduh
             {
-                return bind_back(
-                    [join](auto && rng, T(*val)[N])
-                        -> invoke_result_t<join_fn, decltype(rng), T(&)[N]> {
-                        return join(static_cast<decltype(rng)>(rng), *val);
-                    },
-                    &val);
+                T (&val_)[N];
+
+                template<typename Rng>
+                auto operator()(Rng && rng) const -> invoke_result_t<join_fn, Rng, T(&)[N]> {
+                    return join_fn{}(static_cast<Rng &&>(rng), val_);
+                }
+            };
+
+            template<typename T, std::size_t N>
+            static lamduh<T, N> bind(join_fn, T (&val)[N])
+            {
+                return {val};
             }
+#else // ^^^ workaround / no workaround vvv
+            template<typename T, std::size_t N>
+            static auto bind(join_fn, T (&val)[N])
+            {
+                return [&val](auto && rng)
+                    -> invoke_result_t<join_fn, decltype(rng), T(&)[N]> {
+                    return join_fn{}(static_cast<decltype(rng)>(rng), val);
+                };
+            }
+#endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
             template<typename Rng>
             using inner_value_t = range_value_t<range_reference_t<Rng>>;
 

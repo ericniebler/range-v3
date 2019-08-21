@@ -41,17 +41,35 @@ namespace ranges
             {
                 return bind_back(shuffle, static_cast<Gen &&>(gen));
             }
+#ifdef RANGES_WORKAROUND_MSVC_OLD_LAMBDA
             template<typename Gen>
-            static auto CPP_fun(bind)(shuffle_fn shuffle, Gen & gen)( //
+            struct lamduh
+            {
+                Gen & gen_;
+
+                template<typename Rng>
+                auto operator()(Rng && rng) const -> invoke_result_t<shuffle_fn, Rng, Gen &> {
+                    return shuffle_fn{}(static_cast<Rng &&>(rng), gen_);
+                }
+            };
+
+            template<typename Gen>
+            static lamduh<Gen> CPP_fun(bind)(shuffle_fn, Gen & gen)( //
                 requires uniform_random_bit_generator<Gen>)
             {
-                return bind_back(
-                    [shuffle](auto && rng, Gen * gen)
-                        -> invoke_result_t<shuffle_fn, decltype(rng), Gen &> {
-                        return shuffle(static_cast<decltype(rng)>(rng), *gen);
-                    },
-                    &gen);
+                return {gen};
             }
+#else // ^^^ workaround / no workaround vvv
+            template<typename Gen>
+            static auto CPP_fun(bind)(shuffle_fn, Gen & gen)( //
+                requires uniform_random_bit_generator<Gen>)
+            {
+                return [&gen](auto && rng)
+                    -> invoke_result_t<shuffle_fn, decltype(rng), Gen &> {
+                    return shuffle_fn{}(static_cast<decltype(rng)>(rng), gen);
+                };
+            }
+#endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
 
         public:
             template<typename Rng, typename Gen>
