@@ -13,7 +13,10 @@
 //
 
 #include <iostream>
+#include <vector>
+
 #include <range/v3/range/access.hpp>
+#include <range/v3/range/conversion.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range_for.hpp>
 #include <range/v3/view/span.hpp>
@@ -23,9 +26,11 @@
 #include <range/v3/view/empty.hpp>
 #include <range/v3/view/filter.hpp>
 #include <range/v3/view/iota.hpp>
+#include <range/v3/view/linear_distribute.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/take_exactly.hpp>
-#include <range/v3/view/filter.hpp>
+#include <range/v3/view/transform.hpp>
+
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -231,6 +236,63 @@ void test_bug_978()
     );
 }
 
+template<typename ...T>
+auto cp(const std::vector<T>& ...a)
+{
+    return ranges::views::cartesian_product(a...);
+}
+
+std::vector<double> distribute(double len, unsigned n)
+{
+    return ranges::views::linear_distribute(0.0, len, n) | ranges::to<std::vector>();
+}
+
+// https://github.com/ericniebler/range-v3/issues/1269
+void test_bug_1269_(unsigned size_x, unsigned size_y, unsigned size_z)
+{
+    auto x = distribute(1.0, size_x);
+    CHECK(x.size() == size_x);
+    CHECK((int)x.back() == 1);
+
+    auto y = distribute(2.0, size_y);
+    CHECK(y.size() == size_y);
+    CHECK((int)y.back() == 2);
+
+    auto z = distribute(3.0, size_z);
+    CHECK(z.size() == size_z);
+    CHECK((int)z.back() == 3);
+
+    auto xyz = cp(x, y, z);
+    auto sz = x.size() * y.size() * z.size();
+
+    CHECK(xyz.size() == sz);
+
+    auto t =
+        ranges::views::transform([&](const auto& location) {
+            return std::get<0>(location) * std::get<1>(location) * std::get<2>(location);
+        });
+    auto loc = xyz | t | ranges::to<std::vector>();
+
+    CHECK(loc.size() == sz);
+    CHECK((int)loc.back() == 6);
+}
+
+void test_bug_1269()
+{
+    test_bug_1269_(5, 4, 6);
+    test_bug_1269_(2, 2, 3);
+    test_bug_1269_(2, 3, 3);
+    test_bug_1269_(3, 3, 4);
+    test_bug_1269_(3, 4, 4);
+    test_bug_1269_(4, 4, 5);
+    test_bug_1269_(4, 5, 5);
+
+    test_bug_1269_(3, 2, 2);
+    test_bug_1269_(4, 3, 3);
+    test_bug_1269_(5, 4, 4);
+    test_bug_1269_(6, 5, 5);
+}
+
 int main()
 {
     int some_ints[] = {0,1,2,3};
@@ -284,6 +346,7 @@ int main()
     test_bug_823();
     test_bug_919();
     test_bug_978();
+    test_bug_1269();
 
     return test_result();
 }

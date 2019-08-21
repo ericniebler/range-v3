@@ -79,9 +79,9 @@ namespace test_impl
             dismissed_ = true;
         }
         template<typename V = T>
-        auto eval_(int) -> decltype(!std::declval<V&>())
+        auto eval_(int) -> decltype(!(bool)std::declval<V&>())
         {
-            return !t_;
+            return !(bool)t_;
         }
         bool eval_(long)
         {
