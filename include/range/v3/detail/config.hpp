@@ -320,6 +320,9 @@ namespace ranges
 #if __GNUC__ < 6
 #define RANGES_WORKAROUND_GCC_UNFILED0 /* Workaround old GCC name lookup bug */
 #endif
+#if __GNUC__ == 7 || __GNUC__ == 8
+#define RANGES_WORKAROUND_GCC_UNFILED1 /* Workaround strange GCC ICE */
+#endif
 #if __GNUC__ >= 9 && defined(__cpp_concepts)
 #define RANGES_WORKAROUND_GCC_89953
 #endif

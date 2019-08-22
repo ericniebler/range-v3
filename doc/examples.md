@@ -37,11 +37,23 @@ Examples
 
 \section example-views Examples: Views
 
-TBD
+\subsection example-filter-transform Filter and transform
+
+\snippet filter_transform.cpp filter_transform
+
+\subsection example-accumulate-ints Generate ints and accumulate
+
+\snippet accumulate_ints.cpp accumulate_ints
+
+\subsection example-comprehension-conversion Convert a range comprehension to a vector
+
+\snippet comprehension_conversion.cpp comprehension_conversion
 
 \section example-actions Examples: Actions
 
-TBD
+\subsection example-sort-unique Remove non-unique elements from a container
+
+\snippet sort_unique.cpp sort_unique
 
 \section example-gestalt Examples: Putting it all together
 
