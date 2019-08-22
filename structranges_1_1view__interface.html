@@ -998,7 +998,8 @@ template&lt;bool True = true&gt; </div>
           <td class="paramname"></td><td>)</td>
           <td> const -&gt; detail::iter_size_t&lt;iterator_t&lt;D&lt;True&gt;&gt;&gt;   
                 requires True &amp;&amp; (Cardinality &lt; 0) &amp;&amp;
-                sized_sentinel_for&lt;sentinel_t&lt;D&lt;True&gt; const&gt;, iterator_t&lt;D&lt;True&gt; const&gt;&gt; &amp;&amp;
+                sized_sentinel_for&lt;sentinel_t&lt;D&lt;True&gt; const&gt;,
+                                   iterator_t&lt;D&lt;True&gt; const&gt;&gt; &amp;&amp;
                 <a class="el" href="structranges_1_1view__interface.html#a8f3a50712ecd80e443aea996cc2ff012">forward_range</a>&lt;D&lt;True&gt; const&gt; 
         </td>
         </tr>

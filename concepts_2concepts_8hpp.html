@@ -166,6 +166,29 @@ Macros</h2></td></tr>
 <tr class="memitem:a0dd478c2714c6347c9ab933bedeec873"><td class="memItemLeft" align="right" valign="top"><a id="a0dd478c2714c6347c9ab933bedeec873"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_CTOR_IMPL_1_</b>(...)&#160;&#160;&#160;(__VA_ARGS__) CPP_PP_EXPAND                                                 \</td></tr>
 <tr class="separator:a0dd478c2714c6347c9ab933bedeec873"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7f89d6ef5087f51222a6eb7819a7295"><td class="memItemLeft" align="right" valign="top"><a id="ae7f89d6ef5087f51222a6eb7819a7295"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_ctor_sfinae</b>(TYPE)&#160;&#160;&#160;TYPE CPP_CTOR_SFINAE_IMPL_1_</td></tr>
+<tr class="separator:ae7f89d6ef5087f51222a6eb7819a7295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2019d04cc92ab369e3312954815ecaa6"><td class="memItemLeft" align="right" valign="top"><a id="a2019d04cc92ab369e3312954815ecaa6"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_CTOR_SFINAE_EAT_NOEXCEPT_noexcept</b>(...)</td></tr>
+<tr class="separator:a2019d04cc92ab369e3312954815ecaa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc5eb81bd18d243ebfe825b00724993b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_CTOR_SFINAE_IMPL_1_</b>(...)</td></tr>
+<tr class="separator:acc5eb81bd18d243ebfe825b00724993b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8041a53a56d8135c00617bf3eb746621"><td class="memItemLeft" align="right" valign="top"><a id="a8041a53a56d8135c00617bf3eb746621"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_CTOR_SFINAE_MAKE_PROBE</b>(FIRST, ...)&#160;&#160;&#160;CPP_PP_CAT(CPP_CTOR_SFINAE_PROBE_NOEXCEPT_, FIRST)                          \</td></tr>
+<tr class="separator:a8041a53a56d8135c00617bf3eb746621"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea95fe74c50fffe574aaaf2da8b6ea12"><td class="memItemLeft" align="right" valign="top"><a id="aea95fe74c50fffe574aaaf2da8b6ea12"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_CTOR_SFINAE_PROBE_NOEXCEPT_noexcept</b>&#160;&#160;&#160;CPP_PP_PROBE(~)                                                             \</td></tr>
+<tr class="separator:aea95fe74c50fffe574aaaf2da8b6ea12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75854668433aabe49d0b5a28e4cc2aeb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_CTOR_SFINAE_REQUIRES</b>(...)</td></tr>
+<tr class="separator:a75854668433aabe49d0b5a28e4cc2aeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fde74242f1fa91559d88f7415fbd9de"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_CTOR_SFINAE_REQUIRES_0</b>(...)</td></tr>
+<tr class="separator:a3fde74242f1fa91559d88f7415fbd9de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3a378eb34691f109a699ff0035c6829"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_CTOR_SFINAE_REQUIRES_1</b>(...)</td></tr>
+<tr class="separator:aa3a378eb34691f109a699ff0035c6829"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78e4b650834d2c0fdec06a9fad10e754"><td class="memItemLeft" align="right" valign="top"><a id="a78e4b650834d2c0fdec06a9fad10e754"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_CTOR_SFINAE_SHOW_NOEXCEPT_noexcept</b>(...)&#160;&#160;&#160;noexcept(__VA_ARGS__) CPP_PP_EAT CPP_PP_LPAREN                              \</td></tr>
+<tr class="separator:a78e4b650834d2c0fdec06a9fad10e754"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad63ab803f06ca25574032b36a2e1d8b7"><td class="memItemLeft" align="right" valign="top"><a id="ad63ab803f06ca25574032b36a2e1d8b7"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_CXX_CONCEPTS</b>&#160;&#160;&#160;201800L</td></tr>
 <tr class="separator:ad63ab803f06ca25574032b36a2e1d8b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,6 +208,9 @@ Macros</h2></td></tr>
 <tr class="memitem:ad9f9ca062fb04c31f194ff57c95449f6"><td class="memItemLeft" align="right" valign="top"><a id="ad9f9ca062fb04c31f194ff57c95449f6"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_member</b></td></tr>
 <tr class="separator:ad9f9ca062fb04c31f194ff57c95449f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31e17111e7636268a2cd06478ff90629"><td class="memItemLeft" align="right" valign="top"><a id="a31e17111e7636268a2cd06478ff90629"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_member_sfinae</b>&#160;&#160;&#160;CPP_broken_friend_member                                                    \</td></tr>
+<tr class="separator:a31e17111e7636268a2cd06478ff90629"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21025a68f5129a546a1a86cd0a40470e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_PP_AUX_template</b>(...)</td></tr>
 <tr class="separator:a21025a68f5129a546a1a86cd0a40470e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78019a9b46cdbf59a6430de78f7aeb7c"><td class="memItemLeft" align="right" valign="top"><a id="a78019a9b46cdbf59a6430de78f7aeb7c"></a>
@@ -374,6 +400,19 @@ Macros</h2></td></tr>
 <tr class="memitem:ab9873276bf05119a730c26229b0ef550"><td class="memItemLeft" align="right" valign="top"><a id="ab9873276bf05119a730c26229b0ef550"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_template_def</b>&#160;&#160;&#160;CPP_template                                           \</td></tr>
 <tr class="separator:ab9873276bf05119a730c26229b0ef550"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1466ce23e652b700d764758f4725701"><td class="memItemLeft" align="right" valign="top"><a id="af1466ce23e652b700d764758f4725701"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_template_def_sfinae</b>(...)&#160;&#160;&#160;template&lt;__VA_ARGS__ CPP_TEMPLATE_DEF_SFINAE_AUX_                           \</td></tr>
+<tr class="separator:af1466ce23e652b700d764758f4725701"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02009585db5d95fcf731fec2dfe3010e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_TEMPLATE_DEF_SFINAE_AUX_</b>(...)</td></tr>
+<tr class="separator:a02009585db5d95fcf731fec2dfe3010e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53431f54ae45b9206ff1a28ede8b70ab"><td class="memItemLeft" align="right" valign="top"><a id="a53431f54ae45b9206ff1a28ede8b70ab"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_template_sfinae</b>(...)&#160;&#160;&#160;template&lt;__VA_ARGS__ CPP_TEMPLATE_SFINAE_AUX_                               \</td></tr>
+<tr class="separator:a53431f54ae45b9206ff1a28ede8b70ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c405bfade698f1bd3c2d30c0048a2d1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_TEMPLATE_SFINAE_AUX_</b>(...)</td></tr>
+<tr class="separator:a3c405bfade698f1bd3c2d30c0048a2d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81b1571337bcba2b27f95cf909c7cf40"><td class="memItemLeft" align="right" valign="top"><a id="a81b1571337bcba2b27f95cf909c7cf40"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CPP_TEMPLATE_SFINAE_AUX_3_requires</b></td></tr>
+<tr class="separator:a81b1571337bcba2b27f95cf909c7cf40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -612,6 +651,80 @@ concept&#160;</td><td class="memItemRight" valign="bottom"><b>concepts::detail::
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">CPP_PP_CAT(CPP_AUTO_FUN_RETURNS_CONST_,                                     \</div><div class="line">        CPP_PP_CHECK(CPP_PP_CAT(                                                \</div><div class="line">            CPP_PP_PROBE_CONST_MUTABLE_PROBE_, MAYBE_CONST)))                   \</div></div><!-- fragment -->
+</div>
+</div>
+<a id="acc5eb81bd18d243ebfe825b00724993b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc5eb81bd18d243ebfe825b00724993b">&#9670;&nbsp;</a></span>CPP_CTOR_SFINAE_IMPL_1_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CPP_CTOR_SFINAE_IMPL_1_</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">(__VA_ARGS__                                                                \</div><div class="line">        CPP_PP_COMMA_IIF(                                                       \</div><div class="line">            CPP_PP_NOT(CPP_PP_IS_NOT_EMPTY(__VA_ARGS__)))                       \</div><div class="line">    CPP_CTOR_SFINAE_REQUIRES                                                    \</div></div><!-- fragment -->
+</div>
+</div>
+<a id="a75854668433aabe49d0b5a28e4cc2aeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75854668433aabe49d0b5a28e4cc2aeb">&#9670;&nbsp;</a></span>CPP_CTOR_SFINAE_REQUIRES</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CPP_CTOR_SFINAE_REQUIRES</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">CPP_PP_CAT(CPP_CTOR_SFINAE_REQUIRES_,                                       \</div><div class="line">    CPP_PP_CHECK(CPP_CTOR_SFINAE_MAKE_PROBE(__VA_ARGS__,)))(__VA_ARGS__)        \</div></div><!-- fragment -->
+</div>
+</div>
+<a id="a3fde74242f1fa91559d88f7415fbd9de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fde74242f1fa91559d88f7415fbd9de">&#9670;&nbsp;</a></span>CPP_CTOR_SFINAE_REQUIRES_0</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CPP_CTOR_SFINAE_REQUIRES_0</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">::concepts::detail::enable_if_t&lt;                                            \</div><div class="line">        <a class="code" href="structconcepts_1_1detail_1_1_nil.html">::concepts::detail::Nil</a>,                                                \</div><div class="line">        CPP_false(::<a class="code" href="structconcepts_1_1detail_1_1_nil.html">concepts::detail::xNil</a>{}) ||                                \</div><div class="line">        static_cast&lt;bool&gt;(                                                      \</div><div class="line">            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__))&gt; = {})         \</div><div class="ttc" id="structconcepts_1_1detail_1_1_nil_html"><div class="ttname"><a href="structconcepts_1_1detail_1_1_nil.html">concepts::detail::Nil</a></div><div class="ttdef"><b>Definition:</b> concepts.hpp:764</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="aa3a378eb34691f109a699ff0035c6829"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3a378eb34691f109a699ff0035c6829">&#9670;&nbsp;</a></span>CPP_CTOR_SFINAE_REQUIRES_1</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CPP_CTOR_SFINAE_REQUIRES_1</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">::concepts::detail::enable_if_t&lt;                                            \</div><div class="line">        <a class="code" href="structconcepts_1_1detail_1_1_nil.html">::concepts::detail::Nil</a>,                                                \</div><div class="line">        CPP_false(::<a class="code" href="structconcepts_1_1detail_1_1_nil.html">concepts::detail::xNil</a>{}) ||                                \</div><div class="line">        static_cast&lt;bool&gt;(CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, CPP_PP_CAT(    \</div><div class="line">                CPP_CTOR_SFINAE_EAT_NOEXCEPT_, __VA_ARGS__)))&gt; = {})            \</div><div class="line">        CPP_PP_EXPAND(                                                          \</div><div class="line">            CPP_PP_CAT(CPP_CTOR_SFINAE_SHOW_NOEXCEPT_, __VA_ARGS__)))           \</div><div class="ttc" id="structconcepts_1_1detail_1_1_nil_html"><div class="ttname"><a href="structconcepts_1_1detail_1_1_nil.html">concepts::detail::Nil</a></div><div class="ttdef"><b>Definition:</b> concepts.hpp:764</div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a7d1d40f5375ff90cf9b360ef0bebea25"></a>
@@ -900,6 +1013,44 @@ concept&#160;</td><td class="memItemRight" valign="bottom"><b>concepts::detail::
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">CPP_PP_CHECK(CPP_PP_CAT(CPP_PP_PROBE_EMPTY_PROBE_,                          \</div><div class="line">        CPP_PP_PROBE_EMPTY __VA_ARGS__ ()))                                     \</div></div><!-- fragment -->
+</div>
+</div>
+<a id="a02009585db5d95fcf731fec2dfe3010e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02009585db5d95fcf731fec2dfe3010e">&#9670;&nbsp;</a></span>CPP_TEMPLATE_DEF_SFINAE_AUX_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CPP_TEMPLATE_DEF_SFINAE_AUX_</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">,                                     \</div><div class="line">    bool CPP_false_,                                                            \</div><div class="line">    ::concepts::detail::enable_if_t&lt;<a class="code" href="classint.html">int</a>,                                        \</div><div class="line">        static_cast&lt;bool&gt;(                                                      \</div><div class="line">            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__)) ||             \</div><div class="line">        CPP_false_&gt;&gt;                                                            \</div><div class="ttc" id="classint_html"><div class="ttname"><a href="classint.html">int</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a3c405bfade698f1bd3c2d30c0048a2d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c405bfade698f1bd3c2d30c0048a2d1">&#9670;&nbsp;</a></span>CPP_TEMPLATE_SFINAE_AUX_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CPP_TEMPLATE_SFINAE_AUX_</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">,                                         \</div><div class="line">    bool CPP_false_ = <span class="keyword">false</span>,                                                    \</div><div class="line">    ::concepts::detail::enable_if_t&lt;<a class="code" href="classint.html">int</a>,                                        \</div><div class="line">        static_cast&lt;bool&gt;(\</div><div class="line">            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__)) ||             \</div><div class="line">        CPP_false_&gt; = 0&gt;                                                        \</div><div class="ttc" id="classint_html"><div class="ttname"><a href="classint.html">int</a></div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>

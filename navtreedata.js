@@ -49,8 +49,14 @@ var NAVTREE =
         [ "for_each on associative containers", "md___users_eniebler__code_range-v3_doc_examples.html#example-for_each-assoc", null ],
         [ "is_sorted", "md___users_eniebler__code_range-v3_doc_examples.html#example-is_sorted", null ]
       ] ],
-      [ "Examples: Views", "md___users_eniebler__code_range-v3_doc_examples.html#example-views", null ],
-      [ "Examples: Actions", "md___users_eniebler__code_range-v3_doc_examples.html#example-actions", null ],
+      [ "Examples: Views", "md___users_eniebler__code_range-v3_doc_examples.html#example-views", [
+        [ "Filter and transform", "md___users_eniebler__code_range-v3_doc_examples.html#example-filter-transform", null ],
+        [ "Generate ints and accumulate", "md___users_eniebler__code_range-v3_doc_examples.html#example-accumulate-ints", null ],
+        [ "Convert a range comprehension to a vector", "md___users_eniebler__code_range-v3_doc_examples.html#example-comprehension-conversion", null ]
+      ] ],
+      [ "Examples: Actions", "md___users_eniebler__code_range-v3_doc_examples.html#example-actions", [
+        [ "Remove non-unique elements from a container", "md___users_eniebler__code_range-v3_doc_examples.html#example-sort-unique", null ]
+      ] ],
       [ "Examples: Putting it all together", "md___users_eniebler__code_range-v3_doc_examples.html#example-gestalt", [
         [ "Calendar", "md___users_eniebler__code_range-v3_doc_examples.html#example-calendar", null ]
       ] ]
@@ -90,19 +96,19 @@ var NAVTREEINDEX =
 [
 ".html",
 "common_8hpp.html",
-"diffmax__t_8hpp.html#a56cfdaa2fc42bf8ab477cf3301588479",
-"group__group-functional.html#gaed1c38a1e34a739ee4fd474aaafbcb30",
-"group__lazy__trait.html",
-"meta_8hpp.html#abe228400557af7a8855dd70d965d57ca",
-"numeric_2partial__sum_8hpp.html#gad54f9e9fd106d4b4c079f572ea4d2087",
-"single_8hpp.html#af4a4d1085aea20d60fb5211a08b5b7fc",
-"structranges_1_1basic__iterator.html#a730583e5a2db05bef755a3c5b0515b0a",
-"structranges_1_1ends__with__fn.html#abe00b3c95a2c564d6d8374b0c8c30396",
-"structranges_1_1join__view_1_1cursor.html#a43a72657e736bbc68b8c8536774ed016",
-"structranges_1_1ostreambuf__iterator.html#ac6a710e2e5656ab85bfe4be51f32463e",
-"structranges_1_1sliding__view_3_01_rng_00_01sliding__view__detail_1_1cache_1_1none_01_4.html",
-"structranges_1_1view__interface.html#abcd2d655b9b6f220a3587a651f2765a3",
-"tuple__algorithm_8hpp.html#ga5a3717f9963046b5e8a269e390137618"
+"diffmax__t_8hpp.html#a0729a1a6ba08cb1b20dfff6d7a64c773",
+"group__group-algorithms.html#gaf5bce1a45ad24ba2d4cd7bf9e5a06a57",
+"group__lazy__math.html#gaf1da11678b66429e1e05b9b2360f7344",
+"memory_8hpp.html#ga210213dccfbcc10d705e41e2031cadf6",
+"move__backward_8hpp.html#gaf3ddbe128fcdd14998784890ae88172c",
+"reverse__copy_8hpp.html#ga7bff287e5ec676e01a086ac147d4b618",
+"structranges_1_1back__insert__iterator.html#ae15f8a05ba6a827f7db79fceae41caf4",
+"structranges_1_1drop__view.html#a88e26305910a6df8e4458feec5cdaa94",
+"structranges_1_1iterator__wrapper.html#a6a920fc0673e24b1b40fc2a57768ef89",
+"structranges_1_1ostream__joiner.html#a4773586c3a7b843b48034747e06fdaad",
+"structranges_1_1set__union__fn.html#a977159ee1d4d3ffc9d34d13a27c6ac1a",
+"structranges_1_1view__interface.html#a3beb8b7b741ae98cfa7b5c851319798a",
+"structviews_1_1cartesian__product__fn.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
