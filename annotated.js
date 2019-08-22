@@ -160,7 +160,7 @@ var annotated =
       [ "any", "structranges_1_1any.html", "structranges_1_1any" ],
       [ "any_of_fn", "structranges_1_1any__of__fn.html", "structranges_1_1any__of__fn" ],
       [ "any_view", "structranges_1_1any__view.html", "structranges_1_1any__view" ],
-      [ "any_view< Ref, Cat, meta::if_c<(Cat &category::forward)==category::input > >", "structranges_1_1any__view_3_01_ref_00_01_cat_00_01meta_1_1if__c_3_07_cat_01_6category_1_1forward218eb205c09c7c15e1804ca58b64d975.html", "structranges_1_1any__view_3_01_ref_00_01_cat_00_01meta_1_1if__c_3_07_cat_01_6category_1_1forward218eb205c09c7c15e1804ca58b64d975" ],
+      [ "any_view< Ref, Cat, meta::if_c<(Cat &category::forward)==category::input > >", "structranges_1_1any__view_3_01_ref_00_01_cat_00_01meta_1_1if__c_3_07_cat_01_6category_1_1forwarda7b0f36a8be758638214e77ffe923546.html", "structranges_1_1any__view_3_01_ref_00_01_cat_00_01meta_1_1if__c_3_07_cat_01_6category_1_1forwarda7b0f36a8be758638214e77ffe923546" ],
       [ "at_fn", "structranges_1_1at__fn.html", "structranges_1_1at__fn" ],
       [ "back_fn", "structranges_1_1back__fn.html", "structranges_1_1back__fn" ],
       [ "back_insert_iterator", "structranges_1_1back__insert__iterator.html", "structranges_1_1back__insert__iterator" ],
@@ -358,8 +358,9 @@ var annotated =
       [ "partition_copy_fn", "structranges_1_1partition__copy__fn.html", "structranges_1_1partition__copy__fn" ],
       [ "partition_fn", "structranges_1_1partition__fn.html", "structranges_1_1partition__fn" ],
       [ "partition_point_fn", "structranges_1_1partition__point__fn.html", "structranges_1_1partition__point__fn" ],
-      [ "pipeable", "structranges_1_1pipeable.html", null ],
-      [ "pipeable_access", "structranges_1_1pipeable__access.html", "structranges_1_1pipeable__access" ],
+      [ "pipeable_access", "structranges_1_1pipeable__access.html", [
+        [ "impl", "structranges_1_1pipeable__access_1_1impl.html", null ]
+      ] ],
       [ "pipeable_base", "structranges_1_1pipeable__base.html", "structranges_1_1pipeable__base" ],
       [ "plus", "structranges_1_1plus.html", "structranges_1_1plus" ],
       [ "pop_heap_fn", "structranges_1_1pop__heap__fn.html", "structranges_1_1pop__heap__fn" ],
@@ -429,7 +430,6 @@ var annotated =
       [ "stride_view", "structranges_1_1stride__view.html", "structranges_1_1stride__view" ],
       [ "subrange", "structranges_1_1subrange.html", "structranges_1_1subrange" ],
       [ "swap_ranges_fn", "structranges_1_1swap__ranges__fn.html", "structranges_1_1swap__ranges__fn" ],
-      [ "tagged", "classranges_1_1tagged.html", "classranges_1_1tagged" ],
       [ "tail_view", "structranges_1_1tail__view.html", "structranges_1_1tail__view" ],
       [ "take_view", "structranges_1_1take__view.html", "structranges_1_1take__view" ],
       [ "take_while_view", "structranges_1_1take__while__view.html", "structranges_1_1take__while__view" ],
@@ -471,13 +471,11 @@ var annotated =
       [ "tuple_element< 1, ::ranges::subrange< I, S, K > >", "structstd_1_1tuple__element_3_011_00_01_1_1ranges_1_1subrange_3_01_i_00_01_s_00_01_k_01_4_01_4.html", "structstd_1_1tuple__element_3_011_00_01_1_1ranges_1_1subrange_3_01_i_00_01_s_00_01_k_01_4_01_4" ],
       [ "tuple_element< I, ::ranges::compressed_tuple_detail::compressed_tuple_< ::meta::list< Ts... >, ::meta::index_sequence< Is... > > >", "structstd_1_1tuple__element_3_01_i_00_01_1_1ranges_1_1compressed__tuple__detail_1_1compressed__t605e37e13909af70013f01439fa799ad.html", "structstd_1_1tuple__element_3_01_i_00_01_1_1ranges_1_1compressed__tuple__detail_1_1compressed__t605e37e13909af70013f01439fa799ad" ],
       [ "tuple_element< N, ::ranges::common_tuple< Ts... > >", "structstd_1_1tuple__element_3_01_n_00_01_1_1ranges_1_1common__tuple_3_01_ts_8_8_8_01_4_01_4.html", null ],
-      [ "tuple_element< N, ::ranges::tagged< Untagged, Tags... > >", "structstd_1_1tuple__element_3_01_n_00_01_1_1ranges_1_1tagged_3_01_untagged_00_01_tags_8_8_8_01_4_01_4.html", null ],
       [ "tuple_size<::ranges::common_pair< First, Second > >", "structstd_1_1tuple__size_3_1_1ranges_1_1common__pair_3_01_first_00_01_second_01_4_01_4.html", null ],
       [ "tuple_size<::ranges::common_tuple< Ts... > >", "structstd_1_1tuple__size_3_1_1ranges_1_1common__tuple_3_01_ts_8_8_8_01_4_01_4.html", null ],
       [ "tuple_size<::ranges::compressed_pair< First, Second > >", "structstd_1_1tuple__size_3_1_1ranges_1_1compressed__pair_3_01_first_00_01_second_01_4_01_4.html", null ],
       [ "tuple_size<::ranges::compressed_tuple_detail::compressed_tuple_< ::meta::list< Ts... >, ::meta::index_sequence< Is... > > >", "structstd_1_1tuple__size_3_1_1ranges_1_1compressed__tuple__detail_1_1compressed__tuple___3_01_1_a20d47917fc1ec70f6bb2893fe16917f.html", null ],
-      [ "tuple_size<::ranges::subrange< I, S, K > >", "structstd_1_1tuple__size_3_1_1ranges_1_1subrange_3_01_i_00_01_s_00_01_k_01_4_01_4.html", null ],
-      [ "tuple_size<::ranges::tagged< Untagged, Tags... > >", "structstd_1_1tuple__size_3_1_1ranges_1_1tagged_3_01_untagged_00_01_tags_8_8_8_01_4_01_4.html", null ]
+      [ "tuple_size<::ranges::subrange< I, S, K > >", "structstd_1_1tuple__size_3_1_1ranges_1_1subrange_3_01_i_00_01_s_00_01_k_01_4_01_4.html", null ]
     ] ],
     [ "views", null, [
       [ "cartesian_product_fn", "structviews_1_1cartesian__product__fn.html", null ]
@@ -493,7 +491,6 @@ var annotated =
     [ "set", "classset.html", null ],
     [ "tuple", "classtuple.html", null ],
     [ "tuple_element", "classtuple__element.html", null ],
-    [ "tuple_size", "classtuple__size.html", null ],
     [ "unordered_multiset", "classunordered__multiset.html", null ],
     [ "unordered_set", "classunordered__set.html", null ],
     [ "vector", "classvector.html", null ]

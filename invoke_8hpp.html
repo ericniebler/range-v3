@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Range-v3: range/v3/utility/invoke.hpp File Reference</title>
+<title>Range-v3: range/v3/functional/invoke.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -98,7 +98,7 @@ $(document).ready(function(){initNavTree('invoke_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -108,52 +108,53 @@ $(document).ready(function(){initNavTree('invoke_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1invoke__fn.html">ranges::v3::invoke_fn</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1invoke__fn.html">ranges::invoke_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1invoke__result.html">ranges::v3::invoke_result&lt; Fun, Args &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1is__reference__wrapper.html">ranges::v3::is_reference_wrapper&lt; T &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1is__reference__wrapper_3_01reference__wrapper_3_01_t_01_4_01_4.html">ranges::v3::is_reference_wrapper&lt; reference_wrapper&lt; T &gt; &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1is__reference__wrapper_3_01std_1_1reference__wrapper_3_01_t_01_4_01_4.html">ranges::v3::is_reference_wrapper&lt; std::reference_wrapper&lt; T &gt; &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1reference__wrapper.html">ranges::v3::reference_wrapper&lt; T &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1result__of.html">ranges::v3::result_of&lt; Sig &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1result__of_3_01_fun_07_args_8_8_8_08_4.html">ranges::v3::result_of&lt; Fun(Args...)&gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1invoke__result.html">ranges::invoke_result&lt; Fun, Args &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a79a127f64a52fb63a359c1c317afd75e"><td class="memItemLeft" align="right" valign="top"><a id="a79a127f64a52fb63a359c1c317afd75e"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>RANGES_CONSTEXPR_INVOKE</b>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:a79a127f64a52fb63a359c1c317afd75e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:gad8cf36b8547e3602e5d46d45db68f2af"><td class="memTemplParams" colspan="2">
+<tr class="memitem:ga78d165a5d2f2b9fbb69754ec22e1bc5f"><td class="memTemplParams" colspan="2">
 template&lt;typename Fun , typename... Args&gt; </td></tr>
-<tr class="memitem:gad8cf36b8547e3602e5d46d45db68f2af"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::invoke_result_t</b> = decltype(invoke(std::declval&lt; Fun &gt;(), std::declval&lt; Args &gt;()...))</td></tr>
-<tr class="separator:gad8cf36b8547e3602e5d46d45db68f2af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabf16e934b2973feeca4cd9144a62dd21"><td class="memTemplParams" colspan="2">
+<tr class="memitem:ga78d165a5d2f2b9fbb69754ec22e1bc5f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::invoke_result_t</b> = decltype(invoke(std::declval&lt; Fun &gt;(), std::declval&lt; Args &gt;()...))</td></tr>
+<tr class="separator:ga78d165a5d2f2b9fbb69754ec22e1bc5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaead4e1a1fb7012f09ac5242c6d6693b"><td class="memTemplParams" colspan="2">
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:gabf16e934b2973feeca4cd9144a62dd21"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::is_reference_wrapper_t</b> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; is_reference_wrapper&lt; T &gt; &gt;</td></tr>
-<tr class="separator:gabf16e934b2973feeca4cd9144a62dd21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaead4e1a1fb7012f09ac5242c6d6693b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::is_reference_wrapper</b> = <a class="el" href="group__integral.html#ga8cd5c79222ce70365f7469f35ece905a">meta::bool_</a>&lt; is_reference_wrapper_v&lt; T &gt; &gt;</td></tr>
+<tr class="separator:gaaead4e1a1fb7012f09ac5242c6d6693b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac40820550f75325f9c338b95fec34efd"><td class="memTemplParams" colspan="2">
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gac40820550f75325f9c338b95fec34efd"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::is_reference_wrapper_t</b> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; is_reference_wrapper&lt; T &gt; &gt;</td></tr>
+<tr class="separator:gac40820550f75325f9c338b95fec34efd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga660dcd537cecbe0c05c38d315b210815"><td class="memItemLeft" align="right" valign="top">
-constexpr invoke_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::invoke</b> {}</td></tr>
-<tr class="separator:ga660dcd537cecbe0c05c38d315b210815"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2982c5c738071e0551cb319c2177cc55"><td class="memItemLeft" align="right" valign="top">
+constexpr invoke_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::invoke</b> {}</td></tr>
+<tr class="separator:ga2982c5c738071e0551cb319c2177cc55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa13a57aac906cb9af991d3a8db61d747"><td class="memTemplParams" colspan="2">template&lt;typename Fn , typename... Args&gt; </td></tr>
+<tr class="memitem:gaa13a57aac906cb9af991d3a8db61d747"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::is_invocable_v</b></td></tr>
+<tr class="separator:gaa13a57aac906cb9af991d3a8db61d747"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae4bec16c12565bed95903c3544b6bbc3"><td class="memTemplParams" colspan="2">template&lt;typename Fn , typename... Args&gt; </td></tr>
+<tr class="memitem:gae4bec16c12565bed95903c3544b6bbc3"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::is_nothrow_invocable_v</b></td></tr>
+<tr class="separator:gae4bec16c12565bed95903c3544b6bbc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6958962ea4819425ee801687e863bd81"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ga6958962ea4819425ee801687e863bd81"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::is_reference_wrapper_v</b></td></tr>
+<tr class="separator:ga6958962ea4819425ee801687e863bd81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_13d83aab8ad34329b3e130decb0202f6.html">range</a></li><li class="navelem"><a class="el" href="dir_517791fd89823035f0884929ce7bba8a.html">v3</a></li><li class="navelem"><a class="el" href="dir_bd89acd9184267afd63918e2f2f14eb1.html">utility</a></li><li class="navelem"><a class="el" href="invoke_8hpp.html">invoke.hpp</a></li>
+    <li class="navelem"><a class="el" href="dir_13d83aab8ad34329b3e130decb0202f6.html">range</a></li><li class="navelem"><a class="el" href="dir_517791fd89823035f0884929ce7bba8a.html">v3</a></li><li class="navelem"><a class="el" href="dir_2be7d25da53ccb2e3f92f520d0c54342.html">functional</a></li><li class="navelem"><a class="el" href="invoke_8hpp.html">invoke.hpp</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.15 </li>

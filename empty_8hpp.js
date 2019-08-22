@@ -1,4 +1,6 @@
 var empty_8hpp =
 [
-    [ "empty", "empty_8hpp.html#gaa6cc5a86498c23681ebc5276f432f862", null ]
+    [ "empty_view", "structranges_1_1empty__view.html", "structranges_1_1empty__view" ],
+    [ "empty_view", "empty_8hpp.html#accc939ed906402869056576f5459eeeb", null ],
+    [ "empty", "empty_8hpp.html#ab84e05114c699c99bb506f5406d60622", null ]
 ];

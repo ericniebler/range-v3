@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Range-v3: range/v3/utility/basic_iterator.hpp File Reference</title>
+<title>Range-v3: range/v3/iterator/basic_iterator.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -98,7 +98,7 @@ $(document).ready(function(){initNavTree('basic__iterator_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">basic_iterator.hpp File Reference</div>  </div>
@@ -107,33 +107,94 @@ $(document).ready(function(){initNavTree('basic__iterator_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1basic__iterator.html">ranges::v3::basic_iterator&lt; Cur &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1basic__iterator.html">ranges::basic_iterator&lt; Cur &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1basic__mixin.html">ranges::v3::basic_mixin&lt; T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1basic__mixin.html">ranges::basic_mixin&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1get__cursor__fn.html">ranges::v3::get_cursor_fn</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a cursor from a <a class="el" href="structranges_1_1v3_1_1basic__iterator.html">basic_iterator</a>.  <a href="structranges_1_1v3_1_1get__cursor__fn.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1get__cursor__fn.html">ranges::get_cursor_fn</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a cursor from a <a class="el" href="structranges_1_1basic__iterator.html">basic_iterator</a>.  <a href="structranges_1_1get__cursor__fn.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstd_1_1iterator__traits_3_01_1_1ranges_1_1basic__iterator_3_01_cur_01_4_01_4.html">std::iterator_traits&lt; ::ranges::basic_iterator&lt; Cur &gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstd_1_1iterator__traits_3_1_1ranges_1_1basic__iterator_3_01_cur_01_4_01_4.html">std::iterator_traits&lt;::ranges::basic_iterator&lt; Cur &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gab0cfba7fa4954317ba52e863423c6e28"><td class="memTemplParams" colspan="2">
+template&lt;typename Cur , typename Cur2 &gt; </td></tr>
+<tr class="memitem:gab0cfba7fa4954317ba52e863423c6e28"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::operator!=</b> (basic_iterator&lt; Cur &gt; const &amp;left, basic_iterator&lt; Cur2 &gt; const &amp;right) -&gt; bool requires detail::sentinel_for_cursor&lt; Cur2, Cur &gt;</td></tr>
+<tr class="separator:gab0cfba7fa4954317ba52e863423c6e28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga283f62ad5aac2498d66eb6f758c7ebe0"><td class="memTemplParams" colspan="2">
+template&lt;typename Cur , typename S &gt; </td></tr>
+<tr class="memitem:ga283f62ad5aac2498d66eb6f758c7ebe0"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::operator!=</b> (basic_iterator&lt; Cur &gt; const &amp;left, S const &amp;right) -&gt; bool requires detail::sentinel_for_cursor&lt; S, Cur &gt;</td></tr>
+<tr class="separator:ga283f62ad5aac2498d66eb6f758c7ebe0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa3eea69d6f552bca4b14cc3b35813faa"><td class="memTemplParams" colspan="2">
+template&lt;typename S , typename Cur &gt; </td></tr>
+<tr class="memitem:gaa3eea69d6f552bca4b14cc3b35813faa"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::operator!=</b> (S const &amp;left, basic_iterator&lt; Cur &gt; const &amp;right) -&gt; bool requires detail::sentinel_for_cursor&lt; S, Cur &gt;</td></tr>
+<tr class="separator:gaa3eea69d6f552bca4b14cc3b35813faa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaecb1e7f9a2feb0ff421d83d12b73b6f6"><td class="memTemplParams" colspan="2">
+template&lt;typename Cur &gt; </td></tr>
+<tr class="memitem:gaecb1e7f9a2feb0ff421d83d12b73b6f6"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::operator+</b> (basic_iterator&lt; Cur &gt; left, typename basic_iterator&lt; Cur &gt;::difference_type n) -&gt; basic_iterator&lt; Cur &gt; requires detail::random_access_cursor&lt; Cur &gt;</td></tr>
+<tr class="separator:gaecb1e7f9a2feb0ff421d83d12b73b6f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab128990cfd0bb044a2f6a029af0867ee"><td class="memTemplParams" colspan="2">
+template&lt;typename Cur &gt; </td></tr>
+<tr class="memitem:gab128990cfd0bb044a2f6a029af0867ee"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::operator+</b> (typename basic_iterator&lt; Cur &gt;::difference_type n, basic_iterator&lt; Cur &gt; right) -&gt; basic_iterator&lt; Cur &gt; requires detail::random_access_cursor&lt; Cur &gt;</td></tr>
+<tr class="separator:gab128990cfd0bb044a2f6a029af0867ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae5dfb1b14c2828c47d6a86a88190f1f9"><td class="memTemplParams" colspan="2">
+template&lt;typename Cur &gt; </td></tr>
+<tr class="memitem:gae5dfb1b14c2828c47d6a86a88190f1f9"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::operator-</b> (basic_iterator&lt; Cur &gt; left, typename basic_iterator&lt; Cur &gt;::difference_type n) -&gt; basic_iterator&lt; Cur &gt; requires detail::random_access_cursor&lt; Cur &gt;</td></tr>
+<tr class="separator:gae5dfb1b14c2828c47d6a86a88190f1f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab4e373b7a07910891b87399906fe2718"><td class="memTemplParams" colspan="2">
+template&lt;typename Cur2 , typename Cur &gt; </td></tr>
+<tr class="memitem:gab4e373b7a07910891b87399906fe2718"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::operator-</b> (basic_iterator&lt; Cur2 &gt; const &amp;left, basic_iterator&lt; Cur &gt; const &amp;right) -&gt; typename basic_iterator&lt; Cur &gt;::difference_type requires detail::sized_sentinel_for_cursor&lt; Cur2, Cur &gt;</td></tr>
+<tr class="separator:gab4e373b7a07910891b87399906fe2718"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2bbcb892c7ae81efe74c3b092b558feb"><td class="memTemplParams" colspan="2">
+template&lt;typename S , typename Cur &gt; </td></tr>
+<tr class="memitem:ga2bbcb892c7ae81efe74c3b092b558feb"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::operator-</b> (S const &amp;left, basic_iterator&lt; Cur &gt; const &amp;right) -&gt; typename basic_iterator&lt; Cur &gt;::difference_type requires detail::sized_sentinel_for_cursor&lt; S, Cur &gt;</td></tr>
+<tr class="separator:ga2bbcb892c7ae81efe74c3b092b558feb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga388deb33c8327a8f538f0b6021ddd618"><td class="memTemplParams" colspan="2">
+template&lt;typename Cur , typename S &gt; </td></tr>
+<tr class="memitem:ga388deb33c8327a8f538f0b6021ddd618"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::operator-</b> (basic_iterator&lt; Cur &gt; const &amp;left, S const &amp;right) -&gt; typename basic_iterator&lt; Cur &gt;::difference_type requires detail::sized_sentinel_for_cursor&lt; S, Cur &gt;</td></tr>
+<tr class="separator:ga388deb33c8327a8f538f0b6021ddd618"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2b63491425944f8a1e9853bdbff5eab2"><td class="memTemplParams" colspan="2">
+template&lt;typename Left , typename Right &gt; </td></tr>
+<tr class="memitem:ga2b63491425944f8a1e9853bdbff5eab2"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::operator&lt;</b> (basic_iterator&lt; Left &gt; const &amp;left, basic_iterator&lt; Right &gt; const &amp;right) -&gt; bool requires detail::sized_sentinel_for_cursor&lt; Right, Left &gt;</td></tr>
+<tr class="separator:ga2b63491425944f8a1e9853bdbff5eab2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad1b3d79232ac309a37a8b6899ce87545"><td class="memTemplParams" colspan="2">
+template&lt;typename Left , typename Right &gt; </td></tr>
+<tr class="memitem:gad1b3d79232ac309a37a8b6899ce87545"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::operator&lt;=</b> (basic_iterator&lt; Left &gt; const &amp;left, basic_iterator&lt; Right &gt; const &amp;right) -&gt; bool requires detail::sized_sentinel_for_cursor&lt; Right, Left &gt;</td></tr>
+<tr class="separator:gad1b3d79232ac309a37a8b6899ce87545"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga368047bb7f70a2f7fdcf16f6436c2ba7"><td class="memTemplParams" colspan="2">
+template&lt;typename Cur , typename Cur2 &gt; </td></tr>
+<tr class="memitem:ga368047bb7f70a2f7fdcf16f6436c2ba7"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::operator==</b> (basic_iterator&lt; Cur &gt; const &amp;left, basic_iterator&lt; Cur2 &gt; const &amp;right) -&gt; bool requires detail::sentinel_for_cursor&lt; Cur2, Cur &gt;</td></tr>
+<tr class="separator:ga368047bb7f70a2f7fdcf16f6436c2ba7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9524e9fcbd3b3bad1ae7069cba313d1d"><td class="memTemplParams" colspan="2">
+template&lt;typename Cur , typename S &gt; </td></tr>
+<tr class="memitem:ga9524e9fcbd3b3bad1ae7069cba313d1d"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::operator==</b> (basic_iterator&lt; Cur &gt; const &amp;left, S const &amp;right) -&gt; bool requires detail::sentinel_for_cursor&lt; S, Cur &gt;</td></tr>
+<tr class="separator:ga9524e9fcbd3b3bad1ae7069cba313d1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga50b576ab7df8788670ebeaca195cf74f"><td class="memTemplParams" colspan="2">
+template&lt;typename S , typename Cur &gt; </td></tr>
+<tr class="memitem:ga50b576ab7df8788670ebeaca195cf74f"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::operator==</b> (S const &amp;left, basic_iterator&lt; Cur &gt; const &amp;right) -&gt; bool requires detail::sentinel_for_cursor&lt; S, Cur &gt;</td></tr>
+<tr class="separator:ga50b576ab7df8788670ebeaca195cf74f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga24e0c3342da9b833610300858e4696d9"><td class="memTemplParams" colspan="2">
+template&lt;typename Left , typename Right &gt; </td></tr>
+<tr class="memitem:ga24e0c3342da9b833610300858e4696d9"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::operator&gt;</b> (basic_iterator&lt; Left &gt; const &amp;left, basic_iterator&lt; Right &gt; const &amp;right) -&gt; bool requires detail::sized_sentinel_for_cursor&lt; Right, Left &gt;</td></tr>
+<tr class="separator:ga24e0c3342da9b833610300858e4696d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab5fd9e35a538de51454318881b0c85de"><td class="memTemplParams" colspan="2">
+template&lt;typename Left , typename Right &gt; </td></tr>
+<tr class="memitem:gab5fd9e35a538de51454318881b0c85de"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::operator&gt;=</b> (basic_iterator&lt; Left &gt; const &amp;left, basic_iterator&lt; Right &gt; const &amp;right) -&gt; bool requires detail::sized_sentinel_for_cursor&lt; Right, Left &gt;</td></tr>
+<tr class="separator:gab5fd9e35a538de51454318881b0c85de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga7c5182174c7fa86b188812312a383cd2"><td class="memItemLeft" align="right" valign="top">constexpr get_cursor_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga7c5182174c7fa86b188812312a383cd2">ranges::v3::get_cursor</a> {}</td></tr>
-<tr class="separator:ga7c5182174c7fa86b188812312a383cd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3a1bc0c5a02aeccce8f1a6fe62011760"><td class="memItemLeft" align="right" valign="top">constexpr get_cursor_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-iterator.html#ga3a1bc0c5a02aeccce8f1a6fe62011760">ranges::get_cursor</a> {}</td></tr>
+<tr class="separator:ga3a1bc0c5a02aeccce8f1a6fe62011760"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_13d83aab8ad34329b3e130decb0202f6.html">range</a></li><li class="navelem"><a class="el" href="dir_517791fd89823035f0884929ce7bba8a.html">v3</a></li><li class="navelem"><a class="el" href="dir_bd89acd9184267afd63918e2f2f14eb1.html">utility</a></li><li class="navelem"><a class="el" href="basic__iterator_8hpp.html">basic_iterator.hpp</a></li>
+    <li class="navelem"><a class="el" href="dir_13d83aab8ad34329b3e130decb0202f6.html">range</a></li><li class="navelem"><a class="el" href="dir_517791fd89823035f0884929ce7bba8a.html">v3</a></li><li class="navelem"><a class="el" href="dir_e815b76206c160ea2cab7cdc2346f553.html">iterator</a></li><li class="navelem"><a class="el" href="basic__iterator_8hpp.html">basic_iterator.hpp</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.15 </li>

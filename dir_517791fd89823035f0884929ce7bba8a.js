@@ -15,7 +15,6 @@ var dir_517791fd89823035f0884929ce7bba8a =
     [ "core.hpp", "core_8hpp.html", null ],
     [ "functional.hpp", "functional_8hpp.html", null ],
     [ "iterator.hpp", "iterator_8hpp.html", null ],
-    [ "iterator_range.hpp", "iterator__range_8hpp.html", null ],
     [ "numeric.hpp", "numeric_8hpp.html", null ],
     [ "range.hpp", "range_8hpp.html", null ],
     [ "range_for.hpp", "range__for_8hpp.html", "range__for_8hpp" ],

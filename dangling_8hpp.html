@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Range-v3: range/v3/utility/dangling.hpp File Reference</title>
+<title>Range-v3: range/v3/range/dangling.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -98,8 +98,7 @@ $(document).ready(function(){initNavTree('dangling_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
 <div class="title">dangling.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -107,37 +106,23 @@ $(document).ready(function(){initNavTree('dangling_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1dangling.html">ranges::v3::dangling&lt; I &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for an iterator or a sentinel into a range that may no longer be valid.  <a href="structranges_1_1v3_1_1dangling.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1dangling_3_01void_01_4.html">ranges::v3::dangling&lt; void &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1get__unsafe__fn.html">ranges::v3::get_unsafe_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1sanitize__fn.html">ranges::v3::sanitize_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstd_1_1tuple.html">std::tuple&lt; Ts &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1dangling.html">ranges::dangling</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for an iterator or a sentinel into a range that may no longer be valid.  <a href="structranges_1_1dangling.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges.html">ranges</a></td></tr>
-<tr class="memdesc:namespaceranges"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case] Each erased element overwritten (moved in) with last one. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ga8d1fa62a9a20fbe47c13cb31186a0864"><td class="memItemLeft" align="right" valign="top">constexpr get_unsafe_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga8d1fa62a9a20fbe47c13cb31186a0864">ranges::v3::get_unsafe</a> {}</td></tr>
-<tr class="separator:ga8d1fa62a9a20fbe47c13cb31186a0864"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae8fdb936df3d1d1ca06016ca925f4a7d"><td class="memItemLeft" align="right" valign="top">constexpr sanitize_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#gae8fdb936df3d1d1ca06016ca925f4a7d">ranges::v3::sanitize</a> {}</td></tr>
-<tr class="separator:gae8fdb936df3d1d1ca06016ca925f4a7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a175f0c05be03c6d3d460fdc68f2d5248"><td class="memTemplParams" colspan="2"><a id="a175f0c05be03c6d3d460fdc68f2d5248"></a>
+template&lt;typename Rng &gt; </td></tr>
+<tr class="memitem:a175f0c05be03c6d3d460fdc68f2d5248"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::safe_iterator_t</b> = detail::maybe_dangling_&lt; <a class="el" href="class_rng.html">Rng</a>, iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &gt;</td></tr>
+<tr class="separator:a175f0c05be03c6d3d460fdc68f2d5248"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_13d83aab8ad34329b3e130decb0202f6.html">range</a></li><li class="navelem"><a class="el" href="dir_517791fd89823035f0884929ce7bba8a.html">v3</a></li><li class="navelem"><a class="el" href="dir_bd89acd9184267afd63918e2f2f14eb1.html">utility</a></li><li class="navelem"><a class="el" href="dangling_8hpp.html">dangling.hpp</a></li>
+    <li class="navelem"><a class="el" href="dir_13d83aab8ad34329b3e130decb0202f6.html">range</a></li><li class="navelem"><a class="el" href="dir_517791fd89823035f0884929ce7bba8a.html">v3</a></li><li class="navelem"><a class="el" href="dir_97e03a2d6a6327d5c44491690019b819.html">range</a></li><li class="navelem"><a class="el" href="dangling_8hpp.html">dangling.hpp</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.15 </li>

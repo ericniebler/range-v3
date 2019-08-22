@@ -1,17 +1,18 @@
 /*
-@licstart  The following is the entire license notice for the
+@ @licstart  The following is the entire license notice for the
 JavaScript code in this file.
 
-Copyright (C) 1997-2019 by Dimitri van Heesch
+Copyright (C) 1997-2017 by Dimitri van Heesch
 
 This program is free software; you can redistribute it and/or modify
-it under the terms of version 2 of the GNU General Public License as published by
-the Free Software Foundation
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
@@ -29,35 +30,47 @@ var NAVTREE =
         [ "License", "index.html#tutorial-license", null ],
         [ "Supported Compilers", "index.html#tutorial-compilers", null ]
       ] ],
-      [ "Quick Start", "index.html#tutorial-quick-start", null ],
-      [ "Why Use Ranges?", "index.html#autotoc_md5", [
-        [ "Convenience", "index.html#autotoc_md6", null ],
-        [ "Composability", "index.html#autotoc_md7", [
-          [ "Views", "index.html#autotoc_md8", null ]
-        ] ],
-        [ "View constness", "index.html#autotoc_md9", null ],
-        [ "View validity", "index.html#autotoc_md10", [
-          [ "Actions", "index.html#autotoc_md11", null ]
-        ] ]
-      ] ],
-      [ "Create Custom Ranges", "index.html#autotoc_md12", null ],
-      [ "Adapting Ranges", "index.html#autotoc_md13", null ],
-      [ "view_adaptor in details", "index.html#autotoc_md14", null ],
-      [ "Create Custom Iterators", "index.html#autotoc_md15", null ],
-      [ "Constrain Functions with Concepts", "index.html#autotoc_md16", null ],
-      [ "Range-v3 and the Future", "index.html#autotoc_md17", null ],
-      [ "Range Views", "index.html#range-views", null ],
-      [ "Range Actions", "index.html#range-actions", null ],
-      [ "Examples", "index.html#example-section", [
-        [ "hello ranges", "index.html#example-hello", null ],
-        [ "any_of, all_of, none_of", "index.html#example-any-all-none", null ],
-        [ "count", "index.html#example-count", null ],
-        [ "count_if", "index.html#example-count_if", null ],
-        [ "find, find_if, find_if_not on sequence containers", "index.html#example-find", null ],
-        [ "for_each on sequence containers", "index.html#example-for_each-seq", null ],
-        [ "for_each on associative containers", "index.html#example-for_each-assoc", null ],
-        [ "is_sorted", "index.html#example-is_sorted", null ]
+      [ "Quick Start", "index.html#tutorial-quick-start", [
+        [ "Views", "index.html#tutorial-views", null ],
+        [ "Actions", "index.html#tutorial-actions", null ],
+        [ "Utilities", "index.html#tutorial-utilities", null ],
+        [ "Concept Checking", "index.html#tutorial-concepts", null ],
+        [ "Range-v3 and the Future", "index.html#tutorial-future", null ]
       ] ]
+    ] ],
+    [ "Examples", "md___users_eniebler__code_range-v3_doc_examples.html", [
+      [ "Examples: Algorithms", "md___users_eniebler__code_range-v3_doc_examples.html#example-algorithms", [
+        [ "Hello, Ranges!", "md___users_eniebler__code_range-v3_doc_examples.html#example-hello", null ],
+        [ "any_of, all_of, none_of", "md___users_eniebler__code_range-v3_doc_examples.html#example-any-all-none", null ],
+        [ "count", "md___users_eniebler__code_range-v3_doc_examples.html#example-count", null ],
+        [ "count_if", "md___users_eniebler__code_range-v3_doc_examples.html#example-count_if", null ],
+        [ "find, find_if, find_if_not on sequence containers", "md___users_eniebler__code_range-v3_doc_examples.html#example-find", null ],
+        [ "for_each on sequence containers", "md___users_eniebler__code_range-v3_doc_examples.html#example-for_each-seq", null ],
+        [ "for_each on associative containers", "md___users_eniebler__code_range-v3_doc_examples.html#example-for_each-assoc", null ],
+        [ "is_sorted", "md___users_eniebler__code_range-v3_doc_examples.html#example-is_sorted", null ]
+      ] ],
+      [ "Examples: Views", "md___users_eniebler__code_range-v3_doc_examples.html#example-views", null ],
+      [ "Examples: Actions", "md___users_eniebler__code_range-v3_doc_examples.html#example-actions", null ],
+      [ "Examples: Putting it all together", "md___users_eniebler__code_range-v3_doc_examples.html#example-gestalt", [
+        [ "Calendar", "md___users_eniebler__code_range-v3_doc_examples.html#example-calendar", null ]
+      ] ]
+    ] ],
+    [ "Release Notes", "release_notes.html", [
+      [ "Version 0.5.0", "release_notes.html#v0-5-0", null ],
+      [ "Version 0.4.0", "release_notes.html#v0-4-0", null ],
+      [ "Version 0.3.7", "release_notes.html#v0-3-7", null ],
+      [ "Version 0.3.6", "release_notes.html#v0-3-6", null ],
+      [ "Version 0.3.5", "release_notes.html#v0-3-5", null ],
+      [ "Version 0.3.0", "release_notes.html#v0-3-0", null ],
+      [ "Version 0.2.6", "release_notes.html#v0-2-6", null ],
+      [ "Version 0.2.5", "release_notes.html#v0-2-5", null ],
+      [ "Version 0.2.4", "release_notes.html#v0-2-4", null ],
+      [ "Version 0.2.3", "release_notes.html#v0-2-3", null ],
+      [ "Version 0.2.2", "release_notes.html#v0-2-2", null ],
+      [ "Version 0.2.1", "release_notes.html#v0-2-1", null ],
+      [ "Version 0.2.0", "release_notes.html#v0-2-0", null ],
+      [ "Version 0.1.1", "release_notes.html#v0-1-1", null ],
+      [ "Version 0.1.0", "release_notes.html#v0-1-0", null ]
     ] ],
     [ "Reference", "modules.html", "modules" ],
     [ "Indexes", "usergroup0.html", [
@@ -76,19 +89,19 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"common__tuple_8hpp.html#a1cb24ad0ca848242dc879984d0fe5a48",
-"diffmax__t_8hpp.html#a947b0ddc69a2b954592a1704a2ae3ef6",
-"group__group-iterator.html#ga5ebba4d76b2cd87487faa6a27c559e55",
-"group__lazy__transformation.html#ga5292fd127ef68013889ce784822703bb",
-"meta_8hpp.html#a4a36f4a3352411242856ff61558f18a0",
-"nth__element_8hpp.html#gaf24166a172edde8a06476d4acf2ab5c0",
-"stream__iterators_8hpp.html#ga5ebba4d76b2cd87487faa6a27c559e55",
-"structranges_1_1basic__iterator.html#ad5c801f5b8552c2e5ecd2e786a63f26a",
-"structranges_1_1equal__to.html#a841d3e34a68fe333ff49834631f4cc26",
-"structranges_1_1join__with__view.html#a4ddf137966c94c8bb0750f429920221b",
-"structranges_1_1overloaded_3_01_first_00_01_rest_8_8_8_01_4.html#af4aa8a087d4187d061804761865778f7",
-"structranges_1_1span.html#a106d3e84d97650df9a0dea39c51e0085",
-"structranges_1_1view__interface.html#aea08e9ea193e6470cd0d9a1bc025042f",
+"common_8hpp.html",
+"diffmax__t_8hpp.html#a56cfdaa2fc42bf8ab477cf3301588479",
+"group__group-functional.html#gaed1c38a1e34a739ee4fd474aaafbcb30",
+"group__lazy__trait.html",
+"meta_8hpp.html#abe228400557af7a8855dd70d965d57ca",
+"numeric_2partial__sum_8hpp.html#gad54f9e9fd106d4b4c079f572ea4d2087",
+"single_8hpp.html#af4a4d1085aea20d60fb5211a08b5b7fc",
+"structranges_1_1basic__iterator.html#a730583e5a2db05bef755a3c5b0515b0a",
+"structranges_1_1ends__with__fn.html#abe00b3c95a2c564d6d8374b0c8c30396",
+"structranges_1_1join__view_1_1cursor.html#a43a72657e736bbc68b8c8536774ed016",
+"structranges_1_1ostreambuf__iterator.html#ac6a710e2e5656ab85bfe4be51f32463e",
+"structranges_1_1sliding__view_3_01_rng_00_01sliding__view__detail_1_1cache_1_1none_01_4.html",
+"structranges_1_1view__interface.html#abcd2d655b9b6f220a3587a651f2765a3",
 "tuple__algorithm_8hpp.html#ga5a3717f9963046b5e8a269e390137618"
 ];
 

@@ -12,7 +12,6 @@ var dir_dae4eeac8ca119671b98b3f71d5105fc =
     ] ],
     [ "all.hpp", "view_2all_8hpp.html", "view_2all_8hpp" ],
     [ "any_view.hpp", "any__view_8hpp.html", "any__view_8hpp" ],
-    [ "bounded.hpp", "bounded_8hpp.html", null ],
     [ "c_str.hpp", "c__str_8hpp.html", null ],
     [ "cartesian_product.hpp", "cartesian__product_8hpp.html", "cartesian__product_8hpp" ],
     [ "chunk.hpp", "chunk_8hpp.html", [
@@ -39,7 +38,7 @@ var dir_dae4eeac8ca119671b98b3f71d5105fc =
     ] ],
     [ "drop_last.hpp", "drop__last_8hpp.html", "drop__last_8hpp" ],
     [ "drop_while.hpp", "view_2drop__while_8hpp.html", "view_2drop__while_8hpp" ],
-    [ "empty.hpp", "view_2empty_8hpp.html", "view_2empty_8hpp" ],
+    [ "empty.hpp", "empty_8hpp.html", "empty_8hpp" ],
     [ "enumerate.hpp", "enumerate_8hpp.html", [
       [ "enumerate_fn", "structranges_1_1views_1_1enumerate__fn.html", "structranges_1_1views_1_1enumerate__fn" ]
     ] ],
@@ -59,7 +58,7 @@ var dir_dae4eeac8ca119671b98b3f71d5105fc =
     [ "generate_n.hpp", "view_2generate__n_8hpp.html", [
       [ "generate_n_fn", "structranges_1_1views_1_1generate__n__fn.html", "structranges_1_1views_1_1generate__n__fn" ]
     ] ],
-    [ "getlines.hpp", "view_2getlines_8hpp.html", "view_2getlines_8hpp" ],
+    [ "getlines.hpp", "getlines_8hpp.html", "getlines_8hpp" ],
     [ "group_by.hpp", "group__by_8hpp.html", [
       [ "group_by_fn", "structranges_1_1views_1_1group__by__fn.html", "structranges_1_1views_1_1group__by__fn" ]
     ] ],
@@ -118,7 +117,7 @@ var dir_dae4eeac8ca119671b98b3f71d5105fc =
       [ "sliding_view", "structranges_1_1sliding__view.html", null ],
       [ "sliding_fn", "structranges_1_1views_1_1sliding__fn.html", "structranges_1_1views_1_1sliding__fn" ]
     ] ],
-    [ "span.hpp", "view_2span_8hpp.html", "view_2span_8hpp" ],
+    [ "span.hpp", "span_8hpp.html", "span_8hpp" ],
     [ "split.hpp", "view_2split_8hpp.html", "view_2split_8hpp" ],
     [ "split_when.hpp", "view_2split__when_8hpp.html", [
       [ "split_when_fn", "structranges_1_1views_1_1split__when__fn.html", "structranges_1_1views_1_1split__when__fn" ]

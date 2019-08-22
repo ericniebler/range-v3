@@ -12,6 +12,8 @@ var meta__fwd_8hpp =
     [ "META_HAS_MAKE_INTEGER_SEQ", "meta__fwd_8hpp.html#af6021133e07f9b51de0d7f06200ca679", null ],
     [ "META_HAS_TYPE_PACK_ELEMENT", "meta__fwd_8hpp.html#a05d4a09376275b5ba8eb57c7d7fbe2d5", null ],
     [ "META_INLINE_VAR", "meta__fwd_8hpp.html#a75095c1ef1f69c7f86aed3d9a0b42bc0", null ],
+    [ "META_IS_BASE_OF", "meta__fwd_8hpp.html#a16d72cd39b448c0a47c55dc9394e51af", null ],
+    [ "META_IS_CONSTRUCTIBLE", "meta__fwd_8hpp.html#aac6f6fe89c90f521b9d3c40d20cae594", null ],
     [ "META_IS_SAME", "meta__fwd_8hpp.html#af8af0802d1b710d644fd6746daf18d46", null ],
     [ "META_TYPE_CONSTRAINT", "meta__fwd_8hpp.html#a3fe546f2387d610a9c3f74031d0267d8", null ],
     [ "is_v", "meta__fwd_8hpp.html#gad44e618cd853bf9c253add6b93234302", null ],
