@@ -58,7 +58,7 @@ private:
 
     CPP_template(typename V)(
         requires ranges::input_range<V> && ranges::view_<V> &&
-            is_copy_constructible_or_ref<ranges::range_reference_t<V>>())
+            (is_copy_constructible_or_ref<ranges::range_reference_t<V>>()))
     static generator_for<V> impl(V v)
     {
         if /* constexpr */ (ranges::sized_range<V>)
