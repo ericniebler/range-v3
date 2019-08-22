@@ -403,7 +403,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_template                                                            \
     CPP_template_sfinae                                                         \
     /**/
-#define CPP_template_def CPP_template_sfinae                                    \
+#define CPP_template_def CPP_template_def_sfinae                                \
     /**/
 #define CPP_member CPP_member_sfinae
 #define CPP_ctor CPP_ctor_sfinae
