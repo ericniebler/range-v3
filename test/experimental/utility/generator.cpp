@@ -61,7 +61,7 @@ private:
             (is_copy_constructible_or_ref<ranges::range_reference_t<V>>()))
     static generator_for<V> impl(V v)
     {
-        if /* constexpr */ (ranges::sized_range<V>)
+        if(RANGES_CONSTEXPR_IF(ranges::sized_range<V>))
             co_await static_cast<ranges::experimental::generator_size>((std::size_t)ranges::distance(v));
         auto first = ranges::begin(v);
         auto const last = ranges::end(v);
@@ -165,7 +165,7 @@ meta::invoke<
     ranges::indirect_result_t<F &, ranges::iterator_t<V>>>
 transform(V view, F f)
 {
-    if /* constexpr */ (ranges::sized_range<V>)
+    if(RANGES_CONSTEXPR_IF(ranges::sized_range<V>))
         co_await static_cast<ranges::experimental::generator_size>((std::size_t) ranges::distance(view));
     RANGES_FOR(auto &&i, view)
         co_yield ranges::invoke(f, i);
