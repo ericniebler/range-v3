@@ -13,12 +13,54 @@ ENABLED_SECTIONS        =
 # Resources
 OUTPUT_DIRECTORY        =
 INPUT                   = @Range-v3_SOURCE_DIR@/include \
-                          @Range-v3_SOURCE_DIR@/doc/index.md
+                          @Range-v3_SOURCE_DIR@/doc/index.md \
+                          @Range-v3_SOURCE_DIR@/doc/examples.md \
+                          @Range-v3_SOURCE_DIR@/doc/release_notes.md
 FILE_PATTERNS           = *.hpp *.md
 RECURSIVE               = YES
 EXCLUDE                 = @Range-v3_SOURCE_DIR@/include/range/v3/detail \
                           @Range-v3_SOURCE_DIR@/include/range/v3/algorithm/aux_ \
-                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/safe_int.hpp
+                          @Range-v3_SOURCE_DIR@/include/range/v3/algorithm/tagspec.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/at.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/back.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/begin_end.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/data.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/distance.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/empty.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/front.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/getlines.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/index.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/istream_range.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/iterator_range.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/range_access.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/range_concepts.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/range_traits.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/size.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/span.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/to_container.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/to_container.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/associated_types.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/basic_iterator.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/common_iterator.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/concepts.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/counted_iterator.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/dangling.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/functional.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/infinity.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/invoke.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/iterator_concepts.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/iterator_traits.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/iterator.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/nullptr_v.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/semiregular.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/tagged_pair.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/tagged_tuple.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/unreachable.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/view_adaptor.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/view_adaptor.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/view_facade.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/view_interface.hpp \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/view/bounded.hpp
 EXAMPLE_PATH            = @Range-v3_SOURCE_DIR@/example \
                           @Range-v3_SOURCE_DIR@/test
 EXAMPLE_RECURSIVE       = YES
