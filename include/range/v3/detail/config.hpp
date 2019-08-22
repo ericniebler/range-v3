@@ -215,6 +215,10 @@ namespace ranges
 
 #define RANGES_CXX_VER _MSVC_LANG
 
+#if _MSC_VER < 1920 || _MSVC_LANG < 201703L || !defined(_MSVC_TRADITIONAL) || _MSVC_TRADITIONAL != 0
+#error range-v3 requires Visual Studio 2019 with the /std:c++17 (or /std:c++latest) /permissive- and /experimental:preprocessor options.
+#endif
+
 #if _MSC_VER < 1923
 #define RANGES_WORKAROUND_MSVC_934330 // Deduction guide not correctly preferred to copy
                                       // deduction candidate [No workaround]

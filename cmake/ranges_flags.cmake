@@ -25,8 +25,6 @@ message(STATUS "[range-v3]: C++ std=${RANGES_CXX_STD}")
 if (RANGES_CXX_COMPILER_CLANGCL OR RANGES_CXX_COMPILER_MSVC)
   ranges_append_flag(RANGES_HAS_CXXSTDCOLON "/std:c++${RANGES_CXX_STD}")
   set(RANGES_STD_FLAG "/std:c++${RANGES_CXX_STD}")
-  # Enable strict mode
-  ranges_append_flag(RANGES_HAS_PERMISSIVEMINUS "/permissive-")
   if (RANGES_CXX_COMPILER_CLANGCL)
     ranges_append_flag(RANGES_HAS_FNO_MS_COMPATIBIILITY "-fno-ms-compatibility")
     ranges_append_flag(RANGES_HAS_FNO_DELAYED_TEMPLATE_PARSING "-fno-delayed-template-parsing")
@@ -34,10 +32,6 @@ if (RANGES_CXX_COMPILER_CLANGCL OR RANGES_CXX_COMPILER_MSVC)
   # Enable "normal" warnings and make them errors:
   ranges_append_flag(RANGES_HAS_W3 /W3)
   ranges_append_flag(RANGES_HAS_WX /WX)
-  # range-v3 needs MSVC's experimental actually-conforming preprocessor...
-  ranges_append_flag(RANGES_HAS_EXPERIMENTAL_PREPROCESSOR /experimental:preprocessor)
-  # ...which warns about UB in macros in the UCRT headers =(
-  ranges_append_flag(RANGES_HAS_WD5105 /wd5105)
 else()
   ranges_append_flag(RANGES_HAS_CXXSTD "-std=c++${RANGES_CXX_STD}")
   set(RANGES_STD_FLAG "-std=c++${RANGES_CXX_STD}")
