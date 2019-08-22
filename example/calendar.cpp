@@ -9,6 +9,14 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 //
+
+#include <range/v3/detail/config.hpp>
+
+#if RANGES_CXX_RETURN_TYPE_DEDUCTION >= RANGES_CXX_RETURN_TYPE_DEDUCTION_14 && \
+    RANGES_CXX_GENERIC_LAMBDAS >= RANGES_CXX_GENERIC_LAMBDAS_14
+
+///[calendar]
+
 // Usage:
 //     calendar 2015
 //
@@ -49,11 +57,6 @@
 //     <http://wiki.dlang.org/Component_programming_with_ranges>
 //   Thanks to github's Arzar for bringing date::week_number
 //     to my attention.
-
-#include <range/v3/detail/config.hpp>
-
-#if RANGES_CXX_RETURN_TYPE_DEDUCTION >= RANGES_CXX_RETURN_TYPE_DEDUCTION_14 && \
-    RANGES_CXX_GENERIC_LAMBDAS >= RANGES_CXX_GENERIC_LAMBDAS_14
 
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/format.hpp>
@@ -427,6 +430,7 @@ catch(std::exception &e)
     std::cerr << "  what(): " << e.what();
     return 1;
 }
+///[calendar]
 
 #else
 #pragma message( \
