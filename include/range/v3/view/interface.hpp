@@ -29,7 +29,7 @@
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
 
-#if defined(RANGES_WORKAROUND_GCC_UNFILED1)
+#if defined(RANGES_WORKAROUND_GCC_91525)
 #define CPP_template_gcc_workaround CPP_template_sfinae
 #else
 #define CPP_template_gcc_workaround CPP_template
