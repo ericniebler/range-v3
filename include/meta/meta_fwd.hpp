@@ -147,7 +147,7 @@
 #if __cpp_concepts <= 201507L
 #define META_CONCEPT concept bool
 // TS concepts subsumption barrier for atomic expressions
-#define META_CONCEPT_BARRIER(...) ::meta::detail::bool_<__VA_ARGS__>
+#define META_CONCEPT_BARRIER(...) ::meta::detail::barrier<__VA_ARGS__>
 #else
 #define META_CONCEPT concept
 #define META_CONCEPT_BARRIER(...) __VA_ARGS__
@@ -267,7 +267,7 @@ namespace meta
     namespace detail
     {
         template <bool B>
-        META_INLINE_VAR constexpr bool bool_ = B;
+        META_INLINE_VAR constexpr bool barrier = B;
 
         template <class T, T> struct require_constant; // not defined
     }

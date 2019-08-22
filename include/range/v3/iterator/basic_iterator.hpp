@@ -32,6 +32,9 @@
 #include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/utility/static_const.hpp>
 
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_MULTIPLE_ASSIGNMENT_OPERATORS
+
 namespace ranges
 {
     /// \addtogroup group-iterator Iterator
@@ -934,5 +937,7 @@ namespace std
     {};
 } // namespace std
 /// \endcond
+
+RANGES_DIAGNOSTIC_POP
 
 #endif

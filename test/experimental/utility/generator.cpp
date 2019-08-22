@@ -58,10 +58,10 @@ private:
 
     CPP_template(typename V)(
         requires ranges::input_range<V> && ranges::view_<V> &&
-            is_copy_constructible_or_ref<ranges::range_reference_t<V>>())
+            (is_copy_constructible_or_ref<ranges::range_reference_t<V>>()))
     static generator_for<V> impl(V v)
     {
-        if /* constexpr */ (ranges::sized_range<V>)
+        if(RANGES_CONSTEXPR_IF(ranges::sized_range<V>))
             co_await static_cast<ranges::experimental::generator_size>((std::size_t)ranges::distance(v));
         auto first = ranges::begin(v);
         auto const last = ranges::end(v);
@@ -126,9 +126,9 @@ ranges::experimental::generator<T> iota_generator(T t)
 }
 
 CPP_template(class T, class S)(
-    requires ranges::weakly_incrementable<T> &&
+    requires (ranges::weakly_incrementable<T> &&
         ranges::detail::weakly_equality_comparable_with_<T, S> &&
-        (!ranges::sized_sentinel_for<S, T>) && !(ranges::integral<T> && ranges::integral<S>))
+        !ranges::sized_sentinel_for<S, T> && !(ranges::integral<T> && ranges::integral<S>)))
 ranges::experimental::generator<T> iota_generator(T t, S const s)
 {
     for (; t != s; ++t)
@@ -165,7 +165,7 @@ meta::invoke<
     ranges::indirect_result_t<F &, ranges::iterator_t<V>>>
 transform(V view, F f)
 {
-    if /* constexpr */ (ranges::sized_range<V>)
+    if(RANGES_CONSTEXPR_IF(ranges::sized_range<V>))
         co_await static_cast<ranges::experimental::generator_size>((std::size_t) ranges::distance(view));
     RANGES_FOR(auto &&i, view)
         co_yield ranges::invoke(f, i);
