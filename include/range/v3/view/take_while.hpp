@@ -43,7 +43,7 @@ namespace ranges
     {
     private:
         friend range_access;
-        semiregular_box_t<Pred> pred_;
+        RANGES_NO_UNIQUE_ADDRESS semiregular_box_t<Pred> pred_;
 
         template<bool IsConst>
         struct sentinel_adaptor : adaptor_base

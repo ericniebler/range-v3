@@ -32,7 +32,7 @@ namespace ranges
     {
     private:
         CPP_assert(same_as<FD, detail::decay_t<FD>> && move_constructible<FD>);
-        FD pred_;
+        RANGES_NO_UNIQUE_ADDRESS FD pred_;
 
     public:
         CPP_member
