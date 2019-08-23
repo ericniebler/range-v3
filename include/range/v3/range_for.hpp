@@ -21,19 +21,26 @@
 #if RANGES_CXX_RANGE_BASED_FOR < RANGES_CXX_RANGE_BASED_FOR_17
 /// A range-based for macro, basically a hack until the built-in range-for can handle
 /// Ranges that have a different type for begin and end. \ingroup range-core
-#define RANGES_FOR(VAR_DECL, ...)                                                     \
-    if(bool _range_v3_done = false) {}                                                \
-    else                                                                              \
-        for(auto && _range_v3_rng = (__VA_ARGS__); !_range_v3_done;)                  \
-            for(auto _range_v3_begin = ranges::begin(_range_v3_rng); !_range_v3_done; \
-                _range_v3_done = true)                                                \
-                for(auto _range_v3_end = ranges::end(_range_v3_rng);                  \
-                    !_range_v3_done && _range_v3_begin != _range_v3_end;              \
-                    ++_range_v3_begin)                                                \
-                    if(!(_range_v3_done = true)) {}                                   \
-                    else                                                              \
-                        for(VAR_DECL = *_range_v3_begin; _range_v3_done;              \
-                            _range_v3_done = false)                                   \
+#define RANGES_FOR(VAR_DECL, ...)                                              \
+    if(bool CPP_PP_CAT(_range_v3_done, __LINE__) = false) {}                   \
+    else                                                                       \
+        for(auto && CPP_PP_CAT(_range_v3_rng, __LINE__) = (__VA_ARGS__);       \
+            !CPP_PP_CAT(_range_v3_done, __LINE__);)                            \
+            for(auto CPP_PP_CAT(_range_v3_begin, __LINE__) =                   \
+                    ranges::begin(CPP_PP_CAT(_range_v3_rng, __LINE__));        \
+                !CPP_PP_CAT(_range_v3_done, __LINE__);                         \
+                CPP_PP_CAT(_range_v3_done, __LINE__) = true)                   \
+                for(auto CPP_PP_CAT(_range_v3_end, __LINE__) =                 \
+                        ranges::end(CPP_PP_CAT(_range_v3_rng, __LINE__));      \
+                    !CPP_PP_CAT(_range_v3_done, __LINE__) &&                   \
+                    CPP_PP_CAT(_range_v3_begin, __LINE__) !=                   \
+                        CPP_PP_CAT(_range_v3_end, __LINE__);                   \
+                    ++CPP_PP_CAT(_range_v3_begin, __LINE__))                   \
+                    if(!(CPP_PP_CAT(_range_v3_done, __LINE__) = true)) {}      \
+                    else                                                       \
+                        for(VAR_DECL = *CPP_PP_CAT(_range_v3_begin, __LINE__); \
+                            CPP_PP_CAT(_range_v3_done, __LINE__);              \
+                            CPP_PP_CAT(_range_v3_done, __LINE__) = false)      \
     /**/
 
 #else
