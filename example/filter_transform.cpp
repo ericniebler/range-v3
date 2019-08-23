@@ -15,6 +15,7 @@
 // fly with view adaptors.
 
 #include <iostream>
+#include <string>
 #include <vector>
 
 #include <range/v3/view/filter.hpp>
