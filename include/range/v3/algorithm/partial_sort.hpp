@@ -36,23 +36,23 @@ namespace ranges
     struct partial_sort_fn
     {
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, I middle, S end, C pred = C{},
+        auto operator()(I first, I middle, S last, C pred = C{},
                         P proj = P{}) const -> CPP_ret(I)( //
             requires sortable<I, C, P> && random_access_iterator<I> && sentinel_for<S, I>)
         {
-            make_heap(begin, middle, std::ref(pred), std::ref(proj));
-            auto const len = middle - begin;
+            make_heap(first, middle, std::ref(pred), std::ref(proj));
+            auto const len = middle - first;
             I i = middle;
-            for(; i != end; ++i)
+            for(; i != last; ++i)
             {
-                if(invoke(pred, invoke(proj, *i), invoke(proj, *begin)))
+                if(invoke(pred, invoke(proj, *i), invoke(proj, *first)))
                 {
-                    iter_swap(i, begin);
+                    iter_swap(i, first);
                     detail::sift_down_n(
-                        begin, len, begin, std::ref(pred), std::ref(proj));
+                        first, len, first, std::ref(pred), std::ref(proj));
                 }
             }
-            sort_heap(begin, middle, std::ref(pred), std::ref(proj));
+            sort_heap(first, middle, std::ref(pred), std::ref(proj));
             return i;
         }
 

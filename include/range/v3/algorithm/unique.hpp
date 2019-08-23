@@ -46,20 +46,20 @@ namespace ranges
         /// \pre `C` is a model of the `relation` concept
         ///
         template<typename I, typename S, typename C = equal_to, typename P = identity>
-        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const
+        auto operator()(I first, S last, C pred = C{}, P proj = P{}) const
             -> CPP_ret(I)( //
                 requires sortable<I, C, P> && sentinel_for<S, I>)
         {
-            begin = adjacent_find(std::move(begin), end, std::ref(pred), std::ref(proj));
+            first = adjacent_find(std::move(first), last, std::ref(pred), std::ref(proj));
 
-            if(begin != end)
+            if(first != last)
             {
-                for(I i = next(begin); ++i != end;)
-                    if(!invoke(pred, invoke(proj, *begin), invoke(proj, *i)))
-                        *++begin = iter_move(i);
-                ++begin;
+                for(I i = next(first); ++i != last;)
+                    if(!invoke(pred, invoke(proj, *first), invoke(proj, *i)))
+                        *++first = iter_move(i);
+                ++first;
             }
-            return begin;
+            return first;
         }
 
         template<typename Rng, typename C = equal_to, typename P = identity>

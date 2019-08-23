@@ -47,52 +47,52 @@ namespace ranges
     {
     private:
         template<typename I> // Forward
-        static subrange<I> rotate_left(I begin, I end)
+        static subrange<I> rotate_left(I first, I last)
         {
-            iter_value_t<I> tmp = iter_move(begin);
-            I lm1 = ranges::move(next(begin), end, begin).out;
+            iter_value_t<I> tmp = iter_move(first);
+            I lm1 = ranges::move(next(first), last, first).out;
             *lm1 = std::move(tmp);
-            return {lm1, end};
+            return {lm1, last};
         }
 
         template<typename I> // Bidirectional
-        static subrange<I> rotate_right(I begin, I end)
+        static subrange<I> rotate_right(I first, I last)
         {
-            I lm1 = prev(end);
+            I lm1 = prev(last);
             iter_value_t<I> tmp = iter_move(lm1);
-            I fp1 = move_backward(begin, lm1, end).out;
-            *begin = std::move(tmp);
-            return {fp1, end};
+            I fp1 = move_backward(first, lm1, last).out;
+            *first = std::move(tmp);
+            return {fp1, last};
         }
 
         template<typename I, typename S> // Forward
-        static subrange<I> rotate_forward(I begin, I middle, S end)
+        static subrange<I> rotate_forward(I first, I middle, S last)
         {
             I i = middle;
             while(true)
             {
-                ranges::iter_swap(begin, i);
-                ++begin;
-                if(++i == end)
+                ranges::iter_swap(first, i);
+                ++first;
+                if(++i == last)
                     break;
-                if(begin == middle)
+                if(first == middle)
                     middle = i;
             }
-            I r = begin;
-            if(begin != middle)
+            I r = first;
+            if(first != middle)
             {
                 I j = middle;
                 while(true)
                 {
-                    ranges::iter_swap(begin, j);
-                    ++begin;
-                    if(++j == end)
+                    ranges::iter_swap(first, j);
+                    ++first;
+                    if(++j == last)
                     {
-                        if(begin == middle)
+                        if(first == middle)
                             break;
                         j = middle;
                     }
-                    else if(begin == middle)
+                    else if(first == middle)
                         middle = j;
                 }
             }
@@ -112,17 +112,17 @@ namespace ranges
         }
 
         template<typename I> // Random
-        static subrange<I> rotate_gcd(I begin, I middle, I end)
+        static subrange<I> rotate_gcd(I first, I middle, I last)
         {
-            auto const m1 = middle - begin;
-            auto const m2 = end - middle;
+            auto const m1 = middle - first;
+            auto const m2 = last - middle;
             if(m1 == m2)
             {
-                swap_ranges(begin, middle, middle);
-                return {middle, end};
+                swap_ranges(first, middle, middle);
+                return {middle, last};
             }
             auto const g = rotate_fn::gcd(m1, m2);
-            for(I p = begin + g; p != begin;)
+            for(I p = first + g; p != first;)
             {
                 iter_value_t<I> t = iter_move(--p);
                 I p1 = p;
@@ -131,83 +131,83 @@ namespace ranges
                 {
                     *p1 = iter_move(p2);
                     p1 = p2;
-                    auto const d = end - p2;
+                    auto const d = last - p2;
                     if(m1 < d)
                         p2 += m1;
                     else
-                        p2 = begin + (m1 - d);
+                        p2 = first + (m1 - d);
                 } while(p2 != p);
                 *p1 = std::move(t);
             }
-            return {begin + m2, end};
+            return {first + m2, last};
         }
 
         template<typename I, typename S>
-        static subrange<I> rotate_(I begin, I middle, S end,
+        static subrange<I> rotate_(I first, I middle, S last,
                                    detail::forward_iterator_tag_)
         {
-            return rotate_fn::rotate_forward(begin, middle, end);
+            return rotate_fn::rotate_forward(first, middle, last);
         }
 
         template<typename I>
-        static subrange<I> rotate_(I begin, I middle, I end,
+        static subrange<I> rotate_(I first, I middle, I last,
                                    detail::forward_iterator_tag_)
         {
             using value_type = iter_value_t<I>;
             if(detail::is_trivially_move_assignable<value_type>::value)
             {
-                if(next(begin) == middle)
-                    return rotate_fn::rotate_left(begin, end);
+                if(next(first) == middle)
+                    return rotate_fn::rotate_left(first, last);
             }
-            return rotate_fn::rotate_forward(begin, middle, end);
+            return rotate_fn::rotate_forward(first, middle, last);
         }
 
         template<typename I>
-        static subrange<I> rotate_(I begin, I middle, I end,
+        static subrange<I> rotate_(I first, I middle, I last,
                                    detail::bidirectional_iterator_tag_)
         {
             using value_type = iter_value_t<I>;
             if(detail::is_trivially_move_assignable<value_type>::value)
             {
-                if(next(begin) == middle)
-                    return rotate_fn::rotate_left(begin, end);
-                if(next(middle) == end)
-                    return rotate_fn::rotate_right(begin, end);
+                if(next(first) == middle)
+                    return rotate_fn::rotate_left(first, last);
+                if(next(middle) == last)
+                    return rotate_fn::rotate_right(first, last);
             }
-            return rotate_fn::rotate_forward(begin, middle, end);
+            return rotate_fn::rotate_forward(first, middle, last);
         }
 
         template<typename I>
-        static subrange<I> rotate_(I begin, I middle, I end,
+        static subrange<I> rotate_(I first, I middle, I last,
                                    detail::random_access_iterator_tag_)
         {
             using value_type = iter_value_t<I>;
             if(detail::is_trivially_move_assignable<value_type>::value)
             {
-                if(next(begin) == middle)
-                    return rotate_fn::rotate_left(begin, end);
-                if(next(middle) == end)
-                    return rotate_fn::rotate_right(begin, end);
-                return rotate_fn::rotate_gcd(begin, middle, end);
+                if(next(first) == middle)
+                    return rotate_fn::rotate_left(first, last);
+                if(next(middle) == last)
+                    return rotate_fn::rotate_right(first, last);
+                return rotate_fn::rotate_gcd(first, middle, last);
             }
-            return rotate_fn::rotate_forward(begin, middle, end);
+            return rotate_fn::rotate_forward(first, middle, last);
         }
 
     public:
         template<typename I, typename S>
-        auto operator()(I begin, I middle, S end) const -> CPP_ret(subrange<I>)( //
+        auto operator()(I first, I middle, S last) const -> CPP_ret(subrange<I>)( //
             requires permutable<I> && sentinel_for<S, I>)
         {
-            if(begin == middle)
+            if(first == middle)
             {
-                begin = ranges::next(std::move(begin), end);
-                return {begin, begin};
+                first = ranges::next(std::move(first), last);
+                return {first, first};
             }
-            if(middle == end)
+            if(middle == last)
             {
-                return {begin, middle};
+                return {first, middle};
             }
-            return rotate_fn::rotate_(begin, middle, end, iterator_tag_of<I>{});
+            return rotate_fn::rotate_(first, middle, last, iterator_tag_of<I>{});
         }
 
         template<typename Rng, typename I = iterator_t<Rng>>

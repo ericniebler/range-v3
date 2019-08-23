@@ -149,8 +149,8 @@ namespace ranges
         }
 
         iterator_range() = default;
-        constexpr iterator_range(I begin, S end)
-          : compressed_pair<I, S>{detail::move(begin), detail::move(end)}
+        constexpr iterator_range(I first, S last)
+          : compressed_pair<I, S>{detail::move(first), detail::move(last)}
         {}
         template<typename X, typename Y>
         constexpr CPP_ctor(iterator_range)(iterator_range<X, Y> rng)( //
@@ -209,8 +209,8 @@ namespace ranges
 
     public:
         sized_iterator_range() = default;
-        RANGES_NDEBUG_CONSTEXPR sized_iterator_range(I begin, S end, size_type size)
-          : rng_{detail::move(begin), detail::move(end)}
+        RANGES_NDEBUG_CONSTEXPR sized_iterator_range(I first, S last, size_type size)
+          : rng_{detail::move(first), detail::move(last)}
           , size_(size)
         {
 #ifndef NDEBUG
@@ -301,22 +301,22 @@ namespace ranges
 
     struct make_iterator_range_fn
     {
-        /// \return `{begin, end}`
+        /// \return `{first, last}`
         template<typename I, typename S>
-        constexpr auto operator()(I begin, S end) const
+        constexpr auto operator()(I first, S last) const
             -> CPP_ret(iterator_range<I, S>)( //
                 requires sentinel_for<S, I>)
         {
-            return {detail::move(begin), detail::move(end)};
+            return {detail::move(first), detail::move(last)};
         }
 
-        /// \return `{begin, end, size}`
+        /// \return `{first, last, size}`
         template<typename I, typename S>
-        constexpr auto operator()(I begin, S end, detail::iter_size_t<I> size) const
+        constexpr auto operator()(I first, S last, detail::iter_size_t<I> sz) const
             -> CPP_ret(sized_iterator_range<I, S>)( //
                 requires sentinel_for<S, I>)
         {
-            return {detail::move(begin), detail::move(end), size};
+            return {detail::move(first), detail::move(last), sz};
         }
     };
 

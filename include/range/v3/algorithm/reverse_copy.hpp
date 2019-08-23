@@ -37,14 +37,14 @@ namespace ranges
     struct reverse_copy_fn
     {
         template<typename I, typename S, typename O>
-        auto operator()(I begin, S end_, O out) const
+        auto operator()(I first, S end_, O out) const
             -> CPP_ret(reverse_copy_result<I, O>)( //
                 requires bidirectional_iterator<I> && sentinel_for<S, I> &&
                     weakly_incrementable<O> && indirectly_copyable<I, O>)
         {
-            I end = ranges::next(begin, end_), res = end;
-            for(; begin != end; ++out)
-                *out = *--end;
+            I last = ranges::next(first, end_), res = last;
+            for(; first != last; ++out)
+                *out = *--last;
             return {res, out};
         }
 

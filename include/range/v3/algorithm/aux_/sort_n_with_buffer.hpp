@@ -47,7 +47,7 @@ namespace ranges
         struct sort_n_with_buffer_fn
         {
             template<typename I, typename B, typename C = less, typename P = identity>
-            auto operator()(I begin, iter_difference_t<I> n, B buff, C r = C{},
+            auto operator()(I first, iter_difference_t<I> n, B buff, C r = C{},
                             P p = P{}) const -> CPP_ret(I)( //
                 requires same_as<iter_common_reference_t<I>,
                                  iter_common_reference_t<B>> &&
@@ -55,10 +55,10 @@ namespace ranges
             {
                 auto half = n / 2;
                 if(0 == half)
-                    return next(begin, n);
-                I m = (*this)(begin, half, buff, r, p);
+                    return next(first, n);
+                I m = (*this)(first, half, buff, r, p);
                 (*this)(m, n - half, buff, r, p);
-                return merge_n_with_buffer(begin, half, m, n - half, buff, r, p);
+                return merge_n_with_buffer(first, half, m, n - half, buff, r, p);
             }
         };
 

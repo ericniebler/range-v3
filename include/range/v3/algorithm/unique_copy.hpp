@@ -41,20 +41,20 @@ namespace ranges
     {
     private:
         template<typename I, typename S, typename O, typename C, typename P>
-        static unique_copy_result<I, O> impl(I begin, S end, O out, C pred, P proj,
+        static unique_copy_result<I, O> impl(I first, S last, O out, C pred, P proj,
                                              detail::input_iterator_tag_, std::false_type)
         {
-            if(begin != end)
+            if(first != last)
             {
                 // Must save a copy into a local because we will need this value
                 // even after we advance the input iterator.
                 iter_value_t<I> value =
-                    *begin; // This is guaranteed by indirectly_copyable
+                    *first; // This is guaranteed by indirectly_copyable
                 *out = value;
                 ++out;
-                while(++begin != end)
+                while(++first != last)
                 {
-                    auto && x = *begin;
+                    auto && x = *first;
                     if(!invoke(pred, invoke(proj, value), invoke(proj, x)))
                     {
                         value = (decltype(x) &&)x;
@@ -63,49 +63,49 @@ namespace ranges
                     }
                 }
             }
-            return {begin, out};
+            return {first, out};
         }
 
         template<typename I, typename S, typename O, typename C, typename P>
-        static unique_copy_result<I, O> impl(I begin, S end, O out, C pred, P proj,
+        static unique_copy_result<I, O> impl(I first, S last, O out, C pred, P proj,
                                              detail::forward_iterator_tag_,
                                              std::false_type)
         {
-            if(begin != end)
+            if(first != last)
             {
-                I tmp = begin;
+                I tmp = first;
                 *out = *tmp;
                 ++out;
-                while(++begin != end)
+                while(++first != last)
                 {
-                    auto && x = *begin;
+                    auto && x = *first;
                     if(!invoke(pred, invoke(proj, *tmp), invoke(proj, x)))
                     {
                         *out = (decltype(x) &&)x;
                         ++out;
-                        tmp = begin;
+                        tmp = first;
                     }
                 }
             }
-            return {begin, out};
+            return {first, out};
         }
 
         template<typename I, typename S, typename O, typename C, typename P>
-        static unique_copy_result<I, O> impl(I begin, S end, O out, C pred, P proj,
+        static unique_copy_result<I, O> impl(I first, S last, O out, C pred, P proj,
                                              detail::input_iterator_tag_, std::true_type)
         {
-            if(begin != end)
+            if(first != last)
             {
-                *out = *begin;
-                while(++begin != end)
+                *out = *first;
+                while(++first != last)
                 {
-                    auto && x = *begin;
+                    auto && x = *first;
                     if(!invoke(pred, invoke(proj, *out), invoke(proj, x)))
                         *++out = (decltype(x) &&)x;
                 }
                 ++out;
             }
-            return {begin, out};
+            return {first, out};
         }
 
     public:
@@ -118,7 +118,7 @@ namespace ranges
         /// \pre `C` is a model of the `relation` concept
         template<typename I, typename S, typename O, typename C = equal_to,
                  typename P = identity>
-        auto operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const
+        auto operator()(I first, S last, O out, C pred = C{}, P proj = P{}) const
             -> CPP_ret(unique_copy_result<I, O>)( //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                     indirect_relation<C, projected<I, P>> && weakly_incrementable<O> &&
@@ -126,8 +126,8 @@ namespace ranges
                 (forward_iterator<I> || forward_iterator<O> ||
                  indirectly_copyable_storable<I, O>))
         {
-            return unique_copy_fn::impl(std::move(begin),
-                                        std::move(end),
+            return unique_copy_fn::impl(std::move(first),
+                                        std::move(last),
                                         std::move(out),
                                         std::move(pred),
                                         std::move(proj),

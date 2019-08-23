@@ -225,10 +225,10 @@ void test_bug_919()
 void test_bug_978()
 {
     // https://github.com/ericniebler/range-v3/issues/978
-    int data[] = {1};
+    int rgi[] = {1};
     ranges::views::cartesian_product(
-        data | ranges::views::filter([](int){ return true; }),
-        data
+        rgi | ranges::views::filter([](int){ return true; }),
+        rgi
     );
 }
 

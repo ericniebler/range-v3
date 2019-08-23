@@ -34,13 +34,13 @@ namespace ranges
     {
         template<typename I, typename S, typename V, typename C = less,
                  typename P = identity>
-        auto operator()(I begin, S end, V const & val, C pred = C{}, P proj = P{}) const
+        auto operator()(I first, S last, V const & val, C pred = C{}, P proj = P{}) const
             -> CPP_ret(I)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
                     indirect_strict_weak_order<C, V const *, projected<I, P>>)
         {
-            return partition_point(std::move(begin),
-                                   std::move(end),
+            return partition_point(std::move(first),
+                                   std::move(last),
                                    detail::make_upper_bound_predicate(pred, val),
                                    std::move(proj));
         }

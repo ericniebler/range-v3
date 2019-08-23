@@ -33,14 +33,14 @@ namespace ranges
     {
         template<typename I, typename S, typename T, typename Op = plus,
                  typename P = identity>
-        auto operator()(I begin, S end, T init, Op op = Op{},
+        auto operator()(I first, S last, T init, Op op = Op{},
                         P proj = P{}) const -> CPP_ret(T)( //
             requires sentinel_for<S, I> && input_iterator<I> &&
                 indirectly_binary_invocable_<Op, T *, projected<I, P>> &&
                     assignable_from<T &, indirect_result_t<Op &, T *, projected<I, P>>>)
         {
-            for(; begin != end; ++begin)
-                init = invoke(op, init, invoke(proj, *begin));
+            for(; first != last; ++first)
+                init = invoke(op, init, invoke(proj, *first));
             return init;
         }
 

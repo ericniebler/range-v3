@@ -51,81 +51,92 @@ int main()
     using namespace ranges;
 
     int rgi[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-
-    auto rng = rgi | views::transform(is_odd());
-    has_type<int &>(*begin(rgi));
-    has_type<bool>(*begin(rng));
-    CPP_assert(view_<decltype(rng)>);
-    CPP_assert(sized_range<decltype(rng)>);
-    CPP_assert(random_access_range<decltype(rng)>);
-    ::check_equal(rng, {true, false, true, false, true, false, true, false, true, false});
-
     std::pair<int, int> rgp[] = {{1,1}, {2,2}, {3,3}, {4,4}, {5,5}, {6,6}, {7,7}, {8,8}, {9,9}, {10,10}};
-    auto rng2 = rgp | views::transform(&std::pair<int,int>::first);
-    has_type<int &>(*begin(rng2));
-    CPP_assert(same_as<range_value_t<decltype(rng2)>, int>);
-    CPP_assert(same_as<decltype(iter_move(begin(rng2))), int &&>);
-    CPP_assert(view_<decltype(rng2)>);
-    CPP_assert(common_range<decltype(rng2)>);
-    CPP_assert(sized_range<decltype(rng2)>);
-    CPP_assert(random_access_range<decltype(rng2)>);
-    ::check_equal(rng2, {1,2,3,4,5,6,7,8,9,10});
-    ::check_equal(rng2 | views::reverse, {10,9,8,7,6,5,4,3,2,1});
-    CHECK(&*begin(rng2) == &rgp[0].first);
-    CHECK(rng2.size() == 10u);
 
-    auto rng3 = views::counted(rgp, 10) | views::transform(&std::pair<int,int>::first);
-    has_type<int &>(*begin(rng3));
-    CPP_assert(view_<decltype(rng3)>);
-    CPP_assert(common_range<decltype(rng3)>);
-    CPP_assert(sized_range<decltype(rng3)>);
-    CPP_assert(random_access_range<decltype(rng3)>);
-    ::check_equal(rng3, {1,2,3,4,5,6,7,8,9,10});
-    CHECK(&*begin(rng3) == &rgp[0].first);
-    CHECK(rng3.size() == 10u);
+    {
+        auto rng = rgi | views::transform(is_odd());
+        has_type<int &>(*begin(rgi));
+        has_type<bool>(*begin(rng));
+        CPP_assert(view_<decltype(rng)>);
+        CPP_assert(sized_range<decltype(rng)>);
+        CPP_assert(random_access_range<decltype(rng)>);
+        ::check_equal(rng, {true, false, true, false, true, false, true, false, true, false});
+    }
 
-    auto rng4 = views::counted(ForwardIterator<std::pair<int, int>*>{rgp}, 10)
-                      | views::transform(&std::pair<int,int>::first);
-    has_type<int &>(*begin(rng4));
-    CPP_assert(view_<decltype(rng4)>);
-    CPP_assert(!common_range<decltype(rng4)>);
-    CPP_assert(sized_range<decltype(rng4)>);
-    CPP_assert(forward_range<decltype(rng4)>);
-    CPP_assert(!bidirectional_range<decltype(rng4)>);
-    ::check_equal(rng4, {1,2,3,4,5,6,7,8,9,10});
-    CHECK(&*begin(rng4) == &rgp[0].first);
-    CHECK(rng4.size() == 10u);
+    {
+        auto rng2 = rgp | views::transform(&std::pair<int,int>::first);
+        has_type<int &>(*begin(rng2));
+        CPP_assert(same_as<range_value_t<decltype(rng2)>, int>);
+        CPP_assert(same_as<decltype(iter_move(begin(rng2))), int &&>);
+        CPP_assert(view_<decltype(rng2)>);
+        CPP_assert(common_range<decltype(rng2)>);
+        CPP_assert(sized_range<decltype(rng2)>);
+        CPP_assert(random_access_range<decltype(rng2)>);
+        ::check_equal(rng2, {1,2,3,4,5,6,7,8,9,10});
+        ::check_equal(rng2 | views::reverse, {10,9,8,7,6,5,4,3,2,1});
+        CHECK(&*begin(rng2) == &rgp[0].first);
+        CHECK(rng2.size() == 10u);
+    }
 
-    counted_iterator<ForwardIterator<std::pair<int, int>*>> i = begin(rng4).base();
-    (void)i;
+    {
+
+        auto rng3 = views::counted(rgp, 10) | views::transform(&std::pair<int,int>::first);
+        has_type<int &>(*begin(rng3));
+        CPP_assert(view_<decltype(rng3)>);
+        CPP_assert(common_range<decltype(rng3)>);
+        CPP_assert(sized_range<decltype(rng3)>);
+        CPP_assert(random_access_range<decltype(rng3)>);
+        ::check_equal(rng3, {1,2,3,4,5,6,7,8,9,10});
+        CHECK(&*begin(rng3) == &rgp[0].first);
+        CHECK(rng3.size() == 10u);
+    }
+
+    {
+        auto rng4 = views::counted(ForwardIterator<std::pair<int, int>*>{rgp}, 10)
+                        | views::transform(&std::pair<int,int>::first);
+        has_type<int &>(*begin(rng4));
+        CPP_assert(view_<decltype(rng4)>);
+        CPP_assert(!common_range<decltype(rng4)>);
+        CPP_assert(sized_range<decltype(rng4)>);
+        CPP_assert(forward_range<decltype(rng4)>);
+        CPP_assert(!bidirectional_range<decltype(rng4)>);
+        ::check_equal(rng4, {1,2,3,4,5,6,7,8,9,10});
+        CHECK(&*begin(rng4) == &rgp[0].first);
+        CHECK(rng4.size() == 10u);
+
+        counted_iterator<ForwardIterator<std::pair<int, int>*>> i = begin(rng4).base();
+        (void)i;
+    }
 
     // Test transform with a mutable lambda
-    int cnt = 100;
-    auto mutable_rng = views::transform(rgi, [cnt](int) mutable { return cnt++;});
-    ::check_equal(mutable_rng, {100,101,102,103,104,105,106,107,108,109});
-    CHECK(cnt == 100);
-    CPP_assert(view_<decltype(mutable_rng)>);
-    CPP_assert(!view_<decltype(mutable_rng) const>);
+    {
+        int cnt = 100;
+        auto mutable_rng = views::transform(rgi, [cnt](int) mutable { return cnt++;});
+        ::check_equal(mutable_rng, {100,101,102,103,104,105,106,107,108,109});
+        CHECK(cnt == 100);
+        CPP_assert(view_<decltype(mutable_rng)>);
+        CPP_assert(!view_<decltype(mutable_rng) const>);
+    }
 
     // Test iter_transform by transforming a zip view to select one element.
     {
         auto v0 = to<std::vector<MoveOnlyString>>({"a","b","c"});
         auto v1 = to<std::vector<MoveOnlyString>>({"x","y","z"});
 
-        auto rng = views::zip(v0, v1);
-        CPP_assert(random_access_range<decltype(rng)>);
+        auto rng1 = views::zip(v0, v1);
+        CPP_assert(random_access_range<decltype(rng1)>);
 
         std::vector<MoveOnlyString> res;
-        using R = decltype(rng);
-        using I = iterator_t<R>;
+        using R1 = decltype(rng1);
+        using I1 = iterator_t<R1>;
         // Needlessly verbose -- a simple transform would do the same, but this
         // is an interesting test.
         auto proj = overload(
-            [](I i) -> MoveOnlyString& {return (*i).first;},
-            [](copy_tag, I) -> MoveOnlyString {return {};},
-            [](move_tag, I i) -> MoveOnlyString&& {return std::move((*i).first);}
+            [](I1 i1) -> MoveOnlyString& {return (*i1).first;},
+            [](copy_tag, I1) -> MoveOnlyString {return {};},
+            [](move_tag, I1 i1) -> MoveOnlyString&& {return std::move((*i1).first);}
         );
-        auto rng2 = rng | views::iter_transform(proj);
+        auto rng2 = rng1 | views::iter_transform(proj);
         move(rng2, ranges::back_inserter(res));
         ::check_equal(res, {"a","b","c"});
         ::check_equal(v0, {"","",""});

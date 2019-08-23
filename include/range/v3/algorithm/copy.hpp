@@ -38,14 +38,14 @@ namespace ranges
     struct cpp20_copy_fn
     {
         template<typename I, typename S, typename O>
-        constexpr auto operator()(I begin, S end, O out) const
+        constexpr auto operator()(I first, S last, O out) const
             -> CPP_ret(copy_result<I, O>)( //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                     weakly_incrementable<O> && indirectly_copyable<I, O>)
         {
-            for(; begin != end; ++begin, ++out)
-                *out = *begin;
-            return {begin, out};
+            for(; first != last; ++first, ++out)
+                *out = *first;
+            return {first, out};
         }
 
         template<typename Rng, typename O>

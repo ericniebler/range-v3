@@ -133,15 +133,15 @@ int main()
         constexpr int M = N/2-1;
         S input[N];
         U output[M];
-        for (int i = 0; i < N; ++i)
-            input[i].i = i;
+        for (int j = 0; j < N; ++j)
+            input[j].i = j;
         std::shuffle(input, input+N, gen);
-        U * r = ranges::partial_sort_copy(input, output, std::less<int>(), &S::i, &U::i);
+        U * r2 = ranges::partial_sort_copy(input, output, std::less<int>(), &S::i, &U::i);
         U* e = output + std::min(N, M);
-        CHECK(r == e);
-        int i = 0;
-        for (U* x = output; x < e; ++x, ++i)
-            CHECK(x->i == i);
+        CHECK(r2 == e);
+        int i2 = 0;
+        for (U* x = output; x < e; ++x, ++i2)
+            CHECK(x->i == i2);
     }
 
     // Check rvalue ranges
@@ -150,8 +150,8 @@ int main()
         constexpr int M = N/2-1;
         S input[N];
         U output[M];
-        for (int i = 0; i < N; ++i)
-            input[i].i = i;
+        for (int j = 0; j < N; ++j)
+            input[j].i = j;
         std::shuffle(input, input+N, gen);
         auto r0 = ranges::partial_sort_copy(input, std::move(output), std::less<int>(), &S::i, &U::i);
         U* e = output + std::min(N, M);
@@ -159,18 +159,18 @@ int main()
         CHECK(::is_dangling(r0));
 #endif // RANGES_WORKAROUND_MSVC_573728
 
-        int i = 0;
-        for (U* x = output; x < e; ++x, ++i)
-            CHECK(x->i == i);
+        int i2 = 0;
+        for (U* x = output; x < e; ++x, ++i2)
+            CHECK(x->i == i2);
 
         std::vector<U> vec(M);
         auto r1 = ranges::partial_sort_copy(input, std::move(vec), std::less<int>(), &S::i, &U::i);
         e = vec.data() + std::min(N, M);
         CHECK(::is_dangling(r1));
 
-        i = 0;
-        for (U* x = vec.data(); x < e; ++x, ++i)
-            CHECK(x->i == i);
+        i2 = 0;
+        for (U* x = vec.data(); x < e; ++x, ++i2)
+            CHECK(x->i == i2);
     }
 
     return ::test_result();

@@ -27,7 +27,7 @@ struct Int
     using difference_type = int;
     int i = 0;
     Int() = default;
-    explicit Int(int i) : i(i) {}
+    explicit Int(int j) : i(j) {}
     Int & operator++() {++i; CHECK(i <= 10); return *this;}
     Int operator++(int) {auto tmp = *this; ++*this; return tmp;}
     bool operator==(Int j) const { return i == j.i; }
@@ -65,83 +65,95 @@ int main()
         static_assert(!sized_range<decltype(views::iota(0))>, "");
     }
 
-    char const *sz = "hello world";
-    ::check_equal(views::iota(ForwardIterator<char const*>(sz)) | views::take(10) | views::indirect,
-        {'h','e','l','l','o',' ','w','o','r','l'});
-
-    ::check_equal(views::ints | views::take(10), {0,1,2,3,4,5,6,7,8,9});
-    ::check_equal(views::ints(0,unreachable) | views::take(10), {0,1,2,3,4,5,6,7,8,9});
-    ::check_equal(views::ints(0,9), {0,1,2,3,4,5,6,7,8});
-    ::check_equal(views::closed_indices(0,9), {0,1,2,3,4,5,6,7,8,9});
-    ::check_equal(views::ints(1,10), {1,2,3,4,5,6,7,8,9});
-    ::check_equal(views::closed_indices(1,10), {1,2,3,4,5,6,7,8,9,10});
-
-    auto chars = views::ints(std::numeric_limits<signed char>::min(),
-                            std::numeric_limits<signed char>::max());
-    CPP_assert(random_access_range<decltype(chars)>);
-    CPP_assert(same_as<int, range_difference_t<decltype(chars)>>);
-    CPP_assert(view_<decltype(chars)>);
-    CPP_assert(random_access_range<decltype(chars)>);
-    CPP_assert(common_range<decltype(chars)>);
-    CHECK(distance(chars.begin(), chars.end()) == (long) CHAR_MAX - (long) CHAR_MIN);
-    CHECK(chars.size() == (unsigned)((long) CHAR_MAX - (long) CHAR_MIN));
-
-    auto ushorts = views::ints(std::numeric_limits<unsigned short>::min(),
-                              std::numeric_limits<unsigned short>::max());
-    CPP_assert(view_<decltype(ushorts)>);
-    CPP_assert(common_range<decltype(ushorts)>);
-    CPP_assert(same_as<int, range_difference_t<decltype(ushorts)>>);
-    CPP_assert(same_as<unsigned int, range_size_t<decltype(ushorts)>>);
-    CHECK(distance(ushorts.begin(), ushorts.end()) == (int) USHRT_MAX);
-    CHECK(ushorts.size() == (unsigned) USHRT_MAX);
-
-    auto uints = views::closed_indices(
-        std::numeric_limits<std::uint_least32_t>::min(),
-        std::numeric_limits<std::uint_least32_t>::max() - 1);
-    CPP_assert(view_<decltype(uints)>);
-    CPP_assert(common_range<decltype(uints)>);
-    CPP_assert(same_as<std::int_fast64_t, range_difference_t<decltype(uints)>>);
-    CPP_assert(same_as<std::uint_fast64_t, range_size_t<decltype(uints)>>);
-    CHECK(uints.size() == std::numeric_limits<std::uint32_t>::max());
-
-    auto ints = views::closed_indices(
-        std::numeric_limits<std::int_least32_t>::min(),
-        std::numeric_limits<std::int_least32_t>::max() - 1);
-    CPP_assert(same_as<std::int_fast64_t, range_difference_t<decltype(ints)>>);
-    CPP_assert(same_as<std::uint_fast64_t, range_size_t<decltype(ints)>>);
-    CHECK(ints.size() == std::numeric_limits<std::uint32_t>::max());
-
-    auto sints = views::ints(std::numeric_limits<int>::min(),
-                            std::numeric_limits<int>::max());
-    CPP_assert(random_access_range<decltype(sints)>);
-    CPP_assert(same_as<std::int_fast64_t, range_difference_t<decltype(sints)>>);
-    CPP_assert(view_<decltype(sints)>);
-    CPP_assert(random_access_range<decltype(sints)>);
-    CPP_assert(common_range<decltype(sints)>);
-    CHECK(distance(sints.begin(), sints.end()) == (std::int_fast64_t) INT_MAX - (std::int_fast64_t) INT_MIN);
-    CHECK(sints.size() == (std::uint_fast64_t)((std::int_fast64_t) INT_MAX - (std::int_fast64_t) INT_MIN));
-
     {
-        auto ints = views::closed_iota(Int{0}, Int{10});
-        ::check_equal(ints, {Int{0},Int{1},Int{2},Int{3},Int{4},Int{5},Int{6},Int{7},Int{8},Int{9},Int{10}});
-        CPP_assert(view_<decltype(ints)>);
-        CPP_assert(common_range<decltype(ints)>);
-        CPP_assert(!sized_range<decltype(ints)>);
-        CPP_assert(forward_range<decltype(ints)>);
-        CPP_assert(!bidirectional_range<decltype(ints)>);
+        char const *sz = "hello world";
+        ::check_equal(views::iota(ForwardIterator<char const*>(sz)) | views::take(10) | views::indirect,
+            {'h','e','l','l','o',' ','w','o','r','l'});
+
+        ::check_equal(views::ints | views::take(10), {0,1,2,3,4,5,6,7,8,9});
+        ::check_equal(views::ints(0,unreachable) | views::take(10), {0,1,2,3,4,5,6,7,8,9});
+        ::check_equal(views::ints(0,9), {0,1,2,3,4,5,6,7,8});
+        ::check_equal(views::closed_indices(0,9), {0,1,2,3,4,5,6,7,8,9});
+        ::check_equal(views::ints(1,10), {1,2,3,4,5,6,7,8,9});
+        ::check_equal(views::closed_indices(1,10), {1,2,3,4,5,6,7,8,9,10});
     }
 
     {
-        auto ints = views::closed_iota(0, 10);
-        ::check_equal(ints, {0,1,2,3,4,5,6,7,8,9,10});
-        CPP_assert(view_<decltype(ints)>);
-        CPP_assert(common_range<decltype(ints)>);
-        CPP_assert(sized_range<decltype(ints)>);
-        CPP_assert(random_access_range<decltype(ints)>);
-        CHECK(size(ints) == 11u);
-        auto it = ints.begin(), e = ints.end(), be = e;
+        auto chars = views::ints(std::numeric_limits<signed char>::min(),
+                                std::numeric_limits<signed char>::max());
+        CPP_assert(random_access_range<decltype(chars)>);
+        CPP_assert(same_as<int, range_difference_t<decltype(chars)>>);
+        CPP_assert(view_<decltype(chars)>);
+        CPP_assert(random_access_range<decltype(chars)>);
+        CPP_assert(common_range<decltype(chars)>);
+        CHECK(distance(chars.begin(), chars.end()) == (long) CHAR_MAX - (long) CHAR_MIN);
+        CHECK(chars.size() == (unsigned)((long) CHAR_MAX - (long) CHAR_MIN));
+    }
+
+    {
+        auto ushorts = views::ints(std::numeric_limits<unsigned short>::min(),
+                                std::numeric_limits<unsigned short>::max());
+        CPP_assert(view_<decltype(ushorts)>);
+        CPP_assert(common_range<decltype(ushorts)>);
+        CPP_assert(same_as<int, range_difference_t<decltype(ushorts)>>);
+        CPP_assert(same_as<unsigned int, range_size_t<decltype(ushorts)>>);
+        CHECK(distance(ushorts.begin(), ushorts.end()) == (int) USHRT_MAX);
+        CHECK(ushorts.size() == (unsigned) USHRT_MAX);
+    }
+
+    {
+        auto uints = views::closed_indices(
+            std::numeric_limits<std::uint_least32_t>::min(),
+            std::numeric_limits<std::uint_least32_t>::max() - 1);
+        CPP_assert(view_<decltype(uints)>);
+        CPP_assert(common_range<decltype(uints)>);
+        CPP_assert(same_as<std::int_fast64_t, range_difference_t<decltype(uints)>>);
+        CPP_assert(same_as<std::uint_fast64_t, range_size_t<decltype(uints)>>);
+        CHECK(uints.size() == std::numeric_limits<std::uint32_t>::max());
+    }
+
+    {
+        auto is = views::closed_indices(
+            std::numeric_limits<std::int_least32_t>::min(),
+            std::numeric_limits<std::int_least32_t>::max() - 1);
+        CPP_assert(same_as<std::int_fast64_t, range_difference_t<decltype(is)>>);
+        CPP_assert(same_as<std::uint_fast64_t, range_size_t<decltype(is)>>);
+        CHECK(is.size() == std::numeric_limits<std::uint32_t>::max());
+    }
+
+    {
+        auto sints = views::ints(std::numeric_limits<int>::min(),
+                                std::numeric_limits<int>::max());
+        CPP_assert(random_access_range<decltype(sints)>);
+        CPP_assert(same_as<std::int_fast64_t, range_difference_t<decltype(sints)>>);
+        CPP_assert(view_<decltype(sints)>);
+        CPP_assert(random_access_range<decltype(sints)>);
+        CPP_assert(common_range<decltype(sints)>);
+        CHECK(distance(sints.begin(), sints.end()) == (std::int_fast64_t) INT_MAX - (std::int_fast64_t) INT_MIN);
+        CHECK(sints.size() == (std::uint_fast64_t)((std::int_fast64_t) INT_MAX - (std::int_fast64_t) INT_MIN));
+    }
+
+    {
+        auto is = views::closed_iota(Int{0}, Int{10});
+        ::check_equal(is, {Int{0},Int{1},Int{2},Int{3},Int{4},Int{5},Int{6},Int{7},Int{8},Int{9},Int{10}});
+        CPP_assert(view_<decltype(is)>);
+        CPP_assert(common_range<decltype(is)>);
+        CPP_assert(!sized_range<decltype(is)>);
+        CPP_assert(forward_range<decltype(is)>);
+        CPP_assert(!bidirectional_range<decltype(is)>);
+    }
+
+    {
+        auto is = views::closed_iota(0, 10);
+        ::check_equal(is, {0,1,2,3,4,5,6,7,8,9,10});
+        CPP_assert(view_<decltype(is)>);
+        CPP_assert(common_range<decltype(is)>);
+        CPP_assert(sized_range<decltype(is)>);
+        CPP_assert(random_access_range<decltype(is)>);
+        CHECK(size(is) == 11u);
+        auto it = is.begin(), e = is.end(), be = e;
         --be;
-        using D = range_difference_t<decltype(ints)>;
+        using D = range_difference_t<decltype(is)>;
         // CHECK op++ and op-
         for(D i = 0; ; ++i)
         {
@@ -165,7 +177,7 @@ int main()
         // CHECK op+= and op-
         for(D i = 0; ; ++i)
         {
-            it = next(ints.begin(), i);
+            it = next(is.begin(), i);
             CHECK((e - it) == (11 - i));
             CHECK((it - e) == -(11 - i));
             CHECK((be - it) == (10 - i));
@@ -176,7 +188,7 @@ int main()
         CHECK((e - 0) == e);
         CHECK((be - 0) == be);
         CHECK((e - 1) == be);
-        CHECK((be - 1) == ints.begin() + 9);
+        CHECK((be - 1) == is.begin() + 9);
     }
 
     {  // iota distance tests

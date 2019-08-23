@@ -47,8 +47,8 @@ namespace ranges
 
         public:
             sentinel() = default;
-            constexpr explicit sentinel(sentinel_t<Base> end)
-              : end_(std::move(end))
+            constexpr explicit sentinel(sentinel_t<Base> last)
+              : end_(std::move(last))
             {}
             CPP_template(bool Other)( //
                 requires Const && (!Other) &&
@@ -148,9 +148,9 @@ namespace ranges
     public:
         take_view() = default;
 
-        constexpr take_view(Rng base, range_difference_t<Rng> count)
+        constexpr take_view(Rng base, range_difference_t<Rng> cnt)
           : base_(std::move(base))
-          , count_(count)
+          , count_(cnt)
         {}
 
         constexpr Rng base() const

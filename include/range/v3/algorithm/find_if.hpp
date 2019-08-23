@@ -45,14 +45,14 @@ namespace ranges
         /// \pre `F` models `predicate<X>`, where `X` is the result type
         ///      of `invocable<P, V>`
         template<typename I, typename S, typename F, typename P = identity>
-        auto operator()(I begin, S end, F pred, P proj = P{}) const -> CPP_ret(I)( //
+        auto operator()(I first, S last, F pred, P proj = P{}) const -> CPP_ret(I)( //
             requires input_iterator<I> && sentinel_for<S, I> &&
                 indirect_unary_predicate<F, projected<I, P>>)
         {
-            for(; begin != end; ++begin)
-                if(invoke(pred, invoke(proj, *begin)))
+            for(; first != last; ++first)
+                if(invoke(pred, invoke(proj, *first)))
                     break;
-            return begin;
+            return first;
         }
 
         /// \overload

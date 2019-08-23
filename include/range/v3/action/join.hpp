@@ -47,8 +47,8 @@ namespace ranges
                     semiregular<join_action_value_t_<Rng>>)
             {
                 join_action_value_t_<Rng> ret;
-                auto end = ranges::end(rng);
-                for(auto it = begin(rng); it != end; ++it)
+                auto last = ranges::end(rng);
+                for(auto it = begin(rng); it != last; ++it)
                     push_back(ret, *it);
                 return ret;
             }

@@ -239,16 +239,16 @@ CPP_assert(ranges::input_or_output_iterator<CI>);
 void test_string_view_p0970()
 {
     // basic_string_views are non-dangling
-    using I = ranges::iterator_t<std::string_view>;
-    CPP_assert(ranges::same_as<I, decltype(ranges::begin(std::declval<std::string_view>()))>);
-    CPP_assert(ranges::same_as<I, decltype(ranges::end(std::declval<std::string_view>()))>);
-    CPP_assert(ranges::same_as<I, decltype(ranges::begin(std::declval<const std::string_view>()))>);
-    CPP_assert(ranges::same_as<I, decltype(ranges::end(std::declval<const std::string_view>()))>);
+    using I2 = ranges::iterator_t<std::string_view>;
+    CPP_assert(ranges::same_as<I2, decltype(ranges::begin(std::declval<std::string_view>()))>);
+    CPP_assert(ranges::same_as<I2, decltype(ranges::end(std::declval<std::string_view>()))>);
+    CPP_assert(ranges::same_as<I2, decltype(ranges::begin(std::declval<const std::string_view>()))>);
+    CPP_assert(ranges::same_as<I2, decltype(ranges::end(std::declval<const std::string_view>()))>);
 
     {
         const char hw[] = "Hello, World!";
         auto result = ranges::find(std::string_view{hw}, 'W');
-        CPP_assert(ranges::same_as<I, decltype(result)>);
+        CPP_assert(ranges::same_as<I2, decltype(result)>);
         CHECK(result == std::string_view{hw}.begin() + 7);
     }
 }

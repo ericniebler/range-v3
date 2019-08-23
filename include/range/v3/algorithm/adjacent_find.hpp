@@ -38,18 +38,18 @@ namespace ranges
         /// \pre `Rng` is a model of the `Range` concept
         /// \pre `C` is a model of the `BinaryPredicate` concept
         template<typename I, typename S, typename C = equal_to, typename P = identity>
-        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const
+        auto operator()(I first, S last, C pred = C{}, P proj = P{}) const
             -> CPP_ret(I)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
                     indirect_relation<C, projected<I, P>>)
         {
-            if(begin == end)
-                return begin;
-            auto next = begin;
-            for(; ++next != end; begin = next)
-                if(invoke(pred, invoke(proj, *begin), invoke(proj, *next)))
-                    return begin;
-            return next;
+            if(first == last)
+                return first;
+            auto inext = first;
+            for(; ++inext != last; first = inext)
+                if(invoke(pred, invoke(proj, *first), invoke(proj, *inext)))
+                    return first;
+            return inext;
         }
 
         /// \overload

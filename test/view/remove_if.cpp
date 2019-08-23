@@ -58,46 +58,54 @@ int main()
 
     int rgi[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-    auto rng = rgi | views::remove_if(is_even());
-    has_type<int &>(*begin(rgi));
-    has_type<int &>(*begin(rng));
-    CPP_assert(view_<decltype(rng)>);
-    CPP_assert(common_range<decltype(rng)>);
-    CPP_assert(!sized_range<decltype(rng)>);
-    CPP_assert(bidirectional_range<decltype(rng)>);
-    CPP_assert(!random_access_range<decltype(rng)>);
-    ::check_equal(rng, {1,3,5,7,9});
-    ::check_equal(rng | views::reverse, {9,7,5,3,1});
-    auto tmp = rng | views::reverse;
-    CHECK(&*begin(tmp) == &rgi[8]);
+    {
+        auto rng = rgi | views::remove_if(is_even());
+        has_type<int &>(*begin(rgi));
+        has_type<int &>(*begin(rng));
+        CPP_assert(view_<decltype(rng)>);
+        CPP_assert(common_range<decltype(rng)>);
+        CPP_assert(!sized_range<decltype(rng)>);
+        CPP_assert(bidirectional_range<decltype(rng)>);
+        CPP_assert(!random_access_range<decltype(rng)>);
+        ::check_equal(rng, {1,3,5,7,9});
+        ::check_equal(rng | views::reverse, {9,7,5,3,1});
+        auto tmp = rng | views::reverse;
+        CHECK(&*begin(tmp) == &rgi[8]);
+    }
 
-    auto rng2 = views::counted(rgi, 10) | views::remove_if(not_fn(is_odd()));
-    has_type<int &>(*begin(rng2));
-    CPP_assert(view_<decltype(rng2)>);
-    CPP_assert(bidirectional_range<decltype(rng2)>);
-    CPP_assert(!random_access_range<decltype(rng2)>);
-    CPP_assert(common_range<decltype(rng2)>);
-    CPP_assert(!sized_range<decltype(rng2)>);
-    ::check_equal(rng2, {1,3,5,7,9});
-    CHECK(&*begin(rng2) == &rgi[0]);
+    {
+        auto rng2 = views::counted(rgi, 10) | views::remove_if(not_fn(is_odd()));
+        has_type<int &>(*begin(rng2));
+        CPP_assert(view_<decltype(rng2)>);
+        CPP_assert(bidirectional_range<decltype(rng2)>);
+        CPP_assert(!random_access_range<decltype(rng2)>);
+        CPP_assert(common_range<decltype(rng2)>);
+        CPP_assert(!sized_range<decltype(rng2)>);
+        ::check_equal(rng2, {1,3,5,7,9});
+        CHECK(&*begin(rng2) == &rgi[0]);
+    }
 
-    auto rng3 = views::counted(BidirectionalIterator<int*>{rgi}, 10) | views::remove_if(is_even());
-    has_type<int &>(*begin(rng3));
-    CPP_assert(view_<decltype(rng3)>);
-    CPP_assert(bidirectional_range<decltype(rng3)>);
-    CPP_assert(!random_access_range<decltype(rng3)>);
-    CPP_assert(!common_range<decltype(rng3)>);
-    CPP_assert(!sized_range<decltype(rng3)>);
-    ::check_equal(rng3, {1,3,5,7,9});
-    CHECK(&*begin(rng3) == &rgi[0]);
-    CHECK(&*prev(next(begin(rng3))) == &rgi[0]);
+    {
+        auto rng3 = views::counted(BidirectionalIterator<int*>{rgi}, 10) | views::remove_if(is_even());
+        has_type<int &>(*begin(rng3));
+        CPP_assert(view_<decltype(rng3)>);
+        CPP_assert(bidirectional_range<decltype(rng3)>);
+        CPP_assert(!random_access_range<decltype(rng3)>);
+        CPP_assert(!common_range<decltype(rng3)>);
+        CPP_assert(!sized_range<decltype(rng3)>);
+        ::check_equal(rng3, {1,3,5,7,9});
+        CHECK(&*begin(rng3) == &rgi[0]);
+        CHECK(&*prev(next(begin(rng3))) == &rgi[0]);
+    }
 
-    // Test remove_if with a mutable lambda
-    bool flag = true;
-    auto mutable_rng = views::remove_if(rgi, [flag](int) mutable { return flag = !flag;});
-    ::check_equal(mutable_rng, {1,3,5,7,9});
-    CPP_assert(view_<decltype(mutable_rng)>);
-    CPP_assert(!view_<decltype(mutable_rng) const>);
+    {
+        // Test remove_if with a mutable lambda
+        bool flag = true;
+        auto mutable_rng = views::remove_if(rgi, [flag](int) mutable { return flag = !flag;});
+        ::check_equal(mutable_rng, {1,3,5,7,9});
+        CPP_assert(view_<decltype(mutable_rng)>);
+        CPP_assert(!view_<decltype(mutable_rng) const>);
+    }
 
     {
         const std::array<int, 3> a{{0, 1, 2}};

@@ -58,7 +58,7 @@ namespace ranges
     {
         template<typename I, typename S, typename O, typename S2, typename BOp = minus,
                  typename P = identity>
-        auto operator()(I begin, S end, O result, S2 end_result, BOp bop = BOp{},
+        auto operator()(I first, S last, O result, S2 end_result, BOp bop = BOp{},
                         P proj = P{}) const
             -> CPP_ret(adjacent_difference_result<I, O>)( //
                 requires sentinel_for<S, I> && sentinel_for<S2, O> &&
@@ -70,29 +70,29 @@ namespace ranges
             coerce<V> v;
             coerce<X> x;
 
-            if(begin != end && result != end_result)
+            if(first != last && result != end_result)
             {
-                auto t1(x(invoke(proj, v(*begin))));
+                auto t1(x(invoke(proj, v(*first))));
                 *result = t1;
-                for(++begin, ++result; begin != end && result != end_result;
-                    ++begin, ++result)
+                for(++first, ++result; first != last && result != end_result;
+                    ++first, ++result)
                 {
-                    auto t2(x(invoke(proj, v(*begin))));
+                    auto t2(x(invoke(proj, v(*first))));
                     *result = invoke(bop, t2, t1);
                     t1 = std::move(t2);
                 }
             }
-            return {begin, result};
+            return {first, result};
         }
 
         template<typename I, typename S, typename O, typename BOp = minus,
                  typename P = identity>
-        auto operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
+        auto operator()(I first, S last, O result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(adjacent_difference_result<I, O>)( //
                 requires sentinel_for<S, I> && differenceable<I, O, BOp, P>)
         {
-            return (*this)(std::move(begin),
-                           std::move(end),
+            return (*this)(std::move(first),
+                           std::move(last),
                            std::move(result),
                            unreachable,
                            std::move(bop),

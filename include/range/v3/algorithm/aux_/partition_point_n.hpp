@@ -28,7 +28,7 @@ namespace ranges
         struct partition_point_n_fn
         {
             template<typename I, typename C, typename P = identity>
-            auto operator()(I begin, iter_difference_t<I> d, C pred,
+            auto operator()(I first, iter_difference_t<I> d, C pred,
                             P proj = P{}) const //
                 -> CPP_ret(I)(                  //
                     requires forward_iterator<I> &&
@@ -39,17 +39,17 @@ namespace ranges
                     do
                     {
                         auto half = d / 2;
-                        auto middle = next(uncounted(begin), half);
+                        auto middle = next(uncounted(first), half);
                         if(invoke(pred, invoke(proj, *middle)))
                         {
-                            begin = recounted(begin, std::move(++middle), half + 1);
+                            first = recounted(first, std::move(++middle), half + 1);
                             d -= half + 1;
                         }
                         else
                             d = half;
                     } while(0 != d);
                 }
-                return begin;
+                return first;
             }
         };
 

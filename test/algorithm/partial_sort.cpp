@@ -156,26 +156,26 @@ int main()
     // Check move-only types
     {
         std::vector<std::unique_ptr<int> > v(1000);
-        for(int i = 0; i < (int)v.size(); ++i)
-            v[i].reset(new int((int)v.size() - i - 1));
+        for(int j = 0; j < (int)v.size(); ++j)
+            v[j].reset(new int((int)v.size() - j - 1));
         ranges::partial_sort(v, v.begin() + v.size()/2, indirect_less());
-        for(int i = 0; i < (int)v.size()/2; ++i)
-            CHECK(*v[i] == i);
+        for(int j = 0; j < (int)v.size()/2; ++j)
+            CHECK(*v[j] == j);
     }
 
     // Check projections
     {
         std::vector<S> v(1000, S{});
-        for(int i = 0; (std::size_t)i < v.size(); ++i)
+        for(int j = 0; (std::size_t)j < v.size(); ++j)
         {
-            v[i].i = (int)v.size() - i - 1;
-            v[i].j = i;
+            v[j].i = (int)v.size() - j - 1;
+            v[j].j = j;
         }
         ranges::partial_sort(v, v.begin() + v.size()/2, std::less<int>{}, &S::i);
-        for(int i = 0; (std::size_t)i < v.size()/2; ++i)
+        for(int j = 0; (std::size_t)j < v.size()/2; ++j)
         {
-            CHECK(v[i].i == i);
-            CHECK((std::size_t)v[i].j == v.size() - i - 1);
+            CHECK(v[j].i == j);
+            CHECK((std::size_t)v[j].j == v.size() - j - 1);
         }
     }
 

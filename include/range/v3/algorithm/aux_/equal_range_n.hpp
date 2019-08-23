@@ -36,7 +36,7 @@ namespace ranges
         struct equal_range_n_fn
         {
             template<typename I, typename V, typename R = less, typename P = identity>
-            auto operator()(I begin, iter_difference_t<I> dist, V const & val,
+            auto operator()(I first, iter_difference_t<I> dist, V const & val,
                             R pred = R{}, P proj = P{}) const -> CPP_ret(subrange<I>)( //
                 requires forward_iterator<I> &&
                     indirect_strict_weak_order<R, V const *, projected<I, P>>)
@@ -46,12 +46,12 @@ namespace ranges
                     do
                     {
                         auto half = dist / 2;
-                        auto middle = ranges::next(begin, half);
+                        auto middle = ranges::next(first, half);
                         auto && v = *middle;
                         auto && pv = invoke(proj, (decltype(v) &&)v);
                         if(invoke(pred, pv, val))
                         {
-                            begin = std::move(++middle);
+                            first = std::move(++middle);
                             dist -= half + 1;
                         }
                         else if(invoke(pred, val, pv))
@@ -60,7 +60,7 @@ namespace ranges
                         }
                         else
                         {
-                            return {lower_bound_n(std::move(begin),
+                            return {lower_bound_n(std::move(first),
                                                   half,
                                                   val,
                                                   std::ref(pred),
@@ -73,7 +73,7 @@ namespace ranges
                         }
                     } while(0 != dist);
                 }
-                return {begin, begin};
+                return {first, first};
             }
         };
 

@@ -47,19 +47,19 @@ namespace ranges
         /// projected<I, P>>` concept
         ///
         template<typename I, typename S, typename R = less, typename P = identity>
-        auto operator()(I begin, S end, R pred = R{}, P proj = P{}) const
+        auto operator()(I first, S last, R pred = R{}, P proj = P{}) const
             -> CPP_ret(I)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
                     indirect_strict_weak_order<R, projected<I, P>>)
         {
-            auto i = begin;
-            if(begin != end)
+            auto i = first;
+            if(first != last)
             {
-                while(++i != end)
+                while(++i != last)
                 {
-                    if(invoke(pred, invoke(proj, *i), invoke(proj, *begin)))
+                    if(invoke(pred, invoke(proj, *i), invoke(proj, *first)))
                         return i;
-                    begin = i;
+                    first = i;
                 }
             }
             return i;

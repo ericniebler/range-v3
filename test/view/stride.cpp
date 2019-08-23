@@ -33,9 +33,9 @@ int main()
 
     auto const v = []
     {
-        std::vector<int> v(50);
-        iota(v, 0);
-        return v;
+        std::vector<int> vec(50);
+        iota(vec, 0);
+        return vec;
     }();
     {
         auto rng = v | views::stride(3);

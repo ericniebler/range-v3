@@ -60,10 +60,10 @@ int main()
     }
 
     {
-        std::pair<int, int> const data[] = {{0, 2}, {1, 1}, {2, 0}};
-        auto key_range = debug_input_view<std::pair<int, int> const>{data} | views::keys;
+        std::pair<int, int> const rgp[] = {{0, 2}, {1, 1}, {2, 0}};
+        auto key_range = debug_input_view<std::pair<int, int> const>{rgp} | views::keys;
         check_equal(key_range, {0,1,2});
-        auto value_range = debug_input_view<std::pair<int, int> const>{data} | views::values;
+        auto value_range = debug_input_view<std::pair<int, int> const>{rgp} | views::values;
         check_equal(value_range, {2,1,0});
     }
 

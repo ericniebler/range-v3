@@ -27,22 +27,22 @@ namespace ranges
     namespace adl_erase_detail
     {
         template<typename Cont, typename I, typename S>
-        auto erase(Cont && cont, I begin, S end)                            //
-            -> CPP_ret(decltype(unwrap_reference(cont).erase(begin, end)))( //
+        auto erase(Cont && cont, I first, S last)                            //
+            -> CPP_ret(decltype(unwrap_reference(cont).erase(first, last)))( //
                 requires lvalue_container_like<Cont> && forward_iterator<I> &&
                     sentinel_for<S, I>)
         {
-            return unwrap_reference(cont).erase(begin, end);
+            return unwrap_reference(cont).erase(first, last);
         }
 
         struct erase_fn
         {
             template<typename Rng, typename I, typename S>
-            auto operator()(Rng && rng, I begin, S end) const
-                -> CPP_ret(decltype(erase((Rng &&) rng, begin, end)))( //
+            auto operator()(Rng && rng, I first, S last) const
+                -> CPP_ret(decltype(erase((Rng &&) rng, first, last)))( //
                     requires range<Rng> && forward_iterator<I> && sentinel_for<S, I>)
             {
-                return erase(static_cast<Rng &&>(rng), begin, end);
+                return erase(static_cast<Rng &&>(rng), first, last);
             }
         };
     } // namespace adl_erase_detail
@@ -63,9 +63,9 @@ namespace ranges
     (
         template(typename Rng, typename I, typename S)
         concept erasable_range,
-            requires (Rng &&rng, I begin, S end)
+            requires (Rng &&rng, I first, S last)
             (
-                ranges::erase(static_cast<Rng &&>(rng), begin, end)
+                ranges::erase(static_cast<Rng &&>(rng), first, last)
             ) &&
             range<Rng>
     );

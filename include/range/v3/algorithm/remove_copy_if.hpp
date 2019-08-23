@@ -38,21 +38,21 @@ namespace ranges
     struct remove_copy_if_fn
     {
         template<typename I, typename S, typename O, typename C, typename P = identity>
-        auto operator()(I begin, S end, O out, C pred,
+        auto operator()(I first, S last, O out, C pred,
                         P proj = P{}) const -> CPP_ret(remove_copy_if_result<I, O>)( //
             requires input_iterator<I> && sentinel_for<S, I> && weakly_incrementable<O> &&
                 indirect_unary_predicate<C, projected<I, P>> && indirectly_copyable<I, O>)
         {
-            for(; begin != end; ++begin)
+            for(; first != last; ++first)
             {
-                auto && x = *begin;
+                auto && x = *first;
                 if(!(invoke(pred, invoke(proj, x))))
                 {
                     *out = (decltype(x) &&)x;
                     ++out;
                 }
             }
-            return {begin, out};
+            return {first, out};
         }
 
         template<typename Rng, typename O, typename C, typename P = identity>

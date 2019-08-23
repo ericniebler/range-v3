@@ -73,11 +73,11 @@ namespace ranges
 
             template<typename T>
             RANGES_DEPRECATED("Passing a reference_wrapper to views::all is deprecated.")
-            constexpr auto operator()(std::reference_wrapper<T> ref) const
+            constexpr auto operator()(std::reference_wrapper<T> r) const
                 -> CPP_ret(ref_view<T>)( //
                     requires range<T &>)
             {
-                return ranges::views::ref(ref.get());
+                return ranges::views::ref(r.get());
             }
         };
 

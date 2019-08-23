@@ -38,16 +38,16 @@ namespace ranges
     struct for_each_fn
     {
         template<typename I, typename S, typename F, typename P = identity>
-        auto operator()(I begin, S end, F fun, P proj = P{}) const
+        auto operator()(I first, S last, F fun, P proj = P{}) const
             -> CPP_ret(for_each_result<I, F>)( //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                     indirectly_unary_invocable<F, projected<I, P>>)
         {
-            for(; begin != end; ++begin)
+            for(; first != last; ++first)
             {
-                invoke(fun, invoke(proj, *begin));
+                invoke(fun, invoke(proj, *first));
             }
-            return {detail::move(begin), detail::move(fun)};
+            return {detail::move(first), detail::move(fun)};
         }
 
         template<typename Rng, typename F, typename P = identity>

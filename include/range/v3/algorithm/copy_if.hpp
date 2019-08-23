@@ -39,22 +39,22 @@ namespace ranges
     struct copy_if_fn
     {
         template<typename I, typename S, typename O, typename F, typename P = identity>
-        auto operator()(I begin, S end, O out, F pred, P proj = P{}) const //
+        auto operator()(I first, S last, O out, F pred, P proj = P{}) const //
             -> CPP_ret(copy_if_result<I, O>)(                              //
                 requires input_iterator<I> && sentinel_for<S, I> && weakly_incrementable<
                     O> && indirect_unary_predicate<F, projected<I, P>> &&
                     indirectly_copyable<I, O>)
         {
-            for(; begin != end; ++begin)
+            for(; first != last; ++first)
             {
-                auto && x = *begin;
+                auto && x = *first;
                 if(invoke(pred, invoke(proj, x)))
                 {
                     *out = (decltype(x) &&)x;
                     ++out;
                 }
             }
-            return {begin, out};
+            return {first, out};
         }
 
         template<typename Rng, typename O, typename F, typename P = identity>

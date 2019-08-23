@@ -34,16 +34,16 @@ namespace ranges
     struct min_element_fn
     {
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const
+        auto operator()(I first, S last, C pred = C{}, P proj = P{}) const
             -> CPP_ret(I)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
                     indirect_strict_weak_order<C, projected<I, P>>)
         {
-            if(begin != end)
-                for(auto tmp = next(begin); tmp != end; ++tmp)
-                    if(invoke(pred, invoke(proj, *tmp), invoke(proj, *begin)))
-                        begin = tmp;
-            return begin;
+            if(first != last)
+                for(auto tmp = next(first); tmp != last; ++tmp)
+                    if(invoke(pred, invoke(proj, *tmp), invoke(proj, *first)))
+                        first = tmp;
+            return first;
         }
 
         template<typename Rng, typename C = less, typename P = identity>

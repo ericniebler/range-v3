@@ -232,7 +232,7 @@ namespace ranges
             {
                 // By returning true if *any* of the iterators are equal, we allow
                 // zipped ranges to be of different lengths, stopping when the first
-                // one reaches the end.
+                // one reaches the last.
                 return tuple_foldl(tuple_transform(its_, that.its_, detail::equal_to),
                                    false,
                                    [](bool a, bool b) { return a || b; });
@@ -241,7 +241,7 @@ namespace ranges
             {
                 // By returning true if *any* of the iterators are equal, we allow
                 // zipped ranges to be of different lengths, stopping when the first
-                // one reaches the end.
+                // one reaches the last.
                 return tuple_foldl(tuple_transform(its_, s.ends_, detail::equal_to),
                                    false,
                                    [](bool a, bool b) { return a || b; });
@@ -301,25 +301,25 @@ namespace ranges
 
         cursor<false> begin_cursor()
         {
-            return {fun_, tuple_transform(rngs_, begin)};
+            return {fun_, tuple_transform(rngs_, ranges::begin)};
         }
         end_cursor_t<false> end_cursor()
         {
-            return {fun_, tuple_transform(rngs_, end)};
+            return {fun_, tuple_transform(rngs_, ranges::end)};
         }
         template<bool Const = true>
         auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
             requires Const && and_v<range<Rngs const>...> &&
                 views::zippable_with<Fun, meta::if_c<Const, Rngs const>...>)
         {
-            return {fun_, tuple_transform(rngs_, begin)};
+            return {fun_, tuple_transform(rngs_, ranges::begin)};
         }
         template<bool Const = true>
         auto end_cursor() const -> CPP_ret(end_cursor_t<Const>)( //
             requires Const && and_v<range<Rngs const>...> &&
                 views::zippable_with<Fun, meta::if_c<Const, Rngs const>...>)
         {
-            return {fun_, tuple_transform(rngs_, end)};
+            return {fun_, tuple_transform(rngs_, ranges::end)};
         }
 
     public:

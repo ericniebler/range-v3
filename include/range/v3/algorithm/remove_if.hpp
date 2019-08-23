@@ -36,23 +36,23 @@ namespace ranges
     struct remove_if_fn
     {
         template<typename I, typename S, typename C, typename P = identity>
-        auto operator()(I begin, S end, C pred, P proj = P{}) const -> CPP_ret(I)( //
+        auto operator()(I first, S last, C pred, P proj = P{}) const -> CPP_ret(I)( //
             requires permutable<I> && sentinel_for<S, I> &&
                 indirect_unary_predicate<C, projected<I, P>>)
         {
-            begin = find_if(std::move(begin), end, std::ref(pred), std::ref(proj));
-            if(begin != end)
+            first = find_if(std::move(first), last, std::ref(pred), std::ref(proj));
+            if(first != last)
             {
-                for(I i = next(begin); i != end; ++i)
+                for(I i = next(first); i != last; ++i)
                 {
                     if(!(invoke(pred, invoke(proj, *i))))
                     {
-                        *begin = iter_move(i);
-                        ++begin;
+                        *first = iter_move(i);
+                        ++first;
                     }
                 }
             }
-            return begin;
+            return first;
         }
 
         template<typename Rng, typename C, typename P = identity>

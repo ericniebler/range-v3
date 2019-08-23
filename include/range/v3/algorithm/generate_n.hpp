@@ -37,16 +37,16 @@ namespace ranges
     struct generate_n_fn
     {
         template<typename O, typename F>
-        auto operator()(O begin, iter_difference_t<O> n, F fun) const
+        auto operator()(O first, iter_difference_t<O> n, F fun) const
             -> CPP_ret(generate_n_result<O, F>)( //
                 requires invocable<F &> && output_iterator<O, invoke_result_t<F &>>)
         {
             RANGES_EXPECT(n >= 0);
             auto norig = n;
-            auto b = uncounted(begin);
+            auto b = uncounted(first);
             for(; 0 != n; ++b, --n)
                 *b = invoke(fun);
-            return {recounted(begin, b, norig), detail::move(fun)};
+            return {recounted(first, b, norig), detail::move(fun)};
         }
     };
 

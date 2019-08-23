@@ -99,15 +99,15 @@ public:
 // For making sized iterator ranges:
 template<template<typename> class I, typename It>
 constexpr /*c++14*/
-auto CPP_auto_fun(operator-)(Sentinel<It, true> end, I<It> begin)
+auto CPP_auto_fun(operator-)(Sentinel<It, true> last, I<It> first)
 (
-    return base(end) - base(begin)
+    return base(last) - base(first)
 )
 template<template<typename> class I, typename It>
 constexpr /*c++14*/
-auto CPP_auto_fun(operator-)(I<It> begin, Sentinel<It, true> end)
+auto CPP_auto_fun(operator-)(I<It> first, Sentinel<It, true> last)
 (
-    return base(begin) - base(end)
+    return base(first) - base(last)
 )
 
 template<class It>

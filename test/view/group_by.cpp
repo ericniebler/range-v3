@@ -87,13 +87,14 @@ int main()
     }
 
     {
-        std::vector<int> v {0,1,2,3,4,5,6,7,8,9};
-        auto rng0 = ranges::views::group_by(v, [](int i, int j){ return j - i < 3; });
+        std::vector<int> v2 {0,1,2,3,4,5,6,7,8,9};
+        auto rng0 = ranges::views::group_by(v2, [](int i, int j){ return j - i < 3; });
         check_equal(*rng0.begin(), {0, 1, 2});
         check_equal(*next(rng0.begin()), {3, 4, 5});
         check_equal(*next(rng0.begin(), 2), {6, 7, 8});
         check_equal(*next(rng0.begin(), 3), {9});
         CHECK(distance(rng0) == 4);
     }
+
     return test_result();
 }

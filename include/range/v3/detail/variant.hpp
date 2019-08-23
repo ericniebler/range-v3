@@ -90,8 +90,8 @@ namespace ranges
         reference_wrapper<T> ref_;
 
     public:
-        constexpr indexed_element(reference_wrapper<T> ref) noexcept
-          : ref_(ref)
+        constexpr indexed_element(reference_wrapper<T> r) noexcept
+          : ref_(r)
         {}
         constexpr decltype(auto) get() const noexcept
         {

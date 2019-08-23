@@ -59,10 +59,10 @@ namespace ranges
     namespace detail
     {
         template<typename I, typename C, typename P>
-        inline I unguarded_partition(I begin, I end, C & pred, P & proj)
+        inline I unguarded_partition(I first, I last, C & pred, P & proj)
         {
-            I mid = begin + (end - begin) / 2, last = ranges::prev(end);
-            auto &&x = *begin, &&y = *mid, &&z = *last;
+            I mid = first + (last - first) / 2, penultimate = ranges::prev(last);
+            auto &&x = *first, &&y = *mid, &&z = *penultimate;
             auto &&a = invoke(proj, (decltype(x) &&)x),
                  &&b = invoke(proj, (decltype(y) &&)y),
                  &&c = invoke(proj, (decltype(z) &&)z);
@@ -70,68 +70,68 @@ namespace ranges
             // Find the median:
             I pivot_pnt =
                 invoke(pred, a, b)
-                    ? (invoke(pred, b, c) ? mid : (invoke(pred, a, c) ? last : begin))
-                    : (invoke(pred, a, c) ? begin : (invoke(pred, b, c) ? last : mid));
+                    ? (invoke(pred, b, c) ? mid : (invoke(pred, a, c) ? penultimate : first))
+                    : (invoke(pred, a, c) ? first : (invoke(pred, b, c) ? penultimate : mid));
 
             // Do the partition:
             while(true)
             {
                 auto && v = *pivot_pnt;
                 auto && pivot = invoke(proj, (decltype(v) &&)v);
-                while(invoke(pred, invoke(proj, *begin), pivot))
-                    ++begin;
-                --end;
-                while(invoke(pred, pivot, invoke(proj, *end)))
-                    --end;
-                if(!(begin < end))
-                    return begin;
-                ranges::iter_swap(begin, end);
+                while(invoke(pred, invoke(proj, *first), pivot))
+                    ++first;
+                --last;
+                while(invoke(pred, pivot, invoke(proj, *last)))
+                    --last;
+                if(!(first < last))
+                    return first;
+                ranges::iter_swap(first, last);
                 pivot_pnt =
-                    pivot_pnt == begin ? end : (pivot_pnt == end ? begin : pivot_pnt);
-                ++begin;
+                    pivot_pnt == first ? last : (pivot_pnt == last ? first : pivot_pnt);
+                ++first;
             }
         }
 
         template<typename I, typename C, typename P>
-        inline void unguarded_linear_insert(I end, iter_value_t<I> val, C & pred,
+        inline void unguarded_linear_insert(I last, iter_value_t<I> val, C & pred,
                                             P & proj)
         {
-            I next = prev(end);
+            I next = prev(last);
             while(invoke(pred, invoke(proj, val), invoke(proj, *next)))
             {
-                *end = iter_move(next);
-                end = next;
+                *last = iter_move(next);
+                last = next;
                 --next;
             }
-            *end = std::move(val);
+            *last = std::move(val);
         }
 
         template<typename I, typename C, typename P>
-        inline void linear_insert(I begin, I end, C & pred, P & proj)
+        inline void linear_insert(I first, I last, C & pred, P & proj)
         {
-            iter_value_t<I> val = iter_move(end);
-            if(invoke(pred, invoke(proj, val), invoke(proj, *begin)))
+            iter_value_t<I> val = iter_move(last);
+            if(invoke(pred, invoke(proj, val), invoke(proj, *first)))
             {
-                move_backward(begin, end, end + 1);
-                *begin = std::move(val);
+                move_backward(first, last, last + 1);
+                *first = std::move(val);
             }
             else
-                detail::unguarded_linear_insert(end, std::move(val), pred, proj);
+                detail::unguarded_linear_insert(last, std::move(val), pred, proj);
         }
 
         template<typename I, typename C, typename P>
-        inline void insertion_sort(I begin, I end, C & pred, P & proj)
+        inline void insertion_sort(I first, I last, C & pred, P & proj)
         {
-            if(begin == end)
+            if(first == last)
                 return;
-            for(I i = next(begin); i != end; ++i)
-                detail::linear_insert(begin, i, pred, proj);
+            for(I i = next(first); i != last; ++i)
+                detail::linear_insert(first, i, pred, proj);
         }
 
         template<typename I, typename C, typename P>
-        inline void unguarded_insertion_sort(I begin, I end, C & pred, P & proj)
+        inline void unguarded_insertion_sort(I first, I last, C & pred, P & proj)
         {
-            for(I i = begin; i != end; ++i)
+            for(I i = first; i != last; ++i)
                 detail::unguarded_linear_insert(i, iter_move(i), pred, proj);
         }
     } // namespace detail
@@ -152,17 +152,17 @@ namespace ranges
         }
 
         template<typename I, typename C, typename P>
-        static void final_insertion_sort(I begin, I end, C & pred, P & proj)
+        static void final_insertion_sort(I first, I last, C & pred, P & proj)
         {
-            if(end - begin > sort_fn::introsort_threshold())
+            if(last - first > sort_fn::introsort_threshold())
             {
                 detail::insertion_sort(
-                    begin, begin + sort_fn::introsort_threshold(), pred, proj);
+                    first, first + sort_fn::introsort_threshold(), pred, proj);
                 detail::unguarded_insertion_sort(
-                    begin + sort_fn::introsort_threshold(), end, pred, proj);
+                    first + sort_fn::introsort_threshold(), last, pred, proj);
             }
             else
-                detail::insertion_sort(begin, end, pred, proj);
+                detail::insertion_sort(first, last, pred, proj);
         }
 
         template<typename Size>
@@ -175,33 +175,33 @@ namespace ranges
         }
 
         template<typename I, typename Size, typename C, typename P>
-        static void introsort_loop(I begin, I end, Size depth_limit, C & pred, P & proj)
+        static void introsort_loop(I first, I last, Size depth_limit, C & pred, P & proj)
         {
-            while(end - begin > sort_fn::introsort_threshold())
+            while(last - first > sort_fn::introsort_threshold())
             {
                 if(depth_limit == 0)
-                    return partial_sort(begin, end, end, std::ref(pred), std::ref(proj)),
+                    return partial_sort(first, last, last, std::ref(pred), std::ref(proj)),
                            void();
-                I cut = detail::unguarded_partition(begin, end, pred, proj);
-                sort_fn::introsort_loop(cut, end, --depth_limit, pred, proj);
-                end = cut;
+                I cut = detail::unguarded_partition(first, last, pred, proj);
+                sort_fn::introsort_loop(cut, last, --depth_limit, pred, proj);
+                last = cut;
             }
         }
 
     public:
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, S end_, C pred = C{},
+        auto operator()(I first, S end_, C pred = C{},
                         P proj = P{}) const -> CPP_ret(I)( //
             requires sortable<I, C, P> && random_access_iterator<I> && sentinel_for<S, I>)
         {
-            I end = ranges::next(begin, std::move(end_));
-            if(begin != end)
+            I last = ranges::next(first, std::move(end_));
+            if(first != last)
             {
                 sort_fn::introsort_loop(
-                    begin, end, sort_fn::log2(end - begin) * 2, pred, proj);
-                sort_fn::final_insertion_sort(begin, end, pred, proj);
+                    first, last, sort_fn::log2(last - first) * 2, pred, proj);
+                sort_fn::final_insertion_sort(first, last, pred, proj);
             }
-            return end;
+            return last;
         }
 
         template<typename Rng, typename C = less, typename P = identity>

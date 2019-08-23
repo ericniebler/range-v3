@@ -99,11 +99,11 @@ namespace ranges
 
         constexpr void satisfy_forward(iterator_t<Rng> & it)
         {
-            auto const end = ranges::end(this->base());
-            if(it == end)
+            auto const last = ranges::end(this->base());
+            if(it == last)
                 return;
             auto & pred = this->adjacent_remove_if_view::box::get();
-            for(auto next = it; ++next != end && invoke(pred, *it, *next); it = next)
+            for(auto nxt = it; ++nxt != last && invoke(pred, *it, *nxt); it = nxt)
                 ;
         }
         constexpr void satisfy_reverse(iterator_t<Rng> & it)
@@ -111,14 +111,14 @@ namespace ranges
             auto const & first = *begin_;
             RANGES_ASSERT(it != first);
             (void)first;
-            auto prev = it;
+            auto prv = it;
             --it;
-            if(prev == ranges::end(this->base()))
+            if(prv == ranges::end(this->base()))
             {
                 return;
             }
             auto & pred = this->adjacent_remove_if_view::box::get();
-            for(; invoke(pred, *it, *prev); prev = it, --it)
+            for(; invoke(pred, *it, *prv); prv = it, --it)
                 RANGES_ASSERT(it != first);
         }
 

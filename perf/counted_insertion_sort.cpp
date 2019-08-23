@@ -76,40 +76,40 @@ public:
 };
 
 template<typename I, typename V2>
-I upper_bound_n(I begin, typename std::iterator_traits<I>::difference_type d, V2 const &val)
+I upper_bound_n(I first, typename std::iterator_traits<I>::difference_type d, V2 const &val)
 {
     while(0 != d)
     {
         auto half = d / 2;
-        auto middle = std::next(begin, half);
+        auto middle = std::next(first, half);
         if(val < *middle)
             d = half;
         else
         {
-            begin = ++middle;
+            first = ++middle;
             d -= half + 1;
         }
     }
-    return begin;
+    return first;
 }
 
 template<typename I>
-void insertion_sort_n(I begin, typename std::iterator_traits<I>::difference_type n)
+void insertion_sort_n(I first, typename std::iterator_traits<I>::difference_type n)
 {
     auto m = 0;
-    for(auto it = begin; m != n; ++it, ++m)
+    for(auto it = first; m != n; ++it, ++m)
     {
-        auto insertion = upper_bound_n(begin, m, *it);
+        auto insertion = upper_bound_n(first, m, *it);
         ranges::rotate(insertion, it, std::next(it));
     }
 }
 
 template<typename I, typename S>
-void insertion_sort(I begin, S end)
+void insertion_sort(I first, S last)
 {
-    for(auto it = begin; it != end; ++it)
+    for(auto it = first; it != last; ++it)
     {
-        auto insertion = ranges::upper_bound(begin, it, *it);
+        auto insertion = ranges::upper_bound(first, it, *it);
         ranges::rotate(insertion, it, std::next(it));
     }
 }

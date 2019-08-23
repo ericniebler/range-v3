@@ -41,15 +41,15 @@ namespace ranges
     struct is_partitioned_fn
     {
         template<typename I, typename S, typename C, typename P = identity>
-        auto operator()(I begin, S end, C pred, P proj = P{}) const -> CPP_ret(bool)( //
+        auto operator()(I first, S last, C pred, P proj = P{}) const -> CPP_ret(bool)( //
             requires input_iterator<I> && sentinel_for<S, I> &&
                 indirect_unary_predicate<C, projected<I, P>>)
         {
-            for(; begin != end; ++begin)
-                if(!invoke(pred, invoke(proj, *begin)))
+            for(; first != last; ++first)
+                if(!invoke(pred, invoke(proj, *first)))
                     break;
-            for(; begin != end; ++begin)
-                if(invoke(pred, invoke(proj, *begin)))
+            for(; first != last; ++first)
+                if(invoke(pred, invoke(proj, *first)))
                     return false;
             return true;
         }
