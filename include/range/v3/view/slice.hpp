@@ -263,8 +263,9 @@ namespace ranges
             //       doesn't know it's size?
             template<typename Rng>
             auto CPP_fun(operator())( //
-                Rng && rng, range_difference_t<Rng> from, detail::from_end_of_t<Rng> to)(
-                const requires viewable_range<Rng> && input_range<Rng> && sized_range<Rng>)
+                Rng && rng, range_difference_t<Rng> from,
+                detail::from_end_of_t<Rng> to)(const requires viewable_range<Rng> &&
+                                                   input_range<Rng> && sized_range<Rng>)
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Can't index from the end of an infinite range!");

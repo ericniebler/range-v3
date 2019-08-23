@@ -45,23 +45,22 @@ namespace ranges
           : storage<Ts, Is, Ts...>...
         {
             static_assert(same_as<meta::index_sequence<Is...>,
-                               meta::make_index_sequence<sizeof...(Is)>>,
+                                  meta::make_index_sequence<sizeof...(Is)>>,
                           "What madness is this?!?");
 
             compressed_tuple_() = default;
 
-            template<
-                typename... Args,
-                meta::if_<meta::and_c<META_IS_CONSTRUCTIBLE(Ts, Args)...>, int> = 0>
+            template<typename... Args,
+                     meta::if_<meta::and_c<META_IS_CONSTRUCTIBLE(Ts, Args)...>, int> = 0>
             constexpr compressed_tuple_(Args &&... args) noexcept(
                 meta::strict_and<std::is_nothrow_constructible<storage<Ts, Is, Ts...>,
                                                                Args>...>::value)
               : storage<Ts, Is, Ts...>{static_cast<Args &&>(args)}...
             {}
 
-            template<typename... Us,
-                     meta::if_<meta::and_c<META_IS_CONSTRUCTIBLE(Us, Ts const &)...>,
-                               int> = 0>
+            template<
+                typename... Us,
+                meta::if_<meta::and_c<META_IS_CONSTRUCTIBLE(Us, Ts const &)...>, int> = 0>
             constexpr operator std::tuple<Us...>() const noexcept(
                 meta::strict_and<std::is_nothrow_constructible<Us, Ts const &>...>::value)
             {
@@ -125,7 +124,7 @@ namespace ranges
 
         compressed_pair() = default;
 
-        CPP_template(typename U, typename V)(                             //
+        CPP_template(typename U, typename V)(                                       //
             requires constructible_from<First, U> && constructible_from<Second, V>) //
             constexpr compressed_pair(U && u,
                                       V && v) noexcept(noexcept(First((U &&) u)) &&

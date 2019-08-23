@@ -64,8 +64,8 @@ namespace ranges
 #ifdef RANGES_WORKAROUND_MSVC_786312
                                        argstructible<args_, args_<N, Us...>>
 #else  // ^^^ workaround / no workaround vvv
-                                       meta::and_c<
-                                           META_IS_CONSTRUCTIBLE(Ts, Us)...>::value
+                                       meta::and_c<META_IS_CONSTRUCTIBLE(Ts,
+                                                                         Us)...>::value
 #endif // RANGES_WORKAROUND_MSVC_786312
                                        > * = nullptr)
             {}
@@ -115,7 +115,7 @@ namespace ranges
             requires default_constructible<std::tuple<Ts...>>)
           : common_tuple::forward_tuple_interface{}
         {}
-        CPP_template(typename... Us)(                                         //
+        CPP_template(typename... Us)(                                              //
             requires constructible_from<detail::args<Ts...>, detail::args<Us...>>) //
             explicit common_tuple(Us &&... us) noexcept(
                 meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
@@ -187,7 +187,8 @@ namespace ranges
         auto operator=(std::tuple<Us...> const & that) noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts &, Us const &>::value...>::value)
             -> CPP_ret(common_tuple &)( //
-                requires assignable_from<detail::args<Ts...> &, detail::args<Us const &...>>)
+                requires assignable_from<detail::args<Ts...> &,
+                                         detail::args<Us const &...>>)
         {
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
@@ -206,16 +207,19 @@ namespace ranges
         auto operator=(std::tuple<Us...> & that) const noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts const &, Us &>::value...>::value)
             -> CPP_ret(common_tuple const &)( //
-                requires assignable_from<detail::args<Ts const...> &, detail::args<Us &...>>)
+                requires assignable_from<detail::args<Ts const...> &,
+                                         detail::args<Us &...>>)
         {
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
         }
         template<typename... Us>
-        auto operator=(std::tuple<Us...> const & that) const noexcept(
-            meta::and_c<std::is_nothrow_assignable<Ts const &, Us const &>::value...>::
-                value) -> CPP_ret(common_tuple const &)( //
-            requires assignable_from<detail::args<Ts const...> &, detail::args<Us const &...>>)
+        auto operator=(std::tuple<Us...> const & that) const
+            noexcept(meta::and_c<
+                     std::is_nothrow_assignable<Ts const &, Us const &>::value...>::value)
+                -> CPP_ret(common_tuple const &)( //
+                    requires assignable_from<detail::args<Ts const...> &,
+                                             detail::args<Us const &...>>)
         {
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
@@ -224,14 +228,15 @@ namespace ranges
         auto operator=(std::tuple<Us...> && that) const noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts const &, Us &&>::value...>::value)
             -> CPP_ret(common_tuple const &)( //
-                requires assignable_from<detail::args<Ts const...> &, detail::args<Us...>>)
+                requires assignable_from<detail::args<Ts const...> &,
+                                         detail::args<Us...>>)
         {
             (void)tuple_transform(base(), std::move(that), element_assign_{});
             return *this;
         }
 
         // Conversion
-        CPP_template(typename... Us)(                                           //
+        CPP_template(typename... Us)(                                                //
             requires constructible_from<detail::args<Us...>, detail::args<Ts &...>>) //
             operator std::tuple<Us...>() &
             noexcept(
@@ -240,15 +245,16 @@ namespace ranges
             return detail::to_std_tuple<Us...>(
                 *this, meta::make_index_sequence<sizeof...(Ts)>{});
         }
-        CPP_template(typename... Us)(                                                 //
-            requires constructible_from<detail::args<Us...>, detail::args<Ts const &...>>) //
+        CPP_template(typename... Us)( //
+            requires constructible_from<detail::args<Us...>,
+                                        detail::args<Ts const &...>>) //
         operator std::tuple<Us...>() const & noexcept(
             meta::and_c<std::is_nothrow_constructible<Us, Ts const &>::value...>::value)
         {
             return detail::to_std_tuple<Us...>(
                 *this, meta::make_index_sequence<sizeof...(Ts)>{});
         }
-        CPP_template(typename... Us)(                                         //
+        CPP_template(typename... Us)(                                              //
             requires constructible_from<detail::args<Us...>, detail::args<Ts...>>) //
             operator std::tuple<Us...>() &&
             noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts>::value...>::value)
@@ -262,19 +268,19 @@ namespace ranges
 #define LOGICAL_OP(OP, CONCEPT)                                                    \
     template<typename... Ts, typename... Us>                                       \
     auto operator OP(common_tuple<Ts...> const & a, common_tuple<Us...> const & b) \
-        ->CPP_ret(bool)(requires and_v<CONCEPT<Ts, Us>...>)                          \
+        ->CPP_ret(bool)(requires and_v<CONCEPT<Ts, Us>...>)                        \
     {                                                                              \
         return a.base() OP b.base();                                               \
     }                                                                              \
     template<typename... Ts, typename... Us>                                       \
     auto operator OP(std::tuple<Ts...> const & a, common_tuple<Us...> const & b)   \
-        ->CPP_ret(bool)(requires and_v<CONCEPT<Ts, Us>...>)                          \
+        ->CPP_ret(bool)(requires and_v<CONCEPT<Ts, Us>...>)                        \
     {                                                                              \
         return a OP b.base();                                                      \
     }                                                                              \
     template<typename... Ts, typename... Us>                                       \
     auto operator OP(common_tuple<Ts...> const & a, std::tuple<Us...> const & b)   \
-        ->CPP_ret(bool)(requires and_v<CONCEPT<Ts, Us>...>)                          \
+        ->CPP_ret(bool)(requires and_v<CONCEPT<Ts, Us>...>)                        \
     {                                                                              \
         return a.base() OP b;                                                      \
     }                                                                              \
@@ -339,7 +345,8 @@ namespace ranges
         CPP_ctor(common_pair)(std::pair<F2, S2> const & that)( //
             noexcept(std::is_nothrow_constructible<F, F2 const &>::value &&
                          std::is_nothrow_constructible<S, S2 const &>::value) //
-            requires constructible_from<F, F2 const &> && constructible_from<S, S2 const &>)
+            requires constructible_from<F, F2 const &> &&
+                constructible_from<S, S2 const &>)
           : std::pair<F, S>{that.first, that.second}
         {}
         template<typename F2, typename S2>
@@ -351,7 +358,7 @@ namespace ranges
         {}
 
         // Conversion
-        CPP_template(typename F2, typename S2)(                        //
+        CPP_template(typename F2, typename S2)(                                  //
             requires constructible_from<F2, F &> && constructible_from<S2, S &>) //
             operator std::pair<F2, S2>() &
             noexcept(std::is_nothrow_constructible<F2, F &>::value &&
@@ -359,15 +366,16 @@ namespace ranges
         {
             return {this->first, this->second};
         }
-        CPP_template(typename F2, typename S2)(                                    //
-            requires constructible_from<F2, F const &> && constructible_from<S2, S const &>) //
+        CPP_template(typename F2, typename S2)( //
+            requires constructible_from<F2, F const &> &&
+                constructible_from<S2, S const &>) //
         operator std::pair<F2, S2>() const & noexcept(
             std::is_nothrow_constructible<F2, F const &>::value &&
                 std::is_nothrow_constructible<S2, S const &>::value)
         {
             return {this->first, this->second};
         }
-        CPP_template(typename F2, typename S2)(                    //
+        CPP_template(typename F2, typename S2)(                              //
             requires constructible_from<F2, F> && constructible_from<S2, S>) //
             operator std::pair<F2, S2>() &&
             noexcept(std::is_nothrow_constructible<F2, F>::value &&
@@ -393,7 +401,8 @@ namespace ranges
             std::is_nothrow_assignable<F &, F2 const &>::value &&
                 std::is_nothrow_assignable<S &, S2 const &>::value)
             -> CPP_ret(common_pair &)( //
-                requires assignable_from<F &, F2 const &> && assignable_from<S &, S2 const &>)
+                requires assignable_from<F &, F2 const &> &&
+                    assignable_from<S &, S2 const &>)
         {
             this->first = that.first;
             this->second = that.second;
@@ -415,7 +424,8 @@ namespace ranges
             noexcept(std::is_nothrow_assignable<F const &, F2 &>::value &&
                          std::is_nothrow_assignable<S const &, S2 &>::value)
                 -> CPP_ret(common_pair const &)( //
-                    requires assignable_from<F const &, F2 &> && assignable_from<S const &, S2 &>)
+                    requires assignable_from<F const &, F2 &> &&
+                        assignable_from<S const &, S2 &>)
         {
             this->first = that.first;
             this->second = that.second;
@@ -434,11 +444,11 @@ namespace ranges
             return *this;
         }
         template<typename F2, typename S2>
-        auto operator=(std::pair<F2, S2> && that) const
-            noexcept(std::is_nothrow_assignable<F const &, F2 &&>::value &&
-                         std::is_nothrow_assignable<S const &, S2 &&>::value)
-                -> CPP_ret(common_pair const &)( //
-                    requires assignable_from<F const &, F2> && assignable_from<S const &, S2>)
+        auto operator=(std::pair<F2, S2> && that) const noexcept(
+            std::is_nothrow_assignable<F const &, F2 &&>::value &&
+                std::is_nothrow_assignable<S const &, S2 &&>::value)
+            -> CPP_ret(common_pair const &)( //
+                requires assignable_from<F const &, F2> && assignable_from<S const &, S2>)
         {
             this->first = static_cast<F2 &&>(that.first);
             this->second = static_cast<S2 &&>(that.second);

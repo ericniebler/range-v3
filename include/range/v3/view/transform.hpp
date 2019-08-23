@@ -145,7 +145,8 @@ namespace ranges
         template<bool Const = true>
         auto begin_adaptor() const -> CPP_ret(adaptor<Const>)( //
             requires Const && range<meta::const_if_c<Const, Rng>> &&
-                detail::iter_transform_1_readable<Fun const, meta::const_if_c<Const, Rng>>)
+                detail::iter_transform_1_readable<Fun const,
+                                                  meta::const_if_c<Const, Rng>>)
         {
             return {fun_};
         }
@@ -154,10 +155,11 @@ namespace ranges
             return {fun_};
         }
         template<bool Const = true>
-        auto end_adaptor() const -> CPP_ret(
-            meta::if_<use_sentinel_t<Const>, adaptor_base, adaptor<Const>>)( //
-            requires Const && range<meta::const_if_c<Const, Rng>> &&
-                detail::iter_transform_1_readable<Fun const, meta::const_if_c<Const, Rng>>)
+        auto end_adaptor() const
+            -> CPP_ret(meta::if_<use_sentinel_t<Const>, adaptor_base, adaptor<Const>>)( //
+                requires Const && range<meta::const_if_c<Const, Rng>> &&
+                    detail::iter_transform_1_readable<Fun const,
+                                                      meta::const_if_c<Const, Rng>>)
         {
             return {fun_};
         }
@@ -331,12 +333,12 @@ namespace ranges
         };
 
         template<bool Const>
-        using end_cursor_t =
-            meta::if_c<common_range<meta::const_if_c<Const, Rng1>> &&
-                           common_range<meta::const_if_c<Const, Rng2>> &&
-                           !single_pass_iterator_<iterator_t<meta::const_if_c<Const, Rng1>>> &&
-                           !single_pass_iterator_<iterator_t<meta::const_if_c<Const, Rng2>>>,
-                       cursor<Const>, sentinel<Const>>;
+        using end_cursor_t = meta::if_c<
+            common_range<meta::const_if_c<Const, Rng1>> &&
+                common_range<meta::const_if_c<Const, Rng2>> &&
+                !single_pass_iterator_<iterator_t<meta::const_if_c<Const, Rng1>>> &&
+                !single_pass_iterator_<iterator_t<meta::const_if_c<Const, Rng2>>>,
+            cursor<Const>, sentinel<Const>>;
 
         cursor<simple_view<Rng1>() && simple_view<Rng2>()> begin_cursor()
         {
@@ -432,10 +434,11 @@ namespace ranges
 
         public:
             template<typename Rng, typename Fun>
-            constexpr auto operator()(Rng && rng, Fun fun) const -> CPP_ret(
-                iter_transform_view<all_t<Rng>, Fun>)( //
-                requires viewable_range<Rng> && input_range<Rng> &&
-                    copy_constructible<Fun> && detail::iter_transform_1_readable<Fun, Rng>)
+            constexpr auto operator()(Rng && rng, Fun fun) const
+                -> CPP_ret(iter_transform_view<all_t<Rng>, Fun>)( //
+                    requires viewable_range<Rng> && input_range<Rng> &&
+                        copy_constructible<Fun> &&
+                            detail::iter_transform_1_readable<Fun, Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }

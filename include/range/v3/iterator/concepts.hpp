@@ -115,7 +115,7 @@ namespace ranges
 
         using ::concepts::detail::weakly_equality_comparable_with_;
     } // namespace detail
-    /// \endcond
+      /// \endcond
 
     // clang-format off
     CPP_def
@@ -665,7 +665,8 @@ namespace ranges
 
     template<typename S, typename I>
     using sentinel_tag_of =
-        concepts::tag_of<meta::list<sized_sentinel_for_concept, sentinel_for_concept>, S, I>;
+        concepts::tag_of<meta::list<sized_sentinel_for_concept, sentinel_for_concept>, S,
+                         I>;
 
     // Deprecated things:
     /// \cond
@@ -708,18 +709,18 @@ namespace ranges
         using ranges::contiguous_iterator;
         using ranges::forward_iterator;
         using ranges::incrementable;
+        using ranges::indirect_relation;
         using ranges::indirect_result_t;
+        using ranges::indirect_strict_weak_order;
+        using ranges::indirect_unary_predicate;
         using ranges::indirectly_comparable;
         using ranges::indirectly_copyable;
         using ranges::indirectly_copyable_storable;
         using ranges::indirectly_movable;
         using ranges::indirectly_movable_storable;
-        using ranges::indirectly_swappable;
         using ranges::indirectly_regular_unary_invocable;
-        using ranges::indirect_relation;
-        using ranges::indirect_strict_weak_order;
+        using ranges::indirectly_swappable;
         using ranges::indirectly_unary_invocable;
-        using ranges::indirect_unary_predicate;
         using ranges::input_iterator;
         using ranges::input_or_output_iterator;
         using ranges::mergeable;

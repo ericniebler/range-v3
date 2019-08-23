@@ -53,7 +53,7 @@ namespace ranges
             CPP_template(bool Other)( //
                 requires Const && (!Other) &&
                 convertible_to<sentinel_t<Rng>,
-                              sentinel_t<Base>>) //
+                               sentinel_t<Base>>) //
                 constexpr sentinel(sentinel<Other> that)
               : end_(std::move(that.end_))
             {}
@@ -299,7 +299,7 @@ namespace ranges
             using ranges::views::take;
         }
         CPP_template(typename Rng)( //
-            requires view_<Rng>)     //
+            requires view_<Rng>)    //
             using take_view = ranges::take_view<Rng>;
     } // namespace cpp20
     /// @}

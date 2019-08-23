@@ -37,7 +37,7 @@ namespace ranges
             friend action_access;
             template<typename V, typename P>
             static auto CPP_fun(bind)(remove_fn remove, V && value, P proj)( //
-                requires (!range<V>))
+                requires(!range<V>))
             {
                 return bind_back(remove, static_cast<V &&>(value), std::move(proj));
             }
@@ -54,7 +54,7 @@ namespace ranges
                     requires forward_range<Rng> && permutable<iterator_t<Rng>> &&
                         erasable_range<Rng, iterator_t<Rng>, sentinel_t<Rng>> &&
                             indirect_relation<equal_to, projected<iterator_t<Rng>, P>,
-                                             V const *>)
+                                              V const *>)
             {
                 auto it = ranges::remove(rng, value, std::move(proj));
                 ranges::erase(rng, it, ranges::end(rng));

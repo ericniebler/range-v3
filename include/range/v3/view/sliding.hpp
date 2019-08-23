@@ -51,7 +51,7 @@ namespace ranges
             cache, random_access_range<Rng> && sized_range<Rng>
                        ? cache::none
                        : bidirectional_range<Rng> && common_range<Rng> ? cache::last
-                                                                     : cache::first>;
+                                                                       : cache::first>;
     } // namespace sliding_view_detail
     /// \endcond
 

@@ -190,9 +190,9 @@ namespace ranges
 
     public:
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, S end_, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(I)( //
-                requires sortable<I, C, P> && random_access_iterator<I> && sentinel_for<S, I>)
+        auto operator()(I begin, S end_, C pred = C{},
+                        P proj = P{}) const -> CPP_ret(I)( //
+            requires sortable<I, C, P> && random_access_iterator<I> && sentinel_for<S, I>)
         {
             I end = ranges::next(begin, std::move(end_));
             if(begin != end)

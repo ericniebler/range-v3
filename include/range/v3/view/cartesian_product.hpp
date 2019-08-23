@@ -176,8 +176,8 @@ namespace ranges
                 if(i == ranges::begin(v))
                 {
                     CPP_assert(cartesian_produce_view_can_bidi<IsConst, Views...>);
-                    // cartesian_produce_view_can_bidi<IsConst, Views...> implies this advance
-                    // call is O(1)
+                    // cartesian_produce_view_can_bidi<IsConst, Views...> implies this
+                    // advance call is O(1)
                     ranges::advance(i, ranges::end(v));
                     prev_(meta::size_t<N - 1>{});
                 }

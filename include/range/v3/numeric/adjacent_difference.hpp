@@ -117,8 +117,7 @@ namespace ranges
         auto operator()(Rng && rng, ORng && result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(adjacent_difference_result<safe_iterator_t<Rng>,
                                                   safe_iterator_t<ORng>>)( //
-                requires range<Rng> && range<ORng> &&
-                    differenceable<I, O, BOp, P>)
+                requires range<Rng> && range<ORng> && differenceable<I, O, BOp, P>)
         {
             return (*this)(begin(rng),
                            end(rng),

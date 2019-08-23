@@ -41,9 +41,9 @@ namespace ranges
         template<typename I, typename S, typename O, typename F, typename P = identity>
         auto operator()(I begin, S end, O out, F pred, P proj = P{}) const //
             -> CPP_ret(copy_if_result<I, O>)(                              //
-                requires input_iterator<I> && sentinel_for<S, I> && weakly_incrementable<O> &&
-                    indirect_unary_predicate<F, projected<I, P>> &&
-                        indirectly_copyable<I, O>)
+                requires input_iterator<I> && sentinel_for<S, I> && weakly_incrementable<
+                    O> && indirect_unary_predicate<F, projected<I, P>> &&
+                    indirectly_copyable<I, O>)
         {
             for(; begin != end; ++begin)
             {

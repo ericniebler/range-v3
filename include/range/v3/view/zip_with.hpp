@@ -226,8 +226,9 @@ namespace ranges
             }
             CPP_member
             auto equal(cursor const & that) const -> CPP_ret(bool)( //
-                requires and_v<sentinel_for<iterator_t<meta::const_if_c<Const, Rngs>>,
-                                      iterator_t<meta::const_if_c<Const, Rngs>>>...>)
+                requires and_v<
+                    sentinel_for<iterator_t<meta::const_if_c<Const, Rngs>>,
+                                 iterator_t<meta::const_if_c<Const, Rngs>>>...>)
             {
                 // By returning true if *any* of the iterators are equal, we allow
                 // zipped ranges to be of different lengths, stopping when the first
@@ -259,8 +260,9 @@ namespace ranges
             }
             CPP_member
             auto distance_to(cursor const & that) const -> CPP_ret(difference_type)( //
-                requires and_v<sized_sentinel_for<iterator_t<meta::const_if_c<Const, Rngs>>,
-                                           iterator_t<meta::const_if_c<Const, Rngs>>>...>)
+                requires and_v<
+                    sized_sentinel_for<iterator_t<meta::const_if_c<Const, Rngs>>,
+                                       iterator_t<meta::const_if_c<Const, Rngs>>>...>)
             {
                 // Return the smallest distance (in magnitude) of any of the iterator
                 // pairs. This is to accommodate zippers of sequences of different length.
@@ -372,11 +374,10 @@ namespace ranges
         struct iter_zip_with_fn
         {
             template<typename... Rngs, typename Fun>
-            auto operator()(Fun fun, Rngs &&... rngs) const
-                -> CPP_ret(iter_zip_with_view<Fun, all_t<Rngs>...>)( //
-                    requires and_v<viewable_range<Rngs>...> &&
-                        zippable_with<Fun, Rngs...> &&
-                    (sizeof...(Rngs) != 0))
+            auto operator()(Fun fun, Rngs &&... rngs) const -> CPP_ret(
+                iter_zip_with_view<Fun, all_t<Rngs>...>)( //
+                requires and_v<viewable_range<Rngs>...> && zippable_with<Fun, Rngs...> &&
+                (sizeof...(Rngs) != 0))
             {
                 return iter_zip_with_view<Fun, all_t<Rngs>...>{
                     std::move(fun), all(static_cast<Rngs &&>(rngs))...};
@@ -400,8 +401,8 @@ namespace ranges
             template<typename... Rngs, typename Fun>
             auto operator()(Fun fun, Rngs &&... rngs) const
                 -> CPP_ret(zip_with_view<Fun, all_t<Rngs>...>)( //
-                    requires and_v<viewable_range<Rngs>...> && and_v<input_range<Rngs>...> &&
-                        copy_constructible<Fun> &&
+                    requires and_v<viewable_range<Rngs>...> &&
+                        and_v<input_range<Rngs>...> && copy_constructible<Fun> &&
                             invocable<Fun &, range_reference_t<Rngs> &&...> &&
                     (sizeof...(Rngs) != 0))
             {

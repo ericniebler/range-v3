@@ -44,9 +44,9 @@ namespace ranges
                  typename P = identity>
         auto operator()(I begin, S end, O0 o0, O1 o1, C pred, P proj = P{}) const
             -> CPP_ret(partition_copy_result<I, O0, O1>)( //
-                requires input_iterator<I> && sentinel_for<S, I> && weakly_incrementable<O0> &&
-                    weakly_incrementable<O1> && indirectly_copyable<I, O0> &&
-                        indirectly_copyable<I, O1> &&
+                requires input_iterator<I> && sentinel_for<S, I> &&
+                    weakly_incrementable<O0> && weakly_incrementable<O1> &&
+                        indirectly_copyable<I, O0> && indirectly_copyable<I, O1> &&
                             indirect_unary_predicate<C, projected<I, P>>)
         {
             for(; begin != end; ++begin)
@@ -68,12 +68,12 @@ namespace ranges
 
         template<typename Rng, typename O0, typename O1, typename C,
                  typename P = identity>
-        auto operator()(Rng && rng, O0 o0, O1 o1, C pred, P proj = P{}) const
-            -> CPP_ret(partition_copy_result<safe_iterator_t<Rng>, O0, O1>)( //
-                requires input_range<Rng> && weakly_incrementable<O0> &&
-                    weakly_incrementable<O1> && indirectly_copyable<iterator_t<Rng>, O0> &&
-                        indirectly_copyable<iterator_t<Rng>, O1> &&
-                            indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
+        auto operator()(Rng && rng, O0 o0, O1 o1, C pred, P proj = P{}) const -> CPP_ret(
+            partition_copy_result<safe_iterator_t<Rng>, O0, O1>)( //
+            requires input_range<Rng> && weakly_incrementable<O0> &&
+                weakly_incrementable<O1> && indirectly_copyable<iterator_t<Rng>, O0> &&
+                    indirectly_copyable<iterator_t<Rng>, O1> &&
+                        indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng),
                            end(rng),

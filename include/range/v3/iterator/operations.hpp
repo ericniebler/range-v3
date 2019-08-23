@@ -28,7 +28,7 @@ namespace ranges
     /// @{
 
     /// \cond
-    CPP_template(typename I)( //
+    CPP_template(typename I)(                 //
         requires input_or_output_iterator<I>) //
         struct counted_iterator;
     /// \endcond
@@ -83,7 +83,8 @@ namespace ranges
                 requires sentinel_for<S, I>)
         // [[expects axiom: 0 == n ||
         //     (0 < n && reachable(i, bound)) ||
-        //     (0 > n && same_as<I, S> && bidirectional_iterator<I> && reachable(bound, i))]]
+        //     (0 > n && same_as<I, S> && bidirectional_iterator<I> && reachable(bound,
+        //     i))]]
         {
             if constexpr(sized_sentinel_for<S, I>)
             {
@@ -180,7 +181,8 @@ namespace ranges
         constexpr auto operator()(I & i, S s) const -> CPP_ret(void)( //
             requires sentinel_for<S, I>)
         {
-            advance_fn::to_(i, static_cast<S &&>(s), meta::bool_<assignable_from<I &, S>>());
+            advance_fn::to_(
+                i, static_cast<S &&>(s), meta::bool_<assignable_from<I &, S>>());
         }
         // Advance a certain number of times, with a bound:
         template<typename I, typename S>
@@ -301,7 +303,8 @@ namespace ranges
     struct next_fn
     {
         template<typename I>
-        constexpr auto operator()(I it) const -> CPP_ret(I)(requires input_or_output_iterator<I>)
+        constexpr auto operator()(I it) const
+            -> CPP_ret(I)(requires input_or_output_iterator<I>)
         {
             return ++it;
         }
@@ -313,7 +316,8 @@ namespace ranges
             return it;
         }
         template<typename I, typename S>
-        constexpr auto operator()(I it, S s) const -> CPP_ret(I)(requires sentinel_for<S, I>)
+        constexpr auto operator()(I it, S s) const
+            -> CPP_ret(I)(requires sentinel_for<S, I>)
         {
             advance(it, static_cast<S &&>(s));
             return it;

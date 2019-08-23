@@ -180,7 +180,7 @@ namespace ranges
         }
         CPP_template(typename Rng, typename Pred)( //
             requires viewable_range<Rng> && input_range<Rng> &&
-                        predicate<Pred &, iterator_t<Rng>> && copy_constructible<Pred>)     //
+                predicate<Pred &, iterator_t<Rng>> && copy_constructible<Pred>) //
             using take_while_view = ranges::take_while_view<Rng, Pred>;
     } // namespace cpp20
     /// @}

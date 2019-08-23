@@ -48,8 +48,8 @@ namespace ranges
         detail::non_propagating_cache<iterator_t<Rng>> end_;
 
     public:
-        CPP_assert(bidirectional_range<Rng> && view_<Rng> &&
-                       indirect_unary_predicate<Pred, iterator_t<Rng>> && common_range<Rng>);
+        CPP_assert(bidirectional_range<Rng> && view_<Rng> && indirect_unary_predicate<
+                   Pred, iterator_t<Rng>> && common_range<Rng>);
 
         trim_view() = default;
         constexpr trim_view(Rng rng, Pred pred)
@@ -113,10 +113,10 @@ namespace ranges
 
         public:
             template<typename Rng, typename Pred>
-            constexpr auto operator()(Rng && rng, Pred pred) const
-                -> CPP_ret(trim_view<all_t<Rng>, Pred>)( //
-                    requires viewable_range<Rng> && bidirectional_range<Rng> &&
-                        indirect_unary_predicate<Pred, iterator_t<Rng>> && common_range<Rng>)
+            constexpr auto operator()(Rng && rng, Pred pred) const -> CPP_ret(
+                trim_view<all_t<Rng>, Pred>)( //
+                requires viewable_range<Rng> && bidirectional_range<Rng> &&
+                    indirect_unary_predicate<Pred, iterator_t<Rng>> && common_range<Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }

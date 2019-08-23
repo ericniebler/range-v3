@@ -70,7 +70,8 @@ namespace ranges
             public:
                 template<typename Rng>
                 auto operator()(Rng && t) const -> CPP_ret(shared_view<Rng>)( //
-                    requires range<Rng> && (!view_<Rng>)&&(!std::is_reference<Rng>::value))
+                    requires range<Rng> &&
+                    (!view_<Rng>)&&(!std::is_reference<Rng>::value))
                 {
                     return shared_view<Rng>{std::move(t)};
                 }

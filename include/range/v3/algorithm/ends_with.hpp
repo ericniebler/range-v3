@@ -58,11 +58,11 @@ namespace ranges
         template<typename Rng0, typename Rng1, typename C = equal_to,
                  typename P0 = identity, typename P1 = identity>
         constexpr auto operator()(Rng0 && rng0, Rng1 && rng1, C pred = C{},
-                                  P0 proj0 = P0{}, P1 proj1 = P1{}) const
-            -> CPP_ret(bool)( //
-                requires(forward_range<Rng0> || (input_range<Rng0> && sized_range<Rng0>)) &&
-                (forward_range<Rng1> || (input_range<Rng1> && sized_range<Rng1>)) &&
-                indirectly_comparable<iterator_t<Rng0>, iterator_t<Rng1>, C, P0, P1>)
+                                  P0 proj0 = P0{},
+                                  P1 proj1 = P1{}) const -> CPP_ret(bool)( //
+            requires(forward_range<Rng0> || (input_range<Rng0> && sized_range<Rng0>)) &&
+            (forward_range<Rng1> || (input_range<Rng1> && sized_range<Rng1>)) &&
+            indirectly_comparable<iterator_t<Rng0>, iterator_t<Rng1>, C, P0, P1>)
         {
             const auto drop = distance(rng0) - distance(rng1);
             if(drop < 0)

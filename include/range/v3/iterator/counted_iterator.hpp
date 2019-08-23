@@ -66,8 +66,8 @@ namespace ranges
     } // namespace _counted_iterator_
     /// \endcond
 
-    CPP_template_def(typename I)( //
-        requires input_or_output_iterator<I>)     //
+    CPP_template_def(typename I)(             //
+        requires input_or_output_iterator<I>) //
         struct counted_iterator
       : _counted_iterator_::contiguous_iterator_concept_base<(bool)contiguous_iterator<I>>
     {
@@ -441,7 +441,8 @@ namespace ranges
         };
 
         template<typename I>
-        struct iterator_traits_<I, meta::if_c<input_iterator<I>>> : std::iterator_traits<I>
+        struct iterator_traits_<I, meta::if_c<input_iterator<I>>>
+          : std::iterator_traits<I>
         {
             using pointer = void;
         };

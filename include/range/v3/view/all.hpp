@@ -109,7 +109,7 @@ namespace ranges
         {
             using ranges::views::all;
         }
-        CPP_template(typename Rng)(      //
+        CPP_template(typename Rng)(       //
             requires viewable_range<Rng>) //
             using all_view = ranges::views::all_t<Rng>;
     } // namespace cpp20

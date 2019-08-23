@@ -174,8 +174,8 @@ namespace ranges
     /// \ingroup group-range
     /// \param r
     /// \return \c r, if \c r is an array. Otherwise, `r.begin()` if that expression is
-    ///   well-formed and returns an input_or_output_iterator. Otherwise, `begin(r)` if that expression
-    ///   returns an input_or_output_iterator.
+    ///   well-formed and returns an input_or_output_iterator. Otherwise, `begin(r)` if
+    ///   that expression returns an input_or_output_iterator.
     RANGES_DEFINE_CPO(_begin_::fn, begin)
 
     /// \cond
@@ -334,8 +334,8 @@ namespace ranges
     /// \param r
     /// \return \c r+size(r), if \c r is an array. Otherwise, `r.end()` if that expression
     /// is
-    ///   well-formed and returns an input_or_output_iterator. Otherwise, `end(r)` if that expression
-    ///   returns an input_or_output_iterator.
+    ///   well-formed and returns an input_or_output_iterator. Otherwise, `end(r)` if that
+    ///   expression returns an input_or_output_iterator.
     RANGES_DEFINE_CPO(_end_::fn, end)
 
     /// \cond
@@ -443,13 +443,15 @@ namespace ranges
             };
 
             template<typename R>
-            using impl = impl_<has_member_rbegin<R> ? 0 : has_non_member_rbegin<R> ? 1 : 2>;
+            using impl =
+                impl_<has_member_rbegin<R> ? 0 : has_non_member_rbegin<R> ? 1 : 2>;
 
         public:
             template<typename R>
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl<R>{}((R &&) r))) //
-                requires(has_member_rbegin<R> || has_non_member_rbegin<R> || can_reverse_end<R>))
+                requires(has_member_rbegin<R> || has_non_member_rbegin<R> ||
+                         can_reverse_end<R>))
             {
                 return impl<R>{}((R &&) r);
             }
@@ -508,10 +510,10 @@ namespace ranges
     /// \ingroup group-range
     /// \param r
     /// \return `make_reverse_iterator(r+size(r))` if r is an array. Otherwise,
-    ///   `r.rbegin()` if that expression is well-formed and returns an input_or_output_iterator.
-    ///   Otherwise, `make_reverse_iterator(ranges::end(r))` if `ranges::begin(r)`
-    ///   and `ranges::end(r)` are both well-formed and have the same type that
-    ///   satisfies bidirectional_iterator.
+    ///   `r.rbegin()` if that expression is well-formed and returns an
+    ///   input_or_output_iterator. Otherwise, `make_reverse_iterator(ranges::end(r))` if
+    ///   `ranges::begin(r)` and `ranges::end(r)` are both well-formed and have the same
+    ///   type that satisfies bidirectional_iterator.
     RANGES_DEFINE_CPO(_rbegin_::fn, rbegin)
 
     /// \cond
@@ -583,7 +585,8 @@ namespace ranges
             template<typename R>
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl<R>{}((R &&) r))) //
-                requires(has_member_rend<R> || has_non_member_rend<R> || can_reverse_begin<R>))
+                requires(has_member_rend<R> || has_non_member_rend<R> ||
+                         can_reverse_begin<R>))
             {
                 return impl<R>{}((R &&) r);
             }

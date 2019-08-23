@@ -48,7 +48,9 @@ namespace ranges
                 Gen & gen_;
 
                 template<typename Rng>
-                auto operator()(Rng && rng) const -> invoke_result_t<shuffle_fn, Rng, Gen &> {
+                auto operator()(Rng && rng) const
+                    -> invoke_result_t<shuffle_fn, Rng, Gen &>
+                {
                     return shuffle_fn{}(static_cast<Rng &&>(rng), gen_);
                 }
             };
@@ -59,13 +61,13 @@ namespace ranges
             {
                 return {gen};
             }
-#else // ^^^ workaround / no workaround vvv
+#else  // ^^^ workaround / no workaround vvv
             template<typename Gen>
             static auto CPP_fun(bind)(shuffle_fn, Gen & gen)( //
                 requires uniform_random_bit_generator<Gen>)
             {
                 return [&gen](auto && rng)
-                    -> invoke_result_t<shuffle_fn, decltype(rng), Gen &> {
+                           -> invoke_result_t<shuffle_fn, decltype(rng), Gen &> {
                     return shuffle_fn{}(static_cast<decltype(rng)>(rng), gen);
                 };
             }

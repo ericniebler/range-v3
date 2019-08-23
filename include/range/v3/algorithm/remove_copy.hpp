@@ -38,11 +38,11 @@ namespace ranges
     struct remove_copy_fn
     {
         template<typename I, typename S, typename O, typename T, typename P = identity>
-        auto operator()(I begin, S end, O out, T const & val, P proj = P{}) const
-            -> CPP_ret(remove_copy_result<I, O>)( //
-                requires input_iterator<I> && sentinel_for<S, I> && weakly_incrementable<O> &&
-                    indirect_relation<equal_to, projected<I, P>, T const *> &&
-                        indirectly_copyable<I, O>)
+        auto operator()(I begin, S end, O out, T const & val,
+                        P proj = P{}) const -> CPP_ret(remove_copy_result<I, O>)( //
+            requires input_iterator<I> && sentinel_for<S, I> && weakly_incrementable<O> &&
+                indirect_relation<equal_to, projected<I, P>, T const *> &&
+                    indirectly_copyable<I, O>)
         {
             for(; begin != end; ++begin)
             {
@@ -57,11 +57,11 @@ namespace ranges
         }
 
         template<typename Rng, typename O, typename T, typename P = identity>
-        auto operator()(Rng && rng, O out, T const & val, P proj = P{}) const
-            -> CPP_ret(remove_copy_result<safe_iterator_t<Rng>, O>)( //
-                requires input_range<Rng> && weakly_incrementable<O> &&
-                    indirect_relation<equal_to, projected<iterator_t<Rng>, P>,
-                                     T const *> && indirectly_copyable<iterator_t<Rng>, O>)
+        auto operator()(Rng && rng, O out, T const & val, P proj = P{}) const -> CPP_ret(
+            remove_copy_result<safe_iterator_t<Rng>, O>)( //
+            requires input_range<Rng> && weakly_incrementable<O> &&
+                indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *> &&
+                    indirectly_copyable<iterator_t<Rng>, O>)
         {
             return (*this)(begin(rng), end(rng), std::move(out), val, std::move(proj));
         }

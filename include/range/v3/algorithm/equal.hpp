@@ -67,12 +67,13 @@ namespace ranges
         template<typename I0, typename S0, typename I1, typename S1,
                  typename C = equal_to, typename P0 = identity, typename P1 = identity>
         constexpr auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred = C{},
-                                  P0 proj0 = P0{}, P1 proj1 = P1{}) const
-            -> CPP_ret(bool)( //
-                requires input_iterator<I0> && sentinel_for<S0, I0> && input_iterator<I1> &&
-                    sentinel_for<S1, I1> && indirectly_comparable<I0, I1, C, P0, P1>)
+                                  P0 proj0 = P0{},
+                                  P1 proj1 = P1{}) const -> CPP_ret(bool)( //
+            requires input_iterator<I0> && sentinel_for<S0, I0> && input_iterator<I1> &&
+                sentinel_for<S1, I1> && indirectly_comparable<I0, I1, C, P0, P1>)
         {
-            if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S0, I0> && sized_sentinel_for<S1, I1>))
+            if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S0, I0> &&
+                                   sized_sentinel_for<S1, I1>))
                 if(distance(begin0, end0) != distance(begin1, end1))
                     return false;
             return this->nocheck(std::move(begin0),

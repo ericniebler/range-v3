@@ -59,7 +59,7 @@ namespace ranges
         constexpr explicit single_view(T && t)
           : value_(std::move(t))
         {}
-        CPP_template(class... Args)(            //
+        CPP_template(class... Args)(                 //
             requires constructible_from<T, Args...>) //
             constexpr single_view(in_place_t, Args &&... args)
           : single_view{in_place,

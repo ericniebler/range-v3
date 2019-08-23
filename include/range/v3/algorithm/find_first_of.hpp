@@ -44,8 +44,8 @@ namespace ranges
         constexpr auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, R pred = R{},
                                   P0 proj0 = P0{}, P1 proj1 = P1{}) const
             -> CPP_ret(I0)( //
-                requires input_iterator<I0> && sentinel_for<S0, I0> && forward_iterator<I1> &&
-                    sentinel_for<S1, I1> &&
+                requires input_iterator<I0> && sentinel_for<S0, I0> &&
+                    forward_iterator<I1> && sentinel_for<S1, I1> &&
                         indirect_relation<R, projected<I0, P0>, projected<I1, P1>>)
         {
             for(; begin0 != end0; ++begin0)

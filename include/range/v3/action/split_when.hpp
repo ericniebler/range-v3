@@ -49,7 +49,7 @@ namespace ranges
             template<typename Rng, typename Fun>
             auto operator()(Rng && rng, Fun fun) const       //
                 -> CPP_ret(std::vector<split_value_t<Rng>>)( //
-                    requires forward_range<Rng> &&            //
+                    requires forward_range<Rng> &&           //
                         invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> && invocable<
                             Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
                             copy_constructible<Fun> && convertible_to<

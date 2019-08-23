@@ -126,7 +126,8 @@ namespace ranges
                 requires range<meta::const_if_c<Const, Rng>>)
         {
             return detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>{
-                end_(meta::bool_<detail::random_access_and_sized_range<meta::const_if_c<Const, Rng>>>{})};
+                end_(meta::bool_<detail::random_access_and_sized_range<
+                         meta::const_if_c<Const, Rng>>>{})};
         }
         CPP_member
         auto CPP_fun(size)()(const requires sized_range<Rng const>)
@@ -206,7 +207,7 @@ namespace ranges
             RANGES_INLINE_VARIABLE(ranges::views::view<ranges::views::cpp20_common_fn>,
                                    common)
         }
-        CPP_template(typename Rng)(                    //
+        CPP_template(typename Rng)(                      //
             requires view_<Rng> && (!common_range<Rng>)) //
             using common_view = ranges::common_view<Rng>;
     } // namespace cpp20

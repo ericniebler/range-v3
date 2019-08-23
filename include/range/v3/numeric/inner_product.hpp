@@ -88,9 +88,10 @@ namespace ranges
                  typename BOp2 = multiplies, typename P1 = identity,
                  typename P2 = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
-                        BOp2 bop2 = BOp2{}, P1 proj1 = P1{},
-                        P2 proj2 = P2{}) const -> CPP_ret(T)( //
-            requires sentinel_for<S1, I1> && inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
+                        BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
+            -> CPP_ret(T)( //
+                requires sentinel_for<S1, I1> &&
+                    inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
         {
             return (*this)(std::move(begin1),
                            std::move(end1),

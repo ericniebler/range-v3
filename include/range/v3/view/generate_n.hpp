@@ -66,7 +66,7 @@ namespace ranges
             void next()
             {
                 RANGES_EXPECT(0 != rng_->n_);
-                if (rng_->val_)
+                if(rng_->val_)
                     rng_->val_.reset();
                 else
                     rng_->gen_();
@@ -103,9 +103,9 @@ namespace ranges
                 requires invocable<G &> && copy_constructible<G> &&
                     std::is_object<detail::decay_t<invoke_result_t<G &>>>::value &&
                         constructible_from<detail::decay_t<invoke_result_t<G &>>,
-                                      invoke_result_t<G &>> &&
+                                           invoke_result_t<G &>> &&
                             assignable_from<detail::decay_t<invoke_result_t<G &>> &,
-                                       invoke_result_t<G &>>)
+                                            invoke_result_t<G &>>)
             {
                 return generate_n_view<G>{std::move(g), n};
             }

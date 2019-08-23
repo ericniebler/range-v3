@@ -138,8 +138,8 @@ namespace ranges
 
         public:
             using value_type = range_value_t<constify_if<Rng1>>;
-            using single_pass =
-                meta::or_c<single_pass_iterator_<iterator_t<R1>>, single_pass_iterator_<iterator_t<R2>>>;
+            using single_pass = meta::or_c<single_pass_iterator_<iterator_t<R1>>,
+                                           single_pass_iterator_<iterator_t<R2>>>;
 
             set_difference_cursor() = default;
             set_difference_cursor(pred_ref_ pred, proj1_ref_ proj1, proj2_ref_ proj2,
@@ -227,7 +227,7 @@ namespace ranges
                     requires viewable_range<Rng1> && input_range<Rng1> &&
                         viewable_range<Rng2> && input_range<Rng2> &&
                             indirect_relation<C, projected<iterator_t<Rng1>, P1>,
-                                             projected<iterator_t<Rng2>, P2>>)
+                                              projected<iterator_t<Rng2>, P2>>)
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),
@@ -288,8 +288,8 @@ namespace ranges
 
         public:
             using value_type = range_value_t<R1>;
-            using single_pass =
-                meta::or_c<single_pass_iterator_<iterator_t<R1>>, single_pass_iterator_<iterator_t<R2>>>;
+            using single_pass = meta::or_c<single_pass_iterator_<iterator_t<R1>>,
+                                           single_pass_iterator_<iterator_t<R2>>>;
 
             set_intersection_cursor() = default;
             set_intersection_cursor(pred_ref_ pred, proj1_ref_ proj1, proj2_ref_ proj2,
@@ -378,7 +378,7 @@ namespace ranges
                     requires viewable_range<Rng1> && input_range<Rng1> &&
                         viewable_range<Rng2> && input_range<Rng2> &&
                             indirect_relation<C, projected<iterator_t<Rng1>, P1>,
-                                             projected<iterator_t<Rng2>, P2>>)
+                                              projected<iterator_t<Rng2>, P2>>)
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),
@@ -461,8 +461,8 @@ namespace ranges
             using rvalue_reference_type =
                 common_reference_t<range_rvalue_reference_t<R1>,
                                    range_rvalue_reference_t<R2>>;
-            using single_pass =
-                meta::or_c<single_pass_iterator_<iterator_t<R1>>, single_pass_iterator_<iterator_t<R2>>>;
+            using single_pass = meta::or_c<single_pass_iterator_<iterator_t<R1>>,
+                                           single_pass_iterator_<iterator_t<R2>>>;
 
             set_union_cursor() = default;
             set_union_cursor(pred_ref_ pred, proj1_ref_ proj1, proj2_ref_ proj2,
@@ -556,11 +556,11 @@ namespace ranges
                         viewable_range<Rng2> && input_range<Rng2> && common_with<
                             range_value_t<Rng1>, range_value_t<Rng2>> &&
                             common_reference_with<range_reference_t<Rng1>,
-                                            range_reference_t<Rng2>> &&
+                                                  range_reference_t<Rng2>> &&
                                 common_reference_with<range_rvalue_reference_t<Rng1>,
-                                                range_rvalue_reference_t<Rng2>> &&
+                                                      range_rvalue_reference_t<Rng2>> &&
                                     indirect_relation<C, projected<iterator_t<Rng1>, P1>,
-                                                     projected<iterator_t<Rng2>, P2>>)
+                                                      projected<iterator_t<Rng2>, P2>>)
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),
@@ -652,8 +652,8 @@ namespace ranges
             using rvalue_reference_type =
                 common_reference_t<range_rvalue_reference_t<R1>,
                                    range_rvalue_reference_t<R2>>;
-            using single_pass =
-                meta::or_c<single_pass_iterator_<iterator_t<R1>>, single_pass_iterator_<iterator_t<R2>>>;
+            using single_pass = meta::or_c<single_pass_iterator_<iterator_t<R1>>,
+                                           single_pass_iterator_<iterator_t<R2>>>;
 
             set_symmetric_difference_cursor() = default;
             set_symmetric_difference_cursor(pred_ref_ pred, proj1_ref_ proj1,
@@ -767,11 +767,11 @@ namespace ranges
                         viewable_range<Rng2> && input_range<Rng2> && common_with<
                             range_value_t<Rng1>, range_value_t<Rng2>> &&
                             common_reference_with<range_reference_t<Rng1>,
-                                            range_reference_t<Rng2>> &&
+                                                  range_reference_t<Rng2>> &&
                                 common_reference_with<range_rvalue_reference_t<Rng1>,
-                                                range_rvalue_reference_t<Rng2>> &&
+                                                      range_rvalue_reference_t<Rng2>> &&
                                     indirect_relation<C, projected<iterator_t<Rng1>, P1>,
-                                                     projected<iterator_t<Rng2>, P2>>)
+                                                      projected<iterator_t<Rng2>, P2>>)
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),

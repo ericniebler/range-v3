@@ -41,8 +41,9 @@ namespace ranges
                  typename P = identity>
         auto operator()(I begin, S end, O out, C pred, T const & new_value,
                         P proj = {}) const -> CPP_ret(replace_copy_if_result<I, O>)( //
-            requires input_iterator<I> && sentinel_for<S, I> && output_iterator<O, T const &> &&
-                indirect_unary_predicate<C, projected<I, P>> && indirectly_copyable<I, O>)
+            requires input_iterator<I> && sentinel_for<S, I> && output_iterator<
+                O, T const &> && indirect_unary_predicate<C, projected<I, P>> &&
+                indirectly_copyable<I, O>)
         {
             for(; begin != end; ++begin, ++out)
             {

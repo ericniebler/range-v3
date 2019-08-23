@@ -142,14 +142,15 @@ namespace ranges
         template<typename I1, typename S1, typename I2, typename S2,
                  typename C = equal_to, typename P1 = identity, typename P2 = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{},
-                        P1 proj1 = P1{}, P2 proj2 = P2{}) const
-            -> CPP_ret(subrange<I1>)( //
-                requires forward_iterator<I1> && sentinel_for<S1, I1> && forward_iterator<I2> &&
-                    sentinel_for<S2, I2> && indirectly_comparable<I1, I2, C, P1, P2>)
+                        P1 proj1 = P1{},
+                        P2 proj2 = P2{}) const -> CPP_ret(subrange<I1>)( //
+            requires forward_iterator<I1> && sentinel_for<S1, I1> && forward_iterator<
+                I2> && sentinel_for<S2, I2> && indirectly_comparable<I1, I2, C, P1, P2>)
         {
             if(begin2 == end2)
                 return {begin1, begin1};
-            if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S1, I1> && sized_sentinel_for<S2, I2>))
+            if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S1, I1> &&
+                                   sized_sentinel_for<S2, I2>))
                 return search_fn::sized_impl(std::move(begin1),
                                              std::move(end1),
                                              distance(begin1, end1),

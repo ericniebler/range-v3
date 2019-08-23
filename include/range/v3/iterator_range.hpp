@@ -170,7 +170,7 @@ namespace ranges
             base().second() = std::move(rng.base()).second();
             return *this;
         }
-        CPP_template(typename X, typename Y)(                    //
+        CPP_template(typename X, typename Y)(                      //
             requires convertible_to<I, X> && convertible_to<S, Y>) //
             constexpr
             operator std::pair<X, Y>() const
@@ -261,14 +261,14 @@ namespace ranges
         {
             return size_;
         }
-        CPP_template(typename X, typename Y)(                    //
+        CPP_template(typename X, typename Y)(                      //
             requires convertible_to<I, X> && convertible_to<S, Y>) //
             constexpr
             operator std::pair<X, Y>() const
         {
             return rng_;
         }
-        CPP_template(typename X, typename Y)(                    //
+        CPP_template(typename X, typename Y)(                      //
             requires convertible_to<I, X> && convertible_to<S, Y>) //
             constexpr
             operator iterator_range<X, Y>() const

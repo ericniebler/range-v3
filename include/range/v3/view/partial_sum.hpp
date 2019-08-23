@@ -98,7 +98,7 @@ namespace ranges
             CPP_template(bool Other)( //
                 requires IsConst && (!Other) &&
                 convertible_to<iterator_t<Rng> const &,
-                              iterator_t<Base>>) //
+                               iterator_t<Base>>) //
                 constexpr cursor(cursor<Other> const & that)
               : parent_{that.parent_}
               , current_(that.current_)

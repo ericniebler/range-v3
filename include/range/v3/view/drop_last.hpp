@@ -87,28 +87,26 @@ namespace ranges
             {
                 // keep range bound
                 // Sized Bidi O(N)
-                return (random_access_range<Rng> && view_<Rng> && sized_range<Rng> && view_<Rng>) ||
-                               (bidirectional_range<Rng> && view_<Rng> && common_range<Rng> && view_<Rng>) //
-                           ? mode_enum::bidi                               //
-                           : sized_range<Rng> && view_<Rng>                                //
-                                 ? mode_enum::sized                        //
-                                 : forward_range<Rng> && view_<Rng>                        //
-                                       ? mode_enum::forward                //
-                                       : mode_enum::invalid;               //
+                return (random_access_range<Rng> && view_<Rng> && sized_range<Rng> &&
+                        view_<Rng>) ||
+                               (bidirectional_range<Rng> && view_<Rng> &&
+                                common_range<Rng> && view_<Rng>)    //
+                           ? mode_enum::bidi                        //
+                           : sized_range<Rng> && view_<Rng>         //
+                                 ? mode_enum::sized                 //
+                                 : forward_range<Rng> && view_<Rng> //
+                                       ? mode_enum::forward         //
+                                       : mode_enum::invalid;        //
 
                 // max performance
                 // Sized Bidi O(1)
                 // Sized Bidi use mode::sized instead of mode::bidi - thus become unbound.
-                /*return (random_access_range<Rng> && view_<Rng> && sized_range<Rng> && view_<Rng>) ||
-                        (bidirectional_range<Rng> && view_<Rng> && common_range<Rng> && view_<Rng>)
-                        ? mode::bidi
-                        : sized_range<Rng> && view_<Rng>
-                            ? mode::sized
-                            : bidirectional_range<Rng> && view_<Rng> && common_range<Rng> && view_<Rng>
-                            ? mode::bidi
-                            : forward_range<Rng> && view_<Rng>
-                                ? mode::forward
-                                : mode::invalid;*/
+                /*return (random_access_range<Rng> && view_<Rng> && sized_range<Rng> &&
+                   view_<Rng>) || (bidirectional_range<Rng> && view_<Rng> &&
+                   common_range<Rng> && view_<Rng>) ? mode::bidi : sized_range<Rng> &&
+                   view_<Rng> ? mode::sized : bidirectional_range<Rng> && view_<Rng> &&
+                   common_range<Rng> && view_<Rng> ? mode::bidi : forward_range<Rng> &&
+                   view_<Rng> ? mode::forward : mode::invalid;*/
             }
 
             template<typename Rng>
@@ -128,8 +126,9 @@ namespace ranges
                            ? finite
                            : range_cardinality<Rng>::value> // finite at best
     {
-        CPP_assert((random_access_range<Rng> && view_<Rng> && sized_range<Rng> && view_<Rng>) ||
-                   (bidirectional_range<Rng> && view_<Rng> && common_range<Rng> && view_<Rng>));
+        CPP_assert(
+            (random_access_range<Rng> && view_<Rng> && sized_range<Rng> && view_<Rng>) ||
+            (bidirectional_range<Rng> && view_<Rng> && common_range<Rng> && view_<Rng>));
 
     private:
         friend range_access;

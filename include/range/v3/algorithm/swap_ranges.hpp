@@ -36,8 +36,8 @@ namespace ranges
         template<typename I1, typename S1, typename I2>
         auto operator()(I1 begin1, S1 end1, I2 begin2) const
             -> CPP_ret(swap_ranges_result<I1, I2>)( //
-                requires input_iterator<I1> && sentinel_for<S1, I1> && input_iterator<I2> &&
-                    indirectly_swappable<I1, I2>)
+                requires input_iterator<I1> && sentinel_for<S1, I1> &&
+                    input_iterator<I2> && indirectly_swappable<I1, I2>)
         {
             for(; begin1 != end1; ++begin1, ++begin2)
                 ranges::iter_swap(begin1, begin2);
@@ -45,10 +45,10 @@ namespace ranges
         }
 
         template<typename I1, typename S1, typename I2, typename S2>
-        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2) const
-            -> CPP_ret(swap_ranges_result<I1, I2>)( //
-                requires input_iterator<I1> && sentinel_for<S1, I1> && input_iterator<I2> &&
-                    sentinel_for<S2, I2> && indirectly_swappable<I1, I2>)
+        auto operator()(I1 begin1, S1 end1, I2 begin2,
+                        S2 end2) const -> CPP_ret(swap_ranges_result<I1, I2>)( //
+            requires input_iterator<I1> && sentinel_for<S1, I1> && input_iterator<I2> &&
+                sentinel_for<S2, I2> && indirectly_swappable<I1, I2>)
         {
             for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
                 ranges::iter_swap(begin1, begin2);

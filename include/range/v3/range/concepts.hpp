@@ -369,11 +369,11 @@ namespace ranges
         ::concepts::tag<contiguous_range_concept, random_access_range_tag>;
 
     template<typename T>
-    using range_tag_of =
-        ::concepts::tag_of<meta::list<contiguous_range_concept, random_access_range_concept,
-                                      bidirectional_range_concept, forward_range_concept,
-                                      input_range_concept, range_concept>,
-                           T>;
+    using range_tag_of = ::concepts::tag_of<
+        meta::list<contiguous_range_concept, random_access_range_concept,
+                   bidirectional_range_concept, forward_range_concept,
+                   input_range_concept, range_concept>,
+        T>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // common_range_tag_of
@@ -402,13 +402,11 @@ namespace ranges
                 ranges::view_<T>
         );
         // clang-format on
-    }
+    } // namespace view_detail_
     /// \endcond
 
     namespace cpp20
     {
-        using ranges::range;
-        using ranges::sized_range;
         using ranges::bidirectional_range;
         using ranges::common_range;
         using ranges::contiguous_range;
@@ -417,8 +415,10 @@ namespace ranges
         using ranges::input_range;
         using ranges::output_range;
         using ranges::random_access_range;
-        using ranges::view_detail_::view;
+        using ranges::range;
+        using ranges::sized_range;
         using ranges::viewable_range;
+        using ranges::view_detail_::view;
     } // namespace cpp20
     /// @}
 } // namespace ranges

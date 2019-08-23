@@ -110,7 +110,7 @@ namespace ranges
         CPP_assert(bidirectional_range<Rng>);
         CPP_assert(
             same_as<detail::decay_t<decltype(std::declval<reverse_view<Rng>>().base())>,
-                 Rng>);
+                    Rng>);
 
         reverse_view() = default;
         explicit constexpr reverse_view(reverse_view<Rng> rng)
@@ -155,7 +155,7 @@ namespace ranges
         {
             using ranges::views::reverse;
         }
-        CPP_template(typename Rng)(                        //
+        CPP_template(typename Rng)(                          //
             requires view_<Rng> && bidirectional_range<Rng>) //
             using reverse_view = ranges::reverse_view<Rng>;
     } // namespace cpp20

@@ -89,7 +89,8 @@ namespace ranges
                  typename P = identity>
         auto operator()(I begin, S1 end, O result, S2 end_result, BOp bop = BOp{},
                         P proj = P{}) const -> CPP_ret(partial_sum_result<I, O>)( //
-            requires sentinel_for<S1, I> && sentinel_for<S2, O> && partial_sum_constraints<I, O, BOp, P>)
+            requires sentinel_for<S1, I> && sentinel_for<S2, O> &&
+                partial_sum_constraints<I, O, BOp, P>)
         {
             using X = projected<projected<I, detail::as_value_type_t<I>>, P>;
             coerce<iter_value_t<I>> val_i;
@@ -142,7 +143,8 @@ namespace ranges
         auto operator()(Rng && rng, ORng && result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(
                 partial_sum_result<safe_iterator_t<Rng>, safe_iterator_t<ORng>>)( //
-                requires range<Rng> && range<ORng> && partial_sum_constraints<I, O, BOp, P>)
+                requires range<Rng> && range<ORng> &&
+                    partial_sum_constraints<I, O, BOp, P>)
         {
             return (*this)(begin(rng),
                            end(rng),

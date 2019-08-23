@@ -39,9 +39,10 @@ namespace ranges
                  typename PI = identity, typename PO = identity>
         auto operator()(I begin, SI end, O out_begin, SO out_end, C pred = C{},
                         PI in_proj = PI{}, PO out_proj = PO{}) const -> CPP_ret(O)( //
-            requires input_iterator<I> && sentinel_for<SI, I> && random_access_iterator<O> &&
-                sentinel_for<SO, O> && indirectly_copyable<I, O> && sortable<O, C, PO> &&
-                    indirect_strict_weak_order<C, projected<I, PI>, projected<O, PO>>)
+            requires input_iterator<I> && sentinel_for<SI, I> &&
+                random_access_iterator<O> && sentinel_for<SO, O> &&
+                    indirectly_copyable<I, O> && sortable<O, C, PO> &&
+                        indirect_strict_weak_order<C, projected<I, PI>, projected<O, PO>>)
         {
             O r = out_begin;
             if(r != out_end)
@@ -71,13 +72,13 @@ namespace ranges
         template<typename InRng, typename OutRng, typename C = less,
                  typename PI = identity, typename PO = identity>
         auto operator()(InRng && in_rng, OutRng && out_rng, C pred = C{},
-                        PI in_proj = PI{}, PO out_proj = PO{}) const
-            -> CPP_ret(safe_iterator_t<OutRng>)( //
-                requires input_range<InRng> && random_access_range<OutRng> &&
-                    indirectly_copyable<iterator_t<InRng>, iterator_t<OutRng>> &&
-                        sortable<iterator_t<OutRng>, C, PO> &&
-                            indirect_strict_weak_order<C, projected<iterator_t<InRng>, PI>,
-                                                    projected<iterator_t<OutRng>, PO>>)
+                        PI in_proj = PI{},
+                        PO out_proj = PO{}) const -> CPP_ret(safe_iterator_t<OutRng>)( //
+            requires input_range<InRng> && random_access_range<OutRng> &&
+                indirectly_copyable<iterator_t<InRng>, iterator_t<OutRng>> &&
+                    sortable<iterator_t<OutRng>, C, PO> &&
+                        indirect_strict_weak_order<C, projected<iterator_t<InRng>, PI>,
+                                                   projected<iterator_t<OutRng>, PO>>)
         {
             return (*this)(begin(in_rng),
                            end(in_rng),

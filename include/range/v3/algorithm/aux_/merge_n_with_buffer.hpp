@@ -48,10 +48,11 @@ namespace ranges
         {
             template<typename I, typename B, typename C = less, typename P = identity>
             auto operator()(I begin0, iter_difference_t<I> n0, I begin1,
-                            iter_difference_t<I> n1, B buff, C r = C{},
-                            P p = P{}) const -> CPP_ret(I)( //
-                requires same_as<iter_common_reference_t<I>, iter_common_reference_t<B>> &&
-                    indirectly_copyable<I, B> && mergeable<B, I, I, C, P, P>)
+                            iter_difference_t<I> n1, B buff, C r = C{}, P p = P{}) const
+                -> CPP_ret(I)( //
+                    requires same_as<iter_common_reference_t<I>,
+                                     iter_common_reference_t<B>> &&
+                        indirectly_copyable<I, B> && mergeable<B, I, I, C, P, P>)
             {
                 copy_n(begin0, n0, buff);
                 return merge_n(buff, n0, begin1, n1, begin0, r, p, p).out;

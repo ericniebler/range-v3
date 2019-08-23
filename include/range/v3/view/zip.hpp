@@ -127,10 +127,10 @@ namespace ranges
         struct zip_fn
         {
             template<typename... Rngs>
-            auto operator()(Rngs &&... rngs) const
-                -> CPP_ret(zip_view<all_t<Rngs>...>)( //
-                    requires and_v<viewable_range<Rngs>...> && and_v<input_range<Rngs>...> &&
-                    (sizeof...(Rngs) != 0))
+            auto operator()(Rngs &&... rngs) const -> CPP_ret(
+                zip_view<all_t<Rngs>...>)( //
+                requires and_v<viewable_range<Rngs>...> && and_v<input_range<Rngs>...> &&
+                (sizeof...(Rngs) != 0))
             {
                 return zip_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
             }

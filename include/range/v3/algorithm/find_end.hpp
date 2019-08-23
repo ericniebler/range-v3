@@ -185,10 +185,11 @@ namespace ranges
                  typename R = equal_to, typename P = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{},
                         P proj = P{}) const -> CPP_ret(subrange<I1>)( //
-            requires forward_iterator<I1> && sentinel_for<S1, I1> && forward_iterator<I2> &&
-                sentinel_for<S2, I2> && indirect_relation<R, projected<I1, P>, I2>)
+            requires forward_iterator<I1> && sentinel_for<S1, I1> && forward_iterator<
+                I2> && sentinel_for<S2, I2> && indirect_relation<R, projected<I1, P>, I2>)
         {
-            constexpr bool Bidi = bidirectional_iterator<I1> && bidirectional_iterator<I2>;
+            constexpr bool Bidi =
+                bidirectional_iterator<I1> && bidirectional_iterator<I2>;
             return find_end_fn::impl(begin1,
                                      detail::next_to_if<Bidi>(begin1, end1),
                                      begin2,
@@ -201,10 +202,10 @@ namespace ranges
 
         template<typename Rng1, typename Rng2, typename R = equal_to,
                  typename P = identity>
-        auto operator()(Rng1 && rng1, Rng2 && rng2, R pred = R{}, P proj = P{}) const
-            -> CPP_ret(safe_subrange_t<Rng1>)( //
-                requires forward_range<Rng1> && forward_range<Rng2> &&
-                    indirect_relation<R, projected<iterator_t<Rng1>, P>, iterator_t<Rng2>>)
+        auto operator()(Rng1 && rng1, Rng2 && rng2, R pred = R{},
+                        P proj = P{}) const -> CPP_ret(safe_subrange_t<Rng1>)( //
+            requires forward_range<Rng1> && forward_range<Rng2> &&
+                indirect_relation<R, projected<iterator_t<Rng1>, P>, iterator_t<Rng2>>)
         {
             return (*this)(begin(rng1),
                            end(rng1),

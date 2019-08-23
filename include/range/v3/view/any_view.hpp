@@ -414,7 +414,8 @@ namespace ranges
             template<typename Rng>
             explicit CPP_ctor(any_cursor)(Rng && rng)( //
                 requires(!ranges::defer::same_as<detail::decay_t<Rng>, any_cursor>) &&
-                ranges::defer::forward_range<Rng> && defer::any_compatible_range<Rng, Ref>)
+                ranges::defer::forward_range<Rng> &&
+                defer::any_compatible_range<Rng, Ref>)
               : ptr_{detail::make_unique<impl_t<Rng>>(begin(rng))}
             {}
             any_cursor(any_cursor &&) = default;
@@ -639,7 +640,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Rng)( //
-        requires view_<Rng>)     //
+        requires view_<Rng>)    //
         any_view(Rng &&)
             ->any_view<range_reference_t<Rng>, get_categories<Rng>()>;
 #endif

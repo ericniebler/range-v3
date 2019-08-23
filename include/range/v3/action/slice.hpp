@@ -114,7 +114,8 @@ namespace ranges
                 auto last = next(begin(rng), end(rng));
                 ranges::actions::erase(rng, prev(last, -to.dist_), last);
                 last = next(begin(rng), end(rng));
-                ranges::actions::erase(rng, begin(rng), prev(last, to.dist_ - from.dist_));
+                ranges::actions::erase(
+                    rng, begin(rng), prev(last, to.dist_ - from.dist_));
                 return static_cast<Rng &&>(rng);
             }
 

@@ -130,7 +130,7 @@ namespace ranges
         }
         CPP_template(typename Rng, typename Pred)( //
             requires viewable_range<Rng> && input_range<Rng> &&
-                        indirect_unary_predicate<Pred, iterator_t<Rng>>)     //
+                indirect_unary_predicate<Pred, iterator_t<Rng>>) //
             using drop_while_view = ranges::drop_while_view<Rng, Pred>;
     } // namespace cpp20
     /// @}

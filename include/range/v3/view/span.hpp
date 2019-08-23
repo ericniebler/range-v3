@@ -171,7 +171,8 @@ namespace ranges
 
         CPP_template(typename Rng)( //
             requires(!defer::same_as<span, uncvref_t<Rng>>) &&
-            defer::span_compatible_range<Rng, T> && defer::span_dynamic_conversion<Rng, N>) //
+            defer::span_compatible_range<Rng, T> &&
+            defer::span_dynamic_conversion<Rng, N>) //
             constexpr span(Rng && rng) noexcept(noexcept(ranges::data(rng),
                                                          ranges::size(rng)))
           : span{ranges::data(rng), detail::narrow_cast<index_type>(ranges::size(rng))}
@@ -179,7 +180,8 @@ namespace ranges
 
         CPP_template(typename Rng)( //
             requires(!defer::same_as<span, uncvref_t<Rng>>) &&
-            defer::span_compatible_range<Rng, T> && defer::span_static_conversion<Rng, N>) //
+            defer::span_compatible_range<Rng, T> &&
+            defer::span_static_conversion<Rng, N>) //
             constexpr span(Rng && rng) noexcept(noexcept(ranges::data(rng)))
           : span{ranges::data(rng), N}
         {}
@@ -354,7 +356,7 @@ namespace ranges
     constexpr detail::span_index_t span<T, N>::extent;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng)(        //
+    CPP_template(typename Rng)(         //
         requires contiguous_range<Rng>) //
         span(Rng && rng)
             ->span<detail::element_t<Rng>, (range_cardinality<Rng>::value < cardinality()

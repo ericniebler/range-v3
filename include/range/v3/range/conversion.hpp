@@ -140,7 +140,7 @@ namespace ranges
             friend auto operator+(to_container_iterator i, difference_type n) //
                 -> CPP_broken_friend_ret(to_container_iterator)(
                     requires derived_from<iterator_category,
-                                         std::random_access_iterator_tag>)
+                                          std::random_access_iterator_tag>)
             {
                 return i += n;
             }
@@ -148,7 +148,7 @@ namespace ranges
             friend auto operator-(to_container_iterator i, difference_type n) //
                 -> CPP_broken_friend_ret(to_container_iterator)(
                     requires derived_from<iterator_category,
-                                         std::random_access_iterator_tag>)
+                                          std::random_access_iterator_tag>)
             {
                 return i -= n;
             }
@@ -156,7 +156,7 @@ namespace ranges
             friend auto operator-(difference_type n, to_container_iterator i) //
                 -> CPP_broken_friend_ret(to_container_iterator)(
                     requires derived_from<iterator_category,
-                                         std::random_access_iterator_tag>)
+                                          std::random_access_iterator_tag>)
             {
                 return i -= n;
             }
@@ -165,7 +165,7 @@ namespace ranges
                                   to_container_iterator const & j) //
                 -> CPP_broken_friend_ret(difference_type)(
                     requires derived_from<iterator_category,
-                                         std::random_access_iterator_tag>)
+                                          std::random_access_iterator_tag>)
             {
                 return i.it_ - j.it_;
             }
@@ -286,7 +286,7 @@ namespace ranges
             }
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(container_t<Rng>)( //
-                requires input_range<Rng> &&                                 //
+                requires input_range<Rng> &&                                //
                     convertible_to_container_container<Rng, container_t<Rng>>)
             {
                 static_assert(!is_infinite<Rng>::value,

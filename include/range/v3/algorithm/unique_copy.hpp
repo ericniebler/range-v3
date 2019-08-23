@@ -139,9 +139,8 @@ namespace ranges
         template<typename Rng, typename O, typename C = equal_to, typename P = identity>
         auto operator()(Rng && rng, O out, C pred = C{}, P proj = P{}) const //
             -> CPP_ret(unique_copy_result<safe_iterator_t<Rng>, O>)(         //
-                requires input_range<Rng> &&
-                    indirect_relation<C, projected<iterator_t<Rng>, P>> &&
-                    weakly_incrementable<O> &&
+                requires input_range<Rng> && indirect_relation<
+                    C, projected<iterator_t<Rng>, P>> && weakly_incrementable<O> &&
                     indirectly_copyable<iterator_t<Rng>, O> &&
                 (forward_iterator<iterator_t<Rng>> || forward_iterator<O> ||
                  indirectly_copyable_storable<iterator_t<Rng>, O>))

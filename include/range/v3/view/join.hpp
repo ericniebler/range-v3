@@ -204,9 +204,9 @@ namespace ranges
             }
 
         public:
-            using single_pass =
-                meta::bool_<single_pass_iterator_<iterator_t<COuter>> ||
-                            single_pass_iterator_<iterator_t<CInner>> || !ref_is_glvalue::value>;
+            using single_pass = meta::bool_<single_pass_iterator_<iterator_t<COuter>> ||
+                                            single_pass_iterator_<iterator_t<CInner>> ||
+                                            !ref_is_glvalue::value>;
             cursor() = default;
             template<typename BeginOrEnd>
             constexpr cursor(Parent & rng, BeginOrEnd begin_or_end)
@@ -219,7 +219,7 @@ namespace ranges
                 requires Const && (!Other) &&
                 convertible_to<iterator_t<Rng>, iterator_t<COuter>> &&
                 convertible_to<iterator_t<range_reference_t<Rng>>,
-                              iterator_t<CInner>>) //
+                               iterator_t<CInner>>) //
                 constexpr cursor(cursor<Other> that)
               : rng_(that.rng_)
               , outer_it_(std::move(that.outer_it_))
@@ -331,7 +331,8 @@ namespace ranges
             using CRng = meta::const_if_c<Const, Rng>;
             using cond =
                 meta::bool_<std::is_reference<range_reference_t<CRng>>::value &&
-                            forward_range<CRng> && forward_range<range_reference_t<CRng>> &&
+                            forward_range<CRng> &&
+                            forward_range<range_reference_t<CRng>> &&
                             common_range<CRng> && common_range<range_reference_t<CRng>>>;
             return cend_cursor_fn{}(*this, cond{});
         }
@@ -346,7 +347,8 @@ namespace ranges
         CPP_assert(input_range<Rng>);
         CPP_assert(input_range<range_reference_t<Rng>>);
         CPP_assert(forward_range<ValRng>);
-        CPP_assert(common_with<range_value_t<range_reference_t<Rng>>, range_value_t<ValRng>>);
+        CPP_assert(
+            common_with<range_value_t<range_reference_t<Rng>>, range_value_t<ValRng>>);
         CPP_assert(semiregular<common_type_t<range_value_t<range_reference_t<Rng>>,
                                              range_value_t<ValRng>>>);
 
@@ -539,7 +541,9 @@ namespace ranges
                 T (&val_)[N];
 
                 template<typename Rng>
-                auto operator()(Rng && rng) const -> invoke_result_t<join_fn, Rng, T(&)[N]> {
+                auto operator()(Rng && rng) const
+                    -> invoke_result_t<join_fn, Rng, T (&)[N]>
+                {
                     return join_fn{}(static_cast<Rng &&>(rng), val_);
                 }
             };
@@ -549,12 +553,13 @@ namespace ranges
             {
                 return {val};
             }
-#else // ^^^ workaround / no workaround vvv
+#else  // ^^^ workaround / no workaround vvv
             template<typename T, std::size_t N>
             static auto bind(join_fn, T (&val)[N])
             {
                 return [&val](auto && rng)
-                    -> invoke_result_t<join_fn, decltype(rng), T(&)[N]> {
+                           -> invoke_result_t<join_fn, decltype(rng), T(&)[N]>
+                {
                     return join_fn{}(static_cast<decltype(rng)>(rng), val);
                 };
             }
@@ -589,12 +594,12 @@ namespace ranges
     /// @}
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng)(            //
+    CPP_template(typename Rng)(              //
         requires views::joinable_range<Rng>) //
         explicit join_view(Rng &&)
             ->join_view<views::all_t<Rng>>;
 
-    CPP_template(typename Rng, typename ValRng)(       //
+    CPP_template(typename Rng, typename ValRng)(          //
         requires views::joinable_with_range<Rng, ValRng>) //
         explicit join_with_view(Rng &&, ValRng &&)
             ->join_with_view<views::all_t<Rng>, views::all_t<ValRng>>;
@@ -604,7 +609,8 @@ namespace ranges
     {
         namespace views
         {
-            RANGES_INLINE_VARIABLE(ranges::views::view<ranges::views::cpp20_join_fn>, join)
+            RANGES_INLINE_VARIABLE(ranges::views::view<ranges::views::cpp20_join_fn>,
+                                   join)
         }
         CPP_template(typename Rng)( //
             requires input_range<Rng> && view_<Rng> &&

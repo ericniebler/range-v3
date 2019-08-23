@@ -47,10 +47,10 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename V, typename C = less, typename P = identity>
-        auto operator()(Rng && rng, V const & val, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(safe_iterator_t<Rng>)( //
-                requires forward_range<Rng> &&
-                    indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
+        auto operator()(Rng && rng, V const & val, C pred = C{},
+                        P proj = P{}) const -> CPP_ret(safe_iterator_t<Rng>)( //
+            requires forward_range<Rng> &&
+                indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
         {
             return partition_point(
                 rng, detail::make_upper_bound_predicate(pred, val), std::move(proj));

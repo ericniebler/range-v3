@@ -149,7 +149,8 @@ namespace ranges
         static constexpr bool can_bound() noexcept
         {
             using CRng = meta::const_if_c<Const, Rng>;
-            return common_range<CRng> && (sized_range<CRng> || !bidirectional_range<CRng>);
+            return common_range<CRng> &&
+                   (sized_range<CRng> || !bidirectional_range<CRng>);
         }
 
         template<bool Const>

@@ -100,8 +100,8 @@ namespace ranges
         auto
         operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
                    P2 proj2 = P2{}) const -> CPP_ret(bool)( //
-            requires forward_iterator<I1> && sentinel_for<S1, I1> && forward_iterator<I2> &&
-                indirectly_comparable<I1, I2, C, P1, P2>)
+            requires forward_iterator<I1> && sentinel_for<S1, I1> &&
+                forward_iterator<I2> && indirectly_comparable<I1, I2, C, P1, P2>)
         {
             // shorten sequences as much as possible by lopping off any equal parts
             for(; begin1 != end1; ++begin1, ++begin2)
@@ -147,10 +147,11 @@ namespace ranges
                  typename C = equal_to, typename P1 = identity, typename P2 = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{},
                         P1 proj1 = P1{}, P2 proj2 = P2{}) const -> CPP_ret(bool)( //
-            requires forward_iterator<I1> && sentinel_for<S1, I1> && forward_iterator<I2> &&
-                sentinel_for<S2, I2> && indirectly_comparable<I1, I2, C, P1, P2>)
+            requires forward_iterator<I1> && sentinel_for<S1, I1> && forward_iterator<
+                I2> && sentinel_for<S2, I2> && indirectly_comparable<I1, I2, C, P1, P2>)
         {
-            if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S1, I1> && sized_sentinel_for<S2, I2>))
+            if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S1, I1> &&
+                                   sized_sentinel_for<S2, I2>))
             {
                 RANGES_DIAGNOSTIC_PUSH
                 RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
@@ -230,9 +231,9 @@ namespace ranges
     struct next_permutation_fn
     {
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, S end_, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(bool)( //
-                requires bidirectional_iterator<I> && sentinel_for<S, I> && sortable<I, C, P>)
+        auto operator()(I begin, S end_, C pred = C{},
+                        P proj = P{}) const -> CPP_ret(bool)( //
+            requires bidirectional_iterator<I> && sentinel_for<S, I> && sortable<I, C, P>)
         {
             if(begin == end_)
                 return false;
@@ -274,9 +275,9 @@ namespace ranges
     struct prev_permutation_fn
     {
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, S end_, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(bool)( //
-                requires bidirectional_iterator<I> && sentinel_for<S, I> && sortable<I, C, P>)
+        auto operator()(I begin, S end_, C pred = C{},
+                        P proj = P{}) const -> CPP_ret(bool)( //
+            requires bidirectional_iterator<I> && sentinel_for<S, I> && sortable<I, C, P>)
         {
             if(begin == end_)
                 return false;

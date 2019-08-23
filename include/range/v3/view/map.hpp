@@ -131,7 +131,7 @@ namespace ranges
         {
             using ranges::views::keys;
             using ranges::views::values;
-        }
+        } // namespace views
         // TODO(@cjdb): provide implementation for elements_view
     } // namespace cpp20
     /// @}

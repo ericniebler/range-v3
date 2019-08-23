@@ -54,10 +54,10 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename V, typename C = less, typename P = identity>
-        auto operator()(Rng && rng, V const & val, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(bool)( //
-                requires forward_range<Rng> &&
-                    indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
+        auto operator()(Rng && rng, V const & val, C pred = C{},
+                        P proj = P{}) const -> CPP_ret(bool)( //
+            requires forward_range<Rng> &&
+                indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
         {
             static_assert(!is_infinite<Rng>::value,
                           "Trying to binary search an infinite range");

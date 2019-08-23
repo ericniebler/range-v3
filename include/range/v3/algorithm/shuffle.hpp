@@ -62,8 +62,9 @@ namespace ranges
         auto operator()(Rng && rng, Gen && rand = detail::get_random_engine()) const
             -> CPP_ret(safe_iterator_t<Rng>)( //
                 requires random_access_range<Rng> && permutable<iterator_t<Rng>> &&
-                    uniform_random_bit_generator<std::remove_reference_t<Gen>> && convertible_to<
-                        invoke_result_t<Gen &>, iter_difference_t<iterator_t<Rng>>>)
+                    uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+                        convertible_to<invoke_result_t<Gen &>,
+                                       iter_difference_t<iterator_t<Rng>>>)
         {
             return (*this)(begin(rng), end(rng), static_cast<Gen &&>(rand));
         }

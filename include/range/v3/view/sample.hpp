@@ -171,7 +171,7 @@ namespace ranges
         auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
             requires Const && sized_range<meta::const_if_c<Const, Rng>> ||
             sized_sentinel_for<sentinel_t<meta::const_if_c<Const, Rng>>,
-                          iterator_t<meta::const_if_c<Const, Rng>>> ||
+                               iterator_t<meta::const_if_c<Const, Rng>>> ||
             forward_range<meta::const_if_c<Const, Rng>>)
         {
             return cursor<true>{*this};
@@ -216,10 +216,8 @@ namespace ranges
 
                 template<typename Rng>
                 auto operator()(Rng && rng) const
-                    -> invoke_result_t<sample_fn,
-                                       Rng,
-                                       range_difference_t<Rng>,
-                                       URNG &> {
+                    -> invoke_result_t<sample_fn, Rng, range_difference_t<Rng>, URNG &>
+                {
                     return sample_fn{}(static_cast<Rng &&>(rng),
                                        static_cast<range_difference_t<Rng>>(n),
                                        urng);
@@ -231,25 +229,24 @@ namespace ranges
                                       URNG & urng = detail::get_random_engine())( //
                 requires integral<Size> && uniform_random_bit_generator<URNG>)
             {
-                return make_pipeable(
-                    lamduh<Size, URNG>{
-                        std::move(n), urng
-                    });
+                return make_pipeable(lamduh<Size, URNG>{std::move(n), urng});
             }
-#else // ^^^ workaround / no workaround vvv
+#else  // ^^^ workaround / no workaround vvv
             template<typename Size, typename URNG = detail::default_random_engine>
             static auto CPP_fun(bind)(sample_fn, Size n,
                                       URNG & urng = detail::get_random_engine())( //
                 requires integral<Size> && uniform_random_bit_generator<URNG>)
             {
-                return make_pipeable([n, &urng](auto && rng)
-                        -> invoke_result_t<sample_fn,
-                                           decltype(rng),
-                                           range_difference_t<decltype(rng)>,
-                                           URNG &> {
-                        return sample_fn{}(static_cast<decltype(rng)>(rng),
-                                           static_cast<range_difference_t<decltype(rng)>>(n),
-                                           urng);
+                return make_pipeable(
+                    [n, &urng](
+                        auto && rng) -> invoke_result_t<sample_fn,
+                                                        decltype(rng),
+                                                        range_difference_t<decltype(rng)>,
+                                                        URNG &> {
+                        return sample_fn{}(
+                            static_cast<decltype(rng)>(rng),
+                            static_cast<range_difference_t<decltype(rng)>>(n),
+                            urng);
                     });
             }
 #endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
@@ -262,7 +259,8 @@ namespace ranges
                     requires viewable_range<Rng> && input_range<Rng> &&
                         uniform_random_bit_generator<URNG> && convertible_to<
                             invoke_result_t<URNG &>, range_difference_t<Rng>> &&
-                    (sized_range<Rng> || sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>> ||
+                    (sized_range<Rng> ||
+                     sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>> ||
                      forward_range<Rng>))
             {
                 return sample_view<all_t<Rng>, URNG>{

@@ -261,9 +261,10 @@ namespace ranges
     }
 
     template<typename I1, typename I2, typename S1, typename S2>
-    auto operator==(common_iterator<I1, S1> const & x,
-                    common_iterator<I2, S2> const & y) -> CPP_ret(bool)( //
-        requires sentinel_for<S1, I2> && sentinel_for<S2, I1> && equality_comparable_with<I1, I2>)
+    auto operator==(common_iterator<I1, S1> const & x, common_iterator<I2, S2> const & y)
+        -> CPP_ret(bool)( //
+            requires sentinel_for<S1, I2> && sentinel_for<S2, I1> &&
+                equality_comparable_with<I1, I2>)
     {
         return detail::cidata(x).index() == 1u
                    ? (detail::cidata(y).index() == 1u ||
@@ -320,7 +321,7 @@ namespace ranges
         auto demote_common_iter_cat(int)
             -> CPP_ret(with_iterator_category<std::forward_iterator_tag>)( //
                 requires derived_from<typename std::iterator_traits<I>::iterator_category,
-                                     std::forward_iterator_tag>);
+                                      std::forward_iterator_tag>);
 
         template<typename I, bool = (bool)input_iterator<I>>
         struct common_iterator_std_traits : decltype(detail::demote_common_iter_cat<I>(0))

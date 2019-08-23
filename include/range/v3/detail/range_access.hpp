@@ -352,7 +352,8 @@ namespace ranges
 
         using input_cursor_tag = concepts::tag<input_cursor_concept, cursor_tag>;
 
-        using forward_cursor_tag = concepts::tag<forward_cursor_concept, input_cursor_tag>;
+        using forward_cursor_tag =
+            concepts::tag<forward_cursor_concept, input_cursor_tag>;
 
         using bidirectional_cursor_tag =
             concepts::tag<bidirectional_cursor_concept, forward_cursor_tag>;
@@ -365,7 +366,7 @@ namespace ranges
 
         template<typename T>
         using cursor_tag_of = concepts::tag_of<meta::list<contiguous_cursor_concept,    //
-                                                          random_access_cursor_concept,  //
+                                                          random_access_cursor_concept, //
                                                           bidirectional_cursor_concept, //
                                                           forward_cursor_concept,       //
                                                           input_cursor_concept,         //

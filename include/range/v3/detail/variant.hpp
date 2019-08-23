@@ -88,6 +88,7 @@ namespace ranges
     {
     private:
         reference_wrapper<T> ref_;
+
     public:
         constexpr indexed_element(reference_wrapper<T> ref) noexcept
           : ref_(ref)
@@ -146,7 +147,7 @@ namespace ranges
                 requires default_constructible<T>)
               : datum_{}
             {}
-            CPP_template(typename... Ts)(                                 //
+            CPP_template(typename... Ts)(                                      //
                 requires constructible_from<T, Ts...> && (sizeof...(Ts) != 0)) //
                 constexpr indexed_datum(Ts &&... ts) noexcept(
                     std::is_nothrow_constructible<T, Ts...>::value)
@@ -187,6 +188,7 @@ namespace ranges
             template<typename, typename>
             friend struct indexed_datum;
             reference_wrapper<T &> ref_;
+
         public:
             constexpr indexed_datum(reference_wrapper<T &> ref) noexcept
               : ref_(ref)
@@ -203,6 +205,7 @@ namespace ranges
             template<typename, typename>
             friend struct indexed_datum;
             reference_wrapper<T &&> ref_;
+
         public:
             constexpr indexed_datum(reference_wrapper<T &&> ref) noexcept
               : ref_(ref)
@@ -230,8 +233,8 @@ namespace ranges
     } // namespace detail
 
     template<std::size_t N, typename... Ts, typename... Args>
-    meta::if_c<(bool)constructible_from<detail::variant_datum_t<N, Ts...>, Args...>> emplace(
-        variant<Ts...> &, Args &&...);
+    meta::if_c<(bool)constructible_from<detail::variant_datum_t<N, Ts...>, Args...>>
+    emplace(variant<Ts...> &, Args &&...);
 
     namespace detail
     {
@@ -682,15 +685,16 @@ namespace ranges
             requires default_constructible<datum_t<0>>)
           : variant{emplaced_index<0>}
         {}
-        CPP_template(std::size_t N, typename... Args)(   //
+        CPP_template(std::size_t N, typename... Args)(        //
             requires constructible_from<datum_t<N>, Args...>) //
             constexpr variant(RANGES_EMPLACED_INDEX_T(N), Args &&... args) noexcept(
                 std::is_nothrow_constructible<datum_t<N>, Args...>::value)
           : detail::variant_data<Ts...>{meta::size_t<N>{}, static_cast<Args &&>(args)...}
           , index_(N)
         {}
-        CPP_template(std::size_t N, typename T, typename... Args)(                   //
-            requires constructible_from<datum_t<N>, std::initializer_list<T> &, Args...>) //
+        CPP_template(std::size_t N, typename T, typename... Args)( //
+            requires constructible_from<datum_t<N>, std::initializer_list<T> &,
+                                        Args...>) //
             constexpr variant(
                 RANGES_EMPLACED_INDEX_T(N), std::initializer_list<T> il,
                 Args &&... args) noexcept(std::
@@ -836,8 +840,8 @@ namespace ranges
     ////////////////////////////////////////////////////////////////////////////////////////////
     // emplace
     template<std::size_t N, typename... Ts, typename... Args>
-    meta::if_c<(bool)constructible_from<detail::variant_datum_t<N, Ts...>, Args...>> emplace(
-        variant<Ts...> & var, Args &&... args)
+    meta::if_c<(bool)constructible_from<detail::variant_datum_t<N, Ts...>, Args...>>
+    emplace(variant<Ts...> & var, Args &&... args)
     {
         var.template emplace<N>(static_cast<Args &&>(args)...);
     }

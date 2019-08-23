@@ -17,9 +17,9 @@
 #include <type_traits>
 #include <utility>
 
-#include <concepts/concepts.hpp>
-
 #include <meta/meta.hpp>
+
+#include <concepts/concepts.hpp>
 
 #include <range/v3/detail/config.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -56,10 +56,12 @@ namespace ranges
 {
     /// \cond
     namespace views
-    {}
+    {
+    }
 
     namespace actions
-    {}
+    {
+    }
 
 // GCC either fails to accept an attribute on a namespace, or else
 // it ignores the deprecation attribute. Frustrating.

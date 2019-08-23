@@ -131,29 +131,29 @@ namespace ranges
 #if defined(__cpp_conditional_explicit) && 0 < __cpp_conditional_explicit
         template<typename U>
         explicit(!convertible_to<U, T>) constexpr CPP_ctor(semiregular_box)(U && u)( //
-            noexcept(std::is_nothrow_constructible<T, U>::value)                //
+            noexcept(std::is_nothrow_constructible<T, U>::value)                     //
             requires(!defer::same_as<uncvref_t<U>, semiregular_box>) &&
             defer::constructible_from<T, U>)
           : semiregular_box(in_place, static_cast<U &&>(u))
         {}
 #else
         template<typename U>
-        explicit constexpr CPP_ctor(semiregular_box)(U && u)(        //
+        explicit constexpr CPP_ctor(semiregular_box)(U && u)(    //
             noexcept(std::is_nothrow_constructible<T, U>::value) //
             requires(!defer::same_as<uncvref_t<U>, semiregular_box>) &&
             defer::constructible_from<T, U> && (!defer::convertible_to<U, T>))
           : semiregular_box(in_place, static_cast<U &&>(u))
         {}
         template<typename U>
-        constexpr CPP_ctor(semiregular_box)(U && u)(                 //
+        constexpr CPP_ctor(semiregular_box)(U && u)(             //
             noexcept(std::is_nothrow_constructible<T, U>::value) //
             requires(!defer::same_as<uncvref_t<U>, semiregular_box>) &&
             defer::constructible_from<T, U> && defer::convertible_to<U, T>)
           : semiregular_box(in_place, static_cast<U &&>(u))
         {}
 #endif
-        CPP_template(typename... Args)(                        //
-            requires constructible_from<T, Args...>)                //
+        CPP_template(typename... Args)(                            //
+            requires constructible_from<T, Args...>)               //
             constexpr semiregular_box(in_place_t, Args &&... args) //
             noexcept(std::is_nothrow_constructible<T, Args...>::value)
           : data_(static_cast<Args &&>(args)...)
@@ -263,7 +263,7 @@ namespace ranges
         semiregular_box() = default;
         template<typename Arg>
         CPP_ctor(semiregular_box)(in_place_t, Arg & arg)( //
-            noexcept(true)                            //
+            noexcept(true)                                //
             requires constructible_from<ranges::reference_wrapper<T &>, Arg &>)
           : ranges::reference_wrapper<T &>(arg)
         {}
@@ -281,7 +281,7 @@ namespace ranges
         semiregular_box() = default;
         template<typename Arg>
         CPP_ctor(semiregular_box)(in_place_t, Arg && arg)( //
-            noexcept(true)                             //
+            noexcept(true)                                 //
             requires constructible_from<ranges::reference_wrapper<T &&>, Arg>)
           : ranges::reference_wrapper<T &&>(static_cast<Arg &&>(arg))
         {}
@@ -295,21 +295,22 @@ namespace ranges
     using semiregular_box_t = meta::if_c<(bool)semiregular<T>, T, semiregular_box<T>>;
 
     template<typename T, bool IsConst = false>
-    using semiregular_box_ref_or_val_t = meta::if_c<
-        (bool)semiregular<T>, meta::if_c<IsConst, T, reference_wrapper<T>>,
-        reference_wrapper<meta::if_c<IsConst, semiregular_box<T> const, semiregular_box<T>>>>;
+    using semiregular_box_ref_or_val_t =
+        meta::if_c<(bool)semiregular<T>, meta::if_c<IsConst, T, reference_wrapper<T>>,
+                   reference_wrapper<meta::if_c<IsConst, semiregular_box<T> const,
+                                                semiregular_box<T>>>>;
     /// @}
 
     /// \cond
     template<typename T>
-    using semiregular_t RANGES_DEPRECATED(
-        "Please use semiregular_box_t instead.") = semiregular_box_t<T>;
+    using semiregular_t RANGES_DEPRECATED("Please use semiregular_box_t instead.") =
+        semiregular_box_t<T>;
 
     template<typename T, bool IsConst = false>
     using semiregular_ref_or_val_t RANGES_DEPRECATED(
-        "Please use semiregular_box_t instead.") = semiregular_box_ref_or_val_t<T, IsConst>;
+        "Please use semiregular_box_t instead.") =
+        semiregular_box_ref_or_val_t<T, IsConst>;
     /// \endcond
-
 
 } // namespace ranges
 

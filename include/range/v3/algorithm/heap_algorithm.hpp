@@ -257,9 +257,9 @@ namespace ranges
     struct push_heap_fn
     {
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(I)( //
-                requires random_access_iterator<I> && sentinel_for<S, I> && sortable<I, C, P>)
+        auto operator()(I begin, S end, C pred = C{},
+                        P proj = P{}) const -> CPP_ret(I)( //
+            requires random_access_iterator<I> && sentinel_for<S, I> && sortable<I, C, P>)
         {
             auto n = distance(begin, end);
             detail::sift_up_n(begin, n, std::move(pred), std::move(proj));
@@ -316,9 +316,9 @@ namespace ranges
     struct pop_heap_fn
     {
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(I)( //
-                requires random_access_iterator<I> && sentinel_for<S, I> && sortable<I, C, P>)
+        auto operator()(I begin, S end, C pred = C{},
+                        P proj = P{}) const -> CPP_ret(I)( //
+            requires random_access_iterator<I> && sentinel_for<S, I> && sortable<I, C, P>)
         {
             auto n = distance(begin, end);
             detail::pop_heap_n(begin, n, std::move(pred), std::move(proj));
@@ -349,9 +349,9 @@ namespace ranges
     struct make_heap_fn
     {
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(I)( //
-                requires random_access_iterator<I> && sentinel_for<S, I> && sortable<I, C, P>)
+        auto operator()(I begin, S end, C pred = C{},
+                        P proj = P{}) const -> CPP_ret(I)( //
+            requires random_access_iterator<I> && sentinel_for<S, I> && sortable<I, C, P>)
         {
             iter_difference_t<I> const n = distance(begin, end);
             if(n > 1)
@@ -390,9 +390,9 @@ namespace ranges
     struct sort_heap_fn
     {
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(I)( //
-                requires random_access_iterator<I> && sentinel_for<S, I> && sortable<I, C, P>)
+        auto operator()(I begin, S end, C pred = C{},
+                        P proj = P{}) const -> CPP_ret(I)( //
+            requires random_access_iterator<I> && sentinel_for<S, I> && sortable<I, C, P>)
         {
             iter_difference_t<I> const n = distance(begin, end);
             for(auto i = n; i > 1; --i)

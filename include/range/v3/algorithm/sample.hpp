@@ -74,9 +74,11 @@ namespace ranges
         auto operator()(I first, S last, O out, iter_difference_t<O> const n,
                         Gen && gen = detail::get_random_engine()) const
             -> CPP_ret(sample_result<I, O>)( //
-                requires input_iterator<I> && sentinel_for<S, I> && weakly_incrementable<O> &&
-                    indirectly_copyable<I, O> && uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
-                (random_access_iterator<O> || forward_iterator<I> || sized_sentinel_for<S, I>))
+                requires input_iterator<I> && sentinel_for<S, I> &&
+                    weakly_incrementable<O> && indirectly_copyable<I, O> &&
+                        uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+                (random_access_iterator<O> || forward_iterator<I> ||
+                 sized_sentinel_for<S, I>))
         {
             if(RANGES_CONSTEXPR_IF(forward_iterator<I> || sized_sentinel_for<S, I>))
             {
@@ -130,7 +132,7 @@ namespace ranges
                     uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
                 (forward_range<ORng> ||
                  sized_range<ORng>)&&(random_access_iterator<iterator_t<ORng>> ||
-                                     forward_iterator<I> || sized_sentinel_for<S, I>))
+                                      forward_iterator<I> || sized_sentinel_for<S, I>))
         {
             if(RANGES_CONSTEXPR_IF(forward_iterator<I> || sized_sentinel_for<S, I>))
             {
@@ -156,8 +158,9 @@ namespace ranges
         auto operator()(Rng && rng, O out, iter_difference_t<O> const n,
                         Gen && gen = detail::get_random_engine()) const
             -> CPP_ret(sample_result<safe_iterator_t<Rng>, O>)( //
-                requires input_range<Rng> && weakly_incrementable<O> && indirectly_copyable<
-                    iterator_t<Rng>, O> && uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+                requires input_range<Rng> && weakly_incrementable<O> &&
+                    indirectly_copyable<iterator_t<Rng>, O> &&
+                        uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
                 (random_access_iterator<O> || forward_range<Rng> || sized_range<Rng>))
         {
             if(RANGES_CONSTEXPR_IF(forward_range<Rng> || sized_range<Rng>))

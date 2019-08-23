@@ -176,7 +176,7 @@ namespace ranges
             using ranges::views::drop;
         }
         CPP_template(typename Rng)( //
-            requires view_<Rng>)     //
+            requires view_<Rng>)    //
             using drop_view = ranges::drop_view<Rng>;
     } // namespace cpp20
     /// @}

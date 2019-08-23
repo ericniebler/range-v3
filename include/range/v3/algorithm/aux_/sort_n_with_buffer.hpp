@@ -49,7 +49,8 @@ namespace ranges
             template<typename I, typename B, typename C = less, typename P = identity>
             auto operator()(I begin, iter_difference_t<I> n, B buff, C r = C{},
                             P p = P{}) const -> CPP_ret(I)( //
-                requires same_as<iter_common_reference_t<I>, iter_common_reference_t<B>> &&
+                requires same_as<iter_common_reference_t<I>,
+                                 iter_common_reference_t<B>> &&
                     indirectly_copyable<I, B> && mergeable<B, I, I, C, P, P>)
             {
                 auto half = n / 2;

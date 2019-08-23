@@ -40,8 +40,8 @@ namespace ranges
         template<typename I, typename S, typename O>
         constexpr auto operator()(I begin, S end, O out) const
             -> CPP_ret(copy_result<I, O>)( //
-                requires input_iterator<I> && sentinel_for<S, I> && weakly_incrementable<O> &&
-                    indirectly_copyable<I, O>)
+                requires input_iterator<I> && sentinel_for<S, I> &&
+                    weakly_incrementable<O> && indirectly_copyable<I, O>)
         {
             for(; begin != end; ++begin, ++out)
                 *out = *begin;

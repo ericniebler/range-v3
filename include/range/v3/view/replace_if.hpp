@@ -132,11 +132,11 @@ namespace ranges
                     requires viewable_range<Rng> && input_range<Rng> &&
                         indirect_unary_predicate<Pred, iterator_t<Rng>> &&
                             common_with<detail::decay_t<unwrap_reference_t<Val const &>>,
-                                   range_value_t<Rng>> &&
+                                        range_value_t<Rng>> &&
                                 common_reference_with<unwrap_reference_t<Val const &>,
-                                                range_reference_t<Rng>> &&
+                                                      range_reference_t<Rng>> &&
                                     common_reference_with<unwrap_reference_t<Val const &>,
-                                                    range_rvalue_reference_t<Rng>>)
+                                                          range_rvalue_reference_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)),
                         {std::move(pred), std::move(new_value)}};

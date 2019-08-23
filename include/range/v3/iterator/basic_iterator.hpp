@@ -152,10 +152,10 @@ namespace ranges
           : cursor_traits<Cur>
           // The following adds conversion operators to the common reference
           // types, so that basic_proxy_reference can model readable
-          , meta::inherit<
-                meta::transform<typename cursor_traits<Cur>::common_refs,
-                                meta::bind_front<meta::quote<proxy_reference_conversion>,
-                                                 basic_proxy_reference_<Cur, IsReadable>>>>
+          , meta::inherit<meta::transform<
+                typename cursor_traits<Cur>::common_refs,
+                meta::bind_front<meta::quote<proxy_reference_conversion>,
+                                 basic_proxy_reference_<Cur, IsReadable>>>>
         {
         private:
             Cur * cur_;
@@ -360,7 +360,8 @@ namespace ranges
         );
         // clang-format on
 
-        using cpp17_input_cursor_tag = concepts::tag<cpp17_input_cursor_concept, cursor_tag>;
+        using cpp17_input_cursor_tag =
+            concepts::tag<cpp17_input_cursor_concept, cursor_tag>;
         using cpp17_forward_cursor_tag =
             concepts::tag<cpp17_forward_cursor_concept, cpp17_input_cursor_tag>;
         using cpp17_bidirectional_cursor_tag =
@@ -371,7 +372,8 @@ namespace ranges
         template<typename Cur>
         using cpp17_cursor_tag_of = concepts::tag_of<
             meta::list<random_access_cursor_concept, bidirectional_cursor_concept,
-                       cpp17_forward_cursor_concept, cpp17_input_cursor_concept, cursor_concept>,
+                       cpp17_forward_cursor_concept, cpp17_input_cursor_concept,
+                       cursor_concept>,
             Cur>;
 
         template<typename Category, typename Base = void>
@@ -552,7 +554,8 @@ namespace ranges
         CPP_member
         constexpr auto operator*() noexcept(noexcept(iter_reference_t{
             std::declval<Cur &>()})) -> CPP_ret(iter_reference_t)( //
-            requires detail::has_cursor_next<Cur> && detail::is_writable_cursor<Cur>::value)
+            requires detail::has_cursor_next<Cur> &&
+                detail::is_writable_cursor<Cur>::value)
         {
             return iter_reference_t{pos()};
         }
@@ -585,12 +588,12 @@ namespace ranges
         // iter_value_t, return the address of **this.
         template<typename C = Cur>
         constexpr auto operator-> () const
-            noexcept(noexcept(*std::declval<basic_iterator const &>()))
-                -> CPP_ret(meta::_t<std::add_pointer<const_reference_t>>)( //
-                    requires(!detail::has_cursor_arrow<C>) && detail::readable_cursor<C> &&
-                    std::is_lvalue_reference<const_reference_t>::value &&
-                    same_as<typename detail::iterator_associated_types_base<C>::value_type,
-                         uncvref_t<const_reference_t>>)
+            noexcept(noexcept(*std::declval<basic_iterator const &>())) -> CPP_ret(
+                meta::_t<std::add_pointer<const_reference_t>>)( //
+                requires(!detail::has_cursor_arrow<C>) && detail::readable_cursor<C> &&
+                std::is_lvalue_reference<const_reference_t>::value &&
+                same_as<typename detail::iterator_associated_types_base<C>::value_type,
+                        uncvref_t<const_reference_t>>)
         {
             return detail::addressof(**this);
         }
@@ -621,7 +624,8 @@ namespace ranges
         template<typename A = assoc_types_, typename V = typename A::value_type>
         constexpr auto post_increment_(std::true_type, int) //
             -> CPP_ret(detail::postfix_increment_proxy<V>)( //
-                requires constructible_from<V, typename A::reference> && move_constructible<V>)
+                requires constructible_from<V, typename A::reference> &&
+                    move_constructible<V>)
         {
             detail::postfix_increment_proxy<V> p{**this};
             ++*this;
