@@ -12,6 +12,7 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
+#include <climits>
 #include <iostream>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
@@ -221,14 +222,35 @@ void test_bug_919()
     }
 }
 
-// https://github.com/ericniebler/range-v3/issues/978
 void test_bug_978()
 {
+    // https://github.com/ericniebler/range-v3/issues/978
     int data[] = {1};
     ranges::views::cartesian_product(
         data | ranges::views::filter([](int){ return true; }),
         data
     );
+}
+
+void test_bug_1269()
+{
+    // https://github.com/ericniebler/range-v3/issues/1269
+    int data0[2]{}, data1[3]{}, data2[5]{}, data3[7]{};
+    constexpr std::size_t N = ranges::size(data0) * ranges::size(data1) *
+        ranges::size(data2) * ranges::size(data3);
+    CPP_assert(N < INT_MAX);
+
+    auto rng = ranges::views::cartesian_product(data0, data1, data2, data3);
+    CPP_assert(ranges::sized_range<decltype(rng)>);
+    CHECK(ranges::size(rng) == N);
+
+    CPP_assert(ranges::random_access_range<decltype(rng)>);
+    CPP_assert(ranges::sized_sentinel_for<ranges::sentinel_t<decltype(rng)>, ranges::iterator_t<decltype(rng)>>);
+    for (int i = 0; i < int{N}; ++i)
+    {
+        auto pos = ranges::begin(rng) + i;
+        CHECK((ranges::end(rng) - pos) == std::intmax_t{N} - i);
+    }
 }
 
 int main()
@@ -284,6 +306,7 @@ int main()
     test_bug_823();
     test_bug_919();
     test_bug_978();
+    test_bug_1269();
 
     return test_result();
 }
