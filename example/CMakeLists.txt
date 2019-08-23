@@ -14,6 +14,10 @@ rv3_add_test(example.for_each_sequence for_each_sequence for_each_sequence.cpp)
 rv3_add_test(example.for_each_assoc for_each_assoc for_each_assoc.cpp)
 rv3_add_test(example.is_sorted is_sorted is_sorted.cpp)
 rv3_add_test(example.find find find.cpp)
+rv3_add_test(example.filter_transform filter_transform filter_transform.cpp)
+rv3_add_test(example.accumulate_ints accumulate_ints accumulate_ints.cpp)
+rv3_add_test(example.comprehension_conversion comprehension_conversion comprehension_conversion.cpp)
+rv3_add_test(example.sort_unique sort_unique sort_unique.cpp)
 
 # Guarded with a variable because the calendar example causes gcc to puke.
 if(RANGES_BUILD_CALENDAR_EXAMPLE)

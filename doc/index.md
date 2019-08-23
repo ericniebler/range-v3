@@ -100,7 +100,7 @@ with
     ranges::sort( v );
 ~~~~~~~
 
-Range-v3 contains a full implementation of all the standard algorithms with
+Range-v3 contains full implementations of all the standard algorithms with
 range-based overloads for convenience.
 
 **Composability**
@@ -172,7 +172,7 @@ examples that use views:
 Filter a container using a predicate and transform it.
 
 ~~~~~~~{.cpp}
-    std::vector<int> vi{1,2,3,4,5,6,7,8,9,10};
+    std::vector<int> const vi{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     using namespace ranges;
     auto rng = vi | views::remove_if([](int i){return i % 2 == 1;})
                   | views::transform([](int i){return std::to_string(i);});
@@ -194,25 +194,33 @@ vector with it:
 
 ~~~~~~~{.cpp}
     using namespace ranges;
-    std::vector<int> vi =
-        views::for_each(views::ints(1,10), [](int i){
-            return yield_from(views::repeat_n(i,i));
-        });
+    auto vi =
+        views::for_each(views::ints(1, 10), [](int i) {
+            return yield_from(views::repeat_n(i, i));
+        })
+      | to<std::vector>();
     // vi == {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...}
 ~~~~~~~
 
 ### View const-ness
 
-Logically, a view is like a pair of iterators. In order to work, and work fast,
-many views need to cache some data. In order to keep iterators small, this
-cached data is usually stored in the view itself, and iterators hold only
-pointers to their view. Because of the cache, many views lack a
-`const`-qualified `begin()`/`end()`. When `const` versions of `begin()`/`end()`
-are provided, they are truly `const`; that is, thread-safe.
+Logically, a view is a factory for iterators, but in practice a view is often
+implemented as a state machine, with the state stored within the view object
+itself (to keep iterators small) and mutated as the view is iterated. Because
+the view contains mutable state, many views lack a `const`-qualified
+`begin()`/`end()`. When `const` versions of `begin()`/`end()` are provided, they
+are truly `const`; that is, thread-safe.
+
+Since views present the same interface as containers, the temptation is to think
+they behave like containers with regard to `const`-ness. This is not the case.
+Their behavior with regards to `const`-ness is similar to iterators and
+pointers.
 
 The `const`-ness of a view is not related to the `const`-ness of the underlying
-data. Non-`const` view may return `const` iterators. This is analogous to
-pointers; an `int* const` is a `const` pointer to a mutable `int`.
+data. A non-`const` view may refer to elements that are themselves `const`, and
+_vice versa_. This is analogous to pointers; an `int* const` is a `const`
+pointer to a mutable `int`, and a `int const*` is a non-`const` pointer to a
+`const` `int`.
 
 Use non-`const` views whenever possible. If you need thread-safety, work with
 view copies in threads; don't share.

@@ -29,6 +29,12 @@
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
 
+#if defined(RANGES_WORKAROUND_GCC_91525)
+#define CPP_template_gcc_workaround CPP_template_sfinae
+#else
+#define CPP_template_gcc_workaround CPP_template
+#endif
+
 namespace ranges
 {
     /// \cond
@@ -56,7 +62,7 @@ namespace ranges
               : dist_(dist)
             {}
 
-            CPP_template(typename Other)(                                            //
+            CPP_template(typename Other)(                                               //
                 requires integer_like_<Other> && explicitly_convertible_to<Other, Int>) //
                 constexpr
                 operator from_end_<Other>() const
@@ -169,15 +175,16 @@ namespace ranges
         {
             return bool(ranges::begin(derived()) == ranges::end(derived()));
         }
-        CPP_template(bool True = true)(                 //
+        CPP_template_gcc_workaround(bool True = true)(    //
             requires True && detail::can_empty_<D<True>>) //
             constexpr explicit
-            operator bool() noexcept(noexcept(ranges::empty(std::declval<D<True> &>())))
+            operator bool() //
+            noexcept(noexcept(ranges::empty(std::declval<D<True> &>())))
         {
             return !ranges::empty(derived());
         }
         /// \overload
-        CPP_template(bool True = true)(                       //
+        CPP_template_gcc_workaround(bool True = true)(          //
             requires True && detail::can_empty_<D<True> const>) //
             constexpr explicit
             operator bool() const
@@ -207,10 +214,11 @@ namespace ranges
         }
         /// \overload
         template<bool True = true>
-        constexpr auto size() const
+        constexpr auto size() const                               //
             -> CPP_ret(detail::iter_size_t<iterator_t<D<True>>>)( //
                 requires True && (Cardinality < 0) &&
-                sized_sentinel_for<sentinel_t<D<True> const>, iterator_t<D<True> const>> &&
+                sized_sentinel_for<sentinel_t<D<True> const>,
+                                   iterator_t<D<True> const>> &&
                 forward_range<D<True> const>)
         {
             using size_type = detail::iter_size_t<iterator_t<D<True>>>;
@@ -316,7 +324,7 @@ namespace ranges
         }
         //      rng[{4,end-2}]
         /// \overload
-        CPP_template(bool True = true, typename Slice = views::slice_fn)(     //
+        CPP_template(bool True = true, typename Slice = views::slice_fn)(      //
             requires True && input_range<D<True> &> && sized_range<D<True> &>) //
             constexpr auto
             operator[](detail::slice_bounds<range_difference_t<D<True>>,
@@ -337,7 +345,7 @@ namespace ranges
             return Slice{}(derived(), offs.from, offs.to);
         }
         /// \overload
-        CPP_template(bool True = true, typename Slice = views::slice_fn)( //
+        CPP_template(bool True = true, typename Slice = views::slice_fn)(  //
             requires True && input_range<D<True>> && sized_range<D<True>>) //
             constexpr auto
             operator[](detail::slice_bounds<range_difference_t<D<True>>,

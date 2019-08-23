@@ -101,3 +101,55 @@ cxx_binary(
     '-std=c++14',
   ],
 )
+
+cxx_binary(
+  name = 'filter_transform',
+  srcs = [
+    'filter_transform.cpp',
+  ],
+  deps = [
+    '//:range-v3',
+  ],
+  compiler_flags = [
+    '-std=c++14',
+  ],
+)
+
+cxx_binary(
+  name = 'accumulate_ints',
+  srcs = [
+    'accumulate_ints.cpp',
+  ],
+  deps = [
+    '//:range-v3',
+  ],
+  compiler_flags = [
+    '-std=c++14',
+  ],
+)
+
+cxx_binary(
+  name = 'comprehension_conversion',
+  srcs = [
+    'comprehension_conversion.cpp',
+  ],
+  deps = [
+    '//:range-v3',
+  ],
+  compiler_flags = [
+    '-std=c++14',
+  ],
+)
+
+cxx_binary(
+  name = 'sort_unique',
+  srcs = [
+    'sort_unique.cpp',
+  ],
+  deps = [
+    '//:range-v3',
+  ],
+  compiler_flags = [
+    '-std=c++14',
+  ],
+)

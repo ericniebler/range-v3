@@ -1,4 +1,3 @@
-
 // Range v3 library
 //
 //  Copyright Jeff Garland 2017

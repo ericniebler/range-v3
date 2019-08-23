@@ -400,67 +400,78 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     (__VA_ARGS__) CPP_PP_EXPAND                                                 \
     /**/
 #else
-#define CPP_template(...)                                                       \
-    template<__VA_ARGS__ CPP_TEMPLATE_AUX_                                      \
+#define CPP_template                                                            \
+    CPP_template_sfinae                                                         \
     /**/
-#define CPP_TEMPLATE_AUX_(...) ,                                                \
+#define CPP_template_def CPP_template_def_sfinae                                \
+    /**/
+#define CPP_member CPP_member_sfinae
+#define CPP_ctor CPP_ctor_sfinae
+#endif
+
+#define CPP_template_sfinae(...)                                                \
+    template<__VA_ARGS__ CPP_TEMPLATE_SFINAE_AUX_                               \
+    /**/
+#define CPP_TEMPLATE_SFINAE_AUX_(...) ,                                         \
     bool CPP_false_ = false,                                                    \
     ::concepts::detail::enable_if_t<int,                                        \
-        static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) ||      \
+        static_cast<bool>(\
+            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__)) ||             \
         CPP_false_> = 0>                                                        \
     /**/
-#define CPP_template_def(...)                                                   \
-    template<__VA_ARGS__ CPP_TEMPLATE_DEF_AUX_                                  \
+#define CPP_template_def_sfinae(...)                                            \
+    template<__VA_ARGS__ CPP_TEMPLATE_DEF_SFINAE_AUX_                           \
     /**/
-#define CPP_TEMPLATE_DEF_AUX_(...) ,                                            \
+#define CPP_TEMPLATE_DEF_SFINAE_AUX_(...) ,                                     \
     bool CPP_false_,                                                            \
     ::concepts::detail::enable_if_t<int,                                        \
-        static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) ||      \
+        static_cast<bool>(                                                      \
+            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__)) ||             \
         CPP_false_>>                                                            \
     /**/
-#define CPP_TEMPLATE_AUX_3_requires
-#define CPP_member                                                              \
+#define CPP_TEMPLATE_SFINAE_AUX_3_requires
+#define CPP_member_sfinae                                                       \
     CPP_broken_friend_member                                                    \
     /**/
-#define CPP_ctor(TYPE) TYPE CPP_CTOR_IMPL_1_
-#define CPP_CTOR_IMPL_1_(...)                                                   \
+#define CPP_ctor_sfinae(TYPE) TYPE CPP_CTOR_SFINAE_IMPL_1_
+#define CPP_CTOR_SFINAE_IMPL_1_(...)                                            \
     (__VA_ARGS__                                                                \
         CPP_PP_COMMA_IIF(                                                       \
             CPP_PP_NOT(CPP_PP_IS_NOT_EMPTY(__VA_ARGS__)))                       \
-    CPP_CTOR_REQUIRES                                                           \
+    CPP_CTOR_SFINAE_REQUIRES                                                    \
     /**/
-#define CPP_CTOR_PROBE_NOEXCEPT_noexcept                                        \
+#define CPP_CTOR_SFINAE_PROBE_NOEXCEPT_noexcept                                 \
     CPP_PP_PROBE(~)                                                             \
     /**/
-#define CPP_CTOR_MAKE_PROBE(FIRST,...)                                          \
-    CPP_PP_CAT(CPP_CTOR_PROBE_NOEXCEPT_, FIRST)                                 \
+#define CPP_CTOR_SFINAE_MAKE_PROBE(FIRST,...)                                   \
+    CPP_PP_CAT(CPP_CTOR_SFINAE_PROBE_NOEXCEPT_, FIRST)                          \
     /**/
-#define CPP_CTOR_REQUIRES(...)                                                  \
-    CPP_PP_CAT(CPP_CTOR_REQUIRES_,                                              \
-    CPP_PP_CHECK(CPP_CTOR_MAKE_PROBE(__VA_ARGS__,)))(__VA_ARGS__)               \
+#define CPP_CTOR_SFINAE_REQUIRES(...)                                           \
+    CPP_PP_CAT(CPP_CTOR_SFINAE_REQUIRES_,                                       \
+    CPP_PP_CHECK(CPP_CTOR_SFINAE_MAKE_PROBE(__VA_ARGS__,)))(__VA_ARGS__)        \
     /**/
 // No noexcept-clause:
-#define CPP_CTOR_REQUIRES_0(...)                                                \
+#define CPP_CTOR_SFINAE_REQUIRES_0(...)                                         \
     ::concepts::detail::enable_if_t<                                            \
         ::concepts::detail::Nil,                                                \
         CPP_false(::concepts::detail::xNil{}) ||                                \
-        static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__))> = {})  \
+        static_cast<bool>(                                                      \
+            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__))> = {})         \
     /**/
 // Yes noexcept-clause:
-#define CPP_CTOR_REQUIRES_1(...)                                                \
+#define CPP_CTOR_SFINAE_REQUIRES_1(...)                                         \
     ::concepts::detail::enable_if_t<                                            \
         ::concepts::detail::Nil,                                                \
         CPP_false(::concepts::detail::xNil{}) ||                                \
-        static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, CPP_PP_CAT(           \
-                CPP_CTOR_EAT_NOEXCEPT_, __VA_ARGS__)))> = {})                   \
+        static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, CPP_PP_CAT(    \
+                CPP_CTOR_SFINAE_EAT_NOEXCEPT_, __VA_ARGS__)))> = {})            \
         CPP_PP_EXPAND(                                                          \
-            CPP_PP_CAT(CPP_CTOR_SHOW_NOEXCEPT_, __VA_ARGS__)))                  \
+            CPP_PP_CAT(CPP_CTOR_SFINAE_SHOW_NOEXCEPT_, __VA_ARGS__)))           \
     /**/
-#define CPP_CTOR_EAT_NOEXCEPT_noexcept(...)
-#define CPP_CTOR_SHOW_NOEXCEPT_noexcept(...)                                    \
+#define CPP_CTOR_SFINAE_EAT_NOEXCEPT_noexcept(...)
+#define CPP_CTOR_SFINAE_SHOW_NOEXCEPT_noexcept(...)                             \
     noexcept(__VA_ARGS__) CPP_PP_EAT CPP_PP_LPAREN                              \
     /**/
-#endif
 
 #ifdef CPP_DOXYGEN_INVOKED
 #define CPP_broken_friend_ret(...)                                              \
@@ -548,7 +559,8 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_0(...)                               \
     ::concepts::detail::enable_if_t<                                            \
         ::concepts::detail::Nil,                                                \
-        static_cast<bool>(CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__)) || \
+        static_cast<bool>(                                                      \
+            CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__)) ||             \
         CPP_false(::concepts::detail::xNil{})> = {}) const                      \
     /**/
 
@@ -585,7 +597,8 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_0(...)                            \
     ::concepts::detail::enable_if_t<                                            \
         ::concepts::detail::Nil,                                                \
-        static_cast<bool>(CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__)) || \
+        static_cast<bool>(                                                      \
+            CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__)) ||             \
         CPP_false(::concepts::detail::xNil{})> = {})                            \
     /**/
 
