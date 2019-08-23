@@ -99,7 +99,7 @@ namespace ranges
     {
     private:
         friend range_access;
-        semiregular_box_t<Fun> fun_;
+        RANGES_NO_UNIQUE_ADDRESS semiregular_box_t<Fun> fun_;
         template<bool Const>
         using use_sentinel_t =
             meta::bool_<!common_range<meta::const_if_c<Const, Rng>> ||
@@ -204,7 +204,7 @@ namespace ranges
     {
     private:
         friend range_access;
-        semiregular_box_t<Fun> fun_;
+        RANGES_NO_UNIQUE_ADDRESS semiregular_box_t<Fun> fun_;
         Rng1 rng1_;
         Rng2 rng2_;
         using difference_type_ =

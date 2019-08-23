@@ -43,7 +43,7 @@ namespace ranges
     {
     private:
         Rng rng_;
-        semiregular_box_t<Pred> pred_;
+        RANGES_NO_UNIQUE_ADDRESS semiregular_box_t<Pred> pred_;
         detail::non_propagating_cache<iterator_t<Rng>> begin_;
 
         iterator_t<Rng> get_begin_()
