@@ -169,10 +169,11 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
-            requires Const && sized_range<meta::const_if_c<Const, Rng>> ||
-            sized_sentinel_for<sentinel_t<meta::const_if_c<Const, Rng>>,
-                               iterator_t<meta::const_if_c<Const, Rng>>> ||
-            forward_range<meta::const_if_c<Const, Rng>>)
+            requires Const &&
+            (sized_range<meta::const_if_c<Const, Rng>> ||
+             sized_sentinel_for<sentinel_t<meta::const_if_c<Const, Rng>>,
+                                iterator_t<meta::const_if_c<Const, Rng>>> ||
+             forward_range<meta::const_if_c<Const, Rng>>))
         {
             return cursor<true>{*this};
         }
