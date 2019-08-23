@@ -118,12 +118,11 @@ namespace ranges
     // clang-format on
 
     template<typename... Views>
-    class cartesian_product_view
-      : public view_facade<cartesian_product_view<Views...>,
-                           detail::cartesian_product_cardinality<Views...>::value>
+    struct cartesian_product_view
+      : view_facade<cartesian_product_view<Views...>,
+                    detail::cartesian_product_cardinality<Views...>::value>
     {
-        /// \cond
-    public: // BUGBUG
+    private:
         friend range_access;
         CPP_assert(and_v<(forward_range<Views> && view_<Views>)...>);
         CPP_assert(sizeof...(Views) != 0);
@@ -134,10 +133,11 @@ namespace ranges
         std::tuple<Views...> views_;
 
         template<bool IsConst_>
-        class cursor
+        struct cursor
         {
+        private:
             using IsConst = meta::bool_<IsConst_>;
-            friend class cursor<!IsConst_>;
+            friend cursor<true>;
             template<typename T>
             using constify_if = meta::const_if_c<IsConst_, T>;
             constify_if<cartesian_product_view> * view_;
@@ -193,15 +193,15 @@ namespace ranges
                 return std::get<N - 1>(its_) == std::get<N - 1>(that.its_) &&
                        equal_(that, meta::size_t<N - 1>{});
             }
-            auto distance_(cursor const & that, meta::size_t<1>) const
+            std::intmax_t distance_(cursor const & that, meta::size_t<1>) const
             {
-                return (std::get<0>(that.its_) - std::get<0>(its_)) + std::intmax_t(0);
+                return std::get<0>(that.its_) - std::get<0>(its_);
             }
             template<std::size_t N>
-            auto distance_(cursor const & that, meta::size_t<N>) const
+            std::intmax_t distance_(cursor const & that, meta::size_t<N>) const
             {
-                auto d = distance_(that, meta::size_t<N - 1>{});
-                d *= ranges::distance(std::get<N - 2>(view_->views_));
+                std::intmax_t d = distance_(that, meta::size_t<N - 1>{});
+                d *= ranges::distance(std::get<N - 1>(view_->views_));
                 d += std::get<N - 1>(that.its_) - std::get<N - 1>(its_);
                 return d;
             }
@@ -292,7 +292,6 @@ namespace ranges
                            sized_range<View0>);
                 std::get<0>(its_) += ranges::distance(std::get<0>(view.views_));
             }
-        /// \endcond
 
         public:
             using value_type = std::tuple<range_value_t<Views>...>;
