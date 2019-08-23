@@ -140,6 +140,8 @@ namespace ranges
             friend cursor<true>;
             template<typename T>
             using constify_if = meta::const_if_c<IsConst_, T>;
+            using difference_type = common_type_t<std::intmax_t, range_difference_t<Views>...>;
+
             constify_if<cartesian_product_view> * view_;
             std::tuple<iterator_t<constify_if<Views>>...> its_;
 
@@ -193,37 +195,36 @@ namespace ranges
                 return std::get<N - 1>(its_) == std::get<N - 1>(that.its_) &&
                        equal_(that, meta::size_t<N - 1>{});
             }
-            std::intmax_t distance_(cursor const & that, meta::size_t<1>) const
+            difference_type distance_(cursor const & that, meta::size_t<1>) const
             {
-                return std::get<0>(that.its_) - std::get<0>(its_);
+                return difference_type{std::get<0>(that.its_) - std::get<0>(its_)};
             }
             template<std::size_t N>
-            std::intmax_t distance_(cursor const & that, meta::size_t<N>) const
+            difference_type distance_(cursor const & that, meta::size_t<N>) const
             {
-                std::intmax_t d = distance_(that, meta::size_t<N - 1>{});
-                d *= ranges::distance(std::get<N - 1>(view_->views_));
-                d += std::get<N - 1>(that.its_) - std::get<N - 1>(its_);
-                return d;
+                difference_type const d = distance_(that, meta::size_t<N - 1>{});
+                auto const scale = ranges::distance(std::get<N - 1>(view_->views_));
+                auto const increment = std::get<N - 1>(that.its_) - std::get<N - 1>(its_);
+                return difference_type{d * scale + increment};
             }
-            template<typename Diff>
-            void advance_(meta::size_t<0>, Diff)
+            void advance_(meta::size_t<0>, difference_type)
             {
                 RANGES_EXPECT(false);
             }
             RANGES_DIAGNOSTIC_PUSH
             RANGES_DIAGNOSTIC_IGNORE_DIVIDE_BY_ZERO
-            template<std::size_t N, typename Diff>
-            void advance_(meta::size_t<N>, Diff n)
+            template<std::size_t N>
+            void advance_(meta::size_t<N>, difference_type n)
             {
                 if(n == 0)
                     return;
 
                 auto & i = std::get<N - 1>(its_);
                 auto const my_size =
-                    static_cast<Diff>(ranges::size(std::get<N - 1>(view_->views_)));
+                    static_cast<difference_type>(ranges::size(std::get<N - 1>(view_->views_)));
                 auto const first = ranges::begin(std::get<N - 1>(view_->views_));
 
-                Diff const idx = static_cast<Diff>(i - first);
+                auto const idx = static_cast<difference_type>(i - first);
                 RANGES_EXPECT(0 <= idx);
                 RANGES_EXPECT(idx < my_size || (N == 1 && idx == my_size && n < 0));
                 RANGES_EXPECT(n < INTMAX_MAX - idx);
@@ -342,10 +343,9 @@ namespace ranges
             {
                 return distance_(that, meta::size_t<sizeof...(Views)>{});
             }
-            template<typename Diff>
-            auto advance(Diff n) -> CPP_ret(void)( //
-                requires cartesian_produce_view_can_random<IsConst, Views...> &&
-                    detail::integer_like_<Diff>)
+            CPP_member
+            auto advance(difference_type n) -> CPP_ret(void)( //
+                requires cartesian_produce_view_can_random<IsConst, Views...>)
             {
                 advance_(meta::size_t<sizeof...(Views)>{}, n);
             }
