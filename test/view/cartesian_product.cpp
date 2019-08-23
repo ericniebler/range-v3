@@ -23,6 +23,7 @@
 #include <range/v3/view/chunk.hpp>
 #include <range/v3/view/empty.hpp>
 #include <range/v3/view/filter.hpp>
+#include <range/v3/view/indices.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/take_exactly.hpp>
@@ -253,6 +254,18 @@ void test_bug_1269()
     }
 }
 
+void test_bug_1279()
+{
+    // https://github.com/ericniebler/range-v3/issues/1279
+    auto const xs = ranges::views::indices(std::size_t{0}, std::size_t{10});
+    auto const ys = ranges::views::indices(std::size_t{0}, std::size_t{10});
+
+    for(auto r : ranges::views::cartesian_product(ys, xs))
+    {
+        (void) r;
+    }
+}
+
 int main()
 {
     int some_ints[] = {0,1,2,3};
@@ -307,6 +320,7 @@ int main()
     test_bug_919();
     test_bug_978();
     test_bug_1269();
+    test_bug_1279();
 
     return test_result();
 }
