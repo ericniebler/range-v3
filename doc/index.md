@@ -22,7 +22,7 @@ Those components will change rarely or (preferably) never at all.
 --------------------------------------------
 This library is header-only. You can get the source code from the
 [range-v3 repository](https://github.com/ericniebler/range-v3) on github. To
-compile with Range-v3, just `#%include` the individual headers you want.
+compile with Range-v3, just `#include` the individual headers you want.
 
 This distribution actually contains three separate header-only libraries:
 
@@ -240,7 +240,7 @@ provides, and a blurb about how each is intended to be used.
 
 <DL>
 <DT>\link ranges::views::addressof_fn `views::addressof`\endlink</DT>
-  <DD>Given a source range of lvalue references, return a new view that is the result of taking std::addressof of each.</DD>
+  <DD>Given a source range of lvalue references, return a new view that is the result of taking `std::addressof` of each.</DD>
 <DT>\link ranges::views::adjacent_filter_fn `views::adjacent_filter`\endlink</DT>
   <DD>For each pair of adjacent elements in a source range, evaluate the specified binary predicate. If the predicate evaluates to false, the second element of the pair is removed from the result range; otherwise, it is included. The first element in the source range is always included. (For instance, `adjacent_filter` with `std::not_equal_to` filters out all the non-unique elements.)</DD>
 <DT>\link ranges::views::adjacent_remove_if_fn `views::adjacent_remove_if`\endlink</DT>
@@ -600,7 +600,7 @@ Each `view_adaptor` contains `base()` member in view and iterator.
     assert( vec.begin() == list.base().begin() );
 ~~~~~~~
 
-Like `basic_iterator`'s `cursor` - `view_adaptor`'s `adaptor` can contain mixin class too,
+Like `basic_iterator`'s `cursor`, `view_adaptor`'s `adaptor` can contain mixin class too,
 to inject things into the public interface of the iterator:
 
 ~~~~~~~{.cpp}
@@ -632,7 +632,7 @@ From within mixin you can call:
 * `get()` - to access adaptor internals
 * `base()` - to access adaptable iterator
 
-Iterator/sentinel adaptor may "override" following members:
+Iterator/sentinel adaptor may "override" the following members:
 
 ~~~~~~~{.cpp}
     class adaptor : public ranges::adaptor_base
@@ -777,7 +777,7 @@ Sometimes, you can use the same adaptor for both `begin_adaptor` and `end_adapto
     adaptor end_adaptor()   const { return {100}; }
 ~~~~~~~
 
-Note, that all the data, that you store in the adaptor, will become part of the iterator.
+Note that all the data you store in the adaptor will become part of the iterator.
 
 If you will not "override" `begin_adaptor()` or/and `end_adaptor()` in your view_adaptor, default ones will be used.
 
@@ -891,7 +891,7 @@ in our case. It should be `pair<Key, Value>`, so we explicitly specify
 
 `ranges::common_pair` has conversions:
 
-> `ranges::common_pair<Key&, Value&>` <=> `ranges::common_pair<Key, Value>`.
+> `ranges::common_pair<Key&, Value&>` &harr; `ranges::common_pair<Key, Value>`.
 
 All `ranges::common_pair`s converts to their `std::pair` equivalents, also.
 
