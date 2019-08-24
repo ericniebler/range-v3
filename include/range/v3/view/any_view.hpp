@@ -250,8 +250,8 @@ namespace ranges
             CPP_assert(any_compatible_range<Rng, Ref>);
             CPP_assert(!Sized || (bool)sized_range<Rng>);
 
-            explicit any_input_view_impl(Rng rng_)
-              : rng_{std::move(rng_)}
+            explicit any_input_view_impl(Rng rng)
+              : rng_{std::move(rng)}
             {}
             any_input_view_impl(any_input_view_impl const &) = delete;
             any_input_view_impl & operator=(any_input_view_impl const &) = delete;
@@ -379,7 +379,7 @@ namespace ranges
         {
             virtual bool at_end(
                 any_ref) = 0; // any_ref is a const ref to a wrapped iterator
-                              // to be compared to the erased view's end sentinel
+                              // to be compared to the erased view's last sentinel
         protected:
             ~fully_erased_view() = default;
         };

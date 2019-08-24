@@ -37,7 +37,7 @@ namespace ranges
     {
         template<typename I, typename SI, typename O, typename SO, typename C = less,
                  typename PI = identity, typename PO = identity>
-        auto operator()(I begin, SI end, O out_begin, SO out_end, C pred = C{},
+        auto operator()(I first, SI last, O out_begin, SO out_end, C pred = C{},
                         PI in_proj = PI{}, PO out_proj = PO{}) const -> CPP_ret(O)( //
             requires input_iterator<I> && sentinel_for<SI, I> &&
                 random_access_iterator<O> && sentinel_for<SO, O> &&
@@ -47,13 +47,13 @@ namespace ranges
             O r = out_begin;
             if(r != out_end)
             {
-                for(; begin != end && r != out_end; ++begin, ++r)
-                    *r = *begin;
+                for(; first != last && r != out_end; ++first, ++r)
+                    *r = *first;
                 make_heap(out_begin, r, std::ref(pred), std::ref(out_proj));
                 auto len = r - out_begin;
-                for(; begin != end; ++begin)
+                for(; first != last; ++first)
                 {
-                    auto && x = *begin;
+                    auto && x = *first;
                     if(invoke(pred, invoke(in_proj, x), invoke(out_proj, *out_begin)))
                     {
                         *out_begin = (decltype(x) &&)x;

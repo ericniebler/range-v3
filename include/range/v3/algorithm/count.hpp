@@ -33,14 +33,14 @@ namespace ranges
     struct count_fn
     {
         template<typename I, typename S, typename V, typename P = identity>
-        auto operator()(I begin, S end, V const & val, P proj = P{}) const
+        auto operator()(I first, S last, V const & val, P proj = P{}) const
             -> CPP_ret(iter_difference_t<I>)( //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                     indirect_relation<equal_to, projected<I, P>, V const *>)
         {
             iter_difference_t<I> n = 0;
-            for(; begin != end; ++begin)
-                if(invoke(proj, *begin) == val)
+            for(; first != last; ++first)
+                if(invoke(proj, *first) == val)
                     ++n;
             return n;
         }

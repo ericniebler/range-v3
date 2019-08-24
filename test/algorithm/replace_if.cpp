@@ -35,7 +35,7 @@ void test_iter()
 {
     int ia[] = {0, 1, 2, 3, 4};
     const unsigned sa = sizeof(ia)/sizeof(ia[0]);
-    Iter i = ranges::replace_if(Iter(ia), Sent(ia+sa), [](int i){return i==2;}, 5);
+    Iter i = ranges::replace_if(Iter(ia), Sent(ia+sa), [](int j){return j==2;}, 5);
     CHECK(ia[0] == 0);
     CHECK(ia[1] == 1);
     CHECK(ia[2] == 5);
@@ -50,7 +50,7 @@ void test_rng()
     int ia[] = {0, 1, 2, 3, 4};
     const unsigned sa = sizeof(ia)/sizeof(ia[0]);
     auto rng = ranges::make_subrange(Iter(ia), Sent(ia+sa));
-    Iter i = ranges::replace_if(rng, [](int i){return i==2;}, 5);
+    Iter i = ranges::replace_if(rng, [](int j){return j==2;}, 5);
     CHECK(ia[0] == 0);
     CHECK(ia[1] == 1);
     CHECK(ia[2] == 5);
@@ -83,7 +83,7 @@ int main()
     {
         using P = std::pair<int,std::string>;
         P ia[] = {{0,"0"}, {1,"1"}, {2,"2"}, {3,"3"}, {4,"4"}};
-        P *i = ranges::replace_if(ia, [](int i){return i==2;}, std::make_pair(42,"42"),
+        P *i = ranges::replace_if(ia, [](int j){return j==2;}, std::make_pair(42,"42"),
             &std::pair<int,std::string>::first);
         CHECK(ia[0] == P{0,"0"});
         CHECK(ia[1] == P{1,"1"});
@@ -97,7 +97,7 @@ int main()
     {
         using P = std::pair<int,std::string>;
         P ia[] = {{0,"0"}, {1,"1"}, {2,"2"}, {3,"3"}, {4,"4"}};
-        auto i = ranges::replace_if(std::move(ia), [](int i){return i==2;}, std::make_pair(42,"42"),
+        auto i = ranges::replace_if(std::move(ia), [](int j){return j==2;}, std::make_pair(42,"42"),
             &std::pair<int,std::string>::first);
 #ifndef RANGES_WORKAROUND_MSVC_573728
         CHECK(::is_dangling(i));
@@ -112,7 +112,7 @@ int main()
     {
         using P = std::pair<int,std::string>;
         std::vector<P> ia{{0,"0"}, {1,"1"}, {2,"2"}, {3,"3"}, {4,"4"}};
-        auto i = ranges::replace_if(std::move(ia), [](int i){return i==2;}, std::make_pair(42,"42"),
+        auto i = ranges::replace_if(std::move(ia), [](int j){return j==2;}, std::make_pair(42,"42"),
             &std::pair<int,std::string>::first);
         CHECK(::is_dangling(i));
         CHECK(ia[0] == P{0,"0"});

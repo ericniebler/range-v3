@@ -25,32 +25,36 @@ int main()
 
     int rgi[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-    auto rng = rgi | views::partial_sum;
-    has_type<int &>(*begin(rgi));
-    has_type<int>(*begin(rng));
-    CPP_assert(view_<decltype(rng)>);
-    CPP_assert(sized_range<decltype(rng)>);
-    CPP_assert(forward_range<decltype(rng)>);
-    CPP_assert(!bidirectional_range<decltype(rng)>);
-    ::check_equal(rng, {1, 3, 6, 10, 15, 21, 28, 36, 45, 55});
+    {
+        auto rng = rgi | views::partial_sum;
+        has_type<int &>(*begin(rgi));
+        has_type<int>(*begin(rng));
+        CPP_assert(view_<decltype(rng)>);
+        CPP_assert(sized_range<decltype(rng)>);
+        CPP_assert(forward_range<decltype(rng)>);
+        CPP_assert(!bidirectional_range<decltype(rng)>);
+        ::check_equal(rng, {1, 3, 6, 10, 15, 21, 28, 36, 45, 55});
 
-    auto it = begin(rng);
-    CHECK(*it == 1);
-    auto it2 = next(it);
-    CHECK(*it == 1);
-    CHECK(*it2 == 3);
-    it2 = it;
-    CHECK(*it2 == 1);
-    ++it2;
-    CHECK(*it2 == 3);
+        auto it = begin(rng);
+        CHECK(*it == 1);
+        auto it2 = next(it);
+        CHECK(*it == 1);
+        CHECK(*it2 == 3);
+        it2 = it;
+        CHECK(*it2 == 1);
+        ++it2;
+        CHECK(*it2 == 3);
+    }
 
-    // Test partial_sum with a mutable lambda
-    int cnt = 0;
-    auto mutable_rng = views::partial_sum(rgi, [cnt](int i, int j) mutable { return i + j + cnt++;});
-    ::check_equal(mutable_rng, {1, 3, 7, 13, 21, 31, 43, 57, 73, 91});
-    CHECK(cnt == 0);
-    CPP_assert(view_<decltype(mutable_rng)>);
-    CPP_assert(!view_<decltype(mutable_rng) const>);
+    {
+        // Test partial_sum with a mutable lambda
+        int cnt = 0;
+        auto mutable_rng = views::partial_sum(rgi, [cnt](int i, int j) mutable { return i + j + cnt++;});
+        ::check_equal(mutable_rng, {1, 3, 7, 13, 21, 31, 43, 57, 73, 91});
+        CHECK(cnt == 0);
+        CPP_assert(view_<decltype(mutable_rng)>);
+        CPP_assert(!view_<decltype(mutable_rng) const>);
+    }
 
     {
         auto rng = debug_input_view<int const>{rgi} | views::partial_sum;

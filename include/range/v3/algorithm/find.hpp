@@ -43,15 +43,15 @@ namespace ranges
         /// \pre `P` is a model of the `invocable<iter_common_reference_t<I>>` concept
         /// \pre The ResultType of `P` is equality_comparable with V
         template<typename I, typename S, typename V, typename P = identity>
-        auto operator()(I begin, S end, V const & val, P proj = P{}) const
+        auto operator()(I first, S last, V const & val, P proj = P{}) const
             -> CPP_ret(I)( //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                     indirect_relation<equal_to, projected<I, P>, V const *>)
         {
-            for(; begin != end; ++begin)
-                if(invoke(proj, *begin) == val)
+            for(; first != last; ++first)
+                if(invoke(proj, *first) == val)
                     break;
-            return begin;
+            return first;
         }
 
         /// \overload

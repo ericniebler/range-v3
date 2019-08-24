@@ -57,8 +57,8 @@ int main()
     CHECK(is_sorted(v));
     CHECK(&v3 == &v);
 
-    auto ref = views::ref(v);
-    ref |= actions::sort;
+    auto r = views::ref(v);
+    r |= actions::sort;
 
     // Can pipe a view to a "container" algorithm.
     actions::sort(v, std::greater<int>());

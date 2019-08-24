@@ -34,15 +34,15 @@ namespace ranges
     struct replace_fn
     {
         template<typename I, typename S, typename T1, typename T2, typename P = identity>
-        auto operator()(I begin, S end, T1 const & old_value, T2 const & new_value,
+        auto operator()(I first, S last, T1 const & old_value, T2 const & new_value,
                         P proj = {}) const -> CPP_ret(I)( //
             requires input_iterator<I> && sentinel_for<S, I> && writable<I, T2 const &> &&
                 indirect_relation<equal_to, projected<I, P>, T1 const *>)
         {
-            for(; begin != end; ++begin)
-                if(invoke(proj, *begin) == old_value)
-                    *begin = new_value;
-            return begin;
+            for(; first != last; ++first)
+                if(invoke(proj, *first) == old_value)
+                    *first = new_value;
+            return first;
         }
 
         template<typename Rng, typename T1, typename T2, typename P = identity>

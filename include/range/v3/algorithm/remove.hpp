@@ -36,24 +36,24 @@ namespace ranges
     struct remove_fn
     {
         template<typename I, typename S, typename T, typename P = identity>
-        auto operator()(I begin, S end, T const & val, P proj = P{}) const
+        auto operator()(I first, S last, T const & val, P proj = P{}) const
             -> CPP_ret(I)( //
                 requires permutable<I> && sentinel_for<S, I> &&
                     indirect_relation<equal_to, projected<I, P>, T const *>)
         {
-            begin = find(std::move(begin), end, val, std::ref(proj));
-            if(begin != end)
+            first = find(std::move(first), last, val, std::ref(proj));
+            if(first != last)
             {
-                for(I i = next(begin); i != end; ++i)
+                for(I i = next(first); i != last; ++i)
                 {
                     if(!(invoke(proj, *i) == val))
                     {
-                        *begin = iter_move(i);
-                        ++begin;
+                        *first = iter_move(i);
+                        ++first;
                     }
                 }
             }
-            return begin;
+            return first;
         }
 
         template<typename Rng, typename T, typename P = identity>

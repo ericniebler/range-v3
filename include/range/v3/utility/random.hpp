@@ -213,7 +213,7 @@ namespace ranges
                 std::array<IntRep, count> mixer_;
 
                 template<typename I, typename S>
-                auto mix_entropy(I begin, S end) -> CPP_ret(void)( //
+                auto mix_entropy(I first, S last) -> CPP_ret(void)( //
                     requires input_iterator<I> && sentinel_for<S, I> &&
                         convertible_to<iter_reference_t<I>, IntRep>)
                 {
@@ -233,10 +233,10 @@ namespace ranges
 
                     for(auto & elem : mixer_)
                     {
-                        if(begin != end)
+                        if(first != last)
                         {
-                            elem = hash(static_cast<IntRep>(*begin));
-                            ++begin;
+                            elem = hash(static_cast<IntRep>(*first));
+                            ++first;
                         }
                         else
                             elem = hash(IntRep{0});
@@ -245,9 +245,9 @@ namespace ranges
                         for(auto & dest : mixer_)
                             if(&src != &dest)
                                 dest = mix(dest, hash(src));
-                    for(; begin != end; ++begin)
+                    for(; first != last; ++first)
                         for(auto & dest : mixer_)
-                            dest = mix(dest, hash(static_cast<IntRep>(*begin)));
+                            dest = mix(dest, hash(static_cast<IntRep>(*first)));
                 }
 
             public:
@@ -262,11 +262,11 @@ namespace ranges
                 }
 
                 template<typename I, typename S>
-                CPP_ctor(seed_seq_fe)(I begin, S end)( //
+                CPP_ctor(seed_seq_fe)(I first, S last)( //
                     requires input_iterator<I> && sentinel_for<S, I> &&
                         convertible_to<iter_reference_t<I>, IntRep>)
                 {
-                    seed(begin, end);
+                    seed(first, last);
                 }
 
                 // generating functions
@@ -317,10 +317,10 @@ namespace ranges
 
                         for(auto src = mixer_copy.rbegin(); src != mixer_copy.rend();
                             ++src)
-                            for(auto dest = mixer_copy.rbegin();
-                                dest != mixer_copy.rend();
-                                ++dest)
-                                if(src != dest)
+                            for(auto rdest = mixer_copy.rbegin();
+                                rdest != mixer_copy.rend();
+                                ++rdest)
+                                if(src != rdest)
                                 {
                                     IntRep revhashed = *src;
                                     auto mult_const = hash_const;
@@ -328,11 +328,11 @@ namespace ranges
                                     revhashed ^= hash_const;
                                     revhashed *= mult_const;
                                     revhashed ^= revhashed >> XSHIFT;
-                                    IntRep unmixed = *dest;
+                                    IntRep unmixed = *rdest;
                                     unmixed ^= unmixed >> XSHIFT;
                                     unmixed += MIX_MULT_R * revhashed;
                                     unmixed *= MIX_INV_L;
-                                    *dest = unmixed;
+                                    *rdest = unmixed;
                                 }
 
                         for(auto i = mixer_copy.rbegin(); i != mixer_copy.rend(); ++i)
@@ -349,11 +349,11 @@ namespace ranges
                 }
 
                 template<typename I, typename S>
-                auto seed(I begin, S end) -> CPP_ret(void)( //
+                auto seed(I first, S last) -> CPP_ret(void)( //
                     requires input_iterator<I> && sentinel_for<S, I> &&
                         convertible_to<iter_reference_t<I>, IntRep>)
                 {
-                    mix_entropy(begin, end);
+                    mix_entropy(first, last);
                     // For very small sizes, we do some additional mixing.  For normal
                     // sizes, this loop never performs any iterations.
                     for(std::size_t i = 1; i < mix_rounds; ++i)

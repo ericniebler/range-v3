@@ -69,9 +69,9 @@ namespace ranges
             {
                 iterator_t<CRng> first_;
                 semiregular_box_ref_or_val_t<Fun, IsConst> fun_;
-                bool operator()(range_reference_t<CRng> ref) const
+                bool operator()(range_reference_t<CRng> r) const
                 {
-                    return invoke(fun_, *first_, ref);
+                    return invoke(fun_, *first_, r);
                 }
             };
 #ifdef RANGES_WORKAROUND_MSVC_787074

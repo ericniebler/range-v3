@@ -37,16 +37,16 @@ namespace ranges
     {
         template<typename I, typename S, typename V, typename C = less,
                  typename P = identity>
-        auto operator()(I begin, S end, V const & val, C pred = C{}, P proj = P{}) const
+        auto operator()(I first, S last, V const & val, C pred = C{}, P proj = P{}) const
             -> CPP_ret(subrange<I>)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
                     indirect_strict_weak_order<C, V const *, projected<I, P>>)
         {
             if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S, I>))
             {
-                auto const len = distance(begin, end);
+                auto const len = distance(first, last);
                 return aux::equal_range_n(
-                    std::move(begin), len, val, std::move(pred), std::move(proj));
+                    std::move(first), len, val, std::move(pred), std::move(proj));
             }
 
             // Probe exponentially for either end-of-range, an iterator that
@@ -56,14 +56,14 @@ namespace ranges
             auto dist = iter_difference_t<I>{1};
             while(true)
             {
-                auto mid = begin;
-                auto d = advance(mid, dist, end);
-                if(d || mid == end)
+                auto mid = first;
+                auto d = advance(mid, dist, last);
+                if(d || mid == last)
                 {
                     // at the end of the input range
                     dist -= d;
                     return aux::equal_range_n(
-                        std::move(begin), dist, val, std::ref(pred), std::ref(proj));
+                        std::move(first), dist, val, std::ref(pred), std::ref(proj));
                 }
                 // if val < *mid, mid is after the target range.
                 auto && v = *mid;
@@ -71,7 +71,7 @@ namespace ranges
                 if(invoke(pred, val, pv))
                 {
                     return aux::equal_range_n(
-                        std::move(begin), dist, val, std::ref(pred), std::ref(proj));
+                        std::move(first), dist, val, std::ref(pred), std::ref(proj));
                 }
                 else if(!invoke(pred, pv, val))
                 {
@@ -79,16 +79,16 @@ namespace ranges
                     // mid.
                     return {
                         aux::lower_bound_n(
-                            std::move(begin), dist, val, std::ref(pred), std::ref(proj)),
+                            std::move(first), dist, val, std::ref(pred), std::ref(proj)),
                         upper_bound(std::move(mid),
-                                    std::move(end),
+                                    std::move(last),
                                     val,
                                     std::ref(pred),
                                     std::ref(proj))};
                 }
                 // *mid < val, mid is before the target range.
-                begin = std::move(mid);
-                ++begin;
+                first = std::move(mid);
+                ++first;
                 dist *= 2;
             }
         }

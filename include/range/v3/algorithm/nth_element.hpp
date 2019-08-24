@@ -84,15 +84,15 @@ namespace ranges
         } // x <= y && y <= z
 
         template<typename I, typename C, typename P>
-        auto selection_sort(I begin, I end, C & pred, P & proj) -> CPP_ret(void)( //
+        auto selection_sort(I first, I last, C & pred, P & proj) -> CPP_ret(void)( //
             requires bidirectional_iterator<I> && indirect_relation<C, projected<I, P>>)
         {
-            RANGES_EXPECT(begin != end);
-            for(I lm1 = ranges::prev(end); begin != lm1; ++begin)
+            RANGES_EXPECT(first != last);
+            for(I lm1 = ranges::prev(last); first != lm1; ++first)
             {
-                I i = ranges::min_element(begin, end, std::ref(pred), std::ref(proj));
-                if(i != begin)
-                    ranges::iter_swap(begin, i);
+                I i = ranges::min_element(first, last, std::ref(pred), std::ref(proj));
+                if(i != first)
+                    ranges::iter_swap(first, i);
             }
         }
     } // namespace detail
@@ -103,79 +103,79 @@ namespace ranges
     struct nth_element_fn
     {
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, I nth, S end_, C pred = C{}, P proj = P{}) const
+        auto operator()(I first, I nth, S end_, C pred = C{}, P proj = P{}) const
             -> CPP_ret(I)( //
                 requires random_access_iterator<I> && sortable<I, C, P>)
         {
-            I end = ranges::next(nth, end_), end_orig = end;
+            I last = ranges::next(nth, end_), end_orig = last;
             // C is known to be a reference type
             using difference_type = iter_difference_t<I>;
             difference_type const limit = 7;
             while(true)
             {
             restart:
-                if(nth == end)
+                if(nth == last)
                     return end_orig;
-                difference_type len = end - begin;
+                difference_type len = last - first;
                 switch(len)
                 {
                 case 0:
                 case 1:
                     return end_orig;
                 case 2:
-                    if(invoke(pred, invoke(proj, *--end), invoke(proj, *begin)))
-                        ranges::iter_swap(begin, end);
+                    if(invoke(pred, invoke(proj, *--last), invoke(proj, *first)))
+                        ranges::iter_swap(first, last);
                     return end_orig;
                 case 3:
                 {
-                    I m = begin;
-                    detail::sort3(begin, ++m, --end, pred, proj);
+                    I m = first;
+                    detail::sort3(first, ++m, --last, pred, proj);
                     return end_orig;
                 }
                 }
                 if(len <= limit)
                 {
-                    detail::selection_sort(begin, end, pred, proj);
+                    detail::selection_sort(first, last, pred, proj);
                     return end_orig;
                 }
                 // len > limit >= 3
-                I m = begin + len / 2;
-                I lm1 = end;
-                unsigned n_swaps = detail::sort3(begin, m, --lm1, pred, proj);
+                I m = first + len / 2;
+                I lm1 = last;
+                unsigned n_swaps = detail::sort3(first, m, --lm1, pred, proj);
                 // *m is median
-                // partition [begin, m) < *m and *m <= [m, end)
+                // partition [first, m) < *m and *m <= [m, last)
                 //(this inhibits tossing elements equivalent to m around unnecessarily)
-                I i = begin;
+                I i = first;
                 I j = lm1;
                 // j points beyond range to be tested, *lm1 is known to be <= *m
                 // The search going up is known to be guarded but the search coming down
                 // isn't. Prime the downward search with a guard.
-                if(!invoke(pred, invoke(proj, *i), invoke(proj, *m))) // if *begin == *m
+                if(!invoke(pred, invoke(proj, *i), invoke(proj, *m))) // if *first == *m
                 {
-                    // *begin == *m, *begin doesn't go in begin part
+                    // *first == *m, *first doesn't go in first part
                     // manually guard downward moving j against i
                     while(true)
                     {
                         if(i == --j)
                         {
-                            // *begin == *m, *m <= all other elements
-                            // Parition instead into [begin, i) == *begin and *begin < [i,
-                            // end)
-                            ++i; // begin + 1
-                            j = end;
+                            // *first == *m, *m <= all other elements
+                            // Parition instead into [first, i) == *first and *first < [i,
+                            // last)
+                            ++i; // first + 1
+                            j = last;
                             if(!invoke(
                                    pred,
-                                   invoke(proj, *begin),
+                                   invoke(proj, *first),
                                    invoke(proj,
-                                          *--j))) // we need a guard if *begin == *(end-1)
+                                          *--j))) // we need a guard if *first == *(last-1)
                             {
                                 while(true)
                                 {
                                     if(i == j)
-                                        return end_orig; // [begin, end) all equivalent
+                                        return end_orig; // [first, last) all equivalent
                                                          // elements
                                     if(invoke(
-                                           pred, invoke(proj, *begin), invoke(proj, *i)))
+                                           pred, invoke(proj, *first), invoke(proj, *i)))
                                     {
                                         ranges::iter_swap(i, j);
                                         ++n_swaps;
@@ -185,16 +185,16 @@ namespace ranges
                                     ++i;
                                 }
                             }
-                            // [begin, i) == *begin and *begin < [j, end) and j == end - 1
+                            // [first, i) == *first and *first < [j, last) and j == last - 1
                             if(i == j)
                                 return end_orig;
                             while(true)
                             {
                                 while(
-                                    !invoke(pred, invoke(proj, *begin), invoke(proj, *i)))
+                                    !invoke(pred, invoke(proj, *first), invoke(proj, *i)))
                                     ++i;
                                 while(invoke(
-                                    pred, invoke(proj, *begin), invoke(proj, *--j)))
+                                    pred, invoke(proj, *first), invoke(proj, *--j)))
                                     ;
                                 if(i >= j)
                                     break;
@@ -202,13 +202,13 @@ namespace ranges
                                 ++n_swaps;
                                 ++i;
                             }
-                            // [begin, i) == *begin and *begin < [i, end)
-                            // The begin part is sorted,
+                            // [first, i) == *first and *first < [i, last)
+                            // The first part is sorted,
                             if(nth < i)
                                 return end_orig;
                             // nth_element the second part
-                            // nth_element<C>(i, nth, end, pred);
-                            begin = i;
+                            // nth_element<C>(i, nth, last, pred);
+                            first = i;
                             goto restart;
                         }
                         if(invoke(pred, invoke(proj, *j), invoke(proj, *m)))
@@ -245,13 +245,13 @@ namespace ranges
                         ++i;
                     }
                 }
-                // [begin, i) < *m and *m <= [i, end)
+                // [first, i) < *m and *m <= [i, last)
                 if(i != m && invoke(pred, invoke(proj, *m), invoke(proj, *i)))
                 {
                     ranges::iter_swap(i, m);
                     ++n_swaps;
                 }
-                // [begin, i) < *i and *i <= [i+1, end)
+                // [first, i) < *i and *i <= [i+1, last)
                 if(nth == i)
                     return end_orig;
                 if(n_swaps == 0)
@@ -259,8 +259,8 @@ namespace ranges
                     // We were given a perfectly partitioned sequence.  Coincidence?
                     if(nth < i)
                     {
-                        // Check for [begin, i) already sorted
-                        j = m = begin;
+                        // Check for [first, i) already sorted
+                        j = m = first;
                         while(++j != i)
                         {
                             if(invoke(pred, invoke(proj, *j), invoke(proj, *m)))
@@ -268,21 +268,21 @@ namespace ranges
                                 goto not_sorted;
                             m = j;
                         }
-                        // [begin, i) sorted
+                        // [first, i) sorted
                         return end_orig;
                     }
                     else
                     {
-                        // Check for [i, end) already sorted
+                        // Check for [i, last) already sorted
                         j = m = i;
-                        while(++j != end)
+                        while(++j != last)
                         {
                             if(invoke(pred, invoke(proj, *j), invoke(proj, *m)))
                                 // not yet sorted, so sort
                                 goto not_sorted;
                             m = j;
                         }
-                        // [i, end) sorted
+                        // [i, last) sorted
                         return end_orig;
                     }
                 }
@@ -290,13 +290,13 @@ namespace ranges
                 // nth_element on range containing nth
                 if(nth < i)
                 {
-                    // nth_element<C>(begin, nth, i, pred);
-                    end = i;
+                    // nth_element<C>(first, nth, i, pred);
+                    last = i;
                 }
                 else
                 {
-                    // nth_element<C>(i+1, nth, end, pred);
-                    begin = ++i;
+                    // nth_element<C>(i+1, nth, last, pred);
+                    first = ++i;
                 }
             }
             return end_orig;

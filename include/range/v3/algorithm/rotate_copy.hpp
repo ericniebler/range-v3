@@ -38,14 +38,14 @@ namespace ranges
     struct rotate_copy_fn
     {
         template<typename I, typename S, typename O, typename P = identity>
-        auto operator()(I begin, I middle, S end, O out) const
+        auto operator()(I first, I middle, S last, O out) const
             -> CPP_ret(rotate_copy_result<I, O>)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
                     weakly_incrementable<O> && indirectly_copyable<I, O>)
         {
-            auto res = ranges::copy(middle, std::move(end), std::move(out));
+            auto res = ranges::copy(middle, std::move(last), std::move(out));
             return {std::move(res.in),
-                    ranges::copy(std::move(begin), middle, std::move(res.out)).out};
+                    ranges::copy(std::move(first), middle, std::move(res.out)).out};
         }
 
         template<typename Rng, typename O, typename P = identity>

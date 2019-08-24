@@ -173,10 +173,10 @@ namespace ranges
                 semiregular_box_t<Pred> pred_;
 
                 template<typename I, typename S>
-                auto operator()(I cur, S end) const -> CPP_ret(std::pair<bool, I>)( //
+                auto operator()(I cur, S last) const -> CPP_ret(std::pair<bool, I>)( //
                     requires sentinel_for<S, I>)
                 {
-                    auto where = ranges::find_if_not(cur, end, std::ref(pred_));
+                    auto where = ranges::find_if_not(cur, last, std::ref(pred_));
                     return {cur != where, where};
                 }
             };

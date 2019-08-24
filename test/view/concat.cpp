@@ -39,39 +39,39 @@ int main()
     auto revjoin = joined | views::reverse;
     CHECK((revjoin.end() - revjoin.begin()) == 7);
 
-    auto begin = joined.begin();
-    CHECK(*(begin+0) == "this");
-    CHECK(*(begin+1) == "is");
-    CHECK(*(begin+2) == "his");
-    CHECK(*(begin+3) == "face");
-    CHECK(*(begin+4) == "another");
-    CHECK(*(begin+5) == "fine");
-    CHECK(*(begin+6) == "mess");
+    auto first = joined.begin();
+    CHECK(*(first+0) == "this");
+    CHECK(*(first+1) == "is");
+    CHECK(*(first+2) == "his");
+    CHECK(*(first+3) == "face");
+    CHECK(*(first+4) == "another");
+    CHECK(*(first+5) == "fine");
+    CHECK(*(first+6) == "mess");
 
-    CHECK(*(begin) == "this");
-    CHECK(*(begin+=1) == "is");
-    CHECK(*(begin+=1) == "his");
-    CHECK(*(begin+=1) == "face");
-    CHECK(*(begin+=1) == "another");
-    CHECK(*(begin+=1) == "fine");
-    CHECK(*(begin+=1) == "mess");
+    CHECK(*(first) == "this");
+    CHECK(*(first+=1) == "is");
+    CHECK(*(first+=1) == "his");
+    CHECK(*(first+=1) == "face");
+    CHECK(*(first+=1) == "another");
+    CHECK(*(first+=1) == "fine");
+    CHECK(*(first+=1) == "mess");
 
-    auto end = joined.end();
-    CHECK(*(end-1) == "mess");
-    CHECK(*(end-2) == "fine");
-    CHECK(*(end-3) == "another");
-    CHECK(*(end-4) == "face");
-    CHECK(*(end-5) == "his");
-    CHECK(*(end-6) == "is");
-    CHECK(*(end-7) == "this");
+    auto last = joined.end();
+    CHECK(*(last-1) == "mess");
+    CHECK(*(last-2) == "fine");
+    CHECK(*(last-3) == "another");
+    CHECK(*(last-4) == "face");
+    CHECK(*(last-5) == "his");
+    CHECK(*(last-6) == "is");
+    CHECK(*(last-7) == "this");
 
-    CHECK(*(end-=1) == "mess");
-    CHECK(*(end-=1) == "fine");
-    CHECK(*(end-=1) == "another");
-    CHECK(*(end-=1) == "face");
-    CHECK(*(end-=1) == "his");
-    CHECK(*(end-=1) == "is");
-    CHECK(*(end-=1) == "this");
+    CHECK(*(last-=1) == "mess");
+    CHECK(*(last-=1) == "fine");
+    CHECK(*(last-=1) == "another");
+    CHECK(*(last-=1) == "face");
+    CHECK(*(last-=1) == "his");
+    CHECK(*(last-=1) == "is");
+    CHECK(*(last-=1) == "this");
 
     {
         const std::array<int, 3> a{{0, 1, 2}};
@@ -91,13 +91,13 @@ int main()
     {
         int i = 0;
         auto rng = ranges::views::concat(ranges::views::generate([&]{ return i++; }))
-            | ranges::views::take_while([](int i){ return i < 30; });
+            | ranges::views::take_while([](int j){ return j < 30; });
         CHECK(ranges::distance(ranges::begin(rng), ranges::end(rng)) == 30);
     }
 
     {
-        int const data[] = {0,1,2,3};
-        auto dv = [&]{ return debug_input_view<int const>{data}; };
+        int const rgi[] = {0,1,2,3};
+        auto dv = [&]{ return debug_input_view<int const>{rgi}; };
         auto rng = views::concat(dv(), dv(), dv());
         ::check_equal(rng, {0,1,2,3,0,1,2,3,0,1,2,3});
     }

@@ -63,9 +63,9 @@ namespace ranges
                 sentinel_adaptor(sentinel_adaptor<Other> that)
               : pred_(std::move(that.pred_))
             {}
-            bool empty(iterator_t<CRng> const & it, sentinel_t<CRng> const & end) const
+            bool empty(iterator_t<CRng> const & it, sentinel_t<CRng> const & last) const
             {
-                return it == end || !invoke(pred_, it);
+                return it == last || !invoke(pred_, it);
             }
         };
         sentinel_adaptor<false> end_adaptor()

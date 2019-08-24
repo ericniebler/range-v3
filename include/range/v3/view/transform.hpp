@@ -229,7 +229,7 @@ namespace ranges
         public:
             sentinel() = default;
             sentinel(meta::const_if_c<Const, iter_transform2_view> & parent,
-                     decltype(end))
+                     decltype(ranges::end))
               : end1_(end(parent.rng1_))
               , end2_(end(parent.rng2_))
             {}
@@ -290,14 +290,14 @@ namespace ranges
             {
                 // By returning true if *any* of the iterators are equal, we allow
                 // transformed ranges to be of different lengths, stopping when the first
-                // one reaches the end.
+                // one reaches the last.
                 return it1_ == that.it1_ || it2_ == that.it2_;
             }
             bool equal(sentinel<Const> const & s) const
             {
                 // By returning true if *any* of the iterators are equal, we allow
                 // transformed ranges to be of different lengths, stopping when the first
-                // one reaches the end.
+                // one reaches the last.
                 return it1_ == s.end1_ || it2_ == s.end2_;
             }
             CPP_member

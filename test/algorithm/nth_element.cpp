@@ -51,7 +51,7 @@ namespace
         std::shuffle(array.get(), array.get()+N, gen);
         CHECK(ranges::nth_element(ranges::make_subrange(array.get(), array.get()+N), array.get()+M) == array.get()+N);
         CHECK((unsigned)array[M] == M);
-        ranges::nth_element(array.get(), array.get()+N, array.get()+N); // begin, end, end
+        ranges::nth_element(array.get(), array.get()+N, array.get()+N); // first, last, end
     }
 
     void

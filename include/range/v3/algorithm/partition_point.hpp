@@ -46,31 +46,31 @@ namespace ranges
     struct partition_point_fn
     {
         template<typename I, typename S, typename C, typename P = identity>
-        auto operator()(I begin, S end, C pred, P proj = P{}) const -> CPP_ret(I)( //
+        auto operator()(I first, S last, C pred, P proj = P{}) const -> CPP_ret(I)( //
             requires forward_iterator<I> && sentinel_for<S, I> &&
                 indirect_unary_predicate<C, projected<I, P>>)
         {
             if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S, I>))
             {
-                auto len = distance(begin, std::move(end));
+                auto len = distance(first, std::move(last));
                 return aux::partition_point_n(
-                    std::move(begin), len, std::move(pred), std::move(proj));
+                    std::move(first), len, std::move(pred), std::move(proj));
             }
 
-            // Probe exponentially for either end-of-range or an iterator
+            // Probe exponentially for either last-of-range or an iterator
             // that is past the partition point (i.e., does not satisfy pred).
             auto len = iter_difference_t<I>{1};
             while(true)
             {
-                auto mid = begin;
-                auto d = advance(mid, len, end);
-                if(mid == end || !invoke(pred, invoke(proj, *mid)))
+                auto mid = first;
+                auto d = advance(mid, len, last);
+                if(mid == last || !invoke(pred, invoke(proj, *mid)))
                 {
                     len -= d;
                     return aux::partition_point_n(
-                        std::move(begin), len, std::ref(pred), std::ref(proj));
+                        std::move(first), len, std::ref(pred), std::ref(proj));
                 }
-                begin = std::move(mid);
+                first = std::move(mid);
                 len *= 2;
             }
         }

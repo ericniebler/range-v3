@@ -47,8 +47,8 @@ namespace ranges
                          is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>;
 
         // Bidirectional stride views need to remember the distance between
-        // the penultimate iterator and the end iterator - which may be less
-        // than the stride - so that decrementing an end iterator properly
+        // the penultimate iterator and the last iterator - which may be less
+        // than the stride - so that decrementing an last iterator properly
         // produces the penultimate iterator. stride_view_base specializes on
         // that distinction so that only Bidirectional stride views have the
         // data member "offset_".
@@ -141,8 +141,8 @@ namespace ranges
         }
 
         // If the underlying range doesn't model common_range, then we can't
-        // decrement the end and there's no reason to adapt the sentinel. Strictly
-        // speaking, we don't have to adapt the end iterator of input and forward
+        // decrement the last and there's no reason to adapt the sentinel. Strictly
+        // speaking, we don't have to adapt the last iterator of input and forward
         // ranges, but in the interests of making the resulting stride view model
         // common_range, adapt it anyway.
         template<bool Const>
@@ -226,7 +226,7 @@ namespace ranges
                     auto delta = ranges::advance(it, n, last);
                     if(it == last)
                     {
-                        // advance hit the end of the base range.
+                        // advance hit the last of the base range.
                         rng_->set_offset(delta % rng_->stride_);
                     }
                 }

@@ -159,9 +159,9 @@ namespace ranges
         static constexpr index_type extent = N;
 
         constexpr span() noexcept = default;
-        constexpr span(pointer ptr, index_type count) noexcept
-          : detail::span_extent<N>{(RANGES_EXPECT(count >= 0), count)}
-          , data_{(RANGES_EXPECT(0 == count || ptr != nullptr), ptr)}
+        constexpr span(pointer ptr, index_type cnt) noexcept
+          : detail::span_extent<N>{(RANGES_EXPECT(cnt >= 0), cnt)}
+          , data_{(RANGES_EXPECT(0 == cnt || ptr != nullptr), ptr)}
         {}
         template<typename = void> // Artificially templatize so that the other
                                   // constructor is preferred for {ptr, 0}
@@ -197,10 +197,10 @@ namespace ranges
                    RANGES_EXPECT(Count == 0 || data_ != nullptr),
                    span<T, Count>{data_, Count};
         }
-        constexpr span<T> first(index_type count) const noexcept
+        constexpr span<T> first(index_type cnt) const noexcept
         {
-            return RANGES_EXPECT(count >= 0 && count <= size()),
-                   RANGES_EXPECT(count == 0 || data_ != nullptr), span<T>{data_, count};
+            return RANGES_EXPECT(cnt >= 0 && cnt <= size()),
+                   RANGES_EXPECT(cnt == 0 || data_ != nullptr), span<T>{data_, cnt};
         }
 
         template<index_type Count>
@@ -214,11 +214,11 @@ namespace ranges
                    RANGES_EXPECT((Count == 0 && size() == 0) || data_ != nullptr),
                    span<T, Count>{data_ + size() - Count, Count};
         }
-        constexpr span<T> last(index_type count) const noexcept
+        constexpr span<T> last(index_type cnt) const noexcept
         {
-            return RANGES_EXPECT(count >= 0 && count <= size()),
-                   RANGES_EXPECT((count == 0 && size() == 0) || data_ != nullptr),
-                   span<T>{data_ + size() - count, count};
+            return RANGES_EXPECT(cnt >= 0 && cnt <= size()),
+                   RANGES_EXPECT((cnt == 0 && size() == 0) || data_ != nullptr),
+                   span<T>{data_ + size() - cnt, cnt};
         }
 
         template<index_type Offset, index_type Count>
@@ -261,12 +261,12 @@ namespace ranges
                    span<T, dynamic_extent>{data_ + offset, size() - offset};
         }
         constexpr span<T, dynamic_extent> subspan(index_type offset,
-                                                  index_type count) const noexcept
+                                                  index_type cnt) const noexcept
         {
-            return RANGES_EXPECT(offset >= 0), RANGES_EXPECT(count >= 0),
-                   RANGES_EXPECT(size() >= offset + count),
-                   RANGES_EXPECT((offset == 0 && count == 0) || data_ != nullptr),
-                   span<T, dynamic_extent>{data_ + offset, count};
+            return RANGES_EXPECT(offset >= 0), RANGES_EXPECT(cnt >= 0),
+                   RANGES_EXPECT(size() >= offset + cnt),
+                   RANGES_EXPECT((offset == 0 && cnt == 0) || data_ != nullptr),
+                   span<T, dynamic_extent>{data_ + offset, cnt};
         }
 
         constexpr pointer data() const noexcept
@@ -378,9 +378,9 @@ namespace ranges
 
     template<typename ElementType>
     constexpr span<ElementType> make_span(ElementType * ptr,
-                                          detail::span_index_t count) noexcept
+                                          detail::span_index_t cnt) noexcept
     {
-        return span<ElementType>{ptr, count};
+        return span<ElementType>{ptr, cnt};
     }
     template<typename ElementType>
     constexpr span<ElementType> make_span(ElementType * first,

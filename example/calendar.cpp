@@ -219,9 +219,9 @@ namespace cal_example
 
     public:
         adaptor() = default;
-        adaptor(ranges::range_difference_t<Rng> n, sentinel_t<Rng> end)
+        adaptor(ranges::range_difference_t<Rng> n, sentinel_t<Rng> last)
           : n_(n)
-          , end_(end)
+          , end_(last)
         {}
         auto read(iterator_t<Rng> it) const
         {

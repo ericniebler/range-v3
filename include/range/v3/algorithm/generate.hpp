@@ -37,13 +37,13 @@ namespace ranges
     struct generate_fn
     {
         template<typename O, typename S, typename F>
-        auto operator()(O begin, S end, F fun) const -> CPP_ret(generate_result<O, F>)( //
+        auto operator()(O first, S last, F fun) const -> CPP_ret(generate_result<O, F>)( //
             requires invocable<F &> && output_iterator<O, invoke_result_t<F &>> &&
                 sentinel_for<S, O>)
         {
-            for(; begin != end; ++begin)
-                *begin = invoke(fun);
-            return {detail::move(begin), detail::move(fun)};
+            for(; first != last; ++first)
+                *first = invoke(fun);
+            return {detail::move(first), detail::move(fun)};
         }
 
         template<typename Rng, typename F>

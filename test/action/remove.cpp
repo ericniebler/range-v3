@@ -23,7 +23,7 @@ struct Data
     int i;
 
     Data() = default;
-    explicit Data(int i) : i(i) {}
+    explicit Data(int j) : i(j) {}
 
     bool operator==(const Data& other) const {
         return other.i == i;

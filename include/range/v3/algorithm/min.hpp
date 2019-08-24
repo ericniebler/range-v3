@@ -49,13 +49,13 @@ namespace ranges
                 indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>> &&
                     indirectly_copyable_storable<iterator_t<Rng>, range_value_t<Rng> *>)
         {
-            auto begin = ranges::begin(rng);
-            auto end = ranges::end(rng);
-            RANGES_EXPECT(begin != end);
-            range_value_t<Rng> result = *begin;
-            while(++begin != end)
+            auto first = ranges::begin(rng);
+            auto last = ranges::end(rng);
+            RANGES_EXPECT(first != last);
+            range_value_t<Rng> result = *first;
+            while(++first != last)
             {
-                auto && tmp = *begin;
+                auto && tmp = *first;
                 if(invoke(pred, invoke(proj, tmp), invoke(proj, result)))
                     result = (decltype(tmp) &&)tmp;
             }

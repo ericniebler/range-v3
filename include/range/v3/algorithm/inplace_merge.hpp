@@ -60,33 +60,33 @@ namespace ranges
         {
         private:
             template<typename I, typename C, typename P>
-            static void impl(I begin, I middle, I end, iter_difference_t<I> len1,
+            static void impl(I first, I middle, I last, iter_difference_t<I> len1,
                              iter_difference_t<I> len2, iter_value_t<I> * const buf,
                              C & pred, P & proj)
             {
                 auto tmpbuf = make_raw_buffer(buf);
                 if(len1 <= len2)
                 {
-                    auto p = ranges::move(begin, middle, tmpbuf.begin()).out;
+                    auto p = ranges::move(first, middle, tmpbuf.begin()).out;
                     merge(make_move_iterator(buf),
                           make_move_iterator(p.base().base()),
                           make_move_iterator(std::move(middle)),
-                          make_move_iterator(std::move(end)),
-                          std::move(begin),
+                          make_move_iterator(std::move(last)),
+                          std::move(first),
                           std::ref(pred),
                           std::ref(proj),
                           std::ref(proj));
                 }
                 else
                 {
-                    auto p = ranges::move(middle, end, tmpbuf.begin()).out;
+                    auto p = ranges::move(middle, last, tmpbuf.begin()).out;
                     using RBi = ranges::reverse_iterator<I>;
                     using Rv = ranges::reverse_iterator<iter_value_t<I> *>;
                     merge(make_move_iterator(RBi{std::move(middle)}),
-                          make_move_iterator(RBi{std::move(begin)}),
+                          make_move_iterator(RBi{std::move(first)}),
                           make_move_iterator(Rv{p.base().base()}),
                           make_move_iterator(Rv{buf}),
-                          RBi{std::move(end)},
+                          RBi{std::move(last)},
                           not_fn(std::ref(pred)),
                           std::ref(proj),
                           std::ref(proj));
@@ -95,7 +95,7 @@ namespace ranges
 
         public:
             template<typename I, typename C = less, typename P = identity>
-            auto operator()(I begin, I middle, I end, iter_difference_t<I> len1,
+            auto operator()(I first, I middle, I last, iter_difference_t<I> len1,
                             iter_difference_t<I> len2, iter_value_t<I> * buf,
                             std::ptrdiff_t buf_size, C pred = C{}, P proj = P{}) const
                 -> CPP_ret(void)( //
@@ -104,23 +104,23 @@ namespace ranges
                 using D = iter_difference_t<I>;
                 while(true)
                 {
-                    // if middle == end, we're done
+                    // if middle == last, we're done
                     if(len2 == 0)
                         return;
-                    // shrink [begin, middle) as much as possible (with no moves),
+                    // shrink [first, middle) as much as possible (with no moves),
                     // returning if it shrinks to 0
-                    for(; true; ++begin, --len1)
+                    for(; true; ++first, --len1)
                     {
                         if(len1 == 0)
                             return;
-                        if(invoke(pred, invoke(proj, *middle), invoke(proj, *begin)))
+                        if(invoke(pred, invoke(proj, *middle), invoke(proj, *first)))
                             break;
                     }
                     if(len1 <= buf_size || len2 <= buf_size)
                     {
-                        merge_adaptive_fn::impl(std::move(begin),
+                        merge_adaptive_fn::impl(std::move(first),
                                                 std::move(middle),
-                                                std::move(end),
+                                                std::move(last),
                                                 len1,
                                                 len2,
                                                 buf,
@@ -128,51 +128,51 @@ namespace ranges
                                                 proj);
                         return;
                     }
-                    // begin < middle < end
-                    // *begin > *middle
-                    // partition [begin, m1) [m1, middle) [middle, m2) [m2, end) such that
+                    // first < middle < end
+                    // *first > *middle
+                    // partition [first, m1) [m1, middle) [middle, m2) [m2, last) such that
                     //     all elements in:
-                    //         [begin, m1)  <= [middle, m2)
+                    //         [first, m1)  <= [middle, m2)
                     //         [middle, m2) <  [m1, middle)
-                    //         [m1, middle) <= [m2, end)
+                    //         [m1, middle) <= [m2, last)
                     //     and m1 or m2 is in the middle of its range
-                    I m1;    // "median" of [begin, middle)
-                    I m2;    // "median" of [middle, end)
-                    D len11; // distance(begin, m1)
+                    I m1;    // "median" of [first, middle)
+                    I m2;    // "median" of [middle, last)
+                    D len11; // distance(first, m1)
                     D len21; // distance(middle, m2)
                     // binary search smaller range
                     if(len1 < len2)
                     { // len >= 1, len2 >= 2
                         len21 = len2 / 2;
                         m2 = next(middle, len21);
-                        m1 = upper_bound(begin,
+                        m1 = upper_bound(first,
                                          middle,
                                          invoke(proj, *m2),
                                          std::ref(pred),
                                          std::ref(proj));
-                        len11 = distance(begin, m1);
+                        len11 = distance(first, m1);
                     }
                     else
                     {
                         if(len1 == 1)
                         { // len1 >= len2 && len2 > 0, therefore len2 == 1
-                            // It is known *begin > *middle
-                            ranges::iter_swap(begin, middle);
+                            // It is known *first > *middle
+                            ranges::iter_swap(first, middle);
                             return;
                         }
                         // len1 >= 2, len2 >= 1
                         len11 = len1 / 2;
-                        m1 = next(begin, len11);
+                        m1 = next(first, len11);
                         m2 = lower_bound(middle,
-                                         end,
+                                         last,
                                          invoke(proj, *m1),
                                          std::ref(pred),
                                          std::ref(proj));
                         len21 = distance(middle, m2);
                     }
                     D len12 = len1 - len11; // distance(m1, middle)
-                    D len22 = len2 - len21; // distance(m2, end)
-                    // [begin, m1) [m1, middle) [middle, m2) [m2, end)
+                    D len22 = len2 - len21; // distance(m2, last)
+                    // [first, m1) [m1, middle) [middle, m2) [m2, last)
                     // swap middle two partitions
                     middle = rotate(m1, std::move(middle), m2).begin();
                     // len12 and len21 now have swapped meanings
@@ -180,7 +180,7 @@ namespace ranges
                     // recursion elimination
                     if(len11 + len21 < len12 + len22)
                     {
-                        (*this)(std::move(begin),
+                        (*this)(std::move(first),
                                 std::move(m1),
                                 middle,
                                 len11,
@@ -189,7 +189,7 @@ namespace ranges
                                 buf_size,
                                 std::ref(pred),
                                 std::ref(proj));
-                        begin = std::move(middle);
+                        first = std::move(middle);
                         middle = std::move(m2);
                         len1 = len12;
                         len2 = len22;
@@ -198,14 +198,14 @@ namespace ranges
                     {
                         (*this)(middle,
                                 std::move(m2),
-                                std::move(end),
+                                std::move(last),
                                 len12,
                                 len22,
                                 buf,
                                 buf_size,
                                 std::ref(pred),
                                 std::ref(proj));
-                        end = std::move(middle);
+                        last = std::move(middle);
                         middle = std::move(m1);
                         len1 = len11;
                         len2 = len21;
@@ -219,14 +219,14 @@ namespace ranges
         struct inplace_merge_no_buffer_fn
         {
             template<typename I, typename C = less, typename P = identity>
-            auto operator()(I begin, I middle, I end, iter_difference_t<I> len1,
+            auto operator()(I first, I middle, I last, iter_difference_t<I> len1,
                             iter_difference_t<I> len2, C pred = C{}, P proj = P{}) const
                 -> CPP_ret(void)( //
                     requires bidirectional_iterator<I> && sortable<I, C, P>)
             {
-                merge_adaptive(std::move(begin),
+                merge_adaptive(std::move(first),
                                std::move(middle),
-                               std::move(end),
+                               std::move(last),
                                len1,
                                len2,
                                static_cast<iter_value_t<I> *>(nullptr),
@@ -246,13 +246,13 @@ namespace ranges
     {
         // TODO reimplement to only need forward iterators
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const
+        auto operator()(I first, I middle, S last, C pred = C{}, P proj = P{}) const
             -> CPP_ret(I)( //
                 requires bidirectional_iterator<I> && sortable<I, C, P>)
         {
             using value_type = iter_value_t<I>;
-            auto len1 = distance(begin, middle);
-            auto len2_and_end = enumerate(middle, end);
+            auto len1 = distance(first, middle);
+            auto len2_and_end = enumerate(middle, last);
             auto buf_size = ranges::min(len1, len2_and_end.first);
             std::pair<value_type *, std::ptrdiff_t> buf{nullptr, 0};
             std::unique_ptr<value_type, detail::return_temporary_buffer> h;
@@ -261,7 +261,7 @@ namespace ranges
                 buf = detail::get_temporary_buffer<value_type>(buf_size);
                 h.reset(buf.first);
             }
-            detail::merge_adaptive(std::move(begin),
+            detail::merge_adaptive(std::move(first),
                                    std::move(middle),
                                    len2_and_end.second,
                                    len1,

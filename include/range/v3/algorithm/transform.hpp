@@ -45,15 +45,15 @@ namespace ranges
     {
         // Single-range variant
         template<typename I, typename S, typename O, typename F, typename P = identity>
-        auto operator()(I begin, S end, O out, F fun, P proj = P{}) const
+        auto operator()(I first, S last, O out, F fun, P proj = P{}) const
             -> CPP_ret(unary_transform_result<I, O>)( //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                     weakly_incrementable<O> && copy_constructible<F> &&
                         writable<O, indirect_result_t<F &, projected<I, P>>>)
         {
-            for(; begin != end; ++begin, ++out)
-                *out = invoke(fun, invoke(proj, *begin));
-            return {begin, out};
+            for(; first != last; ++first, ++out)
+                *out = invoke(fun, invoke(proj, *first));
+            return {first, out};
         }
 
         template<typename Rng, typename O, typename F, typename P = identity>

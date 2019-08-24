@@ -118,9 +118,9 @@ class fuzzy_test_fn
     std::uniform_int_distribution<int> distr;
 
 public:
-    explicit fuzzy_test_fn(int size)
-      : size(size)
-      , distr{0, size}
+    explicit fuzzy_test_fn(int sz)
+      : size(sz)
+      , distr{0, sz}
     {}
 
     void operator()()
@@ -129,8 +129,8 @@ public:
         {
             int value;
 
-            explicit Int(int value)
-              : value(value)
+            explicit Int(int v)
+              : value(v)
             {}
             Int(Int const &) = default;
             Int(Int&& other) noexcept
@@ -195,7 +195,7 @@ public:
         for(int i=0; i < erase_count; ++i)
         {
             const int value = distr(eng);
-            const auto pred = [value](Int i) { return i.value == value; };
+            const auto pred = [value](Int j) { return j.value == value; };
             unordered_list |= actions::unstable_remove_if(pred);
             ordered_list |= actions::remove_if(pred);
         }

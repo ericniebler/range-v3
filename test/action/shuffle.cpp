@@ -57,8 +57,8 @@ int main()
 
     // Create and shuffle container reference
     v = views::ints(0,100) | to<std::vector>();
-    auto ref = views::ref(v);
-    ref |= actions::shuffle(gen);
+    auto r = views::ref(v);
+    r |= actions::shuffle(gen);
     CHECK(!is_sorted(v));
 
     // Can pipe a view to a "container" algorithm.

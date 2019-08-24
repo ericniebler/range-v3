@@ -40,22 +40,22 @@ namespace ranges
     struct minmax_element_fn
     {
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const
+        auto operator()(I first, S last, C pred = C{}, P proj = P{}) const
             -> CPP_ret(minmax_element_result<I>)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
                     indirect_strict_weak_order<C, projected<I, P>>)
         {
-            minmax_element_result<I> result{begin, begin};
-            if(begin == end || ++begin == end)
+            minmax_element_result<I> result{first, first};
+            if(first == last || ++first == last)
                 return result;
-            if(invoke(pred, invoke(proj, *begin), invoke(proj, *result.min)))
-                result.min = begin;
+            if(invoke(pred, invoke(proj, *first), invoke(proj, *result.min)))
+                result.min = first;
             else
-                result.max = begin;
-            while(++begin != end)
+                result.max = first;
+            while(++first != last)
             {
-                I tmp = begin;
-                if(++begin == end)
+                I tmp = first;
+                if(++first == last)
                 {
                     if(invoke(pred, invoke(proj, *tmp), invoke(proj, *result.min)))
                         result.min = tmp;
@@ -65,10 +65,10 @@ namespace ranges
                 }
                 else
                 {
-                    if(invoke(pred, invoke(proj, *begin), invoke(proj, *tmp)))
+                    if(invoke(pred, invoke(proj, *first), invoke(proj, *tmp)))
                     {
-                        if(invoke(pred, invoke(proj, *begin), invoke(proj, *result.min)))
-                            result.min = begin;
+                        if(invoke(pred, invoke(proj, *first), invoke(proj, *result.min)))
+                            result.min = first;
                         if(!invoke(pred, invoke(proj, *tmp), invoke(proj, *result.max)))
                             result.max = tmp;
                     }
@@ -76,8 +76,8 @@ namespace ranges
                     {
                         if(invoke(pred, invoke(proj, *tmp), invoke(proj, *result.min)))
                             result.min = tmp;
-                        if(!invoke(pred, invoke(proj, *begin), invoke(proj, *result.max)))
-                            result.max = begin;
+                        if(!invoke(pred, invoke(proj, *first), invoke(proj, *result.max)))
+                            result.max = first;
                     }
                 }
             }

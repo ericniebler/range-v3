@@ -54,11 +54,11 @@ namespace ranges
             auto begin1 = uncounted(begin1_);
             while(true)
             {
-                // Find begin element in sequence 1 that matches *begin2, with a mininum
+                // Find first element in sequence 1 that matches *begin2, with a mininum
                 // of loop checks
                 while(true)
                 {
-                    if(d1 < d2) // return the end if we've run out of room
+                    if(d1 < d2) // return the last if we've run out of room
                     {
                         auto e =
                             ranges::next(recounted(begin1_, std::move(begin1), d1_ - d1),
@@ -104,7 +104,7 @@ namespace ranges
         {
             while(true)
             {
-                // Find begin element in sequence 1 that matches *begin2, with a mininum
+                // Find first element in sequence 1 that matches *begin2, with a mininum
                 // of loop checks
                 while(true)
                 {

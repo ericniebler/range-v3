@@ -213,8 +213,8 @@ namespace ranges
             iterator_t<Rng> probe_;
 
             adaptor() = default;
-            adaptor(iterator_t<Rng> probe_begin)
-              : probe_(std::move(probe_begin))
+            adaptor(iterator_t<Rng> probe_first)
+              : probe_(std::move(probe_first))
             {}
             void next(iterator_t<Rng> & it)
             {

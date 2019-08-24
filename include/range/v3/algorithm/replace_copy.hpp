@@ -39,21 +39,21 @@ namespace ranges
     {
         template<typename I, typename S, typename O, typename T1, typename T2,
                  typename P = identity>
-        auto operator()(I begin, S end, O out, T1 const & old_value, T2 const & new_value,
+        auto operator()(I first, S last, O out, T1 const & old_value, T2 const & new_value,
                         P proj = {}) const -> CPP_ret(replace_copy_result<I, O>)( //
             requires input_iterator<I> && sentinel_for<S, I> &&
                 output_iterator<O, T2 const &> && indirectly_copyable<I, O> &&
                     indirect_relation<equal_to, projected<I, P>, T1 const *>)
         {
-            for(; begin != end; ++begin, ++out)
+            for(; first != last; ++first, ++out)
             {
-                auto && x = *begin;
+                auto && x = *first;
                 if(invoke(proj, x) == old_value)
                     *out = new_value;
                 else
                     *out = (decltype(x) &&)x;
             }
-            return {begin, out};
+            return {first, out};
         }
 
         template<typename Rng, typename O, typename T1, typename T2,

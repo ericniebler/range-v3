@@ -144,17 +144,17 @@ public:
       : algo_(algo)
     {}
     template<typename I, typename...Rest>
-    auto operator()(I begin, I end, Rest &&... rest) const ->
-        ::checker<decltype(algo_(begin, end, rest...))>
+    auto operator()(I first, I last, Rest &&... rest) const ->
+        ::checker<decltype(algo_(first, last, rest...))>
     {
         using S = meta::_t<sentinel_type<I>>;
-        using R = decltype(algo_(begin, end, rest...));
-        auto check_algo = [algo = algo_, begin, end, rest...](function_ref<void(R)> const & check)
+        using R = decltype(algo_(first, last, rest...));
+        auto check_algo = [algo = algo_, first, last, rest...](function_ref<void(R)> const & check)
         {
-            check(algo(begin, end, rest...));
-            check(algo(begin, S{base(end)}, rest...));
-            check(algo(::rvalue_if<RvalueOK>(ranges::make_subrange(begin, end)), rest...));
-            check(algo(::rvalue_if<RvalueOK>(ranges::make_subrange(begin, S{base(end)})), rest...));
+            check(algo(first, last, rest...));
+            check(algo(first, S{base(last)}, rest...));
+            check(algo(::rvalue_if<RvalueOK>(ranges::make_subrange(first, last)), rest...));
+            check(algo(::rvalue_if<RvalueOK>(ranges::make_subrange(first, S{base(last)})), rest...));
         };
         return ::checker<R>{check_algo};
     }

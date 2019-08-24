@@ -87,7 +87,7 @@ namespace ranges
     {
         template<typename I, typename S1, typename O, typename S2, typename BOp = plus,
                  typename P = identity>
-        auto operator()(I begin, S1 end, O result, S2 end_result, BOp bop = BOp{},
+        auto operator()(I first, S1 last, O result, S2 end_result, BOp bop = BOp{},
                         P proj = P{}) const -> CPP_ret(partial_sum_result<I, O>)( //
             requires sentinel_for<S1, I> && sentinel_for<S2, O> &&
                 partial_sum_constraints<I, O, BOp, P>)
@@ -95,30 +95,30 @@ namespace ranges
             using X = projected<projected<I, detail::as_value_type_t<I>>, P>;
             coerce<iter_value_t<I>> val_i;
             coerce<iter_value_t<X>> val_x;
-            if(begin != end && result != end_result)
+            if(first != last && result != end_result)
             {
-                auto && cur1 = val_i(*begin);
+                auto && cur1 = val_i(*first);
                 iter_value_t<X> t(invoke(proj, cur1));
                 *result = t;
-                for(++begin, ++result; begin != end && result != end_result;
-                    ++begin, ++result)
+                for(++first, ++result; first != last && result != end_result;
+                    ++first, ++result)
                 {
-                    auto && cur2 = val_i(*begin);
+                    auto && cur2 = val_i(*first);
                     t = val_x(invoke(bop, t, invoke(proj, cur2)));
                     *result = t;
                 }
             }
-            return {begin, result};
+            return {first, result};
         }
 
         template<typename I, typename S, typename O, typename BOp = plus,
                  typename P = identity>
-        auto operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
+        auto operator()(I first, S last, O result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(partial_sum_result<I, O>)( //
                 requires sentinel_for<S, I> && partial_sum_constraints<I, O, BOp, P>)
         {
-            return (*this)(std::move(begin),
-                           std::move(end),
+            return (*this)(std::move(first),
+                           std::move(last),
                            std::move(result),
                            unreachable,
                            std::move(bop),

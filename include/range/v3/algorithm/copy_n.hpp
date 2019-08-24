@@ -39,17 +39,17 @@ namespace ranges
     struct copy_n_fn
     {
         template<typename I, typename O, typename P = identity>
-        auto operator()(I begin, iter_difference_t<I> n, O out) const
+        auto operator()(I first, iter_difference_t<I> n, O out) const
             -> CPP_ret(copy_n_result<I, O>)( //
                 requires input_iterator<I> && weakly_incrementable<O> &&
                     indirectly_copyable<I, O>)
         {
             RANGES_EXPECT(0 <= n);
             auto norig = n;
-            auto b = uncounted(begin);
+            auto b = uncounted(first);
             for(; n != 0; ++b, ++out, --n)
                 *out = *b;
-            return {recounted(begin, b, norig), out};
+            return {recounted(first, b, norig), out};
         }
     };
 

@@ -365,42 +365,42 @@ namespace ranges
     {
     private:
         template<typename I, typename S>
-        static constexpr auto impl_i(I begin, S end, sentinel_tag)
+        static constexpr auto impl_i(I first, S last, sentinel_tag)
             -> CPP_ret(std::pair<iter_difference_t<I>, I>)( //
                 requires(!sized_sentinel_for<I, I>))
         {
             iter_difference_t<I> d = 0;
-            for(; begin != end; ++begin)
+            for(; first != last; ++first)
                 ++d;
-            return {d, begin};
+            return {d, first};
         }
         template<typename I, typename S>
-        static constexpr auto impl_i(I begin, S end_, sentinel_tag)
+        static constexpr auto impl_i(I first, S end_, sentinel_tag)
             -> CPP_ret(std::pair<iter_difference_t<I>, I>)( //
                 requires sized_sentinel_for<I, I>)
         {
-            I end = ranges::next(begin, end_);
-            auto n = static_cast<iter_difference_t<I>>(end - begin);
+            I last = ranges::next(first, end_);
+            auto n = static_cast<iter_difference_t<I>>(last - first);
             RANGES_EXPECT(((bool)same_as<I, S> || 0 <= n));
-            return {n, end};
+            return {n, last};
         }
         template<typename I, typename S>
-        static constexpr std::pair<iter_difference_t<I>, I> impl_i(I begin, S end,
+        static constexpr std::pair<iter_difference_t<I>, I> impl_i(I first, S last,
                                                                    sized_sentinel_tag)
         {
-            auto n = static_cast<iter_difference_t<I>>(end - begin);
+            auto n = static_cast<iter_difference_t<I>>(last - first);
             RANGES_EXPECT(((bool)same_as<I, S> || 0 <= n));
-            return {n, ranges::next(begin, end)};
+            return {n, ranges::next(first, last)};
         }
 
     public:
         template<typename I, typename S>
-        constexpr auto operator()(I begin, S end) const
+        constexpr auto operator()(I first, S last) const
             -> CPP_ret(std::pair<iter_difference_t<I>, I>)( //
                 requires sentinel_for<S, I>)
         {
-            return iter_enumerate_fn::impl_i(static_cast<I &&>(begin),
-                                             static_cast<S &&>(end),
+            return iter_enumerate_fn::impl_i(static_cast<I &&>(first),
+                                             static_cast<S &&>(last),
                                              sentinel_tag_of<S, I>());
         }
     };
@@ -412,26 +412,26 @@ namespace ranges
     {
     private:
         template<typename I, typename S>
-        static constexpr iter_difference_t<I> impl_i(I begin, S end, sentinel_tag)
+        static constexpr iter_difference_t<I> impl_i(I first, S last, sentinel_tag)
         {
-            return iter_enumerate(static_cast<I &&>(begin), static_cast<S &&>(end)).first;
+            return iter_enumerate(static_cast<I &&>(first), static_cast<S &&>(last)).first;
         }
         template<typename I, typename S>
-        static constexpr iter_difference_t<I> impl_i(I begin, S end, sized_sentinel_tag)
+        static constexpr iter_difference_t<I> impl_i(I first, S last, sized_sentinel_tag)
         {
-            auto n = static_cast<iter_difference_t<I>>(end - begin);
+            auto n = static_cast<iter_difference_t<I>>(last - first);
             RANGES_EXPECT(((bool)same_as<I, S> || 0 <= n));
             return n;
         }
 
     public:
         template<typename I, typename S>
-        constexpr auto operator()(I begin, S end) const
+        constexpr auto operator()(I first, S last) const
             -> CPP_ret(iter_difference_t<I>)( //
                 requires input_or_output_iterator<I> && sentinel_for<S, I>)
         {
-            return iter_distance_fn::impl_i(static_cast<I &&>(begin),
-                                            static_cast<S &&>(end),
+            return iter_distance_fn::impl_i(static_cast<I &&>(first),
+                                            static_cast<S &&>(last),
                                             sentinel_tag_of<S, I>());
         }
     };
@@ -443,22 +443,22 @@ namespace ranges
     {
     private:
         template<typename I, typename S>
-        static constexpr int impl_i(I begin, S end, iter_difference_t<I> n, sentinel_tag)
+        static constexpr int impl_i(I first, S last, iter_difference_t<I> n, sentinel_tag)
         {
             if(n < 0)
                 return 1;
-            for(; n > 0; --n, ++begin)
+            for(; n > 0; --n, ++first)
             {
-                if(begin == end)
+                if(first == last)
                     return -1;
             }
-            return begin == end ? 0 : 1;
+            return first == last ? 0 : 1;
         }
         template<typename I, typename S>
-        static constexpr int impl_i(I begin, S end, iter_difference_t<I> n,
+        static constexpr int impl_i(I first, S last, iter_difference_t<I> n,
                                     sized_sentinel_tag)
         {
-            iter_difference_t<I> dist = end - begin;
+            iter_difference_t<I> dist = last - first;
             if(n < dist)
                 return 1;
             if(dist < n)
@@ -468,12 +468,12 @@ namespace ranges
 
     public:
         template<typename I, typename S>
-        constexpr auto operator()(I begin, S end, iter_difference_t<I> n) const
+        constexpr auto operator()(I first, S last, iter_difference_t<I> n) const
             -> CPP_ret(int)( //
                 requires input_iterator<I> && sentinel_for<S, I>)
         {
-            return iter_distance_compare_fn::impl_i(static_cast<I &&>(begin),
-                                                    static_cast<S &&>(end),
+            return iter_distance_compare_fn::impl_i(static_cast<I &&>(first),
+                                                    static_cast<S &&>(last),
                                                     n,
                                                     sentinel_tag_of<S, I>());
         }
@@ -486,12 +486,12 @@ namespace ranges
     struct iter_size_fn
     {
         template<typename I, typename S>
-        constexpr auto operator()(I const & begin, S end) const
+        constexpr auto operator()(I const & first, S last) const
             -> CPP_ret(meta::_t<std::make_unsigned<iter_difference_t<I>>>)( //
                 requires sized_sentinel_for<S, I>)
         {
             using size_type = meta::_t<std::make_unsigned<iter_difference_t<I>>>;
-            iter_difference_t<I> n = end - begin;
+            iter_difference_t<I> n = last - first;
             RANGES_EXPECT(0 <= n);
             return static_cast<size_type>(n);
         }

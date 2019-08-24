@@ -54,17 +54,17 @@ namespace ranges
                 RANGES_EXPECT(0 < step);
                 if(1 < step)
                 {
-                    I begin = ranges::begin(rng);
-                    S const end = ranges::end(rng);
-                    if(begin != end)
+                    I first = ranges::begin(rng);
+                    S const last = ranges::end(rng);
+                    if(first != last)
                     {
-                        for(I i = ranges::next(++begin, step - 1, end); i != end;
-                            advance(i, step, end), ++begin)
+                        for(I i = ranges::next(++first, step - 1, last); i != last;
+                            advance(i, step, last), ++first)
                         {
-                            *begin = iter_move(i);
+                            *first = iter_move(i);
                         }
                     }
-                    ranges::actions::erase(rng, begin, end);
+                    ranges::actions::erase(rng, first, last);
                 }
                 return static_cast<Rng &&>(rng);
             }

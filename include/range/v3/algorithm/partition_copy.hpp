@@ -42,16 +42,16 @@ namespace ranges
     {
         template<typename I, typename S, typename O0, typename O1, typename C,
                  typename P = identity>
-        auto operator()(I begin, S end, O0 o0, O1 o1, C pred, P proj = P{}) const
+        auto operator()(I first, S last, O0 o0, O1 o1, C pred, P proj = P{}) const
             -> CPP_ret(partition_copy_result<I, O0, O1>)( //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                     weakly_incrementable<O0> && weakly_incrementable<O1> &&
                         indirectly_copyable<I, O0> && indirectly_copyable<I, O1> &&
                             indirect_unary_predicate<C, projected<I, P>>)
         {
-            for(; begin != end; ++begin)
+            for(; first != last; ++first)
             {
-                auto && x = *begin;
+                auto && x = *first;
                 if(invoke(pred, invoke(proj, x)))
                 {
                     *o0 = (decltype(x) &&)x;
@@ -63,7 +63,7 @@ namespace ranges
                     ++o1;
                 }
             }
-            return {begin, o0, o1};
+            return {first, o0, o1};
         }
 
         template<typename Rng, typename O0, typename O1, typename C,

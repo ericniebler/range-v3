@@ -36,23 +36,23 @@ namespace ranges
     struct shuffle_fn
     {
         template<typename I, typename S, typename Gen = detail::default_random_engine &>
-        auto operator()(I const begin, S const end,
+        auto operator()(I const first, S const last,
                         Gen && gen = detail::get_random_engine()) const -> CPP_ret(I)( //
             requires random_access_iterator<I> && sentinel_for<S, I> && permutable<I> &&
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
                     convertible_to<invoke_result_t<Gen &>, iter_difference_t<I>>)
         {
-            auto mid = begin;
-            if(mid == end)
+            auto mid = first;
+            if(mid == last)
                 return mid;
             using D1 = iter_difference_t<I>;
             using D2 = detail::if_then_t<std::is_integral<D1>::value, D1, std::ptrdiff_t>;
             std::uniform_int_distribution<D2> uid{};
             using param_t = typename decltype(uid)::param_type;
-            while(++mid != end)
+            while(++mid != last)
             {
-                RANGES_ENSURE(mid - begin <= PTRDIFF_MAX);
-                if(auto const i = uid(gen, param_t{0, D2(mid - begin)}))
+                RANGES_ENSURE(mid - first <= PTRDIFF_MAX);
+                if(auto const i = uid(gen, param_t{0, D2(mid - first)}))
                     ranges::iter_swap(mid - i, mid);
             }
             return mid;

@@ -165,10 +165,10 @@ namespace ranges
             return it1 - it0;
         }
         template<typename I, typename S>
-        static constexpr auto empty(I const & it, S const & end) -> CPP_ret(bool)( //
+        static constexpr auto empty(I const & it, S const & last) -> CPP_ret(bool)( //
             requires sentinel_for<S, I>)
         {
-            return it == end;
+            return it == last;
         }
     };
 

@@ -109,8 +109,8 @@ namespace ranges
               : Fun
               , pipeable_base
             {
-                constexpr explicit _(Fun && fun)
-                  : Fun(static_cast<Fun &&>(fun))
+                constexpr explicit _(Fun && f)
+                  : Fun(static_cast<Fun &&>(f))
                 {}
             };
             return _{static_cast<Fun &&>(fun)};

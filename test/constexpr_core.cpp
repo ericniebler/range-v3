@@ -23,10 +23,10 @@
 
 // Test sequence 1,2,3,4
 template<typename It>
-constexpr /*c++14*/ auto test_it_back(It, It end,
+constexpr /*c++14*/ auto test_it_back(It, It last,
     ranges::detail::bidirectional_iterator_tag_) -> bool
 {
-    auto end_m1_2 = It{ranges::prev(end, 1)};
+    auto end_m1_2 = It{ranges::prev(last, 1)};
     if (*end_m1_2 != 4) { return false; }
     return true;
 }
@@ -38,61 +38,61 @@ constexpr /*c++14*/ auto test_it_back(It, It, Concept) -> bool
 }
 
 template<typename It>
-constexpr /*c++14*/ auto test_it_(It beg, It end) -> bool
+constexpr /*c++14*/ auto test_it_(It beg, It last) -> bool
 {
     if (*beg != 1) { return false; }
-    if (ranges::distance(beg, end) != 4) { return false; }
-    if (ranges::next(beg, 4) != end) { return false; }
+    if (ranges::distance(beg, last) != 4) { return false; }
+    if (ranges::next(beg, 4) != last) { return false; }
     auto end_m1 = It{ranges::next(beg, 3)};
     if (*end_m1 != 4) { return false; }
 
-    if (!test_it_back(beg, end, ranges::iterator_tag_of<It>{})) { return false; }
+    if (!test_it_back(beg, last, ranges::iterator_tag_of<It>{})) { return false; }
     auto end2 = beg;
-    ranges::advance(end2, end);
-    if (end2 != end) { return false; }
+    ranges::advance(end2, last);
+    if (end2 != last) { return false; }
     auto end3 = beg;
     ranges::advance(end3, 4);
-    if (end3 != end) { return false; }
-    if (ranges::iter_enumerate(beg, end) != std::pair<std::ptrdiff_t, It>{4, end})
+    if (end3 != last) { return false; }
+    if (ranges::iter_enumerate(beg, last) != std::pair<std::ptrdiff_t, It>{4, last})
     {
         return false;
     }
-    if (ranges::iter_distance(beg, end) != 4) { return false; }
-    if (ranges::iter_distance_compare(beg, end, 4) != 0) { return false; }
-    if (ranges::iter_distance_compare(beg, end, 3) != 1) { return false; }
-    if (ranges::iter_distance_compare(beg, end, 5) != -1) { return false; }
+    if (ranges::iter_distance(beg, last) != 4) { return false; }
+    if (ranges::iter_distance_compare(beg, last, 4) != 0) { return false; }
+    if (ranges::iter_distance_compare(beg, last, 3) != 1) { return false; }
+    if (ranges::iter_distance_compare(beg, last, 5) != -1) { return false; }
     return true;
 }
 
 // Test sequence 4,3,2,1 (for reverse iterators)
 template<typename It>
-constexpr /*c++14*/ auto test_rit_(It beg, It end) -> bool
+constexpr /*c++14*/ auto test_rit_(It beg, It last) -> bool
 {
-    if (ranges::distance(beg, end) != 4) { return false; }
-    if (ranges::next(beg, 4) != end) { return false; }
+    if (ranges::distance(beg, last) != 4) { return false; }
+    if (ranges::next(beg, 4) != last) { return false; }
     auto end_m1 = It{ranges::next(beg, 3)};
     if (*end_m1 != 1) { return false; }
     if (ranges::detail::is_convertible<ranges::iterator_tag_of<It>,
                                        ranges::detail::bidirectional_iterator_tag_>{})
     {
-        auto end_m1_2 = It{ranges::prev(end, 1)};
+        auto end_m1_2 = It{ranges::prev(last, 1)};
         if (*end_m1_2 != 1) { return false; }
     }
     auto end2 = beg;
-    ranges::advance(end2, end);
-    if (end2 != end) { return false; }
+    ranges::advance(end2, last);
+    if (end2 != last) { return false; }
     auto end3 = beg;
     ranges::advance(end3, 4);
-    if (end3 != end) { return false; }
+    if (end3 != last) { return false; }
     using D = ranges::iter_difference_t<It>;
-    if (ranges::iter_enumerate(beg, end) != std::pair<D, It>{4, end})
+    if (ranges::iter_enumerate(beg, last) != std::pair<D, It>{4, last})
     {
         return false;
     }
-    if (ranges::iter_distance(beg, end) != 4) { return false; }
-    if (ranges::iter_distance_compare(beg, end, 4) != 0) { return false; }
-    if (ranges::iter_distance_compare(beg, end, 3) != 1) { return false; }
-    if (ranges::iter_distance_compare(beg, end, 5) != -1) { return false; }
+    if (ranges::iter_distance(beg, last) != 4) { return false; }
+    if (ranges::iter_distance_compare(beg, last, 4) != 0) { return false; }
+    if (ranges::iter_distance_compare(beg, last, 3) != 1) { return false; }
+    if (ranges::iter_distance_compare(beg, last, 5) != -1) { return false; }
     return true;
 }
 
@@ -100,8 +100,8 @@ template<typename It, typename Sequence1234>
 constexpr /*c++14*/ auto test_it(Sequence1234&& a) -> bool
 {
     auto beg = It{ranges::begin(a)};
-    auto end = It{ranges::end(a)};
-    return test_it_(beg, end);
+    auto last = It{ranges::end(a)};
+    return test_it_(beg, last);
 }
 
 template<typename Sequence1234>
@@ -129,8 +129,8 @@ template<typename It, typename Sequence1234>
 constexpr /*c++14*/ auto test_rit(Sequence1234&& a) -> bool
 {
     auto beg = It{ranges::rbegin(a)};
-    auto end = It{ranges::rend(a)};
-    return test_rit_(beg, end);
+    auto last = It{ranges::rend(a)};
+    return test_rit_(beg, last);
 }
 
 template<typename Sequence1234>
@@ -145,8 +145,8 @@ template<typename It, typename Sequence1234>
 constexpr /*c++14*/ auto test_cit(Sequence1234&& a) -> bool
 {
     auto beg = It{ranges::cbegin(a)};
-    auto end = It{ranges::cend(a)};
-    return test_it_(beg, end);
+    auto last = It{ranges::cend(a)};
+    return test_it_(beg, last);
 }
 
 template<typename Sequence1234>
@@ -163,8 +163,8 @@ template<typename It, typename Sequence1234>
 constexpr /*c++14*/ auto test_crit(Sequence1234&& a) -> bool
 {
     auto beg = It{ranges::crbegin(a)};
-    auto end = It{ranges::crend(a)};
-    return test_rit_(beg, end);
+    auto last = It{ranges::crend(a)};
+    return test_rit_(beg, last);
 }
 
 template<typename Sequence1234>

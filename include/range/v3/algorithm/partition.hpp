@@ -45,60 +45,60 @@ namespace ranges
     {
     private:
         template<typename I, typename S, typename C, typename P>
-        static I impl(I begin, S end, C pred, P proj, detail::forward_iterator_tag_)
+        static I impl(I first, S last, C pred, P proj, detail::forward_iterator_tag_)
         {
             while(true)
             {
-                if(begin == end)
-                    return begin;
-                if(!invoke(pred, invoke(proj, *begin)))
+                if(first == last)
+                    return first;
+                if(!invoke(pred, invoke(proj, *first)))
                     break;
-                ++begin;
+                ++first;
             }
-            for(I p = begin; ++p != end;)
+            for(I p = first; ++p != last;)
             {
                 if(invoke(pred, invoke(proj, *p)))
                 {
-                    ranges::iter_swap(begin, p);
-                    ++begin;
+                    ranges::iter_swap(first, p);
+                    ++first;
                 }
             }
-            return begin;
+            return first;
         }
 
         template<typename I, typename S, typename C, typename P>
-        static I impl(I begin, S end_, C pred, P proj,
+        static I impl(I first, S end_, C pred, P proj,
                       detail::bidirectional_iterator_tag_)
         {
-            I end = ranges::next(begin, end_);
+            I last = ranges::next(first, end_);
             while(true)
             {
                 while(true)
                 {
-                    if(begin == end)
-                        return begin;
-                    if(!invoke(pred, invoke(proj, *begin)))
+                    if(first == last)
+                        return first;
+                    if(!invoke(pred, invoke(proj, *first)))
                         break;
-                    ++begin;
+                    ++first;
                 }
                 do
                 {
-                    if(begin == --end)
-                        return begin;
-                } while(!invoke(pred, invoke(proj, *end)));
-                ranges::iter_swap(begin, end);
-                ++begin;
+                    if(first == --last)
+                        return first;
+                } while(!invoke(pred, invoke(proj, *last)));
+                ranges::iter_swap(first, last);
+                ++first;
             }
         }
 
     public:
         template<typename I, typename S, typename C, typename P = identity>
-        auto operator()(I begin, S end, C pred, P proj = P{}) const -> CPP_ret(I)( //
+        auto operator()(I first, S last, C pred, P proj = P{}) const -> CPP_ret(I)( //
             requires permutable<I> && sentinel_for<S, I> &&
                 indirect_unary_predicate<C, projected<I, P>>)
         {
-            return partition_fn::impl(std::move(begin),
-                                      std::move(end),
+            return partition_fn::impl(std::move(first),
+                                      std::move(last),
                                       std::move(pred),
                                       std::move(proj),
                                       iterator_tag_of<I>());

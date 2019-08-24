@@ -83,67 +83,79 @@ int main()
     using namespace ranges;
 
     // Test that we can join an input range of input ranges:
-    auto rng0 = make_input_rng() | views::join;
-    static_assert(range_cardinality<decltype(rng0)>::value == ranges::finite, "");
-    CPP_assert(input_range<decltype(rng0)>);
-    CPP_assert(!forward_range<decltype(rng0)>);
-    CPP_assert(!common_range<decltype(rng0)>);
-    CPP_assert(!sized_range<decltype(rng0)>);
-    check_equal(rng0, {0,1,2,3,4,5,6,7,8});
+    {
+        auto rng0 = make_input_rng() | views::join;
+        static_assert(range_cardinality<decltype(rng0)>::value == ranges::finite, "");
+        CPP_assert(input_range<decltype(rng0)>);
+        CPP_assert(!forward_range<decltype(rng0)>);
+        CPP_assert(!common_range<decltype(rng0)>);
+        CPP_assert(!sized_range<decltype(rng0)>);
+        check_equal(rng0, {0,1,2,3,4,5,6,7,8});
+    }
 
     // Joining with a value
-    N = 0;
-    auto rng1 = make_input_rng() | views::join(42);
-    static_assert(range_cardinality<decltype(rng1)>::value == ranges::finite, "");
-    CPP_assert(input_range<decltype(rng1)>);
-    CPP_assert(!forward_range<decltype(rng1)>);
-    CPP_assert(!common_range<decltype(rng1)>);
-    CPP_assert(!sized_range<decltype(rng1)>);
-    check_equal(rng1, {0,1,2,42,3,4,5,42,6,7,8});
+    {
+        N = 0;
+        auto rng1 = make_input_rng() | views::join(42);
+        static_assert(range_cardinality<decltype(rng1)>::value == ranges::finite, "");
+        CPP_assert(input_range<decltype(rng1)>);
+        CPP_assert(!forward_range<decltype(rng1)>);
+        CPP_assert(!common_range<decltype(rng1)>);
+        CPP_assert(!sized_range<decltype(rng1)>);
+        check_equal(rng1, {0,1,2,42,3,4,5,42,6,7,8});
+    }
 
     // Joining with a range
-    N = 0;
-    int rgi[] = {42,43};
-    auto rng2 = make_input_rng() | views::join(rgi);
-    static_assert(range_cardinality<decltype(rng2)>::value == ranges::finite, "");
-    CPP_assert(input_range<decltype(rng2)>);
-    CPP_assert(!forward_range<decltype(rng2)>);
-    CPP_assert(!common_range<decltype(rng2)>);
-    CPP_assert(!sized_range<decltype(rng2)>);
-    check_equal(rng2, {0,1,2,42,43,3,4,5,42,43,6,7,8});
+    {
+        N = 0;
+        int rgi[] = {42,43};
+        auto rng2 = make_input_rng() | views::join(rgi);
+        static_assert(range_cardinality<decltype(rng2)>::value == ranges::finite, "");
+        CPP_assert(input_range<decltype(rng2)>);
+        CPP_assert(!forward_range<decltype(rng2)>);
+        CPP_assert(!common_range<decltype(rng2)>);
+        CPP_assert(!sized_range<decltype(rng2)>);
+        check_equal(rng2, {0,1,2,42,43,3,4,5,42,43,6,7,8});
+    }
 
     // Just for fun:
-    std::string str = "Now,is,the,time,for,all,good,men,to,come,to,the,aid,of,their,country";
-    auto res = str | views::split(',') | views::join(' ') | to<std::string>();
-    CHECK(res == "Now is the time for all good men to come to the aid of their country");
-    static_assert(range_cardinality<decltype(res)>::value == ranges::finite, "");
+    {
+        std::string str = "Now,is,the,time,for,all,good,men,to,come,to,the,aid,of,their,country";
+        auto res = str | views::split(',') | views::join(' ') | to<std::string>();
+        CHECK(res == "Now is the time for all good men to come to the aid of their country");
+        static_assert(range_cardinality<decltype(res)>::value == ranges::finite, "");
+    }
 
-    std::vector<std::string> vs{"This","is","his","face"};
-    auto rng3 = views::join(vs);
-    static_assert(range_cardinality<decltype(rng3)>::value == ranges::finite, "");
-    CPP_assert(!sized_range<decltype(rng3)>);
-    CPP_assert(!sized_sentinel_for<decltype(end(rng3)), decltype(begin(rng3))>);
-    CHECK(to<std::string>(rng3) == "Thisishisface");
+    {
+        std::vector<std::string> vs{"This","is","his","face"};
+        auto rng3 = views::join(vs);
+        static_assert(range_cardinality<decltype(rng3)>::value == ranges::finite, "");
+        CPP_assert(!sized_range<decltype(rng3)>);
+        CPP_assert(!sized_sentinel_for<decltype(end(rng3)), decltype(begin(rng3))>);
+        CHECK(to<std::string>(rng3) == "Thisishisface");
 
-    auto rng4 = views::join(vs, ' ');
-    static_assert(range_cardinality<decltype(rng3)>::value == ranges::finite, "");
-    CPP_assert(!sized_range<decltype(rng4)>);
-    CPP_assert(!sized_sentinel_for<decltype(end(rng4)), decltype(begin(rng4))>);
-    CHECK(to<std::string>(rng4) == "This is his face");
+        auto rng4 = views::join(vs, ' ');
+        static_assert(range_cardinality<decltype(rng3)>::value == ranges::finite, "");
+        CPP_assert(!sized_range<decltype(rng4)>);
+        CPP_assert(!sized_sentinel_for<decltype(end(rng4)), decltype(begin(rng4))>);
+        CHECK(to<std::string>(rng4) == "This is his face");
+    }
 
-    auto rng5 = views::join(twice(twice(42)));
-    static_assert(range_cardinality<decltype(rng5)>::value == 4, "");
-    CPP_assert(sized_range<decltype(rng5)>);
-    CHECK(rng5.size() == 4u);
-    check_equal(rng5, {42,42,42,42});
+    {
+        auto rng5 = views::join(twice(twice(42)));
+        static_assert(range_cardinality<decltype(rng5)>::value == 4, "");
+        CPP_assert(sized_range<decltype(rng5)>);
+        CHECK(rng5.size() == 4u);
+        check_equal(rng5, {42,42,42,42});
+    }
 
-    auto rng6 = views::join(twice(views::repeat_n(42, 2)));
-    static_assert(range_cardinality<decltype(rng6)>::value == ranges::finite, "");
-    CPP_assert(sized_range<decltype(rng6)>);
-    CHECK(rng6.size() == 4u);
-    check_equal(rng6, {42,42,42,42});
-
-    test_issue_283();
+    {
+        auto rng6 = views::join(twice(views::repeat_n(42, 2)));
+        static_assert(range_cardinality<decltype(rng6)>::value == ranges::finite, "");
+        CPP_assert(sized_range<decltype(rng6)>);
+        CHECK(rng6.size() == 4u);
+        check_equal(rng6, {42,42,42,42});
+    }
 
     {
         input_array<std::string, 4> some_strings = {{"This","is","his","face"}};
@@ -190,6 +202,8 @@ int main()
         CPP_assert(!forward_range<decltype(rng)>);
         CPP_assert(!common_range<decltype(rng)>);
     }
+
+    test_issue_283();
 
     return ::test_result();
 }

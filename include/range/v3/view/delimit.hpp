@@ -48,9 +48,9 @@ namespace ranges
               : value_(std::move(value))
             {}
             template<class I, class S>
-            bool empty(I const & it, S const & end) const
+            bool empty(I const & it, S const & last) const
             {
-                return it == end || *it == value_;
+                return it == last || *it == value_;
             }
             Val value_;
         };

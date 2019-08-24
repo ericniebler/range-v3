@@ -29,12 +29,12 @@ namespace ranges
     struct fill_fn
     {
         template<typename O, typename S, typename V>
-        auto operator()(O begin, S end, V const & val) const -> CPP_ret(O)( //
+        auto operator()(O first, S last, V const & val) const -> CPP_ret(O)( //
             requires output_iterator<O, V const &> && sentinel_for<S, O>)
         {
-            for(; begin != end; ++begin)
-                *begin = val;
-            return begin;
+            for(; first != last; ++first)
+                *first = val;
+            return first;
         }
 
         template<typename Rng, typename V>

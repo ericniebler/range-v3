@@ -33,33 +33,33 @@ namespace ranges
     {
     private:
         template<typename I>
-        static void impl(I begin, I end, detail::bidirectional_iterator_tag_)
+        static void impl(I first, I last, detail::bidirectional_iterator_tag_)
         {
-            while(begin != end)
+            while(first != last)
             {
-                if(begin == --end)
+                if(first == --last)
                     break;
-                ranges::iter_swap(begin, end);
-                ++begin;
+                ranges::iter_swap(first, last);
+                ++first;
             }
         }
 
         template<typename I>
-        static void impl(I begin, I end, detail::random_access_iterator_tag_)
+        static void impl(I first, I last, detail::random_access_iterator_tag_)
         {
-            if(begin != end)
-                for(; begin < --end; ++begin)
-                    ranges::iter_swap(begin, end);
+            if(first != last)
+                for(; first < --last; ++first)
+                    ranges::iter_swap(first, last);
         }
 
     public:
         template<typename I, typename S>
-        auto operator()(I begin, S end_) const -> CPP_ret(I)( //
+        auto operator()(I first, S end_) const -> CPP_ret(I)( //
             requires bidirectional_iterator<I> && sentinel_for<S, I> && permutable<I>)
         {
-            I end = ranges::next(begin, end_);
-            reverse_fn::impl(begin, end, iterator_tag_of<I>{});
-            return end;
+            I last = ranges::next(first, end_);
+            reverse_fn::impl(first, last, iterator_tag_of<I>{});
+            return last;
         }
 
         template<typename Rng, typename I = iterator_t<Rng>>

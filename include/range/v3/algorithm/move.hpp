@@ -37,13 +37,13 @@ namespace ranges
     struct cpp20_move_fn
     {
         template<typename I, typename S, typename O>
-        auto operator()(I begin, S end, O out) const -> CPP_ret(move_result<I, O>)( //
+        auto operator()(I first, S last, O out) const -> CPP_ret(move_result<I, O>)( //
             requires input_iterator<I> && sentinel_for<S, I> && weakly_incrementable<O> &&
                 indirectly_movable<I, O>)
         {
-            for(; begin != end; ++begin, ++out)
-                *out = iter_move(begin);
-            return {begin, out};
+            for(; first != last; ++first, ++out)
+                *out = iter_move(first);
+            return {first, out};
         }
 
         template<typename Rng, typename O>

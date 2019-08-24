@@ -231,30 +231,30 @@ namespace ranges
     struct next_permutation_fn
     {
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, S end_, C pred = C{},
+        auto operator()(I first, S end_, C pred = C{},
                         P proj = P{}) const -> CPP_ret(bool)( //
             requires bidirectional_iterator<I> && sentinel_for<S, I> && sortable<I, C, P>)
         {
-            if(begin == end_)
+            if(first == end_)
                 return false;
-            I end = ranges::next(begin, end_), i = end;
-            if(begin == --i)
+            I last = ranges::next(first, end_), i = last;
+            if(first == --i)
                 return false;
             while(true)
             {
                 I ip1 = i;
                 if(invoke(pred, invoke(proj, *--i), invoke(proj, *ip1)))
                 {
-                    I j = end;
+                    I j = last;
                     while(!invoke(pred, invoke(proj, *i), invoke(proj, *--j)))
                         ;
                     ranges::iter_swap(i, j);
-                    ranges::reverse(ip1, end);
+                    ranges::reverse(ip1, last);
                     return true;
                 }
-                if(i == begin)
+                if(i == first)
                 {
-                    ranges::reverse(begin, end);
+                    ranges::reverse(first, last);
                     return false;
                 }
             }
@@ -275,30 +275,30 @@ namespace ranges
     struct prev_permutation_fn
     {
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, S end_, C pred = C{},
+        auto operator()(I first, S end_, C pred = C{},
                         P proj = P{}) const -> CPP_ret(bool)( //
             requires bidirectional_iterator<I> && sentinel_for<S, I> && sortable<I, C, P>)
         {
-            if(begin == end_)
+            if(first == end_)
                 return false;
-            I end = ranges::next(begin, end_), i = end;
-            if(begin == --i)
+            I last = ranges::next(first, end_), i = last;
+            if(first == --i)
                 return false;
             while(true)
             {
                 I ip1 = i;
                 if(invoke(pred, invoke(proj, *ip1), invoke(proj, *--i)))
                 {
-                    I j = end;
+                    I j = last;
                     while(!invoke(pred, invoke(proj, *--j), invoke(proj, *i)))
                         ;
                     ranges::iter_swap(i, j);
-                    ranges::reverse(ip1, end);
+                    ranges::reverse(ip1, last);
                     return true;
                 }
-                if(i == begin)
+                if(i == first)
                 {
-                    ranges::reverse(begin, end);
+                    ranges::reverse(first, last);
                     return false;
                 }
             }

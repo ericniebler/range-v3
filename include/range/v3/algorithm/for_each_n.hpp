@@ -35,16 +35,16 @@ namespace ranges
     struct for_each_n_fn
     {
         template<typename I, typename F, typename P = identity>
-        auto operator()(I begin, iter_difference_t<I> n, F fun,
+        auto operator()(I first, iter_difference_t<I> n, F fun,
                         P proj = P{}) const -> CPP_ret(I)( //
             requires input_iterator<I> && indirectly_unary_invocable<F, projected<I, P>>)
         {
             RANGES_EXPECT(0 <= n);
             auto norig = n;
-            auto b = uncounted(begin);
+            auto b = uncounted(first);
             for(; 0 < n; ++b, --n)
                 invoke(fun, invoke(proj, *b));
-            return recounted(begin, b, norig);
+            return recounted(first, b, norig);
         }
 
         template<typename Rng, typename F, typename P = identity>

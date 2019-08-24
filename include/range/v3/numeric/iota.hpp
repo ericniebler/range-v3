@@ -27,13 +27,13 @@ namespace ranges
     struct iota_fn
     {
         template<typename O, typename S, typename T>
-        auto operator()(O begin, S end, T val) const -> CPP_ret(O)( //
+        auto operator()(O first, S last, T val) const -> CPP_ret(O)( //
             requires output_iterator<O, T const &> && sentinel_for<S, O> &&
                 weakly_incrementable<T>)
         {
-            for(; begin != end; ++begin, ++val)
-                *begin = detail::as_const(val);
-            return begin;
+            for(; first != last; ++first, ++val)
+                *first = detail::as_const(val);
+            return first;
         }
 
         template<typename Rng, typename T>

@@ -223,9 +223,9 @@ namespace ranges
         raw_storage_iterator<Val *, Val> rsi_;
 
     public:
-        explicit raw_buffer(Val * begin)
-          : begin_(begin)
-          , rsi_(begin)
+        explicit raw_buffer(Val * first)
+          : begin_(first)
+          , rsi_(first)
         {}
         raw_buffer(raw_buffer &&) = default;
         raw_buffer(raw_buffer const &) = delete;

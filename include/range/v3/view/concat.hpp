@@ -177,12 +177,12 @@ namespace ranges
                 auto operator()(indexed_element<I, N> it) const -> CPP_ret(void)( //
                     requires random_access_iterator<I>)
                 {
-                    auto end = ranges::end(std::get<N>(pos->rng_->rngs_));
-                    // BUGBUG If distance(it, end) > n, then using bounded advance
-                    // is O(n) when it need not be since the end iterator position
+                    auto last = ranges::end(std::get<N>(pos->rng_->rngs_));
+                    // BUGBUG If distance(it, last) > n, then using bounded advance
+                    // is O(n) when it need not be since the last iterator position
                     // is actually not interesting. Only the "rest" is needed, which
                     // can sometimes be O(1).
-                    auto rest = ranges::advance(it.get(), n, std::move(end));
+                    auto rest = ranges::advance(it.get(), n, std::move(last));
                     pos->satisfy(meta::size_t<N>{});
                     if(rest != 0)
                         pos->its_.visit_i(advance_fwd_fun{pos, rest});
@@ -202,8 +202,8 @@ namespace ranges
                 auto operator()(indexed_element<I, N> it) const -> CPP_ret(void)( //
                     requires random_access_iterator<I>)
                 {
-                    auto begin = ranges::begin(std::get<N>(pos->rng_->rngs_));
-                    if(it.get() == begin)
+                    auto first = ranges::begin(std::get<N>(pos->rng_->rngs_));
+                    if(it.get() == first)
                     {
                         auto && rng = std::get<N - 1>(pos->rng_->rngs_);
                         ranges::emplace<N - 1>(
@@ -213,7 +213,7 @@ namespace ranges
                     }
                     else
                     {
-                        auto rest = ranges::advance(it.get(), n, std::move(begin));
+                        auto rest = ranges::advance(it.get(), n, std::move(first));
                         if(rest != 0)
                             pos->its_.visit_i(advance_rev_fun{pos, rest});
                     }

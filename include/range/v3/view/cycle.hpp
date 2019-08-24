@@ -118,9 +118,9 @@ namespace ranges
             }
             void next()
             {
-                auto const end = ranges::end(rng_->rng_);
-                RANGES_EXPECT(it_ != end);
-                if(++it_ == end)
+                auto const last = ranges::end(rng_->rng_);
+                RANGES_EXPECT(it_ != last);
+                if(++it_ == last)
                 {
                     ++n_;
                     this->set_end_(meta::bool_<(bool)common_range<CRng>>{});
@@ -143,26 +143,26 @@ namespace ranges
                 requires random_access_range<CRng> &&
                     detail::integer_like_<Diff>) void advance(Diff n)
             {
-                auto const begin = ranges::begin(rng_->rng_);
-                auto const end = this->get_end_(meta::bool_<(bool)common_range<CRng>>{},
+                auto const first = ranges::begin(rng_->rng_);
+                auto const last = this->get_end_(meta::bool_<(bool)common_range<CRng>>{},
                                                 meta::bool_<true>());
-                auto const dist = end - begin;
-                auto const d = it_ - begin;
+                auto const dist = last - first;
+                auto const d = it_ - first;
                 auto const off = (d + n) % dist;
                 n_ += (d + n) / dist;
                 RANGES_EXPECT(n_ >= 0);
                 using D = range_difference_t<Rng>;
-                it_ = begin + static_cast<D>(off < 0 ? off + dist : off);
+                it_ = first + static_cast<D>(off < 0 ? off + dist : off);
             }
             CPP_member
             auto CPP_fun(distance_to)(cursor const & that)(
                 const requires sized_sentinel_for<iterator, iterator>)
             {
                 RANGES_EXPECT(that.rng_ == rng_);
-                auto const begin = ranges::begin(rng_->rng_);
-                auto const end = this->get_end_(meta::bool_<(bool)common_range<Rng>>{},
+                auto const first = ranges::begin(rng_->rng_);
+                auto const last = this->get_end_(meta::bool_<(bool)common_range<Rng>>{},
                                                 meta::bool_<true>());
-                auto const dist = end - begin;
+                auto const dist = last - first;
                 return (that.n_ - n_) * dist + (that.it_ - it_);
             }
         };

@@ -37,15 +37,15 @@ namespace ranges
     struct copy_backward_fn
     {
         template<typename I, typename S, typename O>
-        auto operator()(I begin, S end_, O out) const
+        auto operator()(I first, S end_, O out) const
             -> CPP_ret(copy_backward_result<I, O>)( //
                 requires bidirectional_iterator<I> && sentinel_for<S, I> &&
                     bidirectional_iterator<O> && indirectly_copyable<I, O>)
         {
-            I i = ranges::next(begin, end_), end = i;
-            while(begin != i)
+            I i = ranges::next(first, end_), last = i;
+            while(first != i)
                 *--out = *--i;
-            return {end, out};
+            return {last, out};
         }
 
         template<typename Rng, typename O>

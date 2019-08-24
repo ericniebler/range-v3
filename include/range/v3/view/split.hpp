@@ -133,8 +133,8 @@ namespace ranges
             constexpr bool done_() const
             {
                 auto cur = current_();
-                auto end = ranges::end(i_.parent_->base_);
-                if(cur == end)
+                auto last = ranges::end(i_.parent_->base_);
+                if(cur == last)
                     return true;
                 auto pcur = ranges::begin(i_.parent_->pattern_);
                 auto pend = ranges::end(i_.parent_->pattern_);
@@ -146,7 +146,7 @@ namespace ranges
                         return false;
                     if(++pcur == pend)
                         return true;
-                } while(++cur != end);
+                } while(++cur != last);
                 return false;
             }
 #if RANGES_CXX_IF_CONSTEXPR < RANGES_CXX_IF_CONSTEXPR_17
@@ -395,8 +395,8 @@ namespace ranges
             constexpr split_outer_iterator & operator++()
             {
                 auto & current = current_();
-                const auto end = ranges::end(base_());
-                if(current == end)
+                const auto last = ranges::end(base_());
+                if(current == last)
                     return *this;
                 auto const pbegin = ranges::begin(parent_->pattern_);
                 auto const pend = ranges::end(parent_->pattern_);
@@ -405,13 +405,13 @@ namespace ranges
                 else
                     do
                     {
-                        const auto ret = ranges::mismatch(current, end, pbegin, pend);
+                        const auto ret = ranges::mismatch(current, last, pbegin, pend);
                         if(ret.in2 == pend)
                         {
                             current = ret.in1; // The pattern matched; skip it
                             break;
                         }
-                    } while(++current != end);
+                    } while(++current != last);
                 return *this;
             }
 

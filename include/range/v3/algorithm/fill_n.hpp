@@ -31,16 +31,16 @@ namespace ranges
     struct fill_n_fn
     {
         template<typename O, typename V>
-        auto operator()(O begin, iter_difference_t<O> n, V const & val) const
+        auto operator()(O first, iter_difference_t<O> n, V const & val) const
             -> CPP_ret(O)( //
                 requires output_iterator<O, V const &>)
         {
             RANGES_EXPECT(n >= 0);
             auto norig = n;
-            auto b = uncounted(begin);
+            auto b = uncounted(first);
             for(; n != 0; ++b, --n)
                 *b = val;
-            return recounted(begin, b, norig);
+            return recounted(first, b, norig);
         }
     };
 

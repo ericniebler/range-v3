@@ -112,8 +112,8 @@ int main()
     }
 
     {
-        int const data[] = {1,2,3,4};
-        auto rng = debug_input_view<int const>{data} | views::common;
+        int const rgi[] = {1,2,3,4};
+        auto rng = debug_input_view<int const>{rgi} | views::common;
         using Rng = decltype(rng);
         CPP_assert(input_range<Rng> && view_<Rng>);
         CPP_assert(!forward_range<Rng>);

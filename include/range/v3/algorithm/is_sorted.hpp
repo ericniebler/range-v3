@@ -45,13 +45,13 @@ namespace ranges
         /// projected<I, P>>` concept
         ///
         template<typename I, typename S, typename R = less, typename P = identity>
-        auto operator()(I begin, S end, R rel = R{}, P proj = P{}) const
+        auto operator()(I first, S last, R rel = R{}, P proj = P{}) const
             -> CPP_ret(bool)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
                     indirect_strict_weak_order<R, projected<I, P>>)
         {
             return is_sorted_until(
-                       std::move(begin), end, std::move(rel), std::move(proj)) == end;
+                       std::move(first), last, std::move(rel), std::move(proj)) == last;
         }
 
         template<typename Rng, typename R = less, typename P = identity>

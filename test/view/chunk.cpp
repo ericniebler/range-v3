@@ -80,32 +80,36 @@ namespace
 
 int main()
 {
-    auto v = views::iota(0,11) | to<std::vector>();
-    auto rng1 = v | views::chunk(3);
-    CPP_assert(random_access_range<decltype(rng1)>);
-    CPP_assert(sized_range<decltype(rng1)>);
-    auto it1 = ranges::begin(rng1);
-    ::check_equal(*it1++, {0,1,2});
-    ::check_equal(*it1++, {3,4,5});
-    ::check_equal(*it1++, {6,7,8});
-    ::check_equal(*it1++, {9,10});
-    CHECK(it1 == ranges::end(rng1));
-    ::check_equal(*ranges::next(it1, -3), {3,4,5});
-    CHECK(size(rng1), 4u);
-    CHECK(sizeof(rng1.begin()) == sizeof(v.begin()) * 2 + sizeof(std::ptrdiff_t) * 2);
+    {
+        auto v = views::iota(0,11) | to<std::vector>();
+        auto rng1 = v | views::chunk(3);
+        CPP_assert(random_access_range<decltype(rng1)>);
+        CPP_assert(sized_range<decltype(rng1)>);
+        auto it1 = ranges::begin(rng1);
+        ::check_equal(*it1++, {0,1,2});
+        ::check_equal(*it1++, {3,4,5});
+        ::check_equal(*it1++, {6,7,8});
+        ::check_equal(*it1++, {9,10});
+        CHECK(it1 == ranges::end(rng1));
+        ::check_equal(*ranges::next(it1, -3), {3,4,5});
+        CHECK(size(rng1), 4u);
+        CHECK(sizeof(rng1.begin()) == sizeof(v.begin()) * 2 + sizeof(std::ptrdiff_t) * 2);
+    }
 
-    auto l = views::iota(0,11) | to<std::forward_list>();
-    auto rng2 = l | views::chunk(3);
-    CPP_assert(forward_range<decltype(rng2)>);
-    CPP_assert(!bidirectional_range<decltype(rng2)>);
-    CPP_assert(!sized_range<decltype(rng2)>);
-    auto it2 = ranges::begin(rng2);
-    ::check_equal(*it2++, {0,1,2});
-    ::check_equal(*it2++, {3,4,5});
-    ::check_equal(*it2++, {6,7,8});
-    ::check_equal(*it2++, {9,10});
-    CHECK(it2 == ranges::end(rng2));
-    CHECK(sizeof(rng2.begin()) == sizeof(l.begin()) * 2 + sizeof(std::ptrdiff_t));
+    {
+        auto l = views::iota(0,11) | to<std::forward_list>();
+        auto rng2 = l | views::chunk(3);
+        CPP_assert(forward_range<decltype(rng2)>);
+        CPP_assert(!bidirectional_range<decltype(rng2)>);
+        CPP_assert(!sized_range<decltype(rng2)>);
+        auto it2 = ranges::begin(rng2);
+        ::check_equal(*it2++, {0,1,2});
+        ::check_equal(*it2++, {3,4,5});
+        ::check_equal(*it2++, {6,7,8});
+        ::check_equal(*it2++, {9,10});
+        CHECK(it2 == ranges::end(rng2));
+        CHECK(sizeof(rng2.begin()) == sizeof(l.begin()) * 2 + sizeof(std::ptrdiff_t));
+    }
 
     {
         // An infinite, cyclic range with cycle length == 1
@@ -195,8 +199,8 @@ int main()
 
     {
         // Regression test for #567
-        std::vector<std::vector<int>> data{{1, 2, 3}, {4, 5, 6}};
-        auto rng = data | views::join | views::chunk(2);
+        std::vector<std::vector<int>> vec{{1, 2, 3}, {4, 5, 6}};
+        auto rng = vec | views::join | views::chunk(2);
         CPP_assert(input_range<decltype(rng)>);
         CPP_assert(input_range<range_reference_t<decltype(rng)>>);
         int const expected[][2] = {{1, 2}, {3, 4}, {5, 6}};

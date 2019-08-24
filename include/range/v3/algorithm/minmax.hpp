@@ -56,23 +56,23 @@ namespace ranges
                     indirectly_copyable_storable<iterator_t<Rng>, range_value_t<Rng> *>)
         {
             using R = minmax_result<range_value_t<Rng>>;
-            auto begin = ranges::begin(rng);
-            auto end = ranges::end(rng);
-            RANGES_EXPECT(begin != end);
-            auto result = R{*begin, *begin};
-            if(++begin != end)
+            auto first = ranges::begin(rng);
+            auto last = ranges::end(rng);
+            RANGES_EXPECT(first != last);
+            auto result = R{*first, *first};
+            if(++first != last)
             {
                 {
-                    auto && tmp = *begin;
+                    auto && tmp = *first;
                     if(invoke(pred, invoke(proj, tmp), invoke(proj, result.min)))
                         result.min = (decltype(tmp) &&)tmp;
                     else
                         result.max = (decltype(tmp) &&)tmp;
                 }
-                while(++begin != end)
+                while(++first != last)
                 {
-                    range_value_t<Rng> tmp1 = *begin;
-                    if(++begin == end)
+                    range_value_t<Rng> tmp1 = *first;
+                    if(++first == last)
                     {
                         if(invoke(pred, invoke(proj, tmp1), invoke(proj, result.min)))
                             result.min = std::move(tmp1);
@@ -82,7 +82,7 @@ namespace ranges
                         break;
                     }
 
-                    auto && tmp2 = *begin;
+                    auto && tmp2 = *first;
                     if(invoke(pred, invoke(proj, tmp2), invoke(proj, tmp1)))
                     {
                         if(invoke(pred, invoke(proj, tmp2), invoke(proj, result.min)))
