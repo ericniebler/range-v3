@@ -97,22 +97,22 @@ $(document).ready(function(){initNavTree('partition_8hpp.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">partition.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1partition__fn.html">ranges::partition_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ga4dc392eb1def2c89fecf144994f33deb"><td class="memItemLeft" align="right" valign="top">constexpr partition_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga4dc392eb1def2c89fecf144994f33deb">ranges::partition</a> {}</td></tr>
-<tr class="separator:ga4dc392eb1def2c89fecf144994f33deb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga44ec603253c1d8b7db74726ff72fcab7"><td class="memTemplParams" colspan="2">
+template&lt;typename I , typename S , typename C , typename P  = identity&gt; </td></tr>
+<tr class="memitem:ga44ec603253c1d8b7db74726ff72fcab7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga44ec603253c1d8b7db74726ff72fcab7">ranges::partition</a> (I first, S last, C pred, P proj=P{}) -&gt; I requires permutable&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;indirect_unary_predicate&lt; C, projected&lt; I, P &gt;&gt;</td></tr>
+<tr class="memdesc:ga44ec603253c1d8b7db74726ff72fcab7"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>partition</code> <br /></td></tr>
+<tr class="separator:ga44ec603253c1d8b7db74726ff72fcab7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabe6a0c55a56570b91f62b59f9dc906c7"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename C , typename P  = identity&gt; </td></tr>
+<tr class="memitem:gabe6a0c55a56570b91f62b59f9dc906c7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gabe6a0c55a56570b91f62b59f9dc906c7">ranges::partition</a> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, C pred, P proj=P{}) -&gt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt; requires forward_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;permutable&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;&gt; &amp;&amp;indirect_unary_predicate&lt; C, projected&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, P &gt;&gt;</td></tr>
+<tr class="separator:gabe6a0c55a56570b91f62b59f9dc906c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -97,22 +97,22 @@ $(document).ready(function(){initNavTree('ends__with_8hpp.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">ends_with.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1ends__with__fn.html">ranges::ends_with_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:gad639c644014e7f057f38c7f0513ea95c"><td class="memItemLeft" align="right" valign="top">constexpr ends_with_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gad639c644014e7f057f38c7f0513ea95c">ranges::ends_with</a> {}</td></tr>
-<tr class="separator:gad639c644014e7f057f38c7f0513ea95c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga1c871db78e32e35d5e77d844f2df9bd6"><td class="memTemplParams" colspan="2">
+template&lt;typename I0 , typename S0 , typename I1 , typename S1 , typename C  = equal_to, typename P0  = identity, typename P1  = identity&gt; </td></tr>
+<tr class="memitem:ga1c871db78e32e35d5e77d844f2df9bd6"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga1c871db78e32e35d5e77d844f2df9bd6">ranges::ends_with</a> (I0 begin0, S0 end0, I1 begin1, S1 end1, C pred=C{}, P0 proj0=P0{}, P1 proj1=P1{}) -&gt; bool requires((forward_iterator&lt; I0 &gt; &amp;&amp;sentinel_for&lt; S0, I0 &gt;)||(input_iterator&lt; I0 &gt; &amp;&amp;sized_sentinel_for&lt; S0, I0 &gt;)) &amp;&amp;((forward_iterator&lt; I1 &gt; &amp;&amp;sentinel_for&lt; S1, I1 &gt;)||(input_iterator&lt; I1 &gt; &amp;&amp;sized_sentinel_for&lt; S1, I1 &gt;)) &amp;&amp;indirectly_comparable&lt; I0, I1, C, P0, P1 &gt;</td></tr>
+<tr class="memdesc:ga1c871db78e32e35d5e77d844f2df9bd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>ends_with</code> <br /></td></tr>
+<tr class="separator:ga1c871db78e32e35d5e77d844f2df9bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga153b08aa10efdd1745b55a66dff7aa65"><td class="memTemplParams" colspan="2">template&lt;typename Rng0 , typename Rng1 , typename C  = equal_to, typename P0  = identity, typename P1  = identity&gt; </td></tr>
+<tr class="memitem:ga153b08aa10efdd1745b55a66dff7aa65"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga153b08aa10efdd1745b55a66dff7aa65">ranges::ends_with</a> (Rng0 &amp;&amp;rng0, Rng1 &amp;&amp;rng1, C pred=C{}, P0 proj0=P0{}, P1 proj1=P1{}) -&gt; bool requires(forward_range&lt; Rng0 &gt;||(input_range&lt; Rng0 &gt; &amp;&amp;sized_range&lt; Rng0 &gt;)) &amp;&amp;(forward_range&lt; Rng1 &gt;||(input_range&lt; Rng1 &gt; &amp;&amp;sized_range&lt; Rng1 &gt;)) &amp;&amp;indirectly_comparable&lt; iterator_t&lt; Rng0 &gt;, iterator_t&lt; Rng1 &gt;, C, P0, P1 &gt;</td></tr>
+<tr class="separator:ga153b08aa10efdd1745b55a66dff7aa65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

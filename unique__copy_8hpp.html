@@ -97,19 +97,13 @@ $(document).ready(function(){initNavTree('unique__copy_8hpp.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">unique_copy.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1unique__copy__fn.html">ranges::unique_copy_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:gaf7ea4487e401b787c778cbc28e43913d"><td class="memTemplParams" colspan="2">
@@ -117,10 +111,15 @@ template&lt;typename I , typename O &gt; </td></tr>
 <tr class="memitem:gaf7ea4487e401b787c778cbc28e43913d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::unique_copy_result</b> = detail::in_out_result&lt; I, O &gt;</td></tr>
 <tr class="separator:gaf7ea4487e401b787c778cbc28e43913d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ga06ca3c10e5ec5aad6bdbd2a98768416d"><td class="memItemLeft" align="right" valign="top">constexpr unique_copy_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga06ca3c10e5ec5aad6bdbd2a98768416d">ranges::unique_copy</a> {}</td></tr>
-<tr class="separator:ga06ca3c10e5ec5aad6bdbd2a98768416d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gafe19943e4d2efa41533b2d068dc268c4"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename O , typename C  = equal_to, typename P  = identity&gt; </td></tr>
+<tr class="memitem:gafe19943e4d2efa41533b2d068dc268c4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gafe19943e4d2efa41533b2d068dc268c4">ranges::unique_copy</a> (I first, S last, O out, C pred=C{}, P proj=P{}) -&gt; unique_copy_result&lt; I, O &gt; requires input_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;indirect_relation&lt; C, projected&lt; I, P &gt;&gt; &amp;&amp;weakly_incrementable&lt; O &gt; &amp;&amp;indirectly_copyable&lt; I, O &gt; &amp;&amp;(forward_iterator&lt; I &gt;||forward_iterator&lt; O &gt;||indirectly_copyable_storable&lt; I, O &gt;)</td></tr>
+<tr class="memdesc:gafe19943e4d2efa41533b2d068dc268c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">template function unique_copy  <a href="group__group-algorithms.html#gafe19943e4d2efa41533b2d068dc268c4">More...</a><br /></td></tr>
+<tr class="separator:gafe19943e4d2efa41533b2d068dc268c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4cb85c9a5ce8c5773f1f7f8fa9d6ef15"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename O , typename C  = equal_to, typename P  = identity&gt; </td></tr>
+<tr class="memitem:ga4cb85c9a5ce8c5773f1f7f8fa9d6ef15"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga4cb85c9a5ce8c5773f1f7f8fa9d6ef15">ranges::unique_copy</a> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, O out, C pred=C{}, P proj=P{}) -&gt; unique_copy_result&lt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, O &gt; requires input_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;indirect_relation&lt; C, projected&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, P &gt;&gt; &amp;&amp;weakly_incrementable&lt; O &gt; &amp;&amp;indirectly_copyable&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, O &gt; &amp;&amp;(forward_iterator&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;&gt;||forward_iterator&lt; O &gt;||indirectly_copyable_storable&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, O &gt;)</td></tr>
+<tr class="separator:ga4cb85c9a5ce8c5773f1f7f8fa9d6ef15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

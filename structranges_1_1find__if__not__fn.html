@@ -106,17 +106,17 @@ $(document).ready(function(){initNavTree('structranges_1_1find__if__not__fn.html
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9566b61b8570d05fe98647aef25c00c6"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename F , typename P  = identity&gt; </td></tr>
-<tr class="memitem:a9566b61b8570d05fe98647aef25c00c6"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1find__if__not__fn.html#a9566b61b8570d05fe98647aef25c00c6">operator()</a> (I begin, S end, F pred, P proj=P{}) const -&gt; I requires input_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;indirect_unary_predicate&lt; F, projected&lt; I, P &gt;&gt;</td></tr>
-<tr class="memdesc:a9566b61b8570d05fe98647aef25c00c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">template function <code>find_if_not_fn::operator()</code>  <a href="#a9566b61b8570d05fe98647aef25c00c6">More...</a><br /></td></tr>
-<tr class="separator:a9566b61b8570d05fe98647aef25c00c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac98763b73d7f81260845e25baf35cbb8"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename F , typename P  = identity&gt; </td></tr>
+<tr class="memitem:ac98763b73d7f81260845e25baf35cbb8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1find__if__not__fn.html#ac98763b73d7f81260845e25baf35cbb8">operator()</a> (I first, S last, F pred, P proj=P{}) const -&gt; I requires input_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;indirect_unary_predicate&lt; F, projected&lt; I, P &gt;&gt;</td></tr>
+<tr class="memdesc:ac98763b73d7f81260845e25baf35cbb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">template function <code>find_if_not_fn::operator()</code>  <a href="#ac98763b73d7f81260845e25baf35cbb8">More...</a><br /></td></tr>
+<tr class="separator:ac98763b73d7f81260845e25baf35cbb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6a23cb85d10ecb3282831ebdb33d6fb"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename F , typename P  = identity&gt; </td></tr>
 <tr class="memitem:ab6a23cb85d10ecb3282831ebdb33d6fb"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1find__if__not__fn.html#ab6a23cb85d10ecb3282831ebdb33d6fb">operator()</a> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, F pred, P proj=P{}) const -&gt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt; requires input_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;indirect_unary_predicate&lt; F, projected&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, P &gt;&gt;</td></tr>
 <tr class="separator:ab6a23cb85d10ecb3282831ebdb33d6fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a9566b61b8570d05fe98647aef25c00c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9566b61b8570d05fe98647aef25c00c6">&#9670;&nbsp;</a></span>operator()() <span class="overload">[1/2]</span></h2>
+<a id="ac98763b73d7f81260845e25baf35cbb8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac98763b73d7f81260845e25baf35cbb8">&#9670;&nbsp;</a></span>operator()() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -127,13 +127,13 @@ template&lt;typename I , typename S , typename F , typename P  = identity&gt; </
           <td class="memname"><a class="el" href="classauto.html">auto</a> ranges::find_if_not_fn::operator() </td>
           <td>(</td>
           <td class="paramtype">I&#160;</td>
-          <td class="paramname"><em>begin</em>, </td>
+          <td class="paramname"><em>first</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">S&#160;</td>
-          <td class="paramname"><em>end</em>, </td>
+          <td class="paramname"><em>last</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

@@ -1,5 +1,5 @@
 var structranges_1_1search__n__fn =
 [
-    [ "operator()", "structranges_1_1search__n__fn.html#afde48d288e774340f4bdd1c928619326", null ],
-    [ "operator()", "structranges_1_1search__n__fn.html#a37f94314b2d4b6ae4ef67967d0130d4b", null ]
+    [ "operator()", "structranges_1_1search__n__fn.html#a2b42bb26c2fb3c62df7a3614bfbdc4cb", null ],
+    [ "operator()", "structranges_1_1search__n__fn.html#ab306c65f60829bb39510d21b4799ae39", null ]
 ];

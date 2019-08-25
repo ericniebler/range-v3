@@ -68,7 +68,7 @@ var dir_f64c802fe29abe2a49d1e11f47447009 =
     [ "set_algorithm.hpp", "algorithm_2set__algorithm_8hpp.html", "algorithm_2set__algorithm_8hpp" ],
     [ "shuffle.hpp", "algorithm_2shuffle_8hpp.html", "algorithm_2shuffle_8hpp" ],
     [ "sort.hpp", "algorithm_2sort_8hpp.html", "algorithm_2sort_8hpp" ],
-    [ "stable_partition.hpp", "stable__partition_8hpp.html", "stable__partition_8hpp" ],
+    [ "stable_partition.hpp", "stable__partition_8hpp.html", null ],
     [ "stable_sort.hpp", "algorithm_2stable__sort_8hpp.html", "algorithm_2stable__sort_8hpp" ],
     [ "swap_ranges.hpp", "swap__ranges_8hpp.html", "swap__ranges_8hpp" ],
     [ "transform.hpp", "algorithm_2transform_8hpp.html", "algorithm_2transform_8hpp" ],

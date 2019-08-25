@@ -12,7 +12,7 @@ var range_2v3_2range_2concepts_8hpp =
     [ "input_range_tag", "range_2v3_2range_2concepts_8hpp.html#ga84abdfc6f31514ad42770043c3f64003", null ],
     [ "random_access_range_tag", "range_2v3_2range_2concepts_8hpp.html#ga41914e9dddce597e80d12629269e6e53", null ],
     [ "range_tag", "range_2v3_2range_2concepts_8hpp.html#ga1e0708765275d8ccdc2a3dad5b352889", null ],
-    [ "range_tag_of", "range_2v3_2range_2concepts_8hpp.html#ga2ab89e6982be22d962a87c725dda1830", null ],
+    [ "range_tag_of", "range_2v3_2range_2concepts_8hpp.html#ga638889e03f7041febd14a4fc97738100", null ],
     [ "sized_range_tag", "range_2v3_2range_2concepts_8hpp.html#ga88897638f462fca337405e59d6f1b6e0", null ],
     [ "sized_range_tag_of", "range_2v3_2range_2concepts_8hpp.html#ga5c9d49848f02b63f07b2bd641f1baf9f", null ],
     [ "CPP_PP_CAT", "range_2v3_2range_2concepts_8hpp.html#gadd3b6581a0848444dc30139b31578a81", null ],

@@ -106,10 +106,10 @@ $(document).ready(function(){initNavTree('structranges_1_1partition__fn.html',''
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac6db0d34a7e9bf932218931d59c97179"><td class="memTemplParams" colspan="2"><a id="ac6db0d34a7e9bf932218931d59c97179"></a>
+<tr class="memitem:aa63484edbb6d878951afbbb78b5efa56"><td class="memTemplParams" colspan="2"><a id="aa63484edbb6d878951afbbb78b5efa56"></a>
 template&lt;typename I , typename S , typename C , typename P  = identity&gt; </td></tr>
-<tr class="memitem:ac6db0d34a7e9bf932218931d59c97179"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, C pred, P proj=P{}) const -&gt; I requires permutable&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;indirect_unary_predicate&lt; C, projected&lt; I, P &gt;&gt;</td></tr>
-<tr class="separator:ac6db0d34a7e9bf932218931d59c97179"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa63484edbb6d878951afbbb78b5efa56"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I first, S last, C pred, P proj=P{}) const -&gt; I requires permutable&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;indirect_unary_predicate&lt; C, projected&lt; I, P &gt;&gt;</td></tr>
+<tr class="separator:aa63484edbb6d878951afbbb78b5efa56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a379666ac804eeb2d40264c013618afb7"><td class="memTemplParams" colspan="2"><a id="a379666ac804eeb2d40264c013618afb7"></a>
 template&lt;typename Rng , typename C , typename P  = identity&gt; </td></tr>
 <tr class="memitem:a379666ac804eeb2d40264c013618afb7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, C pred, P proj=P{}) const -&gt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt; requires forward_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;permutable&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;&gt; &amp;&amp;indirect_unary_predicate&lt; C, projected&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, P &gt;&gt;</td></tr>

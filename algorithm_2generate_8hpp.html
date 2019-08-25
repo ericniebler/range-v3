@@ -97,19 +97,13 @@ $(document).ready(function(){initNavTree('algorithm_2generate_8hpp.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">generate.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1generate__fn.html">ranges::generate_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ga4b78921a0e76ce435f8c180041296192"><td class="memTemplParams" colspan="2">
@@ -117,10 +111,16 @@ template&lt;typename O , typename F &gt; </td></tr>
 <tr class="memitem:ga4b78921a0e76ce435f8c180041296192"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::generate_result</b> = detail::out_fun_result&lt; O, F &gt;</td></tr>
 <tr class="separator:ga4b78921a0e76ce435f8c180041296192"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:gaf9daf95b145e4b1730c9b6ffc5c6a88a"><td class="memItemLeft" align="right" valign="top">constexpr generate_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gaf9daf95b145e4b1730c9b6ffc5c6a88a">ranges::generate</a> {}</td></tr>
-<tr class="separator:gaf9daf95b145e4b1730c9b6ffc5c6a88a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga1218fcda185e3cbfa06c8da79062bba4"><td class="memTemplParams" colspan="2">
+template&lt;typename O , typename S , typename F &gt; </td></tr>
+<tr class="memitem:ga1218fcda185e3cbfa06c8da79062bba4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga1218fcda185e3cbfa06c8da79062bba4">ranges::generate</a> (O first, S last, F fun) -&gt; generate_result&lt; O, F &gt; requires invocable&lt; F &amp; &gt; &amp;&amp;output_iterator&lt; O, invoke_result_t&lt; F &amp; &gt;&gt; &amp;&amp;sentinel_for&lt; S, O &gt;</td></tr>
+<tr class="memdesc:ga1218fcda185e3cbfa06c8da79062bba4"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>generate_n</code> <br /></td></tr>
+<tr class="separator:ga1218fcda185e3cbfa06c8da79062bba4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae277dfff0628b1e0f057d81ad801db10"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename F &gt; </td></tr>
+<tr class="memitem:gae277dfff0628b1e0f057d81ad801db10"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gae277dfff0628b1e0f057d81ad801db10">ranges::generate</a> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, F fun) -&gt; generate_result&lt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, F &gt; requires invocable&lt; F &amp; &gt; &amp;&amp;output_range&lt; <a class="el" href="class_rng.html">Rng</a>, invoke_result_t&lt; F &amp; &gt;&gt;</td></tr>
+<tr class="separator:gae277dfff0628b1e0f057d81ad801db10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -106,18 +106,18 @@ $(document).ready(function(){initNavTree('structranges_1_1is__sorted__until__fn.
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:acefb5701732611da7c9fe8d2ec9c3404"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename R  = less, typename P  = identity&gt; </td></tr>
-<tr class="memitem:acefb5701732611da7c9fe8d2ec9c3404"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1is__sorted__until__fn.html#acefb5701732611da7c9fe8d2ec9c3404">operator()</a> (I begin, S end, R pred=R{}, P proj=P{}) const -&gt; I requires forward_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;indirect_strict_weak_order&lt; R, projected&lt; I, P &gt;&gt;</td></tr>
-<tr class="memdesc:acefb5701732611da7c9fe8d2ec9c3404"><td class="mdescLeft">&#160;</td><td class="mdescRight">template function <code>is_sorted_until_fn::operator()</code>  <a href="#acefb5701732611da7c9fe8d2ec9c3404">More...</a><br /></td></tr>
-<tr class="separator:acefb5701732611da7c9fe8d2ec9c3404"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97d1416a0d1eb72c7d7fdbdf8f0075d9"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename R  = less, typename P  = identity&gt; </td></tr>
+<tr class="memitem:a97d1416a0d1eb72c7d7fdbdf8f0075d9"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1is__sorted__until__fn.html#a97d1416a0d1eb72c7d7fdbdf8f0075d9">operator()</a> (I first, S last, R pred=R{}, P proj=P{}) const -&gt; I requires forward_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;indirect_strict_weak_order&lt; R, projected&lt; I, P &gt;&gt;</td></tr>
+<tr class="memdesc:a97d1416a0d1eb72c7d7fdbdf8f0075d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">template function <code>is_sorted_until_fn::operator()</code>  <a href="#a97d1416a0d1eb72c7d7fdbdf8f0075d9">More...</a><br /></td></tr>
+<tr class="separator:a97d1416a0d1eb72c7d7fdbdf8f0075d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2114fc4a40700ac282e368bb974292ad"><td class="memTemplParams" colspan="2"><a id="a2114fc4a40700ac282e368bb974292ad"></a>
 template&lt;typename Rng , typename R  = less, typename P  = identity&gt; </td></tr>
 <tr class="memitem:a2114fc4a40700ac282e368bb974292ad"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, R pred=R{}, P proj=P{}) const -&gt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt; requires forward_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;indirect_strict_weak_order&lt; R, projected&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, P &gt;&gt;</td></tr>
 <tr class="separator:a2114fc4a40700ac282e368bb974292ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="acefb5701732611da7c9fe8d2ec9c3404"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acefb5701732611da7c9fe8d2ec9c3404">&#9670;&nbsp;</a></span>operator()()</h2>
+<a id="a97d1416a0d1eb72c7d7fdbdf8f0075d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97d1416a0d1eb72c7d7fdbdf8f0075d9">&#9670;&nbsp;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -128,13 +128,13 @@ template&lt;typename I , typename S , typename R  = less, typename P  = identity
           <td class="memname"><a class="el" href="classauto.html">auto</a> ranges::is_sorted_until_fn::operator() </td>
           <td>(</td>
           <td class="paramtype">I&#160;</td>
-          <td class="paramname"><em>begin</em>, </td>
+          <td class="paramname"><em>first</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">S&#160;</td>
-          <td class="paramname"><em>end</em>, </td>
+          <td class="paramname"><em>last</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

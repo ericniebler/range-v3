@@ -97,19 +97,13 @@ $(document).ready(function(){initNavTree('replace__copy_8hpp.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">replace_copy.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1replace__copy__fn.html">ranges::replace_copy_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:gadf2b15655eb4ca83a6615695d37dc191"><td class="memTemplParams" colspan="2">
@@ -117,10 +111,16 @@ template&lt;typename I , typename O &gt; </td></tr>
 <tr class="memitem:gadf2b15655eb4ca83a6615695d37dc191"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::replace_copy_result</b> = detail::in_out_result&lt; I, O &gt;</td></tr>
 <tr class="separator:gadf2b15655eb4ca83a6615695d37dc191"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ga27264528feb3dc4e8dd876312302bebc"><td class="memItemLeft" align="right" valign="top">constexpr replace_copy_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga27264528feb3dc4e8dd876312302bebc">ranges::replace_copy</a> {}</td></tr>
-<tr class="separator:ga27264528feb3dc4e8dd876312302bebc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga4c5a843b7663cfd1bd361b9dfaefaf01"><td class="memTemplParams" colspan="2">
+template&lt;typename I , typename S , typename O , typename T1 , typename T2 , typename P  = identity&gt; </td></tr>
+<tr class="memitem:ga4c5a843b7663cfd1bd361b9dfaefaf01"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga4c5a843b7663cfd1bd361b9dfaefaf01">ranges::replace_copy</a> (I first, S last, O out, T1 const &amp;old_value, T2 const &amp;new_value, P proj={}) -&gt; replace_copy_result&lt; I, O &gt; requires input_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;output_iterator&lt; O, T2 const &amp; &gt; &amp;&amp;indirectly_copyable&lt; I, O &gt; &amp;&amp;indirect_relation&lt; equal_to, projected&lt; I, P &gt;, T1 const * &gt;</td></tr>
+<tr class="memdesc:ga4c5a843b7663cfd1bd361b9dfaefaf01"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>replace_copy</code> <br /></td></tr>
+<tr class="separator:ga4c5a843b7663cfd1bd361b9dfaefaf01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa5f7293875320edb639082858cc6dcd3"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename O , typename T1 , typename T2 , typename P  = identity&gt; </td></tr>
+<tr class="memitem:gaa5f7293875320edb639082858cc6dcd3"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gaa5f7293875320edb639082858cc6dcd3">ranges::replace_copy</a> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, O out, T1 const &amp;old_value, T2 const &amp;new_value, P proj={}) -&gt; replace_copy_result&lt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, O &gt; requires input_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;output_iterator&lt; O, T2 const &amp; &gt; &amp;&amp;indirectly_copyable&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, O &gt; &amp;&amp;indirect_relation&lt; equal_to, projected&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, P &gt;, T1 const * &gt;</td></tr>
+<tr class="separator:gaa5f7293875320edb639082858cc6dcd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

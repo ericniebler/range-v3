@@ -1,6 +1,6 @@
 var algorithm_2copy_8hpp =
 [
     [ "copy_result", "algorithm_2copy_8hpp.html#gab309c6678ed7ad0eea22415f3d66514a", null ],
-    [ "copy", "algorithm_2copy_8hpp.html#ga0207f6e299b229d266e099e1456ea08c", null ],
-    [ "copy", "algorithm_2copy_8hpp.html#a1518be5440dd0577f11f39f8cd4f4bfe", null ]
+    [ "copy", "algorithm_2copy_8hpp.html#ga83cdf5c653cd6f7b6d18deaab905cdd9", null ],
+    [ "copy", "algorithm_2copy_8hpp.html#ga917adb24d7ee65882cf576a5a4c5228d", null ]
 ];

@@ -97,19 +97,13 @@ $(document).ready(function(){initNavTree('remove__copy_8hpp.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">remove_copy.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1remove__copy__fn.html">ranges::remove_copy_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:gacbea707ae03721b200a22fe6918920d8"><td class="memTemplParams" colspan="2">
@@ -117,10 +111,16 @@ template&lt;typename I , typename O &gt; </td></tr>
 <tr class="memitem:gacbea707ae03721b200a22fe6918920d8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::remove_copy_result</b> = detail::in_out_result&lt; I, O &gt;</td></tr>
 <tr class="separator:gacbea707ae03721b200a22fe6918920d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ga6ba1d0731b34a1281f04628bab378005"><td class="memItemLeft" align="right" valign="top">constexpr remove_copy_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga6ba1d0731b34a1281f04628bab378005">ranges::remove_copy</a> {}</td></tr>
-<tr class="separator:ga6ba1d0731b34a1281f04628bab378005"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gad852bad333661acffd3fd5265c95bf48"><td class="memTemplParams" colspan="2">
+template&lt;typename I , typename S , typename O , typename T , typename P  = identity&gt; </td></tr>
+<tr class="memitem:gad852bad333661acffd3fd5265c95bf48"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gad852bad333661acffd3fd5265c95bf48">ranges::remove_copy</a> (I first, S last, O out, T const &amp;val, P proj=P{}) -&gt; remove_copy_result&lt; I, O &gt; requires input_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;weakly_incrementable&lt; O &gt; &amp;&amp;indirect_relation&lt; equal_to, projected&lt; I, P &gt;, T const * &gt; &amp;&amp;indirectly_copyable&lt; I, O &gt;</td></tr>
+<tr class="memdesc:gad852bad333661acffd3fd5265c95bf48"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>remove_copy</code> <br /></td></tr>
+<tr class="separator:gad852bad333661acffd3fd5265c95bf48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae1185b7f603d2a4781464b73a01e5dfa"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename O , typename T , typename P  = identity&gt; </td></tr>
+<tr class="memitem:gae1185b7f603d2a4781464b73a01e5dfa"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gae1185b7f603d2a4781464b73a01e5dfa">ranges::remove_copy</a> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, O out, T const &amp;val, P proj=P{}) -&gt; remove_copy_result&lt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, O &gt; requires input_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;weakly_incrementable&lt; O &gt; &amp;&amp;indirect_relation&lt; equal_to, projected&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, P &gt;, T const * &gt; &amp;&amp;indirectly_copyable&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, O &gt;</td></tr>
+<tr class="separator:gae1185b7f603d2a4781464b73a01e5dfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

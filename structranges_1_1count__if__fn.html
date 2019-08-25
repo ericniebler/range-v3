@@ -106,10 +106,10 @@ $(document).ready(function(){initNavTree('structranges_1_1count__if__fn.html',''
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0b802d56770e1fd624e0df26b6867226"><td class="memTemplParams" colspan="2"><a id="a0b802d56770e1fd624e0df26b6867226"></a>
+<tr class="memitem:af5a3d2a30f7e6a7a3adc8452fb296a46"><td class="memTemplParams" colspan="2"><a id="af5a3d2a30f7e6a7a3adc8452fb296a46"></a>
 template&lt;typename I , typename S , typename R , typename P  = identity&gt; </td></tr>
-<tr class="memitem:a0b802d56770e1fd624e0df26b6867226"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, R pred, P proj=P{}) const -&gt; iter_difference_t&lt; I &gt; requires input_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;indirect_unary_predicate&lt; R, projected&lt; I, P &gt;&gt;</td></tr>
-<tr class="separator:a0b802d56770e1fd624e0df26b6867226"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5a3d2a30f7e6a7a3adc8452fb296a46"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I first, S last, R pred, P proj=P{}) const -&gt; iter_difference_t&lt; I &gt; requires input_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;indirect_unary_predicate&lt; R, projected&lt; I, P &gt;&gt;</td></tr>
+<tr class="separator:af5a3d2a30f7e6a7a3adc8452fb296a46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae65a3ddef128415af2247a4c36c51c55"><td class="memTemplParams" colspan="2"><a id="ae65a3ddef128415af2247a4c36c51c55"></a>
 template&lt;typename Rng , typename R , typename P  = identity&gt; </td></tr>
 <tr class="memitem:ae65a3ddef128415af2247a4c36c51c55"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, R pred, P proj=P{}) const -&gt; iter_difference_t&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;&gt; requires input_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;indirect_unary_predicate&lt; R, projected&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, P &gt;&gt;</td></tr>

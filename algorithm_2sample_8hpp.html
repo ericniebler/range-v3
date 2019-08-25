@@ -97,19 +97,13 @@ $(document).ready(function(){initNavTree('algorithm_2sample_8hpp.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">sample.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1sample__fn.html">ranges::sample_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ga8571d401e506014ea1a86618ca01545f"><td class="memTemplParams" colspan="2">
@@ -117,10 +111,22 @@ template&lt;typename I , typename O &gt; </td></tr>
 <tr class="memitem:ga8571d401e506014ea1a86618ca01545f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::sample_result</b> = detail::in_out_result&lt; I, O &gt;</td></tr>
 <tr class="separator:ga8571d401e506014ea1a86618ca01545f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:gaf6db7ee1051ac3f6fcbf5307a8dd16a1"><td class="memItemLeft" align="right" valign="top">constexpr sample_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gaf6db7ee1051ac3f6fcbf5307a8dd16a1">ranges::sample</a> {}</td></tr>
-<tr class="separator:gaf6db7ee1051ac3f6fcbf5307a8dd16a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga0ba2307e528141f69de2d92e3c878eee"><td class="memTemplParams" colspan="2">
+template&lt;typename I , typename S , typename O , typename Gen  = detail::default_random_engine &amp;&gt; </td></tr>
+<tr class="memitem:ga0ba2307e528141f69de2d92e3c878eee"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga0ba2307e528141f69de2d92e3c878eee">ranges::sample</a> (I first, S last, O out, iter_difference_t&lt; O &gt; const n, Gen &amp;&amp;gen=detail::get_random_engine()) -&gt; sample_result&lt; I, O &gt; requires input_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;weakly_incrementable&lt; O &gt; &amp;&amp;indirectly_copyable&lt; I, O &gt; &amp;&amp;uniform_random_bit_generator&lt; std::remove_reference_t&lt; Gen &gt;&gt; &amp;&amp;(random_access_iterator&lt; O &gt;||forward_iterator&lt; I &gt;||sized_sentinel_for&lt; S, I &gt;)</td></tr>
+<tr class="memdesc:ga0ba2307e528141f69de2d92e3c878eee"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>sample</code> <br /></td></tr>
+<tr class="separator:ga0ba2307e528141f69de2d92e3c878eee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga192ae87a73afdb587d4d4f58066ce0b3"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename ORng , typename Gen  = detail::default_random_engine &amp;&gt; </td></tr>
+<tr class="memitem:ga192ae87a73afdb587d4d4f58066ce0b3"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga192ae87a73afdb587d4d4f58066ce0b3">ranges::sample</a> (I first, S last, ORng &amp;&amp;out, Gen &amp;&amp;gen=detail::get_random_engine()) -&gt; sample_result&lt; I, safe_iterator_t&lt; ORng &gt;&gt; requires input_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;weakly_incrementable&lt; iterator_t&lt; ORng &gt;&gt; &amp;&amp;indirectly_copyable&lt; I, iterator_t&lt; ORng &gt;&gt; &amp;&amp;uniform_random_bit_generator&lt; std::remove_reference_t&lt; Gen &gt;&gt; &amp;&amp;(forward_range&lt; ORng &gt;||sized_range&lt; ORng &gt;)&amp;&amp;(random_access_iterator&lt; iterator_t&lt; ORng &gt;&gt;||forward_iterator&lt; I &gt;||sized_sentinel_for&lt; S, I &gt;)</td></tr>
+<tr class="separator:ga192ae87a73afdb587d4d4f58066ce0b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6699f9e02f0ebcb00a92417eccf6725c"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename O , typename Gen  = detail::default_random_engine &amp;&gt; </td></tr>
+<tr class="memitem:ga6699f9e02f0ebcb00a92417eccf6725c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga6699f9e02f0ebcb00a92417eccf6725c">ranges::sample</a> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, O out, iter_difference_t&lt; O &gt; const n, Gen &amp;&amp;gen=detail::get_random_engine()) -&gt; sample_result&lt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, O &gt; requires input_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;weakly_incrementable&lt; O &gt; &amp;&amp;indirectly_copyable&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, O &gt; &amp;&amp;uniform_random_bit_generator&lt; std::remove_reference_t&lt; Gen &gt;&gt; &amp;&amp;(random_access_iterator&lt; O &gt;||forward_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt;||sized_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt;)</td></tr>
+<tr class="separator:ga6699f9e02f0ebcb00a92417eccf6725c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadc045be30e4c526e3139fc9437082d3b"><td class="memTemplParams" colspan="2">template&lt;typename IRng , typename ORng , typename Gen  = detail::default_random_engine &amp;&gt; </td></tr>
+<tr class="memitem:gadc045be30e4c526e3139fc9437082d3b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gadc045be30e4c526e3139fc9437082d3b">ranges::sample</a> (IRng &amp;&amp;rng, ORng &amp;&amp;out, Gen &amp;&amp;gen=detail::get_random_engine()) -&gt; sample_result&lt; safe_iterator_t&lt; IRng &gt;, safe_iterator_t&lt; ORng &gt;&gt; requires input_range&lt; IRng &gt; &amp;&amp;range&lt; ORng &gt; &amp;&amp;indirectly_copyable&lt; iterator_t&lt; IRng &gt;, iterator_t&lt; ORng &gt;&gt; &amp;&amp;uniform_random_bit_generator&lt; std::remove_reference_t&lt; Gen &gt;&gt; &amp;&amp;(random_access_iterator&lt; iterator_t&lt; ORng &gt;&gt;||forward_range&lt; IRng &gt;||sized_range&lt; IRng &gt;)&amp;&amp;(forward_range&lt; ORng &gt;||sized_range&lt; ORng &gt;)</td></tr>
+<tr class="separator:gadc045be30e4c526e3139fc9437082d3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

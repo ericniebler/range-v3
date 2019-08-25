@@ -106,17 +106,17 @@ $(document).ready(function(){initNavTree('structranges_1_1adjacent__find__fn.htm
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a104aa2fcf8c7c87dc2fd01ca6d2e1224"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename C  = equal_to, typename P  = identity&gt; </td></tr>
-<tr class="memitem:a104aa2fcf8c7c87dc2fd01ca6d2e1224"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1adjacent__find__fn.html#a104aa2fcf8c7c87dc2fd01ca6d2e1224">operator()</a> (I begin, S end, C pred=C{}, P proj=P{}) const -&gt; I requires forward_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;indirect_relation&lt; C, projected&lt; I, P &gt;&gt;</td></tr>
-<tr class="memdesc:a104aa2fcf8c7c87dc2fd01ca6d2e1224"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>adjacent_find_fn::operator()</code>  <a href="#a104aa2fcf8c7c87dc2fd01ca6d2e1224">More...</a><br /></td></tr>
-<tr class="separator:a104aa2fcf8c7c87dc2fd01ca6d2e1224"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54929784e68c825d75d07d583b0aa780"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename C  = equal_to, typename P  = identity&gt; </td></tr>
+<tr class="memitem:a54929784e68c825d75d07d583b0aa780"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1adjacent__find__fn.html#a54929784e68c825d75d07d583b0aa780">operator()</a> (I first, S last, C pred=C{}, P proj=P{}) const -&gt; I requires forward_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;indirect_relation&lt; C, projected&lt; I, P &gt;&gt;</td></tr>
+<tr class="memdesc:a54929784e68c825d75d07d583b0aa780"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>adjacent_find_fn::operator()</code>  <a href="#a54929784e68c825d75d07d583b0aa780">More...</a><br /></td></tr>
+<tr class="separator:a54929784e68c825d75d07d583b0aa780"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d67d60aefdde38b557a65d3e01cf0bf"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename C  = equal_to, typename P  = identity&gt; </td></tr>
 <tr class="memitem:a1d67d60aefdde38b557a65d3e01cf0bf"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1adjacent__find__fn.html#a1d67d60aefdde38b557a65d3e01cf0bf">operator()</a> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, C pred=C{}, P proj=P{}) const -&gt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt; requires forward_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;indirect_relation&lt; C, projected&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, P &gt;&gt;</td></tr>
 <tr class="separator:a1d67d60aefdde38b557a65d3e01cf0bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a104aa2fcf8c7c87dc2fd01ca6d2e1224"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a104aa2fcf8c7c87dc2fd01ca6d2e1224">&#9670;&nbsp;</a></span>operator()() <span class="overload">[1/2]</span></h2>
+<a id="a54929784e68c825d75d07d583b0aa780"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54929784e68c825d75d07d583b0aa780">&#9670;&nbsp;</a></span>operator()() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -127,13 +127,13 @@ template&lt;typename I , typename S , typename C  = equal_to, typename P  = iden
           <td class="memname"><a class="el" href="classauto.html">auto</a> ranges::adjacent_find_fn::operator() </td>
           <td>(</td>
           <td class="paramtype">I&#160;</td>
-          <td class="paramname"><em>begin</em>, </td>
+          <td class="paramname"><em>first</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">S&#160;</td>
-          <td class="paramname"><em>end</em>, </td>
+          <td class="paramname"><em>last</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

@@ -5,9 +5,9 @@ var structranges_1_1span =
     [ "empty", "structranges_1_1span.html#a1d6598761f33a49b3cb418e519872fa3", null ],
     [ "end", "structranges_1_1span.html#acd98a38d31901f7766f5f24e1196c61f", null ],
     [ "first", "structranges_1_1span.html#a53831c93c9ba4de160390fcf7f9dffab", null ],
-    [ "first", "structranges_1_1span.html#aa5586520e7c598c8571c08b441c0d209", null ],
+    [ "first", "structranges_1_1span.html#a9dfbf99e4d606924e3270328bf36d46e", null ],
     [ "last", "structranges_1_1span.html#ad5e5df726f32fff8e12532d202de340c", null ],
-    [ "last", "structranges_1_1span.html#ae14d1444590b61d0165360080f971457", null ],
+    [ "last", "structranges_1_1span.html#aed5b37bc8997e211486d86fd1f0d430a", null ],
     [ "operator!=", "structranges_1_1span.html#a832462aeacb8a0f265c69ea9159df43f", null ],
     [ "operator<", "structranges_1_1span.html#a54be3b0dc5e5a08d857813654b5c32e5", null ],
     [ "operator<=", "structranges_1_1span.html#a1bb7c83167c8adbd96fa20d0a7a3eebc", null ],
@@ -23,7 +23,7 @@ var structranges_1_1span =
     [ "subspan", "structranges_1_1span.html#a3a8bb725b746782bc3b499f39394ce76", null ],
     [ "subspan", "structranges_1_1span.html#a64607a33fec73ced2f9a51c5523107e3", null ],
     [ "subspan", "structranges_1_1span.html#af1dbbfe951443a3d86fc96cc8ac0f190", null ],
-    [ "subspan", "structranges_1_1span.html#af45e21970b076f5e0c60f04af001cc4a", null ],
+    [ "subspan", "structranges_1_1span.html#acbaeffe1dd3126ef05e342bb1a83ebde", null ],
     [ "difference_type", "structranges_1_1span.html#a592b13b8d4c8e58d7398d7b444b922d4", null ],
     [ "element_type", "structranges_1_1span.html#a5c3b75b13e53fb063b3e7eedf23f4f2b", null ],
     [ "index_type", "structranges_1_1span.html#ac6018ccd97690f3cf542edb32135a252", null ],
@@ -33,6 +33,6 @@ var structranges_1_1span =
     [ "reverse_iterator", "structranges_1_1span.html#af37e822ac400d9526bddbc7161e140e7", null ],
     [ "value_type", "structranges_1_1span.html#a9925f75d7cdfbc9a47e4e25a81963da5", null ],
     [ "span", "structranges_1_1span.html#a3ba9743f73522848b2cd8822c5006879", null ],
-    [ "span", "structranges_1_1span.html#aed7bf9f5caf76be26e5aa4fc65caafd6", null ],
+    [ "span", "structranges_1_1span.html#a355df067e8bda636b23219be98f6331f", null ],
     [ "span", "structranges_1_1span.html#a969f032c51632302d5cf3ed774b3422f", null ]
 ];

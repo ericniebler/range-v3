@@ -97,19 +97,13 @@ $(document).ready(function(){initNavTree('swap__ranges_8hpp.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">swap_ranges.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1swap__ranges__fn.html">ranges::swap_ranges_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ga3a91c5c1590ec2c0cf1a56ea2e363dea"><td class="memTemplParams" colspan="2">
@@ -117,10 +111,24 @@ template&lt;typename I1 , typename I2 &gt; </td></tr>
 <tr class="memitem:ga3a91c5c1590ec2c0cf1a56ea2e363dea"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::swap_ranges_result</b> = detail::in1_in2_result&lt; I1, I2 &gt;</td></tr>
 <tr class="separator:ga3a91c5c1590ec2c0cf1a56ea2e363dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:gaf8a37c890ea18ec3fccc6a327e5f45c3"><td class="memItemLeft" align="right" valign="top">constexpr swap_ranges_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gaf8a37c890ea18ec3fccc6a327e5f45c3">ranges::swap_ranges</a> {}</td></tr>
-<tr class="separator:gaf8a37c890ea18ec3fccc6a327e5f45c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gad69ff7f6528c3abe5b01886a10279101"><td class="memTemplParams" colspan="2">
+template&lt;typename I1 , typename S1 , typename I2 &gt; </td></tr>
+<tr class="memitem:gad69ff7f6528c3abe5b01886a10279101"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gad69ff7f6528c3abe5b01886a10279101">ranges::swap_ranges</a> (I1 begin1, S1 end1, I2 begin2) -&gt; swap_ranges_result&lt; I1, I2 &gt; requires input_iterator&lt; I1 &gt; &amp;&amp;sentinel_for&lt; S1, I1 &gt; &amp;&amp;input_iterator&lt; I2 &gt; &amp;&amp;indirectly_swappable&lt; I1, I2 &gt;</td></tr>
+<tr class="memdesc:gad69ff7f6528c3abe5b01886a10279101"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>swap_ranges</code> <br /></td></tr>
+<tr class="separator:gad69ff7f6528c3abe5b01886a10279101"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac6c5f3296682ac14499cb0e7c39348ae"><td class="memTemplParams" colspan="2">template&lt;typename I1 , typename S1 , typename I2 , typename S2 &gt; </td></tr>
+<tr class="memitem:gac6c5f3296682ac14499cb0e7c39348ae"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gac6c5f3296682ac14499cb0e7c39348ae">ranges::swap_ranges</a> (I1 begin1, S1 end1, I2 begin2, S2 end2) -&gt; swap_ranges_result&lt; I1, I2 &gt; requires input_iterator&lt; I1 &gt; &amp;&amp;sentinel_for&lt; S1, I1 &gt; &amp;&amp;input_iterator&lt; I2 &gt; &amp;&amp;sentinel_for&lt; S2, I2 &gt; &amp;&amp;indirectly_swappable&lt; I1, I2 &gt;</td></tr>
+<tr class="separator:gac6c5f3296682ac14499cb0e7c39348ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga22dd7bb1a1351b69fc5a7d8a0819e6be"><td class="memTemplParams" colspan="2">
+template&lt;typename Rng1 , typename I2_ &gt; </td></tr>
+<tr class="memitem:ga22dd7bb1a1351b69fc5a7d8a0819e6be"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::swap_ranges</b> (Rng1 &amp;&amp;rng1, I2_ &amp;&amp;begin2) -&gt; swap_ranges_result&lt; iterator_t&lt; Rng1 &gt;, uncvref_t&lt; I2_ &gt;&gt; requires input_range&lt; Rng1 &gt; &amp;&amp;input_iterator&lt; uncvref_t&lt; I2_ &gt;&gt; &amp;&amp;indirectly_swappable&lt; iterator_t&lt; Rng1 &gt;, uncvref_t&lt; I2_ &gt;&gt;</td></tr>
+<tr class="separator:ga22dd7bb1a1351b69fc5a7d8a0819e6be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga987eea3fde92ccaa1d11dc9bb84c4028"><td class="memTemplParams" colspan="2">
+template&lt;typename Rng1 , typename Rng2 &gt; </td></tr>
+<tr class="memitem:ga987eea3fde92ccaa1d11dc9bb84c4028"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::swap_ranges</b> (Rng1 &amp;&amp;rng1, Rng2 &amp;&amp;rng2) -&gt; swap_ranges_result&lt; safe_iterator_t&lt; Rng1 &gt;, safe_iterator_t&lt; Rng2 &gt;&gt; requires input_range&lt; Rng1 &gt; &amp;&amp;input_range&lt; Rng2 &gt; &amp;&amp;indirectly_swappable&lt; iterator_t&lt; Rng1 &gt;, iterator_t&lt; Rng2 &gt;&gt;</td></tr>
+<tr class="separator:ga987eea3fde92ccaa1d11dc9bb84c4028"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

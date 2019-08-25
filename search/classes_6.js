@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['generate_5ffn',['generate_fn',['../structranges_1_1generate__fn.html',1,'ranges::generate_fn'],['../structranges_1_1views_1_1generate__fn.html',1,'ranges::views::generate_fn']]],
-  ['generate_5fn_5ffn',['generate_n_fn',['../structranges_1_1generate__n__fn.html',1,'ranges::generate_n_fn'],['../structranges_1_1views_1_1generate__n__fn.html',1,'ranges::views::generate_n_fn']]],
+  ['generate_5ffn',['generate_fn',['../structranges_1_1views_1_1generate__fn.html',1,'ranges::views']]],
+  ['generate_5fn_5ffn',['generate_n_fn',['../structranges_1_1views_1_1generate__n__fn.html',1,'ranges::views']]],
   ['generate_5fn_5fview',['generate_n_view',['../structranges_1_1generate__n__view.html',1,'ranges']]],
   ['generate_5fview',['generate_view',['../structranges_1_1generate__view.html',1,'ranges']]],
   ['get_5fcursor_5ffn',['get_cursor_fn',['../structranges_1_1get__cursor__fn.html',1,'ranges']]],

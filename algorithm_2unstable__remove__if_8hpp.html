@@ -97,23 +97,21 @@ $(document).ready(function(){initNavTree('algorithm_2unstable__remove__if_8hpp.h
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">unstable_remove_if.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1unstable__remove__if__fn.html">ranges::unstable_remove_if_fn</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case]. Each erased element overwritten (moved in) with last one. unstable_remove_if does not preserve relative element order.  <a href="structranges_1_1unstable__remove__if__fn.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:gab5426f1e115d4c601c70d45e4956427d"><td class="memItemLeft" align="right" valign="top">constexpr unstable_remove_if_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gab5426f1e115d4c601c70d45e4956427d">ranges::unstable_remove_if</a> {}</td></tr>
-<tr class="separator:gab5426f1e115d4c601c70d45e4956427d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gaef222b7bf5356fd2124bf661a359d730"><td class="memTemplParams" colspan="2">template&lt;typename I , typename C , typename P  = identity&gt; </td></tr>
+<tr class="memitem:gaef222b7bf5356fd2124bf661a359d730"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gaef222b7bf5356fd2124bf661a359d730">ranges::unstable_remove_if</a> (I first, I last, C pred, P proj={}) -&gt; I requires bidirectional_iterator&lt; I &gt; &amp;&amp;permutable&lt; I &gt; &amp;&amp;indirect_unary_predicate&lt; C, projected&lt; I, P &gt;&gt;</td></tr>
+<tr class="memdesc:gaef222b7bf5356fd2124bf661a359d730"><td class="mdescLeft">&#160;</td><td class="mdescRight">unstable_remove have O(1) complexity for each element remove, unlike remove O(n) [for worst case]. Each erased element overwritten (moved in) with last one. unstable_remove_if does not preserve relative element order.  <a href="group__group-algorithms.html#gaef222b7bf5356fd2124bf661a359d730">More...</a><br /></td></tr>
+<tr class="separator:gaef222b7bf5356fd2124bf661a359d730"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga93307fbcec220cfea80936970d4c8d1a"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename C , typename P  = identity&gt; </td></tr>
+<tr class="memitem:ga93307fbcec220cfea80936970d4c8d1a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga93307fbcec220cfea80936970d4c8d1a">ranges::unstable_remove_if</a> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, C pred, P proj=P{}) -&gt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt; requires bidirectional_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;common_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;permutable&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;&gt; &amp;&amp;indirect_unary_predicate&lt; C, projected&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, P &gt;&gt;</td></tr>
+<tr class="separator:ga93307fbcec220cfea80936970d4c8d1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

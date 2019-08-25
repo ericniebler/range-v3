@@ -13,7 +13,7 @@ var searchData=
   ['tokenize_5fview',['tokenize_view',['../structranges_1_1tokenize__view.html',1,'ranges']]],
   ['tokenizer_5fimpl_5ffn',['tokenizer_impl_fn',['../structranges_1_1views_1_1tokenizer__impl__fn.html',1,'ranges::views']]],
   ['transform2_5fview',['transform2_view',['../structranges_1_1transform2__view.html',1,'ranges']]],
-  ['transform_5ffn',['transform_fn',['../structranges_1_1actions_1_1transform__fn.html',1,'ranges::actions::transform_fn'],['../structranges_1_1transform__fn.html',1,'ranges::transform_fn'],['../structranges_1_1views_1_1transform__fn.html',1,'ranges::views::transform_fn']]],
+  ['transform_5ffn',['transform_fn',['../structranges_1_1actions_1_1transform__fn.html',1,'ranges::actions::transform_fn'],['../structranges_1_1views_1_1transform__fn.html',1,'ranges::views::transform_fn']]],
   ['transform_5fview',['transform_view',['../structranges_1_1transform__view.html',1,'ranges']]],
   ['transformed',['transformed',['../structranges_1_1transformed.html',1,'ranges']]],
   ['trim_5ffn',['trim_fn',['../structranges_1_1views_1_1trim__fn.html',1,'ranges::views']]],

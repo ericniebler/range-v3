@@ -97,19 +97,13 @@ $(document).ready(function(){initNavTree('minmax_8hpp.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">minmax.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1minmax__fn.html">ranges::minmax_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ga33d3732bfda9763bacb492f678c49ac2"><td class="memTemplParams" colspan="2">
@@ -117,10 +111,19 @@ template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga33d3732bfda9763bacb492f678c49ac2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::minmax_result</b> = detail::min_max_result&lt; T, T &gt;</td></tr>
 <tr class="separator:ga33d3732bfda9763bacb492f678c49ac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ga941c8db9156398e287e087c284a35a6c"><td class="memItemLeft" align="right" valign="top">constexpr minmax_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga941c8db9156398e287e087c284a35a6c">ranges::minmax</a> {}</td></tr>
-<tr class="separator:ga941c8db9156398e287e087c284a35a6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gab7746e5071777bfa8943211520a5e7ed"><td class="memTemplParams" colspan="2">
+template&lt;typename T , typename C  = less, typename P  = identity&gt; </td></tr>
+<tr class="memitem:gab7746e5071777bfa8943211520a5e7ed"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gab7746e5071777bfa8943211520a5e7ed">ranges::minmax</a> (T const &amp;a, T const &amp;b, C pred=C{}, P proj=P{}) -&gt; minmax_result&lt; T const &amp; &gt; requires indirect_strict_weak_order&lt; C, projected&lt; T const *, P &gt;&gt;</td></tr>
+<tr class="memdesc:gab7746e5071777bfa8943211520a5e7ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>minmax</code> <br /></td></tr>
+<tr class="separator:gab7746e5071777bfa8943211520a5e7ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga93f42f45f3ba905e1eb1cd573f172a4b"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename C  = less, typename P  = identity&gt; </td></tr>
+<tr class="memitem:ga93f42f45f3ba905e1eb1cd573f172a4b"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga93f42f45f3ba905e1eb1cd573f172a4b">ranges::minmax</a> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, C pred=C{}, P proj=P{}) -&gt; minmax_result&lt; range_value_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;&gt; requires input_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;indirect_strict_weak_order&lt; C, projected&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, P &gt;&gt; &amp;&amp;indirectly_copyable_storable&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, range_value_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt; * &gt;</td></tr>
+<tr class="separator:ga93f42f45f3ba905e1eb1cd573f172a4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7f84b92881ac8d36ec500601758b489e"><td class="memTemplParams" colspan="2">template&lt;typename T , typename C  = less, typename P  = identity&gt; </td></tr>
+<tr class="memitem:ga7f84b92881ac8d36ec500601758b489e"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga7f84b92881ac8d36ec500601758b489e">ranges::minmax</a> (std::initializer_list&lt; T &gt; const &amp;&amp;rng, C pred=C{}, P proj=P{}) -&gt; minmax_result&lt; T &gt; requires copyable&lt; T &gt; &amp;&amp;indirect_strict_weak_order&lt; C, projected&lt; T const *, P &gt;&gt;</td></tr>
+<tr class="separator:ga7f84b92881ac8d36ec500601758b489e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

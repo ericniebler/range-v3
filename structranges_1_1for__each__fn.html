@@ -106,10 +106,10 @@ $(document).ready(function(){initNavTree('structranges_1_1for__each__fn.html',''
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae92a5ff7a407a82b056bb545c75e1bb0"><td class="memTemplParams" colspan="2"><a id="ae92a5ff7a407a82b056bb545c75e1bb0"></a>
+<tr class="memitem:a560946dfdae6688e7d19ae9c99ad05b8"><td class="memTemplParams" colspan="2"><a id="a560946dfdae6688e7d19ae9c99ad05b8"></a>
 template&lt;typename I , typename S , typename F , typename P  = identity&gt; </td></tr>
-<tr class="memitem:ae92a5ff7a407a82b056bb545c75e1bb0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, F fun, P proj=P{}) const -&gt; for_each_result&lt; I, F &gt; requires input_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;indirectly_unary_invocable&lt; F, projected&lt; I, P &gt;&gt;</td></tr>
-<tr class="separator:ae92a5ff7a407a82b056bb545c75e1bb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a560946dfdae6688e7d19ae9c99ad05b8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I first, S last, F fun, P proj=P{}) const -&gt; for_each_result&lt; I, F &gt; requires input_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;indirectly_unary_invocable&lt; F, projected&lt; I, P &gt;&gt;</td></tr>
+<tr class="separator:a560946dfdae6688e7d19ae9c99ad05b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4176875568b0c3db487f6af5b6f10b0"><td class="memTemplParams" colspan="2"><a id="ad4176875568b0c3db487f6af5b6f10b0"></a>
 template&lt;typename Rng , typename F , typename P  = identity&gt; </td></tr>
 <tr class="memitem:ad4176875568b0c3db487f6af5b6f10b0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, F fun, P proj=P{}) const -&gt; for_each_result&lt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, F &gt; requires input_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;indirectly_unary_invocable&lt; F, projected&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, P &gt;&gt;</td></tr>

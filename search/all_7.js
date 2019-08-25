@@ -1,11 +1,11 @@
 var searchData=
 [
-  ['generate',['generate',['../group__group-algorithms.html#gaf9daf95b145e4b1730c9b6ffc5c6a88a',1,'ranges']]],
+  ['generate',['generate',['../group__group-algorithms.html#ga1218fcda185e3cbfa06c8da79062bba4',1,'ranges::generate(O first, S last, F fun) -&gt; generate_result&lt; O, F &gt; requires invocable&lt; F &amp; &gt; &amp;&amp;output_iterator&lt; O, invoke_result_t&lt; F &amp; &gt;&gt; &amp;&amp;sentinel_for&lt; S, O &gt;'],['../group__group-algorithms.html#gae277dfff0628b1e0f057d81ad801db10',1,'ranges::generate(Rng &amp;&amp;rng, F fun) -&gt; generate_result&lt; safe_iterator_t&lt; Rng &gt;, F &gt; requires invocable&lt; F &amp; &gt; &amp;&amp;output_range&lt; Rng, invoke_result_t&lt; F &amp; &gt;&gt;']]],
   ['generate_2ehpp',['generate.hpp',['../algorithm_2generate_8hpp.html',1,'(Global Namespace)'],['../view_2generate_8hpp.html',1,'(Global Namespace)']]],
-  ['generate_5ffn',['generate_fn',['../structranges_1_1generate__fn.html',1,'ranges::generate_fn'],['../structranges_1_1views_1_1generate__fn.html',1,'ranges::views::generate_fn']]],
-  ['generate_5fn',['generate_n',['../group__group-algorithms.html#gad644fe0ef3a39f82c01fd05ed0e04dfa',1,'ranges']]],
+  ['generate_5ffn',['generate_fn',['../structranges_1_1views_1_1generate__fn.html',1,'ranges::views']]],
+  ['generate_5fn',['generate_n',['../group__group-algorithms.html#ga608800721885fcd293a8937fe4947194',1,'ranges']]],
   ['generate_5fn_2ehpp',['generate_n.hpp',['../algorithm_2generate__n_8hpp.html',1,'(Global Namespace)'],['../view_2generate__n_8hpp.html',1,'(Global Namespace)']]],
-  ['generate_5fn_5ffn',['generate_n_fn',['../structranges_1_1generate__n__fn.html',1,'ranges::generate_n_fn'],['../structranges_1_1views_1_1generate__n__fn.html',1,'ranges::views::generate_n_fn']]],
+  ['generate_5fn_5ffn',['generate_n_fn',['../structranges_1_1views_1_1generate__n__fn.html',1,'ranges::views']]],
   ['generate_5fn_5fview',['generate_n_view',['../structranges_1_1generate__n__view.html',1,'ranges']]],
   ['generate_5fview',['generate_view',['../structranges_1_1generate__view.html',1,'ranges']]],
   ['generator_2ehpp',['generator.hpp',['../generator_8hpp.html',1,'']]],

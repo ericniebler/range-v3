@@ -14,7 +14,6 @@ var searchData=
   ['basic_5fview',['basic_view',['../structranges_1_1basic__view.html',1,'ranges']]],
   ['basic_5fview_3c_20cardinality_20_3e',['basic_view&lt; Cardinality &gt;',['../structranges_1_1basic__view.html',1,'ranges']]],
   ['begin_5ftag',['begin_tag',['../structranges_1_1begin__tag.html',1,'ranges']]],
-  ['binary_5fsearch_5ffn',['binary_search_fn',['../structranges_1_1binary__search__fn.html',1,'ranges']]],
   ['bind_5fback',['bind_back',['../structmeta_1_1bind__back.html',1,'meta']]],
   ['bind_5fback_5ffn',['bind_back_fn',['../structranges_1_1bind__back__fn.html',1,'ranges']]],
   ['bind_5fback_5ffn_5f',['bind_back_fn_',['../structranges_1_1detail_1_1bind__back__fn__.html',1,'ranges::detail']]],

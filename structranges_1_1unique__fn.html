@@ -106,18 +106,18 @@ $(document).ready(function(){initNavTree('structranges_1_1unique__fn.html','');}
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4f84f2d8e6170ba1a53ff993831d3206"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename C  = equal_to, typename P  = identity&gt; </td></tr>
-<tr class="memitem:a4f84f2d8e6170ba1a53ff993831d3206"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1unique__fn.html#a4f84f2d8e6170ba1a53ff993831d3206">operator()</a> (I begin, S end, C pred=C{}, P proj=P{}) const -&gt; I requires sortable&lt; I, C, P &gt; &amp;&amp;sentinel_for&lt; S, I &gt;</td></tr>
-<tr class="memdesc:a4f84f2d8e6170ba1a53ff993831d3206"><td class="mdescLeft">&#160;</td><td class="mdescRight">template function <code>unique_fn::operator()</code>  <a href="#a4f84f2d8e6170ba1a53ff993831d3206">More...</a><br /></td></tr>
-<tr class="separator:a4f84f2d8e6170ba1a53ff993831d3206"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a847ea2725ec47fde8333c2a7ef04d7f9"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename C  = equal_to, typename P  = identity&gt; </td></tr>
+<tr class="memitem:a847ea2725ec47fde8333c2a7ef04d7f9"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1unique__fn.html#a847ea2725ec47fde8333c2a7ef04d7f9">operator()</a> (I first, S last, C pred=C{}, P proj=P{}) const -&gt; I requires sortable&lt; I, C, P &gt; &amp;&amp;sentinel_for&lt; S, I &gt;</td></tr>
+<tr class="memdesc:a847ea2725ec47fde8333c2a7ef04d7f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">template function <code>unique_fn::operator()</code>  <a href="#a847ea2725ec47fde8333c2a7ef04d7f9">More...</a><br /></td></tr>
+<tr class="separator:a847ea2725ec47fde8333c2a7ef04d7f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad20f094c66088304e26f18dfb953617a"><td class="memTemplParams" colspan="2"><a id="ad20f094c66088304e26f18dfb953617a"></a>
 template&lt;typename Rng , typename C  = equal_to, typename P  = identity&gt; </td></tr>
 <tr class="memitem:ad20f094c66088304e26f18dfb953617a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, C pred=C{}, P proj=P{}) const -&gt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt; requires sortable&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, C, P &gt; &amp;&amp;range&lt; <a class="el" href="class_rng.html">Rng</a> &gt;</td></tr>
 <tr class="separator:ad20f094c66088304e26f18dfb953617a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a4f84f2d8e6170ba1a53ff993831d3206"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f84f2d8e6170ba1a53ff993831d3206">&#9670;&nbsp;</a></span>operator()()</h2>
+<a id="a847ea2725ec47fde8333c2a7ef04d7f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a847ea2725ec47fde8333c2a7ef04d7f9">&#9670;&nbsp;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -128,13 +128,13 @@ template&lt;typename I , typename S , typename C  = equal_to, typename P  = iden
           <td class="memname"><a class="el" href="classauto.html">auto</a> ranges::unique_fn::operator() </td>
           <td>(</td>
           <td class="paramtype">I&#160;</td>
-          <td class="paramname"><em>begin</em>, </td>
+          <td class="paramname"><em>first</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">S&#160;</td>
-          <td class="paramname"><em>end</em>, </td>
+          <td class="paramname"><em>last</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

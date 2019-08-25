@@ -97,19 +97,13 @@ $(document).ready(function(){initNavTree('copy__if_8hpp.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">copy_if.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1copy__if__fn.html">ranges::copy_if_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ga5a179c5b7b8620b7fd95dc315cab0a39"><td class="memTemplParams" colspan="2">
@@ -117,10 +111,16 @@ template&lt;typename I , typename O &gt; </td></tr>
 <tr class="memitem:ga5a179c5b7b8620b7fd95dc315cab0a39"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::copy_if_result</b> = detail::in_out_result&lt; I, O &gt;</td></tr>
 <tr class="separator:ga5a179c5b7b8620b7fd95dc315cab0a39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:gadd183f0cde27085d35840df64b602cb1"><td class="memItemLeft" align="right" valign="top">constexpr copy_if_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gadd183f0cde27085d35840df64b602cb1">ranges::copy_if</a> {}</td></tr>
-<tr class="separator:gadd183f0cde27085d35840df64b602cb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga9c7793e127e9f16451b8e2869ca8be78"><td class="memTemplParams" colspan="2">
+template&lt;typename I , typename S , typename O , typename F , typename P  = identity&gt; </td></tr>
+<tr class="memitem:ga9c7793e127e9f16451b8e2869ca8be78"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga9c7793e127e9f16451b8e2869ca8be78">ranges::copy_if</a> (I first, S last, O out, F pred, P proj=P{}) -&gt; copy_if_result&lt; I, O &gt; requires input_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;weakly_incrementable&lt; O &gt; &amp;&amp;indirect_unary_predicate&lt; F, projected&lt; I, P &gt;&gt; &amp;&amp;indirectly_copyable&lt; I, O &gt;</td></tr>
+<tr class="memdesc:ga9c7793e127e9f16451b8e2869ca8be78"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>copy_if</code> <br /></td></tr>
+<tr class="separator:ga9c7793e127e9f16451b8e2869ca8be78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacf2c0297eeb25e9a6fd9d1323f4eb967"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename O , typename F , typename P  = identity&gt; </td></tr>
+<tr class="memitem:gacf2c0297eeb25e9a6fd9d1323f4eb967"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gacf2c0297eeb25e9a6fd9d1323f4eb967">ranges::copy_if</a> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, O out, F pred, P proj=P{}) -&gt; copy_if_result&lt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, O &gt; requires input_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;weakly_incrementable&lt; O &gt; &amp;&amp;indirect_unary_predicate&lt; F, projected&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, P &gt;&gt; &amp;&amp;indirectly_copyable&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, O &gt;</td></tr>
+<tr class="separator:gacf2c0297eeb25e9a6fd9d1323f4eb967"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

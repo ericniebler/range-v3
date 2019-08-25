@@ -1,10 +1,6 @@
 var searchData=
 [
-  ['take',['take',['../group__group-actions.html#ga712480018907f61217d703a609fb4995',1,'ranges::actions::take_fn']]],
-  ['take_5fwhile',['take_while',['../group__group-actions.html#gabf8373b1db6121fbe5cab20ba57a46fe',1,'ranges::actions::take_while_fn']]],
-  ['transform',['transform',['../group__group-actions.html#gaf9135baba87fb451e6e904428239ad19',1,'ranges::actions::transform_fn::transform()'],['../group__group-algorithms.html#ga3442d493ab0502446fb8800fbf8c0f1e',1,'ranges::transform()']]],
-  ['tuple_5fapply',['tuple_apply',['../group__group-utility.html#ga1f0504978bb752b0dbedbfaacca67778',1,'ranges']]],
-  ['tuple_5ffoldl',['tuple_foldl',['../group__group-utility.html#gab2f0f09dcd52b7dc22ab9b3ec4f3b03e',1,'ranges']]],
-  ['tuple_5ffor_5feach',['tuple_for_each',['../group__group-utility.html#ga64ad43a79c7ba29e188a4c4a7afcc1e2',1,'ranges']]],
-  ['tuple_5ftransform',['tuple_transform',['../group__group-utility.html#ga5a3717f9963046b5e8a269e390137618',1,'ranges']]]
+  ['unique',['unique',['../group__group-actions.html#gaa148f0f5f607b640c2b14652d498b0eb',1,'ranges::actions::unique_fn']]],
+  ['unstable_5fremove_5fif',['unstable_remove_if',['../group__group-actions.html#gad06f448e98a8107faa5339769e6fb46f',1,'ranges::actions']]],
+  ['unwrap_5freference',['unwrap_reference',['../group__group-functional.html#ga3955120e57fdbe4c169ccd489b3443f7',1,'ranges']]]
 ];

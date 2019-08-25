@@ -97,21 +97,13 @@ $(document).ready(function(){initNavTree('algorithm_2move_8hpp.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">move.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1cpp20__move__fn.html">ranges::cpp20_move_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1move__fn.html">ranges::move_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:gaa9e56e40c245536a73cd3c4479aa71f0"><td class="memTemplParams" colspan="2">
@@ -119,13 +111,16 @@ template&lt;typename I , typename O &gt; </td></tr>
 <tr class="memitem:gaa9e56e40c245536a73cd3c4479aa71f0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::move_result</b> = detail::in_out_result&lt; I, O &gt;</td></tr>
 <tr class="separator:gaa9e56e40c245536a73cd3c4479aa71f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ga0b2fdb8123a8df06072057e380557dc3"><td class="memItemLeft" align="right" valign="top">constexpr move_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga0b2fdb8123a8df06072057e380557dc3">ranges::move</a> {}</td></tr>
-<tr class="separator:ga0b2fdb8123a8df06072057e380557dc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee0dced77f3de02725b2bf4e736dc081"><td class="memItemLeft" align="right" valign="top"><a id="aee0dced77f3de02725b2bf4e736dc081"></a>
-constexpr cpp20_move_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::cpp20::move</b> {}</td></tr>
-<tr class="separator:aee0dced77f3de02725b2bf4e736dc081"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga51a5571f63c297cfd285f4a3873737dc"><td class="memTemplParams" colspan="2">
+template&lt;typename I , typename S , typename O &gt; </td></tr>
+<tr class="memitem:ga51a5571f63c297cfd285f4a3873737dc"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga51a5571f63c297cfd285f4a3873737dc">ranges::move</a> (I first, S last, O out) -&gt; move_result&lt; I, O &gt; requires input_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;weakly_incrementable&lt; O &gt; &amp;&amp;indirectly_movable&lt; I, O &gt;</td></tr>
+<tr class="memdesc:ga51a5571f63c297cfd285f4a3873737dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>move</code> <br /></td></tr>
+<tr class="separator:ga51a5571f63c297cfd285f4a3873737dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa55485146994b298d1392f1aa421fdfe"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename O &gt; </td></tr>
+<tr class="memitem:gaa55485146994b298d1392f1aa421fdfe"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gaa55485146994b298d1392f1aa421fdfe">ranges::move</a> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, O out) -&gt; move_result&lt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, O &gt; requires input_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;weakly_incrementable&lt; O &gt; &amp;&amp;indirectly_movable&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, O &gt;</td></tr>
+<tr class="separator:gaa55485146994b298d1392f1aa421fdfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

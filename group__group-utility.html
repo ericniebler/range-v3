@@ -190,10 +190,10 @@ template&lt;typename... Ts&gt; </td></tr>
 <tr class="memitem:ga62eebd4a33595f706d10ee3b492d16bd"><td class="memTemplParams" colspan="2">template&lt;typename R &gt; </td></tr>
 <tr class="memitem:ga62eebd4a33595f706d10ee3b492d16bd"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga62eebd4a33595f706d10ee3b492d16bd">ranges::aux::move_t</a> = meta::if_c&lt; std::is_reference&lt; R &gt;::value, <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::remove_reference&lt; R &gt; &gt; &amp;&amp;, detail::decay_t&lt; R &gt; &gt;</td></tr>
 <tr class="separator:ga62eebd4a33595f706d10ee3b492d16bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7eeb78c98041a94d7eaa4be2c13b7b27"><td class="memTemplParams" colspan="2"><a id="ga7eeb78c98041a94d7eaa4be2c13b7b27"></a>
+<tr class="memitem:ga5db18be9d74cab1ee228707677b58fd2"><td class="memTemplParams" colspan="2"><a id="ga5db18be9d74cab1ee228707677b58fd2"></a>
 template&lt;typename T , bool IsConst = false&gt; </td></tr>
-<tr class="memitem:ga7eeb78c98041a94d7eaa4be2c13b7b27"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::semiregular_box_ref_or_val_t</b> = meta::if_c&lt;(bool) semiregular&lt; T &gt;, meta::if_c&lt; IsConst, T, <a class="el" href="structranges_1_1reference__wrapper.html">reference_wrapper</a>&lt; T &gt; &gt;, <a class="el" href="structranges_1_1reference__wrapper.html">reference_wrapper</a>&lt; meta::if_c&lt; IsConst, <a class="el" href="structranges_1_1semiregular__box.html">semiregular_box</a>&lt; T &gt; const, <a class="el" href="structranges_1_1semiregular__box.html">semiregular_box</a>&lt; T &gt; &gt;&gt; &gt;</td></tr>
-<tr class="separator:ga7eeb78c98041a94d7eaa4be2c13b7b27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5db18be9d74cab1ee228707677b58fd2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::semiregular_box_ref_or_val_t</b> = meta::if_c&lt;(bool) semiregular&lt; T &gt;, meta::if_c&lt; IsConst, T, <a class="el" href="structranges_1_1reference__wrapper.html">reference_wrapper</a>&lt; T &gt; &gt;, <a class="el" href="structranges_1_1reference__wrapper.html">reference_wrapper</a>&lt; meta::if_c&lt; IsConst, <a class="el" href="structranges_1_1semiregular__box.html">semiregular_box</a>&lt; T &gt; const, <a class="el" href="structranges_1_1semiregular__box.html">semiregular_box</a>&lt; T &gt; &gt;&gt; &gt;</td></tr>
+<tr class="separator:ga5db18be9d74cab1ee228707677b58fd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga75095a7745489691e2634f4c8fa2a91d"><td class="memTemplParams" colspan="2"><a id="ga75095a7745489691e2634f4c8fa2a91d"></a>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga75095a7745489691e2634f4c8fa2a91d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::semiregular_box_t</b> = meta::if_c&lt;(bool) semiregular&lt; T &gt;, T, <a class="el" href="structranges_1_1semiregular__box.html">semiregular_box</a>&lt; T &gt; &gt;</td></tr>
@@ -354,7 +354,7 @@ template&lt;typename T &gt; </div>
 <p><code>#include &lt;<a class="el" href="utility_2move_8hpp.html">range/v3/utility/move.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1aux_1_1move__fn.html">move_fn</a></code> </dd></dl>
 
-<p class="reference">References <a class="el" href="group__group-utility.html#ga20b5b25347e7f8173b2118fdb5ea5f58">ranges::aux::move</a>.</p>
+<p class="reference">References <a class="el" href="group__group-algorithms.html#gaa55485146994b298d1392f1aa421fdfe">ranges::move()</a>.</p>
 
 </div>
 </div>
@@ -501,7 +501,7 @@ template&lt;typename T &gt; </div>
 <p><code>#include &lt;<a class="el" href="utility_2move_8hpp.html">range/v3/utility/move.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1aux_1_1move__fn.html">move_fn</a></code> </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="group__group-utility.html#gaed1565c38a1b2177036d4493be2e65b8">ranges::aux::move_fn::operator|()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structranges_1_1view__interface.html#a2bf306758287222b779d9eec3f8a3ef5">ranges::view_interface&lt; partial_sum_view&lt; Rng, Fun &gt;, Cardinality &gt;::forward_range()</a>, and <a class="el" href="structranges_1_1view__interface.html#a2314da513fbcf86272b2bf77bafd1512">ranges::view_interface&lt; partial_sum_view&lt; Rng, Fun &gt;, Cardinality &gt;::operator[]()</a>.</p>
 
 </div>
 </div>

@@ -97,19 +97,13 @@ $(document).ready(function(){initNavTree('replace__copy__if_8hpp.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">replace_copy_if.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1replace__copy__if__fn.html">ranges::replace_copy_if_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:gaf4f4af78a9add9145c784b58d209e16e"><td class="memTemplParams" colspan="2">
@@ -117,10 +111,16 @@ template&lt;typename I , typename O &gt; </td></tr>
 <tr class="memitem:gaf4f4af78a9add9145c784b58d209e16e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::replace_copy_if_result</b> = detail::in_out_result&lt; I, O &gt;</td></tr>
 <tr class="separator:gaf4f4af78a9add9145c784b58d209e16e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:gaebd42987f50337ea95d04b28dbf4a608"><td class="memItemLeft" align="right" valign="top">constexpr replace_copy_if_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gaebd42987f50337ea95d04b28dbf4a608">ranges::replace_copy_if</a> {}</td></tr>
-<tr class="separator:gaebd42987f50337ea95d04b28dbf4a608"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga8e14db878b4262fc18acf0571712c6f2"><td class="memTemplParams" colspan="2">
+template&lt;typename I , typename S , typename O , typename C , typename T , typename P  = identity&gt; </td></tr>
+<tr class="memitem:ga8e14db878b4262fc18acf0571712c6f2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga8e14db878b4262fc18acf0571712c6f2">ranges::replace_copy_if</a> (I first, S last, O out, C pred, T const &amp;new_value, P proj={}) -&gt; replace_copy_if_result&lt; I, O &gt; requires input_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;output_iterator&lt; O, T const &amp; &gt; &amp;&amp;indirect_unary_predicate&lt; C, projected&lt; I, P &gt;&gt; &amp;&amp;indirectly_copyable&lt; I, O &gt;</td></tr>
+<tr class="memdesc:ga8e14db878b4262fc18acf0571712c6f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>replace_copy_if</code> <br /></td></tr>
+<tr class="separator:ga8e14db878b4262fc18acf0571712c6f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa27a8faf224a76ed63fd5cf5cdd7b529"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename O , typename C , typename T , typename P  = identity&gt; </td></tr>
+<tr class="memitem:gaa27a8faf224a76ed63fd5cf5cdd7b529"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gaa27a8faf224a76ed63fd5cf5cdd7b529">ranges::replace_copy_if</a> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, O out, C pred, T const &amp;new_value, P proj={}) -&gt; replace_copy_if_result&lt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, O &gt; requires input_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;output_iterator&lt; O, T const &amp; &gt; &amp;&amp;indirect_unary_predicate&lt; C, projected&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, P &gt;&gt; &amp;&amp;indirectly_copyable&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, O &gt;</td></tr>
+<tr class="separator:gaa27a8faf224a76ed63fd5cf5cdd7b529"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

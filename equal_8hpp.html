@@ -97,22 +97,28 @@ $(document).ready(function(){initNavTree('equal_8hpp.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">equal.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1equal__fn.html">ranges::equal_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ga83b247b83a6d8c2307a70e2fe41826e3"><td class="memItemLeft" align="right" valign="top">constexpr equal_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga83b247b83a6d8c2307a70e2fe41826e3">ranges::equal</a> {}</td></tr>
-<tr class="separator:ga83b247b83a6d8c2307a70e2fe41826e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga62f56efe45b73d94db6a81f40e12d1b9"><td class="memTemplParams" colspan="2">
+template&lt;typename I0 , typename S0 , typename I1 , typename C  = equal_to, typename P0  = identity, typename P1  = identity&gt; </td></tr>
+<tr class="memitem:ga62f56efe45b73d94db6a81f40e12d1b9"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga62f56efe45b73d94db6a81f40e12d1b9">ranges::equal</a> (I0 begin0, S0 end0, I1 begin1, C pred=C{}, P0 proj0=P0{}, P1 proj1=P1{}) -&gt; bool requires input_iterator&lt; I0 &gt; &amp;&amp;sentinel_for&lt; S0, I0 &gt; &amp;&amp;input_iterator&lt; I1 &gt; &amp;&amp;indirectly_comparable&lt; I0, I1, C, P0, P1 &gt;</td></tr>
+<tr class="memdesc:ga62f56efe45b73d94db6a81f40e12d1b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>equal</code> <br /></td></tr>
+<tr class="separator:ga62f56efe45b73d94db6a81f40e12d1b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf7135f2a482e12c3d97d77c3e13937eb"><td class="memTemplParams" colspan="2">template&lt;typename I0 , typename S0 , typename I1 , typename S1 , typename C  = equal_to, typename P0  = identity, typename P1  = identity&gt; </td></tr>
+<tr class="memitem:gaf7135f2a482e12c3d97d77c3e13937eb"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gaf7135f2a482e12c3d97d77c3e13937eb">ranges::equal</a> (I0 begin0, S0 end0, I1 begin1, S1 end1, C pred=C{}, P0 proj0=P0{}, P1 proj1=P1{}) -&gt; bool requires input_iterator&lt; I0 &gt; &amp;&amp;sentinel_for&lt; S0, I0 &gt; &amp;&amp;input_iterator&lt; I1 &gt; &amp;&amp;sentinel_for&lt; S1, I1 &gt; &amp;&amp;indirectly_comparable&lt; I0, I1, C, P0, P1 &gt;</td></tr>
+<tr class="separator:gaf7135f2a482e12c3d97d77c3e13937eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4bb144928dd7fc7c4004bde7b8b5240e"><td class="memTemplParams" colspan="2">template&lt;typename Rng0 , typename I1Ref , typename C  = equal_to, typename P0  = identity, typename P1  = identity&gt; </td></tr>
+<tr class="memitem:ga4bb144928dd7fc7c4004bde7b8b5240e"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga4bb144928dd7fc7c4004bde7b8b5240e">ranges::equal</a> (Rng0 &amp;&amp;rng0, I1Ref &amp;&amp;begin1, C pred=C{}, P0 proj0=P0{}, P1 proj1=P1{}) -&gt; bool requires input_range&lt; Rng0 &gt; &amp;&amp;input_iterator&lt; uncvref_t&lt; I1Ref &gt;&gt; &amp;&amp;indirectly_comparable&lt; iterator_t&lt; Rng0 &gt;, uncvref_t&lt; I1Ref &gt;, C, P0, P1 &gt;</td></tr>
+<tr class="separator:ga4bb144928dd7fc7c4004bde7b8b5240e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacd9f750063e371826d0d82e81c5d825e"><td class="memTemplParams" colspan="2">template&lt;typename Rng0 , typename Rng1 , typename C  = equal_to, typename P0  = identity, typename P1  = identity&gt; </td></tr>
+<tr class="memitem:gacd9f750063e371826d0d82e81c5d825e"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gacd9f750063e371826d0d82e81c5d825e">ranges::equal</a> (Rng0 &amp;&amp;rng0, Rng1 &amp;&amp;rng1, C pred=C{}, P0 proj0=P0{}, P1 proj1=P1{}) -&gt; bool requires input_range&lt; Rng0 &gt; &amp;&amp;input_range&lt; Rng1 &gt; &amp;&amp;indirectly_comparable&lt; iterator_t&lt; Rng0 &gt;, iterator_t&lt; Rng1 &gt;, C, P0, P1 &gt;</td></tr>
+<tr class="separator:gacd9f750063e371826d0d82e81c5d825e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

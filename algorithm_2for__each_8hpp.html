@@ -97,19 +97,13 @@ $(document).ready(function(){initNavTree('algorithm_2for__each_8hpp.html','');})
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">for_each.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1for__each__fn.html">ranges::for_each_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ga84025d197692778e238c2143ee2dcdee"><td class="memTemplParams" colspan="2">
@@ -117,10 +111,16 @@ template&lt;typename I , typename F &gt; </td></tr>
 <tr class="memitem:ga84025d197692778e238c2143ee2dcdee"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::for_each_result</b> = detail::in_fun_result&lt; I, F &gt;</td></tr>
 <tr class="separator:ga84025d197692778e238c2143ee2dcdee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ga13359bcf6bc70e003b1b74b18bc25953"><td class="memItemLeft" align="right" valign="top">constexpr for_each_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga13359bcf6bc70e003b1b74b18bc25953">ranges::for_each</a> {}</td></tr>
-<tr class="separator:ga13359bcf6bc70e003b1b74b18bc25953"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga5148d309f477cd1ab91e7a7b5d933046"><td class="memTemplParams" colspan="2">
+template&lt;typename I , typename S , typename F , typename P  = identity&gt; </td></tr>
+<tr class="memitem:ga5148d309f477cd1ab91e7a7b5d933046"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga5148d309f477cd1ab91e7a7b5d933046">ranges::for_each</a> (I first, S last, F fun, P proj=P{}) -&gt; for_each_result&lt; I, F &gt; requires input_iterator&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;indirectly_unary_invocable&lt; F, projected&lt; I, P &gt;&gt;</td></tr>
+<tr class="memdesc:ga5148d309f477cd1ab91e7a7b5d933046"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>for_each</code> <br /></td></tr>
+<tr class="separator:ga5148d309f477cd1ab91e7a7b5d933046"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa213bfef81a971e1523c4510112de5e4"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename F , typename P  = identity&gt; </td></tr>
+<tr class="memitem:gaa213bfef81a971e1523c4510112de5e4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#gaa213bfef81a971e1523c4510112de5e4">ranges::for_each</a> (<a class="el" href="class_rng.html">Rng</a> &amp;&amp;rng, F fun, P proj=P{}) -&gt; for_each_result&lt; safe_iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, F &gt; requires input_range&lt; <a class="el" href="class_rng.html">Rng</a> &gt; &amp;&amp;indirectly_unary_invocable&lt; F, projected&lt; iterator_t&lt; <a class="el" href="class_rng.html">Rng</a> &gt;, P &gt;&gt;</td></tr>
+<tr class="separator:gaa213bfef81a971e1523c4510112de5e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
