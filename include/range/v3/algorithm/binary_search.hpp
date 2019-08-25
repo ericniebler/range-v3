@@ -33,19 +33,22 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct binary_search_fn
-    {
-        /// \brief function template \c binary_search_fn::operator()
+    RANGES_BEGIN_NIEBLOID(binary_search)
+        /// \brief function template \c binary_search
         ///
         /// range-based version of the \c binary_search std algorithm
         ///
         /// \pre `Rng` is a model of the `Range` concept
-        template<typename I, typename S, typename V, typename C = less,
+        template<typename I,
+                 typename S,
+                 typename V,
+                 typename C = less,
                  typename P = identity>
-        auto operator()(I first, S last, V const & val, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(bool)( //
+        auto RANGES_FUN_NIEBLOID(binary_search)(
+            I first, S last, V const & val, C pred = C{}, P proj = P{})
+            ->CPP_ret(bool)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
-                    indirect_strict_weak_order<C, V const *, projected<I, P>>)
+                indirect_strict_weak_order<C, V const *, projected<I, P>>)
         {
             first =
                 lower_bound(std::move(first), last, val, std::ref(pred), std::ref(proj));
@@ -54,20 +57,17 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename V, typename C = less, typename P = identity>
-        auto operator()(Rng && rng, V const & val, C pred = C{},
-                        P proj = P{}) const -> CPP_ret(bool)( //
-            requires forward_range<Rng> &&
+        auto RANGES_FUN_NIEBLOID(binary_search)(
+            Rng && rng, V const & val, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(bool)(                                       //
+                requires forward_range<Rng> &&
                 indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
         {
             static_assert(!is_infinite<Rng>::value,
                           "Trying to binary search an infinite range");
             return (*this)(begin(rng), end(rng), val, std::move(pred), std::move(proj));
         }
-    };
-
-    /// \sa `binary_search_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(binary_search_fn, binary_search)
+    RANGES_END_NIEBLOID(binary_search)
 
     namespace cpp20
     {

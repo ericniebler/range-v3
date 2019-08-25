@@ -38,11 +38,13 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct is_partitioned_fn
-    {
+    RANGES_BEGIN_NIEBLOID(is_partitioned)
+
+        /// \brief function template \c is_partitioned
         template<typename I, typename S, typename C, typename P = identity>
-        auto operator()(I first, S last, C pred, P proj = P{}) const -> CPP_ret(bool)( //
-            requires input_iterator<I> && sentinel_for<S, I> &&
+        auto RANGES_FUN_NIEBLOID(is_partitioned)(I first, S last, C pred, P proj = P{}) //
+            ->CPP_ret(bool)(                                                            //
+                requires input_iterator<I> && sentinel_for<S, I> &&
                 indirect_unary_predicate<C, projected<I, P>>)
         {
             for(; first != last; ++first)
@@ -54,18 +56,17 @@ namespace ranges
             return true;
         }
 
+        /// \overload
         template<typename Rng, typename C, typename P = identity>
-        auto operator()(Rng && rng, C pred, P proj = P{}) const -> CPP_ret(bool)( //
-            requires input_range<Rng> &&
+        auto RANGES_FUN_NIEBLOID(is_partitioned)(Rng && rng, C pred, P proj = P{}) //
+            ->CPP_ret(bool)(                                                       //
+                requires input_range<Rng> &&
                 indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
-    };
 
-    /// \sa `is_partitioned_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(is_partitioned_fn, is_partitioned)
+    RANGES_END_NIEBLOID(is_partitioned)
 
     namespace cpp20
     {

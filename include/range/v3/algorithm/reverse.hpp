@@ -29,11 +29,12 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct reverse_fn
+
+    /// \cond
+    namespace detail
     {
-    private:
         template<typename I>
-        static void impl(I first, I last, detail::bidirectional_iterator_tag_)
+        void reverse_impl(I first, I last, detail::bidirectional_iterator_tag_)
         {
             while(first != last)
             {
@@ -45,34 +46,38 @@ namespace ranges
         }
 
         template<typename I>
-        static void impl(I first, I last, detail::random_access_iterator_tag_)
+        void reverse_impl(I first, I last, detail::random_access_iterator_tag_)
         {
             if(first != last)
                 for(; first < --last; ++first)
                     ranges::iter_swap(first, last);
         }
+    } // namespace detail
+    /// \endcond
 
-    public:
+    RANGES_BEGIN_NIEBLOID(reverse)
+
+        /// \brief function template \c reverse
         template<typename I, typename S>
-        auto operator()(I first, S end_) const -> CPP_ret(I)( //
-            requires bidirectional_iterator<I> && sentinel_for<S, I> && permutable<I>)
+        auto RANGES_FUN_NIEBLOID(reverse)(I first, S end_) //
+            ->CPP_ret(I)(                                  //
+                requires bidirectional_iterator<I> && sentinel_for<S, I> && permutable<I>)
         {
             I last = ranges::next(first, end_);
-            reverse_fn::impl(first, last, iterator_tag_of<I>{});
+            detail::reverse_impl(first, last, iterator_tag_of<I>{});
             return last;
         }
 
+        /// \overload
         template<typename Rng, typename I = iterator_t<Rng>>
-        auto operator()(Rng && rng) const -> CPP_ret(safe_iterator_t<Rng>)( //
-            requires bidirectional_range<Rng> && permutable<I>)
+        auto RANGES_FUN_NIEBLOID(reverse)(Rng && rng) //
+            ->CPP_ret(safe_iterator_t<Rng>)(          //
+                requires bidirectional_range<Rng> && permutable<I>)
         {
             return (*this)(begin(rng), end(rng));
         }
-    };
 
-    /// \sa `reverse_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(reverse_fn, reverse)
+    RANGES_END_NIEBLOID(reverse)
 
     namespace cpp20
     {

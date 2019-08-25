@@ -63,16 +63,18 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct stable_sort_fn
+
+    /// \cond
+    namespace detail
     {
         template<typename I, typename C, typename P>
-        static void inplace_stable_sort(I first, I last, C & pred, P & proj)
+        void inplace_stable_sort(I first, I last, C & pred, P & proj)
         {
             if(last - first < 15)
                 return detail::insertion_sort(first, last, pred, proj), void();
             I middle = first + (last - first) / 2;
-            stable_sort_fn::inplace_stable_sort(first, middle, pred, proj);
-            stable_sort_fn::inplace_stable_sort(middle, last, pred, proj);
+            detail::inplace_stable_sort(first, middle, pred, proj);
+            detail::inplace_stable_sort(middle, last, pred, proj);
             detail::inplace_merge_no_buffer(first,
                                             middle,
                                             last,
@@ -83,8 +85,8 @@ namespace ranges
         }
 
         template<typename I1, typename I2, typename D, typename C, typename P>
-        static void merge_sort_loop(I1 first, I1 last, I2 result, D step_size, C & pred,
-                                    P & proj)
+        void merge_sort_loop(I1 first, I1 last, I2 result, D step_size, C & pred,
+                             P & proj)
         {
             D two_step = 2 * step_size;
             while(last - first >= two_step)
@@ -111,13 +113,13 @@ namespace ranges
                   std::ref(proj));
         }
 
-        static constexpr int merge_sort_chunk_size()
+        constexpr int merge_sort_chunk_size()
         {
             return 7;
         }
 
         template<typename I, typename D, typename C, typename P>
-        static void chunk_insertion_sort(I first, I last, D chunk_size, C & pred, P & proj)
+        void chunk_insertion_sort(I first, I last, D chunk_size, C & pred, P & proj)
         {
             while(last - first >= chunk_size)
             {
@@ -130,49 +132,48 @@ namespace ranges
         // buffer points to raw memory, we create objects, and then restore the buffer to
         // raw memory by destroying the objects on return.
         template<typename I, typename V, typename C, typename P>
-        static void merge_sort_with_buffer(I first, I last, V * buffer, C & pred, P & proj)
+        void merge_sort_with_buffer(I first, I last, V * buffer, C & pred, P & proj)
         {
             iter_difference_t<I> len = last - first,
-                                 step_size = stable_sort_fn::merge_sort_chunk_size();
-            stable_sort_fn::chunk_insertion_sort(first, last, step_size, pred, proj);
+                                 step_size = detail::merge_sort_chunk_size();
+            detail::chunk_insertion_sort(first, last, step_size, pred, proj);
             if(step_size >= len)
                 return;
             // The first call to merge_sort_loop moves into raw storage. Construct
             // on-demand and keep track of how many objects we need to destroy.
             V * buffer_end = buffer + static_cast<std::ptrdiff_t>(len);
             auto tmpbuf = make_raw_buffer(buffer);
-            stable_sort_fn::merge_sort_loop(
-                first, last, tmpbuf.begin(), step_size, pred, proj);
+            detail::merge_sort_loop(first, last, tmpbuf.begin(), step_size, pred, proj);
             step_size *= 2;
         loop:
-            stable_sort_fn::merge_sort_loop(
+            detail::merge_sort_loop(
                 buffer, buffer_end, first, (std::ptrdiff_t)step_size, pred, proj);
             step_size *= 2;
             if(step_size >= len)
                 return;
-            stable_sort_fn::merge_sort_loop(first, last, buffer, step_size, pred, proj);
+            detail::merge_sort_loop(first, last, buffer, step_size, pred, proj);
             step_size *= 2;
             goto loop;
         }
 
         // buffer points to raw memory
         template<typename I, typename V, typename C, typename P>
-        static void stable_sort_adaptive(I first, I last, V * buffer,
-                                         std::ptrdiff_t buffer_size, C & pred, P & proj)
+        void stable_sort_adaptive(I first, I last, V * buffer, std::ptrdiff_t buffer_size,
+                                  C & pred, P & proj)
         {
             iter_difference_t<I> len = (last - first + 1) / 2;
             I middle = first + len;
             if(len > buffer_size)
             {
-                stable_sort_fn::stable_sort_adaptive(
+                detail::stable_sort_adaptive(
                     first, middle, buffer, buffer_size, pred, proj);
-                stable_sort_fn::stable_sort_adaptive(
+                detail::stable_sort_adaptive(
                     middle, last, buffer, buffer_size, pred, proj);
             }
             else
             {
-                stable_sort_fn::merge_sort_with_buffer(first, middle, buffer, pred, proj);
-                stable_sort_fn::merge_sort_with_buffer(middle, last, buffer, pred, proj);
+                detail::merge_sort_with_buffer(first, middle, buffer, pred, proj);
+                detail::merge_sort_with_buffer(middle, last, buffer, pred, proj);
             }
             detail::merge_adaptive(first,
                                    middle,
@@ -184,12 +185,18 @@ namespace ranges
                                    std::ref(pred),
                                    std::ref(proj));
         }
+    } // namespace detail
+    /// \endcond
 
-    public:
+    RANGES_BEGIN_NIEBLOID(stable_sort)
+
+        /// \brief function template \c stable_sort
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I first, S end_, C pred = C{},
-                        P proj = P{}) const -> CPP_ret(I)( //
-            requires sortable<I, C, P> && random_access_iterator<I> && sentinel_for<S, I>)
+        auto RANGES_FUN_NIEBLOID(stable_sort)(
+            I first, S end_, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(I)(                                //
+                requires sortable<I, C, P> && random_access_iterator<I> &&
+                sentinel_for<S, I>)
         {
             I last = ranges::next(first, end_);
             using D = iter_difference_t<I>;
@@ -199,25 +206,23 @@ namespace ranges
                 len > 256 ? detail::get_temporary_buffer<V>(len) : detail::value_init{};
             std::unique_ptr<V, detail::return_temporary_buffer> h{buf.first};
             if(buf.first == nullptr)
-                stable_sort_fn::inplace_stable_sort(first, last, pred, proj);
+                detail::inplace_stable_sort(first, last, pred, proj);
             else
-                stable_sort_fn::stable_sort_adaptive(
+                detail::stable_sort_adaptive(
                     first, last, buf.first, buf.second, pred, proj);
             return last;
         }
 
+        /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(safe_iterator_t<Rng>)( //
+        auto RANGES_FUN_NIEBLOID(stable_sort)(Rng && rng, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                                          //
                 requires sortable<iterator_t<Rng>, C, P> && random_access_range<Rng>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
-    };
 
-    /// \sa `stable_sort_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(stable_sort_fn, stable_sort)
+    RANGES_END_NIEBLOID(stable_sort)
 
     namespace cpp20
     {

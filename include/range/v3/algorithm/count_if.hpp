@@ -30,13 +30,14 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct count_if_fn
-    {
+    RANGES_BEGIN_NIEBLOID(count_if)
+
+        /// \brief function template \c count_if
         template<typename I, typename S, typename R, typename P = identity>
-        auto operator()(I first, S last, R pred, P proj = P{}) const
-            -> CPP_ret(iter_difference_t<I>)( //
+        auto RANGES_FUN_NIEBLOID(count_if)(I first, S last, R pred, P proj = P{})
+            ->CPP_ret(iter_difference_t<I>)( //
                 requires input_iterator<I> && sentinel_for<S, I> &&
-                    indirect_unary_predicate<R, projected<I, P>>)
+                indirect_unary_predicate<R, projected<I, P>>)
         {
             iter_difference_t<I> n = 0;
             for(; first != last; ++first)
@@ -45,19 +46,17 @@ namespace ranges
             return n;
         }
 
+        /// \overload
         template<typename Rng, typename R, typename P = identity>
-        auto operator()(Rng && rng, R pred, P proj = P{}) const
-            -> CPP_ret(iter_difference_t<iterator_t<Rng>>)( //
+        auto RANGES_FUN_NIEBLOID(count_if)(Rng && rng, R pred, P proj = P{})
+            ->CPP_ret(iter_difference_t<iterator_t<Rng>>)( //
                 requires input_range<Rng> &&
-                    indirect_unary_predicate<R, projected<iterator_t<Rng>, P>>)
+                indirect_unary_predicate<R, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
-    };
 
-    /// \sa `count_if_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(count_if_fn, count_if)
+    RANGES_END_NIEBLOID(count_if)
 
     namespace cpp20
     {

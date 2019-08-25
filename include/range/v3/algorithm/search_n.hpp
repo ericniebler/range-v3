@@ -42,12 +42,13 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct search_n_fn
+
+    /// \cond
+    namespace detail
     {
-    private:
         template<typename I, typename S, typename D, typename V, typename C, typename P>
-        static subrange<I> sized_impl(I const begin_, S last, D const d_, D cnt,
-                                      V const & val, C & pred, P & proj)
+        subrange<I> search_n_sized_impl(I const begin_, S last, D const d_, D cnt,
+                                        V const & val, C & pred, P & proj)
         {
             D d = d_; // always the distance from first to end
             auto first = uncounted(begin_);
@@ -74,7 +75,7 @@ namespace ranges
                 while(true)
                 {
                     if(++c == cnt) // If pattern exhausted, first is the answer (works
-                                     // for 1 element pattern)
+                                   // for 1 element pattern)
                         return {recounted(begin_, std::move(first), d_ - d),
                                 recounted(begin_, std::move(++m), d_ - d)};
                     ++m; // No need to check, we know we have room to match successfully
@@ -91,8 +92,8 @@ namespace ranges
         }
 
         template<typename I, typename S, typename D, typename V, typename C, typename P>
-        static subrange<I> impl(I first, S last, D cnt, V const & val, C & pred,
-                                P & proj)
+        subrange<I> search_n_impl(I first, S last, D cnt, V const & val, C & pred,
+                                  P & proj)
         {
             while(true)
             {
@@ -112,7 +113,7 @@ namespace ranges
                 while(true)
                 {
                     if(++c == cnt) // If pattern exhausted, first is the answer (works
-                                     // for 1 element pattern)
+                                   // for 1 element pattern)
                         return {first, ++m};
                     if(++m == last) // Otherwise if source exhausted, pattern not found
                         return {m, m};
@@ -126,50 +127,65 @@ namespace ranges
                 }
             }
         }
+    } // namespace detail
+    /// \endcond
 
-    public:
-        template<typename I, typename S, typename V, typename C = equal_to,
+    RANGES_BEGIN_NIEBLOID(search_n)
+
+        /// \brief function template \c search_n
+        template<typename I,
+                 typename S,
+                 typename V,
+                 typename C = equal_to,
                  typename P = identity>
-        auto operator()(I first, S last, iter_difference_t<I> cnt, V const & val,
-                        C pred = C{}, P proj = P{}) const -> CPP_ret(subrange<I>)( //
-            requires forward_iterator<I> && sentinel_for<S, I> &&
+        auto RANGES_FUN_NIEBLOID(search_n)(I first,
+                                           S last,
+                                           iter_difference_t<I>
+                                               cnt,
+                                           V const & val,
+                                           C pred = C{},
+                                           P proj = P{}) //
+            ->CPP_ret(subrange<I>)(                      //
+                requires forward_iterator<I> && sentinel_for<S, I> &&
                 indirectly_comparable<I, V const *, C, P>)
         {
             if(cnt <= 0)
                 return {first, first};
             if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S, I>))
-                return search_n_fn::sized_impl(std::move(first),
-                                               std::move(last),
-                                               distance(first, last),
-                                               cnt,
-                                               val,
-                                               pred,
-                                               proj);
+                return detail::search_n_sized_impl(std::move(first),
+                                                   std::move(last),
+                                                   distance(first, last),
+                                                   cnt,
+                                                   val,
+                                                   pred,
+                                                   proj);
             else
-                return search_n_fn::impl(
+                return detail::search_n_impl(
                     std::move(first), std::move(last), cnt, val, pred, proj);
         }
 
+        /// \overload
         template<typename Rng, typename V, typename C = equal_to, typename P = identity>
-        auto operator()(Rng && rng, iter_difference_t<iterator_t<Rng>> cnt,
-                        V const & val, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(safe_subrange_t<Rng>)( //
+        auto RANGES_FUN_NIEBLOID(search_n)(Rng && rng,
+                                           iter_difference_t<iterator_t<Rng>>
+                                               cnt,
+                                           V const & val,
+                                           C pred = C{},
+                                           P proj = P{}) //
+            ->CPP_ret(safe_subrange_t<Rng>)(             //
                 requires forward_range<Rng> &&
-                    indirectly_comparable<iterator_t<Rng>, V const *, C, P>)
+                indirectly_comparable<iterator_t<Rng>, V const *, C, P>)
         {
             if(cnt <= 0)
                 return subrange<iterator_t<Rng>>{begin(rng), begin(rng)};
             if(RANGES_CONSTEXPR_IF(sized_range<Rng>))
-                return search_n_fn::sized_impl(
+                return detail::search_n_sized_impl(
                     begin(rng), end(rng), distance(rng), cnt, val, pred, proj);
             else
-                return search_n_fn::impl(begin(rng), end(rng), cnt, val, pred, proj);
+                return detail::search_n_impl(begin(rng), end(rng), cnt, val, pred, proj);
         }
-    };
 
-    /// \sa `search_n_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(search_n_fn, search_n)
+    RANGES_END_NIEBLOID(search_n)
 
     namespace cpp20
     {

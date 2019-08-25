@@ -33,13 +33,14 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct remove_fn
-    {
+    RANGES_BEGIN_NIEBLOID(remove)
+
+        /// \brief function template \c remove
         template<typename I, typename S, typename T, typename P = identity>
-        auto operator()(I first, S last, T const & val, P proj = P{}) const
-            -> CPP_ret(I)( //
+        auto RANGES_FUN_NIEBLOID(remove)(I first, S last, T const & val, P proj = P{}) //
+            ->CPP_ret(I)(                                                              //
                 requires permutable<I> && sentinel_for<S, I> &&
-                    indirect_relation<equal_to, projected<I, P>, T const *>)
+                indirect_relation<equal_to, projected<I, P>, T const *>)
         {
             first = find(std::move(first), last, val, std::ref(proj));
             if(first != last)
@@ -56,19 +57,17 @@ namespace ranges
             return first;
         }
 
+        /// \overload
         template<typename Rng, typename T, typename P = identity>
-        auto operator()(Rng && rng, T const & val, P proj = P{}) const
-            -> CPP_ret(safe_iterator_t<Rng>)( //
+        auto RANGES_FUN_NIEBLOID(remove)(Rng && rng, T const & val, P proj = P{})
+            ->CPP_ret(safe_iterator_t<Rng>)( //
                 requires forward_range<Rng> && permutable<iterator_t<Rng>> &&
-                    indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *>)
+                indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *>)
         {
             return (*this)(begin(rng), end(rng), val, std::move(proj));
         }
-    };
 
-    /// \sa `remove_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(remove_fn, remove)
+    RANGES_END_NIEBLOID(remove)
 
     namespace cpp20
     {

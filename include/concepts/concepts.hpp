@@ -122,6 +122,8 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 #define CPP_PP_EMPTY()
 #define CPP_PP_COMMA() ,
+#define CPP_PP_LBRACE() {
+#define CPP_PP_RBRACE() }
 #define CPP_PP_COMMA_IIF(X)                                                     \
     CPP_PP_IIF(X)(CPP_PP_EMPTY, CPP_PP_COMMA)()                                 \
     /**/

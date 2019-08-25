@@ -35,13 +35,14 @@ namespace ranges
     template<typename I, typename F>
     using for_each_result = detail::in_fun_result<I, F>;
 
-    struct for_each_fn
-    {
+    RANGES_BEGIN_NIEBLOID(for_each)
+
+        /// \brief function template \c for_each
         template<typename I, typename S, typename F, typename P = identity>
-        auto operator()(I first, S last, F fun, P proj = P{}) const
-            -> CPP_ret(for_each_result<I, F>)( //
+        auto RANGES_FUN_NIEBLOID(for_each)(I first, S last, F fun, P proj = P{})
+            ->CPP_ret(for_each_result<I, F>)( //
                 requires input_iterator<I> && sentinel_for<S, I> &&
-                    indirectly_unary_invocable<F, projected<I, P>>)
+                indirectly_unary_invocable<F, projected<I, P>>)
         {
             for(; first != last; ++first)
             {
@@ -50,20 +51,18 @@ namespace ranges
             return {detail::move(first), detail::move(fun)};
         }
 
+        /// \overload
         template<typename Rng, typename F, typename P = identity>
-        auto operator()(Rng && rng, F fun, P proj = P{}) const
-            -> CPP_ret(for_each_result<safe_iterator_t<Rng>, F>)( //
+        auto RANGES_FUN_NIEBLOID(for_each)(Rng && rng, F fun, P proj = P{})
+            ->CPP_ret(for_each_result<safe_iterator_t<Rng>, F>)( //
                 requires input_range<Rng> &&
-                    indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
+                indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
         {
             return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in,
                     detail::move(fun)};
         }
-    };
 
-    /// \sa `for_each_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(for_each_fn, for_each)
+    RANGES_END_NIEBLOID(for_each)
 
     namespace cpp20
     {

@@ -32,31 +32,44 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct equal_fn
+
+    /// \cond
+    namespace detail
     {
-    private:
         template<typename I0, typename S0, typename I1, typename S1, typename C,
                  typename P0, typename P1>
-        constexpr bool nocheck(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred, P0 proj0,
-                               P1 proj1) const
+        constexpr bool equal_nocheck(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred,
+                                     P0 proj0, P1 proj1)
         {
             for(; begin0 != end0 && begin1 != end1; ++begin0, ++begin1)
                 if(!invoke(pred, invoke(proj0, *begin0), invoke(proj1, *begin1)))
                     return false;
             return begin0 == end0 && begin1 == end1;
         }
+    } // namespace detail
+    /// \endcond
 
-    public:
-        template<typename I0, typename S0, typename I1, typename C = equal_to,
-                 typename P0 = identity, typename P1 = identity>
+    RANGES_BEGIN_NIEBLOID(equal)
+
+        /// \brief function template \c equal
+        template<typename I0,
+                 typename S0,
+                 typename I1,
+                 typename C = equal_to,
+                 typename P0 = identity,
+                 typename P1 = identity>
         RANGES_DEPRECATED(
             "Use the variant of ranges::equal that takes an upper bound for "
             "both sequences")
-        constexpr auto
-        operator()(I0 begin0, S0 end0, I1 begin1, C pred = C{}, P0 proj0 = P0{},
-                   P1 proj1 = P1{}) const -> CPP_ret(bool)( //
-            requires input_iterator<I0> && sentinel_for<S0, I0> && input_iterator<I1> &&
-                indirectly_comparable<I0, I1, C, P0, P1>)
+        constexpr auto RANGES_FUN_NIEBLOID(equal)(I0 begin0,
+                                                  S0 end0,
+                                                  I1 begin1,
+                                                  C pred = C{},
+                                                  P0 proj0 = P0{},
+                                                  P1 proj1 = P1{}) //
+            ->CPP_ret(bool)(                                       //
+                requires input_iterator<I0> && sentinel_for<S0, I0> &&
+                input_iterator<I1> && indirectly_comparable<I0, I1, C, P0, P1>)
         {
             for(; begin0 != end0; ++begin0, ++begin1)
                 if(!invoke(pred, invoke(proj0, *begin0), invoke(proj1, *begin1)))
@@ -64,36 +77,55 @@ namespace ranges
             return true;
         }
 
-        template<typename I0, typename S0, typename I1, typename S1,
-                 typename C = equal_to, typename P0 = identity, typename P1 = identity>
-        constexpr auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred = C{},
-                                  P0 proj0 = P0{},
-                                  P1 proj1 = P1{}) const -> CPP_ret(bool)( //
-            requires input_iterator<I0> && sentinel_for<S0, I0> && input_iterator<I1> &&
-                sentinel_for<S1, I1> && indirectly_comparable<I0, I1, C, P0, P1>)
+        /// \overload
+        template<typename I0,
+                 typename S0,
+                 typename I1,
+                 typename S1,
+                 typename C = equal_to,
+                 typename P0 = identity,
+                 typename P1 = identity>
+        constexpr auto RANGES_FUN_NIEBLOID(equal)(I0 begin0,
+                                                  S0 end0,
+                                                  I1 begin1,
+                                                  S1 end1,
+                                                  C pred = C{},
+                                                  P0 proj0 = P0{},
+                                                  P1 proj1 = P1{}) //
+            ->CPP_ret(bool)(                                       //
+                requires input_iterator<I0> && sentinel_for<S0, I0> &&
+                input_iterator<I1> && sentinel_for<S1, I1> &&
+                indirectly_comparable<I0, I1, C, P0, P1>)
         {
             if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S0, I0> &&
                                    sized_sentinel_for<S1, I1>))
                 if(distance(begin0, end0) != distance(begin1, end1))
                     return false;
-            return this->nocheck(std::move(begin0),
-                                 std::move(end0),
-                                 std::move(begin1),
-                                 std::move(end1),
-                                 std::move(pred),
-                                 std::move(proj0),
-                                 std::move(proj1));
+            return detail::equal_nocheck(std::move(begin0),
+                                         std::move(end0),
+                                         std::move(begin1),
+                                         std::move(end1),
+                                         std::move(pred),
+                                         std::move(proj0),
+                                         std::move(proj1));
         }
 
-        template<typename Rng0, typename I1Ref, typename C = equal_to,
-                 typename P0 = identity, typename P1 = identity>
+        /// \overload
+        template<typename Rng0,
+                 typename I1Ref,
+                 typename C = equal_to,
+                 typename P0 = identity,
+                 typename P1 = identity>
         RANGES_DEPRECATED(
             "Use the variant of ranges::equal that takes an upper bound for "
             "both sequences")
-        constexpr auto
-        operator()(Rng0 && rng0, I1Ref && begin1, C pred = C{}, P0 proj0 = P0{},
-                   P1 proj1 = P1{}) const -> CPP_ret(bool)( //
-            requires input_range<Rng0> && input_iterator<uncvref_t<I1Ref>> &&
+        constexpr auto RANGES_FUN_NIEBLOID(equal)(Rng0 && rng0,
+                                                  I1Ref && begin1,
+                                                  C pred = C{},
+                                                  P0 proj0 = P0{},
+                                                  P1 proj1 = P1{}) //
+            ->CPP_ret(bool)(                                       //
+                requires input_range<Rng0> && input_iterator<uncvref_t<I1Ref>> &&
                 indirectly_comparable<iterator_t<Rng0>, uncvref_t<I1Ref>, C, P0, P1>)
         {
             RANGES_DIAGNOSTIC_PUSH
@@ -107,30 +139,31 @@ namespace ranges
             RANGES_DIAGNOSTIC_POP
         }
 
-        template<typename Rng0, typename Rng1, typename C = equal_to,
-                 typename P0 = identity, typename P1 = identity>
-        constexpr auto operator()(Rng0 && rng0, Rng1 && rng1, C pred = C{},
-                                  P0 proj0 = P0{}, P1 proj1 = P1{}) const
-            -> CPP_ret(bool)( //
+        /// \overload
+        template<typename Rng0,
+                 typename Rng1,
+                 typename C = equal_to,
+                 typename P0 = identity,
+                 typename P1 = identity>
+        constexpr auto RANGES_FUN_NIEBLOID(equal)(
+            Rng0 && rng0, Rng1 && rng1, C pred = C{}, P0 proj0 = P0{}, P1 proj1 = P1{}) //
+            ->CPP_ret(bool)(                                                            //
                 requires input_range<Rng0> && input_range<Rng1> &&
-                    indirectly_comparable<iterator_t<Rng0>, iterator_t<Rng1>, C, P0, P1>)
+                indirectly_comparable<iterator_t<Rng0>, iterator_t<Rng1>, C, P0, P1>)
         {
             if(RANGES_CONSTEXPR_IF(sized_range<Rng0> && sized_range<Rng1>))
                 if(distance(rng0) != distance(rng1))
                     return false;
-            return this->nocheck(begin(rng0),
-                                 end(rng0),
-                                 begin(rng1),
-                                 end(rng1),
-                                 std::move(pred),
-                                 std::move(proj0),
-                                 std::move(proj1));
+            return detail::equal_nocheck(begin(rng0),
+                                         end(rng0),
+                                         begin(rng1),
+                                         end(rng1),
+                                         std::move(pred),
+                                         std::move(proj0),
+                                         std::move(proj1));
         }
-    };
 
-    /// \sa `equal_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(equal_fn, equal)
+    RANGES_END_NIEBLOID(equal)
 
     namespace cpp20
     {

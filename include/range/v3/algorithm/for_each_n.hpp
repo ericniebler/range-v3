@@ -32,12 +32,15 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct for_each_n_fn
-    {
+    RANGES_BEGIN_NIEBLOID(for_each_n)
+
+        /// \brief function template \c for_each_n
         template<typename I, typename F, typename P = identity>
-        auto operator()(I first, iter_difference_t<I> n, F fun,
-                        P proj = P{}) const -> CPP_ret(I)( //
-            requires input_iterator<I> && indirectly_unary_invocable<F, projected<I, P>>)
+        auto RANGES_FUN_NIEBLOID(for_each_n)(
+            I first, iter_difference_t<I> n, F fun, P proj = P{}) //
+            ->CPP_ret(I)(                                         //
+                requires input_iterator<I> &&
+                indirectly_unary_invocable<F, projected<I, P>>)
         {
             RANGES_EXPECT(0 <= n);
             auto norig = n;
@@ -47,22 +50,21 @@ namespace ranges
             return recounted(first, b, norig);
         }
 
+        /// \overload
         template<typename Rng, typename F, typename P = identity>
-        auto operator()(Rng && rng, range_difference_t<Rng> n, F fun, P proj = P{}) const
-            -> CPP_ret(safe_iterator_t<Rng>)( //
+        auto RANGES_FUN_NIEBLOID(for_each_n)(
+            Rng && rng, range_difference_t<Rng> n, F fun, P proj = P{})
+            ->CPP_ret(safe_iterator_t<Rng>)( //
                 requires input_range<Rng> &&
-                    indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
+                indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
         {
             if(sized_range<Rng>)
                 RANGES_EXPECT(n <= distance(rng));
 
             return (*this)(begin(rng), n, detail::move(fun), detail::move(proj));
         }
-    };
 
-    /// \sa `for_each_n_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(for_each_n_fn, for_each_n)
+    RANGES_END_NIEBLOID(for_each_n)
 
     // Not yet!
     //  namespace cpp20

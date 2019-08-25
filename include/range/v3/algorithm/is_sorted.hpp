@@ -30,9 +30,8 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct is_sorted_fn
-    {
-        /// \brief template function \c is_sorted_fn::operator()
+    RANGES_BEGIN_NIEBLOID(is_sorted)
+        /// \brief template function \c is_sorted
         ///
         /// range-based version of the \c is_sorted std algorithm
         ///
@@ -45,27 +44,26 @@ namespace ranges
         /// projected<I, P>>` concept
         ///
         template<typename I, typename S, typename R = less, typename P = identity>
-        auto operator()(I first, S last, R rel = R{}, P proj = P{}) const
-            -> CPP_ret(bool)( //
+        auto RANGES_FUN_NIEBLOID(is_sorted)(I first, S last, R rel = R{}, P proj = P{})
+            ->CPP_ret(bool)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
-                    indirect_strict_weak_order<R, projected<I, P>>)
+                indirect_strict_weak_order<R, projected<I, P>>)
         {
             return is_sorted_until(
                        std::move(first), last, std::move(rel), std::move(proj)) == last;
         }
 
+        /// \overload
         template<typename Rng, typename R = less, typename P = identity>
-        auto operator()(Rng && rng, R rel = R{}, P proj = P{}) const -> CPP_ret(bool)( //
-            requires forward_range<Rng> &&
+        auto RANGES_FUN_NIEBLOID(is_sorted)(Rng && rng, R rel = R{}, P proj = P{}) //
+            ->CPP_ret(bool)(                                                       //
+                requires forward_range<Rng> &&
                 indirect_strict_weak_order<R, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(rel), std::move(proj));
         }
-    };
 
-    /// \sa `is_sorted_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(is_sorted_fn, is_sorted)
+    RANGES_END_NIEBLOID(is_sorted)
 
     namespace cpp20
     {

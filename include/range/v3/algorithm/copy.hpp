@@ -35,46 +35,51 @@ namespace ranges
     template<typename I, typename O>
     using copy_result = detail::in_out_result<I, O>;
 
-    struct cpp20_copy_fn
-    {
+    RANGES_HIDDEN_DETAIL(namespace _copy CPP_PP_LBRACE())
+    RANGES_BEGIN_NIEBLOID(copy)
+
+        /// \brief function template \c copy
         template<typename I, typename S, typename O>
-        constexpr auto operator()(I first, S last, O out) const
-            -> CPP_ret(copy_result<I, O>)( //
+        constexpr auto RANGES_FUN_NIEBLOID(copy)(I first, S last, O out) //
+            ->CPP_ret(copy_result<I, O>)(                                //
                 requires input_iterator<I> && sentinel_for<S, I> &&
-                    weakly_incrementable<O> && indirectly_copyable<I, O>)
+                weakly_incrementable<O> && indirectly_copyable<I, O>)
         {
             for(; first != last; ++first, ++out)
                 *out = *first;
             return {first, out};
-        }
+        } // namespace ranges
 
+        /// \overload
         template<typename Rng, typename O>
-        constexpr auto operator()(Rng && rng, O out) const
-            -> CPP_ret(copy_result<safe_iterator_t<Rng>, O>)( //
+        constexpr auto RANGES_FUN_NIEBLOID(copy)(Rng && rng, O out) //
+            ->CPP_ret(copy_result<safe_iterator_t<Rng>, O>)(        //
                 requires input_range<Rng> && weakly_incrementable<O> &&
-                    indirectly_copyable<iterator_t<Rng>, O>)
+                indirectly_copyable<iterator_t<Rng>, O>)
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }
-    };
 
-    struct RANGES_EMPTY_BASES copy_fn
+    RANGES_END_NIEBLOID(copy)
+    RANGES_HIDDEN_DETAIL(CPP_PP_RBRACE())
+
+#ifndef RANGES_DOXYGEN_INVOKED
+    struct copy_fn
       : aux::copy_fn
-      , cpp20_copy_fn
+      , _copy::copy_fn
     {
         using aux::copy_fn::operator();
-        using cpp20_copy_fn::operator();
+        using _copy::copy_fn::operator();
     };
-
-    /// \sa `copy_fn`
-    /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(copy_fn, copy)
+#endif
 
     namespace cpp20
     {
         using ranges::copy_result;
-        RANGES_INLINE_VARIABLE(cpp20_copy_fn, copy)
+        using ranges::RANGES_HIDDEN_DETAIL(_copy::) copy;
     } // namespace cpp20
+
     /// @}
 } // namespace ranges
 

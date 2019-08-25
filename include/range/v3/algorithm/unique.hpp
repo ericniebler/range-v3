@@ -34,9 +34,9 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct unique_fn
-    {
-        /// \brief template function \c unique_fn::operator()
+    RANGES_BEGIN_NIEBLOID(unique)
+
+        /// \brief template function \c unique
         ///
         /// range-based version of the \c unique std algorithm
         ///
@@ -46,8 +46,8 @@ namespace ranges
         /// \pre `C` is a model of the `relation` concept
         ///
         template<typename I, typename S, typename C = equal_to, typename P = identity>
-        auto operator()(I first, S last, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(I)( //
+        auto RANGES_FUN_NIEBLOID(unique)(I first, S last, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(I)(                                                             //
                 requires sortable<I, C, P> && sentinel_for<S, I>)
         {
             first = adjacent_find(std::move(first), last, std::ref(pred), std::ref(proj));
@@ -62,18 +62,16 @@ namespace ranges
             return first;
         }
 
+        /// \overload
         template<typename Rng, typename C = equal_to, typename P = identity>
-        auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(safe_iterator_t<Rng>)( //
+        auto RANGES_FUN_NIEBLOID(unique)(Rng && rng, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                                     //
                 requires sortable<iterator_t<Rng>, C, P> && range<Rng>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
-    };
 
-    /// \sa `unique_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(unique_fn, unique)
+    RANGES_END_NIEBLOID(unique)
 
     namespace cpp20
     {

@@ -70,8 +70,10 @@ namespace ranges
             // Find the median:
             I pivot_pnt =
                 invoke(pred, a, b)
-                    ? (invoke(pred, b, c) ? mid : (invoke(pred, a, c) ? penultimate : first))
-                    : (invoke(pred, a, c) ? first : (invoke(pred, b, c) ? penultimate : mid));
+                    ? (invoke(pred, b, c) ? mid
+                                          : (invoke(pred, a, c) ? penultimate : first))
+                    : (invoke(pred, a, c) ? first
+                                          : (invoke(pred, b, c) ? penultimate : mid));
 
             // Do the partition:
             while(true)
@@ -134,6 +136,49 @@ namespace ranges
             for(I i = first; i != last; ++i)
                 detail::unguarded_linear_insert(i, iter_move(i), pred, proj);
         }
+
+        constexpr int introsort_threshold()
+        {
+            return 16;
+        }
+
+        template<typename I, typename C, typename P>
+        inline void final_insertion_sort(I first, I last, C & pred, P & proj)
+        {
+            if(last - first > detail::introsort_threshold())
+            {
+                detail::insertion_sort(
+                    first, first + detail::introsort_threshold(), pred, proj);
+                detail::unguarded_insertion_sort(
+                    first + detail::introsort_threshold(), last, pred, proj);
+            }
+            else
+                detail::insertion_sort(first, last, pred, proj);
+        }
+
+        template<typename Size>
+        inline Size log2(Size n)
+        {
+            Size k = 0;
+            for(; n != 1; n >>= 1)
+                ++k;
+            return k;
+        }
+
+        template<typename I, typename Size, typename C, typename P>
+        inline void introsort_loop(I first, I last, Size depth_limit, C & pred, P & proj)
+        {
+            while(last - first > detail::introsort_threshold())
+            {
+                if(depth_limit == 0)
+                    return partial_sort(
+                               first, last, last, std::ref(pred), std::ref(proj)),
+                           void();
+                I cut = detail::unguarded_partition(first, last, pred, proj);
+                detail::introsort_loop(cut, last, --depth_limit, pred, proj);
+                last = cut;
+            }
+        }
     } // namespace detail
     /// \endcond
 
@@ -143,79 +188,36 @@ namespace ranges
     // Introsort: Quicksort to a certain depth, then Heapsort. Insertion
     // sort below a certain threshold.
     // TODO Forward iterators, like EoP?
-    struct sort_fn
-    {
-    private:
-        static constexpr int introsort_threshold()
-        {
-            return 16;
-        }
 
-        template<typename I, typename C, typename P>
-        static void final_insertion_sort(I first, I last, C & pred, P & proj)
-        {
-            if(last - first > sort_fn::introsort_threshold())
-            {
-                detail::insertion_sort(
-                    first, first + sort_fn::introsort_threshold(), pred, proj);
-                detail::unguarded_insertion_sort(
-                    first + sort_fn::introsort_threshold(), last, pred, proj);
-            }
-            else
-                detail::insertion_sort(first, last, pred, proj);
-        }
+    RANGES_BEGIN_NIEBLOID(sort)
 
-        template<typename Size>
-        static Size log2(Size n)
-        {
-            Size k = 0;
-            for(; n != 1; n >>= 1)
-                ++k;
-            return k;
-        }
-
-        template<typename I, typename Size, typename C, typename P>
-        static void introsort_loop(I first, I last, Size depth_limit, C & pred, P & proj)
-        {
-            while(last - first > sort_fn::introsort_threshold())
-            {
-                if(depth_limit == 0)
-                    return partial_sort(first, last, last, std::ref(pred), std::ref(proj)),
-                           void();
-                I cut = detail::unguarded_partition(first, last, pred, proj);
-                sort_fn::introsort_loop(cut, last, --depth_limit, pred, proj);
-                last = cut;
-            }
-        }
-
-    public:
+        /// \brief function template \c sort
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I first, S end_, C pred = C{},
-                        P proj = P{}) const -> CPP_ret(I)( //
-            requires sortable<I, C, P> && random_access_iterator<I> && sentinel_for<S, I>)
+        auto RANGES_FUN_NIEBLOID(sort)(I first, S end_, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(I)(                                                           //
+                requires sortable<I, C, P> && random_access_iterator<I> &&
+                sentinel_for<S, I>)
         {
             I last = ranges::next(first, std::move(end_));
             if(first != last)
             {
-                sort_fn::introsort_loop(
-                    first, last, sort_fn::log2(last - first) * 2, pred, proj);
-                sort_fn::final_insertion_sort(first, last, pred, proj);
+                detail::introsort_loop(
+                    first, last, detail::log2(last - first) * 2, pred, proj);
+                detail::final_insertion_sort(first, last, pred, proj);
             }
             return last;
         }
 
+        /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(safe_iterator_t<Rng>)( //
+        auto RANGES_FUN_NIEBLOID(sort)(Rng && rng, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                                   //
                 requires sortable<iterator_t<Rng>, C, P> && random_access_range<Rng>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
-    };
 
-    /// \sa `sort_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(sort_fn, sort)
+    RANGES_END_NIEBLOID(sort)
 
     namespace cpp20
     {

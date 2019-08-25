@@ -30,14 +30,19 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct upper_bound_fn
-    {
-        template<typename I, typename S, typename V, typename C = less,
+    RANGES_BEGIN_NIEBLOID(upper_bound)
+
+        /// \brief function template \c upper_bound
+        template<typename I,
+                 typename S,
+                 typename V,
+                 typename C = less,
                  typename P = identity>
-        auto operator()(I first, S last, V const & val, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(I)( //
+        auto RANGES_FUN_NIEBLOID(upper_bound)(
+            I first, S last, V const & val, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(I)(                                               //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
-                    indirect_strict_weak_order<C, V const *, projected<I, P>>)
+                indirect_strict_weak_order<C, V const *, projected<I, P>>)
         {
             return partition_point(std::move(first),
                                    std::move(last),
@@ -47,19 +52,17 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename V, typename C = less, typename P = identity>
-        auto operator()(Rng && rng, V const & val, C pred = C{},
-                        P proj = P{}) const -> CPP_ret(safe_iterator_t<Rng>)( //
-            requires forward_range<Rng> &&
+        auto RANGES_FUN_NIEBLOID(upper_bound)(
+            Rng && rng, V const & val, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                       //
+                requires forward_range<Rng> &&
                 indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
         {
             return partition_point(
                 rng, detail::make_upper_bound_predicate(pred, val), std::move(proj));
         }
-    };
 
-    /// \sa `upper_bound_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(upper_bound_fn, upper_bound)
+    RANGES_END_NIEBLOID(upper_bound)
 
     namespace cpp20
     {

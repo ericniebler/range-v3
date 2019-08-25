@@ -35,15 +35,25 @@ namespace ranges
     template<typename I, typename O>
     using replace_copy_result = detail::in_out_result<I, O>;
 
-    struct replace_copy_fn
-    {
-        template<typename I, typename S, typename O, typename T1, typename T2,
+    RANGES_BEGIN_NIEBLOID(replace_copy)
+
+        /// \brief function template \c replace_copy
+        template<typename I,
+                 typename S,
+                 typename O,
+                 typename T1,
+                 typename T2,
                  typename P = identity>
-        auto operator()(I first, S last, O out, T1 const & old_value, T2 const & new_value,
-                        P proj = {}) const -> CPP_ret(replace_copy_result<I, O>)( //
-            requires input_iterator<I> && sentinel_for<S, I> &&
+        auto RANGES_FUN_NIEBLOID(replace_copy)(I first,
+                                               S last,
+                                               O out,
+                                               T1 const & old_value,
+                                               T2 const & new_value,
+                                               P proj = {}) //
+            ->CPP_ret(replace_copy_result<I, O>)(           //
+                requires input_iterator<I> && sentinel_for<S, I> &&
                 output_iterator<O, T2 const &> && indirectly_copyable<I, O> &&
-                    indirect_relation<equal_to, projected<I, P>, T1 const *>)
+                indirect_relation<equal_to, projected<I, P>, T1 const *>)
         {
             for(; first != last; ++first, ++out)
             {
@@ -56,14 +66,18 @@ namespace ranges
             return {first, out};
         }
 
-        template<typename Rng, typename O, typename T1, typename T2,
+        /// \overload
+        template<typename Rng,
+                 typename O,
+                 typename T1,
+                 typename T2,
                  typename P = identity>
-        auto operator()(Rng && rng, O out, T1 const & old_value, T2 const & new_value,
-                        P proj = {}) const
-            -> CPP_ret(replace_copy_result<safe_iterator_t<Rng>, O>)( //
+        auto RANGES_FUN_NIEBLOID(replace_copy)(
+            Rng && rng, O out, T1 const & old_value, T2 const & new_value, P proj = {}) //
+            ->CPP_ret(replace_copy_result<safe_iterator_t<Rng>, O>)(                    //
                 requires input_range<Rng> && output_iterator<O, T2 const &> &&
-                    indirectly_copyable<iterator_t<Rng>, O> && indirect_relation<
-                        equal_to, projected<iterator_t<Rng>, P>, T1 const *>)
+                indirectly_copyable<iterator_t<Rng>, O> &&
+                indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>)
         {
             return (*this)(begin(rng),
                            end(rng),
@@ -72,11 +86,8 @@ namespace ranges
                            new_value,
                            std::move(proj));
         }
-    };
 
-    /// \sa `replace_copy_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(replace_copy_fn, replace_copy)
+    RANGES_END_NIEBLOID(replace_copy)
 
     namespace cpp20
     {

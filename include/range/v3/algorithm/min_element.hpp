@@ -31,13 +31,15 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct min_element_fn
-    {
+    RANGES_BEGIN_NIEBLOID(min_element)
+
+        /// \brief function template \c min_element
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I first, S last, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(I)( //
+        auto RANGES_FUN_NIEBLOID(min_element)(
+            I first, S last, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(I)(                                //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
-                    indirect_strict_weak_order<C, projected<I, P>>)
+                indirect_strict_weak_order<C, projected<I, P>>)
         {
             if(first != last)
                 for(auto tmp = next(first); tmp != last; ++tmp)
@@ -46,19 +48,17 @@ namespace ranges
             return first;
         }
 
+        /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(safe_iterator_t<Rng>)( //
+        auto RANGES_FUN_NIEBLOID(min_element)(Rng && rng, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                                          //
                 requires forward_range<Rng> &&
-                    indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>)
+                indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
-    };
 
-    /// \sa `min_element_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(min_element_fn, min_element)
+    RANGES_END_NIEBLOID(min_element)
 
     namespace cpp20
     {

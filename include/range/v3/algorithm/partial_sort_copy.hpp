@@ -33,16 +33,28 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct partial_sort_copy_fn
-    {
-        template<typename I, typename SI, typename O, typename SO, typename C = less,
-                 typename PI = identity, typename PO = identity>
-        auto operator()(I first, SI last, O out_begin, SO out_end, C pred = C{},
-                        PI in_proj = PI{}, PO out_proj = PO{}) const -> CPP_ret(O)( //
-            requires input_iterator<I> && sentinel_for<SI, I> &&
+    RANGES_BEGIN_NIEBLOID(partial_sort_copy)
+
+        /// \brief function template \c partial_sort_copy
+        template<typename I,
+                 typename SI,
+                 typename O,
+                 typename SO,
+                 typename C = less,
+                 typename PI = identity,
+                 typename PO = identity>
+        auto RANGES_FUN_NIEBLOID(partial_sort_copy)(I first,
+                                                    SI last,
+                                                    O out_begin,
+                                                    SO out_end,
+                                                    C pred = C{},
+                                                    PI in_proj = PI{},
+                                                    PO out_proj = PO{}) //
+            ->CPP_ret(O)(                                               //
+                requires input_iterator<I> && sentinel_for<SI, I> &&
                 random_access_iterator<O> && sentinel_for<SO, O> &&
-                    indirectly_copyable<I, O> && sortable<O, C, PO> &&
-                        indirect_strict_weak_order<C, projected<I, PI>, projected<O, PO>>)
+                indirectly_copyable<I, O> && sortable<O, C, PO> &&
+                indirect_strict_weak_order<C, projected<I, PI>, projected<O, PO>>)
         {
             O r = out_begin;
             if(r != out_end)
@@ -69,16 +81,24 @@ namespace ranges
             return r;
         }
 
-        template<typename InRng, typename OutRng, typename C = less,
-                 typename PI = identity, typename PO = identity>
-        auto operator()(InRng && in_rng, OutRng && out_rng, C pred = C{},
-                        PI in_proj = PI{},
-                        PO out_proj = PO{}) const -> CPP_ret(safe_iterator_t<OutRng>)( //
-            requires input_range<InRng> && random_access_range<OutRng> &&
+        /// \overload
+        template<typename InRng,
+                 typename OutRng,
+                 typename C = less,
+                 typename PI = identity,
+                 typename PO = identity>
+        auto RANGES_FUN_NIEBLOID(partial_sort_copy)(InRng && in_rng,
+                                                    OutRng && out_rng,
+                                                    C pred = C{},
+                                                    PI in_proj = PI{},
+                                                    PO out_proj = PO{}) //
+            ->CPP_ret(safe_iterator_t<OutRng>)(                         //
+                requires input_range<InRng> && random_access_range<OutRng> &&
                 indirectly_copyable<iterator_t<InRng>, iterator_t<OutRng>> &&
-                    sortable<iterator_t<OutRng>, C, PO> &&
-                        indirect_strict_weak_order<C, projected<iterator_t<InRng>, PI>,
-                                                   projected<iterator_t<OutRng>, PO>>)
+                sortable<iterator_t<OutRng>, C, PO> &&
+                indirect_strict_weak_order<C,
+                                           projected<iterator_t<InRng>, PI>,
+                                           projected<iterator_t<OutRng>, PO>>)
         {
             return (*this)(begin(in_rng),
                            end(in_rng),
@@ -88,11 +108,8 @@ namespace ranges
                            std::move(in_proj),
                            std::move(out_proj));
         }
-    };
 
-    /// \sa `partial_sort_copy_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(partial_sort_copy_fn, partial_sort_copy)
+    RANGES_END_NIEBLOID(partial_sort_copy)
 
     namespace cpp20
     {

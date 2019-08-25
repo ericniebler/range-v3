@@ -31,9 +31,8 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct find_if_not_fn
-    {
-        /// \brief template function \c find_if_not_fn::operator()
+    RANGES_BEGIN_NIEBLOID(find_if_not)
+        /// \brief template function \c find_if_not
         ///
         /// range-based version of the \c find_if_not std algorithm
         ///
@@ -45,8 +44,9 @@ namespace ranges
         /// \pre `F` models `predicate<X>`, where `X` is the result type
         ///      of `invocable<P, V>`
         template<typename I, typename S, typename F, typename P = identity>
-        auto operator()(I first, S last, F pred, P proj = P{}) const -> CPP_ret(I)( //
-            requires input_iterator<I> && sentinel_for<S, I> &&
+        auto RANGES_FUN_NIEBLOID(find_if_not)(I first, S last, F pred, P proj = P{}) //
+            ->CPP_ret(I)(                                                            //
+                requires input_iterator<I> && sentinel_for<S, I> &&
                 indirect_unary_predicate<F, projected<I, P>>)
         {
             for(; first != last; ++first)
@@ -57,18 +57,15 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename F, typename P = identity>
-        auto operator()(Rng && rng, F pred, P proj = P{}) const
-            -> CPP_ret(safe_iterator_t<Rng>)( //
+        auto RANGES_FUN_NIEBLOID(find_if_not)(Rng && rng, F pred, P proj = P{})
+            ->CPP_ret(safe_iterator_t<Rng>)( //
                 requires input_range<Rng> &&
-                    indirect_unary_predicate<F, projected<iterator_t<Rng>, P>>)
+                indirect_unary_predicate<F, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
-    };
 
-    /// \sa `find_if_not_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(find_if_not_fn, find_if_not)
+    RANGES_END_NIEBLOID(find_if_not)
 
     namespace cpp20
     {

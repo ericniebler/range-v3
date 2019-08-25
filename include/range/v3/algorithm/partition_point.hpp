@@ -43,11 +43,14 @@ namespace ranges
     /// \addtogroup group-algorithms
     /// @{
 
-    struct partition_point_fn
-    {
+    RANGES_BEGIN_NIEBLOID(partition_point)
+
+        /// \brief function template \c partition_point
         template<typename I, typename S, typename C, typename P = identity>
-        auto operator()(I first, S last, C pred, P proj = P{}) const -> CPP_ret(I)( //
-            requires forward_iterator<I> && sentinel_for<S, I> &&
+        auto RANGES_FUN_NIEBLOID(partition_point)(
+            I first, S last, C pred, P proj = P{}) //
+            ->CPP_ret(I)(                          //
+                requires forward_iterator<I> && sentinel_for<S, I> &&
                 indirect_unary_predicate<C, projected<I, P>>)
         {
             if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S, I>))
@@ -75,11 +78,12 @@ namespace ranges
             }
         }
 
+        /// \overload
         template<typename Rng, typename C, typename P = identity>
-        auto operator()(Rng && rng, C pred, P proj = P{}) const
-            -> CPP_ret(safe_iterator_t<Rng>)( //
+        auto RANGES_FUN_NIEBLOID(partition_point)(Rng && rng, C pred, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                                        //
                 requires forward_range<Rng> &&
-                    indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
+                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
         {
             if(RANGES_CONSTEXPR_IF(sized_range<Rng>))
             {
@@ -89,11 +93,8 @@ namespace ranges
             }
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
-    };
 
-    /// \sa `partition_point_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(partition_point_fn, partition_point)
+    RANGES_END_NIEBLOID(partition_point)
 
     namespace cpp20
     {

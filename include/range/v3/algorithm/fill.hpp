@@ -26,29 +26,29 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct fill_fn
-    {
+    RANGES_BEGIN_NIEBLOID(fill)
+
+        /// \brief function template \c fill
         template<typename O, typename S, typename V>
-        auto operator()(O first, S last, V const & val) const -> CPP_ret(O)( //
-            requires output_iterator<O, V const &> && sentinel_for<S, O>)
+        auto RANGES_FUN_NIEBLOID(fill)(O first, S last, V const & val) //
+            ->CPP_ret(O)(                                              //
+                requires output_iterator<O, V const &> && sentinel_for<S, O>)
         {
             for(; first != last; ++first)
                 *first = val;
             return first;
         }
 
+        /// \overload
         template<typename Rng, typename V>
-        auto operator()(Rng && rng, V const & val) const
-            -> CPP_ret(safe_iterator_t<Rng>)( //
+        auto RANGES_FUN_NIEBLOID(fill)(Rng && rng, V const & val)
+            ->CPP_ret(safe_iterator_t<Rng>)( //
                 requires output_range<Rng, V const &>)
         {
             return (*this)(begin(rng), end(rng), val);
         }
-    };
 
-    /// \sa `fill_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(fill_fn, fill)
+    RANGES_END_NIEBLOID(fill)
 
     namespace cpp20
     {
