@@ -62,6 +62,7 @@ var NAVTREE =
       ] ]
     ] ],
     [ "Release Notes", "release_notes.html", [
+      [ "Version 0.9.0 \"Std::ranger Things\"", "release_notes.html#v0-9-0", null ],
       [ "Version 0.5.0", "release_notes.html#v0-5-0", null ],
       [ "Version 0.4.0", "release_notes.html#v0-4-0", null ],
       [ "Version 0.3.7", "release_notes.html#v0-3-7", null ],
@@ -102,13 +103,13 @@ var NAVTREEINDEX =
 "group__transformation.html#gac34d21074558f4ddc07a6206d5065619",
 "meta_8hpp.html#ga82704ab3563d63460b7ac1be6c9876c9",
 "range_2traits_8hpp.html#ga311aa71e4a487dad62b7b9114bfdcab6",
-"structmeta_1_1detail_1_1count__if___3_01list_3_01_l_8_8_8_01_4_00_01_fn_00_01void___3_01integer_5f827808f61383ae58cc36c01904f2fc.html",
-"structranges_1_1common__iterator.html#aa27a5f00cda054f5ecf0f2aec201f7e4",
-"structranges_1_1insert__fn.html#a8ed659e63c2c4f11c5550fc4e67c4877",
-"structranges_1_1optional.html#abf060a9fbba82af00e081f4dc5137719",
-"structranges_1_1split__view.html#aba8cea85a8ab391a41c9d818c79f767e",
-"structranges_1_1views_1_1iota__fn.html",
-"zip__with_8hpp.html"
+"structmeta_1_1detail_1_1count__if__.html",
+"structranges_1_1common__iterator.html#a965968050d887f615ad894c87e7ff5cf",
+"structranges_1_1insert__fn.html#a8557439081ca2a7a8d6babbf8550e4f3",
+"structranges_1_1optional.html#ab9bdfa37af9ed07a6c14fa0df6895221",
+"structranges_1_1split__view.html#aa417757ada0e58eabcdee1d83d957a84",
+"structranges_1_1views_1_1ints__fn.html#aa0e2bc5f67852f872f7ba4930252499c",
+"zip_8hpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

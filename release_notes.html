@@ -100,7 +100,75 @@ $(document).ready(function(){initNavTree('release_notes.html','');});
 <div class="title">Release Notes </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="v0-5-0"></a>
+<div class="textblock"><h1><a class="anchor" id="v0-9-0"></a>
+Version 0.9.0 "Std::ranger Things"</h1>
+<p><em>Released:</em> Aug 26, 2019.</p>
+<p>Bring many interfaces into sync with the C++20 draft.</p>
+<ul>
+<li><b>NEW:</b> An improved concepts portability layer with macros that use C++20 concepts when the compiler supports them.</li>
+<li><b>NEW:</b> An improved directory structure that keeps disjoint parts of the library &ndash; iterators, ranges, algorithms, actions, views, functional programming support, and general utilities &ndash; physically separate.</li>
+<li><b>NEW:</b> A <code>RANGES_DEEP_STL_INTEGRATION</code> configuration option that makes your STL implementation default to structural conformance to infer iterator category, as in C++20. Applies to libc++, libstdc++, and MSVC's Standard Library.</li>
+<li><b>NEW:</b> A <code>ranges::cpp20</code> namespace that contains all the functionality of C++20's <code>std::ranges</code> namespace.</li>
+<li>All concept names have been given standard_case (renamed from PascalCase) and have been harmonized with the C++20 draft.</li>
+<li>The following range access customization points no longer accept rvalue ranges by default:<ul>
+<li><code>ranges::begin</code></li>
+<li><code>ranges::end</code></li>
+<li><code>ranges::rbegin</code></li>
+<li><code>ranges::rend</code></li>
+<li><code>ranges::cbegin</code></li>
+<li><code>ranges::cend</code></li>
+<li><code>ranges::crbegin</code></li>
+<li><code>ranges::crend</code></li>
+<li><code>ranges::data</code></li>
+<li><code>ranges::cdata</code></li>
+</ul>
+</li>
+<li>Iterators may specify an <code>iterator_concept</code> type alias in addition to <code>iterator_category</code> &ndash; either as a nested type or as a member of a <code>std::iterator_traits</code> specialization &ndash; to denote conformance to the C++20 iterator concepts as distinct from the C++98 iterator requirements. (See <a href="http://wg21.link/p1037">P1037 "Deep Integration of the Ranges TS"</a> for more information.)</li>
+<li>The <code>ranges::value_type</code> trait has been renamed to <code>readable_traits</code>.</li>
+<li>The <code>ranges::difference_type</code> trait has been renamed to <code>incrementable_traits</code>.</li>
+<li>The <code>ranges::iterator_category</code> trait has been deprecated. Specialize <code>std::iterator_traits</code> to non-intrusively specify an iterator's category and (optionally) concept.</li>
+<li>Rename the <code>ranges::view</code> namespace to <code>ranges::views</code> and <code>ranges::action</code> to <code>ranges::actions</code> (with deprecated namespace aliases for migration).</li>
+<li>Rename <code>view::bounded</code> to <code>views::common</code>.</li>
+<li>Rename <code>unreachable</code> to <code>unreachable_sentinel_t</code>.</li>
+<li>Change <code>dangling</code> from a class template that wraps an iterator to a class that acts as a placeholder for an iterator that would otherwise dangle.</li>
+<li>Implement C++20's <code>subrange</code> as a view that wraps an iterator/sentinel pair; deprecate <code>iterator_range</code>.</li>
+<li>Deprecate implicit conversion from view types to containers; rename <code>ranges::to_</code> to <code>ranges::to</code> and extend it to support converting a range-of-ranges to a container-of-containers.</li>
+<li>Deprecate the <code>ranges::v3</code> inline versioning namespace.</li>
+<li><p class="startli">The following views have had minor changes to bring them into conformance with the C++20 working draft:</p><ul>
+<li><code>join_view</code></li>
+<li><code>single_view</code></li>
+<li><code>empty_view</code></li>
+<li><code>split_view</code></li>
+<li><code>reverse_view</code></li>
+<li><code>all_view</code></li>
+<li><code>take_view</code></li>
+<li><code>iota_view</code> </li>
+</ul>
+<p class="startli"><code>iota_view&lt;std::[u]intmax_t&gt;</code>, in particular, is given a user-defined <code>difference_type</code> that avoids integer overflow.</p>
+</li>
+<li>New names for the iterator and range type aliases: <table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Old Name  </th><th class="markdownTableHeadNone">New Name   </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>value_type_t</code>  </td><td class="markdownTableBodyNone"><code>iter_value_t</code>   </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>reference_t</code>  </td><td class="markdownTableBodyNone"><code>iter_reference_t</code>   </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>difference_type_t</code>  </td><td class="markdownTableBodyNone"><code>iter_difference_t</code>   </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>size_type_t</code>  </td><td class="markdownTableBodyNone"><em>deprecated</em>   </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>rvalue_reference_t</code>  </td><td class="markdownTableBodyNone"><code>iter_rvalue_reference_t</code>   </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>range_value_type_t</code>  </td><td class="markdownTableBodyNone"><code>range_value_t</code>   </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>range_difference_type_t</code>  </td><td class="markdownTableBodyNone"><code>range_difference_t</code>   </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>range_size_type_t</code>  </td><td class="markdownTableBodyNone"><code>range_size_t</code>   </td></tr>
+</table>
+</li>
+</ul>
+<h1><a class="anchor" id="v0-5-0"></a>
 Version 0.5.0</h1>
 <p><em>Released:</em> Apr 30, 2019.</p>
 <ul>
@@ -259,9 +327,7 @@ Version 0.2.1</h1>
 Version 0.2.0</h1>
 <p><em>Released:</em> March 13, 2017.</p>
 <p>Bring many interfaces into sync with the Ranges TS.</p><ul>
-<li>Many interfaces are simply renamed. The following table shows the old names and the new. (All names are in the <code>ranges::v3</code> namespace.)</li>
-</ul>
-<table class="markdownTable">
+<li>Many interfaces are simply renamed. The following table shows the old names and the new. (All names are in the <code>ranges::v3</code> namespace.) <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Old Name  </th><th class="markdownTableHeadNone">New Name   </th></tr>
 <tr class="markdownTableRowOdd">
@@ -291,7 +357,7 @@ Version 0.2.0</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>range_sentinel_t</code>  </td><td class="markdownTableBodyNone"><code>sentinel_t</code>   </td></tr>
 </table>
-<ul>
+</li>
 <li><code>common_iterator</code> now requires that its two types (<code>Iterator</code> and <code>Sentinel</code>) are different. Use <code>common_iterator_t&lt;I, S&gt;</code> to get the old behavior (i.e., if the two types are the same, it is an alias for <code>I</code>; otherwise, it is <code>common_iterator&lt;I, S&gt;</code>).</li>
 <li>The following iterator adaptors now work with iterators that return proxies from their postfix increment operator (i.e., <code>operator++(int)</code>):<ul>
 <li><code>common_iterator</code></li>

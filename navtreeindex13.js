@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"structranges_1_1views_1_1ints__fn.html#aa0e2bc5f67852f872f7ba4930252499c":[4,1,2,4,33,4],
 "structranges_1_1views_1_1iota__fn.html":[4,1,2,4,34],
 "structranges_1_1views_1_1iota__fn.html#a00fd247c7582b36853190ae4e5074511":[4,1,2,4,34,1],
 "structranges_1_1views_1_1iota__fn.html#a83c9bc0e2debfc9f0ce73746f3289c4f":[4,1,2,4,34,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "view_2view_8hpp.html#a2d7a1ca2212da411af6adf28dcfcb7a3":[4,2,2,0,8,67,1],
 "view_2view_8hpp.html#a5b30df3ab53ae04a685d5d40e1d5e35e":[4,2,2,0,8,67,0],
 "view_2view_8hpp.html#ga3af6f45c883a0d2eba248877b89989e6":[4,2,2,0,8,67,2],
-"view_8hpp.html":[4,2,2,0,21],
-"zip_8hpp.html":[4,2,2,0,8,68]
+"view_8hpp.html":[4,2,2,0,21]
 };
