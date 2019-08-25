@@ -32,9 +32,8 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct is_sorted_until_fn
-    {
-        /// \brief template function \c is_sorted_until_fn::operator()
+    RANGES_BEGIN_NIEBLOID(is_sorted_until)
+        /// \brief template function \c is_sorted_until
         ///
         /// range-based version of the \c is_sorted_until std algorithm
         ///
@@ -47,10 +46,11 @@ namespace ranges
         /// projected<I, P>>` concept
         ///
         template<typename I, typename S, typename R = less, typename P = identity>
-        auto operator()(I first, S last, R pred = R{}, P proj = P{}) const
-            -> CPP_ret(I)( //
+        auto RANGES_FUN_NIEBLOID(is_sorted_until)(
+            I first, S last, R pred = R{}, P proj = P{})
+            ->CPP_ret(I)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
-                    indirect_strict_weak_order<R, projected<I, P>>)
+                indirect_strict_weak_order<R, projected<I, P>>)
         {
             auto i = first;
             if(first != last)
@@ -65,19 +65,17 @@ namespace ranges
             return i;
         }
 
+        /// \overload
         template<typename Rng, typename R = less, typename P = identity>
-        auto operator()(Rng && rng, R pred = R{}, P proj = P{}) const
-            -> CPP_ret(safe_iterator_t<Rng>)( //
+        auto RANGES_FUN_NIEBLOID(is_sorted_until)(Rng && rng, R pred = R{}, P proj = P{})
+            ->CPP_ret(safe_iterator_t<Rng>)( //
                 requires forward_range<Rng> &&
-                    indirect_strict_weak_order<R, projected<iterator_t<Rng>, P>>)
+                indirect_strict_weak_order<R, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
-    };
 
-    /// \sa `is_sorted_until_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(is_sorted_until_fn, is_sorted_until)
+    RANGES_END_NIEBLOID(is_sorted_until)
 
     namespace cpp20
     {

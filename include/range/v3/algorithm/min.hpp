@@ -32,22 +32,25 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct min_fn
-    {
+    RANGES_BEGIN_NIEBLOID(min)
+
+        /// \brief function template \c min
         template<typename T, typename C = less, typename P = identity>
-        constexpr auto operator()(T const & a, T const & b, C pred = C{},
-                                  P proj = P{}) const -> CPP_ret(T const &)( //
-            requires indirect_strict_weak_order<C, projected<T const *, P>>)
+        constexpr auto RANGES_FUN_NIEBLOID(min)(
+            T const & a, T const & b, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(T const &)(                                 //
+                requires indirect_strict_weak_order<C, projected<T const *, P>>)
         {
             return invoke(pred, invoke(proj, b), invoke(proj, a)) ? b : a;
         }
 
+        /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        constexpr auto operator()(Rng && rng, C pred = C{},
-                                  P proj = P{}) const -> CPP_ret(range_value_t<Rng>)( //
-            requires input_range<Rng> &&
+        constexpr auto RANGES_FUN_NIEBLOID(min)(Rng && rng, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(range_value_t<Rng>)(                                              //
+                requires input_range<Rng> &&
                 indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>> &&
-                    indirectly_copyable_storable<iterator_t<Rng>, range_value_t<Rng> *>)
+                indirectly_copyable_storable<iterator_t<Rng>, range_value_t<Rng> *>)
         {
             auto first = ranges::begin(rng);
             auto last = ranges::end(rng);
@@ -62,19 +65,18 @@ namespace ranges
             return result;
         }
 
+        /// \overload
         template<typename T, typename C = less, typename P = identity>
-        constexpr auto operator()(std::initializer_list<T> const && rng, C pred = C{},
-                                  P proj = P{}) const -> CPP_ret(T)( //
-            requires copyable<T> &&
+        constexpr auto RANGES_FUN_NIEBLOID(min)(
+            std::initializer_list<T> const && rng, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(T)(                                                      //
+                requires copyable<T> &&
                 indirect_strict_weak_order<C, projected<T const *, P>>)
         {
             return (*this)(rng, std::move(pred), std::move(proj));
         }
-    };
 
-    /// \sa `min_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(min_fn, min)
+    RANGES_END_NIEBLOID(min)
 
     namespace cpp20
     {

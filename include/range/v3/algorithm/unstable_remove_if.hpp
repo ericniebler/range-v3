@@ -39,11 +39,14 @@ namespace ranges
     /// unstable_remove have O(1) complexity for each element remove, unlike remove O(n)
     /// [for worst case]. Each erased element overwritten (moved in) with last one.
     /// unstable_remove_if does not preserve relative element order.
-    struct unstable_remove_if_fn
-    {
+    RANGES_BEGIN_NIEBLOID(unstable_remove_if)
+
+        /// \brief function template \c unstable_remove_if
         template<typename I, typename C, typename P = identity>
-        auto operator()(I first, I last, C pred, P proj = {}) const -> CPP_ret(I)( //
-            requires bidirectional_iterator<I> && permutable<I> &&
+        auto RANGES_FUN_NIEBLOID(unstable_remove_if)(
+            I first, I last, C pred, P proj = {}) //
+            ->CPP_ret(I)(                         //
+                requires bidirectional_iterator<I> && permutable<I> &&
                 indirect_unary_predicate<C, projected<I, P>>)
         {
             while(true)
@@ -63,20 +66,18 @@ namespace ranges
             }
         }
 
+        /// \overload
         template<typename Rng, typename C, typename P = identity>
-        auto operator()(Rng && rng, C pred, P proj = P{}) const
-            -> CPP_ret(safe_iterator_t<Rng>)( //
+        auto RANGES_FUN_NIEBLOID(unstable_remove_if)(Rng && rng, C pred, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                                           //
                 requires bidirectional_range<Rng> && common_range<Rng> &&
-                    permutable<iterator_t<Rng>> &&
-                        indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
+                permutable<iterator_t<Rng>> &&
+                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
-    };
 
-    /// \sa `unstable_remove_if_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(unstable_remove_if_fn, unstable_remove_if)
+    RANGES_END_NIEBLOID(unstable_remove_if)
     /// @}
 } // namespace ranges
 

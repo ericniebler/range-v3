@@ -33,14 +33,19 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct equal_range_fn
-    {
-        template<typename I, typename S, typename V, typename C = less,
+    RANGES_BEGIN_NIEBLOID(equal_range)
+
+        /// \brief function template \c equal_range
+        template<typename I,
+                 typename S,
+                 typename V,
+                 typename C = less,
                  typename P = identity>
-        auto operator()(I first, S last, V const & val, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(subrange<I>)( //
+        auto RANGES_FUN_NIEBLOID(equal_range)(
+            I first, S last, V const & val, C pred = C{}, P proj = P{})
+            ->CPP_ret(subrange<I>)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
-                    indirect_strict_weak_order<C, V const *, projected<I, P>>)
+                indirect_strict_weak_order<C, V const *, projected<I, P>>)
         {
             if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S, I>))
             {
@@ -93,10 +98,12 @@ namespace ranges
             }
         }
 
+        /// \overload
         template<typename Rng, typename V, typename C = less, typename P = identity>
-        auto operator()(Rng && rng, V const & val, C pred = C{},
-                        P proj = P{}) const -> CPP_ret(safe_subrange_t<Rng>)( //
-            requires forward_range<Rng> &&
+        auto RANGES_FUN_NIEBLOID(equal_range)(
+            Rng && rng, V const & val, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(safe_subrange_t<Rng>)(                       //
+                requires forward_range<Rng> &&
                 indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
         {
             if(RANGES_CONSTEXPR_IF(sized_range<Rng>))
@@ -108,11 +115,8 @@ namespace ranges
 
             return (*this)(begin(rng), end(rng), val, std::move(pred), std::move(proj));
         }
-    };
 
-    /// \sa `equal_range_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(equal_range_fn, equal_range)
+    RANGES_END_NIEBLOID(equal_range)
 
     namespace cpp20
     {

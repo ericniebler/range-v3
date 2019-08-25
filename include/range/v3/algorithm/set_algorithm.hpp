@@ -42,15 +42,27 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct includes_fn
-    {
-        template<typename I1, typename S1, typename I2, typename S2, typename C = less,
-                 typename P1 = identity, typename P2 = identity>
-        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{},
-                        P1 proj1 = P1{}, P2 proj2 = P2{}) const -> CPP_ret(bool)( //
-            requires input_iterator<I1> && sentinel_for<S1, I1> && input_iterator<I2> &&
-                sentinel_for<S2, I2> &&
-                    indirect_strict_weak_order<C, projected<I1, P1>, projected<I2, P2>>)
+    RANGES_BEGIN_NIEBLOID(includes)
+
+        /// \brief function template \c includes
+        template<typename I1,
+                 typename S1,
+                 typename I2,
+                 typename S2,
+                 typename C = less,
+                 typename P1 = identity,
+                 typename P2 = identity>
+        auto RANGES_FUN_NIEBLOID(includes)(I1 begin1,
+                                           S1 end1,
+                                           I2 begin2,
+                                           S2 end2,
+                                           C pred = C{},
+                                           P1 proj1 = P1{},
+                                           P2 proj2 = P2{}) //
+            ->CPP_ret(bool)(                                //
+                requires input_iterator<I1> && sentinel_for<S1, I1> &&
+                input_iterator<I2> && sentinel_for<S2, I2> &&
+                indirect_strict_weak_order<C, projected<I1, P1>, projected<I2, P2>>)
         {
             for(; begin2 != end2; ++begin1)
             {
@@ -63,12 +75,19 @@ namespace ranges
             return true;
         }
 
-        template<typename Rng1, typename Rng2, typename C = less, typename P1 = identity,
+        /// \overload
+        template<typename Rng1,
+                 typename Rng2,
+                 typename C = less,
+                 typename P1 = identity,
                  typename P2 = identity>
-        auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
-                        P2 proj2 = P2{}) const -> CPP_ret(bool)( //
-            requires input_range<Rng1> && input_range<Rng2> && indirect_strict_weak_order<
-                C, projected<iterator_t<Rng1>, P1>, projected<iterator_t<Rng2>, P2>>)
+        auto RANGES_FUN_NIEBLOID(includes)(
+            Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) //
+            ->CPP_ret(bool)(                                                            //
+                requires input_range<Rng1> && input_range<Rng2> &&
+                indirect_strict_weak_order<C,
+                                           projected<iterator_t<Rng1>, P1>,
+                                           projected<iterator_t<Rng2>, P2>>)
         {
             return (*this)(begin(rng1),
                            end(rng1),
@@ -78,11 +97,8 @@ namespace ranges
                            std::move(proj1),
                            std::move(proj2));
         }
-    };
 
-    /// \sa `includes_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(includes_fn, includes)
+    RANGES_END_NIEBLOID(includes)
 
     namespace cpp20
     {
@@ -92,15 +108,28 @@ namespace ranges
     template<typename I1, typename I2, typename O>
     using set_union_result = detail::in1_in2_out_result<I1, I2, O>;
 
-    struct set_union_fn
-    {
-        template<typename I1, typename S1, typename I2, typename S2, typename O,
-                 typename C = less, typename P1 = identity, typename P2 = identity>
-        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
-                        P1 proj1 = P1{}, P2 proj2 = P2{}) const
-            -> CPP_ret(set_union_result<I1, I2, O>)( //
+    RANGES_BEGIN_NIEBLOID(set_union)
+
+        /// \brief function template \c set_union
+        template<typename I1,
+                 typename S1,
+                 typename I2,
+                 typename S2,
+                 typename O,
+                 typename C = less,
+                 typename P1 = identity,
+                 typename P2 = identity>
+        auto RANGES_FUN_NIEBLOID(set_union)(I1 begin1,
+                                            S1 end1,
+                                            I2 begin2,
+                                            S2 end2,
+                                            O out,
+                                            C pred = C{},
+                                            P1 proj1 = P1{},
+                                            P2 proj2 = P2{}) //
+            ->CPP_ret(set_union_result<I1, I2, O>)(          //
                 requires sentinel_for<S1, I1> && sentinel_for<S2, I2> &&
-                    mergeable<I1, I2, O, C, P1, P2>)
+                mergeable<I1, I2, O, C, P1, P2>)
         {
             for(; begin1 != end1; ++out)
             {
@@ -126,14 +155,23 @@ namespace ranges
             return {begin1, tmp.in, tmp.out};
         }
 
-        template<typename Rng1, typename Rng2, typename O, typename C = less,
-                 typename P1 = identity, typename P2 = identity>
-        auto operator()(Rng1 && rng1, Rng2 && rng2, O out, C pred = C{}, P1 proj1 = P1{},
-                        P2 proj2 = P2{}) const
-            -> CPP_ret(
+        /// \overload
+        template<typename Rng1,
+                 typename Rng2,
+                 typename O,
+                 typename C = less,
+                 typename P1 = identity,
+                 typename P2 = identity>
+        auto RANGES_FUN_NIEBLOID(set_union)(Rng1 && rng1,
+                                            Rng2 && rng2,
+                                            O out,
+                                            C pred = C{},
+                                            P1 proj1 = P1{},
+                                            P2 proj2 = P2{}) //
+            ->CPP_ret(
                 set_union_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>, O>)( //
                 requires range<Rng1> && range<Rng2> &&
-                    mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
+                mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         {
             return (*this)(begin(rng1),
                            end(rng1),
@@ -144,11 +182,8 @@ namespace ranges
                            std::move(proj1),
                            std::move(proj2));
         }
-    };
 
-    /// \sa `set_union_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(set_union_fn, set_union)
+    RANGES_END_NIEBLOID(set_union)
 
     namespace cpp20
     {
@@ -156,13 +191,27 @@ namespace ranges
         using ranges::set_union_result;
     } // namespace cpp20
 
-    struct set_intersection_fn
-    {
-        template<typename I1, typename S1, typename I2, typename S2, typename O,
-                 typename C = less, typename P1 = identity, typename P2 = identity>
-        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
-                        P1 proj1 = P1{}, P2 proj2 = P2{}) const -> CPP_ret(O)( //
-            requires sentinel_for<S1, I1> && sentinel_for<S2, I2> &&
+    RANGES_BEGIN_NIEBLOID(set_intersection)
+
+        /// \brief function template \c set_intersection
+        template<typename I1,
+                 typename S1,
+                 typename I2,
+                 typename S2,
+                 typename O,
+                 typename C = less,
+                 typename P1 = identity,
+                 typename P2 = identity>
+        auto RANGES_FUN_NIEBLOID(set_intersection)(I1 begin1,
+                                                   S1 end1,
+                                                   I2 begin2,
+                                                   S2 end2,
+                                                   O out,
+                                                   C pred = C{},
+                                                   P1 proj1 = P1{},
+                                                   P2 proj2 = P2{}) //
+            ->CPP_ret(O)(                                           //
+                requires sentinel_for<S1, I1> && sentinel_for<S2, I2> &&
                 mergeable<I1, I2, O, C, P1, P2>)
         {
             while(begin1 != end1 && begin2 != end2)
@@ -183,11 +232,21 @@ namespace ranges
             return out;
         }
 
-        template<typename Rng1, typename Rng2, typename O, typename C = less,
-                 typename P1 = identity, typename P2 = identity>
-        auto operator()(Rng1 && rng1, Rng2 && rng2, O out, C pred = C{}, P1 proj1 = P1{},
-                        P2 proj2 = P2{}) const -> CPP_ret(O)( //
-            requires range<Rng1> && range<Rng2> &&
+        /// \overload
+        template<typename Rng1,
+                 typename Rng2,
+                 typename O,
+                 typename C = less,
+                 typename P1 = identity,
+                 typename P2 = identity>
+        auto RANGES_FUN_NIEBLOID(set_intersection)(Rng1 && rng1,
+                                                   Rng2 && rng2,
+                                                   O out,
+                                                   C pred = C{},
+                                                   P1 proj1 = P1{},
+                                                   P2 proj2 = P2{}) //
+            ->CPP_ret(O)(                                           //
+                requires range<Rng1> && range<Rng2> &&
                 mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         {
             return (*this)(begin(rng1),
@@ -199,11 +258,8 @@ namespace ranges
                            std::move(proj1),
                            std::move(proj2));
         }
-    };
 
-    /// \sa `set_intersection_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(set_intersection_fn, set_intersection)
+    RANGES_END_NIEBLOID(set_intersection)
 
     namespace cpp20
     {
@@ -213,15 +269,28 @@ namespace ranges
     template<typename I, typename O>
     using set_difference_result = detail::in1_out_result<I, O>;
 
-    struct set_difference_fn
-    {
-        template<typename I1, typename S1, typename I2, typename S2, typename O,
-                 typename C = less, typename P1 = identity, typename P2 = identity>
-        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
-                        P1 proj1 = P1{}, P2 proj2 = P2{}) const
-            -> CPP_ret(set_difference_result<I1, O>)( //
+    RANGES_BEGIN_NIEBLOID(set_difference)
+
+        /// \brief function template \c set_difference
+        template<typename I1,
+                 typename S1,
+                 typename I2,
+                 typename S2,
+                 typename O,
+                 typename C = less,
+                 typename P1 = identity,
+                 typename P2 = identity>
+        auto RANGES_FUN_NIEBLOID(set_difference)(I1 begin1,
+                                                 S1 end1,
+                                                 I2 begin2,
+                                                 S2 end2,
+                                                 O out,
+                                                 C pred = C{},
+                                                 P1 proj1 = P1{},
+                                                 P2 proj2 = P2{}) //
+            ->CPP_ret(set_difference_result<I1, O>)(              //
                 requires sentinel_for<S1, I1> && sentinel_for<S2, I2> &&
-                    mergeable<I1, I2, O, C, P1, P2>)
+                mergeable<I1, I2, O, C, P1, P2>)
         {
             while(begin1 != end1)
             {
@@ -246,13 +315,22 @@ namespace ranges
             return {begin1, out};
         }
 
-        template<typename Rng1, typename Rng2, typename O, typename C = less,
-                 typename P1 = identity, typename P2 = identity>
-        auto operator()(Rng1 && rng1, Rng2 && rng2, O out, C pred = C{}, P1 proj1 = P1{},
-                        P2 proj2 = P2{}) const
-            -> CPP_ret(set_difference_result<safe_iterator_t<Rng1>, O>)( //
+        /// \overload
+        template<typename Rng1,
+                 typename Rng2,
+                 typename O,
+                 typename C = less,
+                 typename P1 = identity,
+                 typename P2 = identity>
+        auto RANGES_FUN_NIEBLOID(set_difference)(Rng1 && rng1,
+                                                 Rng2 && rng2,
+                                                 O out,
+                                                 C pred = C{},
+                                                 P1 proj1 = P1{},
+                                                 P2 proj2 = P2{})       //
+            ->CPP_ret(set_difference_result<safe_iterator_t<Rng1>, O>)( //
                 requires range<Rng1> && range<Rng2> &&
-                    mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
+                mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         {
             return (*this)(begin(rng1),
                            end(rng1),
@@ -263,11 +341,8 @@ namespace ranges
                            std::move(proj1),
                            std::move(proj2));
         }
-    };
 
-    /// \sa `set_difference_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(set_difference_fn, set_difference)
+    RANGES_END_NIEBLOID(set_difference)
 
     namespace cpp20
     {
@@ -278,15 +353,28 @@ namespace ranges
     template<typename I1, typename I2, typename O>
     using set_symmetric_difference_result = detail::in1_in2_out_result<I1, I2, O>;
 
-    struct set_symmetric_difference_fn
-    {
-        template<typename I1, typename S1, typename I2, typename S2, typename O,
-                 typename C = less, typename P1 = identity, typename P2 = identity>
-        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
-                        P1 proj1 = P1{}, P2 proj2 = P2{}) const
-            -> CPP_ret(set_symmetric_difference_result<I1, I2, O>)( //
+    RANGES_BEGIN_NIEBLOID(set_symmetric_difference)
+
+        /// \brief function template \c set_symmetric_difference
+        template<typename I1,
+                 typename S1,
+                 typename I2,
+                 typename S2,
+                 typename O,
+                 typename C = less,
+                 typename P1 = identity,
+                 typename P2 = identity>
+        auto RANGES_FUN_NIEBLOID(set_symmetric_difference)(I1 begin1,
+                                                           S1 end1,
+                                                           I2 begin2,
+                                                           S2 end2,
+                                                           O out,
+                                                           C pred = C{},
+                                                           P1 proj1 = P1{},
+                                                           P2 proj2 = P2{}) //
+            ->CPP_ret(set_symmetric_difference_result<I1, I2, O>)(          //
                 requires sentinel_for<S1, I1> && sentinel_for<S2, I2> &&
-                    mergeable<I1, I2, O, C, P1, P2>)
+                mergeable<I1, I2, O, C, P1, P2>)
         {
             while(begin1 != end1)
             {
@@ -317,15 +405,24 @@ namespace ranges
             return {begin1, tmp.in, tmp.out};
         }
 
-        template<typename Rng1, typename Rng2, typename O, typename C = less,
-                 typename P1 = identity, typename P2 = identity>
-        auto operator()(Rng1 && rng1, Rng2 && rng2, O out, C pred = C{}, P1 proj1 = P1{},
-                        P2 proj2 = P2{}) const
-            -> CPP_ret(set_symmetric_difference_result<safe_iterator_t<Rng1>,
-                                                       safe_iterator_t<Rng2>,
-                                                       O>)( //
+        /// \overload
+        template<typename Rng1,
+                 typename Rng2,
+                 typename O,
+                 typename C = less,
+                 typename P1 = identity,
+                 typename P2 = identity>
+        auto RANGES_FUN_NIEBLOID(set_symmetric_difference)(Rng1 && rng1,
+                                                           Rng2 && rng2,
+                                                           O out,
+                                                           C pred = C{},
+                                                           P1 proj1 = P1{},
+                                                           P2 proj2 = P2{}) //
+            ->CPP_ret(set_symmetric_difference_result<safe_iterator_t<Rng1>,
+                                                      safe_iterator_t<Rng2>,
+                                                      O>)( //
                 requires range<Rng1> && range<Rng2> &&
-                    mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
+                mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         {
             return (*this)(begin(rng1),
                            end(rng1),
@@ -336,11 +433,8 @@ namespace ranges
                            std::move(proj1),
                            std::move(proj2));
         }
-    };
 
-    /// \sa `set_symmetric_difference_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(set_symmetric_difference_fn, set_symmetric_difference)
+    RANGES_END_NIEBLOID(set_symmetric_difference)
 
     namespace cpp20
     {

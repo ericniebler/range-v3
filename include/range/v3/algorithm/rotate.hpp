@@ -43,11 +43,11 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct rotate_fn
+    /// \cond
+    namespace detail
     {
-    private:
         template<typename I> // Forward
-        static subrange<I> rotate_left(I first, I last)
+        subrange<I> rotate_left(I first, I last)
         {
             iter_value_t<I> tmp = iter_move(first);
             I lm1 = ranges::move(next(first), last, first).out;
@@ -56,7 +56,7 @@ namespace ranges
         }
 
         template<typename I> // Bidirectional
-        static subrange<I> rotate_right(I first, I last)
+        subrange<I> rotate_right(I first, I last)
         {
             I lm1 = prev(last);
             iter_value_t<I> tmp = iter_move(lm1);
@@ -66,7 +66,7 @@ namespace ranges
         }
 
         template<typename I, typename S> // Forward
-        static subrange<I> rotate_forward(I first, I middle, S last)
+        subrange<I> rotate_forward(I first, I middle, S last)
         {
             I i = middle;
             while(true)
@@ -100,7 +100,7 @@ namespace ranges
         }
 
         template<typename D>
-        static D gcd(D x, D y)
+        D gcd(D x, D y)
         {
             do
             {
@@ -112,7 +112,7 @@ namespace ranges
         }
 
         template<typename I> // Random
-        static subrange<I> rotate_gcd(I first, I middle, I last)
+        subrange<I> rotate_gcd(I first, I middle, I last)
         {
             auto const m1 = middle - first;
             auto const m2 = last - middle;
@@ -121,7 +121,7 @@ namespace ranges
                 swap_ranges(first, middle, middle);
                 return {middle, last};
             }
-            auto const g = rotate_fn::gcd(m1, m2);
+            auto const g = detail::gcd(m1, m2);
             for(I p = first + g; p != first;)
             {
                 iter_value_t<I> t = iter_move(--p);
@@ -143,60 +143,63 @@ namespace ranges
         }
 
         template<typename I, typename S>
-        static subrange<I> rotate_(I first, I middle, S last,
-                                   detail::forward_iterator_tag_)
+        subrange<I> rotate_(I first, I middle, S last, detail::forward_iterator_tag_)
         {
-            return rotate_fn::rotate_forward(first, middle, last);
+            return detail::rotate_forward(first, middle, last);
         }
 
         template<typename I>
-        static subrange<I> rotate_(I first, I middle, I last,
-                                   detail::forward_iterator_tag_)
+        subrange<I> rotate_(I first, I middle, I last, detail::forward_iterator_tag_)
         {
             using value_type = iter_value_t<I>;
             if(detail::is_trivially_move_assignable<value_type>::value)
             {
                 if(next(first) == middle)
-                    return rotate_fn::rotate_left(first, last);
+                    return detail::rotate_left(first, last);
             }
-            return rotate_fn::rotate_forward(first, middle, last);
+            return detail::rotate_forward(first, middle, last);
         }
 
         template<typename I>
-        static subrange<I> rotate_(I first, I middle, I last,
-                                   detail::bidirectional_iterator_tag_)
+        subrange<I> rotate_(I first, I middle, I last,
+                            detail::bidirectional_iterator_tag_)
         {
             using value_type = iter_value_t<I>;
             if(detail::is_trivially_move_assignable<value_type>::value)
             {
                 if(next(first) == middle)
-                    return rotate_fn::rotate_left(first, last);
+                    return detail::rotate_left(first, last);
                 if(next(middle) == last)
-                    return rotate_fn::rotate_right(first, last);
+                    return detail::rotate_right(first, last);
             }
-            return rotate_fn::rotate_forward(first, middle, last);
+            return detail::rotate_forward(first, middle, last);
         }
 
         template<typename I>
-        static subrange<I> rotate_(I first, I middle, I last,
-                                   detail::random_access_iterator_tag_)
+        subrange<I> rotate_(I first, I middle, I last,
+                            detail::random_access_iterator_tag_)
         {
             using value_type = iter_value_t<I>;
             if(detail::is_trivially_move_assignable<value_type>::value)
             {
                 if(next(first) == middle)
-                    return rotate_fn::rotate_left(first, last);
+                    return detail::rotate_left(first, last);
                 if(next(middle) == last)
-                    return rotate_fn::rotate_right(first, last);
-                return rotate_fn::rotate_gcd(first, middle, last);
+                    return detail::rotate_right(first, last);
+                return detail::rotate_gcd(first, middle, last);
             }
-            return rotate_fn::rotate_forward(first, middle, last);
+            return detail::rotate_forward(first, middle, last);
         }
+    } // namespace detail
+    /// \endcond
 
-    public:
+    RANGES_BEGIN_NIEBLOID(rotate)
+
+        /// \brief function template \c rotate
         template<typename I, typename S>
-        auto operator()(I first, I middle, S last) const -> CPP_ret(subrange<I>)( //
-            requires permutable<I> && sentinel_for<S, I>)
+        auto RANGES_FUN_NIEBLOID(rotate)(I first, I middle, S last) //
+            ->CPP_ret(subrange<I>)(                                 //
+                requires permutable<I> && sentinel_for<S, I>)
         {
             if(first == middle)
             {
@@ -207,20 +210,19 @@ namespace ranges
             {
                 return {first, middle};
             }
-            return rotate_fn::rotate_(first, middle, last, iterator_tag_of<I>{});
+            return detail::rotate_(first, middle, last, iterator_tag_of<I>{});
         }
 
+        /// \overload
         template<typename Rng, typename I = iterator_t<Rng>>
-        auto operator()(Rng && rng, I middle) const -> CPP_ret(safe_subrange_t<Rng>)( //
-            requires range<Rng> && permutable<I>)
+        auto RANGES_FUN_NIEBLOID(rotate)(Rng && rng, I middle) //
+            ->CPP_ret(safe_subrange_t<Rng>)(                   //
+                requires range<Rng> && permutable<I>)
         {
             return (*this)(begin(rng), std::move(middle), end(rng));
         }
-    };
 
-    /// \sa `rotate_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(rotate_fn, rotate)
+    RANGES_END_NIEBLOID(rotate)
 
     namespace cpp20
     {

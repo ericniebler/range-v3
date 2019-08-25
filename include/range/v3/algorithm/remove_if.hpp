@@ -33,11 +33,13 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct remove_if_fn
-    {
+    RANGES_BEGIN_NIEBLOID(remove_if)
+
+        /// \brief function template \c remove_if
         template<typename I, typename S, typename C, typename P = identity>
-        auto operator()(I first, S last, C pred, P proj = P{}) const -> CPP_ret(I)( //
-            requires permutable<I> && sentinel_for<S, I> &&
+        auto RANGES_FUN_NIEBLOID(remove_if)(I first, S last, C pred, P proj = P{}) //
+            ->CPP_ret(I)(                                                          //
+                requires permutable<I> && sentinel_for<S, I> &&
                 indirect_unary_predicate<C, projected<I, P>>)
         {
             first = find_if(std::move(first), last, std::ref(pred), std::ref(proj));
@@ -55,19 +57,17 @@ namespace ranges
             return first;
         }
 
+        /// \overload
         template<typename Rng, typename C, typename P = identity>
-        auto operator()(Rng && rng, C pred, P proj = P{}) const
-            -> CPP_ret(safe_iterator_t<Rng>)( //
+        auto RANGES_FUN_NIEBLOID(remove_if)(Rng && rng, C pred, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                                  //
                 requires forward_range<Rng> && permutable<iterator_t<Rng>> &&
-                    indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
+                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
-    };
 
-    /// \sa `remove_if_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(remove_if_fn, remove_if)
+    RANGES_END_NIEBLOID(remove_if)
 
     namespace cpp20
     {

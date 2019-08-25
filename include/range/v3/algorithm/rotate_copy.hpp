@@ -35,32 +35,32 @@ namespace ranges
     template<typename I, typename O>
     using rotate_copy_result = detail::in_out_result<I, O>;
 
-    struct rotate_copy_fn
-    {
+    RANGES_BEGIN_NIEBLOID(rotate_copy)
+
+        /// \brief function template \c rotate_copy
         template<typename I, typename S, typename O, typename P = identity>
-        auto operator()(I first, I middle, S last, O out) const
-            -> CPP_ret(rotate_copy_result<I, O>)( //
+        auto RANGES_FUN_NIEBLOID(rotate_copy)(I first, I middle, S last, O out) //
+            ->CPP_ret(rotate_copy_result<I, O>)(                                //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
-                    weakly_incrementable<O> && indirectly_copyable<I, O>)
+                weakly_incrementable<O> && indirectly_copyable<I, O>)
         {
             auto res = ranges::copy(middle, std::move(last), std::move(out));
             return {std::move(res.in),
                     ranges::copy(std::move(first), middle, std::move(res.out)).out};
         }
 
+        /// \overload
         template<typename Rng, typename O, typename P = identity>
-        auto operator()(Rng && rng, iterator_t<Rng> middle, O out) const
-            -> CPP_ret(rotate_copy_result<safe_iterator_t<Rng>, O>)( //
+        auto RANGES_FUN_NIEBLOID(rotate_copy)(
+            Rng && rng, iterator_t<Rng> middle, O out)              //
+            ->CPP_ret(rotate_copy_result<safe_iterator_t<Rng>, O>)( //
                 requires range<Rng> && weakly_incrementable<O> &&
-                    indirectly_copyable<iterator_t<Rng>, O>)
+                indirectly_copyable<iterator_t<Rng>, O>)
         {
             return (*this)(begin(rng), std::move(middle), end(rng), std::move(out));
         }
-    };
 
-    /// \sa `rotate_copy_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(rotate_copy_fn, rotate_copy)
+    RANGES_END_NIEBLOID(rotate_copy)
 
     namespace cpp20
     {

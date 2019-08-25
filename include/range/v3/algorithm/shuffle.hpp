@@ -33,14 +33,18 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct shuffle_fn
-    {
+    RANGES_BEGIN_NIEBLOID(shuffle)
+
+        /// \brief function template \c shuffle
         template<typename I, typename S, typename Gen = detail::default_random_engine &>
-        auto operator()(I const first, S const last,
-                        Gen && gen = detail::get_random_engine()) const -> CPP_ret(I)( //
-            requires random_access_iterator<I> && sentinel_for<S, I> && permutable<I> &&
+        auto RANGES_FUN_NIEBLOID(shuffle)(I const first,
+                                          S const last,
+                                          Gen && gen = detail::get_random_engine()) //
+            ->CPP_ret(I)(                                                           //
+                requires random_access_iterator<I> && sentinel_for<S, I> &&
+                permutable<I> &&
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
-                    convertible_to<invoke_result_t<Gen &>, iter_difference_t<I>>)
+                convertible_to<invoke_result_t<Gen &>, iter_difference_t<I>>)
         {
             auto mid = first;
             if(mid == last)
@@ -58,21 +62,20 @@ namespace ranges
             return mid;
         }
 
+        /// \overload
         template<typename Rng, typename Gen = detail::default_random_engine &>
-        auto operator()(Rng && rng, Gen && rand = detail::get_random_engine()) const
-            -> CPP_ret(safe_iterator_t<Rng>)( //
+        auto RANGES_FUN_NIEBLOID(shuffle)(Rng && rng,
+                                          Gen && rand = detail::get_random_engine()) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                                         //
                 requires random_access_range<Rng> && permutable<iterator_t<Rng>> &&
-                    uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
-                        convertible_to<invoke_result_t<Gen &>,
-                                       iter_difference_t<iterator_t<Rng>>>)
+                uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+                convertible_to<invoke_result_t<Gen &>,
+                               iter_difference_t<iterator_t<Rng>>>)
         {
             return (*this)(begin(rng), end(rng), static_cast<Gen &&>(rand));
         }
-    };
 
-    /// \sa `shuffle_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(shuffle_fn, shuffle)
+    RANGES_END_NIEBLOID(shuffle)
 
     namespace cpp20
     {

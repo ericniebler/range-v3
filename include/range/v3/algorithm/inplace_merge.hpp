@@ -130,7 +130,8 @@ namespace ranges
                     }
                     // first < middle < end
                     // *first > *middle
-                    // partition [first, m1) [m1, middle) [middle, m2) [m2, last) such that
+                    // partition [first, m1) [m1, middle) [middle, m2) [m2, last) such
+                    // that
                     //     all elements in:
                     //         [first, m1)  <= [middle, m2)
                     //         [middle, m2) <  [m1, middle)
@@ -242,12 +243,15 @@ namespace ranges
 
     /// \addtogroup group-algorithms
     /// @{
-    struct inplace_merge_fn
-    {
+    RANGES_BEGIN_NIEBLOID(inplace_merge)
+
         // TODO reimplement to only need forward iterators
+
+        /// \brief function template \c inplace_merge
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I first, I middle, S last, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(I)( //
+        auto RANGES_FUN_NIEBLOID(inplace_merge)(
+            I first, I middle, S last, C pred = C{}, P proj = P{})
+            ->CPP_ret(I)( //
                 requires bidirectional_iterator<I> && sortable<I, C, P>)
         {
             using value_type = iter_value_t<I>;
@@ -273,10 +277,12 @@ namespace ranges
             return len2_and_end.second;
         }
 
+        /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto operator()(Rng && rng, iterator_t<Rng> middle, C pred = C{},
-                        P proj = P{}) const -> CPP_ret(safe_iterator_t<Rng>)( //
-            requires bidirectional_range<Rng> && sortable<iterator_t<Rng>, C, P>)
+        auto RANGES_FUN_NIEBLOID(inplace_merge)(
+            Rng && rng, iterator_t<Rng> middle, C pred = C{}, P proj = P{})
+            ->CPP_ret(safe_iterator_t<Rng>)( //
+                requires bidirectional_range<Rng> && sortable<iterator_t<Rng>, C, P>)
         {
             return (*this)(begin(rng),
                            std::move(middle),
@@ -284,11 +290,8 @@ namespace ranges
                            std::move(pred),
                            std::move(proj));
         }
-    };
 
-    /// \sa `inplace_merge_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(inplace_merge_fn, inplace_merge)
+    RANGES_END_NIEBLOID(inplace_merge)
 
     namespace cpp20
     {

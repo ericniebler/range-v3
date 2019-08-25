@@ -578,6 +578,17 @@ namespace ranges
 #define RANGES_HIDDEN_DETAIL(...)
 #endif
 
+#ifndef RANGES_DOXYGEN_INVOKED
+#define RANGES_BEGIN_NIEBLOID(NAME) struct NAME ## _fn {
+#define RANGES_END_NIEBLOID(NAME) }; RANGES_INLINE_VARIABLE(NAME ## _fn, NAME)
+#define RANGES_FUN_NIEBLOID(NAME) operator() RANGES_FUN_NIEBLOID_CONST_
+#define RANGES_FUN_NIEBLOID_CONST_(...) (__VA_ARGS__) const
+#else
+#define RANGES_BEGIN_NIEBLOID(NAME)
+#define RANGES_END_NIEBLOID(NAME)
+#define RANGES_FUN_NIEBLOID(NAME) NAME
+#endif
+
 #ifndef RANGES_CXX_DEDUCTION_GUIDES
 #if defined(__clang__) && defined(__apple_build_version__)
 // Apple's clang version doesn't do deduction guides very well.

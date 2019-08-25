@@ -36,13 +36,14 @@ namespace ranges
     template<typename I, typename O>
     using copy_n_result = detail::in_out_result<I, O>;
 
-    struct copy_n_fn
-    {
+    RANGES_BEGIN_NIEBLOID(copy_n)
+
+        /// \brief function template \c copy_n
         template<typename I, typename O, typename P = identity>
-        auto operator()(I first, iter_difference_t<I> n, O out) const
-            -> CPP_ret(copy_n_result<I, O>)( //
+        auto RANGES_FUN_NIEBLOID(copy_n)(I first, iter_difference_t<I> n, O out)
+            ->CPP_ret(copy_n_result<I, O>)( //
                 requires input_iterator<I> && weakly_incrementable<O> &&
-                    indirectly_copyable<I, O>)
+                indirectly_copyable<I, O>)
         {
             RANGES_EXPECT(0 <= n);
             auto norig = n;
@@ -51,11 +52,8 @@ namespace ranges
                 *out = *b;
             return {recounted(first, b, norig), out};
         }
-    };
 
-    /// \sa `copy_n_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(copy_n_fn, copy_n)
+    RANGES_END_NIEBLOID(copy_n)
 
     namespace cpp20
     {

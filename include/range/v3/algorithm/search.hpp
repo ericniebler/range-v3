@@ -42,12 +42,13 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct search_fn
+
+    /// \cond
+    namespace detail
     {
-    private:
         template<typename I1, typename S1, typename D1, typename I2, typename S2,
                  typename D2, typename C, typename P1, typename P2>
-        static subrange<I1> sized_impl(I1 const begin1_, S1 end1, D1 const d1_, I2 begin2,
+        subrange<I1> search_sized_impl(I1 const begin1_, S1 end1, D1 const d1_, I2 begin2,
                                        S2 end2, D2 d2, C & pred, P1 & proj1, P2 & proj2)
         {
             D1 d1 = d1_;
@@ -99,7 +100,7 @@ namespace ranges
 
         template<typename I1, typename S1, typename I2, typename S2, typename C,
                  typename P1, typename P2>
-        static subrange<I1> impl(I1 begin1, S1 end1, I2 begin2, S2 end2, C & pred,
+        subrange<I1> search_impl(I1 begin1, S1 end1, I2 begin2, S2 end2, C & pred,
                                  P1 & proj1, P2 & proj2)
         {
             while(true)
@@ -137,68 +138,84 @@ namespace ranges
                 }
             }
         }
+    } // namespace detail
+    /// \endcond
 
-    public:
-        template<typename I1, typename S1, typename I2, typename S2,
-                 typename C = equal_to, typename P1 = identity, typename P2 = identity>
-        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{},
-                        P1 proj1 = P1{},
-                        P2 proj2 = P2{}) const -> CPP_ret(subrange<I1>)( //
-            requires forward_iterator<I1> && sentinel_for<S1, I1> && forward_iterator<
-                I2> && sentinel_for<S2, I2> && indirectly_comparable<I1, I2, C, P1, P2>)
+    RANGES_BEGIN_NIEBLOID(search)
+
+        /// \brief function template \c search
+        template<typename I1,
+                 typename S1,
+                 typename I2,
+                 typename S2,
+                 typename C = equal_to,
+                 typename P1 = identity,
+                 typename P2 = identity>
+        auto RANGES_FUN_NIEBLOID(search)(I1 begin1,
+                                         S1 end1,
+                                         I2 begin2,
+                                         S2 end2,
+                                         C pred = C{},
+                                         P1 proj1 = P1{},
+                                         P2 proj2 = P2{}) //
+            ->CPP_ret(subrange<I1>)(                      //
+                requires forward_iterator<I1> && sentinel_for<S1, I1> &&
+                forward_iterator<I2> && sentinel_for<S2, I2> &&
+                indirectly_comparable<I1, I2, C, P1, P2>)
         {
             if(begin2 == end2)
                 return {begin1, begin1};
             if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S1, I1> &&
                                    sized_sentinel_for<S2, I2>))
-                return search_fn::sized_impl(std::move(begin1),
-                                             std::move(end1),
-                                             distance(begin1, end1),
-                                             std::move(begin2),
-                                             std::move(end2),
-                                             distance(begin2, end2),
-                                             pred,
-                                             proj1,
-                                             proj2);
+                return detail::search_sized_impl(std::move(begin1),
+                                                 std::move(end1),
+                                                 distance(begin1, end1),
+                                                 std::move(begin2),
+                                                 std::move(end2),
+                                                 distance(begin2, end2),
+                                                 pred,
+                                                 proj1,
+                                                 proj2);
             else
-                return search_fn::impl(std::move(begin1),
-                                       std::move(end1),
-                                       std::move(begin2),
-                                       std::move(end2),
-                                       pred,
-                                       proj1,
-                                       proj2);
+                return detail::search_impl(std::move(begin1),
+                                           std::move(end1),
+                                           std::move(begin2),
+                                           std::move(end2),
+                                           pred,
+                                           proj1,
+                                           proj2);
         }
 
-        template<typename Rng1, typename Rng2, typename C = equal_to,
-                 typename P1 = identity, typename P2 = identity>
-        auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
-                        P2 proj2 = P2{}) const //
-            -> CPP_ret(safe_subrange_t<Rng1>)( //
+        /// \overload
+        template<typename Rng1,
+                 typename Rng2,
+                 typename C = equal_to,
+                 typename P1 = identity,
+                 typename P2 = identity>
+        auto RANGES_FUN_NIEBLOID(search)(
+            Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) //
+            ->CPP_ret(safe_subrange_t<Rng1>)(                                           //
                 requires forward_range<Rng1> && forward_range<Rng2> &&
-                    indirectly_comparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
+                indirectly_comparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
         {
             if(empty(rng2))
                 return subrange<iterator_t<Rng1>>{begin(rng1), begin(rng1)};
             if(RANGES_CONSTEXPR_IF(sized_range<Rng1> && sized_range<Rng2>))
-                return search_fn::sized_impl(begin(rng1),
-                                             end(rng1),
-                                             distance(rng1),
-                                             begin(rng2),
-                                             end(rng2),
-                                             distance(rng2),
-                                             pred,
-                                             proj1,
-                                             proj2);
+                return detail::search_sized_impl(begin(rng1),
+                                                 end(rng1),
+                                                 distance(rng1),
+                                                 begin(rng2),
+                                                 end(rng2),
+                                                 distance(rng2),
+                                                 pred,
+                                                 proj1,
+                                                 proj2);
             else
-                return search_fn::impl(
+                return detail::search_impl(
                     begin(rng1), end(rng1), begin(rng2), end(rng2), pred, proj1, proj2);
         }
-    };
 
-    /// \sa `search_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(search_fn, search)
+    RANGES_END_NIEBLOID(search)
 
     namespace cpp20
     {

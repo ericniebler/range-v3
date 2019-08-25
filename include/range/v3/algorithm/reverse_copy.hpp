@@ -34,13 +34,14 @@ namespace ranges
     template<typename I, typename O>
     using reverse_copy_result = detail::in_out_result<I, O>;
 
-    struct reverse_copy_fn
-    {
+    RANGES_BEGIN_NIEBLOID(reverse_copy)
+
+        /// \brief function template \c reverse_copy
         template<typename I, typename S, typename O>
-        auto operator()(I first, S end_, O out) const
-            -> CPP_ret(reverse_copy_result<I, O>)( //
+        auto RANGES_FUN_NIEBLOID(reverse_copy)(I first, S end_, O out) //
+            ->CPP_ret(reverse_copy_result<I, O>)(                      //
                 requires bidirectional_iterator<I> && sentinel_for<S, I> &&
-                    weakly_incrementable<O> && indirectly_copyable<I, O>)
+                weakly_incrementable<O> && indirectly_copyable<I, O>)
         {
             I last = ranges::next(first, end_), res = last;
             for(; first != last; ++out)
@@ -48,19 +49,17 @@ namespace ranges
             return {res, out};
         }
 
+        /// \overload
         template<typename Rng, typename O>
-        auto operator()(Rng && rng, O out) const
-            -> CPP_ret(reverse_copy_result<safe_iterator_t<Rng>, O>)( //
+        auto RANGES_FUN_NIEBLOID(reverse_copy)(Rng && rng, O out)    //
+            ->CPP_ret(reverse_copy_result<safe_iterator_t<Rng>, O>)( //
                 requires bidirectional_range<Rng> && weakly_incrementable<O> &&
-                    indirectly_copyable<iterator_t<Rng>, O>)
+                indirectly_copyable<iterator_t<Rng>, O>)
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }
-    };
 
-    /// \sa `reverse_copy_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(reverse_copy_fn, reverse_copy)
+    RANGES_END_NIEBLOID(reverse_copy)
 
     namespace cpp20
     {

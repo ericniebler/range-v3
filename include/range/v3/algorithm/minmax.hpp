@@ -36,24 +36,27 @@ namespace ranges
     template<typename T>
     using minmax_result = detail::min_max_result<T, T>;
 
-    struct minmax_fn
-    {
+    RANGES_BEGIN_NIEBLOID(minmax)
+
+        /// \brief function template \c minmax
         template<typename T, typename C = less, typename P = identity>
-        constexpr auto operator()(T const & a, T const & b, C pred = C{},
-                                  P proj = P{}) const
-            -> CPP_ret(minmax_result<T const &>)( //
+        constexpr auto RANGES_FUN_NIEBLOID(minmax)(
+            T const & a, T const & b, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(minmax_result<T const &>)(                  //
                 requires indirect_strict_weak_order<C, projected<T const *, P>>)
         {
             using R = minmax_result<T const &>;
             return invoke(pred, invoke(proj, b), invoke(proj, a)) ? R{b, a} : R{a, b};
         }
 
+        /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        constexpr auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(minmax_result<range_value_t<Rng>>)( //
-                requires input_range<Rng> && indirect_strict_weak_order<
-                    C, projected<iterator_t<Rng>, P>> &&
-                    indirectly_copyable_storable<iterator_t<Rng>, range_value_t<Rng> *>)
+        constexpr auto RANGES_FUN_NIEBLOID(minmax)(
+            Rng && rng, C pred = C{}, P proj = P{})       //
+            ->CPP_ret(minmax_result<range_value_t<Rng>>)( //
+                requires input_range<Rng> &&
+                indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>> &&
+                indirectly_copyable_storable<iterator_t<Rng>, range_value_t<Rng> *>)
         {
             using R = minmax_result<range_value_t<Rng>>;
             auto first = ranges::begin(rng);
@@ -102,19 +105,18 @@ namespace ranges
             return result;
         }
 
+        /// \overload
         template<typename T, typename C = less, typename P = identity>
-        constexpr auto operator()(std::initializer_list<T> const && rng, C pred = C{},
-                                  P proj = P{}) const -> CPP_ret(minmax_result<T>)( //
-            requires copyable<T> &&
+        constexpr auto RANGES_FUN_NIEBLOID(minmax)(
+            std::initializer_list<T> const && rng, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(minmax_result<T>)(                                       //
+                requires copyable<T> &&
                 indirect_strict_weak_order<C, projected<T const *, P>>)
         {
             return (*this)(rng, std::move(pred), std::move(proj));
         }
-    };
 
-    /// \sa `minmax_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(minmax_fn, minmax)
+    RANGES_END_NIEBLOID(minmax)
 
     namespace cpp20
     {

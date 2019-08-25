@@ -31,12 +31,15 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct replace_fn
-    {
+    RANGES_BEGIN_NIEBLOID(replace)
+
+        /// \brief function template \c replace
         template<typename I, typename S, typename T1, typename T2, typename P = identity>
-        auto operator()(I first, S last, T1 const & old_value, T2 const & new_value,
-                        P proj = {}) const -> CPP_ret(I)( //
-            requires input_iterator<I> && sentinel_for<S, I> && writable<I, T2 const &> &&
+        auto RANGES_FUN_NIEBLOID(replace)(
+            I first, S last, T1 const & old_value, T2 const & new_value, P proj = {}) //
+            ->CPP_ret(I)(                                                             //
+                requires input_iterator<I> && sentinel_for<S, I> &&
+                writable<I, T2 const &> &&
                 indirect_relation<equal_to, projected<I, P>, T1 const *>)
         {
             for(; first != last; ++first)
@@ -45,19 +48,18 @@ namespace ranges
             return first;
         }
 
+        /// \overload
         template<typename Rng, typename T1, typename T2, typename P = identity>
-        auto operator()(Rng && rng, T1 const & old_value, T2 const & new_value,
-                        P proj = {}) const -> CPP_ret(safe_iterator_t<Rng>)( //
-            requires input_range<Rng> && writable<iterator_t<Rng>, T2 const &> &&
+        auto RANGES_FUN_NIEBLOID(replace)(
+            Rng && rng, T1 const & old_value, T2 const & new_value, P proj = {}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                                     //
+                requires input_range<Rng> && writable<iterator_t<Rng>, T2 const &> &&
                 indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>)
         {
             return (*this)(begin(rng), end(rng), old_value, new_value, std::move(proj));
         }
-    };
 
-    /// \sa `replace_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(replace_fn, replace)
+    RANGES_END_NIEBLOID(replace)
 
     namespace cpp20
     {

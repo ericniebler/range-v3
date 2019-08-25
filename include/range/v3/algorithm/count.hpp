@@ -30,13 +30,14 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct count_fn
-    {
+    RANGES_BEGIN_NIEBLOID(count)
+
+        /// \brief function template \c count
         template<typename I, typename S, typename V, typename P = identity>
-        auto operator()(I first, S last, V const & val, P proj = P{}) const
-            -> CPP_ret(iter_difference_t<I>)( //
+        auto RANGES_FUN_NIEBLOID(count)(I first, S last, V const & val, P proj = P{})
+            ->CPP_ret(iter_difference_t<I>)( //
                 requires input_iterator<I> && sentinel_for<S, I> &&
-                    indirect_relation<equal_to, projected<I, P>, V const *>)
+                indirect_relation<equal_to, projected<I, P>, V const *>)
         {
             iter_difference_t<I> n = 0;
             for(; first != last; ++first)
@@ -45,19 +46,17 @@ namespace ranges
             return n;
         }
 
+        /// \overload
         template<typename Rng, typename V, typename P = identity>
-        auto operator()(Rng && rng, V const & val, P proj = P{}) const
-            -> CPP_ret(iter_difference_t<iterator_t<Rng>>)( //
+        auto RANGES_FUN_NIEBLOID(count)(Rng && rng, V const & val, P proj = P{})
+            ->CPP_ret(iter_difference_t<iterator_t<Rng>>)( //
                 requires input_range<Rng> &&
-                    indirect_relation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
+                indirect_relation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
         {
             return (*this)(begin(rng), end(rng), val, std::move(proj));
         }
-    };
 
-    /// \sa `count_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(count_fn, count)
+    RANGES_END_NIEBLOID(count)
 
     namespace cpp20
     {

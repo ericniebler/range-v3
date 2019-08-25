@@ -52,15 +52,28 @@ namespace ranges
     template<typename I0, typename I1, typename O>
     using merge_result = detail::in1_in2_out_result<I0, I1, O>;
 
-    struct merge_fn
-    {
-        template<typename I0, typename S0, typename I1, typename S1, typename O,
-                 typename C = less, typename P0 = identity, typename P1 = identity>
-        auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, C pred = C{},
-                        P0 proj0 = P0{}, P1 proj1 = P1{}) const
-            -> CPP_ret(merge_result<I0, I1, O>)( //
+    RANGES_BEGIN_NIEBLOID(merge)
+
+        /// \brief function template \c merge
+        template<typename I0,
+                 typename S0,
+                 typename I1,
+                 typename S1,
+                 typename O,
+                 typename C = less,
+                 typename P0 = identity,
+                 typename P1 = identity>
+        auto RANGES_FUN_NIEBLOID(merge)(I0 begin0,
+                                        S0 end0,
+                                        I1 begin1,
+                                        S1 end1,
+                                        O out,
+                                        C pred = C{},
+                                        P0 proj0 = P0{},
+                                        P1 proj1 = P1{}) //
+            ->CPP_ret(merge_result<I0, I1, O>)(          //
                 requires sentinel_for<S0, I0> && sentinel_for<S1, I1> &&
-                    mergeable<I0, I1, O, C, P0, P1>)
+                mergeable<I0, I1, O, C, P0, P1>)
         {
             for(; begin0 != end0 && begin1 != end1; ++out)
             {
@@ -80,13 +93,22 @@ namespace ranges
             return {t0.in, t1.in, t1.out};
         }
 
-        template<typename Rng0, typename Rng1, typename O, typename C = less,
-                 typename P0 = identity, typename P1 = identity>
-        auto operator()(Rng0 && rng0, Rng1 && rng1, O out, C pred = C{}, P0 proj0 = P0{},
-                        P1 proj1 = P1{}) const
-            -> CPP_ret(merge_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>, O>)( //
+        /// \overload
+        template<typename Rng0,
+                 typename Rng1,
+                 typename O,
+                 typename C = less,
+                 typename P0 = identity,
+                 typename P1 = identity>
+        auto RANGES_FUN_NIEBLOID(merge)(Rng0 && rng0,
+                                        Rng1 && rng1,
+                                        O out,
+                                        C pred = C{},
+                                        P0 proj0 = P0{},
+                                        P1 proj1 = P1{})
+            ->CPP_ret(merge_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>, O>)( //
                 requires range<Rng0> && range<Rng1> &&
-                    mergeable<iterator_t<Rng0>, iterator_t<Rng1>, O, C, P0, P1>)
+                mergeable<iterator_t<Rng0>, iterator_t<Rng1>, O, C, P0, P1>)
         {
             return (*this)(begin(rng0),
                            end(rng0),
@@ -97,11 +119,8 @@ namespace ranges
                            std::move(proj0),
                            std::move(proj1));
         }
-    };
 
-    /// \sa `merge_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(merge_fn, merge)
+    RANGES_END_NIEBLOID(merge)
 
     namespace cpp20
     {

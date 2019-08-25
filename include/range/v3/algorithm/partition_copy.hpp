@@ -38,16 +38,22 @@ namespace ranges
     template<typename I, typename O0, typename O1>
     using partition_copy_result = detail::in_out1_out2_result<I, O0, O1>;
 
-    struct partition_copy_fn
-    {
-        template<typename I, typename S, typename O0, typename O1, typename C,
+    RANGES_BEGIN_NIEBLOID(partition_copy)
+
+        /// \brief function template \c partition_copy
+        template<typename I,
+                 typename S,
+                 typename O0,
+                 typename O1,
+                 typename C,
                  typename P = identity>
-        auto operator()(I first, S last, O0 o0, O1 o1, C pred, P proj = P{}) const
-            -> CPP_ret(partition_copy_result<I, O0, O1>)( //
+        auto RANGES_FUN_NIEBLOID(partition_copy)(
+            I first, S last, O0 o0, O1 o1, C pred, P proj = P{})
+            ->CPP_ret(partition_copy_result<I, O0, O1>)( //
                 requires input_iterator<I> && sentinel_for<S, I> &&
-                    weakly_incrementable<O0> && weakly_incrementable<O1> &&
-                        indirectly_copyable<I, O0> && indirectly_copyable<I, O1> &&
-                            indirect_unary_predicate<C, projected<I, P>>)
+                weakly_incrementable<O0> && weakly_incrementable<O1> &&
+                indirectly_copyable<I, O0> && indirectly_copyable<I, O1> &&
+                indirect_unary_predicate<C, projected<I, P>>)
         {
             for(; first != last; ++first)
             {
@@ -66,14 +72,19 @@ namespace ranges
             return {first, o0, o1};
         }
 
-        template<typename Rng, typename O0, typename O1, typename C,
+        /// \overload
+        template<typename Rng,
+                 typename O0,
+                 typename O1,
+                 typename C,
                  typename P = identity>
-        auto operator()(Rng && rng, O0 o0, O1 o1, C pred, P proj = P{}) const -> CPP_ret(
-            partition_copy_result<safe_iterator_t<Rng>, O0, O1>)( //
-            requires input_range<Rng> && weakly_incrementable<O0> &&
+        auto RANGES_FUN_NIEBLOID(partition_copy)(
+            Rng && rng, O0 o0, O1 o1, C pred, P proj = P{})                 //
+            ->CPP_ret(partition_copy_result<safe_iterator_t<Rng>, O0, O1>)( //
+                requires input_range<Rng> && weakly_incrementable<O0> &&
                 weakly_incrementable<O1> && indirectly_copyable<iterator_t<Rng>, O0> &&
-                    indirectly_copyable<iterator_t<Rng>, O1> &&
-                        indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
+                indirectly_copyable<iterator_t<Rng>, O1> &&
+                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng),
                            end(rng),
@@ -82,11 +93,8 @@ namespace ranges
                            std::move(pred),
                            std::move(proj));
         }
-    };
 
-    /// \sa `partition_copy_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(partition_copy_fn, partition_copy)
+    RANGES_END_NIEBLOID(partition_copy)
 
     namespace cpp20
     {

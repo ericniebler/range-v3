@@ -31,12 +31,14 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    struct replace_if_fn
-    {
+    RANGES_BEGIN_NIEBLOID(replace_if)
+
+        /// \brief function template \c replace_if
         template<typename I, typename S, typename C, typename T, typename P = identity>
-        auto operator()(I first, S last, C pred, T const & new_value,
-                        P proj = P{}) const -> CPP_ret(I)( //
-            requires input_iterator<I> && sentinel_for<S, I> &&
+        auto RANGES_FUN_NIEBLOID(replace_if)(
+            I first, S last, C pred, T const & new_value, P proj = P{}) //
+            ->CPP_ret(I)(                                               //
+                requires input_iterator<I> && sentinel_for<S, I> &&
                 indirect_unary_predicate<C, projected<I, P>> && writable<I, T const &>)
         {
             for(; first != last; ++first)
@@ -45,20 +47,20 @@ namespace ranges
             return first;
         }
 
+        /// \overload
         template<typename Rng, typename C, typename T, typename P = identity>
-        auto operator()(Rng && rng, C pred, T const & new_value,
-                        P proj = P{}) const -> CPP_ret(safe_iterator_t<Rng>)( //
-            requires input_range<Rng> && indirect_unary_predicate<
-                C, projected<iterator_t<Rng>, P>> && writable<iterator_t<Rng>, T const &>)
+        auto RANGES_FUN_NIEBLOID(replace_if)(
+            Rng && rng, C pred, T const & new_value, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                       //
+                requires input_range<Rng> &&
+                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> &&
+                writable<iterator_t<Rng>, T const &>)
         {
             return (*this)(
                 begin(rng), end(rng), std::move(pred), new_value, std::move(proj));
         }
-    };
 
-    /// \sa `replace_if_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(replace_if_fn, replace_if)
+    RANGES_END_NIEBLOID(replace_if)
 
     namespace cpp20
     {

@@ -41,58 +41,82 @@ namespace ranges
     template<typename I1, typename I2, typename O>
     using binary_transform_result = detail::in1_in2_out_result<I1, I2, O>;
 
-    struct transform_fn
-    {
+    RANGES_BEGIN_NIEBLOID(transform)
+
         // Single-range variant
+        /// \brief function template \c transform
         template<typename I, typename S, typename O, typename F, typename P = identity>
-        auto operator()(I first, S last, O out, F fun, P proj = P{}) const
-            -> CPP_ret(unary_transform_result<I, O>)( //
+        auto RANGES_FUN_NIEBLOID(transform)(
+            I first, S last, O out, F fun, P proj = P{}) //
+            ->CPP_ret(unary_transform_result<I, O>)(     //
                 requires input_iterator<I> && sentinel_for<S, I> &&
-                    weakly_incrementable<O> && copy_constructible<F> &&
-                        writable<O, indirect_result_t<F &, projected<I, P>>>)
+                weakly_incrementable<O> && copy_constructible<F> &&
+                writable<O, indirect_result_t<F &, projected<I, P>>>)
         {
             for(; first != last; ++first, ++out)
                 *out = invoke(fun, invoke(proj, *first));
             return {first, out};
         }
 
+        /// \overload
         template<typename Rng, typename O, typename F, typename P = identity>
-        auto operator()(Rng && rng, O out, F fun, P proj = P{}) const -> CPP_ret(
-            unary_transform_result<safe_iterator_t<Rng>, O>)( //
-            requires input_range<Rng> && weakly_incrementable<O> && copy_constructible<
-                F> && writable<O, indirect_result_t<F &, projected<iterator_t<Rng>, P>>>)
+        auto RANGES_FUN_NIEBLOID(transform)(Rng && rng, O out, F fun, P proj = P{}) //
+            ->CPP_ret(unary_transform_result<safe_iterator_t<Rng>, O>)(             //
+                requires input_range<Rng> && weakly_incrementable<O> &&
+                copy_constructible<F> &&
+                writable<O, indirect_result_t<F &, projected<iterator_t<Rng>, P>>>)
         {
             return (*this)(
                 begin(rng), end(rng), std::move(out), std::move(fun), std::move(proj));
         }
 
         // Double-range variant, 4-iterator version
-        template<typename I0, typename S0, typename I1, typename S1, typename O,
-                 typename F, typename P0 = identity, typename P1 = identity>
-        auto operator()(
-            I0 begin0, S0 end0, I1 begin1, S1 end1, O out, F fun, P0 proj0 = P0{},
-            P1 proj1 = P1{}) const -> CPP_ret(binary_transform_result<I0, I1, O>)( //
-            requires input_iterator<I0> && sentinel_for<S0, I0> && input_iterator<I1> &&
-                sentinel_for<S1, I1> && weakly_incrementable<O> &&
-                    copy_constructible<F> && writable<
-                        O, indirect_result_t<F &, projected<I0, P0>, projected<I1, P1>>>)
+        /// \overload
+        template<typename I0,
+                 typename S0,
+                 typename I1,
+                 typename S1,
+                 typename O,
+                 typename F,
+                 typename P0 = identity,
+                 typename P1 = identity>
+        auto RANGES_FUN_NIEBLOID(transform)(I0 begin0,
+                                            S0 end0,
+                                            I1 begin1,
+                                            S1 end1,
+                                            O out,
+                                            F fun,
+                                            P0 proj0 = P0{},
+                                            P1 proj1 = P1{}) //
+            ->CPP_ret(binary_transform_result<I0, I1, O>)(   //
+                requires input_iterator<I0> && sentinel_for<S0, I0> &&
+                input_iterator<I1> && sentinel_for<S1, I1> && weakly_incrementable<O> &&
+                copy_constructible<F> &&
+                writable<O, indirect_result_t<F &, projected<I0, P0>, projected<I1, P1>>>)
         {
             for(; begin0 != end0 && begin1 != end1; ++begin0, ++begin1, ++out)
                 *out = invoke(fun, invoke(proj0, *begin0), invoke(proj1, *begin1));
             return {begin0, begin1, out};
         }
 
-        template<typename Rng0, typename Rng1, typename O, typename F,
-                 typename P0 = identity, typename P1 = identity>
-        auto operator()(Rng0 && rng0, Rng1 && rng1, O out, F fun, P0 proj0 = P0{},
-                        P1 proj1 = P1{}) const
-            -> CPP_ret(
-                binary_transform_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>,
-                                        O>)( //
+        /// \overload
+        template<typename Rng0,
+                 typename Rng1,
+                 typename O,
+                 typename F,
+                 typename P0 = identity,
+                 typename P1 = identity>
+        auto RANGES_FUN_NIEBLOID(transform)(
+            Rng0 && rng0, Rng1 && rng1, O out, F fun, P0 proj0 = P0{}, P1 proj1 = P1{}) //
+            ->CPP_ret(binary_transform_result<safe_iterator_t<Rng0>,
+                                              safe_iterator_t<Rng1>,
+                                              O>)( //
                 requires input_range<Rng0> && input_range<Rng1> &&
-                    weakly_incrementable<O> && copy_constructible<F> && writable<
-                        O, indirect_result_t<F &, projected<iterator_t<Rng0>, P0>,
-                                             projected<iterator_t<Rng1>, P1>>>)
+                weakly_incrementable<O> && copy_constructible<F> &&
+                writable<O,
+                         indirect_result_t<F &,
+                                           projected<iterator_t<Rng0>, P0>,
+                                           projected<iterator_t<Rng1>, P1>>>)
         {
             return (*this)(begin(rng0),
                            end(rng0),
@@ -105,18 +129,28 @@ namespace ranges
         }
 
         // Double-range variant, 3-iterator version
-        template<typename I0, typename S0, typename I1, typename O, typename F,
-                 typename P0 = identity, typename P1 = identity>
+        /// \overload
+        template<typename I0,
+                 typename S0,
+                 typename I1,
+                 typename O,
+                 typename F,
+                 typename P0 = identity,
+                 typename P1 = identity>
         RANGES_DEPRECATED(
             "Use the variant of ranges::transform that takes an upper bound "
             "for both input ranges")
-        auto
-        operator()(
-            I0 begin0, S0 end0, I1 begin1, O out, F fun, P0 proj0 = P0{},
-            P1 proj1 = P1{}) const -> CPP_ret(binary_transform_result<I0, I1, O>)( //
-            requires input_iterator<I0> && sentinel_for<S0, I0> && input_iterator<I1> &&
-                weakly_incrementable<O> && copy_constructible<F> && writable<
-                    O, indirect_result_t<F &, projected<I0, P0>, projected<I1, P1>>>)
+        auto RANGES_FUN_NIEBLOID(transform)(I0 begin0,
+                                            S0 end0,
+                                            I1 begin1,
+                                            O out,
+                                            F fun,
+                                            P0 proj0 = P0{},
+                                            P1 proj1 = P1{}) //
+            ->CPP_ret(binary_transform_result<I0, I1, O>)(   //
+                requires input_iterator<I0> && sentinel_for<S0, I0> &&
+                input_iterator<I1> && weakly_incrementable<O> && copy_constructible<F> &&
+                writable<O, indirect_result_t<F &, projected<I0, P0>, projected<I1, P1>>>)
         {
             return (*this)(std::move(begin0),
                            std::move(end0),
@@ -128,20 +162,30 @@ namespace ranges
                            std::move(proj1));
         }
 
-        template<typename Rng0, typename I1Ref, typename O, typename F,
-                 typename P0 = identity, typename P1 = identity>
+        /// \overload
+        template<typename Rng0,
+                 typename I1Ref,
+                 typename O,
+                 typename F,
+                 typename P0 = identity,
+                 typename P1 = identity>
         RANGES_DEPRECATED(
             "Use the variant of ranges::transform that takes an upper bound "
             "for both input ranges")
-        auto
-        operator()(Rng0 && rng0, I1Ref && begin1, O out, F fun, P0 proj0 = P0{},
-                   P1 proj1 = P1{}) const
-            -> CPP_ret(
+        auto RANGES_FUN_NIEBLOID(transform)(Rng0 && rng0,
+                                            I1Ref && begin1,
+                                            O out,
+                                            F fun,
+                                            P0 proj0 = P0{},
+                                            P1 proj1 = P1{}) //
+            ->CPP_ret(
                 binary_transform_result<safe_iterator_t<Rng0>, uncvref_t<I1Ref>, O>)( //
                 requires input_range<Rng0> && input_iterator<uncvref_t<I1Ref>> &&
-                    weakly_incrementable<O> && copy_constructible<F> && writable<
-                        O, indirect_result_t<F &, projected<iterator_t<Rng0>, P0>,
-                                             projected<uncvref_t<I1Ref>, P1>>>)
+                weakly_incrementable<O> && copy_constructible<F> &&
+                writable<O,
+                         indirect_result_t<F &,
+                                           projected<iterator_t<Rng0>, P0>,
+                                           projected<uncvref_t<I1Ref>, P1>>>)
         {
             return (*this)(begin(rng0),
                            end(rng0),
@@ -152,11 +196,8 @@ namespace ranges
                            std::move(proj0),
                            std::move(proj1));
         }
-    };
 
-    /// \sa `transform_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(transform_fn, transform)
+    RANGES_END_NIEBLOID(transform)
 
     namespace cpp20
     {

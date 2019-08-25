@@ -37,13 +37,15 @@ namespace ranges
     template<typename I>
     using minmax_element_result = detail::min_max_result<I, I>;
 
-    struct minmax_element_fn
-    {
+    RANGES_BEGIN_NIEBLOID(minmax_element)
+
+        /// \brief function template \c minmax_element
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I first, S last, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(minmax_element_result<I>)( //
+        auto RANGES_FUN_NIEBLOID(minmax_element)(
+            I first, S last, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(minmax_element_result<I>)(         //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
-                    indirect_strict_weak_order<C, projected<I, P>>)
+                indirect_strict_weak_order<C, projected<I, P>>)
         {
             minmax_element_result<I> result{first, first};
             if(first == last || ++first == last)
@@ -84,19 +86,18 @@ namespace ranges
             return result;
         }
 
+        /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(minmax_element_result<safe_iterator_t<Rng>>)( //
+        auto RANGES_FUN_NIEBLOID(minmax_element)(
+            Rng && rng, C pred = C{}, P proj = P{})                 //
+            ->CPP_ret(minmax_element_result<safe_iterator_t<Rng>>)( //
                 requires forward_range<Rng> &&
-                    indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>)
+                indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
-    };
 
-    /// \sa `minmax_element_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(minmax_element_fn, minmax_element)
+    RANGES_END_NIEBLOID(minmax_element)
 
     namespace cpp20
     {

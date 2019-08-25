@@ -35,14 +35,17 @@ namespace ranges
     template<typename I, typename O>
     using remove_copy_result = detail::in_out_result<I, O>;
 
-    struct remove_copy_fn
-    {
+    RANGES_BEGIN_NIEBLOID(remove_copy)
+
+        /// \brief function template \c remove_copy
         template<typename I, typename S, typename O, typename T, typename P = identity>
-        auto operator()(I first, S last, O out, T const & val,
-                        P proj = P{}) const -> CPP_ret(remove_copy_result<I, O>)( //
-            requires input_iterator<I> && sentinel_for<S, I> && weakly_incrementable<O> &&
+        auto RANGES_FUN_NIEBLOID(remove_copy)(
+            I first, S last, O out, T const & val, P proj = P{}) //
+            ->CPP_ret(remove_copy_result<I, O>)(                 //
+                requires input_iterator<I> && sentinel_for<S, I> &&
+                weakly_incrementable<O> &&
                 indirect_relation<equal_to, projected<I, P>, T const *> &&
-                    indirectly_copyable<I, O>)
+                indirectly_copyable<I, O>)
         {
             for(; first != last; ++first)
             {
@@ -56,20 +59,19 @@ namespace ranges
             return {first, out};
         }
 
+        /// \overload
         template<typename Rng, typename O, typename T, typename P = identity>
-        auto operator()(Rng && rng, O out, T const & val, P proj = P{}) const -> CPP_ret(
-            remove_copy_result<safe_iterator_t<Rng>, O>)( //
-            requires input_range<Rng> && weakly_incrementable<O> &&
+        auto RANGES_FUN_NIEBLOID(remove_copy)(
+            Rng && rng, O out, T const & val, P proj = P{})         //
+            ->CPP_ret(remove_copy_result<safe_iterator_t<Rng>, O>)( //
+                requires input_range<Rng> && weakly_incrementable<O> &&
                 indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *> &&
-                    indirectly_copyable<iterator_t<Rng>, O>)
+                indirectly_copyable<iterator_t<Rng>, O>)
         {
             return (*this)(begin(rng), end(rng), std::move(out), val, std::move(proj));
         }
-    };
 
-    /// \sa `remove_copy_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(remove_copy_fn, remove_copy)
+    RANGES_END_NIEBLOID(remove_copy)
 
     namespace cpp20
     {

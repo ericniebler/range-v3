@@ -56,19 +56,12 @@ namespace ranges
         {
             return detail::next_to_if(std::move(i), std::move(s), meta::bool_<B>{});
         }
-    } // namespace detail
-    /// \endcond
 
-    /// \addtogroup group-algorithms
-    /// @{
-    struct find_end_fn
-    {
-    private:
         template<typename I1, typename S1, typename I2, typename S2, typename R,
                  typename P>
-        static subrange<I1> impl(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred, P proj,
-                                 detail::forward_iterator_tag_,
-                                 detail::forward_iterator_tag_)
+        subrange<I1> find_end_impl(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred, P proj,
+                                   detail::forward_iterator_tag_,
+                                   detail::forward_iterator_tag_)
         {
             bool found = false;
             I1 res_begin, res_end;
@@ -110,9 +103,9 @@ namespace ranges
         }
 
         template<typename I1, typename I2, typename R, typename P>
-        static subrange<I1> impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
-                                 detail::bidirectional_iterator_tag_,
-                                 detail::bidirectional_iterator_tag_)
+        subrange<I1> find_end_impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
+                                   detail::bidirectional_iterator_tag_,
+                                   detail::bidirectional_iterator_tag_)
         {
             // modeled after search algorithm (in reverse)
             if(begin2 == end2)
@@ -147,9 +140,9 @@ namespace ranges
         }
 
         template<typename I1, typename I2, typename R, typename P>
-        static subrange<I1> impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
-                                 detail::random_access_iterator_tag_,
-                                 detail::random_access_iterator_tag_)
+        subrange<I1> find_end_impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
+                                   detail::random_access_iterator_tag_,
+                                   detail::random_access_iterator_tag_)
         {
             // Take advantage of knowing source and pattern lengths.  Stop short when
             // source is smaller than pattern
@@ -179,32 +172,48 @@ namespace ranges
                 while(invoke(pred, invoke(proj, *--m1), *--m2));
             }
         }
+    } // namespace detail
+    /// \endcond
 
-    public:
-        template<typename I1, typename S1, typename I2, typename S2,
-                 typename R = equal_to, typename P = identity>
-        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{},
-                        P proj = P{}) const -> CPP_ret(subrange<I1>)( //
-            requires forward_iterator<I1> && sentinel_for<S1, I1> && forward_iterator<
-                I2> && sentinel_for<S2, I2> && indirect_relation<R, projected<I1, P>, I2>)
+    /// \addtogroup group-algorithms
+    /// @{
+    RANGES_BEGIN_NIEBLOID(find_end)
+
+        /// \brief function template \c find_end
+        template<typename I1,
+                 typename S1,
+                 typename I2,
+                 typename S2,
+                 typename R = equal_to,
+                 typename P = identity>
+        auto RANGES_FUN_NIEBLOID(find_end)(
+            I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{}, P proj = P{}) //
+            ->CPP_ret(subrange<I1>)(                                            //
+                requires forward_iterator<I1> && sentinel_for<S1, I1> &&
+                forward_iterator<I2> && sentinel_for<S2, I2> &&
+                indirect_relation<R, projected<I1, P>, I2>)
         {
             constexpr bool Bidi =
                 bidirectional_iterator<I1> && bidirectional_iterator<I2>;
-            return find_end_fn::impl(begin1,
-                                     detail::next_to_if<Bidi>(begin1, end1),
-                                     begin2,
-                                     detail::next_to_if<Bidi>(begin2, end2),
-                                     std::move(pred),
-                                     std::move(proj),
-                                     iterator_tag_of<I1>(),
-                                     iterator_tag_of<I2>());
+            return detail::find_end_impl(begin1,
+                                         detail::next_to_if<Bidi>(begin1, end1),
+                                         begin2,
+                                         detail::next_to_if<Bidi>(begin2, end2),
+                                         std::move(pred),
+                                         std::move(proj),
+                                         iterator_tag_of<I1>(),
+                                         iterator_tag_of<I2>());
         }
 
-        template<typename Rng1, typename Rng2, typename R = equal_to,
+        /// \overload
+        template<typename Rng1,
+                 typename Rng2,
+                 typename R = equal_to,
                  typename P = identity>
-        auto operator()(Rng1 && rng1, Rng2 && rng2, R pred = R{},
-                        P proj = P{}) const -> CPP_ret(safe_subrange_t<Rng1>)( //
-            requires forward_range<Rng1> && forward_range<Rng2> &&
+        auto RANGES_FUN_NIEBLOID(find_end)(
+            Rng1 && rng1, Rng2 && rng2, R pred = R{}, P proj = P{}) //
+            ->CPP_ret(safe_subrange_t<Rng1>)(                       //
+                requires forward_range<Rng1> && forward_range<Rng2> &&
                 indirect_relation<R, projected<iterator_t<Rng1>, P>, iterator_t<Rng2>>)
         {
             return (*this)(begin(rng1),
@@ -214,11 +223,8 @@ namespace ranges
                            std::move(pred),
                            std::move(proj));
         }
-    };
 
-    /// \sa `find_end_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(find_end_fn, find_end)
+    RANGES_END_NIEBLOID(find_end)
 
     namespace cpp20
     {

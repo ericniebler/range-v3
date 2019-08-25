@@ -100,11 +100,13 @@ namespace ranges
 
     /// \addtogroup group-algorithms
     /// @{
-    struct nth_element_fn
-    {
+    RANGES_BEGIN_NIEBLOID(nth_element)
+
+        /// \brief function template \c nth_element
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I first, I nth, S end_, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(I)( //
+        auto RANGES_FUN_NIEBLOID(nth_element)(
+            I first, I nth, S end_, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(I)(                                       //
                 requires random_access_iterator<I> && sortable<I, C, P>)
         {
             I last = ranges::next(nth, end_), end_orig = last;
@@ -166,8 +168,9 @@ namespace ranges
                             if(!invoke(
                                    pred,
                                    invoke(proj, *first),
-                                   invoke(proj,
-                                          *--j))) // we need a guard if *first == *(last-1)
+                                   invoke(
+                                       proj,
+                                       *--j))) // we need a guard if *first == *(last-1)
                             {
                                 while(true)
                                 {
@@ -185,7 +188,8 @@ namespace ranges
                                     ++i;
                                 }
                             }
-                            // [first, i) == *first and *first < [j, last) and j == last - 1
+                            // [first, i) == *first and *first < [j, last) and j == last -
+                            // 1
                             if(i == j)
                                 return end_orig;
                             while(true)
@@ -302,19 +306,18 @@ namespace ranges
             return end_orig;
         }
 
+        /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto operator()(Rng && rng, iterator_t<Rng> nth, C pred = C{}, P proj = P{}) const
-            -> CPP_ret(safe_iterator_t<Rng>)( //
+        auto RANGES_FUN_NIEBLOID(nth_element)(
+            Rng && rng, iterator_t<Rng> nth, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                             //
                 requires random_access_range<Rng> && sortable<iterator_t<Rng>, C, P>)
         {
             return (*this)(
                 begin(rng), std::move(nth), end(rng), std::move(pred), std::move(proj));
         }
-    };
 
-    /// \sa `nth_element_fn`
-    /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(nth_element_fn, nth_element)
+    RANGES_END_NIEBLOID(nth_element)
 
     namespace cpp20
     {
