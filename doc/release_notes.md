@@ -1,6 +1,84 @@
 Release Notes           {#release_notes}
 =============
 
+\section v0-9-0 Version 0.9.0 "Std::ranger Things"
+
+_Released:_ Aug 26, 2019.
+
+Bring many interfaces into sync with the C++20 draft.
+
+* **NEW:** An improved concepts portability layer with  macros that use C++20
+  concepts when the compiler supports them.
+* **NEW:** An improved directory structure that keeps disjoint parts of the
+  library -- iterators, ranges, algorithms, actions, views, functional
+  programming support, and general utilities -- physically separate.
+* **NEW:** A `RANGES_DEEP_STL_INTEGRATION` configuration option that makes your
+  STL implementation default to structural conformance to infer iterator
+  category, as in C++20. Applies to libc++, libstdc++, and MSVC's Standard
+  Library.
+* **NEW:** A `ranges::cpp20` namespace that contains all the functionality of
+  C++20's `std::ranges` namespace.
+* All concept names have been given standard_case (renamed from PascalCase) and
+  have been harmonized with the C++20 draft.
+* The following range access customization points no longer accept rvalue ranges
+  by default:
+  - `ranges::begin`
+  - `ranges::end`
+  - `ranges::rbegin`
+  - `ranges::rend`
+  - `ranges::cbegin`
+  - `ranges::cend`
+  - `ranges::crbegin`
+  - `ranges::crend`
+  - `ranges::data`
+  - `ranges::cdata`
+* Iterators may specify an `iterator_concept` type alias in addition to
+  `iterator_category` -- either as a nested type or as a member of a
+  `std::iterator_traits` specialization -- to denote conformance to the C++20
+  iterator concepts as distinct from the C++98 iterator requirements.
+  (See [P1037 "Deep Integration of the Ranges TS"](http://wg21.link/p1037)
+  for more information.)
+* The `ranges::value_type` trait has been renamed to `readable_traits`.
+* The `ranges::difference_type` trait has been renamed to `incrementable_traits`.
+* The `ranges::iterator_category` trait has been deprecated. Specialize
+  `std::iterator_traits` to non-intrusively specify an iterator's category
+  and (optionally) concept.
+* Rename the `ranges::view` namespace to `ranges::views` and `ranges::action` to
+  `ranges::actions` (with deprecated namespace aliases for migration).
+* Rename `view::bounded` to `views::common`.
+* Rename `unreachable` to `unreachable_sentinel_t`.
+* Change `dangling` from a class template that wraps an iterator to a class that
+  acts as a placeholder for an iterator that would otherwise dangle.
+* Implement C++20's `subrange` as a view that wraps an iterator/sentinel pair;
+  deprecate `iterator_range`.
+* Deprecate implicit conversion from view types to containers; rename
+  `ranges::to_` to `ranges::to` and extend it to support converting a
+  range-of-ranges to a container-of-containers.
+* Deprecate the `ranges::v3` inline versioning namespace.
+* The following views have had minor changes to bring them into conformance with
+  the C++20 working draft:
+  - `join_view`
+  - `single_view`
+  - `empty_view`
+  - `split_view`
+  - `reverse_view`
+  - `all_view`
+  - `take_view`
+  - `iota_view`
+  <p/>`iota_view<std::[u]intmax_t>`, in particular, is given a user-defined
+  `difference_type` that avoids integer overflow.
+* New names for the iterator and range type aliases:
+  | Old Name                      | New Name                    |
+  |-------------------------------|-----------------------------|
+  | `value_type_t`                | `iter_value_t`              |
+  | `reference_t`                 | `iter_reference_t`          |
+  | `difference_type_t`           | `iter_difference_t`         |
+  | `size_type_t`                 | _deprecated_                |
+  | `rvalue_reference_t`          | `iter_rvalue_reference_t`   |
+  | `range_value_type_t`          | `range_value_t`             |
+  | `range_difference_type_t`     | `range_difference_t`        |
+  | `range_size_type_t`           | `range_size_t`              |
+
 \section v0-5-0 Version 0.5.0
 
 _Released:_ Apr 30, 2019.
@@ -167,7 +245,6 @@ _Released:_ March 13, 2017.
 Bring many interfaces into sync with the Ranges TS.
 - Many interfaces are simply renamed. The following table shows the old names
   and the new. (All names are in the `ranges::v3` namespace.)
-
   | Old Name                      | New Name                  |
   |-------------------------------|---------------------------|
   | `indirect_swap`               | `iter_swap`               |
