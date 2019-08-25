@@ -1,9 +1,9 @@
 shallow_clone: true
 
-image: Visual Studio 2017
+image: Visual Studio 2019
 
 platform:
-  - x86
+  - x64_x86
   - x64
 
 configuration:
@@ -12,9 +12,14 @@ configuration:
 
 environment:
   matrix:
-    - CPP: latest
+    - CXX: clang-cl
+      CPP: latest
 
-#    - CPP: 14
+    - CXX: cl
+      CPP: 17
+
+    - CXX: cl
+      CPP: latest
 
 cache:
   - C:\ninja-1.8.2
@@ -26,27 +31,27 @@ install:
         7z x -y ninja-win.zip -oC:\ninja-1.8.2
       }
       $env:PATH="C:\ninja-1.8.2;$env:PATH"
-  - for /f "tokens=1* delims=" %%i in ('"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath') do call "%%i\VC\Auxiliary\Build\vcvarsall.bat" %PLATFORM:x86=x64_x86%
+  - for /f "tokens=1* delims=" %%i in ('"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath') do call "%%i\VC\Auxiliary\Build\vcvarsall.bat" %PLATFORM%
   - cmake --version
   - ninja --version
   - clang-cl --version
+  - cl /Bv || exit 0
 
 build_script:
   - mkdir build && cd build
   - ps: |
-      $env:CC='clang-cl'
-      $env:CXX='clang-cl'
+      $env:CC=$env:CXX
       $env:HEADER_CHECK=0
       if ($env:PLATFORM -eq "x64") {
         if ($env:CONFIGURATION -eq "Debug") {
           $env:HEADER_CHECK=1
         }
-      } else {
+      } elseif ($env:CXX -eq "clang-cl") {
         $env:CXXFLAGS='-m32'
         $env:CFLAGS='-m32'
       }
   - cmake .. -G Ninja -Wdev -DRANGE_V3_HEADER_CHECKS=%HEADER_CHECK% -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DRANGES_CXX_STD=%CPP%
-  - ninja -v
+  - ninja
 
 test_script:
   - ctest -j2 --output-on-failure
