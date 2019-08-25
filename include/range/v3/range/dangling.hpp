@@ -26,7 +26,7 @@
 namespace ranges
 {
     /// \ingroup group-range
-    /// A wrapper for an iterator or a sentinel into a range that may
+    /// A placeholder for an iterator or a sentinel into a range that may
     /// no longer be valid.
     struct dangling
     {
