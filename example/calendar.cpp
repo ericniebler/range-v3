@@ -145,7 +145,9 @@ by_week()
 std::string
 format_day(date d)
 {
-    return boost::str(boost::format("%|3|") % d.day());
+    std::stringstream ss;
+    ss << " " << std::setw( 2 ) << std::setfill( ' ' ) << (int) d.day( );
+    return ss.str( );
 }
 
 // In:  range<range<date>>: month grouped by weeks.
