@@ -170,7 +170,15 @@ format_weeks()
 std::string
 month_title(date d)
 {
-    return boost::str(boost::format("%|=22|") % d.month().as_long_string());
+    std::stringstream ss;
+    ss << d.month( ).as_long_string( );
+    std::string longMonth = ss.str( );
+    ss.str( "" );
+    const size_t totalSize = 22;
+    ss << std::string( ( totalSize - longMonth.length( ) ) / 2, ' ' );
+    ss << longMonth;
+    ss << std::string( ( totalSize - longMonth.length( ) ) / 2, ' ' );
+    return ss.str( );
 }
 
 // In:  range<range<date>>: year of months of days
