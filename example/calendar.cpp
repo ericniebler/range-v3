@@ -59,8 +59,6 @@
 //     to my attention.
 
 #include <boost/date_time/gregorian/gregorian.hpp>
-#include <boost/format.hpp>
-#include <boost/lexical_cast.hpp>
 #include <algorithm>
 #include <cstddef>
 #include <functional>
