@@ -175,20 +175,23 @@ namespace ranges
         {
             return bool(ranges::begin(derived()) == ranges::end(derived()));
         }
-        CPP_template_gcc_workaround(bool True = true)(    //
-            requires True && detail::can_empty_<D<True>>) //
+        CPP_template_gcc_workaround(
+            typename Bool, typename = detail::enable_if_t<RANGES_IS_SAME(Bool, bool)>)( //
+            requires detail::can_empty_<D<RANGES_IS_SAME(Bool, bool)>>)                 //
             constexpr explicit
-            operator bool() //
-            noexcept(noexcept(ranges::empty(std::declval<D<True> &>())))
+            operator Bool() //
+            noexcept(
+                noexcept(ranges::empty(std::declval<D<RANGES_IS_SAME(Bool, bool)> &>())))
         {
             return !ranges::empty(derived());
         }
         /// \overload
-        CPP_template_gcc_workaround(bool True = true)(          //
-            requires True && detail::can_empty_<D<True> const>) //
+        CPP_template_gcc_workaround(
+            typename Bool, typename = detail::enable_if_t<RANGES_IS_SAME(Bool, bool)>)( //
+            requires detail::can_empty_<D<RANGES_IS_SAME(Bool, bool)> const>)           //
             constexpr explicit
-            operator bool() const
-            noexcept(noexcept(ranges::empty(std::declval<D<True> const &>())))
+            operator Bool() const noexcept(noexcept(
+                ranges::empty(std::declval<D<RANGES_IS_SAME(Bool, bool)> const &>())))
         {
             return !ranges::empty(derived());
         }
