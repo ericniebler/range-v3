@@ -156,9 +156,12 @@ auto
 format_weeks()
 {
     return views::transform([](/*range<date>*/ auto week) {
-        return boost::str(boost::format("%1%%2%%|22t|") %
-                          std::string(front(week).day_of_week() * 3u, ' ') %
-                          (week | views::transform(format_day) | actions::join));
+        std::stringstream ss;
+        ss << std::string( front( week ).day_of_week( ) * 3u, ' ' );
+        ss << (week | views::transform( format_day ) | actions::join );
+        size_t len = ss.str( ).length( );
+        ss << std::string( 22 - len, ' ' );
+        return ss.str( );
     });
 }
 
