@@ -89,7 +89,7 @@
 #include <vector>
 
 namespace greg = boost::gregorian;
-using date = greg::date;
+using CalDate = greg::date;
 using day = greg::date_duration;
 using namespace ranges;
 
@@ -97,11 +97,11 @@ namespace boost
 {
     namespace gregorian
     {
-        date &operator++(date &d)
+        CalDate &operator++(CalDate &d)
         {
             return d = d + day(1);
         }
-        date operator++(date &d, int)
+        CalDate operator++(CalDate &d, int)
         {
             return ++d - day(1);
         }
@@ -110,55 +110,55 @@ namespace boost
 namespace ranges
 {
     template<>
-    struct incrementable_traits<date>
+    struct incrementable_traits<CalDate>
     {
-        using difference_type = date::duration_type::duration_rep::int_type;
+        using difference_type = CalDate::duration_type::duration_rep::int_type;
     };
 }
-CPP_assert(incrementable<date>);
+CPP_assert(incrementable<CalDate>);
 
 auto
 dates(unsigned short start, unsigned short stop)
 {
-    return views::iota(date{start, greg::Jan, 1}, date{stop, greg::Jan, 1});
+    return views::iota(CalDate{start, greg::Jan, 1}, CalDate{stop, greg::Jan, 1});
 }
 
 auto
 dates_from(unsigned short year)
 {
-    return views::iota(date{year, greg::Jan, 1});
+    return views::iota(CalDate{year, greg::Jan, 1});
 }
 
 auto
 by_month()
 {
     return views::group_by(
-        [](date a, date b) { return a.month() == b.month(); });
+        [](CalDate a, CalDate b) { return a.month() == b.month(); });
 }
 
 auto
 by_week()
 {
-    return views::group_by([](date a, date b) {
+    return views::group_by([](CalDate a, CalDate b) {
         // ++a because week_number is Mon-Sun and we want Sun-Sat
         return (++a).week_number() == (++b).week_number();
     });
 }
 
 std::string
-format_day(date d)
+format_day(CalDate d)
 {
     std::stringstream ss;
     ss << " " << std::setw( 2 ) << std::setfill( ' ' ) << (int) d.day( );
     return ss.str( );
 }
 
-// In:  range<range<date>>: month grouped by weeks.
+// In:  range<range<CalDate>>: month grouped by weeks.
 // Out: range<std::string>: month with formatted weeks.
 auto
 format_weeks()
 {
-    return views::transform([](/*range<date>*/ auto week) {
+    return views::transform([](/*range<CalDate>*/ auto week) {
         std::stringstream ss;
         ss << std::string( front( week ).day_of_week( ) * 3u, ' ' );
         ss << (week | views::transform( format_day ) | actions::join );
@@ -171,7 +171,7 @@ format_weeks()
 // Return a formatted string with the title of the month
 // corresponding to a date.
 std::string
-month_title(date d)
+month_title(CalDate d)
 {
     std::stringstream ss;
     ss << d.month( ).as_long_string( );
@@ -184,12 +184,12 @@ month_title(date d)
     return ss.str( );
 }
 
-// In:  range<range<date>>: year of months of days
+// In:  range<range<CalDate>>: year of months of days
 // Out: range<range<std::string>>: year of months of formatted wks
 auto
 layout_months()
 {
-    return views::transform([](/*range<date>*/ auto month) {
+    return views::transform([](/*range<CalDate>*/ auto month) {
         auto week_count =
             static_cast<std::ptrdiff_t>(distance(month | by_week()));
         return views::concat(
@@ -361,7 +361,7 @@ join_months()
         [](/*range<string>*/ auto rng) { return actions::join(rng); });
 }
 
-// In:  range<date>
+// In:  range<CalDate>
 // Out: range<string>, lines of formatted output
 auto
 format_calendar(std::size_t months_per_line)
