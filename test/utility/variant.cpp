@@ -25,7 +25,7 @@ void bug_1217()
 {
     std::vector<int> vec;
 
-    if(auto tx = vec | ranges::view::transform( [](int){ return 0; } ))
+    if(auto tx = vec | ranges::views::transform( [](int){ return 0; } ))
     {
         auto positions_visited = ranges::views::concat( tx, tx ) | ranges::views::partial_sum;
         ranges::accumulate( positions_visited, 0 );
