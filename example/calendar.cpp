@@ -61,7 +61,6 @@
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/program_options.hpp>
 #include <algorithm>
 #include <cstddef>
 #include <functional>
@@ -86,7 +85,6 @@
 #include <utility>
 #include <vector>
 
-namespace po = boost::program_options;
 namespace greg = boost::gregorian;
 using date = greg::date;
 using day = greg::date_duration;
@@ -370,41 +368,69 @@ format_calendar(std::size_t months_per_line)
     });
 }
 
+
+void usage( )
+{
+  std::cout << "Allowed options:"                              << std::endl;
+  std::cout << "  --help               produce help message"   << std::endl;
+  std::cout << "  --start arg          Year to start"          << std::endl;
+  std::cout << "  --stop arg           Year to stop"           << std::endl;
+  std::cout << "  --per-line arg (=3)  Nbr of months per line" << std::endl;
+}
+
+
 int
 main(int argc, char *argv[]) try
 {
-    // Declare the supported options.
-    po::options_description desc("Allowed options");
-    desc.add_options()("help", "produce help message")(
-        "start", po::value<unsigned short>(), "Year to start")(
-        "stop", po::value<std::string>(), "Year to stop")(
-        "per-line",
-        po::value<std::size_t>()->default_value(3u),
-        "Nbr of months per line");
+    // Configuration.
+    bool help            = false;
+    auto start           = 0;
+    auto stop            = 0;
+    auto months_per_line = 3;
 
-    po::positional_options_description p;
-    p.add("start", 1).add("stop", 1);
-
-    po::variables_map vm;
-    po::store(
-        po::command_line_parser(argc, argv).options(desc).positional(p).run(),
-        vm);
-    po::notify(vm);
-
-    if(vm.count("help") || 1 != vm.count("start"))
+    for ( int i = 1; i < argc; ++i )
     {
-        std::cerr << desc << '\n';
-        return 1;
+      std::string arg = argv[ i ];
+
+      if ( arg == "--help" )
+      {
+        help = true;
+        continue;
+      }
+
+      if ( arg == "--start" )
+      {
+        arg = argv[ ++i ];
+        start = atoi( arg.c_str( ) );
+        continue;
+      }
+
+      if ( arg == "--stop" )
+      {
+        arg = argv[ ++i ];
+        stop = atoi( arg.c_str( ) );
+        continue;
+      }
+
+      if ( arg == "--per-line" )
+      {
+        arg = argv[ ++i ];
+        months_per_line = atoi( arg.c_str( ) );
+        continue;
+      }
+
+      if ( !arg.empty( ) )
+      {
+        start = atoi( arg.c_str( ) );
+        stop  = start + 1;
+      }
     }
 
-    auto const start = vm["start"].as<unsigned short>();
-    auto const stop = 0 == vm.count("stop")
-                          ? (unsigned short)(start + 1)
-                          : vm["stop"].as<std::string>() == "never"
-                                ? (unsigned short)-1
-                                : boost::lexical_cast<unsigned short>(
-                                      vm["stop"].as<std::string>());
-    auto const months_per_line = vm["per-line"].as<std::size_t>();
+    if ( help || ( start == 0 && stop == 0 ) )
+    {
+      usage( );
+      return 0;
+    }
 
     if(stop != (unsigned short)-1 && stop <= start)
     {

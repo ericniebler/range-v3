@@ -24,7 +24,7 @@ if(RANGES_BUILD_CALENDAR_EXAMPLE)
     set(Boost_USE_STATIC_LIBS        ON)
     set(Boost_USE_MULTITHREADED     OFF)
     set(Boost_USE_STATIC_RUNTIME    OFF)
-    find_package(Boost 1.59.0 COMPONENTS date_time program_options)
+    find_package(Boost 1.59.0 COMPONENTS date_time)
 
     if (Boost_FOUND)
         add_executable(calendar calendar.cpp)
