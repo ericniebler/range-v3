@@ -58,7 +58,12 @@
 //   Thanks to github's Arzar for bringing date::week_number
 //     to my attention.
 
+#define STD_DATE 0
+#if STD_DATE == 1
+#include "date.h"
+#else
 #include <boost/date_time/gregorian/gregorian.hpp>
+#endif
 #include <algorithm>
 #include <cstddef>
 #include <functional>
