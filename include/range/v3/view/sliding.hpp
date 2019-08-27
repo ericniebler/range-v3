@@ -187,9 +187,9 @@ namespace ranges
 
         public:
             adaptor() = default;
-            adaptor(sliding_view & v)
-              : base_t{v.base()}
-              , n_{v.n_}
+            adaptor(sliding_view * v)
+              : base_t{v->base()}
+              , n_{v->n_}
             {}
             iterator_t<Rng> begin(sliding_view & v)
             {
@@ -223,11 +223,11 @@ namespace ranges
 
         adaptor begin_adaptor()
         {
-            return {*this};
+            return {this};
         }
         meta::if_c<common_range<Rng>, adaptor, adaptor_base> end_adaptor()
         {
-            return {*this};
+            return {this};
         }
 
     public:
@@ -259,8 +259,8 @@ namespace ranges
 
         public:
             adaptor() = default;
-            adaptor(sliding_view & v)
-              : n_{v.n_}
+            adaptor(sliding_view * v)
+              : n_{v->n_}
             {}
             iterator_t<Rng> end(sliding_view & v)
             {
@@ -275,11 +275,11 @@ namespace ranges
 
         adaptor begin_adaptor()
         {
-            return {*this};
+            return {this};
         }
         adaptor end_adaptor()
         {
-            return {*this};
+            return {this};
         }
 
     public:

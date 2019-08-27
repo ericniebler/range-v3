@@ -175,26 +175,23 @@ namespace ranges
         {
             return bool(ranges::begin(derived()) == ranges::end(derived()));
         }
-        CPP_template_gcc_workaround(
-            typename Bool, typename = detail::enable_if_t<RANGES_IS_SAME(Bool, bool)>)( //
-            requires detail::can_empty_<D<RANGES_IS_SAME(Bool, bool)>>)                 //
-            constexpr explicit
-            operator Bool() //
-            noexcept(
-                noexcept(ranges::empty(std::declval<D<RANGES_IS_SAME(Bool, bool)> &>())))
+        CPP_template_gcc_workaround(bool True = true)(    //
+            requires True && detail::can_empty_<D<True>>) // clang-format off
+        constexpr explicit operator bool()
+            noexcept(noexcept(ranges::empty(std::declval<D<True> &>())))
         {
             return !ranges::empty(derived());
         }
+        // clang-format on
         /// \overload
-        CPP_template_gcc_workaround(
-            typename Bool, typename = detail::enable_if_t<RANGES_IS_SAME(Bool, bool)>)( //
-            requires detail::can_empty_<D<RANGES_IS_SAME(Bool, bool)> const>)           //
-            constexpr explicit
-            operator Bool() const noexcept(noexcept(
-                ranges::empty(std::declval<D<RANGES_IS_SAME(Bool, bool)> const &>())))
+        CPP_template_gcc_workaround(bool True = true)(          //
+            requires True && detail::can_empty_<D<True> const>) // clang-format off
+        constexpr explicit operator bool() const
+            noexcept(noexcept(ranges::empty(std::declval<D<True> const &>())))
         {
             return !ranges::empty(derived());
         }
+        // clang-format on
         /// If the size of the range is known at compile-time and finite,
         /// return it.
         template<bool True = true, int = 42>
@@ -452,7 +449,8 @@ namespace ranges
         }
         /// \cond
         /// Implicit conversion to something that looks like a container.
-        CPP_template(typename Container, bool True = true)( // clang-format off
+        CPP_template(typename Container, bool True = true,
+                     typename = typename Container::allocator_type)( // clang-format off
             requires detail::convertible_to_container<D<True>, Container>)
         RANGES_DEPRECATED(
             "Implicit conversion from a view to a container is deprecated. "
@@ -462,7 +460,8 @@ namespace ranges
             return ranges::to<Container>(derived());
         }
         /// \overload
-        CPP_template(typename Container, bool True = true)( // clang-format off
+        CPP_template(typename Container, bool True = true,
+                     typename = typename Container::allocator_type)( // clang-format off
             requires detail::convertible_to_container<D<True> const, Container>)
         RANGES_DEPRECATED(
             "Implicit conversion from a view to a container is deprecated. "

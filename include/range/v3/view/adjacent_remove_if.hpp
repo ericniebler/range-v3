@@ -56,8 +56,8 @@ namespace ranges
 
         public:
             adaptor() = default;
-            constexpr adaptor(adjacent_remove_if_view & rng) noexcept
-              : rng_(&rng)
+            constexpr adaptor(adjacent_remove_if_view * rng) noexcept
+              : rng_(rng)
             {}
             constexpr static iterator_t<Rng> begin(adjacent_remove_if_view & rng)
             {
@@ -80,7 +80,7 @@ namespace ranges
         constexpr adaptor begin_adaptor()
         {
             cache_begin();
-            return {*this};
+            return {this};
         }
         CPP_member
         constexpr auto end_adaptor() -> CPP_ret(adaptor)( //
@@ -88,7 +88,7 @@ namespace ranges
         {
             if(bidirectional_range<Rng>)
                 cache_begin();
-            return {*this};
+            return {this};
         }
         CPP_member
         constexpr auto end_adaptor() noexcept -> CPP_ret(adaptor_base)( //

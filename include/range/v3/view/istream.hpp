@@ -43,8 +43,8 @@ namespace ranges
 
         public:
             cursor() = default;
-            explicit cursor(istream_view & rng)
-              : rng_(&rng)
+            explicit cursor(istream_view * rng)
+              : rng_(rng)
             {}
             void next()
             {
@@ -70,7 +70,7 @@ namespace ranges
         }
         cursor begin_cursor()
         {
-            return cursor{*this};
+            return cursor{this};
         }
 
     public:

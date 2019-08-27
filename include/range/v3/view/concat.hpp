@@ -88,8 +88,8 @@ namespace ranges
 
         public:
             sentinel() = default;
-            sentinel(concat_view_t & rng, end_tag)
-              : end_(end(std::get<cranges - 1>(rng.rngs_)))
+            sentinel(concat_view_t * rng, end_tag)
+              : end_(end(std::get<cranges - 1>(rng->rngs_)))
             {}
             CPP_template(bool Other)( //
                 requires IsConst && (!Other)) sentinel(sentinel<Other> that)
@@ -253,15 +253,15 @@ namespace ranges
             using reference = common_reference_t<range_reference_t<constify_if<Rngs>>...>;
             using single_pass = meta::or_c<single_pass_iterator_<iterator_t<Rngs>>...>;
             cursor() = default;
-            cursor(concat_view_t & rng, begin_tag)
-              : rng_(&rng)
-              , its_{emplaced_index<0>, begin(std::get<0>(rng.rngs_))}
+            cursor(concat_view_t * rng, begin_tag)
+              : rng_(rng)
+              , its_{emplaced_index<0>, begin(std::get<0>(rng->rngs_))}
             {
                 this->satisfy(meta::size_t<0>{});
             }
-            cursor(concat_view_t & rng, end_tag)
-              : rng_(&rng)
-              , its_{emplaced_index<cranges - 1>, end(std::get<cranges - 1>(rng.rngs_))}
+            cursor(concat_view_t * rng, end_tag)
+              : rng_(rng)
+              , its_{emplaced_index<cranges - 1>, end(std::get<cranges - 1>(rng->rngs_))}
             {}
             CPP_template(bool Other)(         //
                 requires IsConst && (!Other)) //
@@ -316,20 +316,20 @@ namespace ranges
         };
         cursor<meta::and_c<simple_view<Rngs>()...>::value> begin_cursor()
         {
-            return {*this, begin_tag{}};
+            return {this, begin_tag{}};
         }
         meta::if_<meta::and_c<(bool)common_range<Rngs>...>,
                   cursor<meta::and_c<simple_view<Rngs>()...>::value>,
                   sentinel<meta::and_c<simple_view<Rngs>()...>::value>>
         end_cursor()
         {
-            return {*this, end_tag{}};
+            return {this, end_tag{}};
         }
         CPP_member
         auto begin_cursor() const -> CPP_ret(cursor<true>)( //
             requires and_v<range<Rngs const>...>)
         {
-            return {*this, begin_tag{}};
+            return {this, begin_tag{}};
         }
         CPP_member
         auto end_cursor() const -> CPP_ret(
@@ -337,7 +337,7 @@ namespace ranges
                       sentinel<true>>)( //
             requires and_v<range<Rngs const>...>)
         {
-            return {*this, end_tag{}};
+            return {this, end_tag{}};
         }
 
     public:

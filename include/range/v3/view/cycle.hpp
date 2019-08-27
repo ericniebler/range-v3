@@ -94,9 +94,9 @@ namespace ranges
 
         public:
             cursor() = default;
-            cursor(cycled_view_t & rng)
-              : rng_(&rng)
-              , it_(ranges::begin(rng.rng_))
+            cursor(cycled_view_t * rng)
+              : rng_(rng)
+              , it_(ranges::begin(rng->rng_))
             {}
             CPP_template(bool Other)( //
                 requires IsConst && (!Other)) cursor(cursor<Other> that)
@@ -171,13 +171,13 @@ namespace ranges
         auto begin_cursor() -> CPP_ret(cursor<false>)( //
             requires(!simple_view<Rng>() || !common_range<Rng const>))
         {
-            return {*this};
+            return {this};
         }
         CPP_member
         auto begin_cursor() const -> CPP_ret(cursor<true>)( //
             requires common_range<Rng const>)
         {
-            return {*this};
+            return {this};
         }
         unreachable_sentinel_t end_cursor() const
         {

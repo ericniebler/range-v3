@@ -50,8 +50,8 @@ namespace ranges
 
         public:
             cursor() = default;
-            explicit cursor(generate_view & view)
-              : view_(&view)
+            explicit cursor(generate_view * view)
+              : view_(view)
             {}
             result_t && read() const
             {
@@ -69,7 +69,7 @@ namespace ranges
         };
         cursor begin_cursor()
         {
-            return cursor{*this};
+            return cursor{this};
         }
         unreachable_sentinel_t end_cursor() const
         {

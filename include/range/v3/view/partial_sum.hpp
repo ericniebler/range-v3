@@ -88,11 +88,11 @@ namespace ranges
             using single_pass = meta::bool_<single_pass_iterator_<iterator_t<Base>>>;
 
             cursor() = default;
-            constexpr explicit cursor(Parent & rng)
-              : parent_{detail::addressof(rng)}
-              , current_(ranges::begin(rng.base_))
+            constexpr explicit cursor(Parent * rng)
+              : parent_{rng}
+              , current_(ranges::begin(rng->base_))
             {
-                if(current_ != ranges::end(rng.base_))
+                if(current_ != ranges::end(rng->base_))
                     sum_ = *current_;
             }
             CPP_template(bool Other)( //
@@ -136,13 +136,13 @@ namespace ranges
 
         constexpr cursor<false> begin_cursor()
         {
-            return cursor<false>{*this};
+            return cursor<false>{this};
         }
         template<typename CRng = Rng const>
         constexpr auto begin_cursor() const -> CPP_ret(cursor<true>)( //
             requires detail::partial_sum_view_constraints<CRng, Fun const>)
         {
-            return cursor<true>{*this};
+            return cursor<true>{this};
         }
 
     public:

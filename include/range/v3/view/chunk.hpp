@@ -119,10 +119,10 @@ namespace ranges
 
         public:
             adaptor() = default;
-            constexpr adaptor(meta::const_if_c<Const, chunk_view_> & cv)
+            constexpr adaptor(meta::const_if_c<Const, chunk_view_> * cv)
               : box<offset_t<Const>>{0}
-              , n_((RANGES_EXPECT(0 < cv.n_), cv.n_))
-              , end_(ranges::end(cv.base()))
+              , n_((RANGES_EXPECT(0 < cv->n_), cv->n_))
+              , end_(ranges::end(cv->base()))
             {}
             CPP_template(bool Other)( //
                 requires Const && (!Other)) constexpr adaptor(adaptor<Other> that)
@@ -189,13 +189,13 @@ namespace ranges
 
         constexpr adaptor<simple_view<Rng>()> begin_adaptor()
         {
-            return adaptor<simple_view<Rng>()>{*this};
+            return adaptor<simple_view<Rng>()>{this};
         }
         CPP_member
         constexpr auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
             requires forward_range<Rng const>)
         {
-            return adaptor<true>{*this};
+            return adaptor<true>{this};
         }
         template<typename Size>
         constexpr Size size_(Size base_size) const
@@ -316,8 +316,8 @@ namespace ranges
             using value_type = inner_view;
 
             outer_cursor() = default;
-            constexpr explicit outer_cursor(chunk_view_ & view) noexcept
-              : rng_{&view}
+            constexpr explicit outer_cursor(chunk_view_ * view) noexcept
+              : rng_{view}
             {}
             constexpr inner_view read() const
             {
@@ -359,7 +359,7 @@ namespace ranges
         constexpr outer_cursor begin_cursor() noexcept
         {
             it_cache_ = ranges::begin(base_);
-            return outer_cursor{*this};
+            return outer_cursor{this};
         }
         template<typename Size>
         constexpr Size size_(Size base_size) const
