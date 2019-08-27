@@ -68,8 +68,8 @@ namespace ranges
 
         public:
             adaptor() = default;
-            constexpr adaptor(Parent & rng) noexcept
-              : rng_(&rng)
+            constexpr adaptor(Parent * rng) noexcept
+              : rng_(rng)
             {}
             CPP_template(bool Other)( //
                 requires Const && (!Other)) constexpr adaptor(adaptor<Other> that)
@@ -104,23 +104,23 @@ namespace ranges
         };
         constexpr auto begin_adaptor() noexcept -> adaptor<false>
         {
-            return {*this};
+            return {this};
         }
         CPP_member
         constexpr auto begin_adaptor() const noexcept -> CPP_ret(adaptor<true>)( //
             requires detail::adjacent_filter_constraints<Rng const, Pred const>)
         {
-            return {*this};
+            return {this};
         }
         constexpr auto end_adaptor() noexcept -> adaptor<false>
         {
-            return {*this};
+            return {this};
         }
         CPP_member
         constexpr auto end_adaptor() const noexcept -> CPP_ret(adaptor<true>)( //
             requires detail::adjacent_filter_constraints<Rng const, Pred const>)
         {
-            return {*this};
+            return {this};
         }
 
     public:

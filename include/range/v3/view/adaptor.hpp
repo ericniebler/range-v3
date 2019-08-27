@@ -240,6 +240,8 @@ namespace ranges
     {
     private:
         friend range_access;
+        template<typename, typename>
+        friend struct adaptor_cursor;
         using base_t = detail::adaptor_value_type_<BaseIter, Adapt>;
         using single_pass = meta::bool_<(bool)range_access::single_pass_t<Adapt>() ||
                                         (bool)single_pass_iterator_<BaseIter>>;
@@ -434,6 +436,13 @@ namespace ranges
         adaptor_cursor() = default;
         adaptor_cursor(BaseIter iter, Adapt adapt)
           : base_t{{std::move(iter), std::move(adapt)}}
+        {}
+        template<typename OtherIter, typename OtherAdapt>
+        CPP_ctor(adaptor_cursor)(adaptor_cursor<OtherIter, OtherAdapt> that)(
+            requires defer::not_same_as_<adaptor_cursor<OtherIter, OtherAdapt>, adaptor_cursor> &&
+                defer::convertible_to<OtherIter, BaseIter> &&
+                defer::convertible_to<OtherAdapt, Adapt>)
+          : base_t{{std::move(that.data_.first()), std::move(that.data_.second())}}
         {}
     };
 

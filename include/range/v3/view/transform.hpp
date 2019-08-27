@@ -228,10 +228,10 @@ namespace ranges
 
         public:
             sentinel() = default;
-            sentinel(meta::const_if_c<Const, iter_transform2_view> & parent,
+            sentinel(meta::const_if_c<Const, iter_transform2_view> * parent,
                      decltype(ranges::end))
-              : end1_(end(parent.rng1_))
-              , end2_(end(parent.rng2_))
+              : end1_(end(parent->rng1_))
+              , end2_(end(parent->rng2_))
             {}
             CPP_template(bool Other)( //
                 requires Const && (!Other)) sentinel(sentinel<Other> that)
@@ -261,11 +261,11 @@ namespace ranges
 
             cursor() = default;
             template<typename BeginEndFn>
-            cursor(meta::const_if_c<Const, iter_transform2_view> & parent,
+            cursor(meta::const_if_c<Const, iter_transform2_view> * parent,
                    BeginEndFn begin_end)
-              : fun_(parent.fun_)
-              , it1_(begin_end(parent.rng1_))
-              , it2_(begin_end(parent.rng2_))
+              : fun_(parent->fun_)
+              , it1_(begin_end(parent->rng1_))
+              , it2_(begin_end(parent->rng2_))
             {}
             CPP_template(bool Other)( //
                 requires Const && (!Other)) cursor(cursor<Other> that)
@@ -342,11 +342,11 @@ namespace ranges
 
         cursor<simple_view<Rng1>() && simple_view<Rng2>()> begin_cursor()
         {
-            return {*this, ranges::begin};
+            return {this, ranges::begin};
         }
         end_cursor_t<simple_view<Rng1>() && simple_view<Rng2>()> end_cursor()
         {
-            return {*this, ranges::end};
+            return {this, ranges::end};
         }
         template<bool Const = true>
         auto begin_cursor() const -> CPP_ret(cursor<true>)( //
@@ -355,7 +355,7 @@ namespace ranges
                     Fun const, meta::const_if_c<Const, Rng1>,
                     meta::const_if_c<Const, Rng2>>)
         {
-            return {*this, ranges::begin};
+            return {this, ranges::begin};
         }
         template<bool Const = true>
         auto end_cursor() const -> CPP_ret(end_cursor_t<Const>)( //
@@ -364,7 +364,7 @@ namespace ranges
                     Fun const, meta::const_if_c<Const, Rng1>,
                     meta::const_if_c<Const, Rng2>>)
         {
-            return {*this, ranges::end};
+            return {this, ranges::end};
         }
         template<typename Self>
         static constexpr auto size_(Self & self)

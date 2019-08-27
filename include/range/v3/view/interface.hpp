@@ -176,22 +176,22 @@ namespace ranges
             return bool(ranges::begin(derived()) == ranges::end(derived()));
         }
         CPP_template_gcc_workaround(bool True = true)(    //
-            requires True && detail::can_empty_<D<True>>) //
-            constexpr explicit
-            operator bool() //
+            requires True && detail::can_empty_<D<True>>) // clang-format off
+        constexpr explicit operator bool()
             noexcept(noexcept(ranges::empty(std::declval<D<True> &>())))
         {
             return !ranges::empty(derived());
         }
+        // clang-format on
         /// \overload
         CPP_template_gcc_workaround(bool True = true)(          //
-            requires True && detail::can_empty_<D<True> const>) //
-            constexpr explicit
-            operator bool() const
+            requires True && detail::can_empty_<D<True> const>) // clang-format off
+        constexpr explicit operator bool() const
             noexcept(noexcept(ranges::empty(std::declval<D<True> const &>())))
         {
             return !ranges::empty(derived());
         }
+        // clang-format on
         /// If the size of the range is known at compile-time and finite,
         /// return it.
         template<bool True = true, int = 42>
