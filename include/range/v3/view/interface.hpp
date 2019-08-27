@@ -449,8 +449,7 @@ namespace ranges
         }
         /// \cond
         /// Implicit conversion to something that looks like a container.
-        CPP_template(typename Container, bool True = true,
-                     typename = typename Container::allocator_type)( // clang-format off
+        CPP_template(typename Container, bool True = true)( // clang-format off
             requires detail::convertible_to_container<D<True>, Container>)
         RANGES_DEPRECATED(
             "Implicit conversion from a view to a container is deprecated. "
@@ -460,8 +459,7 @@ namespace ranges
             return ranges::to<Container>(derived());
         }
         /// \overload
-        CPP_template(typename Container, bool True = true,
-                     typename = typename Container::allocator_type)( // clang-format off
+        CPP_template(typename Container, bool True = true)( // clang-format off
             requires detail::convertible_to_container<D<True> const, Container>)
         RANGES_DEPRECATED(
             "Implicit conversion from a view to a container is deprecated. "
