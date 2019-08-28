@@ -58,7 +58,7 @@
 //   Thanks to github's Arzar for bringing date::week_number
 //     to my attention.
 
-#define STD_DATE 0
+#define STD_DATE 1
 #if STD_DATE == 1
 #include "date.h"
 #else
@@ -67,6 +67,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <functional>
+#include <iomanip>
 #include <iostream>
 #include <range/v3/action/join.hpp>
 #include <range/v3/algorithm/copy.hpp>
@@ -88,60 +89,92 @@
 #include <utility>
 #include <vector>
 
-namespace greg = boost::gregorian;
-using CalDate = greg::date;
-using day = greg::date_duration;
+// namespace greg = boost::gregorian;
+// using CalDate = date::sys_days;
+// using day = date::days;
 using namespace ranges;
 
-namespace boost
+class CalDate : public date::sys_days
 {
-    namespace gregorian
+  public:
+
+    using rep = date::sys_days::rep;
+
+    using difference_type = rep;
+
+    CalDate( const date::year_month_day &d_ )
+      : date::sys_days( d_ )
     {
-        CalDate &operator++(CalDate &d)
-        {
-            return d = d + day(1);
-        }
-        CalDate operator++(CalDate &d, int)
-        {
-            return ++d - day(1);
-        }
     }
-}
+
+    int week_number( )
+    {
+      date::year_month_day date2 { *this                 };
+      date::year_month_day date1 { date2.year( ) / 1 / 1 };
+      auto d1 = date::local_days( date1 );
+      auto d2 = date::local_days( date2 );
+      int wn = std::chrono::duration_cast< date::weeks >( d2 - d1 ).count( ) + 1;
+      return wn;
+    }
+
+    CalDate &operator ++( ) // prefix
+    {
+      *this += date::days( 1 );
+      return *this;
+    }
+
+    CalDate operator ++( int ) // postfix
+    {
+      CalDate ret = *this;
+      ++*this;
+      return ret;
+    }
+
+  protected:
+
+  private:
+};
+
+
 namespace ranges
 {
-    template<>
-    struct incrementable_traits<CalDate>
+    template< >
+    struct incrementable_traits< CalDate >
     {
-        using difference_type = CalDate::duration_type::duration_rep::int_type;
+        using difference_type = CalDate::difference_type;
     };
 }
-CPP_assert(incrementable<CalDate>);
+
+CPP_assert( incrementable< CalDate > );
 
 auto
 dates(unsigned short start, unsigned short stop)
 {
-    return views::iota(CalDate{start, greg::Jan, 1}, CalDate{stop, greg::Jan, 1});
+    return views::iota( CalDate{ date::year( start ) / date::jan / 1 },
+                        CalDate{ date::year( stop  ) / date::jan / 1 } );
 }
 
 auto
 dates_from(unsigned short year)
 {
-    return views::iota(CalDate{year, greg::Jan, 1});
+    return views::iota( CalDate{ date::year( year ) / date::jan / 1 } );
 }
 
 auto
 by_month()
 {
     return views::group_by(
-        [](CalDate a, CalDate b) { return a.month() == b.month(); });
+        []( CalDate a, CalDate b )
+    {
+      return date::year_month_day( a ).month() == date::year_month_day( b ).month();
+    });
 }
 
 auto
 by_week()
 {
     return views::group_by([](CalDate a, CalDate b) {
-        // ++a because week_number is Mon-Sun and we want Sun-Sat
-        return (++a).week_number() == (++b).week_number();
+        return a.week_number( ) == b.week_number();
     });
 }
 
@@ -149,7 +182,7 @@ std::string
 format_day(CalDate d)
 {
     std::stringstream ss;
-    ss << " " << std::setw( 2 ) << std::setfill( ' ' ) << (int) d.day( );
+    ss << " " << std::setw( 2 ) << std::setfill( ' ' ) << (int) (unsigned) date::year_month_day( d ).day( );
     return ss.str( );
 }
 
@@ -174,7 +207,7 @@ std::string
 month_title(CalDate d)
 {
     std::stringstream ss;
-    ss << d.month( ).as_long_string( );
+    ss << date::format( "%B", d );
     std::string longMonth = ss.str( );
     ss.str( "" );
     const size_t totalSize = 22;
