@@ -118,7 +118,7 @@ class IntWrapperImpl
 
     int week_number( ) const
     {
-      date::year_month_day date2 { date::year{ m_Date.year( ) } / 1 / 1 };
+      date::year_month_day date2 = m_Date;
       date::year_month_day date1 { date2.year( ) / 1 / 1 };
       auto d1 = date::local_days( date1 );
       auto d2 = date::local_days( date2 );
@@ -192,7 +192,9 @@ auto
 by_week()
 {
     return views::group_by([](CalDate a, CalDate b) {
-        return a.week_number( ) == b.week_number( );
+        int weekA = a.week_number( );
+        int weekB = b.week_number( );
+        return weekA == weekB;
     });
 }
 
