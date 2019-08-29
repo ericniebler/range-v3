@@ -58,12 +58,7 @@
 //   Thanks to github's Arzar for bringing date::week_number
 //     to my attention.
 
-#define STD_DATE 1
-#if STD_DATE == 1
-#include "date.h"
-#else
-#include <boost/date_time/gregorian/gregorian.hpp>
-#endif
+
 #include <algorithm>
 #include <cstddef>
 #include <functional>
@@ -89,27 +84,41 @@
 #include <utility>
 #include <vector>
 
-// namespace greg = boost::gregorian;
-// using CalDate = date::sys_days;
-// using day = date::days;
+#include "date.h"
+
 using namespace ranges;
 
-class CalDate : public date::sys_days
+
+template< class T >
+class IntWrapperImpl
 {
   public:
 
-    using rep = date::sys_days::rep;
+    using value_type = T;
 
-    using difference_type = rep;
+    using difference_type = T;
 
-    CalDate( const date::year_month_day &d_ )
-      : date::sys_days( d_ )
+    IntWrapperImpl( ) : m_Date( ) { }
+//    IntWrapperImpl( T v_ ) : m_Value( v_ ) { }
+    IntWrapperImpl( const date::year_month_day &d_ )
+      : m_Date( d_ )
     {
     }
 
-    int week_number( )
+    operator T( ) const { return date::sys_days( m_Date ).time_since_epoch( ).count( ); }
+
+    date::year_month_day ymd( ) { return date::year_month_day{ }; }
+
+    int week_day( )
     {
-      date::year_month_day date2 { *this                 };
+      date::year_month_weekday wd( m_Date );
+      date::days day = wd.weekday( ) - date::Sunday;
+      return day.count( );
+    }
+
+    int week_number( ) const
+    {
+      date::year_month_day date2 { date::year{ m_Date.year( ) } / 1 / 1 };
       date::year_month_day date1 { date2.year( ) / 1 / 1 };
       auto d1 = date::local_days( date1 );
       auto d2 = date::local_days( date2 );
@@ -117,23 +126,30 @@ class CalDate : public date::sys_days
       return wn;
     }
 
-    CalDate &operator ++( ) // prefix
+    // modifiers
+
+    IntWrapperImpl &operator++( )
     {
-      *this += date::days( 1 );
+      date::sys_days d( m_Date );
+      d = d + date::days{ 1 };
+      m_Date = d;
       return *this;
     }
 
-    CalDate operator ++( int ) // postfix
+    IntWrapperImpl operator++( int )
     {
-      CalDate ret = *this;
-      ++*this;
-      return ret;
+      IntWrapperImpl< T > d = *this;
+      ++( *this );
+      return d;
     }
 
-  protected:
-
   private:
+
+    date::year_month_day m_Date;
 };
+
+
+using CalDate = IntWrapperImpl< date::sys_days::rep >;
 
 
 namespace ranges
@@ -150,14 +166,16 @@ CPP_assert( incrementable< CalDate > );
 auto
 dates(unsigned short start, unsigned short stop)
 {
-    return views::iota( CalDate{ date::year( start ) / date::jan / 1 },
-                        CalDate{ date::year( stop  ) / date::jan / 1 } );
+    const CalDate startDate( CalDate{ date::year( start ) / date::jan / 1 } );
+    const CalDate stopDate(  CalDate{ date::year( stop  ) / date::jan / 1 } );
+    return views::iota( startDate, stopDate  );
 }
 
 auto
-dates_from(unsigned short year)
+dates_from(unsigned short startYear)
 {
-    return views::iota( CalDate{ date::year( year ) / date::jan / 1 } );
+    const CalDate startDate{ date::year( startYear ) / date::jan / 1 };
+    return views::iota( startDate );
 }
 
 auto
@@ -166,7 +184,7 @@ by_month()
     return views::group_by(
         []( CalDate a, CalDate b )
     {
-      return date::year_month_day( a ).month() == date::year_month_day( b ).month();
+      return a.ymd( ).month() == b.ymd( ).month();
     });
 }
 
@@ -174,7 +192,7 @@ auto
 by_week()
 {
     return views::group_by([](CalDate a, CalDate b) {
-        return a.week_number( ) == b.week_number();
+        return a.week_number( ) == b.week_number( );
     });
 }
 
@@ -182,7 +200,7 @@ std::string
 format_day(CalDate d)
 {
     std::stringstream ss;
-    ss << " " << std::setw( 2 ) << std::setfill( ' ' ) << (int) (unsigned) date::year_month_day( d ).day( );
+    ss << " " << std::setw( 2 ) << std::setfill( ' ' ) << (int) (unsigned) d.ymd( ).day( );
     return ss.str( );
 }
 
@@ -193,7 +211,7 @@ format_weeks()
 {
     return views::transform([](/*range<CalDate>*/ auto week) {
         std::stringstream ss;
-        ss << std::string( front( week ).day_of_week( ) * 3u, ' ' );
+        ss << std::string( front( week ).week_day( ) * 3u, ' ' );
         ss << (week | views::transform( format_day ) | actions::join );
         size_t len = ss.str( ).length( );
         ss << std::string( 22 - len, ' ' );
@@ -207,7 +225,7 @@ std::string
 month_title(CalDate d)
 {
     std::stringstream ss;
-    ss << date::format( "%B", d );
+    ss << date::format( "%B", d.ymd( ) );
     std::string longMonth = ss.str( );
     ss.str( "" );
     const size_t totalSize = 22;
