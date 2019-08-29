@@ -91,6 +91,10 @@ using namespace ranges;
 // Characters per week line.
 const int chars_per_week = 22;
 
+// Spaces per day
+const int spaces_per_day = 3;
+
+
 template< class T >
 class IntWrapperImpl
 {
@@ -100,16 +104,22 @@ class IntWrapperImpl
 
     using difference_type = T;
 
-    IntWrapperImpl( ) : m_Date( ) { }
-//    IntWrapperImpl( T v_ ) : m_Value( v_ ) { }
+    IntWrapperImpl( ) : m_Date( )
+    {
+
+    }
+
     IntWrapperImpl( const date::year_month_day &d_ )
       : m_Date( d_ )
     {
     }
 
-    operator T( ) const { return date::sys_days( m_Date ).time_since_epoch( ).count( ); }
+    operator T( ) const
+    {
+      return date::sys_days( m_Date ).time_since_epoch( ).count( );
+    }
 
-    date::year_month_day ymd( ) { return m_Date; }
+    // helpers
 
     int week_day( )
     {
@@ -145,6 +155,28 @@ class IntWrapperImpl
       IntWrapperImpl< T > d = *this;
       ++( *this );
       return d;
+    }
+
+    // accessors
+
+    date::year_month_day ymd( )
+    {
+      return m_Date;
+    }
+
+    date::year year( )
+    {
+      return m_Date.year( );
+    }
+
+    date::month month( )
+    {
+      return m_Date.month( );
+    }
+
+    date::day day( )
+    {
+      return m_Date.day( );
     }
 
   private:
@@ -188,7 +220,7 @@ by_month()
     return views::group_by(
         []( CalDate a, CalDate b )
     {
-      return a.ymd( ).month() == b.ymd( ).month();
+      return a.month( ) == b.month( );
     });
 }
 
@@ -205,8 +237,9 @@ by_week()
 std::string
 format_day(CalDate d)
 {
+    // 3 spaces for each day.
     std::stringstream ss;
-    ss << std::setw( 3 ) << std::setfill( ' ' ) << (int) (unsigned) d.ymd( ).day( );
+    ss << std::setw( spaces_per_day ) << std::setfill( ' ' ) << (int) (unsigned) d.day( );
     return ss.str( );
 }
 
@@ -217,7 +250,7 @@ format_weeks()
 {
     return views::transform([](/*range<CalDate>*/ auto week) {
         std::stringstream ss;
-        ss << std::string( front( week ).week_day( ) * 3u, ' ' );
+        ss << std::string( front( week ).week_day( ) * spaces_per_day, ' ' );
         size_t len = ss.str( ).length( );
         ss << (week | views::transform( format_day ) | actions::join );
         ss << std::string( chars_per_week - len, ' ' );
