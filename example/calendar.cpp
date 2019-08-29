@@ -122,8 +122,8 @@ class IntWrapperImpl
       date::year_month_day date1 = m_Date.year( ) / m_Date.month( ) / 1;
       date::weekday weekday = date::sys_days( date1 );
       date1 = date::sys_days( date1 ) - ( weekday - date::Sunday );
-      auto d1 = date::local_days( date1 );
-      auto d2 = date::local_days( m_Date );
+      auto d1 = date::sys_days( date1 );
+      auto d2 = date::sys_days( m_Date );
       int wn = std::chrono::duration_cast< date::weeks >( d2 - d1 ).count( ) + 1;
       return wn;
     }
