@@ -214,8 +214,8 @@ format_weeks()
     return views::transform([](/*range<CalDate>*/ auto week) {
         std::stringstream ss;
         ss << std::string( front( week ).week_day( ) * 3u, ' ' );
-        ss << (week | views::transform( format_day ) | actions::join );
         size_t len = ss.str( ).length( );
+        ss << (week | views::transform( format_day ) | actions::join );
         ss << std::string( 22 - len, ' ' );
         return ss.str( );
     });
