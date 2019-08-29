@@ -116,12 +116,14 @@ class IntWrapperImpl
       return day.count( );
     }
 
-    int week_number( ) const
+    int week_number_in_month( ) const
     {
-      date::year_month_day date2 = m_Date;
-      date::year_month_day date1 { date2.year( ) / 1 / 1 };
+      // Get the first Sunday before the current date.
+      date::year_month_day date1 = m_Date.year( ) / m_Date.month( ) / 1;
+      date::weekday weekday = date::sys_days( date1 );
+      date1 = date::sys_days( date1 ) - ( weekday - date::Sunday );
       auto d1 = date::local_days( date1 );
-      auto d2 = date::local_days( date2 );
+      auto d2 = date::local_days( m_Date );
       int wn = std::chrono::duration_cast< date::weeks >( d2 - d1 ).count( ) + 1;
       return wn;
     }
@@ -192,8 +194,8 @@ auto
 by_week()
 {
     return views::group_by([](CalDate a, CalDate b) {
-        int weekA = a.week_number( );
-        int weekB = b.week_number( );
+        int weekA = a.week_number_in_month( );
+        int weekB = b.week_number_in_month( );
         return weekA == weekB;
     });
 }
@@ -202,7 +204,7 @@ std::string
 format_day(CalDate d)
 {
     std::stringstream ss;
-    ss << " " << std::setw( 2 ) << std::setfill( ' ' ) << (int) (unsigned) d.ymd( ).day( );
+    ss << std::setw( 3 ) << std::setfill( ' ' ) << (int) (unsigned) d.ymd( ).day( );
     return ss.str( );
 }
 
@@ -217,7 +219,7 @@ format_weeks()
         size_t len = ss.str( ).length( );
         ss << (week | views::transform( format_day ) | actions::join );
         ss << std::string( 22 - len, ' ' );
-        return ss.str( );
+        return ss.str( ).substr( 0, 22 );
     });
 }
 
