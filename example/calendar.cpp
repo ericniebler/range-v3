@@ -88,6 +88,8 @@
 
 using namespace ranges;
 
+// Characters per week line.
+const int chars_per_week = 22;
 
 template< class T >
 class IntWrapperImpl
@@ -218,8 +220,8 @@ format_weeks()
         ss << std::string( front( week ).week_day( ) * 3u, ' ' );
         size_t len = ss.str( ).length( );
         ss << (week | views::transform( format_day ) | actions::join );
-        ss << std::string( 22 - len, ' ' );
-        return ss.str( ).substr( 0, 22 );
+        ss << std::string( chars_per_week - len, ' ' );
+        return ss.str( ).substr( 0, chars_per_week );
     });
 }
 
@@ -232,7 +234,7 @@ month_title(CalDate d)
     ss << date::format( "%B", d.ymd( ) );
     std::string longMonth = ss.str( );
     ss.str( "" );
-    const size_t totalSize = 22;
+    const size_t totalSize = chars_per_week;
     ss << std::string( ( totalSize - longMonth.length( ) ) / 2, ' ' );
     ss << longMonth;
     ss << std::string( ( totalSize - longMonth.length( ) ) / 2, ' ' );
@@ -250,7 +252,7 @@ layout_months()
         return views::concat(
             views::single(month_title(front(month))),
             month | by_week() | format_weeks(),
-            views::repeat_n(std::string(22, ' '), 6 - week_count));
+            views::repeat_n(std::string( chars_per_week, ' '), 6 - week_count));
     });
 }
 
