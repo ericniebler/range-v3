@@ -107,7 +107,7 @@ class IntWrapperImpl
 
     operator T( ) const { return date::sys_days( m_Date ).time_since_epoch( ).count( ); }
 
-    date::year_month_day ymd( ) { return date::year_month_day{ }; }
+    date::year_month_day ymd( ) { return m_Date; }
 
     int week_day( )
     {
