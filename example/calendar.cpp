@@ -95,8 +95,12 @@ const int chars_per_week = 22;
 const int spaces_per_day = 3;
 
 
+// This template wrapper class provides the ability to act both as an
+// "incrementabl" class which can be used with ranges and also a
+// "date" class which can be used to calculate year/month/day and other
+// values.
 template< class T >
-class IntWrapperImpl
+class CalDateWrapper
 {
   public:
 
@@ -104,12 +108,12 @@ class IntWrapperImpl
 
     using difference_type = T;
 
-    IntWrapperImpl( ) : m_Date( )
+    CalDateWrapper( ) : m_Date( )
     {
 
     }
 
-    IntWrapperImpl( const date::year_month_day &d_ )
+    CalDateWrapper( const date::year_month_day &d_ )
       : m_Date( d_ )
     {
     }
@@ -121,11 +125,11 @@ class IntWrapperImpl
 
     // helpers
 
-    int week_day( )
+    int week_day_count( )
     {
       date::year_month_weekday wd( m_Date );
-      date::days day = wd.weekday( ) - date::Sunday;
-      return day.count( );
+      date::days days = wd.weekday( ) - date::Sunday;
+      return days.count( );
     }
 
     int week_number_in_month( ) const
@@ -142,7 +146,7 @@ class IntWrapperImpl
 
     // modifiers
 
-    IntWrapperImpl &operator++( )
+    CalDateWrapper &operator++( )
     {
       date::sys_days d( m_Date );
       d = d + date::days{ 1 };
@@ -150,9 +154,9 @@ class IntWrapperImpl
       return *this;
     }
 
-    IntWrapperImpl operator++( int )
+    CalDateWrapper operator++( int )
     {
-      IntWrapperImpl< T > d = *this;
+      CalDateWrapper< T > d = *this;
       ++( *this );
       return d;
     }
@@ -185,7 +189,7 @@ class IntWrapperImpl
 };
 
 
-using CalDate = IntWrapperImpl< date::sys_days::rep >;
+using CalDate = CalDateWrapper< date::sys_days::rep >;
 
 
 namespace ranges
@@ -250,7 +254,7 @@ format_weeks()
 {
     return views::transform([](/*range<CalDate>*/ auto week) {
         std::stringstream ss;
-        ss << std::string( front( week ).week_day( ) * spaces_per_day, ' ' );
+        ss << std::string( front( week ).week_day_count( ) * spaces_per_day, ' ' );
         size_t len = ss.str( ).length( );
         ss << (week | views::transform( format_day ) | actions::join );
         ss << std::string( chars_per_week - len, ' ' );
