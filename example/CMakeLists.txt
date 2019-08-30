@@ -21,7 +21,7 @@ rv3_add_test(example.sort_unique sort_unique sort_unique.cpp)
 
 # Guarded with a variable because the calendar example causes MSVC to puke.
 if(RANGES_BUILD_CALENDAR_EXAMPLE)
-  add_executable(calendar calendar.cpp)
+  add_executable(calendar calendar.cpp date.h)
   target_link_libraries(calendar range-v3)
   if( MSVC )
     target_compile_options(calendar PRIVATE /experimental:preprocessor)
