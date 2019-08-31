@@ -157,6 +157,7 @@ namespace ranges
         struct adaptor : adaptor_base
         {
         private:
+            friend struct adaptor<!Const>;
             using CRng = meta::const_if_c<Const, Rng>;
             using stride_view_t = meta::const_if_c<Const, stride_view>;
             stride_view_t * rng_;
