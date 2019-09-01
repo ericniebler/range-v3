@@ -87,7 +87,7 @@ namespace ranges
         template(typename IsConst, typename...Views)
         (concept cartesian_produce_view_can_size)(IsConst, Views...),
             and_v<sized_range<meta::const_if<IsConst, Views>>...> &&
-                type<common_type_t<std::uintmax_t, range_size_t<meta::const_if<IsConst, Views>>...>>
+                ranges::type<common_type_t<std::uintmax_t, range_size_t<meta::const_if<IsConst, Views>>...>>
     );
     CPP_def
     (

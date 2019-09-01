@@ -165,7 +165,7 @@ namespace ranges
         (
             template(typename D)
             concept signed_integer_like_,
-                type<decltype(std::integral_constant<bool, (D(-1) < D(0))>{})> &&
+                concepts::type<decltype(std::integral_constant<bool, (D(-1) < D(0))>{})> &&
                 std::integral_constant<bool, (D(-1) < D(0))>::value
         );
 #else // ^^^ workaround / no workaround vvv
@@ -174,7 +174,7 @@ namespace ranges
             template(typename D)
             concept signed_integer_like_,
                 integer_like_<D> &&
-                type<std::integral_constant<bool, (D(-1) < D(0))>> &&
+                concepts::type<std::integral_constant<bool, (D(-1) < D(0))>> &&
                 std::integral_constant<bool, (D(-1) < D(0))>::value
         );
 #endif // RANGES_WORKAROUND_MSVC_792338
@@ -193,7 +193,7 @@ namespace ranges
                 i++,
                 concepts::requires_<same_as<I&, decltype(++i)>>
             ) &&
-            type<iter_difference_t<I>> &&
+            concepts::type<iter_difference_t<I>> &&
             detail::signed_integer_like_<iter_difference_t<I>> &&
             semiregular<I>
     );
@@ -388,7 +388,7 @@ namespace ranges
         (
             template(typename T1, typename T2, typename T3, typename T4)
             concept common_reference_with_4_,
-                type<common_reference_t<T1, T2, T3, T4>> &&
+                concepts::type<common_reference_t<T1, T2, T3, T4>> &&
                 convertible_to<T1, common_reference_t<T1, T2, T3, T4>> &&
                 convertible_to<T2, common_reference_t<T1, T2, T3, T4>> &&
                 convertible_to<T3, common_reference_t<T1, T2, T3, T4>> &&
