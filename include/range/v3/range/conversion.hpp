@@ -186,7 +186,7 @@ namespace ranges
         (
             template(typename Cont)
             concept has_allocator_type,
-                type<typename Cont::allocator_type>
+                ranges::type<typename Cont::allocator_type>
         );
 
         CPP_def
