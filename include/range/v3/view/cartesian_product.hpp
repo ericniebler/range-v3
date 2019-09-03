@@ -281,14 +281,14 @@ namespace ranges
                    std::true_type) // common_with
               : cursor(begin_tag{}, view)
             {
-                CPP_assert(common_range<meta::at_c<meta::list<Views...>, 0>>);
+                CPP_assert(common_range<meta::at_c<meta::list<constify_if<Views>...>, 0>>);
                 std::get<0>(its_) = ranges::end(std::get<0>(view->views_));
             }
             cursor(end_tag, constify_if<cartesian_product_view> * view,
                    std::false_type) // !common_with
               : cursor(begin_tag{}, view)
             {
-                using View0 = meta::at_c<meta::list<Views...>, 0>;
+                using View0 = meta::at_c<meta::list<constify_if<Views>...>, 0>;
                 CPP_assert(!common_range<View0> && random_access_range<View0> &&
                            sized_range<View0>);
                 std::get<0>(its_) += ranges::distance(std::get<0>(view->views_));
@@ -308,14 +308,14 @@ namespace ranges
             }
             explicit cursor(end_tag, constify_if<cartesian_product_view> * view)
               : cursor(end_tag{}, view,
-                       meta::bool_<common_range<meta::at_c<meta::list<Views...>, 0>>>{})
+                       meta::bool_<common_range<meta::at_c<meta::list<constify_if<Views>...>, 0>>>{})
             {}
             CPP_template(bool Other)( //
                 requires IsConst_ && (!Other)) cursor(cursor<Other> that)
               : view_(that.view_)
               , its_(std::move(that.its_))
             {}
-            common_tuple<range_reference_t<Views>...> read() const
+            common_tuple<range_reference_t<constify_if<Views>>...> read() const
             {
                 return tuple_transform(its_, detail::dereference_fn{});
             }

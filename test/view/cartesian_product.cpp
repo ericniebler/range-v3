@@ -26,7 +26,9 @@
 #include <range/v3/view/indices.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/reverse.hpp>
+#include <range/v3/view/single.hpp>
 #include <range/v3/view/take_exactly.hpp>
+#include <range/v3/view/transform.hpp>
 #include <range/v3/view/filter.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -266,6 +268,18 @@ void test_bug_1279()
     }
 }
 
+void test_bug_1296()
+{
+    // https://github.com/ericniebler/range-v3/issues/1296
+    auto v = ranges::views::cartesian_product(ranges::views::single(2.0))
+        | ranges::views::transform([](std::tuple<double> a) {
+            return std::get<0>(a);
+        });
+
+    CHECK(ranges::size(v) == 1u);
+    CHECK(*ranges::begin(v) == 2.0);
+}
+
 int main()
 {
     int some_ints[] = {0,1,2,3};
@@ -321,6 +335,7 @@ int main()
     test_bug_978();
     test_bug_1269();
     test_bug_1279();
+    test_bug_1296();
 
     return test_result();
 }
