@@ -271,13 +271,13 @@ void test_bug_1279()
 void test_bug_1296()
 {
     // https://github.com/ericniebler/range-v3/issues/1296
-    auto v = ranges::views::cartesian_product(ranges::views::single(2.0))
-        | ranges::views::transform([](std::tuple<double> a) {
+    auto v = ranges::views::cartesian_product(ranges::views::single(42))
+        | ranges::views::transform([](std::tuple<int> a) {
             return std::get<0>(a);
         });
 
     CHECK(ranges::size(v) == 1u);
-    CHECK(*ranges::begin(v) == 2.0);
+    CHECK(*ranges::begin(v) == 42);
 }
 
 int main()
