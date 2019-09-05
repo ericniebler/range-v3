@@ -74,7 +74,13 @@
         "__node_handle": "cpp",
         "__tree": "cpp",
         "climits": "cpp",
-        "__memory": "cpp"
+        "__memory": "cpp",
+        "strstream": "cpp",
+        "complex": "cpp",
+        "iomanip": "cpp",
+        "cinttypes": "cpp",
+        "typeindex": "cpp",
+        "variant": "cpp"
     },
     "C_Cpp.configurationWarnings": "Disabled"
 }
