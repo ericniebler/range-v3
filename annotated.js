@@ -157,7 +157,7 @@ var annotated =
       [ "advance_fn", "structranges_1_1advance__fn.html", "structranges_1_1advance__fn" ],
       [ "any", "structranges_1_1any.html", "structranges_1_1any" ],
       [ "any_view", "structranges_1_1any__view.html", "structranges_1_1any__view" ],
-      [ "any_view< Ref, Cat, meta::if_c<(Cat &category::forward)==category::input > >", "structranges_1_1any__view_3_01_ref_00_01_cat_00_01meta_1_1if__c_3_07_cat_01_6category_1_1forward218eb205c09c7c15e1804ca58b64d975.html", "structranges_1_1any__view_3_01_ref_00_01_cat_00_01meta_1_1if__c_3_07_cat_01_6category_1_1forward218eb205c09c7c15e1804ca58b64d975" ],
+      [ "any_view< Ref, Cat, meta::if_c<(Cat &category::forward)==category::input > >", "structranges_1_1any__view_3_01_ref_00_01_cat_00_01meta_1_1if__c_3_07_cat_01_6category_1_1forwarda7b0f36a8be758638214e77ffe923546.html", "structranges_1_1any__view_3_01_ref_00_01_cat_00_01meta_1_1if__c_3_07_cat_01_6category_1_1forwarda7b0f36a8be758638214e77ffe923546" ],
       [ "at_fn", "structranges_1_1at__fn.html", "structranges_1_1at__fn" ],
       [ "back_fn", "structranges_1_1back__fn.html", "structranges_1_1back__fn" ],
       [ "back_insert_iterator", "structranges_1_1back__insert__iterator.html", "structranges_1_1back__insert__iterator" ],

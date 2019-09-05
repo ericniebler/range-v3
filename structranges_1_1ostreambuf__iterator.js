@@ -1,7 +1,7 @@
 var structranges_1_1ostreambuf__iterator =
 [
     [ "failed", "structranges_1_1ostreambuf__iterator.html#a24fca209afbe06f320629091c4bfc023", null ],
-    [ "operator*", "structranges_1_1ostreambuf__iterator.html#a01e83ab46d2d8cf265926214fac56cca", null ],
+    [ "operator *", "structranges_1_1ostreambuf__iterator.html#abf37eb19793a7fb8e8c68930d0d0126c", null ],
     [ "operator++", "structranges_1_1ostreambuf__iterator.html#a0f358e7c62faeb4e41b9b5ed6d65d92a", null ],
     [ "operator++", "structranges_1_1ostreambuf__iterator.html#a587d437d6e7ede0ef37f5b11acc17800", null ],
     [ "operator=", "structranges_1_1ostreambuf__iterator.html#a03b04d7c6afaab082bb860e9344adde5", null ],

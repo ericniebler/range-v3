@@ -1,17 +1,18 @@
 /*
-@licstart  The following is the entire license notice for the
+@ @licstart  The following is the entire license notice for the
 JavaScript code in this file.
 
-Copyright (C) 1997-2019 by Dimitri van Heesch
+Copyright (C) 1997-2017 by Dimitri van Heesch
 
 This program is free software; you can redistribute it and/or modify
-it under the terms of version 2 of the GNU General Public License as published by
-the Free Software Foundation
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
@@ -31,17 +32,8 @@ var NAVTREE =
       ] ],
       [ "Quick Start", "index.html#tutorial-quick-start", [
         [ "Views", "index.html#tutorial-views", null ],
-        [ "View const-ness", "index.html#autotoc_md6", null ],
-        [ "View validity", "index.html#autotoc_md7", null ],
-        [ "List of range views", "index.html#autotoc_md8", null ],
         [ "Actions", "index.html#tutorial-actions", null ],
-        [ "List of range actions", "index.html#autotoc_md10", null ],
         [ "Utilities", "index.html#tutorial-utilities", null ],
-        [ "Create Custom Views with view_facade", "index.html#autotoc_md12", null ],
-        [ "Create Custom Views with view_adaptor", "index.html#autotoc_md13", [
-          [ "view_adaptor in details", "index.html#autotoc_md14", null ]
-        ] ],
-        [ "Create Custom Iterators with basic_iterator", "index.html#autotoc_md15", null ],
         [ "Concept Checking", "index.html#tutorial-concepts", null ],
         [ "Range-v3 and the Future", "index.html#tutorial-future", null ]
       ] ]
@@ -107,18 +99,18 @@ var NAVTREEINDEX =
 ".html",
 "classranges_1_1join__with__view_1_1cursor.html#af84987f9f140204f222a8040e2f7abd5",
 "count_8hpp.html#ga0a6302f276cdf98372e30f45d10ae3a4",
-"group__group-algorithms.html#ga4e5950e393a0aee33b00b34c2f8e97c9",
-"group__group-views.html#ga615df54cfd70fb7afa4c6049cac099ad",
-"group__transformation.html#gad8262b50af24df0244354b25ab025b15",
-"meta_8hpp.html#ga731ad47dfb1f72563fdad66fa5ae2a1a",
-"range_2operations_8hpp.html",
-"structmeta_1_1defer.html",
-"structranges_1_1common__iterator.html#a43ad26fe9e49e440b77c56c6dd4e123f",
-"structranges_1_1indirected.html#adc41a6acff59ef0603231341631fe05e",
-"structranges_1_1optional.html#a7b5a66fdfaa18475a9043501d16aaf5b",
-"structranges_1_1split__view.html",
-"structranges_1_1views_1_1indices__fn.html",
-"view_2transform_8hpp.html#ae083fcb35b57527e84530a4c9ba67057"
+"group__group-algorithms.html#ga4da42176e10f531b5b742c55dd5647d0",
+"group__group-views.html#ga606f4de6ac61e8af1ae07ba8d3cbc7c0",
+"group__transformation.html#gac34d21074558f4ddc07a6206d5065619",
+"meta_8hpp.html#ga82704ab3563d63460b7ac1be6c9876c9",
+"range_2traits_8hpp.html#ga311aa71e4a487dad62b7b9114bfdcab6",
+"structmeta_1_1detail_1_1count___3_01list_3_4_00_01_t_01_4.html#acaa47d8a3e0f65c0f20b8faeb4923dbd",
+"structranges_1_1common__iterator.html#a6036aa527344c2fe201fedd267b49f4e",
+"structranges_1_1insert__fn.html",
+"structranges_1_1optional.html#a8b179d2d00e28f32254bade052b2a227",
+"structranges_1_1split__view.html#a3d380dac179fd390923d12b6757481f5",
+"structranges_1_1views_1_1ints__fn.html#a374963b292d9ed845c79aa503e59dd14",
+"view_2view_8hpp.html#a5b30df3ab53ae04a685d5d40e1d5e35e"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
