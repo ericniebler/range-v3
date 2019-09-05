@@ -50,11 +50,13 @@ else()
   message(WARNING "[range-v3 warning]: unknown system ${CMAKE_SYSTEM_NAME} !")
 endif()
 
-if (RANGES_CXX_COMPILER_MSVC AND RANGES_CXX_STD LESS 17)
-  # MSVC is currently supported only in 17+ mode
-  set(RANGES_CXX_STD 17)
-elseif(RANGES_CXX_STD LESS 14)
-  set(RANGES_CXX_STD 14)
+if(RANGES_CXX_STD MATCHES "^[0-9]+$")
+  if(RANGES_CXX_COMPILER_MSVC AND RANGES_CXX_STD LESS 17)
+    # MSVC is currently supported only in 17+ mode
+    set(RANGES_CXX_STD 17)
+  elseif(RANGES_CXX_STD LESS 14)
+    set(RANGES_CXX_STD 14)
+  endif()
 endif()
 
 # Build type
