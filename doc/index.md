@@ -72,7 +72,7 @@ The code is known to work on the following compilers:
 
 - clang 3.6.2
 - GCC 5.0.2
-- MSVC VS2017 15.9 (`_MSC_VER >= 1916`), with `/std:c++17 /permissive-`
+- MSVC VS2017 15.9 (`_MSC_VER >= 1916`), with `/std:c++17 /permissive- /experimental:preprocessor`
 
 \section tutorial-quick-start Quick Start
 
@@ -453,7 +453,7 @@ provides, and a blurb about how each is intended to be used.
 Below we cover some utilities that range-v3 provides for creating your own
 view adaptors and iterators.
 
-### Create Custom Views with view_facade
+#### Create Custom Views with view_facade
 
 Range-v3 provides a utility for easily creating your own range types, called
 \link ranges::view_facade `ranges::view_facade`\endlink. The code below uses
@@ -504,7 +504,7 @@ strings, as below:
     }
 ~~~~~~~
 
-### Create Custom Views with view_adaptor
+#### Create Custom Views with view_adaptor
 
 Often, a new range type is most easily expressed by adapting an existing range
 type. That's the case for many of the range views provided by the Range-v3
@@ -587,7 +587,7 @@ sentinel. That is only necessary if the underlying range's sentinel type models
 bidirectional_iterator. That's a finer point that you shouldn't worry about right
 now.)*
 
-#### view_adaptor in details
+##### view_adaptor in details
 
 Each `view_adaptor` contains `base()` member in view and iterator.
 `base()` - allow to access "adapted" range/iterator:
@@ -781,7 +781,7 @@ Note that all the data you store in the adaptor will become part of the iterator
 
 If you will not "override" `begin_adaptor()` or/and `end_adaptor()` in your view_adaptor, default ones will be used.
 
-### Create Custom Iterators with basic_iterator
+#### Create Custom Iterators with basic_iterator
 
 Here is an example of Range-v3 compatible random access proxy iterator.
 The iterator returns a key/value pair, like the `zip` view.
