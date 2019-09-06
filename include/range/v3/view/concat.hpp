@@ -265,7 +265,7 @@ namespace ranges
             {}
             CPP_template(bool Other)(         //
                 requires IsConst && (!Other)) //
-            cursor(cursor<Other> that)
+                cursor(cursor<Other> that)
               : rng_(that.rng_)
               , its_(std::move(that.its_))
             {}

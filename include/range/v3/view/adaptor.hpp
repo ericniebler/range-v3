@@ -439,9 +439,10 @@ namespace ranges
         {}
         template<typename OtherIter, typename OtherAdapt>
         CPP_ctor(adaptor_cursor)(adaptor_cursor<OtherIter, OtherAdapt> that)(
-            requires defer::not_same_as_<adaptor_cursor<OtherIter, OtherAdapt>, adaptor_cursor> &&
+            requires defer::not_same_as_<adaptor_cursor<OtherIter, OtherAdapt>,
+                                         adaptor_cursor> &&
                 defer::convertible_to<OtherIter, BaseIter> &&
-                defer::convertible_to<OtherAdapt, Adapt>)
+                    defer::convertible_to<OtherAdapt, Adapt>)
           : base_t{{std::move(that.data_.first()), std::move(that.data_.second())}}
         {}
     };

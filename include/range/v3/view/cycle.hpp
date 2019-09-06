@@ -145,7 +145,7 @@ namespace ranges
             {
                 auto const first = ranges::begin(rng_->rng_);
                 auto const last = this->get_end_(meta::bool_<(bool)common_range<CRng>>{},
-                                                meta::bool_<true>());
+                                                 meta::bool_<true>());
                 auto const dist = last - first;
                 auto const d = it_ - first;
                 auto const off = (d + n) % dist;
@@ -161,7 +161,7 @@ namespace ranges
                 RANGES_EXPECT(that.rng_ == rng_);
                 auto const first = ranges::begin(rng_->rng_);
                 auto const last = this->get_end_(meta::bool_<(bool)common_range<Rng>>{},
-                                                meta::bool_<true>());
+                                                 meta::bool_<true>());
                 auto const dist = last - first;
                 return (that.n_ - n_) * dist + (that.it_ - it_);
             }

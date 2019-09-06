@@ -24,6 +24,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/any_view.hpp>
 #include <range/v3/view/c_str.hpp>
+#include <range/v3/view/cache1.hpp>
 #include <range/v3/view/cartesian_product.hpp>
 #include <range/v3/view/chunk.hpp>
 #include <range/v3/view/common.hpp>
