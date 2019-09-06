@@ -204,6 +204,8 @@ Views</h2>
 <dd>Type-erased range of elements with value type <code>T</code>; can store <em>any</em> range with this value type. </dd>
 <dt><a class="el" href="structranges_1_1views_1_1c__str__fn.html"><code>views::c_str</code></a> </dt>
 <dd>View a <code>\0</code>-terminated C string (e.g. from a <code>const char*</code>) as a range. </dd>
+<dt><a class="el" href="structranges_1_1views_1_1cache1__fn.html"><code>views::cache1</code></a> </dt>
+<dd>Caches the most recent element within the view so that dereferencing the view's iterator multiple times doesn't incur any recomputation. This can be useful in adaptor pipelines that include combinations of <code>view::filter</code> and <code>view::transform</code>, for instance. <code>views::cache1</code> is always single-pass. </dd>
 <dt><a class="el" href="structranges_1_1views_1_1cartesian__product__fn.html"><code>views::cartesian_product</code></a> </dt>
 <dd>Enumerates the n-ary cartesian product of <code>n</code> ranges, i.e., generates all <code>n</code>-tuples <code>(e1, e2, ... , en)</code> where <code>e1</code> is an element of the first range, <code>e2</code> is an element of the second range, etc. </dd>
 <dt><a class="el" href="structranges_1_1views_1_1chunk__fn.html"><code>views::chunk</code></a> </dt>

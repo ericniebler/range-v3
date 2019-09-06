@@ -1,6 +1,8 @@
 var searchData=
 [
   ['c_5fstr_5ffn',['c_str_fn',['../structranges_1_1views_1_1c__str__fn.html',1,'ranges::views']]],
+  ['cache1_5ffn',['cache1_fn',['../structranges_1_1views_1_1cache1__fn.html',1,'ranges::views']]],
+  ['cache1_5fview',['cache1_view',['../structranges_1_1cache1__view.html',1,'ranges']]],
   ['cartesian_5fproduct_5ffn',['cartesian_product_fn',['../structranges_1_1views_1_1cartesian__product__fn.html',1,'ranges::views']]],
   ['cartesian_5fproduct_5fview',['cartesian_product_view',['../structranges_1_1cartesian__product__view.html',1,'ranges']]],
   ['cend_5fcursor_5ffn',['cend_cursor_fn',['../structranges_1_1join__view_1_1cend__cursor__fn.html',1,'ranges::join_view']]],

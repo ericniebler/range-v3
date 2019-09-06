@@ -41,6 +41,11 @@ var group__group_views =
       [ "base_adaptor_sentinel", "structranges_1_1base__adaptor__sentinel.html#a7379afb31d9d8ba9adf3e5cd184332b8", null ],
       [ "base_adaptor_sentinel", "structranges_1_1base__adaptor__sentinel.html#aae3732f6c0a655bbae804be2b2e32d5f", null ]
     ] ],
+    [ "cache1_view", "structranges_1_1cache1__view.html", [
+      [ "size", "structranges_1_1cache1__view.html#a17cd1eb041408266726d14a5ce9c7402", null ],
+      [ "cache1_view", "structranges_1_1cache1__view.html#a6644ee0250537bd618fbe939e1a8a97f", null ],
+      [ "cache1_view", "structranges_1_1cache1__view.html#af023006c18fd09646890ed1f47294e75", null ]
+    ] ],
     [ "chunk_view", "structranges_1_1chunk__view.html", null ],
     [ "chunk_view_", "structranges_1_1chunk__view__.html", [
       [ "size", "structranges_1_1chunk__view__.html#ab0e631c3cddacb198086f79654559b5a", null ],

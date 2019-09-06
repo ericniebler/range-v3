@@ -2,6 +2,9 @@ var searchData=
 [
   ['c_5fstr_2ehpp',['c_str.hpp',['../c__str_8hpp.html',1,'']]],
   ['c_5fstr_5ffn',['c_str_fn',['../structranges_1_1views_1_1c__str__fn.html',1,'ranges::views']]],
+  ['cache1_2ehpp',['cache1.hpp',['../cache1_8hpp.html',1,'']]],
+  ['cache1_5ffn',['cache1_fn',['../structranges_1_1views_1_1cache1__fn.html',1,'ranges::views']]],
+  ['cache1_5fview',['cache1_view',['../structranges_1_1cache1__view.html',1,'ranges']]],
   ['cartesian_5fproduct',['cartesian_product',['../group__transformation.html#ga5e408243147a04c1ca2742211e3c0982',1,'meta::cartesian_product()'],['../group__lazy__transformation.html#ga7618cffe976d0c5158c683c9186c4af0',1,'meta::lazy::cartesian_product()']]],
   ['cartesian_5fproduct_2ehpp',['cartesian_product.hpp',['../cartesian__product_8hpp.html',1,'']]],
   ['cartesian_5fproduct_5ffn',['cartesian_product_fn',['../structranges_1_1views_1_1cartesian__product__fn.html',1,'ranges::views']]],

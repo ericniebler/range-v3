@@ -13,6 +13,9 @@ var dir_dae4eeac8ca119671b98b3f71d5105fc =
     [ "all.hpp", "view_2all_8hpp.html", "view_2all_8hpp" ],
     [ "any_view.hpp", "any__view_8hpp.html", "any__view_8hpp" ],
     [ "c_str.hpp", "c__str_8hpp.html", null ],
+    [ "cache1.hpp", "cache1_8hpp.html", [
+      [ "cache1_fn", "structranges_1_1views_1_1cache1__fn.html", "structranges_1_1views_1_1cache1__fn" ]
+    ] ],
     [ "cartesian_product.hpp", "cartesian__product_8hpp.html", "cartesian__product_8hpp" ],
     [ "chunk.hpp", "chunk_8hpp.html", [
       [ "chunk_fn", "structranges_1_1views_1_1chunk__fn.html", "structranges_1_1views_1_1chunk__fn" ]
