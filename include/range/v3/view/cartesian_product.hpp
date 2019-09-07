@@ -140,7 +140,8 @@ namespace ranges
             friend cursor<true>;
             template<typename T>
             using constify_if = meta::const_if_c<IsConst_, T>;
-            using difference_type = common_type_t<std::intmax_t, range_difference_t<Views>...>;
+            using difference_type =
+                common_type_t<std::intmax_t, range_difference_t<Views>...>;
 
             constify_if<cartesian_product_view> * view_;
             std::tuple<iterator_t<constify_if<Views>>...> its_;
@@ -220,8 +221,8 @@ namespace ranges
                     return;
 
                 auto & i = std::get<N - 1>(its_);
-                auto const my_size =
-                    static_cast<difference_type>(ranges::size(std::get<N - 1>(view_->views_)));
+                auto const my_size = static_cast<difference_type>(
+                    ranges::size(std::get<N - 1>(view_->views_)));
                 auto const first = ranges::begin(std::get<N - 1>(view_->views_));
 
                 auto const idx = static_cast<difference_type>(i - first);
@@ -281,7 +282,8 @@ namespace ranges
                    std::true_type) // common_with
               : cursor(begin_tag{}, view)
             {
-                CPP_assert(common_range<meta::at_c<meta::list<constify_if<Views>...>, 0>>);
+                CPP_assert(
+                    common_range<meta::at_c<meta::list<constify_if<Views>...>, 0>>);
                 std::get<0>(its_) = ranges::end(std::get<0>(view->views_));
             }
             cursor(end_tag, constify_if<cartesian_product_view> * view,
@@ -307,8 +309,10 @@ namespace ranges
                 check_at_end_(meta::size_t<sizeof...(Views)>{});
             }
             explicit cursor(end_tag, constify_if<cartesian_product_view> * view)
-              : cursor(end_tag{}, view,
-                       meta::bool_<common_range<meta::at_c<meta::list<constify_if<Views>...>, 0>>>{})
+              : cursor(
+                    end_tag{}, view,
+                    meta::bool_<
+                        common_range<meta::at_c<meta::list<constify_if<Views>...>, 0>>>{})
             {}
             CPP_template(bool Other)( //
                 requires IsConst_ && (!Other)) cursor(cursor<Other> that)

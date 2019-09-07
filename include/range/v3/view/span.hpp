@@ -260,8 +260,8 @@ namespace ranges
                    RANGES_EXPECT((offset == 0 && size() == 0) || data_ != nullptr),
                    span<T, dynamic_extent>{data_ + offset, size() - offset};
         }
-        constexpr span<T, dynamic_extent> subspan(index_type offset,
-                                                  index_type cnt) const noexcept
+        constexpr span<T, dynamic_extent> subspan(index_type offset, index_type cnt) const
+            noexcept
         {
             return RANGES_EXPECT(offset >= 0), RANGES_EXPECT(cnt >= 0),
                    RANGES_EXPECT(size() >= offset + cnt),

@@ -251,6 +251,8 @@ provides, and a blurb about how each is intended to be used.
   <DD>Type-erased range of elements with value type `T`; can store _any_ range with this value type.</DD>
 <DT>\link ranges::views::c_str_fn `views::c_str`\endlink</DT>
   <DD>View a `\0`-terminated C string (e.g. from a `const char*`) as a range.</DD>
+<DT>\link ranges::views::cache1_fn `views::cache1`\endlink</DT>
+  <DD>Caches the most recent element within the view so that dereferencing the view's iterator multiple times doesn't incur any recomputation. This can be useful in adaptor pipelines that include combinations of `view::filter` and `view::transform`, for instance. `views::cache1` is always single-pass.</DD>
 <DT>\link ranges::views::cartesian_product_fn `views::cartesian_product`\endlink</DT>
   <DD>Enumerates the n-ary cartesian product of `n` ranges, i.e., generates all `n`-tuples `(e1, e2, ... , en)` where `e1` is an element of the first range, `e2` is an element of the second range, etc.</DD>
 <DT>\link ranges::views::chunk_fn `views::chunk`\endlink</DT>

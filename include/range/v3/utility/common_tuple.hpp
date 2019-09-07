@@ -238,7 +238,7 @@ namespace ranges
         }
 
         // Conversion
-        CPP_template(typename... Us)(                                                //
+        CPP_template(typename... Us)(                                               //
             requires constructible_from<detail::args<Us...>, detail::rargs<Ts...>>) //
             operator std::tuple<Us...>() &
             noexcept(
