@@ -80,7 +80,11 @@
         "iomanip": "cpp",
         "cinttypes": "cpp",
         "typeindex": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "__split_buffer": "cpp",
+        "filesystem": "cpp",
+        "queue": "cpp",
+        "stack": "cpp"
     },
     "C_Cpp.configurationWarnings": "Disabled"
 }

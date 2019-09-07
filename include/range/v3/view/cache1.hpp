@@ -86,11 +86,11 @@ namespace ranges
             cursor() = default;
 
             constexpr explicit cursor(cache1_view * parent,
-                                      iterator_t<Rng> current) noexcept
+                                      iterator_t<Rng> current)
               : parent_(parent)
               , current_(std::move(current))
             {}
-            range_value_t<Rng> && read() const noexcept
+            range_value_t<Rng> && read() const
             {
                 if(parent_->dirty_)
                 {
