@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_UTILITY_SEMIREGULAR_BOX_HPP
 #define RANGES_V3_UTILITY_SEMIREGULAR_BOX_HPP
 
+#include <type_traits>
 #include <utility>
 
 #include <meta/meta.hpp>
@@ -295,10 +296,11 @@ namespace ranges
     using semiregular_box_t = meta::if_c<(bool)semiregular<T>, T, semiregular_box<T>>;
 
     template<typename T, bool IsConst = false>
-    using semiregular_box_ref_or_val_t =
-        meta::if_c<(bool)semiregular<T>, meta::if_c<IsConst, T, reference_wrapper<T>>,
-                   reference_wrapper<meta::if_c<IsConst, semiregular_box<T> const,
-                                                semiregular_box<T>>>>;
+    using semiregular_box_ref_or_val_t = meta::if_c<
+        (bool)semiregular<T>,
+        meta::if_c<IsConst || std::is_empty<T>::value, T, reference_wrapper<T>>,
+        reference_wrapper<
+            meta::if_c<IsConst, semiregular_box<T> const, semiregular_box<T>>>>;
     /// @}
 
     /// \cond
@@ -308,7 +310,7 @@ namespace ranges
 
     template<typename T, bool IsConst = false>
     using semiregular_ref_or_val_t RANGES_DEPRECATED(
-        "Please use semiregular_box_t instead.") =
+        "Please use semiregular_box_ref_or_val_t instead.") =
         semiregular_box_ref_or_val_t<T, IsConst>;
     /// \endcond
 
