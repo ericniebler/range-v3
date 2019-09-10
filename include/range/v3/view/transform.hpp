@@ -112,7 +112,7 @@ namespace ranges
             friend struct adaptor<!IsConst>;
             using CRng = meta::const_if_c<IsConst, Rng>;
             using fun_ref_ = semiregular_box_ref_or_val_t<Fun, IsConst>;
-            fun_ref_ fun_;
+            RANGES_NO_UNIQUE_ADDRESS fun_ref_ fun_;
 
         public:
             using value_type =
