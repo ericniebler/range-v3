@@ -1,6 +1,6 @@
 var classranges_1_1tagged =
 [
-    [ "swap", "classranges_1_1tagged.html#a2aab973b4a54048dd3ebce97bdf12608", null ],
+    [ "swap", "classranges_1_1tagged.html#a71601c85f267ec110a5fa40bee1d2431", null ],
     [ "operator=", "classranges_1_1tagged.html#a8f8f85cba850e0afef296d47d9d080ad", null ],
     [ "operator=", "classranges_1_1tagged.html#a0e727bd45e2fc1fedc7f00cb63da0505", null ],
     [ "operator=", "classranges_1_1tagged.html#ab93f0496ff876cfac12c4bf11b437e98", null ],

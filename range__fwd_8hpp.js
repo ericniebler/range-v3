@@ -14,6 +14,7 @@ var range__fwd_8hpp =
     [ "take_view", "structranges_1_1take__view.html", "structranges_1_1take__view" ],
     [ "variant", "structranges_1_1variant.html", null ],
     [ "view_base", "structranges_1_1view__base.html", null ],
+    [ "view", "structranges_1_1views_1_1view.html", "structranges_1_1views_1_1view" ],
     [ "is_finite", "range__fwd_8hpp.html#a3e936d57dee4f695b2eaf6d926cae8d2", null ],
     [ "is_infinite", "range__fwd_8hpp.html#a22e82748fcb6b2b6545db3ee010362d7", null ],
     [ "keys_range_view", "range__fwd_8hpp.html#a12f6be5afcd9eef4f3e274b187d0d341", null ],

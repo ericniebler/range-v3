@@ -1,18 +1,17 @@
 /*
-@ @licstart  The following is the entire license notice for the
+@licstart  The following is the entire license notice for the
 JavaScript code in this file.
 
-Copyright (C) 1997-2017 by Dimitri van Heesch
+Copyright (C) 1997-2019 by Dimitri van Heesch
 
 This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
+it under the terms of version 2 of the GNU General Public License as published by
+the Free Software Foundation
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
@@ -32,8 +31,18 @@ var NAVTREE =
       ] ],
       [ "Quick Start", "index.html#tutorial-quick-start", [
         [ "Views", "index.html#tutorial-views", null ],
+        [ "View const-ness", "index.html#autotoc_md6", null ],
+        [ "View validity", "index.html#autotoc_md7", null ],
+        [ "List of range views", "index.html#autotoc_md8", null ],
         [ "Actions", "index.html#tutorial-actions", null ],
-        [ "Utilities", "index.html#tutorial-utilities", null ],
+        [ "List of range actions", "index.html#autotoc_md10", null ],
+        [ "Utilities", "index.html#tutorial-utilities", [
+          [ "Create Custom Views with view_facade", "index.html#autotoc_md12", null ],
+          [ "Create Custom Views with view_adaptor", "index.html#autotoc_md13", [
+            [ "view_adaptor in details", "index.html#autotoc_md14", null ]
+          ] ],
+          [ "Create Custom Iterators with basic_iterator", "index.html#autotoc_md15", null ]
+        ] ],
         [ "Concept Checking", "index.html#tutorial-concepts", null ],
         [ "Range-v3 and the Future", "index.html#tutorial-future", null ]
       ] ]
@@ -97,20 +106,20 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"classranges_1_1join__with__view_1_1cursor.html#ae7223ceccfee7a840a125106bdb2cb4c",
-"count_8hpp.html",
-"group__group-algorithms.html#ga4cb85c9a5ce8c5773f1f7f8fa9d6ef15",
-"group__group-views.html#ga5db3cae4e50e5733f548eb4b5840c157",
-"group__transformation.html#ga8d0d695134bd6b94698ae4f1c0d2f553",
+"classranges_1_1join__with__view_1_1cursor.html#af84987f9f140204f222a8040e2f7abd5",
+"count_8hpp.html#ga0a6302f276cdf98372e30f45d10ae3a4",
+"group__group-algorithms.html#ga4e5950e393a0aee33b00b34c2f8e97c9",
+"group__group-views.html#ga63c1f2feed272a28e308452c21baaa19",
+"group__transformation.html#gae8b919ad4c2cfe9b0fc7549cedae5e37",
 "meta_8hpp.html#ga7e59a2a7df311e0d88e2781f753e5a9a",
 "range_2operations_8hpp.html#gadb5d99cd1ed6afb3c5735265f81a450e",
-"structmeta_1_1detail_1_1count___3_01list_3_01_l_8_8_8_01_4_00_01_t_01_4.html#a387acf25b3b04a1fa41a8dbf18d3c84e",
-"structranges_1_1common__iterator.html#a27f89195bfb93fdca1083a52918dfcde",
-"structranges_1_1indirected.html#adc41a6acff59ef0603231341631fe05e",
-"structranges_1_1optional.html#a777a66ba9f2920bbc3026b55a0743e94",
-"structranges_1_1split__view.html",
-"structranges_1_1views_1_1group__by__fn.html",
-"view_2transform_8hpp.html#ab17a0d23c102396186e9b972738c057c"
+"structmeta_1_1detail_1_1count___3_01list_3_4_00_01_t_01_4.html",
+"structranges_1_1common__iterator.html#a3ecb9ddb42309f0f895e4a02b70165c8",
+"structranges_1_1indirected.html#ad641b877c402b691f4c38407cd95cd01",
+"structranges_1_1optional.html#a50bd4938a812b0acf95a506d4501d358",
+"structranges_1_1span.html#acd98a38d31901f7766f5f24e1196c61f",
+"structranges_1_1views_1_1for__each__fn.html",
+"view_2split_8hpp.html#aac1d140a436be9d9b53dd9f0c0f6f5aa"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
