@@ -549,6 +549,14 @@ namespace ranges
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(ints_fn, ints)
     } // namespace views
+
+    namespace cpp20
+    {
+        namespace views
+        {
+            using ranges::views::iota;
+        }
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 
