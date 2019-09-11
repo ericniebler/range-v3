@@ -215,14 +215,14 @@ namespace ranges
             static constexpr auto CPP_fun(bind)(slice_fn slice, Int from, Int to)( //
                 requires detail::integer_like_<Int>)
             {
-                return make_pipeable(bind_back(slice, from, to));
+                return bind_back(slice, from, to);
             }
             template<typename Int>
             static constexpr auto CPP_fun(bind)(slice_fn slice, Int from,
                                                 detail::from_end_<Int> to)( //
                 requires detail::integer_like_<Int>)
             {
-                return make_pipeable(bind_back(slice, from, to));
+                return bind_back(slice, from, to);
             }
             template<typename Int>
             static constexpr auto CPP_fun(bind)(slice_fn slice,
@@ -230,13 +230,13 @@ namespace ranges
                                                 detail::from_end_<Int> to)( //
                 requires detail::integer_like_<Int>)
             {
-                return make_pipeable(bind_back(slice, from, to));
+                return bind_back(slice, from, to);
             }
             template<typename Int>
             static constexpr auto CPP_fun(bind)(slice_fn, Int from, end_fn)( //
                 requires detail::integer_like_<Int>)
             {
-                return make_pipeable(bind_back(ranges::views::drop_exactly, from));
+                return bind_back(ranges::views::drop_exactly, from);
             }
             template<typename Int>
             static constexpr auto CPP_fun(bind)(slice_fn slice,
@@ -244,7 +244,7 @@ namespace ranges
                                                 end_fn to)( //
                 requires detail::integer_like_<Int>)
             {
-                return make_pipeable(bind_back(slice, from, to));
+                return bind_back(slice, from, to);
             }
 
         public:

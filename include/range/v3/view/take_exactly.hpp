@@ -149,7 +149,7 @@ namespace ranges
             static constexpr auto CPP_fun(bind)(take_exactly_fn take_exactly, Int n)( //
                 requires integral<Int>)
             {
-                return make_pipeable(bind_back(take_exactly, n));
+                return bind_back(take_exactly, n);
             }
 
             template<typename Rng>

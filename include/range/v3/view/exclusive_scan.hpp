@@ -159,8 +159,7 @@ namespace ranges
             static constexpr auto bind(exclusive_scan_fn exclusive_scan, T init,
                                        Fun fun = {})
             {
-                return make_pipeable(
-                    bind_back(exclusive_scan, std::move(init), std::move(fun)));
+                return bind_back(exclusive_scan, std::move(init), std::move(fun));
             }
 
         public:

@@ -305,7 +305,7 @@ namespace ranges
             constexpr static auto CPP_fun(bind)(stride_fn stride, Difference step)( //
                 requires integral<Difference>)
             {
-                return make_pipeable(bind_back(stride, std::move(step)));
+                return bind_back(stride, std::move(step));
             }
 
         public:

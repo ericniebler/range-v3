@@ -165,7 +165,7 @@ namespace ranges
             template<typename T>
             static auto bind(split_when_fn split_when, T && t)
             {
-                return make_pipeable(bind_back(split_when, static_cast<T &&>(t)));
+                return bind_back(split_when, static_cast<T &&>(t));
             }
             template<typename Pred>
             struct predicate_pred

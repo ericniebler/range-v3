@@ -18,6 +18,7 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/functional/pipeable.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
@@ -39,8 +40,8 @@ namespace ranges
             shared_view() = default;
 
             // construct from a range rvalue
-            explicit shared_view(Rng && t)
-              : rng_ptr_{std::make_shared<Rng>(std::move(t))}
+            explicit shared_view(Rng rng)
+              : rng_ptr_{std::make_shared<Rng>(std::move(rng))}
             {}
 
             // use the stored range's begin and end
@@ -67,23 +68,19 @@ namespace ranges
         {
             struct shared_fn : pipeable_base
             {
-            public:
                 template<typename Rng>
-                auto operator()(Rng && t) const -> CPP_ret(shared_view<Rng>)( //
-                    requires range<Rng> &&
-                    (!view_<Rng>)&&(!std::is_reference<Rng>::value))
+                auto operator()(Rng && rng) const                       //
+                    -> CPP_ret(shared_view<detail::decay_t<Rng>>)(      //
+                        requires range<Rng> && (!viewable_range<Rng>)&& //
+                        constructible_from<detail::decay_t<Rng>, Rng>)
                 {
-                    return shared_view<Rng>{std::move(t)};
+                    return shared_view<detail::decay_t<Rng>>{static_cast<Rng &&>(rng)};
                 }
             };
 
-            /// \relates all_fn
+            /// \relates shared_fn
             /// \ingroup group-views
             RANGES_INLINE_VARIABLE(shared_fn, shared)
-
-            template<typename Rng>
-            using shared_t = detail::decay_t<decltype(shared(std::declval<Rng>()))>;
-
         } // namespace views
         /// @}
     } // namespace experimental

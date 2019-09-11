@@ -121,8 +121,7 @@ namespace ranges
             template<typename Pred, typename Val>
             static constexpr auto bind(replace_if_fn replace_if, Pred pred, Val new_value)
             {
-                return make_pipeable(
-                    bind_back(replace_if, std::move(pred), std::move(new_value)));
+                return bind_back(replace_if, std::move(pred), std::move(new_value));
             }
 
         public:

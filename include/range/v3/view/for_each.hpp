@@ -45,7 +45,7 @@ namespace ranges
             template<typename Fun>
             static constexpr auto bind(for_each_fn for_each, Fun fun)
             {
-                return make_pipeable(bind_back(for_each, std::move(fun)));
+                return bind_back(for_each, std::move(fun));
             }
 
         public:

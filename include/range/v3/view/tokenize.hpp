@@ -99,6 +99,37 @@ namespace ranges
     {
         struct tokenizer_impl_fn
         {
+        private:
+            friend view_access;
+
+            template<typename Regex>
+            static auto bind(tokenizer_impl_fn tokenize, Regex && rex, int sub = 0,
+                             std::regex_constants::match_flag_type flags =
+                                 std::regex_constants::match_default)
+            {
+                return bind_back(tokenize, static_cast<Regex &&>(rex), sub, flags);
+            }
+
+            template<typename Regex>
+            static auto bind(tokenizer_impl_fn tokenize, Regex && rex,
+                             std::vector<int> subs,
+                             std::regex_constants::match_flag_type flags =
+                                 std::regex_constants::match_default)
+            {
+                return bind_back(
+                    tokenize, static_cast<Regex &&>(rex), std::move(subs), flags);
+            }
+
+            template<typename Regex>
+            static auto bind(tokenizer_impl_fn tokenize, Regex && rex,
+                             std::initializer_list<int> subs,
+                             std::regex_constants::match_flag_type flags =
+                                 std::regex_constants::match_default)
+            {
+                return bind_back(tokenize, static_cast<Regex &&>(rex), subs, flags);
+            }
+
+        public:
             template<typename Rng, typename Regex>
             tokenize_view<all_t<Rng>, detail::decay_t<Regex>, int> operator()(
                 Rng && rng, Regex && rex, int sub = 0,
@@ -152,57 +183,27 @@ namespace ranges
                         std::move(subs),
                         flags};
             }
-
-            template<typename Regex>
-            auto operator()(Regex && rex, int sub = 0,
-                            std::regex_constants::match_flag_type flags =
-                                std::regex_constants::match_default) const
-            {
-                return make_pipeable(
-                    bind_back(*this, static_cast<Regex &&>(rex), sub, flags));
-            }
-
-            template<typename Regex>
-            auto operator()(Regex && rex, std::vector<int> subs,
-                            std::regex_constants::match_flag_type flags =
-                                std::regex_constants::match_default) const
-            {
-                return make_pipeable(
-                    bind_back(*this, static_cast<Regex &&>(rex), std::move(subs), flags));
-            }
-
-            template<typename Regex>
-            auto operator()(Regex && rex, std::initializer_list<int> subs,
-                            std::regex_constants::match_flag_type flags =
-                                std::regex_constants::match_default) const
-            {
-                return make_pipeable(
-                    bind_back(*this, static_cast<Regex &&>(rex), subs, flags));
-            }
         };
 
         // Damn C++ and its imperfect forwarding of initializer_list.
-        struct tokenize_fn : tokenizer_impl_fn
+        struct tokenize_fn : view<tokenizer_impl_fn>
         {
         private:
-            tokenizer_impl_fn const & base() const
+            view<tokenizer_impl_fn> const & base() const
             {
                 return *this;
             }
 
         public:
-            template<typename... Args>
-            auto operator()(Args &&... args) const
-                -> decltype(base()(static_cast<Args &&>(args)...))
-            {
-                return base()(static_cast<Args &&>(args)...);
-            }
+            using view<tokenizer_impl_fn>::operator();
 
             template<typename Arg0, typename... Args>
             auto operator()(Arg0 && arg0, std::initializer_list<int> subs,
                             Args &&... args) const
-                -> decltype(base()(static_cast<Arg0 &&>(arg0), std::move(subs),
-                                   static_cast<Args &&>(args)...))
+                -> CPP_ret(invoke_result_t<view<tokenizer_impl_fn> const &, Arg0,
+                                           std::initializer_list<int>, Args...>)(
+                    requires invocable<view<tokenizer_impl_fn> const &, Arg0,
+                                       std::initializer_list<int>, Args...>)
             {
                 return base()(static_cast<Arg0 &&>(arg0),
                               std::move(subs),
@@ -212,8 +213,10 @@ namespace ranges
             template<typename Arg0, typename Arg1, typename... Args>
             auto operator()(Arg0 && arg0, Arg1 && arg1, std::initializer_list<int> subs,
                             Args &&... args) const
-                -> decltype(base()(static_cast<Arg0 &&>(arg0), static_cast<Arg1 &&>(arg1),
-                                   std::move(subs), static_cast<Args &&>(args)...))
+                -> CPP_ret(invoke_result_t<view<tokenizer_impl_fn> const &, Arg0, Arg1,
+                                           std::initializer_list<int>, Args...>)(
+                    requires invocable<view<tokenizer_impl_fn> const &, Arg0, Arg1,
+                                       std::initializer_list<int>, Args...>)
             {
                 return base()(static_cast<Arg0 &&>(arg0),
                               static_cast<Arg1 &&>(arg1),

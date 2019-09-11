@@ -113,7 +113,7 @@ namespace ranges
             template<typename Pred>
             static constexpr auto bind(iter_take_while_fn iter_take_while, Pred pred)
             {
-                return make_pipeable(bind_back(iter_take_while, std::move(pred)));
+                return bind_back(iter_take_while, std::move(pred));
             }
 
         public:
@@ -134,13 +134,12 @@ namespace ranges
             template<typename Pred>
             static constexpr auto bind(take_while_fn take_while, Pred pred)
             {
-                return make_pipeable(bind_back(take_while, std::move(pred)));
+                return bind_back(take_while, std::move(pred));
             }
             template<typename Pred, typename Proj>
             static constexpr auto bind(take_while_fn take_while, Pred pred, Proj proj)
             {
-                return make_pipeable(
-                    bind_back(take_while, std::move(pred), std::move(proj)));
+                return bind_back(take_while, std::move(pred), std::move(proj));
             }
 
         public:

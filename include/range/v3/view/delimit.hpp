@@ -83,7 +83,7 @@ namespace ranges
             template<typename Val>
             static constexpr auto bind(delimit_impl_fn delimit, Val value)
             {
-                return make_pipeable(bind_back(delimit, std::move(value)));
+                return bind_back(delimit, std::move(value));
             }
 
         public:

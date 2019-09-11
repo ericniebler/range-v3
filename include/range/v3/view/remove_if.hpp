@@ -152,13 +152,12 @@ namespace ranges
             template<typename Pred>
             static constexpr auto bind(remove_if_fn remove_if, Pred pred)
             {
-                return make_pipeable(bind_back(remove_if, std::move(pred)));
+                return bind_back(remove_if, std::move(pred));
             }
             template<typename Pred, typename Proj>
             static constexpr auto bind(remove_if_fn remove_if, Pred pred, Proj proj)
             {
-                return make_pipeable(
-                    bind_back(remove_if, std::move(pred), std::move(proj)));
+                return bind_back(remove_if, std::move(pred), std::move(proj));
             }
 
         public:

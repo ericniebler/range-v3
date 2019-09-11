@@ -366,7 +366,7 @@ namespace ranges
             static constexpr auto CPP_fun(bind)(sliding_fn sliding, Int n)( //
                 requires integral<Int>)
             {
-                return make_pipeable(bind_back(sliding, n));
+                return bind_back(sliding, n);
             }
 
         public:

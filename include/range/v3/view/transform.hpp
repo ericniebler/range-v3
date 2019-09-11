@@ -429,7 +429,7 @@ namespace ranges
             template<typename Fun>
             static constexpr auto bind(iter_transform_fn iter_transform, Fun fun)
             {
-                return make_pipeable(bind_back(iter_transform, std::move(fun)));
+                return bind_back(iter_transform, std::move(fun));
             }
 
         public:
@@ -493,7 +493,7 @@ namespace ranges
             template<typename Fun>
             static constexpr auto bind(transform_fn transform, Fun fun)
             {
-                return make_pipeable(bind_back(transform, std::move(fun)));
+                return bind_back(transform, std::move(fun));
             }
 
         public:

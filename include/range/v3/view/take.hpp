@@ -274,7 +274,7 @@ namespace ranges
             static constexpr auto CPP_fun(bind)(take_fn take, Int n)( //
                 requires integral<Int>)
             {
-                return make_pipeable(bind_back(take, n));
+                return bind_back(take, n);
             }
 
         public:

@@ -241,12 +241,14 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
             CPP_EXPLICIT constexpr operator bool() const noexcept {             \
                 return (bool) _eager_::NAME<CPP_PP_EXPAND ARGS>;                \
             }                                                                   \
-            constexpr auto operator!() const noexcept {                         \
-                return ::concepts::detail::not_<Eval>{};                        \
+            constexpr auto operator!() const noexcept                           \
+                -> ::concepts::detail::not_<Eval> {                             \
+                return {};                                                      \
             }                                                                   \
             template<typename That>                                             \
-            constexpr auto operator&&(That) const noexcept {                    \
-                return ::concepts::detail::and_<Eval, That>{};                  \
+            constexpr auto operator&&(That) const noexcept                      \
+                -> ::concepts::detail::and_<Eval, That> {                       \
+                return {};                                                      \
             }                                                                   \
         };                                                                      \
     };                                                                          \
@@ -305,12 +307,14 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
             CPP_EXPLICIT constexpr operator bool() const noexcept {             \
                 return Eval::impl(0);                                           \
             }                                                                   \
-            constexpr auto operator!() const noexcept {                         \
-                return ::concepts::detail::not_<Eval>{};                        \
+            constexpr auto operator!() const noexcept                           \
+                -> ::concepts::detail::not_<Eval> {                             \
+                return {};                                                      \
             }                                                                   \
             template<typename That>                                             \
-            constexpr auto operator&&(That) const noexcept {                    \
-                return ::concepts::detail::and_<Eval, That>{};                  \
+            constexpr auto operator&&(That) const noexcept                      \
+                -> ::concepts::detail::and_<Eval, That> {                       \
+                return {};                                                      \
             }                                                                   \
         };                                                                      \
     };                                                                          \
@@ -717,12 +721,12 @@ namespace concepts
             {
                 return !(bool) T{};
             }
-            constexpr auto operator!() const noexcept
+            constexpr T operator!() const noexcept
             {
                 return T{};
             }
             template<typename That>
-            constexpr auto operator&&(That) const noexcept
+            constexpr and_<not_, That> operator&&(That) const noexcept
             {
                 return and_<not_, That>{};
             }
@@ -742,12 +746,12 @@ namespace concepts
             {
                 return and_::impl(bool_<(bool) T{}>{});
             }
-            constexpr auto operator!() const noexcept
+            constexpr not_<and_> operator!() const noexcept
             {
                 return not_<and_>{};
             }
             template<typename That>
-            constexpr auto operator&&(That) const noexcept
+            constexpr detail::and_<and_, That> operator&&(That) const noexcept
             {
                 return detail::and_<and_, That>{};
             }

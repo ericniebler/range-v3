@@ -32,7 +32,7 @@ namespace ranges
     /// @{
     namespace views
     {
-        struct all_fn : pipeable_base
+        struct all_fn
         {
         private:
             /// If it's a view already, pass it though.
@@ -83,7 +83,7 @@ namespace ranges
 
         /// \relates all_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(all_fn, all)
+        RANGES_INLINE_VARIABLE(view<all_fn>, all)
 
         template<typename Rng>
         using all_t = decltype(all(std::declval<Rng>()));

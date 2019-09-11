@@ -230,7 +230,7 @@ namespace ranges
                                       URNG & urng = detail::get_random_engine())( //
                 requires integral<Size> && uniform_random_bit_generator<URNG>)
             {
-                return make_pipeable(lamduh<Size, URNG>{std::move(n), urng});
+                return lamduh<Size, URNG>{std::move(n), urng};
             }
 #else  // ^^^ workaround / no workaround vvv
             template<typename Size, typename URNG = detail::default_random_engine>
@@ -238,17 +238,15 @@ namespace ranges
                                       URNG & urng = detail::get_random_engine())( //
                 requires integral<Size> && uniform_random_bit_generator<URNG>)
             {
-                return make_pipeable(
-                    [n, &urng](
-                        auto && rng) -> invoke_result_t<sample_fn,
-                                                        decltype(rng),
-                                                        range_difference_t<decltype(rng)>,
-                                                        URNG &> {
-                        return sample_fn{}(
-                            static_cast<decltype(rng)>(rng),
-                            static_cast<range_difference_t<decltype(rng)>>(n),
-                            urng);
-                    });
+                return [n, &urng](auto && rng)
+                           -> invoke_result_t<sample_fn,
+                                              decltype(rng),
+                                              range_difference_t<decltype(rng)>,
+                                              URNG &> {
+                    return sample_fn{}(static_cast<decltype(rng)>(rng),
+                                       static_cast<range_difference_t<decltype(rng)>>(n),
+                                       urng);
+                };
             }
 #endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
 

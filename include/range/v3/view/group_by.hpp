@@ -151,7 +151,7 @@ namespace ranges
             template<typename Fun>
             static constexpr auto bind(group_by_fn group_by, Fun fun)
             {
-                return make_pipeable(bind_back(group_by, std::move(fun)));
+                return bind_back(group_by, std::move(fun));
             }
 
         public:

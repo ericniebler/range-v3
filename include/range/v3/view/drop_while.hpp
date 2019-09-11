@@ -88,13 +88,12 @@ namespace ranges
             template<typename Pred>
             static constexpr auto bind(drop_while_fn drop_while, Pred pred)
             {
-                return make_pipeable(bind_back(drop_while, std::move(pred)));
+                return bind_back(drop_while, std::move(pred));
             }
             template<typename Pred, typename Proj>
             static constexpr auto bind(drop_while_fn drop_while, Pred pred, Proj proj)
             {
-                return make_pipeable(
-                    bind_back(drop_while, std::move(pred), std::move(proj)));
+                return bind_back(drop_while, std::move(pred), std::move(proj));
             }
 
         public:

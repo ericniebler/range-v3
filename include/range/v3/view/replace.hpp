@@ -96,8 +96,7 @@ namespace ranges
                 requires same_as<detail::decay_t<unwrap_reference_t<Val1>>,
                                  detail::decay_t<unwrap_reference_t<Val2>>>)
             {
-                return make_pipeable(
-                    bind_back(replace, std::move(old_value), std::move(new_value)));
+                return bind_back(replace, std::move(old_value), std::move(new_value));
             }
 
         public:

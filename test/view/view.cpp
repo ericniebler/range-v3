@@ -15,8 +15,8 @@ private:
     template<typename Int>
     static constexpr auto bind(my_drop_fn my_drop, Int n)
     {
-        return make_pipeable(
-            [=](auto && rng) { return my_drop(std::forward<decltype(rng)>(rng), n); });
+        return [=](auto && rng) {
+            return my_drop(std::forward<decltype(rng)>(rng), n); };
     }
 
 public:

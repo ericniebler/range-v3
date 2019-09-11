@@ -147,7 +147,7 @@ namespace ranges
             template<typename Pred>
             constexpr static auto bind(adjacent_filter_fn adjacent_filter, Pred pred)
             {
-                return make_pipeable(bind_back(adjacent_filter, std::move(pred)));
+                return bind_back(adjacent_filter, std::move(pred));
             }
 
         public:

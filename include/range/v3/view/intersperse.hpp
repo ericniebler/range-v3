@@ -209,7 +209,7 @@ namespace ranges
             static constexpr auto CPP_fun(bind)(intersperse_fn intersperse, T t)( //
                 requires copyable<T>)
             {
-                return make_pipeable(bind_back(intersperse, std::move(t)));
+                return bind_back(intersperse, std::move(t));
             }
 
         public:

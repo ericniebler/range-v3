@@ -19,7 +19,6 @@
 #include <range/v3/range_fwd.hpp>
 
 #include <range/v3/functional/bind_back.hpp>
-#include <range/v3/functional/pipeable.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/operations.hpp>
 #include <range/v3/view/drop_exactly.hpp>
@@ -36,7 +35,7 @@ namespace ranges
             static constexpr auto CPP_fun(bind)(take_last_fn take_last, Int n)( //
                 requires integral<Int>)
             {
-                return make_pipeable(bind_back(take_last, n));
+                return bind_back(take_last, n);
             }
 
         public:

@@ -150,7 +150,7 @@ namespace ranges
             static constexpr auto bind(adjacent_remove_if_fn adjacent_remove_if,
                                        Pred pred)
             {
-                return make_pipeable(bind_back(adjacent_remove_if, std::move(pred)));
+                return bind_back(adjacent_remove_if, std::move(pred));
             }
 
         public:

@@ -23,7 +23,6 @@
 #include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/invoke.hpp>
-#include <range/v3/functional/pipeable.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -103,12 +102,12 @@ namespace ranges
             template<typename Pred>
             static constexpr auto bind(trim_fn trim, Pred pred)
             {
-                return make_pipeable(bind_back(trim, std::move(pred)));
+                return bind_back(trim, std::move(pred));
             }
             template<typename Pred, typename Proj>
             static constexpr auto bind(trim_fn trim, Pred pred, Proj proj)
             {
-                return make_pipeable(bind_back(trim, std::move(pred), std::move(proj)));
+                return bind_back(trim, std::move(pred), std::move(proj));
             }
 
         public:

@@ -24,6 +24,7 @@
 #include <range/v3/functional/arithmetic.hpp>
 #include <range/v3/functional/concepts.hpp>
 #include <range/v3/functional/invoke.hpp>
+#include <range/v3/functional/pipeable.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/ref.hpp>
@@ -32,6 +33,19 @@ namespace ranges
 {
     /// \addtogroup group-actions
     /// @{
+    struct make_action_fn
+    {
+        template<typename Fun>
+        constexpr actions::action<Fun> operator()(Fun fun) const
+        {
+            return actions::action<Fun>{detail::move(fun)};
+        }
+    };
+
+    /// \ingroup group-actions
+    /// \relates make_action_fn
+    RANGES_INLINE_VARIABLE(make_action_fn, make_action)
+
     namespace actions
     {
         struct action_access
@@ -49,35 +63,64 @@ namespace ranges
             };
         };
 
-        struct make_action_fn
+        using ranges::make_action; // for legacy reasons
+
+        struct action_base
         {
-            template<typename Fun>
-            constexpr action<Fun> operator()(Fun fun) const
+        private:
+            // clang-format off
+            template<typename Act1, typename Act2>
+            struct composed
             {
-                return action<Fun>{detail::move(fun)};
+                Act1 act1_;
+                Act2 act2_;
+                template<typename Arg>
+                constexpr auto CPP_auto_fun(operator())(Arg && arg) (const)
+                (
+                    return static_cast<Arg &&>(arg) | act1_ | act2_
+                )
+            };
+            // clang-format on
+        public:
+            template<typename Act>
+            constexpr static Act && get_action(action<Act> && act) noexcept
+            {
+                return static_cast<Act &&>(act.action_);
+            }
+
+            // Piping requires things are passed by value.
+            CPP_template(typename Rng, typename Act)(                       //
+                requires defer::range<Rng> && defer::invocable<Act, Rng> && //
+                (!defer::is_true<std::is_reference<Rng>::value>))           //
+                constexpr friend decltype(auto)
+                operator|(Rng && rng, action<Act> act)
+            {
+                return get_action(static_cast<action<Act> &&>(act))(
+                    static_cast<Rng &&>(rng));
+            }
+
+            // This overload is deleted because when piping a range into an
+            // action, it must be moved in.
+            template<typename Rng, typename Act>
+            // RANGES_DEPRECATED("You must pipe an rvalue range into an action.")
+            constexpr friend auto operator|(Rng &&, action<Act> const &) -> CPP_ret(Rng)(
+                requires range<Rng> && std::is_reference<Rng>::value) = delete;
+
+            template<typename Act1, typename Act2>
+            constexpr friend auto operator|(action<Act1> act1, action<Act2> act2)
+            {
+                return make_action(composed<action<Act1>, action<Act2>>{
+                    static_cast<action<Act1> &&>(act1),
+                    static_cast<action<Act2> &&>(act2)});
             }
         };
 
-        /// \ingroup group-actions
-        /// \relates make_action_fn
-        RANGES_INLINE_VARIABLE(make_action_fn, make_action)
-
         template<typename Action>
-        struct action : pipeable_base
+        struct action : action_base
         {
         private:
             Action action_;
-            friend pipeable_access;
-
-            // Piping requires things are passed by value.
-            template<typename Rng, typename Act>
-            static auto pipe(Rng && rng, Act && act)
-                -> CPP_ret(invoke_result_t<Action &, Rng>)( //
-                    requires range<Rng> && invocable<Action &, Rng> &&
-                    (!std::is_reference<Rng>::value))
-            {
-                return invoke(act.action_, detail::move(rng));
-            }
+            friend action_base;
 
         public:
             action() = default;
@@ -98,27 +141,30 @@ namespace ranges
 
             // Currying overload.
             // clang-format off
-            template<typename T, typename... Rest, typename A = Action>
-            auto CPP_auto_fun(operator())(T &&t, Rest &&... rest)(const)
+            CPP_template(typename... Rest, typename A = Action)(
+                requires(sizeof...(Rest) != 0))
+            auto CPP_auto_fun(operator())(Rest &&... rest)(const)
             (
                 return make_action(
                     action_access::impl<A>::bind(action_,
-                                                 static_cast<T &&>(t),
                                                  static_cast<Rest &&>(rest)...))
             )
             // clang-format on
         };
 
-        template<typename Rng, typename Action>
-        auto operator|=(Rng & rng, Action && action) -> CPP_ret(Rng &)( //
-            requires is_pipeable<Action>::value && range<Rng &> &&
-                invocable<bitwise_or, ref_view<Rng>, Action &> && same_as<
-                    ref_view<Rng>, invoke_result_t<bitwise_or, ref_view<Rng>, Action &>>)
+        template<typename Rng, typename Act>
+        auto operator|=(Rng & rng, action<Act> act) -> CPP_ret(Rng &)( //
+            requires range<Rng &> && invocable<bitwise_or, ref_view<Rng>, action<Act>> &&
+                same_as<ref_view<Rng>,
+                        invoke_result_t<bitwise_or, ref_view<Rng>, action<Act>>>)
         {
-            views::ref(rng) | action;
+            views::ref(rng) | static_cast<action<Act> &&>(act);
             return rng;
         }
     } // namespace actions
+
+    template<typename Act>
+    RANGES_INLINE_VAR constexpr bool is_pipeable_v<actions::action<Act>> = true;
     /// @}
 } // namespace ranges
 

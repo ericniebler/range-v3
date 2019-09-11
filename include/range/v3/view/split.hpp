@@ -612,7 +612,7 @@ namespace ranges
             template<typename T>
             static constexpr auto bind(split_fn split, T t)
             {
-                return make_pipeable(bind_back(split, std::move(t)));
+                return bind_back(split, std::move(t));
             }
 
         public:

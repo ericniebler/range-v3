@@ -180,7 +180,7 @@ namespace ranges
             template<typename Fun>
             static constexpr auto bind(partial_sum_fn partial_sum, Fun fun)
             {
-                return make_pipeable(bind_back(partial_sum, std::move(fun)));
+                return bind_back(partial_sum, std::move(fun));
             }
             template<typename Fun = plus>
             RANGES_DEPRECATED(
@@ -188,7 +188,7 @@ namespace ranges
                 "\"ranges::views::partial_sum()\".")
             static constexpr auto bind(partial_sum_fn partial_sum)
             {
-                return make_pipeable(bind_back(partial_sum, Fun{}));
+                return bind_back(partial_sum, Fun{});
             }
 
         public:

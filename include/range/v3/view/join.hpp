@@ -532,7 +532,7 @@ namespace ranges
             static auto CPP_fun(bind)(join_fn join, T && t)( //
                 requires(!joinable_range<T>))
             {
-                return make_pipeable(bind_back(join, static_cast<T &&>(t)));
+                return bind_back(join, static_cast<T &&>(t));
             }
 #ifdef RANGES_WORKAROUND_MSVC_OLD_LAMBDA
             template<typename T, std::size_t N>

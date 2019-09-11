@@ -138,7 +138,7 @@ namespace ranges
             static constexpr auto CPP_fun(bind)(drop_fn drop, Int n)( //
                 requires integral<Int>)
             {
-                return make_pipeable(bind_back(drop, n));
+                return bind_back(drop, n);
             }
             template<typename Rng>
             static auto impl_(Rng && rng, range_difference_t<Rng> n, input_range_tag)

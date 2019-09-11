@@ -19,7 +19,6 @@
 #include <meta/meta.hpp>
 
 #include <range/v3/functional/bind_back.hpp>
-#include <range/v3/functional/pipeable.hpp>
 #include <range/v3/iterator/counted_iterator.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/iterator/operations.hpp>
@@ -337,7 +336,7 @@ namespace ranges
             static constexpr auto CPP_fun(bind)(drop_last_fn drop_last, Int n)( //
                 requires integral<Int>)
             {
-                return make_pipeable(bind_back(drop_last, n));
+                return bind_back(drop_last, n);
             }
 
         public:
