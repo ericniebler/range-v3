@@ -126,14 +126,14 @@ namespace ranges
             using difference_type = D;
 
             cursor() = default;
-            explicit cursor(meta::const_if_c<IsConst, sample_view> & rng)
-              : parent_(&rng)
-              , current_(ranges::begin(rng.rng_))
-              , size_{rng.rng_}
+            explicit cursor(meta::const_if_c<IsConst, sample_view> * rng)
+              : parent_(rng)
+              , current_(ranges::begin(rng->rng_))
+              , size_{rng->rng_}
             {
                 auto n = pop_size();
-                if(rng.size_ > n)
-                    rng.size_ = n;
+                if(rng->size_ > n)
+                    rng->size_ = n;
                 advance();
             }
             CPP_template(bool Other)( //
@@ -165,7 +165,7 @@ namespace ranges
 
         cursor<false> begin_cursor()
         {
-            return cursor<false>{*this};
+            return cursor<false>{this};
         }
         template<bool Const = true>
         auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
@@ -175,7 +175,7 @@ namespace ranges
                                 iterator_t<meta::const_if_c<Const, Rng>>> ||
              forward_range<meta::const_if_c<Const, Rng>>))
         {
-            return cursor<true>{*this};
+            return cursor<true>{this};
         }
 
     public:

@@ -6,6 +6,7 @@ rv3_add_test(test.view.adjacent_remove_if view.adjacent_remove_if adjacent_remov
 rv3_add_test(test.view.all view.all all.cpp)
 rv3_add_test(test.view.any_view view.any_view any_view.cpp)
 rv3_add_test(test.view.common view.common common.cpp)
+rv3_add_test(test.view.cache1 view.cache1 cache1.cpp)
 rv3_add_test(test.view.cartesian_product view.cartesian_product cartesian_product.cpp)
 rv3_add_test(test.view.chunk view.chunk chunk.cpp)
 rv3_add_test(test.view.concat view.concat concat.cpp)

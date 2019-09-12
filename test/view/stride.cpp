@@ -15,6 +15,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/view/istream.hpp>
 #include <range/v3/view/move.hpp>
+#include <range/v3/view/partial_sum.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/stride.hpp>
 #include <range/v3/view/iota.hpp>
@@ -26,6 +27,15 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
+
+// https://github.com/ericniebler/range-v3/issues/1291
+void bug_1291()
+{
+    std::vector<int> vec;
+
+    auto tx = vec | ranges::views::stride( 2 ) | ranges::views::partial_sum;
+    ranges::accumulate( tx, 0 );
+}
 
 int main()
 {

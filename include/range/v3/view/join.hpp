@@ -209,9 +209,9 @@ namespace ranges
                                             !ref_is_glvalue::value>;
             cursor() = default;
             template<typename BeginOrEnd>
-            constexpr cursor(Parent & rng, BeginOrEnd begin_or_end)
-              : rng_{&rng}
-              , outer_it_(begin_or_end(rng.outer_))
+            constexpr cursor(Parent * rng, BeginOrEnd begin_or_end)
+              : rng_{rng}
+              , outer_it_(begin_or_end(rng->outer_))
             {
                 satisfy();
             }
@@ -280,22 +280,22 @@ namespace ranges
         }
         struct end_cursor_fn
         {
-            constexpr auto operator()(join_view & this_, std::true_type) const
+            constexpr auto operator()(join_view * this_, std::true_type) const
             {
                 return cursor<use_const_always()>{this_, ranges::end};
             }
-            constexpr auto operator()(join_view &, std::false_type) const
+            constexpr auto operator()(join_view *, std::false_type) const
             {
                 return default_sentinel_t{};
             }
         };
         struct cend_cursor_fn
         {
-            constexpr auto operator()(join_view const & this_, std::true_type) const
+            constexpr auto operator()(join_view const * this_, std::true_type) const
             {
                 return cursor<true>{this_, ranges::end};
             }
-            constexpr auto operator()(join_view const &, std::false_type) const
+            constexpr auto operator()(join_view const *, std::false_type) const
             {
                 return default_sentinel_t{};
             }
@@ -303,7 +303,7 @@ namespace ranges
 
         constexpr cursor<use_const_always()> begin_cursor()
         {
-            return {*this, ranges::begin};
+            return {this, ranges::begin};
         }
 
         template<bool Const = true>
@@ -311,7 +311,7 @@ namespace ranges
             requires Const && input_range<meta::const_if_c<Const, Rng>> &&
                 std::is_reference<range_reference_t<meta::const_if_c<Const, Rng>>>::value)
         {
-            return {*this, ranges::begin};
+            return {this, ranges::begin};
         }
 
         constexpr auto end_cursor()
@@ -320,7 +320,7 @@ namespace ranges
                 meta::bool_<std::is_reference<range_reference_t<Rng>>::value &&
                             forward_range<Rng> && forward_range<range_reference_t<Rng>> &&
                             common_range<Rng> && common_range<range_reference_t<Rng>>>;
-            return end_cursor_fn{}(*this, cond{});
+            return end_cursor_fn{}(this, cond{});
         }
 
         template<bool Const = true>
@@ -334,7 +334,7 @@ namespace ranges
                             forward_range<CRng> &&
                             forward_range<range_reference_t<CRng>> &&
                             common_range<CRng> && common_range<range_reference_t<CRng>>>;
-            return cend_cursor_fn{}(*this, cond{});
+            return cend_cursor_fn{}(this, cond{});
         }
     };
 
@@ -422,14 +422,14 @@ namespace ranges
                                                         range_rvalue_reference_t<ValRng>>;
             using single_pass = std::true_type;
             cursor() = default;
-            cursor(join_with_view & rng)
-              : rng_{&rng}
-              , outer_it_(ranges::begin(rng.outer_))
+            cursor(join_with_view * rng)
+              : rng_{rng}
+              , outer_it_(ranges::begin(rng->outer_))
             {
-                if(outer_it_ != ranges::end(rng_->outer_))
+                if(outer_it_ != ranges::end(rng->outer_))
                 {
-                    rng.inner_ = views::all(*outer_it_);
-                    ranges::emplace<1>(cur_, ranges::begin(rng.inner_));
+                    rng->inner_ = views::all(*outer_it_);
+                    ranges::emplace<1>(cur_, ranges::begin(rng->inner_));
                     satisfy();
                 }
             }
@@ -474,7 +474,7 @@ namespace ranges
         };
         cursor begin_cursor()
         {
-            return {*this};
+            return {this};
         }
     };
 

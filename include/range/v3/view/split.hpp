@@ -47,7 +47,7 @@ namespace ranges
             template(typename R)
             concept tiny_range,
                 sized_range<R> &&
-                type<std::integral_constant<
+                ranges::type<std::integral_constant<
                     decltype(std::remove_reference_t<R>::size()),
                     std::remove_reference_t<R>::size()>> &&
                 (std::remove_reference_t<R>::size() <= 1)

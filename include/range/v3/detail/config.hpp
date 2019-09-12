@@ -579,8 +579,13 @@ namespace ranges
 #endif
 
 #ifndef RANGES_DOXYGEN_INVOKED
-#define RANGES_BEGIN_NIEBLOID(NAME) struct NAME ## _fn {
-#define RANGES_END_NIEBLOID(NAME) }; RANGES_INLINE_VARIABLE(NAME ## _fn, NAME)
+#define RANGES_BEGIN_NIEBLOID(NAME) \
+    struct NAME##_fn                \
+    {
+#define RANGES_END_NIEBLOID(NAME) \
+    }                             \
+    ;                             \
+    RANGES_INLINE_VARIABLE(NAME##_fn, NAME)
 #define RANGES_FUN_NIEBLOID(NAME) operator() RANGES_FUN_NIEBLOID_CONST_
 #define RANGES_FUN_NIEBLOID_CONST_(...) (__VA_ARGS__) const
 #else

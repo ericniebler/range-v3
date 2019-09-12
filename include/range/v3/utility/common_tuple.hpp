@@ -84,6 +84,8 @@ namespace ranges
         };
         template<typename... Ts>
         using args = args_<sizeof...(Ts), Ts...>;
+        template<typename... Ts>
+        using rargs = args_<sizeof...(Ts), Ts &...>;
     } // namespace detail
     /// \endcond
 
@@ -125,14 +127,14 @@ namespace ranges
         CPP_ctor(common_tuple)(std::tuple<Us...> & that)( //
             noexcept(
                 meta::and_c<std::is_nothrow_constructible<Ts, Us &>::value...>::value) //
-            requires constructible_from<detail::args<Ts...>, detail::args<Us &...>>)
+            requires constructible_from<detail::args<Ts...>, detail::rargs<Us...>>)
           : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
         {}
         template<typename... Us>
         CPP_ctor(common_tuple)(std::tuple<Us...> const & that)( //
             noexcept(meta::and_c<
                      std::is_nothrow_constructible<Ts, Us const &>::value...>::value) //
-            requires constructible_from<detail::args<Ts...>, detail::args<Us const &...>>)
+            requires constructible_from<detail::args<Ts...>, detail::rargs<Us const...>>)
           : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
         {}
         template<typename... Us>
@@ -146,14 +148,14 @@ namespace ranges
         CPP_ctor(common_tuple)(common_tuple<Us...> & that)( //
             noexcept(
                 meta::and_c<std::is_nothrow_constructible<Ts, Us &>::value...>::value) //
-            requires constructible_from<detail::args<Ts...>, detail::args<Us &...>>)
+            requires constructible_from<detail::args<Ts...>, detail::rargs<Us...>>)
           : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
         {}
         template<typename... Us>
         CPP_ctor(common_tuple)(common_tuple<Us...> const & that)( //
             noexcept(meta::and_c<
                      std::is_nothrow_constructible<Ts, Us const &>::value...>::value) //
-            requires constructible_from<detail::args<Ts...>, detail::args<Us const &...>>)
+            requires constructible_from<detail::args<Ts...>, detail::rargs<Us const...>>)
           : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
         {}
         template<typename... Us>
@@ -178,7 +180,7 @@ namespace ranges
         auto operator=(std::tuple<Us...> & that) noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts &, Us &>::value...>::value)
             -> CPP_ret(common_tuple &)( //
-                requires assignable_from<detail::args<Ts...> &, detail::args<Us &...>>)
+                requires assignable_from<detail::args<Ts...> &, detail::rargs<Us...>>)
         {
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
@@ -188,7 +190,7 @@ namespace ranges
             meta::and_c<std::is_nothrow_assignable<Ts &, Us const &>::value...>::value)
             -> CPP_ret(common_tuple &)( //
                 requires assignable_from<detail::args<Ts...> &,
-                                         detail::args<Us const &...>>)
+                                         detail::rargs<Us const...>>)
         {
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
@@ -208,7 +210,7 @@ namespace ranges
             meta::and_c<std::is_nothrow_assignable<Ts const &, Us &>::value...>::value)
             -> CPP_ret(common_tuple const &)( //
                 requires assignable_from<detail::args<Ts const...> &,
-                                         detail::args<Us &...>>)
+                                         detail::rargs<Us...>>)
         {
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
@@ -219,7 +221,7 @@ namespace ranges
                      std::is_nothrow_assignable<Ts const &, Us const &>::value...>::value)
                 -> CPP_ret(common_tuple const &)( //
                     requires assignable_from<detail::args<Ts const...> &,
-                                             detail::args<Us const &...>>)
+                                             detail::rargs<Us const...>>)
         {
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
@@ -236,8 +238,8 @@ namespace ranges
         }
 
         // Conversion
-        CPP_template(typename... Us)(                                                //
-            requires constructible_from<detail::args<Us...>, detail::args<Ts &...>>) //
+        CPP_template(typename... Us)(                                               //
+            requires constructible_from<detail::args<Us...>, detail::rargs<Ts...>>) //
             operator std::tuple<Us...>() &
             noexcept(
                 meta::and_c<std::is_nothrow_constructible<Us, Ts &>::value...>::value)
@@ -247,7 +249,7 @@ namespace ranges
         }
         CPP_template(typename... Us)( //
             requires constructible_from<detail::args<Us...>,
-                                        detail::args<Ts const &...>>) //
+                                        detail::rargs<Ts const...>>) //
         operator std::tuple<Us...>() const & noexcept(
             meta::and_c<std::is_nothrow_constructible<Us, Ts const &>::value...>::value)
         {

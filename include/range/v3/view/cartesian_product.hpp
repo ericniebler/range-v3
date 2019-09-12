@@ -87,7 +87,7 @@ namespace ranges
         template(typename IsConst, typename...Views)
         (concept cartesian_produce_view_can_size)(IsConst, Views...),
             and_v<sized_range<meta::const_if<IsConst, Views>>...> &&
-                type<common_type_t<std::uintmax_t, range_size_t<meta::const_if<IsConst, Views>>...>>
+                ranges::type<common_type_t<std::uintmax_t, range_size_t<meta::const_if<IsConst, Views>>...>>
     );
     CPP_def
     (
@@ -140,7 +140,8 @@ namespace ranges
             friend cursor<true>;
             template<typename T>
             using constify_if = meta::const_if_c<IsConst_, T>;
-            using difference_type = common_type_t<std::intmax_t, range_difference_t<Views>...>;
+            using difference_type =
+                common_type_t<std::intmax_t, range_difference_t<Views>...>;
 
             constify_if<cartesian_product_view> * view_;
             std::tuple<iterator_t<constify_if<Views>>...> its_;
@@ -220,8 +221,8 @@ namespace ranges
                     return;
 
                 auto & i = std::get<N - 1>(its_);
-                auto const my_size =
-                    static_cast<difference_type>(ranges::size(std::get<N - 1>(view_->views_)));
+                auto const my_size = static_cast<difference_type>(
+                    ranges::size(std::get<N - 1>(view_->views_)));
                 auto const first = ranges::begin(std::get<N - 1>(view_->views_));
 
                 auto const idx = static_cast<difference_type>(i - first);
@@ -277,45 +278,48 @@ namespace ranges
                     at_end || bool(std::get<N - 1>(its_) ==
                                    ranges::end(std::get<N - 1>(view_->views_))));
             }
-            cursor(end_tag, constify_if<cartesian_product_view> & view,
+            cursor(end_tag, constify_if<cartesian_product_view> * view,
                    std::true_type) // common_with
               : cursor(begin_tag{}, view)
             {
-                CPP_assert(common_range<meta::at_c<meta::list<Views...>, 0>>);
-                std::get<0>(its_) = ranges::end(std::get<0>(view.views_));
+                CPP_assert(
+                    common_range<meta::at_c<meta::list<constify_if<Views>...>, 0>>);
+                std::get<0>(its_) = ranges::end(std::get<0>(view->views_));
             }
-            cursor(end_tag, constify_if<cartesian_product_view> & view,
+            cursor(end_tag, constify_if<cartesian_product_view> * view,
                    std::false_type) // !common_with
               : cursor(begin_tag{}, view)
             {
-                using View0 = meta::at_c<meta::list<Views...>, 0>;
+                using View0 = meta::at_c<meta::list<constify_if<Views>...>, 0>;
                 CPP_assert(!common_range<View0> && random_access_range<View0> &&
                            sized_range<View0>);
-                std::get<0>(its_) += ranges::distance(std::get<0>(view.views_));
+                std::get<0>(its_) += ranges::distance(std::get<0>(view->views_));
             }
 
         public:
             using value_type = std::tuple<range_value_t<Views>...>;
 
             cursor() = default;
-            explicit cursor(begin_tag, constify_if<cartesian_product_view> & view)
-              : view_(&view)
-              , its_(tuple_transform(view.views_, ranges::begin))
+            explicit cursor(begin_tag, constify_if<cartesian_product_view> * view)
+              : view_(view)
+              , its_(tuple_transform(view->views_, ranges::begin))
             {
                 // If any of the constituent views is empty, the cartesian_product is
                 // empty and this "begin" iterator needs to become an "end" iterator.
                 check_at_end_(meta::size_t<sizeof...(Views)>{});
             }
-            explicit cursor(end_tag, constify_if<cartesian_product_view> & view)
-              : cursor(end_tag{}, view,
-                       meta::bool_<common_range<meta::at_c<meta::list<Views...>, 0>>>{})
+            explicit cursor(end_tag, constify_if<cartesian_product_view> * view)
+              : cursor(
+                    end_tag{}, view,
+                    meta::bool_<
+                        common_range<meta::at_c<meta::list<constify_if<Views>...>, 0>>>{})
             {}
             CPP_template(bool Other)( //
                 requires IsConst_ && (!Other)) cursor(cursor<Other> that)
               : view_(that.view_)
               , its_(std::move(that.its_))
             {}
-            common_tuple<range_reference_t<Views>...> read() const
+            common_tuple<range_reference_t<constify_if<Views>>...> read() const
             {
                 return tuple_transform(its_, detail::dereference_fn{});
             }
@@ -352,25 +356,25 @@ namespace ranges
         };
         cursor<false> begin_cursor()
         {
-            return cursor<false>{begin_tag{}, *this};
+            return cursor<false>{begin_tag{}, this};
         }
         CPP_member
         auto begin_cursor() const -> CPP_ret(cursor<true>)( //
             requires cartesian_produce_view_can_const<Views...>)
         {
-            return cursor<true>{begin_tag{}, *this};
+            return cursor<true>{begin_tag{}, this};
         }
         CPP_member
         auto end_cursor() -> CPP_ret(cursor<false>)( //
             requires cartesian_produce_view_can_bidi<std::false_type, Views...>)
         {
-            return cursor<false>{end_tag{}, *this};
+            return cursor<false>{end_tag{}, this};
         }
         CPP_member
         auto end_cursor() const -> CPP_ret(cursor<true>)( //
             requires cartesian_produce_view_can_bidi<std::true_type, Views...>)
         {
-            return cursor<true>{end_tag{}, *this};
+            return cursor<true>{end_tag{}, this};
         }
         CPP_member
         auto end_cursor() const -> CPP_ret(default_sentinel_t)( //

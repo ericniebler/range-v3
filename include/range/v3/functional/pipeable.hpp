@@ -105,15 +105,15 @@ namespace ranges
         template<typename Fun>
         constexpr auto operator()(Fun fun) const
         {
-            struct _
+            struct local
               : Fun
               , pipeable_base
             {
-                constexpr explicit _(Fun && f)
+                constexpr explicit local(Fun && f)
                   : Fun(static_cast<Fun &&>(f))
                 {}
             };
-            return _{static_cast<Fun &&>(fun)};
+            return local{static_cast<Fun &&>(fun)};
         }
     };
 

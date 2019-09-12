@@ -97,6 +97,26 @@ namespace ranges
             template<typename T>
             using invoke = T;
         };
+
+        template<typename Stream, typename Rng>
+        Stream & print_rng_(Stream & sout, Rng & rng)
+        {
+            sout << '[';
+            auto it = ranges::begin(rng);
+            auto const e = ranges::end(rng);
+            if(it != e)
+            {
+                for(;;)
+                {
+                    sout << *it;
+                    if(++it == e)
+                        break;
+                    sout << ',';
+                }
+            }
+            sout << ']';
+            return sout;
+        }
     } // namespace detail
     /// \endcond
 
@@ -176,22 +196,22 @@ namespace ranges
             return bool(ranges::begin(derived()) == ranges::end(derived()));
         }
         CPP_template_gcc_workaround(bool True = true)(    //
-            requires True && detail::can_empty_<D<True>>) //
-            constexpr explicit
-            operator bool() //
+            requires True && detail::can_empty_<D<True>>) // clang-format off
+        constexpr explicit operator bool()
             noexcept(noexcept(ranges::empty(std::declval<D<True> &>())))
         {
             return !ranges::empty(derived());
         }
+        // clang-format on
         /// \overload
         CPP_template_gcc_workaround(bool True = true)(          //
-            requires True && detail::can_empty_<D<True> const>) //
-            constexpr explicit
-            operator bool() const
+            requires True && detail::can_empty_<D<True> const>) // clang-format off
+        constexpr explicit operator bool() const
             noexcept(noexcept(ranges::empty(std::declval<D<True> const &>())))
         {
             return !ranges::empty(derived());
         }
+        // clang-format on
         /// If the size of the range is known at compile-time and finite,
         /// return it.
         template<bool True = true, int = 42>
@@ -469,35 +489,14 @@ namespace ranges
             return ranges::to<Container>(derived());
         }
         /// \endcond
-        /// \brief Print a range to an ostream
     private:
-        template<typename Stream, typename Rng>
-        static auto print_(Stream & sout, Rng & rng) -> CPP_ret(Stream &)( //
-            requires same_as<Derived, meta::_t<std::remove_cv<Rng>>>)
-        {
-            sout << '[';
-            auto it = ranges::begin(rng);
-            auto const e = ranges::end(rng);
-            if(it != e)
-            {
-                for(;;)
-                {
-                    sout << *it;
-                    if(++it == e)
-                        break;
-                    sout << ',';
-                }
-            }
-            sout << ']';
-            return sout;
-        }
-
+        /// \brief Print a range to an ostream
         template<bool True = true>
         friend auto operator<<(std::ostream & sout, Derived const & rng)
             -> CPP_broken_friend_ret(std::ostream &)( //
                 requires True && input_range<D<True> const>)
         {
-            return view_interface::print_(sout, rng);
+            return detail::print_rng_(sout, rng);
         }
         /// \overload
         template<bool True = true>
@@ -505,7 +504,7 @@ namespace ranges
             -> CPP_broken_friend_ret(std::ostream &)( //
                 requires True && (!range<D<True> const>)&&input_range<D<True>>)
         {
-            return view_interface::print_(sout, rng);
+            return detail::print_rng_(sout, rng);
         }
         /// \overload
         template<bool True = true>
@@ -513,7 +512,7 @@ namespace ranges
             -> CPP_broken_friend_ret(std::ostream &)( //
                 requires True && (!range<D<True> const>)&&input_range<D<True>>)
         {
-            return view_interface::print_(sout, rng);
+            return detail::print_rng_(sout, rng);
         }
     };
 

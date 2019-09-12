@@ -153,6 +153,13 @@ namespace ranges
         struct cpp20_common_fn
         {
             template<typename Rng>
+            auto operator()(Rng && rng) const -> CPP_ret(all_t<Rng>)( //
+                requires viewable_range<Rng> && common_range<Rng>)
+            {
+                return all(static_cast<Rng &&>(rng));
+            }
+
+            template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(common_view<all_t<Rng>>)( //
                 requires viewable_range<Rng> && (!common_range<Rng>))
             {

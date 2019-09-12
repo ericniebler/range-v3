@@ -1,6 +1,12 @@
 Release Notes           {#release_notes}
 =============
 
+\section v0-9-1 Version 0.9.1
+
+_Released:_ Sept 1, 2019.
+
+gcc-9.x portability fixes.
+
 \section v0-9-0 Version 0.9.0 "Std::ranger Things"
 
 _Released:_ Aug 26, 2019.

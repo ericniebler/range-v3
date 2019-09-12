@@ -414,7 +414,8 @@ namespace ranges
         template<typename I, typename S>
         static constexpr iter_difference_t<I> impl_i(I first, S last, sentinel_tag)
         {
-            return iter_enumerate(static_cast<I &&>(first), static_cast<S &&>(last)).first;
+            return iter_enumerate(static_cast<I &&>(first), static_cast<S &&>(last))
+                .first;
         }
         template<typename I, typename S>
         static constexpr iter_difference_t<I> impl_i(I first, S last, sized_sentinel_tag)

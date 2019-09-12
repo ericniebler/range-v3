@@ -157,14 +157,15 @@ namespace ranges
         struct adaptor : adaptor_base
         {
         private:
+            friend struct adaptor<!Const>;
             using CRng = meta::const_if_c<Const, Rng>;
             using stride_view_t = meta::const_if_c<Const, stride_view>;
             stride_view_t * rng_;
 
         public:
             adaptor() = default;
-            constexpr adaptor(stride_view_t & rng) noexcept
-              : rng_(&rng)
+            constexpr adaptor(stride_view_t * rng) noexcept
+              : rng_(rng)
             {}
             CPP_template(bool Other)( //
                 requires Const && (!Other)) adaptor(adaptor<Other> that)
@@ -244,26 +245,26 @@ namespace ranges
         };
         constexpr auto begin_adaptor() noexcept -> adaptor<false>
         {
-            return adaptor<false>{*this};
+            return adaptor<false>{this};
         }
         CPP_member
         constexpr auto begin_adaptor() const noexcept
             -> CPP_ret(adaptor<true>)(requires(const_iterable()))
         {
-            return adaptor<true>{*this};
+            return adaptor<true>{this};
         }
 
         constexpr auto end_adaptor() noexcept
             -> meta::if_c<can_bound<false>(), adaptor<false>, adaptor_base>
         {
-            return {*this};
+            return {this};
         }
         CPP_member
         constexpr auto end_adaptor() const noexcept
             -> CPP_ret(meta::if_c<can_bound<true>(), adaptor<true>, adaptor_base>)( //
                 requires(const_iterable()))
         {
-            return {*this};
+            return {this};
         }
 
     public:

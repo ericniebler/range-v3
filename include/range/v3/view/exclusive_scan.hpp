@@ -76,8 +76,8 @@ namespace ranges
                 // clang-format on
                 public : using single_pass = exclusive_scan_view::single_pass;
             adaptor() = default;
-            adaptor(exclusive_scan_view_t & rng)
-              : rng_(&rng)
+            adaptor(exclusive_scan_view_t * rng)
+              : rng_(rng)
             {}
             CPP_template(bool Other)( //
                 requires IsConst && (!Other)) adaptor(adaptor<Other> that)
@@ -103,24 +103,24 @@ namespace ranges
 
         adaptor<false> begin_adaptor()
         {
-            return {*this};
+            return {this};
         }
         meta::if_<use_sentinel_t, adaptor_base, adaptor<false>> end_adaptor()
         {
-            return {*this};
+            return {this};
         }
         CPP_member
         auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
             requires exclusive_scan_constraints<Rng const, T, Fun const>)
         {
-            return {*this};
+            return {this};
         }
         CPP_member
         auto end_adaptor() const
             -> CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)( //
                 requires exclusive_scan_constraints<Rng const, T, Fun const>)
         {
-            return {*this};
+            return {this};
         }
 
     public:
