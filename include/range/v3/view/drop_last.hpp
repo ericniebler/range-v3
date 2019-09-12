@@ -35,6 +35,9 @@
 
 namespace ranges
 {
+    /// \addtogroup group-views
+    /// @{
+
     /// \cond
     namespace detail
     {
@@ -352,6 +355,8 @@ namespace ranges
 
         RANGES_INLINE_VARIABLE(view<drop_last_fn>, drop_last)
     } // namespace views
+
+    /// @}
 } // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>

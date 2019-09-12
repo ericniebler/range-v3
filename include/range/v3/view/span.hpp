@@ -31,6 +31,9 @@
 
 namespace ranges
 {
+    /// \addtogroup group-views
+    /// @{
+
     /// \cond
     namespace detail
     {
@@ -408,6 +411,8 @@ namespace ranges
     {
         return {ranges::data(rng), range_cardinality<Rng>::value};
     }
+
+    /// @}
 } // namespace ranges
 
 #endif // RANGES_V3_VIEW_SPAN_HPP
