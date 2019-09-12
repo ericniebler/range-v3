@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['views_2168',['Views',['../group__group-views.html',1,'']]]
+  ['views',['Views',['../group__group-views.html',1,'']]]
 ];

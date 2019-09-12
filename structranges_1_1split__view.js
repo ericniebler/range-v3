@@ -3,7 +3,7 @@ var structranges_1_1split__view =
     [ "detail::split_inner_iterator", "structranges_1_1split__view.html#a2cff8108fbf494af37a8d83cd0a1ef03", null ],
     [ "detail::split_outer_iterator", "structranges_1_1split__view.html#ac6638c9d9cdce94a16153b2a87dc2b2c", null ],
     [ "base", "structranges_1_1split__view.html#aa417757ada0e58eabcdee1d83d957a84", null ],
-    [ "begin", "structranges_1_1split__view.html#aba8cea85a8ab391a41c9d818c79f767e", null ],
+    [ "begin", "structranges_1_1split__view.html#ad06b4dc3a2230c81e4e792d3f641cee8", null ],
     [ "begin", "structranges_1_1split__view.html#a49cd3519349e0c5bbab912da1c7977c0", null ],
     [ "end", "structranges_1_1split__view.html#add3923a6e1c6f59c0b707e4563d93ac2", null ],
     [ "end", "structranges_1_1split__view.html#a2437d0fc3ea766d316a4a08ee9502fc0", null ],

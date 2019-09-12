@@ -1,13 +1,10 @@
 var group__group_actions =
 [
-    [ "make_action_fn", "structranges_1_1make__action__fn.html", [
-      [ "make_action", "group__group-actions.html#ga0b2257b9d4c04c0be00bbc11b5e6936b", null ],
-      [ "operator()", "structranges_1_1make__action__fn.html#a9577d0f0166ef9559590ab9b34c88a39", null ]
-    ] ],
     [ "adjacent_remove_if", "group__group-actions.html#ga8c1b6d7c5bdcd2cd29c67de3f7482a22", null ],
     [ "drop", "group__group-actions.html#ga1e36152aecd17031d25fea4fe8da2b69", null ],
     [ "drop_while", "group__group-actions.html#gabf7e0a0e9db096aa11eb9d37f242fba8", null ],
     [ "join", "group__group-actions.html#gaf85c713c3d2cb80ef2c53b9c3212ccad", null ],
+    [ "make_action", "group__group-actions.html#ga0b2257b9d4c04c0be00bbc11b5e6936b", null ],
     [ "remove", "group__group-actions.html#gabcc7d67528ad11a549ca00e59dc3443a", null ],
     [ "remove_if", "group__group-actions.html#ga8fa4d6429c889af4a6b67b2a90cb93a0", null ],
     [ "reverse", "group__group-actions.html#ga4c5cc0cc96a941b2fdc9fa5d744da163", null ],

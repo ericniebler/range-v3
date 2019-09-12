@@ -5,6 +5,6 @@ var action_2action_8hpp =
       [ "impl", "structranges_1_1actions_1_1action__access_1_1impl.html", null ]
     ] ],
     [ "impl", "structranges_1_1actions_1_1action__access_1_1impl.html", null ],
-    [ "action_base", "structranges_1_1actions_1_1action__base.html", "structranges_1_1actions_1_1action__base" ],
-    [ "operator|=", "action_2action_8hpp.html#aee2c50fe589c32bd41899556edd9d21b", null ]
+    [ "make_action_fn", "structranges_1_1actions_1_1make__action__fn.html", "structranges_1_1actions_1_1make__action__fn" ],
+    [ "operator|=", "action_2action_8hpp.html#a9ec8c6fcbfa4bc5739d3f844b62c6d04", null ]
 ];

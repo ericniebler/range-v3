@@ -1,17 +1,18 @@
 /*
-@licstart  The following is the entire license notice for the
+@ @licstart  The following is the entire license notice for the
 JavaScript code in this file.
 
-Copyright (C) 1997-2019 by Dimitri van Heesch
+Copyright (C) 1997-2017 by Dimitri van Heesch
 
 This program is free software; you can redistribute it and/or modify
-it under the terms of version 2 of the GNU General Public License as published by
-the Free Software Foundation
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
@@ -31,18 +32,8 @@ var NAVTREE =
       ] ],
       [ "Quick Start", "index.html#tutorial-quick-start", [
         [ "Views", "index.html#tutorial-views", null ],
-        [ "View const-ness", "index.html#autotoc_md6", null ],
-        [ "View validity", "index.html#autotoc_md7", null ],
-        [ "List of range views", "index.html#autotoc_md8", null ],
         [ "Actions", "index.html#tutorial-actions", null ],
-        [ "List of range actions", "index.html#autotoc_md10", null ],
-        [ "Utilities", "index.html#tutorial-utilities", [
-          [ "Create Custom Views with view_facade", "index.html#autotoc_md12", null ],
-          [ "Create Custom Views with view_adaptor", "index.html#autotoc_md13", [
-            [ "view_adaptor in details", "index.html#autotoc_md14", null ]
-          ] ],
-          [ "Create Custom Iterators with basic_iterator", "index.html#autotoc_md15", null ]
-        ] ],
+        [ "Utilities", "index.html#tutorial-utilities", null ],
         [ "Concept Checking", "index.html#tutorial-concepts", null ],
         [ "Range-v3 and the Future", "index.html#tutorial-future", null ]
       ] ]
@@ -106,20 +97,20 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"classranges_1_1join__with__view_1_1cursor.html#af84987f9f140204f222a8040e2f7abd5",
-"count_8hpp.html#ga0a6302f276cdf98372e30f45d10ae3a4",
-"group__group-algorithms.html#ga4e5950e393a0aee33b00b34c2f8e97c9",
-"group__group-views.html#ga63c1f2feed272a28e308452c21baaa19",
-"group__transformation.html#gae8b919ad4c2cfe9b0fc7549cedae5e37",
-"meta_8hpp.html#ga7e59a2a7df311e0d88e2781f753e5a9a",
-"range_2operations_8hpp.html#gadb5d99cd1ed6afb3c5735265f81a450e",
-"structmeta_1_1detail_1_1count___3_01list_3_4_00_01_t_01_4.html",
-"structranges_1_1common__iterator.html#a3ecb9ddb42309f0f895e4a02b70165c8",
-"structranges_1_1indirected.html#ad641b877c402b691f4c38407cd95cd01",
-"structranges_1_1optional.html#a50bd4938a812b0acf95a506d4501d358",
-"structranges_1_1span.html#acd98a38d31901f7766f5f24e1196c61f",
-"structranges_1_1views_1_1for__each__fn.html",
-"view_2split_8hpp.html#aac1d140a436be9d9b53dd9f0c0f6f5aa"
+"classranges_1_1join__with__view_1_1cursor.html#ae7223ceccfee7a840a125106bdb2cb4c",
+"count_8hpp.html",
+"group__group-algorithms.html#ga4cb85c9a5ce8c5773f1f7f8fa9d6ef15",
+"group__group-views.html#ga4c265de67279f05d48f0306864417660",
+"group__query.html#ga665bd44f6d231438a3200df8030f593a",
+"meta_8hpp.html#ga4e3348a777312c3f3b7cc0d6cd93a240",
+"pipeable_8hpp.html#ga15823a65a9498bb7c7502a3b1c16c293",
+"structconcepts_1_1common__type_3_01_t_00_01_u_01_4.html",
+"structranges_1_1cache1__view.html",
+"structranges_1_1getlines__view.html#a9ca5dfe50f2f7126062f705de0f199cf",
+"structranges_1_1multiplies.html#a1a18d88865d044d96c4af59df6ee3575",
+"structranges_1_1split__view.html",
+"structranges_1_1views_1_1generate__n__fn.html#a3caa1c1fe5bbbae201f5cc8d707d755f",
+"view_2transform_8hpp.html#a29d619f981eb48473b43b941c1b5c545"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
