@@ -51,7 +51,7 @@ namespace ranges
         private:
             friend struct sentinel_adaptor<!IsConst>;
             using CRng = meta::const_if_c<IsConst, Rng>;
-            semiregular_box_ref_or_val_t<Pred, IsConst> pred_;
+            RANGES_NO_UNIQUE_ADDRESS semiregular_box_ref_or_val_t<Pred, IsConst> pred_;
 
         public:
             sentinel_adaptor() = default;
