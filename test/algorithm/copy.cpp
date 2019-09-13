@@ -9,6 +9,7 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <vector>
 #include <sstream>
 #include <cstring>
 #include <utility>
