@@ -20,6 +20,9 @@
 
 namespace ranges
 {
+    /// \addtogroup group-views
+    /// @{
+
     /// \cond
     namespace detail
     {
@@ -88,6 +91,8 @@ namespace ranges
             requires std::is_object<T>::value) //
             using empty_view = ranges::empty_view<T>;
     } // namespace cpp20
+
+    /// @}
 } // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>

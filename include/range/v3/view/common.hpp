@@ -33,9 +33,9 @@ namespace ranges
     /// \addtogroup group-views
     /// @{
 
+    /// \cond
     namespace detail
     {
-        /// \cond
         // clang-format off
         CPP_def
         (
@@ -53,8 +53,8 @@ namespace ranges
         template<typename Rng>
         struct is_common_range : meta::bool_<common_range<Rng>>
         {};
-        /// \endcond
     } // namespace detail
+    /// \endcond
 
     template<typename Rng, bool = detail::is_common_range<Rng>::value>
     struct common_view : view_interface<common_view<Rng>, range_cardinality<Rng>::value>

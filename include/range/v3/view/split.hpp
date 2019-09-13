@@ -546,7 +546,7 @@ namespace ranges
             return base_;
         }
 
-        constexpr auto begin()
+        constexpr auto begin() -> outer_iterator<forward_range<V> && simple_view<V>()>
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(forward_range<V>)
