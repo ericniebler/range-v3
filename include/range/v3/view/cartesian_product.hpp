@@ -75,6 +75,9 @@ namespace ranges
     } // namespace detail
       /// \endcond
 
+    /// \addtogroup group-views
+    /// @{
+
     // clang-format off
     CPP_def
     (
@@ -436,6 +439,8 @@ namespace ranges
 
         RANGES_INLINE_VARIABLE(cartesian_product_fn, cartesian_product)
     } // namespace views
+
+    /// @}
 } // namespace ranges
 
 #endif

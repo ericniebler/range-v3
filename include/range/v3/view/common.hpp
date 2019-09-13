@@ -33,9 +33,9 @@ namespace ranges
     /// \addtogroup group-views
     /// @{
 
+    /// \cond
     namespace detail
     {
-        /// \cond
         // clang-format off
         CPP_def
         (
@@ -53,8 +53,8 @@ namespace ranges
         template<typename Rng>
         struct is_common_range : meta::bool_<common_range<Rng>>
         {};
-        /// \endcond
     } // namespace detail
+    /// \endcond
 
     template<typename Rng, bool = detail::is_common_range<Rng>::value>
     struct common_view : view_interface<common_view<Rng>, range_cardinality<Rng>::value>
@@ -152,6 +152,13 @@ namespace ranges
     {
         struct cpp20_common_fn
         {
+            template<typename Rng>
+            auto operator()(Rng && rng) const -> CPP_ret(all_t<Rng>)( //
+                requires viewable_range<Rng> && common_range<Rng>)
+            {
+                return all(static_cast<Rng &&>(rng));
+            }
+
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(common_view<all_t<Rng>>)( //
                 requires viewable_range<Rng> && (!common_range<Rng>))

@@ -730,6 +730,7 @@ namespace ranges
         using ranges::random_access_iterator;
         using ranges::readable;
         using ranges::sentinel_for;
+        using ranges::sized_sentinel_for;
         using ranges::sortable;
         using ranges::weakly_incrementable;
         using ranges::writable;
