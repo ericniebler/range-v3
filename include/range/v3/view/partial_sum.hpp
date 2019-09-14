@@ -46,6 +46,8 @@ namespace ranges
             template(typename Rng, typename Fun)
             concept partial_sum_view_constraints,
                 input_range<Rng> &&
+                copy_constructible<Fun> &&
+                copy_constructible<range_value_t<Rng>> &&
                 constructible_from<range_value_t<Rng>, range_reference_t<Rng>> &&
                 assignable_from<range_value_t<Rng> &, range_reference_t<Rng>> &&
                 indirectly_binary_invocable_<Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
