@@ -393,6 +393,13 @@ namespace ranges
             {
                 return concat_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
             }
+            template<typename Rng>
+            auto operator()(Rng && rng) const //
+                -> CPP_ret(all_t<Rng>)(       //
+                    requires viewable_range<Rng> && input_range<Rng>)
+            {
+                return all(static_cast<Rng &&>(rng));
+            }
         };
 
         /// \relates concat_fn
