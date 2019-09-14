@@ -46,6 +46,18 @@ namespace concepts
     };
 }
 
+template<typename T>
+struct ConvTo
+{
+    operator T();
+};
+
+// Whoops, fails:
+static_assert(std::is_same<
+    ranges::common_type_t<ConvTo<int>, int>,
+    int
+>::value, "");
+
 int main()
 {
     using namespace ranges;
