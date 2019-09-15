@@ -19,6 +19,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/functional.hpp>
 #include <range/v3/iterator.hpp>
+#include <range/v3/iterator_range.hpp>
 #include <range/v3/numeric.hpp>
 #include <range/v3/range.hpp>
 #include <range/v3/utility.hpp>
