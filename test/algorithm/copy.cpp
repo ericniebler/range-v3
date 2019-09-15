@@ -9,6 +9,8 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <vector>
+#include <sstream>
 #include <cstring>
 #include <utility>
 #include <algorithm>
@@ -16,6 +18,7 @@
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/equal.hpp>
 #include <range/v3/view/delimit.hpp>
+#include <range/v3/iterator/stream_iterators.hpp>
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
@@ -78,6 +81,14 @@ int main()
         CHECK(::is_dangling(res3.in));
         CHECK(res3.out == buf + std::strlen(sz));
         CHECK(std::strcmp(sz, buf) == 0);
+    }
+
+    {
+        using namespace ranges;
+        std::ostringstream sout;
+        std::vector<int> copy_vec{1,1,1,1,1};
+        copy(copy_vec, ostream_iterator<>(sout, " "));
+        CHECK(sout.str() == "1 1 1 1 1 ");
     }
 
     return test_result();
