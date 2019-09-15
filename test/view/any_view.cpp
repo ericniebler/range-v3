@@ -15,6 +15,7 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/map.hpp>
 #include <range/v3/view/take.hpp>
+#include <range/v3/view/tail.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/any_view.hpp>
 #include <range/v3/utility/copy.hpp>
@@ -181,6 +182,17 @@ RANGES_DIAGNOSTIC_POP
         ranges::any_view<int, ranges::category::forward | ranges::category::sized> as_any =
             mm | ranges::views::keys;
         (void)as_any;
+    }
+
+    // Regression test for #1101
+    {
+        std::vector<int> v = { 1, 2, 3, 4, 5 };
+
+        using SizedAnyView = ranges::any_view<int, ranges::category::random_access | ranges::category::sized>;
+
+        SizedAnyView av1 = v;
+        SizedAnyView av2 = av1 | ranges::views::transform( [](auto){ return 0; } ); // fail
+        SizedAnyView av3 = av1 | ranges::views::tail; // fail
     }
 
     test_polymorphic_downcast();
