@@ -577,7 +577,7 @@ namespace ranges
             template<typename T, std::size_t N>
             constexpr view_closure<lamduh<T, N>> operator()(T (&val)[N]) const
             {
-                return view_closure<lamduh<T, N>>{val};
+                return view_closure<lamduh<T, N>>{lamduh<T, N>{val}};
             }
 #else  // ^^^ workaround / no workaround vvv
             template<typename T, std::size_t N>
