@@ -48,6 +48,26 @@ namespace ranges
             {
                 return bind_back(split, static_cast<T &&>(val));
             }
+#ifdef RANGES_WORKAROUND_MSVC_OLD_LAMBDA
+            template<typename T, std::size_t N>
+            struct lamduh
+            {
+                T (&val_)[N];
+
+                template<class Rng>
+                constexpr auto operator()(Rng && rng)
+                    -> decltype(split_fn{}(std::declval<Rng>(), val_))
+                {
+                    return split_fn{}(static_cast<Rng &&>(rng), val_);
+                }
+            };
+
+            template<typename T, std::size_t N>
+            static auto bind(split_fn, T (&val)[N])
+            {
+                return lamduh<T, N>{val};
+            }
+#else // ^^^ workaround / no workaround vvv
             template<typename T, std::size_t N>
             static auto bind(split_fn, T (&val)[N])
             {
@@ -57,6 +77,7 @@ namespace ranges
                     return split_fn{}(static_cast<decltype(rng)>(rng), val);
                 };
             }
+#endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
 
         public:
             // BUGBUG something is not right with the actions. It should be possible
