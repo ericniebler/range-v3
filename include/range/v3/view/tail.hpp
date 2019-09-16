@@ -122,7 +122,7 @@ namespace ranges
 
         /// \relates tail_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<tail_fn>, tail)
+        RANGES_INLINE_VARIABLE(view_closure<tail_fn>, tail)
     } // namespace views
     /// @}
 } // namespace ranges

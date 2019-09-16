@@ -77,7 +77,7 @@ namespace ranges
         // operator
         // clang-format off
         template<typename Arg, typename Pipe>
-        constexpr static auto CPP_auto_fun(pipe)(Arg &&arg, Pipe p)
+        static constexpr auto CPP_auto_fun(pipe)(Arg &&arg, Pipe p)
         (
             return static_cast<Pipe &&>(p)(static_cast<Arg &&>(arg))
         )

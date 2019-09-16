@@ -243,7 +243,7 @@ struct interleave_view<Rngs>::cursor
 auto
 interleave()
 {
-    return make_view([](auto &&rngs) {
+    return make_view_closure([](auto &&rngs) {
         using Rngs = decltype(rngs);
         return interleave_view<views::all_t<Rngs>>(
             views::all(std::forward<Rngs>(rngs)));
@@ -255,7 +255,7 @@ interleave()
 auto
 transpose()
 {
-    return make_view([](auto &&rngs) {
+    return make_view_closure([](auto &&rngs) {
         using Rngs = decltype(rngs);
         CPP_assert(forward_range<Rngs>);
         return std::forward<Rngs>(rngs)

@@ -81,22 +81,8 @@ namespace ranges
 
     namespace views
     {
-        struct drop_while_fn
+        struct drop_while_base_fn
         {
-        private:
-            friend view_access;
-            template<typename Pred>
-            static constexpr auto bind(drop_while_fn drop_while, Pred pred)
-            {
-                return bind_back(drop_while, std::move(pred));
-            }
-            template<typename Pred, typename Proj>
-            static constexpr auto bind(drop_while_fn drop_while, Pred pred, Proj proj)
-            {
-                return bind_back(drop_while, std::move(pred), std::move(proj));
-            }
-
-        public:
             template<typename Rng, typename Pred>
             auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(drop_while_view<all_t<Rng>, Pred>)( //
@@ -116,9 +102,26 @@ namespace ranges
             }
         };
 
+        struct drop_while_fn : drop_while_base_fn
+        {
+            using drop_while_base_fn::operator();
+
+            template<typename Pred>
+            constexpr auto operator()(Pred pred) const
+            {
+                return make_view_closure(bind_back(drop_while_base_fn{}, std::move(pred)));
+            }
+            template<typename Pred, typename Proj>
+            constexpr auto CPP_fun(operator())(Pred && pred, Proj proj)(const //
+                requires(!range<Pred>))
+            {
+                return make_view_closure(bind_back(drop_while_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));
+            }
+        };
+
         /// \relates drop_while_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<drop_while_fn>, drop_while)
+        RANGES_INLINE_VARIABLE(drop_while_fn, drop_while)
     } // namespace views
 
     namespace cpp20

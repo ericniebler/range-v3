@@ -83,7 +83,7 @@ namespace ranges
 
         /// \relates all_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<all_fn>, all)
+        RANGES_INLINE_VARIABLE(all_fn, all)
 
         template<typename Rng>
         using all_t = decltype(all(std::declval<Rng>()));

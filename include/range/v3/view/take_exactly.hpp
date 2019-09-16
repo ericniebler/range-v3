@@ -140,18 +140,9 @@ namespace ranges
 
     namespace views
     {
-        struct take_exactly_fn
+        struct take_exactly_base_fn
         {
         private:
-            friend view_access;
-
-            template<typename Int>
-            static constexpr auto CPP_fun(bind)(take_exactly_fn take_exactly, Int n)( //
-                requires integral<Int>)
-            {
-                return bind_back(take_exactly, n);
-            }
-
             template<typename Rng>
             static constexpr take_exactly_view<all_t<Rng>> impl_(
                 Rng && rng, range_difference_t<Rng> n, input_range_tag)
@@ -166,20 +157,32 @@ namespace ranges
             {
                 return {begin(rng), next(begin(rng), n)};
             }
-
         public:
             template<typename Rng>
             constexpr auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(
-                const requires viewable_range<Rng> && input_range<Rng>)
+                const //
+                    requires viewable_range<Rng> && input_range<Rng>)
             {
-                return take_exactly_fn::impl_(
+                return take_exactly_base_fn::impl_(
                     static_cast<Rng &&>(rng), n, range_tag_of<Rng>{});
+            }
+        };
+
+        struct take_exactly_fn : take_exactly_base_fn
+        {
+            using take_exactly_base_fn::operator();
+
+            template<typename Int>
+            constexpr auto CPP_fun(operator())(Int n)(const //
+                requires detail::integer_like_<Int>)
+            {
+                return make_view_closure(bind_back(take_exactly_base_fn{}, n));
             }
         };
 
         /// \relates take_exactly_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<take_exactly_fn>, take_exactly)
+        RANGES_INLINE_VARIABLE(take_exactly_fn, take_exactly)
     } // namespace views
     /// @}
 } // namespace ranges

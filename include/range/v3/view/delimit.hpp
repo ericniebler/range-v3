@@ -76,31 +76,8 @@ namespace ranges
 
     namespace views
     {
-        struct delimit_impl_fn
+        struct delimit_base_fn
         {
-        private:
-            friend view_access;
-            template<typename Val>
-            static constexpr auto bind(delimit_impl_fn delimit, Val value)
-            {
-                return bind_back(delimit, std::move(value));
-            }
-
-        public:
-            template<typename Rng, typename Val>
-            constexpr auto operator()(Rng && rng, Val value) const -> CPP_ret(
-                delimit_view<all_t<Rng>, Val>)( //
-                requires viewable_range<Rng> && input_range<Rng> && semiregular<Val> &&
-                    equality_comparable_with<Val, range_reference_t<Rng>>)
-            {
-                return {all(static_cast<Rng &&>(rng)), std::move(value)};
-            }
-        };
-
-        struct delimit_fn : view<delimit_impl_fn>
-        {
-            using view<delimit_impl_fn>::operator();
-
             template<typename I_, typename Val, typename I = detail::decay_t<I_>>
             constexpr auto operator()(I_ && begin_, Val value) const
                 -> CPP_ret(delimit_view<subrange<I, unreachable_sentinel_t>, Val>)( //
@@ -109,6 +86,26 @@ namespace ranges
                              equality_comparable_with<Val, iter_reference_t<I>>))
             {
                 return {{static_cast<I_ &&>(begin_), {}}, std::move(value)};
+            }
+
+            template<typename Rng, typename Val>
+            constexpr auto operator()(Rng && rng, Val value) const //
+                -> CPP_ret(delimit_view<all_t<Rng>, Val>)(         //
+                    requires viewable_range<Rng> && input_range<Rng> && semiregular<Val> &&
+                        equality_comparable_with<Val, range_reference_t<Rng>>)
+            {
+                return {all(static_cast<Rng &&>(rng)), std::move(value)};
+            }
+        };
+
+        struct delimit_fn : delimit_base_fn
+        {
+            using delimit_base_fn::operator();
+
+            template<typename Val>
+            constexpr auto operator()(Val value) const
+            {
+                return make_view_closure(bind_back(delimit_base_fn{}, std::move(value)));
             }
         };
 

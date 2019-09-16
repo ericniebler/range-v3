@@ -114,17 +114,8 @@ namespace ranges
     /// @{
     namespace views
     {
-        struct replace_if_fn
+        struct replace_if_base_fn
         {
-        private:
-            friend view_access;
-            template<typename Pred, typename Val>
-            static constexpr auto bind(replace_if_fn replace_if, Pred pred, Val new_value)
-            {
-                return bind_back(replace_if, std::move(pred), std::move(new_value));
-            }
-
-        public:
             template<typename Rng, typename Pred, typename Val>
             constexpr auto operator()(Rng && rng, Pred pred, Val new_value) const
                 -> CPP_ret(replace_if_view<all_t<Rng>, Pred, Val>)( //
@@ -142,9 +133,20 @@ namespace ranges
             }
         };
 
+        struct replace_if_fn : replace_if_base_fn
+        {
+            using replace_if_base_fn::operator();
+
+            template<typename Pred, typename Val>
+            constexpr auto operator()(Pred pred, Val new_value) const
+            {
+                return make_view_closure(bind_back(replace_if_base_fn{}, std::move(pred), std::move(new_value)));
+            }
+        };
+
         /// \relates replace_if_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<replace_if_fn>, replace_if)
+        RANGES_INLINE_VARIABLE(replace_if_fn, replace_if)
     } // namespace views
     /// @}
 } // namespace ranges

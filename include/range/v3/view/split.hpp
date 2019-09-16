@@ -604,18 +604,8 @@ namespace ranges
 
     namespace views
     {
-        struct split_fn
+        struct split_base_fn
         {
-        private:
-            friend view_access;
-
-            template<typename T>
-            static constexpr auto bind(split_fn split, T t)
-            {
-                return bind_back(split, std::move(t));
-            }
-
-        public:
             template<typename Rng>
             constexpr auto operator()(Rng && rng, range_value_t<Rng> val) const
                 -> CPP_ret(split_view<all_t<Rng>, single_view<range_value_t<Rng>>>)( //
@@ -639,9 +629,20 @@ namespace ranges
             }
         };
 
+        struct split_fn : split_base_fn
+        {
+            using split_base_fn::operator();
+
+            template<typename T>
+            constexpr auto operator()(T t) const
+            {
+                return make_view_closure(bind_back(split_base_fn{}, std::move(t)));
+            }
+        };
+
         /// \relates split_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<split_fn>, split)
+        RANGES_INLINE_VARIABLE(split_fn, split)
     } // namespace views
 
     namespace cpp20

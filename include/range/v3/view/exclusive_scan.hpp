@@ -151,18 +151,8 @@ namespace ranges
 
     namespace views
     {
-        struct exclusive_scan_fn
+        struct exclusive_scan_base_fn
         {
-        private:
-            friend view_access;
-            template<typename T, typename Fun = plus>
-            static constexpr auto bind(exclusive_scan_fn exclusive_scan, T init,
-                                       Fun fun = {})
-            {
-                return bind_back(exclusive_scan, std::move(init), std::move(fun));
-            }
-
-        public:
             template<typename Rng, typename T, typename Fun = plus>
             constexpr auto operator()(Rng && rng, T init, Fun fun = Fun{}) const
                 -> CPP_ret(exclusive_scan_view<all_t<Rng>, T, Fun>)( //
@@ -172,9 +162,20 @@ namespace ranges
             }
         };
 
+        struct exclusive_scan_fn : exclusive_scan_base_fn
+        {
+            using exclusive_scan_base_fn::operator();
+
+            template<typename T, typename Fun = plus>
+            constexpr auto operator()(T init, Fun fun = {}) const
+            {
+                return make_view_closure(bind_back(exclusive_scan_base_fn{}, std::move(init), std::move(fun)));
+            }
+        };
+
         /// \relates exclusive_scan_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<exclusive_scan_fn>, exclusive_scan)
+        RANGES_INLINE_VARIABLE(exclusive_scan_fn, exclusive_scan)
     } // namespace views
     /// @}
 } // namespace ranges

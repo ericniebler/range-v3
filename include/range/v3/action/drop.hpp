@@ -36,7 +36,7 @@ namespace ranges
             friend action_access;
             template<typename Int>
             static auto CPP_fun(bind)(drop_fn drop, Int n)( //
-                requires integral<Int>)
+                requires detail::integer_like_<Int>)
             {
                 return bind_back(drop, n);
             }

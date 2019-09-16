@@ -140,17 +140,8 @@ namespace ranges
 
     namespace views
     {
-        struct adjacent_filter_fn
+        struct adjacent_filter_base_fn
         {
-        private:
-            friend view_access;
-            template<typename Pred>
-            constexpr static auto bind(adjacent_filter_fn adjacent_filter, Pred pred)
-            {
-                return bind_back(adjacent_filter, std::move(pred));
-            }
-
-        public:
             template<typename Rng, typename Pred>
             constexpr auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(adjacent_filter_view<all_t<Rng>, Pred>)( //
@@ -160,9 +151,20 @@ namespace ranges
             }
         };
 
+        struct adjacent_filter_fn : adjacent_filter_base_fn
+        {
+            using adjacent_filter_base_fn::operator();
+
+            template<typename Pred>
+            constexpr auto operator()(Pred pred) const
+            {
+                return make_view_closure(bind_back(adjacent_filter_base_fn{}, std::move(pred)));
+            }
+        };
+
         /// \relates adjacent_filter_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<adjacent_filter_fn>, adjacent_filter)
+        RANGES_INLINE_VARIABLE(adjacent_filter_fn, adjacent_filter)
     } // namespace views
     /// @}
 } // namespace ranges

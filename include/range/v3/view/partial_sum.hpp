@@ -173,25 +173,8 @@ namespace ranges
 
     namespace views
     {
-        struct partial_sum_fn
+        struct partial_sum_base_fn
         {
-        private:
-            friend view_access;
-            template<typename Fun>
-            static constexpr auto bind(partial_sum_fn partial_sum, Fun fun)
-            {
-                return bind_back(partial_sum, std::move(fun));
-            }
-            template<typename Fun = plus>
-            RANGES_DEPRECATED(
-                "Use \"ranges::views::partial_sum\" instead of "
-                "\"ranges::views::partial_sum()\".")
-            static constexpr auto bind(partial_sum_fn partial_sum)
-            {
-                return bind_back(partial_sum, Fun{});
-            }
-
-        public:
             template<typename Rng, typename Fun = plus>
             constexpr auto operator()(Rng && rng, Fun fun = {}) const
                 -> CPP_ret(partial_sum_view<all_t<Rng>, Fun>)( //
@@ -201,9 +184,29 @@ namespace ranges
             }
         };
 
+        struct partial_sum_fn : partial_sum_base_fn
+        {
+            using partial_sum_base_fn::operator();
+
+            template<typename Fun>
+            constexpr auto CPP_fun(operator())(Fun && fun)(const //
+                requires(!range<Fun>))
+            {
+                return make_view_closure(bind_back(partial_sum_base_fn{}, static_cast<Fun &&>(fun)));
+            }
+            template<typename Fun = plus>
+            RANGES_DEPRECATED(
+                "Use \"ranges::views::partial_sum\" instead of "
+                "\"ranges::views::partial_sum()\".")
+            constexpr auto operator()() const
+            {
+                return make_view_closure(bind_back(partial_sum_base_fn{}, Fun{}));
+            }
+        };
+
         /// \relates partial_sum_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<partial_sum_fn>, partial_sum)
+        RANGES_INLINE_VARIABLE(view_closure<partial_sum_fn>, partial_sum)
     } // namespace views
     /// @}
 } // namespace ranges

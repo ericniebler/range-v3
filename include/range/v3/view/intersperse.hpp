@@ -201,18 +201,8 @@ namespace ranges
 
     namespace views
     {
-        struct intersperse_fn
+        struct intersperse_base_fn
         {
-        private:
-            friend view_access;
-            template<typename T>
-            static constexpr auto CPP_fun(bind)(intersperse_fn intersperse, T t)( //
-                requires copyable<T>)
-            {
-                return bind_back(intersperse, std::move(t));
-            }
-
-        public:
             template<typename Rng>
             constexpr auto operator()(Rng && rng, range_value_t<Rng> val) const
                 -> CPP_ret(intersperse_view<all_t<Rng>>)( //
@@ -224,9 +214,21 @@ namespace ranges
             }
         };
 
+        struct intersperse_fn : intersperse_base_fn
+        {
+            using intersperse_base_fn::operator();
+
+            template<typename T>
+            constexpr auto CPP_fun(operator())(T t)(const //
+                requires copyable<T>)
+            {
+                return make_view_closure(bind_back(intersperse_base_fn{}, std::move(t)));
+            }
+        };
+
         /// \relates intersperse_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<intersperse_fn>, intersperse)
+        RANGES_INLINE_VARIABLE(intersperse_fn, intersperse)
     } // namespace views
 } // namespace ranges
 

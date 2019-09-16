@@ -50,11 +50,11 @@ namespace ranges
         static_assert(std::is_object<T>::value,
                       "The template parameter to empty_view must be an object type.");
         empty_view() = default;
-        constexpr static T * begin() noexcept
+        static constexpr T * begin() noexcept
         {
             return nullptr;
         }
-        constexpr static T * end() noexcept
+        static constexpr T * end() noexcept
         {
             return nullptr;
         }

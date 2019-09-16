@@ -182,7 +182,7 @@ namespace ranges
 
         /// \relates cache1_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<cache1_fn>, cache1)
+        RANGES_INLINE_VARIABLE(view_closure<cache1_fn>, cache1)
     } // namespace views
 
     /// @}

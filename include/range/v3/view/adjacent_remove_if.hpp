@@ -59,7 +59,7 @@ namespace ranges
             constexpr adaptor(adjacent_remove_if_view * rng) noexcept
               : rng_(rng)
             {}
-            constexpr static iterator_t<Rng> begin(adjacent_remove_if_view & rng)
+            static constexpr iterator_t<Rng> begin(adjacent_remove_if_view & rng)
             {
                 return *rng.begin_;
             }
@@ -142,18 +142,8 @@ namespace ranges
 
     namespace views
     {
-        struct adjacent_remove_if_fn
+        struct adjacent_remove_if_base_fn
         {
-        private:
-            friend view_access;
-            template<typename Pred>
-            static constexpr auto bind(adjacent_remove_if_fn adjacent_remove_if,
-                                       Pred pred)
-            {
-                return bind_back(adjacent_remove_if, std::move(pred));
-            }
-
-        public:
             template<typename Rng, typename Pred>
             constexpr auto operator()(Rng && rng, Pred pred) const -> CPP_ret(
                 adjacent_remove_if_view<all_t<Rng>, Pred>)( //
@@ -164,9 +154,20 @@ namespace ranges
             }
         };
 
+        struct adjacent_remove_if_fn : adjacent_remove_if_base_fn
+        {
+            using adjacent_remove_if_base_fn::operator();
+
+            template<typename Pred>
+            constexpr auto operator()(Pred pred) const
+            {
+                return make_view_closure(bind_back(adjacent_remove_if_base_fn{}, std::move(pred)));
+            }
+        };
+
         /// \relates adjacent_remove_if_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<adjacent_remove_if_fn>, adjacent_remove_if)
+        RANGES_INLINE_VARIABLE(adjacent_remove_if_fn, adjacent_remove_if)
     } // namespace views
     /// @}
 } // namespace ranges

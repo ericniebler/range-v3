@@ -144,17 +144,8 @@ namespace ranges
 
     namespace views
     {
-        struct group_by_fn
+        struct group_by_base_fn
         {
-        private:
-            friend view_access;
-            template<typename Fun>
-            static constexpr auto bind(group_by_fn group_by, Fun fun)
-            {
-                return bind_back(group_by, std::move(fun));
-            }
-
-        public:
             template<typename Rng, typename Fun>
             constexpr auto operator()(Rng && rng, Fun fun) const
                 -> CPP_ret(group_by_view<all_t<Rng>, Fun>)( //
@@ -165,9 +156,20 @@ namespace ranges
             }
         };
 
+        struct group_by_fn : group_by_base_fn
+        {
+            using group_by_base_fn::operator();
+
+            template<typename Fun>
+            constexpr auto operator()(Fun fun) const
+            {
+                return make_view_closure(bind_back(group_by_base_fn{}, std::move(fun)));
+            }
+        };
+
         /// \relates group_by_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<group_by_fn>, group_by)
+        RANGES_INLINE_VARIABLE(group_by_fn, group_by)
     } // namespace views
     /// @}
 } // namespace ranges
