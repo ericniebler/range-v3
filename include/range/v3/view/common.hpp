@@ -137,9 +137,10 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng)(        //
-        requires (!common_range<Rng>)) //
-        common_view(Rng &&)->common_view<views::all_t<Rng>>;
+    CPP_template(typename Rng)(       //
+        requires(!common_range<Rng>)) //
+        common_view(Rng &&)
+            ->common_view<views::all_t<Rng>>;
 #endif
 
     template<typename Rng>
@@ -212,8 +213,8 @@ namespace ranges
     {
         namespace views
         {
-            RANGES_INLINE_VARIABLE(ranges::views::view_closure<ranges::views::cpp20_common_fn>,
-                                   common)
+            RANGES_INLINE_VARIABLE(
+                ranges::views::view_closure<ranges::views::cpp20_common_fn>, common)
         }
         CPP_template(typename Rng)(                      //
             requires view_<Rng> && (!common_range<Rng>)) //

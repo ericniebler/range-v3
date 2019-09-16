@@ -169,7 +169,8 @@ namespace ranges
             template<typename T, typename Fun = plus>
             constexpr auto operator()(T init, Fun fun = {}) const
             {
-                return make_view_closure(bind_back(exclusive_scan_base_fn{}, std::move(init), std::move(fun)));
+                return make_view_closure(
+                    bind_back(exclusive_scan_base_fn{}, std::move(init), std::move(fun)));
             }
         };
 

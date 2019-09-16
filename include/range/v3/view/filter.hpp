@@ -69,7 +69,8 @@ namespace ranges
             template<typename Pred>
             constexpr auto operator()(Pred pred) const
             {
-                return make_view_closure(bind_back(cpp20_filter_base_fn{}, std::move(pred)));
+                return make_view_closure(
+                    bind_back(cpp20_filter_base_fn{}, std::move(pred)));
             }
         };
 
@@ -104,7 +105,8 @@ namespace ranges
             template<typename Pred, typename Proj>
             constexpr auto operator()(Pred pred, Proj proj) const
             {
-                return make_view_closure(bind_back(filter_base_fn{}, std::move(pred), std::move(proj)));
+                return make_view_closure(
+                    bind_back(filter_base_fn{}, std::move(pred), std::move(proj)));
             }
         };
 

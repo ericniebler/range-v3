@@ -51,9 +51,10 @@ namespace ranges
 
             template<typename C>
             constexpr auto CPP_fun(operator())(C && pred)(const //
-                requires(!range<C>))
+                                                          requires(!range<C>))
             {
-                return make_view_closure(bind_back(unique_base_fn{}, static_cast<C &&>(pred)));
+                return make_view_closure(
+                    bind_back(unique_base_fn{}, static_cast<C &&>(pred)));
             }
         };
 

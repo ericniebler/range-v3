@@ -56,7 +56,8 @@ namespace ranges
                     input_range<Rng> &&
                         indirectly_comparable<iterator_t<Rng>, Value const *, equal_to>)
             {
-                return remove_if(static_cast<Rng &&>(rng), pred_<Value>{std::move(value)});
+                return remove_if(static_cast<Rng &&>(rng),
+                                 pred_<Value>{std::move(value)});
             }
 
             template<typename Rng, typename Value, typename Proj>
@@ -81,10 +82,12 @@ namespace ranges
                 return make_view_closure(bind_back(remove_base_fn{}, std::move(value)));
             }
             template<typename Value, typename Proj>
-            constexpr auto CPP_fun(operator())(Value && value, Proj proj)(const //
-                requires(!range<Value>))
+            constexpr auto CPP_fun(operator())(Value && value,
+                                               Proj proj)(const //
+                                                          requires(!range<Value>))
             {
-                return make_view_closure(bind_back(remove_base_fn{}, static_cast<Value &&>(value), std::move(proj)));
+                return make_view_closure(bind_back(
+                    remove_base_fn{}, static_cast<Value &&>(value), std::move(proj)));
             }
         };
 

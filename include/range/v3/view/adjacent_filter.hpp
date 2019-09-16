@@ -158,7 +158,8 @@ namespace ranges
             template<typename Pred>
             constexpr auto operator()(Pred pred) const
             {
-                return make_view_closure(bind_back(adjacent_filter_base_fn{}, std::move(pred)));
+                return make_view_closure(
+                    bind_back(adjacent_filter_base_fn{}, std::move(pred)));
             }
         };
 

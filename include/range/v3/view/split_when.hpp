@@ -177,14 +177,14 @@ namespace ranges
 
         public:
             template<typename Rng, typename Fun>
-            auto operator()(Rng && rng, Fun fun) const //
+            auto operator()(Rng && rng, Fun fun) const        //
                 -> CPP_ret(split_when_view<all_t<Rng>, Fun>)( //
                     requires viewable_range<Rng> && forward_range<Rng> &&
-                        invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                            invocable<Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
-                                copy_constructible<Fun> && convertible_to<
-                                    invoke_result_t<Fun &, iterator_t<Rng>, sentinel_t<Rng>>,
-                                    std::pair<bool, iterator_t<Rng>>>)
+                        invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> && invocable<
+                            Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
+                            copy_constructible<Fun> && convertible_to<
+                                invoke_result_t<Fun &, iterator_t<Rng>, sentinel_t<Rng>>,
+                                std::pair<bool, iterator_t<Rng>>>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
@@ -206,7 +206,8 @@ namespace ranges
             template<typename T>
             constexpr auto operator()(T && t) const
             {
-                return make_view_closure(bind_back(split_when_base_fn{}, static_cast<T &&>(t)));
+                return make_view_closure(
+                    bind_back(split_when_base_fn{}, static_cast<T &&>(t)));
             }
         };
 

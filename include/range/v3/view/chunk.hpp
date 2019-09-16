@@ -425,7 +425,7 @@ namespace ranges
 
             template<typename Int>
             constexpr auto CPP_fun(operator())(Int n)(const //
-                requires integral<Int>)
+                                                      requires detail::integer_like_<Int>)
             {
                 return make_view_closure(bind_back(chunk_base_fn{}, n));
             }

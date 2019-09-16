@@ -556,7 +556,7 @@ namespace ranges
 
             template<typename T>
             constexpr auto CPP_fun(operator())(T && t)(const //
-                requires(!joinable_range<T>))
+                                                       requires(!joinable_range<T>))
             {
                 return make_view_closure(bind_back(join_base_fn{}, static_cast<T &&>(t)));
             }
@@ -577,17 +577,17 @@ namespace ranges
             template<typename T, std::size_t N>
             constexpr view_closure<lamduh<T, N>> operator()(T (&val)[N]) const
             {
-                return view_closure<lamduh<T, N>>{lamduh<T, N>{val}};
+                return view_closure<lamduh<T, N>>{lamduh<T, N> { val }};
             }
 #else  // ^^^ workaround / no workaround vvv
             template<typename T, std::size_t N>
             constexpr auto operator()(T (&val)[N]) const
             {
-                return make_view_closure([&val](auto && rng)
-                           -> invoke_result_t<join_fn, decltype(rng), T(&)[N]>
-                {
-                    return join_fn{}(static_cast<decltype(rng)>(rng), val);
-                });
+                return make_view_closure(
+                    [&val](
+                        auto && rng) -> invoke_result_t<join_fn, decltype(rng), T(&)[N]> {
+                        return join_fn{}(static_cast<decltype(rng)>(rng), val);
+                    });
             }
 #endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
         };
@@ -614,8 +614,8 @@ namespace ranges
     {
         namespace views
         {
-            RANGES_INLINE_VARIABLE(ranges::views::view_closure<ranges::views::cpp20_join_fn>,
-                                   join)
+            RANGES_INLINE_VARIABLE(
+                ranges::views::view_closure<ranges::views::cpp20_join_fn>, join)
         }
         CPP_template(typename Rng)( //
             requires input_range<Rng> && view_<Rng> &&

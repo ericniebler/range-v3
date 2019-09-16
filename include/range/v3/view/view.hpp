@@ -131,7 +131,7 @@ namespace ranges
                                                             // **** IF YOUR COMPILE *****
                 -> CPP_ret(Rng)(                            // ****** BREAKS HERE *******
                     requires range<Rng> &&                  // **************************
-                         (!viewable_range<Rng>)) = delete;  // **************************
+                    (!viewable_range<Rng>)) = delete;       // **************************
             // **************************************************************************
             // *    When piping a range into an adaptor, the range must satisfy the     *
             // *    "viewable_range" concept. A range is viewable when either or both   *
@@ -144,9 +144,10 @@ namespace ranges
             constexpr friend auto operator|(view_closure<View1> vw1,
                                             view_closure<View2> vw2)
             {
-                return make_view_closure(composed_<view_closure<View1>, view_closure<View2>>{
-                    static_cast<view_closure<View1> &&>(vw1),
-                    static_cast<view_closure<View2> &&>(vw2)});
+                return make_view_closure(
+                    composed_<view_closure<View1>, view_closure<View2>>{
+                        static_cast<view_closure<View1> &&>(vw1),
+                        static_cast<view_closure<View2> &&>(vw2)});
             }
         };
 
@@ -177,7 +178,8 @@ namespace ranges
                 return view<Fun>{std::move(fun)};
             }
         };
-        using make_view_fn RANGES_DEPRECATED("make_view_fn is deprecated. Please use "
+        using make_view_fn RANGES_DEPRECATED(
+            "make_view_fn is deprecated. Please use "
             "make_view_closure instead.") = make_view_fn_;
 
         namespace
@@ -185,7 +187,8 @@ namespace ranges
             RANGES_DEPRECATED(
                 "make_view and views::view<> has been deprecated Please switch to "
                 "make_view_closure and views::view_closure.")
-            RANGES_INLINE_VAR constexpr auto & make_view = static_const<make_view_fn_>::value;
+            RANGES_INLINE_VAR constexpr auto & make_view =
+                static_const<make_view_fn_>::value;
         } // namespace
 
         template<typename View>

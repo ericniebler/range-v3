@@ -44,7 +44,7 @@ namespace ranges
 
             template<typename Int>
             constexpr auto CPP_fun(operator())(Int n)(const //
-                requires detail::integer_like_<Int>)
+                                                      requires detail::integer_like_<Int>)
             {
                 return make_view_closure(bind_back(take_last_base_fn{}, n));
             }

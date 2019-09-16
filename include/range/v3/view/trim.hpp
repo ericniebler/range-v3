@@ -99,9 +99,10 @@ namespace ranges
         {
             template<typename Rng, typename Pred>
             constexpr auto operator()(Rng && rng, Pred pred) const //
-                -> CPP_ret(trim_view<all_t<Rng>, Pred>)( //
+                -> CPP_ret(trim_view<all_t<Rng>, Pred>)(           //
                     requires viewable_range<Rng> && bidirectional_range<Rng> &&
-                        indirect_unary_predicate<Pred, iterator_t<Rng>> && common_range<Rng>)
+                        indirect_unary_predicate<Pred, iterator_t<Rng>> &&
+                            common_range<Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
@@ -127,10 +128,12 @@ namespace ranges
                 return make_view_closure(bind_back(trim_base_fn{}, std::move(pred)));
             }
             template<typename Pred, typename Proj>
-            constexpr auto CPP_fun(operator())(Pred && pred, Proj proj)(const //
-                requires(!range<Pred>))
+            constexpr auto CPP_fun(operator())(Pred && pred,
+                                               Proj proj)(const //
+                                                          requires(!range<Pred>))
             {
-                return make_view_closure(bind_back(trim_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));
+                return make_view_closure(bind_back(
+                    trim_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));
             }
         };
 

@@ -157,11 +157,12 @@ namespace ranges
             {
                 return {begin(rng), next(begin(rng), n)};
             }
+
         public:
             template<typename Rng>
             constexpr auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(
                 const //
-                    requires viewable_range<Rng> && input_range<Rng>)
+                requires viewable_range<Rng> && input_range<Rng>)
             {
                 return take_exactly_base_fn::impl_(
                     static_cast<Rng &&>(rng), n, range_tag_of<Rng>{});
@@ -174,7 +175,7 @@ namespace ranges
 
             template<typename Int>
             constexpr auto CPP_fun(operator())(Int n)(const //
-                requires detail::integer_like_<Int>)
+                                                      requires detail::integer_like_<Int>)
             {
                 return make_view_closure(bind_back(take_exactly_base_fn{}, n));
             }

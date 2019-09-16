@@ -240,13 +240,19 @@ namespace ranges
         {
             using set_difference_base_fn::operator();
 
-            template<typename Rng2, typename C = less,
-                     typename P1 = identity, typename P2 = identity>
-            constexpr auto CPP_fun(operator())(Rng2 && rng2, C && pred = C{}, P1 proj1 = P1{},
-                            P2 proj2 = P2{})(const //
-                requires viewable_range<Rng2> && input_range<Rng2> && (!range<C>))
+            template<typename Rng2, typename C = less, typename P1 = identity,
+                     typename P2 = identity>
+            constexpr auto CPP_fun(operator())(Rng2 && rng2, C && pred = C{},
+                                               P1 proj1 = P1{}, P2 proj2 = P2{})(
+                const //
+                requires viewable_range<Rng2> && input_range<Rng2> &&
+                (!range<C>))
             {
-                return make_view_closure(bind_back(set_difference_base_fn{}, all(rng2), static_cast<C &&>(pred), std::move(proj1), std::move(proj2)));
+                return make_view_closure(bind_back(set_difference_base_fn{},
+                                                   all(rng2),
+                                                   static_cast<C &&>(pred),
+                                                   std::move(proj1),
+                                                   std::move(proj2)));
             }
         };
 
@@ -404,13 +410,19 @@ namespace ranges
         {
             using set_intersection_base_fn::operator();
 
-            template<typename Rng2, typename C = less,
-                     typename P1 = identity, typename P2 = identity>
-            constexpr auto CPP_fun(operator())(Rng2 && rng2, C && pred = C{}, P1 proj1 = P1{},
-                            P2 proj2 = P2{})(const //
-                requires viewable_range<Rng2> && input_range<Rng2> && (!range<C>))
+            template<typename Rng2, typename C = less, typename P1 = identity,
+                     typename P2 = identity>
+            constexpr auto CPP_fun(operator())(Rng2 && rng2, C && pred = C{},
+                                               P1 proj1 = P1{}, P2 proj2 = P2{})(
+                const //
+                requires viewable_range<Rng2> && input_range<Rng2> &&
+                (!range<C>))
             {
-                return make_view_closure(bind_back(set_intersection_base_fn{}, all(rng2), static_cast<C &&>(pred), std::move(proj1), std::move(proj2)));
+                return make_view_closure(bind_back(set_intersection_base_fn{},
+                                                   all(rng2),
+                                                   static_cast<C &&>(pred),
+                                                   std::move(proj1),
+                                                   std::move(proj2)));
             }
         };
 
@@ -600,13 +612,19 @@ namespace ranges
         {
             using set_union_base_fn::operator();
 
-            template<typename Rng2, typename C = less,
-                     typename P1 = identity, typename P2 = identity>
-            constexpr auto CPP_fun(operator())(Rng2 && rng2, C && pred = C{}, P1 proj1 = P1{},
-                            P2 proj2 = P2{})(const //
-                requires viewable_range<Rng2> && input_range<Rng2> && (!range<C>))
+            template<typename Rng2, typename C = less, typename P1 = identity,
+                     typename P2 = identity>
+            constexpr auto CPP_fun(operator())(Rng2 && rng2, C && pred = C{},
+                                               P1 proj1 = P1{}, P2 proj2 = P2{})(
+                const //
+                requires viewable_range<Rng2> && input_range<Rng2> &&
+                (!range<C>))
             {
-                return make_view_closure(bind_back(set_union_base_fn{}, all(rng2), static_cast<C &&>(pred), std::move(proj1), std::move(proj2)));
+                return make_view_closure(bind_back(set_union_base_fn{},
+                                                   all(rng2),
+                                                   static_cast<C &&>(pred),
+                                                   std::move(proj1),
+                                                   std::move(proj2)));
             }
         };
 
@@ -824,20 +842,25 @@ namespace ranges
         {
             using set_symmetric_difference_base_fn::operator();
 
-            template<typename Rng2, typename C = less,
-                     typename P1 = identity, typename P2 = identity>
-            constexpr auto CPP_fun(operator())(Rng2 && rng2, C && pred = C{}, P1 proj1 = P1{},
-                            P2 proj2 = P2{})(const //
-                requires viewable_range<Rng2> && input_range<Rng2> && (!range<C>))
+            template<typename Rng2, typename C = less, typename P1 = identity,
+                     typename P2 = identity>
+            constexpr auto CPP_fun(operator())(Rng2 && rng2, C && pred = C{},
+                                               P1 proj1 = P1{}, P2 proj2 = P2{})(
+                const //
+                requires viewable_range<Rng2> && input_range<Rng2> &&
+                (!range<C>))
             {
-                return make_view_closure(bind_back(set_symmetric_difference_base_fn{}, all(rng2), static_cast<C &&>(pred), std::move(proj1), std::move(proj2)));
+                return make_view_closure(bind_back(set_symmetric_difference_base_fn{},
+                                                   all(rng2),
+                                                   static_cast<C &&>(pred),
+                                                   std::move(proj1),
+                                                   std::move(proj2)));
             }
         };
 
         /// \relates set_symmetric_difference_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(set_symmetric_difference_fn,
-                               set_symmetric_difference)
+        RANGES_INLINE_VARIABLE(set_symmetric_difference_fn, set_symmetric_difference)
     } // namespace views
     /// @}
 } // namespace ranges

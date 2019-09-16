@@ -129,9 +129,9 @@ namespace ranges
     namespace cpp20
     {
         using ranges::range_difference_t;
-        using ranges::range_value_t;
         using ranges::range_reference_t;
         using ranges::range_rvalue_reference_t;
+        using ranges::range_value_t;
     } // namespace cpp20
 } // namespace ranges
 

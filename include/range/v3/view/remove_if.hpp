@@ -177,10 +177,12 @@ namespace ranges
                 return make_view_closure(bind_back(remove_if_base_fn{}, std::move(pred)));
             }
             template<typename Pred, typename Proj>
-            constexpr auto CPP_fun(operator())(Pred && pred, Proj proj)(const //
-                requires(!range<Pred>))
+            constexpr auto CPP_fun(operator())(Pred && pred,
+                                               Proj proj)(const //
+                                                          requires(!range<Pred>))
             {
-                return make_view_closure(bind_back(remove_if_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));
+                return make_view_closure(bind_back(
+                    remove_if_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));
             }
         };
 

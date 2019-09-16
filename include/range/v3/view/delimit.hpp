@@ -91,8 +91,8 @@ namespace ranges
             template<typename Rng, typename Val>
             constexpr auto operator()(Rng && rng, Val value) const //
                 -> CPP_ret(delimit_view<all_t<Rng>, Val>)(         //
-                    requires viewable_range<Rng> && input_range<Rng> && semiregular<Val> &&
-                        equality_comparable_with<Val, range_reference_t<Rng>>)
+                    requires viewable_range<Rng> && input_range<Rng> && semiregular<
+                        Val> && equality_comparable_with<Val, range_reference_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(value)};
             }

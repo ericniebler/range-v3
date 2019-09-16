@@ -140,7 +140,8 @@ namespace ranges
             template<typename Pred, typename Val>
             constexpr auto operator()(Pred pred, Val new_value) const
             {
-                return make_view_closure(bind_back(replace_if_base_fn{}, std::move(pred), std::move(new_value)));
+                return make_view_closure(bind_back(
+                    replace_if_base_fn{}, std::move(pred), std::move(new_value)));
             }
         };
 

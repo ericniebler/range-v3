@@ -118,7 +118,8 @@ namespace ranges
             using replace_base_fn::operator();
 
             template<typename Val1, typename Val2>
-            constexpr auto CPP_fun(operator())(Val1 old_value, Val2 new_value)(const //
+            constexpr auto CPP_fun(operator())(Val1 old_value, Val2 new_value)(
+                const //
                 requires same_as<detail::decay_t<unwrap_reference_t<Val1>>,
                                  detail::decay_t<unwrap_reference_t<Val2>>>)
             {

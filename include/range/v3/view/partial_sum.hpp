@@ -192,15 +192,17 @@ namespace ranges
 
             template<typename Fun>
             constexpr auto CPP_fun(operator())(Fun && fun)(const //
-                requires(!range<Fun>))
+                                                           requires(!range<Fun>))
             {
-                return make_view_closure(bind_back(partial_sum_base_fn{}, static_cast<Fun &&>(fun)));
+                return make_view_closure(
+                    bind_back(partial_sum_base_fn{}, static_cast<Fun &&>(fun)));
             }
             template<typename Fun = plus>
             RANGES_DEPRECATED(
                 "Use \"ranges::views::partial_sum\" instead of "
                 "\"ranges::views::partial_sum()\".")
-            constexpr auto operator()() const
+            constexpr auto
+            operator()() const
             {
                 return make_view_closure(bind_back(partial_sum_base_fn{}, Fun{}));
             }

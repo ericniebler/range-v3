@@ -125,7 +125,8 @@ namespace ranges
             template<typename Pred>
             constexpr auto operator()(Pred pred) const
             {
-                return make_view_closure(bind_back(iter_take_while_base_fn{}, std::move(pred)));
+                return make_view_closure(
+                    bind_back(iter_take_while_base_fn{}, std::move(pred)));
             }
         };
 
@@ -157,13 +158,16 @@ namespace ranges
             template<typename Pred>
             constexpr auto operator()(Pred pred) const
             {
-                return make_view_closure(bind_back(take_while_base_fn{}, std::move(pred)));
+                return make_view_closure(
+                    bind_back(take_while_base_fn{}, std::move(pred)));
             }
             template<typename Pred, typename Proj>
-            constexpr auto CPP_fun(operator())(Pred && pred, Proj proj)(const //
-                requires(!range<Pred>))
+            constexpr auto CPP_fun(operator())(Pred && pred,
+                                               Proj proj)(const //
+                                                          requires(!range<Pred>))
             {
-                return make_view_closure(bind_back(take_while_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));
+                return make_view_closure(bind_back(
+                    take_while_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));
             }
         };
 

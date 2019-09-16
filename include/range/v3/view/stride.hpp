@@ -313,7 +313,8 @@ namespace ranges
             using stride_base_fn::operator();
 
             template<typename Difference>
-            constexpr auto CPP_fun(operator())(Difference step)(const //
+            constexpr auto CPP_fun(operator())(Difference step)(
+                const //
                 requires detail::integer_like_<Difference>)
             {
                 return make_view_closure(bind_back(stride_base_fn{}, step));

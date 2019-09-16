@@ -150,10 +150,12 @@ namespace ranges
 
         public:
             template<typename Rng>
-            auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(const//
+            auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(
+                const //
                 requires viewable_range<Rng> && input_range<Rng>)
             {
-                return drop_base_fn::impl_(static_cast<Rng &&>(rng), n, range_tag_of<Rng>{});
+                return drop_base_fn::impl_(
+                    static_cast<Rng &&>(rng), n, range_tag_of<Rng>{});
             }
         };
 
@@ -162,7 +164,8 @@ namespace ranges
             using drop_base_fn::operator();
 
             template<typename Int>
-            constexpr auto CPP_fun(operator())(Int n)(const requires integral<Int>)
+            constexpr auto CPP_fun(operator())(Int n)(const //
+                                                      requires detail::integer_like_<Int>)
             {
                 return make_view_closure(bind_back(drop_base_fn{}, n));
             }

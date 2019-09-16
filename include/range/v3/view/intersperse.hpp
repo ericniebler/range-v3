@@ -220,7 +220,7 @@ namespace ranges
 
             template<typename T>
             constexpr auto CPP_fun(operator())(T t)(const //
-                requires copyable<T>)
+                                                    requires copyable<T>)
             {
                 return make_view_closure(bind_back(intersperse_base_fn{}, std::move(t)));
             }

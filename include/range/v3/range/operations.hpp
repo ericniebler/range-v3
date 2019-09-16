@@ -66,10 +66,9 @@ namespace ranges
     {
         /// \return `begin(rng)[n]`
         template<typename Rng, typename Int>
-        constexpr auto operator()(Rng && rng, Int n) const
-            -> CPP_ret(range_reference_t<Rng>)( //
-                requires random_access_range<Rng> && integral<Int> &&
-                    forwarding_range_<Rng>)
+        constexpr auto operator()(Rng && rng,
+                                  Int n) const -> CPP_ret(range_reference_t<Rng>)( //
+            requires random_access_range<Rng> && integral<Int> && forwarding_range_<Rng>)
         {
             using D = range_difference_t<Rng>;
             RANGES_EXPECT(0 <= static_cast<D>(n));

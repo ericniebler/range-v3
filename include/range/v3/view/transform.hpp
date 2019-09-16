@@ -455,7 +455,8 @@ namespace ranges
             template<typename Fun>
             constexpr auto operator()(Fun fun) const
             {
-                return make_view_closure(bind_back(iter_transform_base_fn{}, std::move(fun)));
+                return make_view_closure(
+                    bind_back(iter_transform_base_fn{}, std::move(fun)));
             }
         };
 
