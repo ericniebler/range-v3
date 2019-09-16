@@ -227,7 +227,7 @@ namespace ranges
             template<typename... Ts, typename V = View>
             constexpr auto CPP_auto_fun(operator())(Ts &&... ts)(const)
             (
-                return make_view(
+                return make_view_fn_{}(
                     view_access::impl<V>::bind(view_, static_cast<Ts &&>(ts)...))
             )
             // clang-format on
