@@ -22,13 +22,13 @@
 
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/concepts.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/split_when.hpp>
-#include <range/v3/view/transform.hpp>
 
 namespace ranges
 {
@@ -39,9 +39,16 @@ namespace ranges
         struct split_when_fn
         {
         private:
+            friend action_access;
             template<typename Rng>
             using split_value_t = meta::if_c<(bool)ranges::container<Rng>, uncvref_t<Rng>,
                                              std::vector<range_value_t<Rng>>>;
+
+            template<typename Fun>
+            static auto bind(split_when_fn split_when, Fun fun)
+            {
+                return bind_back(split_when, static_cast<Fun &&>(fun));
+            }
 
         public:
             // BUGBUG something is not right with the actions. It should be possible
@@ -57,7 +64,7 @@ namespace ranges
                                 std::pair<bool, iterator_t<Rng>>>)
             {
                 return views::split_when(rng, std::move(fun)) |
-                       views::transform(to<split_value_t<Rng>>()) | to_vector;
+                       to<std::vector<split_value_t<Rng>>>();
             }
             template<typename Rng, typename Fun>
             auto operator()(Rng && rng, Fun fun) const
@@ -66,12 +73,12 @@ namespace ranges
                         Fun const &, range_reference_t<Rng>> && copy_constructible<Fun>)
             {
                 return views::split_when(rng, std::move(fun)) |
-                       views::transform(to<split_value_t<Rng>>()) | to_vector;
+                       to<std::vector<split_value_t<Rng>>>();
             }
         };
 
         /// \ingroup group-actions
-        /// \relates split_fn
+        /// \relates split_when_fn
         /// \sa action
         RANGES_INLINE_VARIABLE(action<split_when_fn>, split_when)
     } // namespace actions

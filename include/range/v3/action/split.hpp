@@ -22,12 +22,12 @@
 
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/concepts.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/split.hpp>
-#include <range/v3/view/transform.hpp>
 
 namespace ranges
 {
@@ -38,9 +38,46 @@ namespace ranges
         struct split_fn
         {
         private:
+            friend action_access;
             template<typename Rng>
             using split_value_t = meta::if_c<(bool)ranges::container<Rng>, uncvref_t<Rng>,
                                              std::vector<range_value_t<Rng>>>;
+
+            template<typename T>
+            static auto bind(split_fn split, T && val)
+            {
+                return bind_back(split, static_cast<T &&>(val));
+            }
+#ifdef RANGES_WORKAROUND_MSVC_OLD_LAMBDA
+            template<typename T, std::size_t N>
+            struct lamduh
+            {
+                T (&val_)[N];
+
+                template<class Rng>
+                constexpr auto operator()(Rng && rng)
+                    -> decltype(split_fn{}(std::declval<Rng>(), val_))
+                {
+                    return split_fn{}(static_cast<Rng &&>(rng), val_);
+                }
+            };
+
+            template<typename T, std::size_t N>
+            static auto bind(split_fn, T (&val)[N])
+            {
+                return lamduh<T, N>{val};
+            }
+#else // ^^^ workaround / no workaround vvv
+            template<typename T, std::size_t N>
+            static auto bind(split_fn, T (&val)[N])
+            {
+                return [&val](auto && rng)
+                           -> invoke_result_t<split_fn, decltype(rng), T(&)[N]>
+                {
+                    return split_fn{}(static_cast<decltype(rng)>(rng), val);
+                };
+            }
+#endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
 
         public:
             // BUGBUG something is not right with the actions. It should be possible
@@ -52,7 +89,7 @@ namespace ranges
                         iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>)
             {
                 return views::split(rng, std::move(val)) |
-                       views::transform(to<split_value_t<Rng>>()) | to_vector;
+                       to<std::vector<split_value_t<Rng>>>();
             }
             template<typename Rng, typename Pattern>
             auto operator()(Rng && rng, Pattern && pattern) const
@@ -63,7 +100,7 @@ namespace ranges
                     (forward_range<Rng> || detail::tiny_range<Pattern>))
             {
                 return views::split(rng, static_cast<Pattern &&>(pattern)) |
-                       views::transform(to<split_value_t<Rng>>()) | to_vector;
+                       to<std::vector<split_value_t<Rng>>>();
             }
         };
 
