@@ -71,11 +71,10 @@ namespace ranges
             CPP_template(typename Rng, typename ActionFn)(                         //
                 requires defer::range<Rng> && defer::invocable<ActionFn, Rng &> && //
                 (!defer::is_true<std::is_reference<Rng>::value>))                  //
-                constexpr friend decltype(auto)
+                constexpr friend auto
                 operator|(Rng && rng, action_closure<ActionFn> act)
             {
-                using Ret = invoke_result_t<ActionFn, Rng &>;
-                return static_cast<aux::move_t<Ret>>(static_cast<ActionFn &&>(act)(rng));
+                return aux::move(static_cast<ActionFn &&>(act)(rng));
             }
 
             template<typename Rng, typename ActionFn>   // ******************************
