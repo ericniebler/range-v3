@@ -22,6 +22,7 @@
 
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/concepts.hpp>
+#include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
@@ -37,13 +38,11 @@ namespace ranges
     {
         struct split_when_fn
         {
-        private:
             template<typename Rng>
             using split_value_t =
                 meta::if_c<(bool)ranges::container<Rng>, //
                            uncvref_t<Rng>, std::vector<range_value_t<Rng>>>;
 
-        public:
             template<typename Fun>
             constexpr auto operator()(Fun fun) const
             {
@@ -80,7 +79,7 @@ namespace ranges
             }
         };
 
-        /// \relates actions::split_fn
+        /// \relates actions::split_when_fn
         RANGES_INLINE_VARIABLE(split_when_fn, split_when)
     } // namespace actions
     /// @}
