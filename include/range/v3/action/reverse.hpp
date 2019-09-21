@@ -32,10 +32,6 @@ namespace ranges
         /// Reversed the source range in-place.
         struct reverse_fn
         {
-        private:
-            friend action_access;
-
-        public:
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(Rng)( //
                 requires bidirectional_range<Rng> && permutable<iterator_t<Rng>>)
@@ -45,10 +41,9 @@ namespace ranges
             }
         };
 
-        /// \ingroup group-actions
-        /// \relates reverse_fn
-        /// \sa action
-        RANGES_INLINE_VARIABLE(action<reverse_fn>, reverse)
+        /// \relates actions::reverse_fn
+        /// \sa action_closure
+        RANGES_INLINE_VARIABLE(action_closure<reverse_fn>, reverse)
     } // namespace actions
     /// @}
 } // namespace ranges

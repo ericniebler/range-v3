@@ -81,21 +81,6 @@ namespace ranges
 
     namespace views
     {
-        struct view_access
-        {
-            template<typename ViewFn>
-            struct impl
-            {
-                // clang-format off
-                template<typename... Ts, typename V = ViewFn>
-                static constexpr auto CPP_auto_fun(bind)(Ts &&... ts)
-                (
-                    return V::bind(static_cast<Ts &&>(ts)...)
-                )
-                // clang-format on
-            };
-        };
-
         struct view_closure_base
         {
         private:
@@ -167,6 +152,26 @@ namespace ranges
 
         /// \cond
         /// DEPRECATED STUFF
+        struct view_access_
+        {
+            template<typename ViewFn>
+            struct impl
+            {
+                // clang-format off
+                template<typename... Ts, typename V = ViewFn>
+                static constexpr auto CPP_auto_fun(bind)(Ts &&... ts)
+                (
+                    return V::bind(static_cast<Ts &&>(ts)...)
+                )
+                // clang-format on
+            };
+        };
+
+        using view_access RANGES_DEPRECATED(
+            "view_access and views::view<> are deprecated. Please "
+            "replace view<> with view_closure<> and discontinue use of view_access.") =
+            view_access_;
+
         template<typename>
         struct view;
 
@@ -175,7 +180,7 @@ namespace ranges
             template<typename Fun>
             constexpr view<Fun> operator()(Fun fun) const
             {
-                return view<Fun>{std::move(fun)};
+                return view<Fun>{static_cast<Fun &&>(fun)};
             }
         };
         using make_view_fn RANGES_DEPRECATED(
@@ -185,7 +190,7 @@ namespace ranges
         namespace
         {
             RANGES_DEPRECATED(
-                "make_view and views::view<> has been deprecated Please switch to "
+                "make_view and views::view<> has been deprecated. Please switch to "
                 "make_view_closure and views::view_closure.")
             RANGES_INLINE_VAR constexpr auto & make_view =
                 static_const<make_view_fn_>::value;

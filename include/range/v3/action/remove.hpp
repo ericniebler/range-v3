@@ -33,21 +33,21 @@ namespace ranges
     {
         struct remove_fn
         {
-        private:
-            friend action_access;
             template<typename V, typename P>
-            static auto CPP_fun(bind)(remove_fn remove, V && value, P proj)( //
-                requires(!range<V>))
+            constexpr auto CPP_fun(operator())(V && value, P proj)(const //
+                                                                   requires(!range<V>))
             {
-                return bind_back(remove, static_cast<V &&>(value), std::move(proj));
-            }
-            template<typename V>
-            static auto bind(remove_fn remove, V && value)
-            {
-                return bind_back(remove, static_cast<V &&>(value), identity{});
+                return make_action_closure(
+                    bind_back(remove_fn{}, static_cast<V &&>(value), std::move(proj)));
             }
 
-        public:
+            template<typename V>
+            constexpr auto operator()(V && value) const
+            {
+                return make_action_closure(
+                    bind_back(remove_fn{}, static_cast<V &&>(value), identity{}));
+            }
+
             template<typename Rng, typename V, typename P = identity>
             auto operator()(Rng && rng, V const & value, P proj = {}) const
                 -> CPP_ret(Rng)( //
@@ -61,10 +61,9 @@ namespace ranges
                 return static_cast<Rng &&>(rng);
             }
         };
-        /// \ingroup group-actions
-        /// \sa action
-        /// \sa with_braced_init_args
-        RANGES_INLINE_VARIABLE(action<remove_fn>, remove)
+
+        /// \relates actions::remove_fn
+        RANGES_INLINE_VARIABLE(remove_fn, remove)
     } // namespace actions
     /// @}
 } // namespace ranges

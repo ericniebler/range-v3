@@ -27,7 +27,6 @@
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/split.hpp>
-#include <range/v3/view/transform.hpp>
 
 namespace ranges
 {
@@ -43,6 +42,12 @@ namespace ranges
                                              std::vector<range_value_t<Rng>>>;
 
         public:
+            template<typename T>
+            constexpr auto operator()(T && t) const
+            {
+                return make_action_closure(bind_back(split_fn{}, static_cast<T &&>(t)));
+            }
+
             // BUGBUG something is not right with the actions. It should be possible
             // to move a container into a split and have elements moved into the result.
             template<typename Rng>
@@ -52,8 +57,9 @@ namespace ranges
                         iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>)
             {
                 return views::split(rng, std::move(val)) |
-                       views::transform(to<split_value_t<Rng>>()) | to_vector;
+                       to<std::vector<split_value_t<Rng>>>();
             }
+
             template<typename Rng, typename Pattern>
             auto operator()(Rng && rng, Pattern && pattern) const
                 -> CPP_ret(std::vector<split_value_t<Rng>>)( //
@@ -63,14 +69,12 @@ namespace ranges
                     (forward_range<Rng> || detail::tiny_range<Pattern>))
             {
                 return views::split(rng, static_cast<Pattern &&>(pattern)) |
-                       views::transform(to<split_value_t<Rng>>()) | to_vector;
+                       to<std::vector<split_value_t<Rng>>>();
             }
         };
 
-        /// \ingroup group-actions
-        /// \relates split_fn
-        /// \sa action
-        RANGES_INLINE_VARIABLE(action<split_fn>, split)
+        /// \relates actions::split_fn
+        RANGES_INLINE_VARIABLE(split_fn, split)
     } // namespace actions
     /// @}
 } // namespace ranges

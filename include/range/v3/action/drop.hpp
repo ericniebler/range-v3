@@ -32,16 +32,14 @@ namespace ranges
     {
         struct drop_fn
         {
-        private:
-            friend action_access;
             template<typename Int>
-            static auto CPP_fun(bind)(drop_fn drop, Int n)( //
-                requires detail::integer_like_<Int>)
+            constexpr auto CPP_fun(operator())(Int n)(const //
+                                                      requires detail::integer_like_<Int>)
             {
-                return bind_back(drop, n);
+                RANGES_EXPECT(n >= Int(0));
+                return make_action_closure(bind_back(drop_fn{}, n));
             }
 
-        public:
             template<typename Rng>
             auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> CPP_ret(Rng)( //
@@ -55,10 +53,8 @@ namespace ranges
             }
         };
 
-        /// \ingroup group-actions
-        /// \relates drop_fn
-        /// \sa action
-        RANGES_INLINE_VARIABLE(action<drop_fn>, drop)
+        /// \relates actions::drop_fn
+        RANGES_INLINE_VARIABLE(drop_fn, drop)
     } // namespace actions
     /// @}
 } // namespace ranges

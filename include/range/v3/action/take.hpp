@@ -32,16 +32,13 @@ namespace ranges
     {
         struct take_fn
         {
-        private:
-            friend action_access;
             template<typename Int>
-            static auto CPP_fun(bind)(take_fn take, Int n)( //
-                requires integral<Int>)
+            constexpr auto CPP_fun(operator())(Int n)(const //
+                                                      requires detail::integer_like_<Int>)
             {
-                return bind_back(take, n);
+                return make_action_closure(bind_back(take_fn{}, n));
             }
 
-        public:
             template<typename Rng>
             auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> CPP_ret(Rng)( //
@@ -55,10 +52,8 @@ namespace ranges
             }
         };
 
-        /// \ingroup group-actions
-        /// \relates take_fn
-        /// \sa action
-        RANGES_INLINE_VARIABLE(action<take_fn>, take)
+        /// \relates actions::take_fn
+        RANGES_INLINE_VARIABLE(take_fn, take)
     } // namespace actions
     /// @}
 } // namespace ranges

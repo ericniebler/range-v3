@@ -28,6 +28,9 @@
 
 namespace ranges
 {
+    /// \addtogroup group-actions
+    /// @{
+
     /// \cond
     namespace adl_push_front_detail
     {
@@ -69,14 +72,8 @@ namespace ranges
 
         struct push_front_fn
         {
-        private:
-            friend actions::action_access;
-            template<typename T>
-            static auto bind(push_front_fn push_front, T && val)
-            {
-                return bind_back(push_front, static_cast<T &&>(val));
-            }
 #ifdef RANGES_WORKAROUND_MSVC_OLD_LAMBDA
+        private:
             template<typename T, std::size_t N>
             struct lamduh
             {
@@ -89,29 +86,56 @@ namespace ranges
                     return push_front_fn{}(static_cast<Rng &&>(rng), val_);
                 }
             };
+
+        public:
             template<typename T, std::size_t N>
-            static lamduh<T, N> bind(push_front_fn, T (&val)[N])
+            constexpr auto operator()(T (&val)[N]) const
             {
-                return {val};
+                return make_action_closure(lamduh<T, N>{val});
             }
 #else  // ^^^ workaround / no workaround vvv
             template<typename T, std::size_t N>
-            static auto bind(push_front_fn, T (&val)[N])
+            constexpr auto operator()(T (&val)[N]) const
             {
-                return [&val](auto && rng)
-                           -> invoke_result_t<push_front_fn, decltype(rng), T(&)[N]>
-                {
-                    return push_front_fn{}(static_cast<decltype(rng)>(rng), val);
-                };
+                return make_action_closure(
+                    [&val](auto && rng)
+                        -> invoke_result_t<push_front_fn, decltype(rng), T(&)[N]> {
+                        return push_front_fn{}(static_cast<decltype(rng)>(rng), val);
+                    });
             }
 #endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
-        public:
+
+            template<typename T>
+            constexpr auto operator()(T && val) const
+            {
+                return make_action_closure(
+                    bind_back(push_front_fn{}, static_cast<T &&>(val)));
+            }
+
+            template<typename T>
+            constexpr auto operator()(std::initializer_list<T> val) const
+            {
+                return make_action_closure(bind_back(push_front_fn{}, val));
+            }
+
             template<typename Rng, typename T>
-            auto operator()(Rng && rng, T && t) const -> CPP_ret(Rng)( //
-                requires input_range<Rng> && can_push_front_<Rng, T> &&
-                (range<T> || constructible_from<range_value_t<Rng>, T>))
+            auto operator()(Rng && rng, T && t) const //
+                -> CPP_ret(Rng)(                      //
+                    requires input_range<Rng> && can_push_front_<Rng, T> &&
+                    (range<T> || constructible_from<range_value_t<Rng>, T>))
             {
                 push_front(rng, static_cast<T &&>(t));
+                return static_cast<Rng &&>(rng);
+            }
+
+            template<typename Rng, typename T>
+            auto operator()(Rng && rng, std::initializer_list<T> t) const //
+                -> CPP_ret(Rng)(                                          //
+                    requires input_range<Rng> &&                          //
+                        can_push_front_<Rng, std::initializer_list<T>> &&
+                            constructible_from<range_value_t<Rng>, T const &>)
+            {
+                push_front(rng, t);
                 return static_cast<Rng &&>(rng);
             }
         };
@@ -120,13 +144,12 @@ namespace ranges
 
     namespace actions
     {
-        /// \ingroup group-actions
-        RANGES_INLINE_VARIABLE(
-            detail::with_braced_init_args<action<adl_push_front_detail::push_front_fn>>,
-            push_front)
+        RANGES_INLINE_VARIABLE(adl_push_front_detail::push_front_fn, push_front)
     } // namespace actions
 
     using actions::push_front;
+
+    /// @}
 } // namespace ranges
 
 #endif

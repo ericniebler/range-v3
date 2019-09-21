@@ -34,16 +34,14 @@ namespace ranges
     {
         struct unique_fn
         {
-        private:
-            friend action_access;
             template<typename C, typename P = identity>
-            static auto CPP_fun(bind)(unique_fn unique, C pred, P proj = P{})( //
-                requires(!range<C>))
+            constexpr auto CPP_fun(operator())(C pred, P proj = P{})(const //
+                                                                     requires(!range<C>))
             {
-                return bind_back(unique, std::move(pred), std::move(proj));
+                return make_action_closure(
+                    bind_back(unique_fn{}, std::move(pred), std::move(proj)));
             }
 
-        public:
             template<typename Rng, typename C = equal_to, typename P = identity>
             auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
                 -> CPP_ret(Rng)( //
@@ -57,10 +55,9 @@ namespace ranges
             }
         };
 
-        /// \ingroup group-actions
-        /// \relates unique_fn
-        /// \sa action
-        RANGES_INLINE_VARIABLE(action<unique_fn>, unique)
+        /// \relates detail::unique_fn
+        /// \sa action_closure
+        RANGES_INLINE_VARIABLE(action_closure<unique_fn>, unique)
     } // namespace actions
     /// @}
 } // namespace ranges

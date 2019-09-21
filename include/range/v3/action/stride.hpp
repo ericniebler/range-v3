@@ -32,16 +32,13 @@ namespace ranges
     {
         struct stride_fn
         {
-        private:
-            friend action_access;
             template<typename D>
-            static auto CPP_fun(bind)(stride_fn stride, D step)( //
-                requires integral<D>)
+            constexpr auto CPP_fun(operator())(D step)(const //
+                                                       requires detail::integer_like_<D>)
             {
-                return bind_back(stride, step);
+                return make_action_closure(bind_back(stride_fn{}, step));
             }
 
-        public:
             template<typename Rng, typename D = range_difference_t<Rng>>
             auto operator()(Rng && rng, range_difference_t<Rng> const step) const
                 -> CPP_ret(Rng)( //
@@ -70,10 +67,8 @@ namespace ranges
             }
         };
 
-        /// \ingroup group-actions
-        /// \relates stride_fn
-        /// \sa action
-        RANGES_INLINE_VARIABLE(action<stride_fn>, stride)
+        /// \relates actions::stride_fn
+        RANGES_INLINE_VARIABLE(stride_fn, stride)
     } // namespace actions
     /// @}
 } // namespace ranges

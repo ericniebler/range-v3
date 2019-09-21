@@ -133,8 +133,8 @@ namespace ranges
 
     namespace actions
     {
-        template<typename Action>
-        struct action;
+        template<typename ActionFn>
+        struct action_closure;
     }
 
     namespace views
