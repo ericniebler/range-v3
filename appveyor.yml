@@ -1,25 +1,44 @@
+# Range v3 library
+#
+#  Copyright Casey Carter
+#
+# SPDX-License-Identifier: BSL-1.0
+#
+# Project home: https://github.com/ericniebler/range-v3
+
 shallow_clone: true
 
 image: Visual Studio 2019
-
-platform:
-  - x64_x86
-  - x64
-
-configuration:
-  - Debug
-  - Release
 
 environment:
   matrix:
     - CXX: clang-cl
       CPP: latest
+      platform: x64
+      configuration: Release
+      HEADER_CHECK: On
 
     - CXX: cl
       CPP: 17
+      platform: x64
+      configuration: Release
+      HEADER_CHECK: On
 
     - CXX: cl
       CPP: latest
+      platform: x64
+      configuration: Debug
+      HEADER_CHECK: On
+
+    - CXX: cl
+      CPP: latest
+      platform: x64
+      configuration: Release
+
+    - CXX: cl
+      CPP: latest
+      platform: x64_x86
+      configuration: Debug
 
 cache:
   - C:\ninja-1.8.2
@@ -38,18 +57,16 @@ install:
   - cl /Bv || exit 0
 
 build_script:
-  - mkdir build && cd build
   - ps: |
       $env:CC=$env:CXX
-      $env:HEADER_CHECK=0
-      if ($env:PLATFORM -eq "x64") {
-        if ($env:CONFIGURATION -eq "Debug") {
-          $env:HEADER_CHECK=1
-        }
-      } elseif ($env:CXX -eq "clang-cl") {
+      if ("$env:HEADER_CHECK" -eq "") {
+        $env:HEADER_CHECK='Off'
+      }
+      if ($env:PLATFORM -eq 'x86_x64' -and $env:CXX -eq 'clang-cl') {
         $env:CXXFLAGS='-m32'
         $env:CFLAGS='-m32'
       }
+  - mkdir build && cd build
   - cmake .. -G Ninja -Wdev -DRANGE_V3_HEADER_CHECKS=%HEADER_CHECK% -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DRANGES_CXX_STD=%CPP%
   - ninja
 
