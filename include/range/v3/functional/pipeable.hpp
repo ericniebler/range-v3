@@ -60,7 +60,7 @@ namespace ranges
         CPP_template(typename Arg, typename Pipe)( //
             requires(!is_pipeable_v<Arg>) && is_pipeable_v<Pipe> &&
             invocable<Pipe, Arg>) // clang-format off
-        constexpr friend auto operator|(Arg &&arg, Pipe pipe) // clang-format off
+        friend constexpr auto operator|(Arg &&arg, Pipe pipe) // clang-format off
         {
             return static_cast<Pipe &&>(pipe)(static_cast<Arg &&>(arg));
         }
@@ -68,7 +68,7 @@ namespace ranges
         // Compose two pipes
         CPP_template(typename Pipe0, typename Pipe1)( //
             requires is_pipeable_v<Pipe0> && is_pipeable_v<Pipe1>) // clang-format off
-        constexpr friend auto operator|(Pipe0 pipe0, Pipe1 pipe1) // clang-format on
+        friend constexpr auto operator|(Pipe0 pipe0, Pipe1 pipe1) // clang-format on
         {
             return composed<Pipe0, Pipe1>{detail::move(pipe0), detail::move(pipe1)};
         }

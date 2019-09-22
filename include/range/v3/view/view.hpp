@@ -102,7 +102,7 @@ namespace ranges
             // Piping requires viewable_ranges.
             CPP_template(typename Rng, typename ViewFn)(                              //
                 requires defer::viewable_range<Rng> && defer::invocable<ViewFn, Rng>) //
-                constexpr friend auto
+                friend constexpr auto
                 operator|(Rng && rng, view_closure<ViewFn> vw)
             {
                 return static_cast<ViewFn &&>(vw)(static_cast<Rng &&>(rng));
@@ -111,7 +111,7 @@ namespace ranges
             // This overload is deleted because when piping a range into an
             // view, it must be moved in.
             template<typename Rng, typename ViewFn>         // **************************
-            constexpr friend auto                           // **************************
+            friend constexpr auto                           // **************************
             operator|(Rng &&, view_closure<ViewFn> const &) // ******* READ THIS ********
                                                             // **** IF YOUR COMPILE *****
                 -> CPP_ret(Rng)(                            // ****** BREAKS HERE *******
@@ -126,7 +126,7 @@ namespace ranges
             // **************************************************************************
 
             template<typename View1, typename View2>
-            constexpr friend auto operator|(view_closure<View1> vw1,
+            friend constexpr auto operator|(view_closure<View1> vw1,
                                             view_closure<View2> vw2)
             {
                 return make_view_closure(

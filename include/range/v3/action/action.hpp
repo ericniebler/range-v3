@@ -48,7 +48,27 @@ namespace ranges
 
     namespace actions
     {
+#ifdef RANGES_WORKAROUND_CLANG_43400
+        namespace action_closure_base_detail
+        {
+            struct hook {};
+
+            template<typename Rng, typename ActionFn>   // ******************************
+            constexpr auto                              // ******************************
+            operator|(Rng &,                            // ********* READ THIS **********
+                      action_closure<ActionFn> const &) // ****** IF YOUR COMPILE *******
+                -> CPP_ret(Rng)(                        // ******** BREAKS HERE *********
+                    requires range<Rng>) = delete;      // ******************************
+            // **************************************************************************
+            // *    When piping a range into an action, the range must be moved in.     *
+            // **************************************************************************
+        }
+#endif // RANGES_WORKAROUND_CLANG_43400
+
         struct action_closure_base
+#ifdef RANGES_WORKAROUND_CLANG_43400
+          : private action_closure_base_detail::hook
+#endif // RANGES_WORKAROUND_CLANG_43400
         {
         private:
             template<typename ActionFn1, typename ActionFn2>
@@ -69,27 +89,28 @@ namespace ranges
         public:
             // Piping requires things are passed by value.
             CPP_template(typename Rng, typename ActionFn)(                         //
-                requires defer::range<Rng> && defer::invocable<ActionFn, Rng &> && //
-                (!defer::is_true<std::is_reference<Rng>::value>))                  //
-                constexpr friend auto
+                requires (!defer::is_true<std::is_lvalue_reference<Rng>::value> && //
+                    defer::range<Rng> && defer::invocable<ActionFn, Rng &>))       //
+                friend constexpr auto
                 operator|(Rng && rng, action_closure<ActionFn> act)
             {
                 return aux::move(static_cast<ActionFn &&>(act)(rng));
             }
 
+#ifndef RANGES_WORKAROUND_CLANG_43400
             template<typename Rng, typename ActionFn>   // ******************************
-            constexpr friend auto                       // ******************************
+            friend constexpr auto                       // ******************************
             operator|(Rng &,                            // ********* READ THIS **********
                       action_closure<ActionFn> const &) // ****** IF YOUR COMPILE *******
                 -> CPP_ret(Rng)(                        // ******** BREAKS HERE *********
                     requires range<Rng>) = delete;      // ******************************
             // **************************************************************************
-            // *    When piping a range into an action, the range must be a be moved    *
-            // *    in.                                                                 *
+            // *    When piping a range into an action, the range must be moved in.     *
             // **************************************************************************
+#endif // RANGES_WORKAROUND_CLANG_43400
 
             template<typename ActionFn1, typename ActionFn2>
-            constexpr friend auto operator|(action_closure<ActionFn1> act1,
+            friend constexpr auto operator|(action_closure<ActionFn1> act1,
                                             action_closure<ActionFn2> act2)
             {
                 return make_action_closure(

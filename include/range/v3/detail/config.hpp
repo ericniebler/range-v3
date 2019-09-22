@@ -324,6 +324,7 @@ namespace ranges
 #define RANGES_WORKAROUND_CLANG_23135 // constexpr leads to premature instantiation on
                                       // clang-3.x
 #endif
+#define RANGES_WORKAROUND_CLANG_43400 // template friend is redefinition of itself
 #else // __GNUC__
 #if __GNUC__ < 6
 #define RANGES_WORKAROUND_GCC_UNFILED0 /* Workaround old GCC name lookup bug */

@@ -10,7 +10,6 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/view/iota.hpp>
-#include <range/v3/algorithm/move.hpp>
 #include <range/v3/action/drop.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
