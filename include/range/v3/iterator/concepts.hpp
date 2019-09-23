@@ -122,12 +122,16 @@ namespace ranges
     (
         template(typename I)
         concept readable,
-            common_reference_with<iter_reference_t<I> &&,
-                                  iter_value_t<std::remove_reference_t<I>> &> &&
+            requires (uncvref_t<I> const i) (
+                // { *i } -> same_as<iter_reference_t<I>>;
+                // { iter_move(i) } -> same_as<iter_rvalue_reference_t<I>>;
+                concepts::requires_<same_as<decltype(*i), iter_reference_t<I>>>,
+                concepts::requires_<same_as<decltype(iter_move(i)), iter_rvalue_reference_t<I>>>
+            ) &&
+            common_reference_with<iter_reference_t<I> &&, iter_value_t<I> &> &&
             common_reference_with<iter_reference_t<I> &&,
                                   iter_rvalue_reference_t<I> &&> &&
-            common_reference_with<iter_rvalue_reference_t<I> &&,
-                                  iter_value_t<std::remove_reference_t<I>> const &>
+            common_reference_with<iter_rvalue_reference_t<I> &&, iter_value_t<I> const &>
     );
 
     CPP_def
@@ -609,12 +613,12 @@ namespace ranges
     (
         template(typename I1, typename I2 = I1)
         (concept indirectly_swappable)(I1, I2),
-            requires (I1 && i1, I2 && i2)
+            requires (I1 const i1, I2 const i2)
             (
-                ranges::iter_swap((I1 &&) i1, (I2 &&) i2),
-                ranges::iter_swap((I1 &&) i1, (I1 &&) i1),
-                ranges::iter_swap((I2 &&) i2, (I2 &&) i2),
-                ranges::iter_swap((I2 &&) i2, (I1 &&) i1)
+                ranges::iter_swap(i1, i2),
+                ranges::iter_swap(i1, i1),
+                ranges::iter_swap(i2, i2),
+                ranges::iter_swap(i2, i1)
             ) &&
             readable<I1> && readable<I2>
     );

@@ -51,23 +51,26 @@ namespace ranges
 #endif
                  typename = R &>
         using iter_reference_t_ = R;
+
+#if defined(RANGES_DEEP_STL_INTEGRATION) && RANGES_DEEP_STL_INTEGRATION && \
+        !defined(RANGES_DOXYGEN_INVOKED)
+        template<typename T>
+        using iter_value_t_ =
+            typename if_then_t<is_std_iterator_traits_specialized_v<T>,
+                               std::iterator_traits<T>,
+                               readable_traits<T>>::value_type;
+#else
+        template<typename T>
+        using iter_value_t_ = typename readable_traits<T>::value_type;
+#endif
     } // namespace detail
     /// \endcond
 
     template<typename R>
     using iter_reference_t = detail::iter_reference_t_<R>;
 
-#if defined(RANGES_DEEP_STL_INTEGRATION) && RANGES_DEEP_STL_INTEGRATION && \
-    !defined(RANGES_DOXYGEN_INVOKED)
-    template<typename T>
-    using iter_value_t =
-        typename detail::if_then_t<detail::is_std_iterator_traits_specialized_v<T>,
-                                   std::iterator_traits<T>,
-                                   readable_traits<T>>::value_type;
-#else
-    template<typename T>
-    using iter_value_t = typename readable_traits<T>::value_type;
-#endif
+    template<typename R>
+    using iter_value_t = detail::iter_value_t_<uncvref_t<R>>;
 
     /// \cond
     namespace _iter_move_
