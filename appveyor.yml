@@ -13,32 +13,15 @@ image: Visual Studio 2019
 environment:
   matrix:
     - CXX: clang-cl
-      CPP: latest
-      platform: x64
-      configuration: Release
-      HEADER_CHECK: On
-
-    - CXX: cl
       CPP: 17
-      platform: x64
-      configuration: Release
-      HEADER_CHECK: On
-
-    - CXX: cl
-      CPP: latest
-      platform: x64
-      configuration: Debug
-      HEADER_CHECK: On
-
-    - CXX: cl
-      CPP: latest
-      platform: x64
-      configuration: Release
-
-    - CXX: cl
-      CPP: latest
       platform: x64_x86
       configuration: Debug
+      HEADER_CHECK: On
+
+    - CXX: cl
+      CPP: latest
+      platform: x64
+      configuration: Release
 
 cache:
   - C:\ninja-1.8.2
