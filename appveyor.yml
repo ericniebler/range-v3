@@ -42,10 +42,10 @@ install:
 build_script:
   - ps: |
       $env:CC=$env:CXX
-      if ("$env:HEADER_CHECK" -eq "") {
+      if ("$env:HEADER_CHECK" -eq '') {
         $env:HEADER_CHECK='Off'
       }
-      if ($env:PLATFORM -eq 'x86_x64' -and $env:CXX -eq 'clang-cl') {
+      if (($env:PLATFORM -eq 'x86_x64' -or $env:PLATFORM -eq 'x86') -and $env:CXX -eq 'clang-cl') {
         $env:CXXFLAGS='-m32'
         $env:CFLAGS='-m32'
       }
