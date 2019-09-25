@@ -82,8 +82,8 @@ namespace ranges
         (
             template(typename T)
             concept pair_like_gcc_bugs_,
-                ranges::defer::type<meta::_t<std::tuple_size<T>>> &&
-                defer::pair_like_gcc_bugs_2_<T>
+                bool(ranges::defer::type<meta::_t<std::tuple_size<T>>> &&
+                     defer::pair_like_gcc_bugs_2_<T>)
         );
         CPP_def
         (
@@ -100,8 +100,8 @@ namespace ranges
             template(typename T)
             concept pair_like_,
                 (!std::is_reference<T>::value) &&
-                (defer::get_first_and_second_<T> &&
-                 defer::pair_like_gcc_bugs_<T>)
+                bool(defer::get_first_and_second_<T> &&
+                     defer::pair_like_gcc_bugs_<T>)
         );
         // clang-format on
 
@@ -130,8 +130,8 @@ namespace ranges
             concept pair_like_convertible_from_,
                 (!range<T>) &&
                 constructible_from<T, U, V> &&
-                (ranges::defer::is_true<pair_like<uncvref_t<T>>::value> &&
-                 defer::pair_like_convertible_from_gcc_bugs_<T, U, V>)
+                bool(ranges::defer::is_true<pair_like<uncvref_t<T>>::value> &&
+                     defer::pair_like_convertible_from_gcc_bugs_<T, U, V>)
         );
         CPP_def
         (
@@ -284,15 +284,6 @@ namespace ranges
             {
                 RANGES_EXPECT(n == ranges::size(r));
             }
-        }
-
-        /// Implicit conversion to something that looks like a container.
-        CPP_template(typename Container)(                                         //
-            requires detail::convertible_to_container<subrange const, Container>) //
-            constexpr
-            operator Container() const
-        {
-            return ranges::to<Container>(*this);
         }
 
         CPP_template(typename PairLike)( //
