@@ -46,7 +46,7 @@
 #if defined(_MSC_VER) && !defined(__clang__)
 #define CPP_WORKAROUND_MSVC_779763 // FATAL_UNREACHABLE calling constexpr function via template parameter
 #define CPP_WORKAROUND_MSVC_780775 // Incorrect substitution in function template return type
-#define CPP_WORKAROUND_MSVC_784772 // Failure to invoke *explicit* bool conversion in a constant expression
+#define CPP_WORKAROUND_MSVC_654601 // Failure to invoke *implicit* bool conversion in a constant expression
 #endif
 
 #if !defined(CPP_CXX_CONCEPTS)
@@ -134,10 +134,10 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #define CPP_assert_msg static_assert
 
-#ifdef CPP_WORKAROUND_MSVC_784772
-#define CPP_EXPLICIT /**/
+#ifdef CPP_WORKAROUND_MSVC_654601
+#define CPP_FORCE_TO_BOOL static_cast<bool>
 #else
-#define CPP_EXPLICIT explicit
+#define CPP_FORCE_TO_BOOL
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -268,15 +268,16 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #else
 // No requires expression:
 #define CPP_PP_DEF_IMPL_0(...)                                                  \
-    () -> std::enable_if_t<__VA_ARGS__, int>                                    \
+    () -> std::enable_if_t<CPP_FORCE_TO_BOOL(__VA_ARGS__), int>                 \
     /**/
 // Requires expression:
 #define CPP_PP_DEF_IMPL_1(...)                                                  \
-    CPP_PP_CAT(CPP_PP_DEF_IMPL_1_, __VA_ARGS__) , int>                          \
+    CPP_PP_CAT(CPP_PP_DEF_IMPL_1_, __VA_ARGS__) ) , int>                        \
     /**/
 #define CPP_PP_DEF_IMPL_1_requires(...)                                         \
     (__VA_ARGS__) ->                                                            \
-        std::enable_if_t<::concepts::detail::requires_ CPP_PP_DEF_REQUIRES_BODY \
+        std::enable_if_t<CPP_FORCE_TO_BOOL(                                     \
+            ::concepts::detail::requires_ CPP_PP_DEF_REQUIRES_BODY              \
     /**/
  #define CPP_PP_DEF_REQUIRES_BODY(...)                                          \
     <decltype(__VA_ARGS__, void())>()                                           \
@@ -421,7 +422,9 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_TEMPLATE_SFINAE_AUX_(...) ,                                         \
     typename CPP_true_ = std::true_type,                                        \
     std::enable_if_t<                                                           \
-        CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) && CPP_true_{},     \
+        CPP_FORCE_TO_BOOL(                                                      \
+            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) && CPP_true_{}  \
+        ),                                                                      \
         int                                                                     \
     > = 0>                                                                      \
     /**/
@@ -431,7 +434,9 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_TEMPLATE_DEF_SFINAE_AUX_(...) ,                                     \
     typename CPP_true_,                                                         \
     std::enable_if_t<                                                           \
-        CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) && CPP_true_{},     \
+        CPP_FORCE_TO_BOOL(                                                      \
+            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) && CPP_true_{}  \
+        ),                                                                      \
         int                                                                     \
     >>                                                                          \
     /**/
@@ -459,17 +464,21 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 // No noexcept-clause:
 #define CPP_CTOR_SFINAE_REQUIRES_0(...)                                         \
     std::enable_if_t<                                                           \
-        CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) &&                  \
-        CPP_true(::concepts::detail::xNil{}),                                   \
+        CPP_FORCE_TO_BOOL(                                                      \
+            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) &&              \
+            CPP_true(::concepts::detail::xNil{})                                \
+        ),                                                                      \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
     /**/
 // Yes noexcept-clause:
 #define CPP_CTOR_SFINAE_REQUIRES_1(...)                                         \
     std::enable_if_t<                                                           \
-        CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_,                                  \
-            CPP_PP_CAT(CPP_CTOR_SFINAE_EAT_NOEXCEPT_, __VA_ARGS__)              \
-        ) && CPP_true(::concepts::detail::xNil{}),                              \
+        CPP_FORCE_TO_BOOL(                                                      \
+            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_,                              \
+                CPP_PP_CAT(CPP_CTOR_SFINAE_EAT_NOEXCEPT_, __VA_ARGS__)          \
+            ) && CPP_true(::concepts::detail::xNil{})                           \
+        ),                                                                      \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
     CPP_PP_EXPAND(CPP_PP_CAT(CPP_CTOR_SFINAE_SHOW_NOEXCEPT_, __VA_ARGS__)))     \
@@ -487,7 +496,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_broken_friend_ret(...)                                              \
     ::concepts::return_t<                                                       \
         __VA_ARGS__,                                                            \
-        std::enable_if_t<CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_                     \
+        std::enable_if_t<CPP_FORCE_TO_BOOL(CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_   \
     /**/
 #define CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_(...)                                 \
     CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(CPP_PP_CAT(                            \
@@ -495,7 +504,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #define CPP_TEMPLATE_AUX_2_requires
 #define CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(...)                               \
-    __VA_ARGS__ && CPP_true(::concepts::detail::xNil{})>>                       \
+    __VA_ARGS__ && CPP_true(::concepts::detail::xNil{}))>>                      \
     /**/
 #ifdef CPP_WORKAROUND_MSVC_779763
 #define CPP_broken_friend_member                                                \
@@ -565,18 +574,22 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_0(...)                               \
     std::enable_if_t<                                                           \
-        CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__) &&                  \
-        CPP_true(::concepts::detail::xNil{}),                                   \
+        CPP_FORCE_TO_BOOL(                                                      \
+            CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__) &&              \
+            CPP_true(::concepts::detail::xNil{})                                \
+        ),                                                                      \
         ::concepts::detail::Nil                                                 \
     > = {}) const                                                               \
     /**/
 
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_1(...)                               \
     std::enable_if_t<                                                           \
-        CPP_PP_CAT(                                                             \
-            CPP_FUN_IMPL_EAT_REQUIRES_,                                         \
-            CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)                 \
-        ) && CPP_true(::concepts::detail::xNil{}),                              \
+        CPP_FORCE_TO_BOOL(                                                      \
+            CPP_PP_CAT(                                                         \
+                CPP_FUN_IMPL_EAT_REQUIRES_,                                     \
+                CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)             \
+            ) && CPP_true(::concepts::detail::xNil{})                           \
+        ),                                                                      \
         ::concepts::detail::Nil                                                 \
     > = {}) const                                                               \
     CPP_PP_EXPAND(CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))        \
@@ -605,19 +618,23 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_0(...)                            \
     std::enable_if_t<                                                           \
-        CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__) &&                  \
-        CPP_true(::concepts::detail::xNil{}),                                   \
+        CPP_FORCE_TO_BOOL(                                                      \
+            CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__) &&              \
+            CPP_true(::concepts::detail::xNil{})                                \
+        ),                                                                      \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
     /**/
 
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_1(...)                            \
     std::enable_if_t<                                                           \
-        CPP_PP_CAT(                                                             \
-            CPP_FUN_IMPL_EAT_REQUIRES_,                                         \
-            CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)                 \
-        ) &&                                                                    \
-        CPP_true(::concepts::detail::xNil{}),                                   \
+        CPP_FORCE_TO_BOOL(                                                      \
+            CPP_PP_CAT(                                                         \
+                CPP_FUN_IMPL_EAT_REQUIRES_,                                     \
+                CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)             \
+            ) &&                                                                \
+            CPP_true(::concepts::detail::xNil{})                                \
+        ),                                                                      \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
     CPP_PP_EXPAND(CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))        \
