@@ -140,6 +140,12 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_FORCE_TO_BOOL
 #endif
 
+#if defined(_MSC_VER) && !defined(__clang__)
+#define CPP_INSTANCE(...) ::concepts::detail::instance_<decltype(__VA_ARGS__)>
+#else
+#define CPP_INSTANCE(...) __VA_ARGS__
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 // CPP_def
 //   For defining concepts with a syntax similar to C++20. For example:
@@ -466,7 +472,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     std::enable_if_t<                                                           \
         CPP_FORCE_TO_BOOL(                                                      \
             CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) &&              \
-            decltype(CPP_true(::concepts::detail::xNil{})){}                    \
+            CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))                  \
         ),                                                                      \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
@@ -477,7 +483,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
         CPP_FORCE_TO_BOOL(                                                      \
             CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_,                              \
                 CPP_PP_CAT(CPP_CTOR_SFINAE_EAT_NOEXCEPT_, __VA_ARGS__)          \
-            ) && decltype(CPP_true(::concepts::detail::xNil{})){}               \
+            ) && CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))             \
         ),                                                                      \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
@@ -504,7 +510,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #define CPP_TEMPLATE_AUX_2_requires
 #define CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(...)                               \
-    __VA_ARGS__ && decltype(CPP_true(::concepts::detail::xNil{})){})>>          \
+    __VA_ARGS__ && CPP_INSTANCE(CPP_true(::concepts::detail::xNil{})))>>        \
     /**/
 #ifdef CPP_WORKAROUND_MSVC_779763
 #define CPP_broken_friend_member                                                \
@@ -576,7 +582,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     std::enable_if_t<                                                           \
         CPP_FORCE_TO_BOOL(                                                      \
             CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__) &&              \
-            decltype(CPP_true(::concepts::detail::xNil{})){}                    \
+            CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))                  \
         ),                                                                      \
         ::concepts::detail::Nil                                                 \
     > = {}) const                                                               \
@@ -588,7 +594,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
             CPP_PP_CAT(                                                         \
                 CPP_FUN_IMPL_EAT_REQUIRES_,                                     \
                 CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)             \
-            ) && decltype(CPP_true(::concepts::detail::xNil{})){}               \
+            ) && CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))             \
         ),                                                                      \
         ::concepts::detail::Nil                                                 \
     > = {}) const                                                               \
@@ -620,7 +626,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     std::enable_if_t<                                                           \
         CPP_FORCE_TO_BOOL(                                                      \
             CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__) &&              \
-            decltype(CPP_true(::concepts::detail::xNil{})){}                    \
+            CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))                  \
         ),                                                                      \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
@@ -633,7 +639,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
                 CPP_FUN_IMPL_EAT_REQUIRES_,                                     \
                 CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)             \
             ) &&                                                                \
-            decltype(CPP_true(::concepts::detail::xNil{})){}                    \
+            CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))                  \
         ),                                                                      \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
@@ -740,6 +746,9 @@ namespace concepts
 
     namespace detail
     {
+        template<typename T>
+        CPP_INLINE_VAR constexpr T instance_ = T{};
+
         template<typename>
         constexpr bool requires_()
         {
