@@ -35,12 +35,12 @@ namespace ranges
     template<typename I, typename O>
     using rotate_copy_result = detail::in_out_result<I, O>;
 
-    RANGES_BEGIN_NIEBLOID(rotate_copy)
+    RANGES_FUNC_BEGIN(rotate_copy)
 
         /// \brief function template \c rotate_copy
         template<typename I, typename S, typename O, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(rotate_copy)(I first, I middle, S last, O out) //
-            ->CPP_ret(rotate_copy_result<I, O>)(                                //
+        auto RANGES_FUNC(rotate_copy)(I first, I middle, S last, O out) //
+            ->CPP_ret(rotate_copy_result<I, O>)(                        //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
                 weakly_incrementable<O> && indirectly_copyable<I, O>)
         {
@@ -51,16 +51,15 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename O, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(rotate_copy)(
-            Rng && rng, iterator_t<Rng> middle, O out)              //
-            ->CPP_ret(rotate_copy_result<safe_iterator_t<Rng>, O>)( //
+        auto RANGES_FUNC(rotate_copy)(Rng && rng, iterator_t<Rng> middle, O out) //
+            ->CPP_ret(rotate_copy_result<safe_iterator_t<Rng>, O>)(              //
                 requires range<Rng> && weakly_incrementable<O> &&
                 indirectly_copyable<iterator_t<Rng>, O>)
         {
             return (*this)(begin(rng), std::move(middle), end(rng), std::move(out));
         }
 
-    RANGES_END_NIEBLOID(rotate_copy)
+    RANGES_FUNC_END(rotate_copy)
 
     namespace cpp20
     {

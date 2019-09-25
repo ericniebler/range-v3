@@ -33,14 +33,14 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(shuffle)
+    RANGES_FUNC_BEGIN(shuffle)
 
         /// \brief function template \c shuffle
         template<typename I, typename S, typename Gen = detail::default_random_engine &>
-        auto RANGES_FUN_NIEBLOID(shuffle)(I const first,
-                                          S const last,
-                                          Gen && gen = detail::get_random_engine()) //
-            ->CPP_ret(I)(                                                           //
+        auto RANGES_FUNC(shuffle)(I const first,
+                                  S const last,
+                                  Gen && gen = detail::get_random_engine()) //
+            ->CPP_ret(I)(                                                   //
                 requires random_access_iterator<I> && sentinel_for<S, I> &&
                 permutable<I> &&
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
@@ -64,9 +64,9 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename Gen = detail::default_random_engine &>
-        auto RANGES_FUN_NIEBLOID(shuffle)(Rng && rng,
-                                          Gen && rand = detail::get_random_engine()) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                         //
+        auto RANGES_FUNC(shuffle)(Rng && rng,
+                                  Gen && rand = detail::get_random_engine()) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                                 //
                 requires random_access_range<Rng> && permutable<iterator_t<Rng>> &&
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
                 convertible_to<invoke_result_t<Gen &>,
@@ -75,7 +75,7 @@ namespace ranges
             return (*this)(begin(rng), end(rng), static_cast<Gen &&>(rand));
         }
 
-    RANGES_END_NIEBLOID(shuffle)
+    RANGES_FUNC_END(shuffle)
 
     namespace cpp20
     {

@@ -55,12 +55,12 @@ namespace ranges
     } // namespace detail
     /// \endcond
 
-    RANGES_BEGIN_NIEBLOID(reverse)
+    RANGES_FUNC_BEGIN(reverse)
 
         /// \brief function template \c reverse
         template<typename I, typename S>
-        auto RANGES_FUN_NIEBLOID(reverse)(I first, S end_) //
-            ->CPP_ret(I)(                                  //
+        auto RANGES_FUNC(reverse)(I first, S end_) //
+            ->CPP_ret(I)(                          //
                 requires bidirectional_iterator<I> && sentinel_for<S, I> && permutable<I>)
         {
             I last = ranges::next(first, end_);
@@ -70,14 +70,14 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename I = iterator_t<Rng>>
-        auto RANGES_FUN_NIEBLOID(reverse)(Rng && rng) //
-            ->CPP_ret(safe_iterator_t<Rng>)(          //
+        auto RANGES_FUNC(reverse)(Rng && rng) //
+            ->CPP_ret(safe_iterator_t<Rng>)(  //
                 requires bidirectional_range<Rng> && permutable<I>)
         {
             return (*this)(begin(rng), end(rng));
         }
 
-    RANGES_END_NIEBLOID(reverse)
+    RANGES_FUNC_END(reverse)
 
     namespace cpp20
     {

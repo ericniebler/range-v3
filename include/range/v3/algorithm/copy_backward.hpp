@@ -34,11 +34,11 @@ namespace ranges
     template<typename I, typename O>
     using copy_backward_result = detail::in_out_result<I, O>;
 
-    RANGES_BEGIN_NIEBLOID(copy_backward)
+    RANGES_FUNC_BEGIN(copy_backward)
 
         /// \brief function template \c copy_backward
         template<typename I, typename S, typename O>
-        auto RANGES_FUN_NIEBLOID(copy_backward)(I first, S end_, O out)
+        auto RANGES_FUNC(copy_backward)(I first, S end_, O out)
             ->CPP_ret(copy_backward_result<I, O>)( //
                 requires bidirectional_iterator<I> && sentinel_for<S, I> &&
                 bidirectional_iterator<O> && indirectly_copyable<I, O>)
@@ -51,14 +51,14 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename O>
-        auto RANGES_FUN_NIEBLOID(copy_backward)(Rng && rng, O out)
+        auto RANGES_FUNC(copy_backward)(Rng && rng, O out)
             ->CPP_ret(copy_backward_result<safe_iterator_t<Rng>, O>)( //
                 requires bidirectional_range<Rng> && bidirectional_iterator<O> &&
                 indirectly_copyable<iterator_t<Rng>, O>)
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }
-    RANGES_END_NIEBLOID(copy_backward)
+    RANGES_FUNC_END(copy_backward)
 
     namespace cpp20
     {

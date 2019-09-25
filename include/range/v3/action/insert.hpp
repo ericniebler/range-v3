@@ -179,7 +179,7 @@ namespace ranges
                                        std::move(i),
                                        std::move(j),
                                        meta::bool_ < random_access_reservable<Cont> &&
-                                           sized_sentinel_for<S, I> > {});
+                                           sized_sentinel_for<S, I>> {});
         }
 
         template<typename Cont, typename I, typename Rng>
@@ -193,7 +193,7 @@ namespace ranges
                                        std::move(p),
                                        static_cast<Rng &&>(rng),
                                        meta::bool_ < random_access_reservable<Cont> &&
-                                           sized_range<Rng> > {});
+                                           sized_range<Rng>> {});
         }
 
         struct insert_fn

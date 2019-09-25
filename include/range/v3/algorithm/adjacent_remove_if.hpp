@@ -35,7 +35,7 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(adjacent_remove_if)
+    RANGES_FUNC_BEGIN(adjacent_remove_if)
         /// \brief function \c adjacent_remove_if
         ///
         /// range-based version of the \c adjacent_remove_if algorithm
@@ -43,7 +43,7 @@ namespace ranges
         /// \pre `Rng` is a model of the `forward_range` concept.
         /// \pre `Pred` is a model of the `BinaryPredicate` concept.
         template<typename I, typename S, typename Pred, typename Proj = identity>
-        auto RANGES_FUN_NIEBLOID(adjacent_remove_if)(
+        auto RANGES_FUNC(adjacent_remove_if)(
             I first, S last, Pred pred = {}, Proj proj = {})
             ->CPP_ret(I)( //
                 requires permutable<I> && sentinel_for<S, I> &&
@@ -70,16 +70,15 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename Pred, typename Proj = identity>
-        auto RANGES_FUN_NIEBLOID(adjacent_remove_if)(
-            Rng && rng, Pred pred, Proj proj = {}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(       //
+        auto RANGES_FUNC(adjacent_remove_if)(Rng && rng, Pred pred, Proj proj = {}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                                        //
                 requires forward_range<Rng> &&
                 indirect_relation<Pred, projected<iterator_t<Rng>, Proj>> &&
                 permutable<iterator_t<Rng>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
-    RANGES_END_NIEBLOID(adjacent_remove_if)
+    RANGES_FUNC_END(adjacent_remove_if)
 
     namespace cpp20
     {

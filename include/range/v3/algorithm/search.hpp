@@ -141,7 +141,7 @@ namespace ranges
     } // namespace detail
     /// \endcond
 
-    RANGES_BEGIN_NIEBLOID(search)
+    RANGES_FUNC_BEGIN(search)
 
         /// \brief function template \c search
         template<typename I1,
@@ -151,14 +151,14 @@ namespace ranges
                  typename C = equal_to,
                  typename P1 = identity,
                  typename P2 = identity>
-        auto RANGES_FUN_NIEBLOID(search)(I1 begin1,
-                                         S1 end1,
-                                         I2 begin2,
-                                         S2 end2,
-                                         C pred = C{},
-                                         P1 proj1 = P1{},
-                                         P2 proj2 = P2{}) //
-            ->CPP_ret(subrange<I1>)(                      //
+        auto RANGES_FUNC(search)(I1 begin1,
+                                 S1 end1,
+                                 I2 begin2,
+                                 S2 end2,
+                                 C pred = C{},
+                                 P1 proj1 = P1{},
+                                 P2 proj2 = P2{}) //
+            ->CPP_ret(subrange<I1>)(              //
                 requires forward_iterator<I1> && sentinel_for<S1, I1> &&
                 forward_iterator<I2> && sentinel_for<S2, I2> &&
                 indirectly_comparable<I1, I2, C, P1, P2>)
@@ -192,7 +192,7 @@ namespace ranges
                  typename C = equal_to,
                  typename P1 = identity,
                  typename P2 = identity>
-        auto RANGES_FUN_NIEBLOID(search)(
+        auto RANGES_FUNC(search)(
             Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) //
             ->CPP_ret(safe_subrange_t<Rng1>)(                                           //
                 requires forward_range<Rng1> && forward_range<Rng2> &&
@@ -215,7 +215,7 @@ namespace ranges
                     begin(rng1), end(rng1), begin(rng2), end(rng2), pred, proj1, proj2);
         }
 
-    RANGES_END_NIEBLOID(search)
+    RANGES_FUNC_END(search)
 
     namespace cpp20
     {
