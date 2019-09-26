@@ -35,7 +35,7 @@ namespace ranges
     template<typename I, typename O>
     using replace_copy_result = detail::in_out_result<I, O>;
 
-    RANGES_BEGIN_NIEBLOID(replace_copy)
+    RANGES_FUNC_BEGIN(replace_copy)
 
         /// \brief function template \c replace_copy
         template<typename I,
@@ -44,13 +44,13 @@ namespace ranges
                  typename T1,
                  typename T2,
                  typename P = identity>
-        auto RANGES_FUN_NIEBLOID(replace_copy)(I first,
-                                               S last,
-                                               O out,
-                                               T1 const & old_value,
-                                               T2 const & new_value,
-                                               P proj = {}) //
-            ->CPP_ret(replace_copy_result<I, O>)(           //
+        auto RANGES_FUNC(replace_copy)(I first,
+                                       S last,
+                                       O out,
+                                       T1 const & old_value,
+                                       T2 const & new_value,
+                                       P proj = {}) //
+            ->CPP_ret(replace_copy_result<I, O>)(   //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                 output_iterator<O, T2 const &> && indirectly_copyable<I, O> &&
                 indirect_relation<equal_to, projected<I, P>, T1 const *>)
@@ -72,7 +72,7 @@ namespace ranges
                  typename T1,
                  typename T2,
                  typename P = identity>
-        auto RANGES_FUN_NIEBLOID(replace_copy)(
+        auto RANGES_FUNC(replace_copy)(
             Rng && rng, O out, T1 const & old_value, T2 const & new_value, P proj = {}) //
             ->CPP_ret(replace_copy_result<safe_iterator_t<Rng>, O>)(                    //
                 requires input_range<Rng> && output_iterator<O, T2 const &> &&
@@ -87,7 +87,7 @@ namespace ranges
                            std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(replace_copy)
+    RANGES_FUNC_END(replace_copy)
 
     namespace cpp20
     {

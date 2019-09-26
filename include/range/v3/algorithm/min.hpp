@@ -32,11 +32,11 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(min)
+    RANGES_FUNC_BEGIN(min)
 
         /// \brief function template \c min
         template<typename T, typename C = less, typename P = identity>
-        constexpr auto RANGES_FUN_NIEBLOID(min)(
+        constexpr auto RANGES_FUNC(min)(
             T const & a, T const & b, C pred = C{}, P proj = P{}) //
             ->CPP_ret(T const &)(                                 //
                 requires indirect_strict_weak_order<C, projected<T const *, P>>)
@@ -46,8 +46,8 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        constexpr auto RANGES_FUN_NIEBLOID(min)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(range_value_t<Rng>)(                                              //
+        constexpr auto RANGES_FUNC(min)(Rng && rng, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(range_value_t<Rng>)(                                      //
                 requires input_range<Rng> &&
                 indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>> &&
                 indirectly_copyable_storable<iterator_t<Rng>, range_value_t<Rng> *>)
@@ -67,7 +67,7 @@ namespace ranges
 
         /// \overload
         template<typename T, typename C = less, typename P = identity>
-        constexpr auto RANGES_FUN_NIEBLOID(min)(
+        constexpr auto RANGES_FUNC(min)(
             std::initializer_list<T> const && rng, C pred = C{}, P proj = P{}) //
             ->CPP_ret(T)(                                                      //
                 requires copyable<T> &&
@@ -76,7 +76,7 @@ namespace ranges
             return (*this)(rng, std::move(pred), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(min)
+    RANGES_FUNC_END(min)
 
     namespace cpp20
     {

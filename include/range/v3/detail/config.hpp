@@ -580,19 +580,21 @@ namespace ranges
 #endif
 
 #ifndef RANGES_DOXYGEN_INVOKED
-#define RANGES_BEGIN_NIEBLOID(NAME) \
-    struct NAME##_fn                \
+#define RANGES_FUNC_BEGIN(NAME) \
+    struct NAME##_fn            \
     {
-#define RANGES_END_NIEBLOID(NAME) \
-    }                             \
-    ;                             \
+#define RANGES_FUNC_END(NAME) \
+    }                         \
+    ;                         \
     RANGES_INLINE_VARIABLE(NAME##_fn, NAME)
-#define RANGES_FUN_NIEBLOID(NAME) operator() RANGES_FUN_NIEBLOID_CONST_
-#define RANGES_FUN_NIEBLOID_CONST_(...) (__VA_ARGS__) const
+#define RANGES_FUNC(NAME) operator()                                                    \
+    RANGES_FUNC_CONST_                                                                  \
+    /**/
+#define RANGES_FUNC_CONST_(...) (__VA_ARGS__) const
 #else
-#define RANGES_BEGIN_NIEBLOID(NAME)
-#define RANGES_END_NIEBLOID(NAME)
-#define RANGES_FUN_NIEBLOID(NAME) NAME
+#define RANGES_FUNC_BEGIN(NAME)
+#define RANGES_FUNC_END(NAME)
+#define RANGES_FUNC(NAME) NAME
 #endif
 
 #ifndef RANGES_CXX_DEDUCTION_GUIDES

@@ -36,12 +36,12 @@ namespace ranges
     template<typename I, typename O>
     using copy_if_result = detail::in_out_result<I, O>;
 
-    RANGES_BEGIN_NIEBLOID(copy_if)
+    RANGES_FUNC_BEGIN(copy_if)
 
         /// \brief function template \c copy_if
         template<typename I, typename S, typename O, typename F, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(copy_if)(I first, S last, O out, F pred, P proj = P{}) //
-            ->CPP_ret(copy_if_result<I, O>)(                                            //
+        auto RANGES_FUNC(copy_if)(I first, S last, O out, F pred, P proj = P{}) //
+            ->CPP_ret(copy_if_result<I, O>)(                                    //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                 weakly_incrementable<O> && indirect_unary_predicate<F, projected<I, P>> &&
                 indirectly_copyable<I, O>)
@@ -60,7 +60,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename O, typename F, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(copy_if)(Rng && rng, O out, F pred, P proj = P{})
+        auto RANGES_FUNC(copy_if)(Rng && rng, O out, F pred, P proj = P{})
             ->CPP_ret(copy_if_result<safe_iterator_t<Rng>, O>)( //
                 requires input_range<Rng> && weakly_incrementable<O> &&
                 indirect_unary_predicate<F, projected<iterator_t<Rng>, P>> &&
@@ -70,7 +70,7 @@ namespace ranges
                 begin(rng), end(rng), std::move(out), std::move(pred), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(copy_if)
+    RANGES_FUNC_END(copy_if)
 
     namespace cpp20
     {

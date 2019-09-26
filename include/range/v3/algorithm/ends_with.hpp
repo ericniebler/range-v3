@@ -30,7 +30,7 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(ends_with)
+    RANGES_FUNC_BEGIN(ends_with)
 
         /// \brief function template \c ends_with
         template<typename I0,
@@ -40,14 +40,14 @@ namespace ranges
                  typename C = equal_to,
                  typename P0 = identity,
                  typename P1 = identity>
-        constexpr auto RANGES_FUN_NIEBLOID(ends_with)(I0 begin0,
-                                                      S0 end0,
-                                                      I1 begin1,
-                                                      S1 end1,
-                                                      C pred = C{},
-                                                      P0 proj0 = P0{},
-                                                      P1 proj1 = P1{}) //
-            ->CPP_ret(bool)(                                           //
+        constexpr auto RANGES_FUNC(ends_with)(I0 begin0,
+                                              S0 end0,
+                                              I1 begin1,
+                                              S1 end1,
+                                              C pred = C{},
+                                              P0 proj0 = P0{},
+                                              P1 proj1 = P1{}) //
+            ->CPP_ret(bool)(                                   //
                 requires((forward_iterator<I0> && sentinel_for<S0, I0>) ||
                          (input_iterator<I0> && sized_sentinel_for<S0, I0>)) &&
                 ((forward_iterator<I1> && sentinel_for<S1, I1>) ||
@@ -72,7 +72,7 @@ namespace ranges
                  typename C = equal_to,
                  typename P0 = identity,
                  typename P1 = identity>
-        constexpr auto RANGES_FUN_NIEBLOID(ends_with)(
+        constexpr auto RANGES_FUNC(ends_with)(
             Rng0 && rng0, Rng1 && rng1, C pred = C{}, P0 proj0 = P0{}, P1 proj1 = P1{}) //
             ->CPP_ret(bool)(                                                            //
                 requires(forward_range<Rng0> ||
@@ -92,7 +92,7 @@ namespace ranges
                          std::move(proj1));
         }
 
-    RANGES_END_NIEBLOID(ends_with)
+    RANGES_FUNC_END(ends_with)
     /// @}
 } // namespace ranges
 

@@ -100,11 +100,11 @@ namespace ranges
 
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(nth_element)
+    RANGES_FUNC_BEGIN(nth_element)
 
         /// \brief function template \c nth_element
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(nth_element)(
+        auto RANGES_FUNC(nth_element)(
             I first, I nth, S end_, C pred = C{}, P proj = P{}) //
             ->CPP_ret(I)(                                       //
                 requires random_access_iterator<I> && sortable<I, C, P>)
@@ -308,7 +308,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(nth_element)(
+        auto RANGES_FUNC(nth_element)(
             Rng && rng, iterator_t<Rng> nth, C pred = C{}, P proj = P{}) //
             ->CPP_ret(safe_iterator_t<Rng>)(                             //
                 requires random_access_range<Rng> && sortable<iterator_t<Rng>, C, P>)
@@ -317,7 +317,7 @@ namespace ranges
                 begin(rng), std::move(nth), end(rng), std::move(pred), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(nth_element)
+    RANGES_FUNC_END(nth_element)
 
     namespace cpp20
     {

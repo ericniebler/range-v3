@@ -32,7 +32,7 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(lower_bound)
+    RANGES_FUNC_BEGIN(lower_bound)
 
         /// \brief function template \c lower_bound
         template<typename I,
@@ -40,7 +40,7 @@ namespace ranges
                  typename V,
                  typename C = less,
                  typename P = identity>
-        auto RANGES_FUN_NIEBLOID(lower_bound)(
+        auto RANGES_FUNC(lower_bound)(
             I first, S last, V const & val, C pred = C{}, P proj = P{})
             ->CPP_ret(I)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
@@ -54,7 +54,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename V, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(lower_bound)(
+        auto RANGES_FUNC(lower_bound)(
             Rng && rng, V const & val, C pred = C{}, P proj = P{})
             ->CPP_ret(safe_iterator_t<Rng>)( //
                 requires forward_range<Rng> &&
@@ -64,7 +64,7 @@ namespace ranges
                 rng, detail::make_lower_bound_predicate(pred, val), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(lower_bound)
+    RANGES_FUNC_END(lower_bound)
 
     namespace cpp20
     {

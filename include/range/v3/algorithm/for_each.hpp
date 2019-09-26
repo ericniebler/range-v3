@@ -35,11 +35,11 @@ namespace ranges
     template<typename I, typename F>
     using for_each_result = detail::in_fun_result<I, F>;
 
-    RANGES_BEGIN_NIEBLOID(for_each)
+    RANGES_FUNC_BEGIN(for_each)
 
         /// \brief function template \c for_each
         template<typename I, typename S, typename F, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(for_each)(I first, S last, F fun, P proj = P{})
+        auto RANGES_FUNC(for_each)(I first, S last, F fun, P proj = P{})
             ->CPP_ret(for_each_result<I, F>)( //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                 indirectly_unary_invocable<F, projected<I, P>>)
@@ -53,7 +53,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename F, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(for_each)(Rng && rng, F fun, P proj = P{})
+        auto RANGES_FUNC(for_each)(Rng && rng, F fun, P proj = P{})
             ->CPP_ret(for_each_result<safe_iterator_t<Rng>, F>)( //
                 requires input_range<Rng> &&
                 indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
@@ -62,7 +62,7 @@ namespace ranges
                     detail::move(fun)};
         }
 
-    RANGES_END_NIEBLOID(for_each)
+    RANGES_FUNC_END(for_each)
 
     namespace cpp20
     {

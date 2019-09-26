@@ -34,12 +34,12 @@ namespace ranges
     template<typename I, typename O>
     using move_backward_result = detail::in_out_result<I, O>;
 
-    RANGES_BEGIN_NIEBLOID(move_backward)
+    RANGES_FUNC_BEGIN(move_backward)
 
         /// \brief function template \c move_backward
         template<typename I, typename S, typename O>
-        auto RANGES_FUN_NIEBLOID(move_backward)(I first, S end_, O out) //
-            ->CPP_ret(move_backward_result<I, O>)(                      //
+        auto RANGES_FUNC(move_backward)(I first, S end_, O out) //
+            ->CPP_ret(move_backward_result<I, O>)(              //
                 requires bidirectional_iterator<I> && sentinel_for<S, I> &&
                 bidirectional_iterator<O> && indirectly_movable<I, O>)
         {
@@ -51,7 +51,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename O>
-        auto RANGES_FUN_NIEBLOID(move_backward)(Rng && rng, O out)    //
+        auto RANGES_FUNC(move_backward)(Rng && rng, O out)            //
             ->CPP_ret(move_backward_result<safe_iterator_t<Rng>, O>)( //
                 requires bidirectional_range<Rng> && bidirectional_iterator<O> &&
                 indirectly_movable<iterator_t<Rng>, O>)
@@ -59,7 +59,7 @@ namespace ranges
             return (*this)(begin(rng), end(rng), std::move(out));
         }
 
-    RANGES_END_NIEBLOID(move_backward)
+    RANGES_FUNC_END(move_backward)
 
     namespace cpp20
     {

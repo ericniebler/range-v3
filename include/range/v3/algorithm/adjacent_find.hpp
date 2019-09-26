@@ -29,7 +29,7 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(adjacent_find)
+    RANGES_FUNC_BEGIN(adjacent_find)
         /// \brief function template \c adjacent_find
         ///
         /// range-based version of the \c adjacent_find std algorithm
@@ -37,9 +37,8 @@ namespace ranges
         /// \pre `Rng` is a model of the `Range` concept
         /// \pre `C` is a model of the `BinaryPredicate` concept
         template<typename I, typename S, typename C = equal_to, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(adjacent_find)(
-            I first, S last, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(I)(                                //
+        auto RANGES_FUNC(adjacent_find)(I first, S last, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(I)(                                                            //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
                 indirect_relation<C, projected<I, P>>)
         {
@@ -54,14 +53,14 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C = equal_to, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(adjacent_find)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                            //
+        auto RANGES_FUNC(adjacent_find)(Rng && rng, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                                    //
                 requires forward_range<Rng> &&
                 indirect_relation<C, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
-    RANGES_END_NIEBLOID(adjacent_find)
+    RANGES_FUNC_END(adjacent_find)
 
     namespace cpp20
     {

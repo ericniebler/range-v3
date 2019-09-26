@@ -188,13 +188,12 @@ namespace ranges
     } // namespace detail
     /// \endcond
 
-    RANGES_BEGIN_NIEBLOID(stable_sort)
+    RANGES_FUNC_BEGIN(stable_sort)
 
         /// \brief function template \c stable_sort
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(stable_sort)(
-            I first, S end_, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(I)(                                //
+        auto RANGES_FUNC(stable_sort)(I first, S end_, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(I)(                                                          //
                 requires sortable<I, C, P> && random_access_iterator<I> &&
                 sentinel_for<S, I>)
         {
@@ -215,14 +214,14 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(stable_sort)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                          //
+        auto RANGES_FUNC(stable_sort)(Rng && rng, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                                  //
                 requires sortable<iterator_t<Rng>, C, P> && random_access_range<Rng>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(stable_sort)
+    RANGES_FUNC_END(stable_sort)
 
     namespace cpp20
     {

@@ -193,12 +193,12 @@ namespace ranges
     } // namespace detail
     /// \endcond
 
-    RANGES_BEGIN_NIEBLOID(rotate)
+    RANGES_FUNC_BEGIN(rotate)
 
         /// \brief function template \c rotate
         template<typename I, typename S>
-        auto RANGES_FUN_NIEBLOID(rotate)(I first, I middle, S last) //
-            ->CPP_ret(subrange<I>)(                                 //
+        auto RANGES_FUNC(rotate)(I first, I middle, S last) //
+            ->CPP_ret(subrange<I>)(                         //
                 requires permutable<I> && sentinel_for<S, I>)
         {
             if(first == middle)
@@ -215,14 +215,14 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename I = iterator_t<Rng>>
-        auto RANGES_FUN_NIEBLOID(rotate)(Rng && rng, I middle) //
-            ->CPP_ret(safe_subrange_t<Rng>)(                   //
+        auto RANGES_FUNC(rotate)(Rng && rng, I middle) //
+            ->CPP_ret(safe_subrange_t<Rng>)(           //
                 requires range<Rng> && permutable<I>)
         {
             return (*this)(begin(rng), std::move(middle), end(rng));
         }
 
-    RANGES_END_NIEBLOID(rotate)
+    RANGES_FUNC_END(rotate)
 
     namespace cpp20
     {

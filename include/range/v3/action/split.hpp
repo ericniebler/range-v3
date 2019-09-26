@@ -63,7 +63,7 @@ namespace ranges
             {
                 return make_action_closure(lamduh<T, N>{val});
             }
-#else // ^^^ workaround / no workaround vvv
+#else  // ^^^ workaround / no workaround vvv
             template<typename T, std::size_t N>
             constexpr auto operator()(T (&val)[N]) const
             {
