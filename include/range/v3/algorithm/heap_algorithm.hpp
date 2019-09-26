@@ -93,12 +93,11 @@ namespace ranges
 
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(is_heap_until)
+    RANGES_FUNC_BEGIN(is_heap_until)
 
         /// \brief function template \c is_heap_until
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(is_heap_until)(
-            I first, S last, C pred = C{}, P proj = P{})
+        auto RANGES_FUNC(is_heap_until)(I first, S last, C pred = C{}, P proj = P{})
             ->CPP_ret(I)( //
                 requires random_access_iterator<I> && sentinel_for<S, I> &&
                 indirect_strict_weak_order<C, projected<I, P>>)
@@ -111,7 +110,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(is_heap_until)(Rng && rng, C pred = C{}, P proj = P{})
+        auto RANGES_FUNC(is_heap_until)(Rng && rng, C pred = C{}, P proj = P{})
             ->CPP_ret(safe_iterator_t<Rng>)( //
                 requires random_access_range<Rng> &&
                 indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>)
@@ -120,19 +119,19 @@ namespace ranges
                 begin(rng), distance(rng), std::move(pred), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(is_heap_until)
+    RANGES_FUNC_END(is_heap_until)
 
     namespace cpp20
     {
         using ranges::is_heap_until;
     }
 
-    RANGES_BEGIN_NIEBLOID(is_heap)
+    RANGES_FUNC_BEGIN(is_heap)
 
         /// \brief function template \c is_heap
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(is_heap)(I first, S last, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(bool)(                                                           //
+        auto RANGES_FUNC(is_heap)(I first, S last, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(bool)(                                                   //
                 requires random_access_iterator<I> && sentinel_for<S, I> &&
                 indirect_strict_weak_order<C, projected<I, P>>)
         {
@@ -144,8 +143,8 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(is_heap)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(bool)(                                                      //
+        auto RANGES_FUNC(is_heap)(Rng && rng, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(bool)(                                              //
                 requires random_access_range<Rng> &&
                 indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>)
         {
@@ -153,7 +152,7 @@ namespace ranges
                 begin(rng), distance(rng), std::move(pred), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(is_heap)
+    RANGES_FUNC_END(is_heap)
 
     namespace cpp20
     {
@@ -258,13 +257,12 @@ namespace ranges
 
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(push_heap)
+    RANGES_FUNC_BEGIN(push_heap)
 
         /// \brief function template \c push_heap
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(push_heap)(
-            I first, S last, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(I)(                                //
+        auto RANGES_FUNC(push_heap)(I first, S last, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(I)(                                                        //
                 requires random_access_iterator<I> && sentinel_for<S, I> &&
                 sortable<I, C, P>)
         {
@@ -275,8 +273,8 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(push_heap)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                        //
+        auto RANGES_FUNC(push_heap)(Rng && rng, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                                //
                 requires random_access_range<Rng> && sortable<iterator_t<Rng>, C, P>)
         {
             iterator_t<Rng> first = ranges::begin(rng);
@@ -285,7 +283,7 @@ namespace ranges
             return first + n;
         }
 
-    RANGES_END_NIEBLOID(push_heap)
+    RANGES_FUNC_END(push_heap)
 
     namespace cpp20
     {
@@ -318,11 +316,11 @@ namespace ranges
 
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(pop_heap)
+    RANGES_FUNC_BEGIN(pop_heap)
 
         /// \brief function template \c pop_heap
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(pop_heap)(I first, S last, C pred = C{}, P proj = P{})
+        auto RANGES_FUNC(pop_heap)(I first, S last, C pred = C{}, P proj = P{})
             ->CPP_ret(I)( //
                 requires random_access_iterator<I> && sentinel_for<S, I> &&
                 sortable<I, C, P>)
@@ -334,7 +332,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(pop_heap)(Rng && rng, C pred = C{}, P proj = P{})
+        auto RANGES_FUNC(pop_heap)(Rng && rng, C pred = C{}, P proj = P{})
             ->CPP_ret(safe_iterator_t<Rng>)( //
                 requires random_access_range<Rng> && sortable<iterator_t<Rng>, C, P>)
         {
@@ -344,18 +342,18 @@ namespace ranges
             return first + n;
         }
 
-    RANGES_END_NIEBLOID(pop_heap)
+    RANGES_FUNC_END(pop_heap)
 
     namespace cpp20
     {
         using ranges::pop_heap;
     }
 
-    RANGES_BEGIN_NIEBLOID(make_heap)
+    RANGES_FUNC_BEGIN(make_heap)
 
         /// \brief function template \c make_heap
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(make_heap)(I first, S last, C pred = C{}, P proj = P{})
+        auto RANGES_FUNC(make_heap)(I first, S last, C pred = C{}, P proj = P{})
             ->CPP_ret(I)( //
                 requires random_access_iterator<I> && sentinel_for<S, I> &&
                 sortable<I, C, P>)
@@ -371,7 +369,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(make_heap)(Rng && rng, C pred = C{}, P proj = P{})
+        auto RANGES_FUNC(make_heap)(Rng && rng, C pred = C{}, P proj = P{})
             ->CPP_ret(safe_iterator_t<Rng>)( //
                 requires random_access_range<Rng> && sortable<iterator_t<Rng>, C, P>)
         {
@@ -385,17 +383,17 @@ namespace ranges
             return first + n;
         }
 
-    RANGES_END_NIEBLOID(make_heap)
+    RANGES_FUNC_END(make_heap)
 
     namespace cpp20
     {
         using ranges::make_heap;
     }
 
-    RANGES_BEGIN_NIEBLOID(sort_heap)
+    RANGES_FUNC_BEGIN(sort_heap)
 
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(sort_heap)(I first, S last, C pred = C{}, P proj = P{})
+        auto RANGES_FUNC(sort_heap)(I first, S last, C pred = C{}, P proj = P{})
             ->CPP_ret(I)( //
                 requires random_access_iterator<I> && sentinel_for<S, I> &&
                 sortable<I, C, P>)
@@ -407,7 +405,7 @@ namespace ranges
         }
 
         template<typename Rng, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(sort_heap)(Rng && rng, C pred = C{}, P proj = P{})
+        auto RANGES_FUNC(sort_heap)(Rng && rng, C pred = C{}, P proj = P{})
             ->CPP_ret(safe_iterator_t<Rng>)( //
                 requires random_access_range<Rng &> && sortable<iterator_t<Rng>, C, P>)
         {
@@ -418,7 +416,7 @@ namespace ranges
             return first + n;
         }
 
-    RANGES_END_NIEBLOID(sort_heap)
+    RANGES_FUNC_END(sort_heap)
 
     namespace cpp20
     {

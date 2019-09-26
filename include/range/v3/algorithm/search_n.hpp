@@ -130,7 +130,7 @@ namespace ranges
     } // namespace detail
     /// \endcond
 
-    RANGES_BEGIN_NIEBLOID(search_n)
+    RANGES_FUNC_BEGIN(search_n)
 
         /// \brief function template \c search_n
         template<typename I,
@@ -138,14 +138,14 @@ namespace ranges
                  typename V,
                  typename C = equal_to,
                  typename P = identity>
-        auto RANGES_FUN_NIEBLOID(search_n)(I first,
-                                           S last,
-                                           iter_difference_t<I>
-                                               cnt,
-                                           V const & val,
-                                           C pred = C{},
-                                           P proj = P{}) //
-            ->CPP_ret(subrange<I>)(                      //
+        auto RANGES_FUNC(search_n)(I first,
+                                   S last,
+                                   iter_difference_t<I>
+                                       cnt,
+                                   V const & val,
+                                   C pred = C{},
+                                   P proj = P{}) //
+            ->CPP_ret(subrange<I>)(              //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
                 indirectly_comparable<I, V const *, C, P>)
         {
@@ -166,13 +166,13 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename V, typename C = equal_to, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(search_n)(Rng && rng,
-                                           iter_difference_t<iterator_t<Rng>>
-                                               cnt,
-                                           V const & val,
-                                           C pred = C{},
-                                           P proj = P{}) //
-            ->CPP_ret(safe_subrange_t<Rng>)(             //
+        auto RANGES_FUNC(search_n)(Rng && rng,
+                                   iter_difference_t<iterator_t<Rng>>
+                                       cnt,
+                                   V const & val,
+                                   C pred = C{},
+                                   P proj = P{}) //
+            ->CPP_ret(safe_subrange_t<Rng>)(     //
                 requires forward_range<Rng> &&
                 indirectly_comparable<iterator_t<Rng>, V const *, C, P>)
         {
@@ -185,7 +185,7 @@ namespace ranges
                 return detail::search_n_impl(begin(rng), end(rng), cnt, val, pred, proj);
         }
 
-    RANGES_END_NIEBLOID(search_n)
+    RANGES_FUNC_END(search_n)
 
     namespace cpp20
     {

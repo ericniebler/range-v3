@@ -30,7 +30,7 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(is_sorted)
+    RANGES_FUNC_BEGIN(is_sorted)
         /// \brief template function \c is_sorted
         ///
         /// range-based version of the \c is_sorted std algorithm
@@ -44,7 +44,7 @@ namespace ranges
         /// projected<I, P>>` concept
         ///
         template<typename I, typename S, typename R = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(is_sorted)(I first, S last, R rel = R{}, P proj = P{})
+        auto RANGES_FUNC(is_sorted)(I first, S last, R rel = R{}, P proj = P{})
             ->CPP_ret(bool)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
                 indirect_strict_weak_order<R, projected<I, P>>)
@@ -55,15 +55,15 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename R = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(is_sorted)(Rng && rng, R rel = R{}, P proj = P{}) //
-            ->CPP_ret(bool)(                                                       //
+        auto RANGES_FUNC(is_sorted)(Rng && rng, R rel = R{}, P proj = P{}) //
+            ->CPP_ret(bool)(                                               //
                 requires forward_range<Rng> &&
                 indirect_strict_weak_order<R, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(rel), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(is_sorted)
+    RANGES_FUNC_END(is_sorted)
 
     namespace cpp20
     {

@@ -31,12 +31,12 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(any_of)
+    RANGES_FUNC_BEGIN(any_of)
 
         /// \brief function template \c any_of
         template<typename I, typename S, typename F, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(any_of)(I first, S last, F pred, P proj = P{}) //
-            ->CPP_ret(bool)(                                                    //
+        auto RANGES_FUNC(any_of)(I first, S last, F pred, P proj = P{}) //
+            ->CPP_ret(bool)(                                            //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                 indirect_unary_predicate<F, projected<I, P>>)
         {
@@ -48,15 +48,15 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename F, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(any_of)(Rng && rng, F pred, P proj = P{}) //
-            ->CPP_ret(bool)(                                               //
+        auto RANGES_FUNC(any_of)(Rng && rng, F pred, P proj = P{}) //
+            ->CPP_ret(bool)(                                       //
                 requires input_range<Rng> &&
                 indirect_unary_predicate<F, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(any_of)
+    RANGES_FUNC_END(any_of)
 
     namespace cpp20
     {

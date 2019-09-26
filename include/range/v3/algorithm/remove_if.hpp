@@ -33,12 +33,12 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(remove_if)
+    RANGES_FUNC_BEGIN(remove_if)
 
         /// \brief function template \c remove_if
         template<typename I, typename S, typename C, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(remove_if)(I first, S last, C pred, P proj = P{}) //
-            ->CPP_ret(I)(                                                          //
+        auto RANGES_FUNC(remove_if)(I first, S last, C pred, P proj = P{}) //
+            ->CPP_ret(I)(                                                  //
                 requires permutable<I> && sentinel_for<S, I> &&
                 indirect_unary_predicate<C, projected<I, P>>)
         {
@@ -59,15 +59,15 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(remove_if)(Rng && rng, C pred, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                  //
+        auto RANGES_FUNC(remove_if)(Rng && rng, C pred, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                          //
                 requires forward_range<Rng> && permutable<iterator_t<Rng>> &&
                 indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(remove_if)
+    RANGES_FUNC_END(remove_if)
 
     namespace cpp20
     {

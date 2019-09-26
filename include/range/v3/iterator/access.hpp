@@ -53,12 +53,11 @@ namespace ranges
         using iter_reference_t_ = R;
 
 #if defined(RANGES_DEEP_STL_INTEGRATION) && RANGES_DEEP_STL_INTEGRATION && \
-        !defined(RANGES_DOXYGEN_INVOKED)
+    !defined(RANGES_DOXYGEN_INVOKED)
         template<typename T>
         using iter_value_t_ =
             typename if_then_t<is_std_iterator_traits_specialized_v<T>,
-                               std::iterator_traits<T>,
-                               readable_traits<T>>::value_type;
+                               std::iterator_traits<T>, readable_traits<T>>::value_type;
 #else
         template<typename T>
         using iter_value_t_ = typename readable_traits<T>::value_type;

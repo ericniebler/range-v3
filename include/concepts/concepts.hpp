@@ -46,7 +46,7 @@
 #if defined(_MSC_VER) && !defined(__clang__)
 #define CPP_WORKAROUND_MSVC_779763 // FATAL_UNREACHABLE calling constexpr function via template parameter
 #define CPP_WORKAROUND_MSVC_780775 // Incorrect substitution in function template return type
-#define CPP_WORKAROUND_MSVC_784772 // Failure to invoke *explicit* bool conversion in a constant expression
+#define CPP_WORKAROUND_MSVC_654601 // Failure to invoke *implicit* bool conversion in a constant expression
 #endif
 
 #if !defined(CPP_CXX_CONCEPTS)
@@ -134,10 +134,16 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #define CPP_assert_msg static_assert
 
-#ifdef CPP_WORKAROUND_MSVC_784772
-#define CPP_EXPLICIT /**/
+#ifdef CPP_WORKAROUND_MSVC_654601
+#define CPP_FORCE_TO_BOOL static_cast<bool>
 #else
-#define CPP_EXPLICIT explicit
+#define CPP_FORCE_TO_BOOL
+#endif
+
+#if defined(_MSC_VER) && !defined(__clang__)
+#define CPP_INSTANCE(...) ::concepts::detail::instance_<decltype(__VA_ARGS__)>
+#else
+#define CPP_INSTANCE(...) __VA_ARGS__
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -236,9 +242,9 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     }                                                                           \
     struct CPP_PP_CAT(NAME, _concept) {                                         \
         CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
-        struct Eval {                                                           \
+        struct Eval : ::concepts::detail::boolean {                             \
             using Concept = CPP_PP_CAT(NAME, _concept);                         \
-            CPP_EXPLICIT constexpr operator bool() const noexcept {             \
+            constexpr operator bool() const noexcept {                          \
                 return (bool) _eager_::NAME<CPP_PP_EXPAND ARGS>;                \
             }                                                                   \
             constexpr auto operator!() const noexcept {                         \
@@ -246,6 +252,10 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
             }                                                                   \
             template<typename That>                                             \
             constexpr auto operator&&(That) const noexcept {                    \
+                static_assert(                                                  \
+                    !META_IS_SAME(That, bool),                                  \
+                    "All expressions in a conjunction should be "               \
+                    "defer:: concepts");                                        \
                 return ::concepts::detail::and_<Eval, That>{};                  \
             }                                                                   \
         };                                                                      \
@@ -264,15 +274,16 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #else
 // No requires expression:
 #define CPP_PP_DEF_IMPL_0(...)                                                  \
-    () -> ::concepts::detail::enable_if_t<int, static_cast<bool>(__VA_ARGS__)>  \
+    () -> std::enable_if_t<CPP_FORCE_TO_BOOL(__VA_ARGS__), int>                 \
     /**/
 // Requires expression:
 #define CPP_PP_DEF_IMPL_1(...)                                                  \
-    CPP_PP_CAT(CPP_PP_DEF_IMPL_1_, __VA_ARGS__) )>                              \
+    CPP_PP_CAT(CPP_PP_DEF_IMPL_1_, __VA_ARGS__) ) , int>                        \
     /**/
 #define CPP_PP_DEF_IMPL_1_requires(...)                                         \
-    (__VA_ARGS__) -> ::concepts::detail::enable_if_t<int,                       \
-        static_cast<bool>(::concepts::detail::requires_ CPP_PP_DEF_REQUIRES_BODY \
+    (__VA_ARGS__) ->                                                            \
+        std::enable_if_t<CPP_FORCE_TO_BOOL(                                     \
+            ::concepts::detail::requires_ CPP_PP_DEF_REQUIRES_BODY              \
     /**/
  #define CPP_PP_DEF_REQUIRES_BODY(...)                                          \
     <decltype(__VA_ARGS__, void())>()                                           \
@@ -302,7 +313,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
         struct Eval {                                                           \
             CPP_PP_DECL_DEF_IMPL_HACK(ARGS)                                     \
             static constexpr bool impl(long) noexcept { return false; }         \
-            CPP_EXPLICIT constexpr operator bool() const noexcept {             \
+            constexpr operator bool() const noexcept {                          \
                 return Eval::impl(0);                                           \
             }                                                                   \
             constexpr auto operator!() const noexcept {                         \
@@ -316,7 +327,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     };                                                                          \
     CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                             \
     CPP_INLINE_VAR constexpr bool NAME =                                        \
-        (bool)CPP_PP_CAT(NAME, _concept)::Eval<CPP_PP_EXPAND ARGS>{};           \
+        CPP_PP_CAT(NAME, _concept)::Eval<CPP_PP_EXPAND ARGS>{};                 \
     namespace lazy {                                                            \
         CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
         CPP_INLINE_VAR constexpr auto NAME =                                    \
@@ -415,21 +426,25 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     template<__VA_ARGS__ CPP_TEMPLATE_SFINAE_AUX_                               \
     /**/
 #define CPP_TEMPLATE_SFINAE_AUX_(...) ,                                         \
-    bool CPP_false_ = false,                                                    \
-    ::concepts::detail::enable_if_t<int,                                        \
-        static_cast<bool>(\
-            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__)) ||             \
-        CPP_false_> = 0>                                                        \
+    typename CPP_true_ = std::true_type,                                        \
+    std::enable_if_t<                                                           \
+        CPP_FORCE_TO_BOOL(                                                      \
+            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) && CPP_true_{}  \
+        ),                                                                      \
+        int                                                                     \
+    > = 0>                                                                      \
     /**/
 #define CPP_template_def_sfinae(...)                                            \
     template<__VA_ARGS__ CPP_TEMPLATE_DEF_SFINAE_AUX_                           \
     /**/
 #define CPP_TEMPLATE_DEF_SFINAE_AUX_(...) ,                                     \
-    bool CPP_false_,                                                            \
-    ::concepts::detail::enable_if_t<int,                                        \
-        static_cast<bool>(                                                      \
-            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__)) ||             \
-        CPP_false_>>                                                            \
+    typename CPP_true_,                                                         \
+    std::enable_if_t<                                                           \
+        CPP_FORCE_TO_BOOL(                                                      \
+            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) && CPP_true_{}  \
+        ),                                                                      \
+        int                                                                     \
+    >>                                                                          \
     /**/
 #define CPP_TEMPLATE_SFINAE_AUX_3_requires
 #define CPP_member_sfinae                                                       \
@@ -454,21 +469,25 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 // No noexcept-clause:
 #define CPP_CTOR_SFINAE_REQUIRES_0(...)                                         \
-    ::concepts::detail::enable_if_t<                                            \
-        ::concepts::detail::Nil,                                                \
-        CPP_false(::concepts::detail::xNil{}) ||                                \
-        static_cast<bool>(                                                      \
-            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__))> = {})         \
+    std::enable_if_t<                                                           \
+        CPP_FORCE_TO_BOOL(                                                      \
+            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) &&              \
+            CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))                  \
+        ),                                                                      \
+        ::concepts::detail::Nil                                                 \
+    > = {})                                                                     \
     /**/
 // Yes noexcept-clause:
 #define CPP_CTOR_SFINAE_REQUIRES_1(...)                                         \
-    ::concepts::detail::enable_if_t<                                            \
-        ::concepts::detail::Nil,                                                \
-        CPP_false(::concepts::detail::xNil{}) ||                                \
-        static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, CPP_PP_CAT(    \
-                CPP_CTOR_SFINAE_EAT_NOEXCEPT_, __VA_ARGS__)))> = {})            \
-        CPP_PP_EXPAND(                                                          \
-            CPP_PP_CAT(CPP_CTOR_SFINAE_SHOW_NOEXCEPT_, __VA_ARGS__)))           \
+    std::enable_if_t<                                                           \
+        CPP_FORCE_TO_BOOL(                                                      \
+            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_,                              \
+                CPP_PP_CAT(CPP_CTOR_SFINAE_EAT_NOEXCEPT_, __VA_ARGS__)          \
+            ) && CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))             \
+        ),                                                                      \
+        ::concepts::detail::Nil                                                 \
+    > = {})                                                                     \
+    CPP_PP_EXPAND(CPP_PP_CAT(CPP_CTOR_SFINAE_SHOW_NOEXCEPT_, __VA_ARGS__)))     \
     /**/
 #define CPP_CTOR_SFINAE_EAT_NOEXCEPT_noexcept(...)
 #define CPP_CTOR_SFINAE_SHOW_NOEXCEPT_noexcept(...)                             \
@@ -481,8 +500,9 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #else
 #define CPP_broken_friend_ret(...)                                              \
-    ::concepts::detail::enable_if_t<__VA_ARGS__,                                \
-    CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_                                          \
+    ::concepts::return_t<                                                       \
+        __VA_ARGS__,                                                            \
+        std::enable_if_t<CPP_FORCE_TO_BOOL(CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_   \
     /**/
 #define CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_(...)                                 \
     CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(CPP_PP_CAT(                            \
@@ -490,17 +510,17 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #define CPP_TEMPLATE_AUX_2_requires
 #define CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(...)                               \
-    static_cast<bool>(__VA_ARGS__) || CPP_false(::concepts::detail::xNil{})>    \
+    __VA_ARGS__ && CPP_INSTANCE(CPP_true(::concepts::detail::xNil{})))>>        \
     /**/
 #ifdef CPP_WORKAROUND_MSVC_779763
 #define CPP_broken_friend_member                                                \
-    template<::concepts::detail::CPP_false_t const &CPP_false =                 \
-        ::concepts::detail::CPP_false_>                                         \
+    template<::concepts::detail::CPP_true_t const &CPP_true =                   \
+        ::concepts::detail::CPP_true_>                                          \
     /**/
 #else // ^^^ workaround / no workaround vvv
 #define CPP_broken_friend_member                                                \
-    template<bool (&CPP_false)(::concepts::detail::xNil) =                      \
-        ::concepts::detail::CPP_false>                                          \
+    template<std::true_type (&CPP_true)(::concepts::detail::xNil) =             \
+        ::concepts::detail::CPP_true>                                           \
     /**/
 #endif // CPP_WORKAROUND_MSVC_779763
 #endif
@@ -559,20 +579,26 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_PP_PROBE_NOEXCEPT_PROBE_noexcept CPP_PP_PROBE(~)
 
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_0(...)                               \
-    ::concepts::detail::enable_if_t<                                            \
-        ::concepts::detail::Nil,                                                \
-        static_cast<bool>(                                                      \
-            CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__)) ||             \
-        CPP_false(::concepts::detail::xNil{})> = {}) const                      \
+    std::enable_if_t<                                                           \
+        CPP_FORCE_TO_BOOL(                                                      \
+            CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__) &&              \
+            CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))                  \
+        ),                                                                      \
+        ::concepts::detail::Nil                                                 \
+    > = {}) const                                                               \
     /**/
 
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_1(...)                               \
-    ::concepts::detail::enable_if_t<                                            \
-        ::concepts::detail::Nil,                                                \
-        static_cast<bool>(CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, CPP_PP_CAT(    \
-            CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__))) ||                       \
-            CPP_false(::concepts::detail::xNil{})> = {}) const CPP_PP_EXPAND(   \
-            CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))              \
+    std::enable_if_t<                                                           \
+        CPP_FORCE_TO_BOOL(                                                      \
+            CPP_PP_CAT(                                                         \
+                CPP_FUN_IMPL_EAT_REQUIRES_,                                     \
+                CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)             \
+            ) && CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))             \
+        ),                                                                      \
+        ::concepts::detail::Nil                                                 \
+    > = {}) const                                                               \
+    CPP_PP_EXPAND(CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))        \
     /**/
 
 #define CPP_FUN_IMPL_EAT_NOEXCEPT_noexcept(...)
@@ -597,20 +623,27 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_0(...)                            \
-    ::concepts::detail::enable_if_t<                                            \
-        ::concepts::detail::Nil,                                                \
-        static_cast<bool>(                                                      \
-            CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__)) ||             \
-        CPP_false(::concepts::detail::xNil{})> = {})                            \
+    std::enable_if_t<                                                           \
+        CPP_FORCE_TO_BOOL(                                                      \
+            CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__) &&              \
+            CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))                  \
+        ),                                                                      \
+        ::concepts::detail::Nil                                                 \
+    > = {})                                                                     \
     /**/
 
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_1(...)                            \
-    ::concepts::detail::enable_if_t<                                            \
-        ::concepts::detail::Nil,                                                \
-        static_cast<bool>(CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, CPP_PP_CAT(    \
-            CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__))) ||                       \
-            CPP_false(::concepts::detail::xNil{})> = {})                        \
-        CPP_PP_EXPAND(CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))    \
+    std::enable_if_t<                                                           \
+        CPP_FORCE_TO_BOOL(                                                      \
+            CPP_PP_CAT(                                                         \
+                CPP_FUN_IMPL_EAT_REQUIRES_,                                     \
+                CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)             \
+            ) &&                                                                \
+            CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))                  \
+        ),                                                                      \
+        ::concepts::detail::Nil                                                 \
+    > = {})                                                                     \
+    CPP_PP_EXPAND(CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))        \
     /**/
 
 #define CPP_FUN_IMPL_EAT_CONST_const
@@ -701,19 +734,40 @@ namespace concepts
         !META_IS_SAME(detail::bools<Bs..., false>, detail::bools<false, Bs...>);
 #endif
 
+    template<typename>
+    struct return_t_
+    {
+        template<typename T>
+        using invoke = T;
+    };
+
+    template<typename T, typename EnableIf>
+    using return_t = meta::invoke<return_t_<EnableIf>, T>;
+
     namespace detail
     {
+        template<typename T>
+        CPP_INLINE_VAR constexpr T instance_ = T{};
+
         template<typename>
         constexpr bool requires_()
         {
             return true;
         }
+
+        struct boolean
+        {
+            friend bool operator&&(boolean, bool) = delete;
+            friend bool operator&&(bool, boolean) = delete;
+            friend bool operator||(boolean, bool) = delete;
+            friend bool operator||(bool, boolean) = delete;
+        };
         template<typename T, typename U>
         struct and_;
         template<typename T>
-        struct not_
+        struct not_ : boolean
         {
-            CPP_EXPLICIT constexpr operator bool() const noexcept
+            constexpr operator bool() const noexcept
             {
                 return !(bool) T{};
             }
@@ -727,8 +781,9 @@ namespace concepts
                 return and_<not_, That>{};
             }
         };
+
         template<typename T, typename U>
-        struct and_
+        struct and_ : boolean
         {
             static constexpr bool impl(std::false_type) noexcept
             {
@@ -738,7 +793,7 @@ namespace concepts
             {
                 return (bool) U{};
             }
-            CPP_EXPLICIT constexpr operator bool() const noexcept
+            constexpr operator bool() const noexcept
             {
                 return and_::impl(bool_<(bool) T{}>{});
             }
@@ -749,19 +804,13 @@ namespace concepts
             template<typename That>
             constexpr auto operator&&(That) const noexcept
             {
+                static_assert(
+                    !META_IS_SAME(That, bool),
+                    "All expressions in a conjunction should be "
+                    "defer:: concepts");
                 return detail::and_<and_, That>{};
             }
         };
-
-        template<typename...>
-        struct identity
-        {
-            template<typename T>
-            using invoke = T;
-        };
-
-        template<typename T, bool Enable>
-        using enable_if_t = meta::invoke<identity<std::enable_if_t<Enable>>, T>;
 
         struct Nil
         {};
@@ -769,31 +818,31 @@ namespace concepts
 #ifdef CPP_WORKAROUND_MSVC_779763
         enum class xNil {};
 
-        struct CPP_false_t
+        struct CPP_true_t
         {
-            constexpr bool operator()(Nil) const noexcept
+            constexpr std::true_type operator()(Nil) const noexcept
             {
-                return false;
+                return {};
             }
-            constexpr bool operator()(xNil) const noexcept
+            constexpr std::true_type operator()(xNil) const noexcept
             {
-                return false;
+                return {};
             }
         };
 
-        CPP_INLINE_VAR constexpr CPP_false_t CPP_false_{};
+        CPP_INLINE_VAR constexpr CPP_true_t CPP_true_{};
 
-        constexpr bool CPP_false(xNil)
+        constexpr std::true_type CPP_true(xNil)
         {
-            return false;
+            return {};
         }
 #else
         using xNil = Nil;
 #endif
 
-        constexpr bool CPP_false(Nil)
+        constexpr std::true_type CPP_true(Nil)
         {
-            return false;
+            return {};
         }
 
         template<typename T>
@@ -816,11 +865,11 @@ namespace concepts
 
 #if defined(__clang__) || defined(_MSC_VER)
     template<bool B>
-    ::concepts::detail::enable_if_t<void, B> requires_()
+    std::enable_if_t<B> requires_()
     {}
 #else
     template<bool B>
-    CPP_INLINE_VAR constexpr ::concepts::detail::enable_if_t<int, B> requires_ = 0;
+    CPP_INLINE_VAR constexpr std::enable_if_t<B, int> requires_ = 0;
 #endif
 
     inline namespace defs

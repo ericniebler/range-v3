@@ -31,11 +31,11 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(max_element)
+    RANGES_FUNC_BEGIN(max_element)
 
         /// \brief function template \c max_element
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(max_element)(I first, S last, C pred = C{}, P proj = P{})
+        auto RANGES_FUNC(max_element)(I first, S last, C pred = C{}, P proj = P{})
             ->CPP_ret(I)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
                 indirect_strict_weak_order<C, projected<I, P>>)
@@ -49,7 +49,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(max_element)(Rng && rng, C pred = C{}, P proj = P{})
+        auto RANGES_FUNC(max_element)(Rng && rng, C pred = C{}, P proj = P{})
             ->CPP_ret(safe_iterator_t<Rng>)( //
                 requires forward_range<Rng> &&
                 indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>)
@@ -57,7 +57,7 @@ namespace ranges
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(max_element)
+    RANGES_FUNC_END(max_element)
 
     namespace cpp20
     {

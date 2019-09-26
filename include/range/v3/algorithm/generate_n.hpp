@@ -34,11 +34,11 @@ namespace ranges
     template<typename O, typename F>
     using generate_n_result = detail::out_fun_result<O, F>;
 
-    RANGES_BEGIN_NIEBLOID(generate_n)
+    RANGES_FUNC_BEGIN(generate_n)
 
         /// \brief function template \c generate_n
         template<typename O, typename F>
-        auto RANGES_FUN_NIEBLOID(generate_n)(O first, iter_difference_t<O> n, F fun)
+        auto RANGES_FUNC(generate_n)(O first, iter_difference_t<O> n, F fun)
             ->CPP_ret(generate_n_result<O, F>)( //
                 requires invocable<F &> && output_iterator<O, invoke_result_t<F &>>)
         {
@@ -50,7 +50,7 @@ namespace ranges
             return {recounted(first, b, norig), detail::move(fun)};
         }
 
-    RANGES_END_NIEBLOID(generate_n)
+    RANGES_FUNC_END(generate_n)
 
     namespace cpp20
     {

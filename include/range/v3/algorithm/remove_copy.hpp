@@ -35,11 +35,11 @@ namespace ranges
     template<typename I, typename O>
     using remove_copy_result = detail::in_out_result<I, O>;
 
-    RANGES_BEGIN_NIEBLOID(remove_copy)
+    RANGES_FUNC_BEGIN(remove_copy)
 
         /// \brief function template \c remove_copy
         template<typename I, typename S, typename O, typename T, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(remove_copy)(
+        auto RANGES_FUNC(remove_copy)(
             I first, S last, O out, T const & val, P proj = P{}) //
             ->CPP_ret(remove_copy_result<I, O>)(                 //
                 requires input_iterator<I> && sentinel_for<S, I> &&
@@ -61,9 +61,8 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename O, typename T, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(remove_copy)(
-            Rng && rng, O out, T const & val, P proj = P{})         //
-            ->CPP_ret(remove_copy_result<safe_iterator_t<Rng>, O>)( //
+        auto RANGES_FUNC(remove_copy)(Rng && rng, O out, T const & val, P proj = P{}) //
+            ->CPP_ret(remove_copy_result<safe_iterator_t<Rng>, O>)(                   //
                 requires input_range<Rng> && weakly_incrementable<O> &&
                 indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *> &&
                 indirectly_copyable<iterator_t<Rng>, O>)
@@ -71,7 +70,7 @@ namespace ranges
             return (*this)(begin(rng), end(rng), std::move(out), val, std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(remove_copy)
+    RANGES_FUNC_END(remove_copy)
 
     namespace cpp20
     {

@@ -30,11 +30,11 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(count)
+    RANGES_FUNC_BEGIN(count)
 
         /// \brief function template \c count
         template<typename I, typename S, typename V, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(count)(I first, S last, V const & val, P proj = P{})
+        auto RANGES_FUNC(count)(I first, S last, V const & val, P proj = P{})
             ->CPP_ret(iter_difference_t<I>)( //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                 indirect_relation<equal_to, projected<I, P>, V const *>)
@@ -48,7 +48,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename V, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(count)(Rng && rng, V const & val, P proj = P{})
+        auto RANGES_FUNC(count)(Rng && rng, V const & val, P proj = P{})
             ->CPP_ret(iter_difference_t<iterator_t<Rng>>)( //
                 requires input_range<Rng> &&
                 indirect_relation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
@@ -56,7 +56,7 @@ namespace ranges
             return (*this)(begin(rng), end(rng), val, std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(count)
+    RANGES_FUNC_END(count)
 
     namespace cpp20
     {

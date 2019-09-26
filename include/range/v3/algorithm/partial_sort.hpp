@@ -33,11 +33,11 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(partial_sort)
+    RANGES_FUNC_BEGIN(partial_sort)
 
         /// \brief function template \c partial_sort
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(partial_sort)(
+        auto RANGES_FUNC(partial_sort)(
             I first, I middle, S last, C pred = C{}, P proj = P{}) //
             ->CPP_ret(I)(                                          //
                 requires sortable<I, C, P> && random_access_iterator<I> &&
@@ -61,7 +61,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(partial_sort)(
+        auto RANGES_FUNC(partial_sort)(
             Rng && rng, iterator_t<Rng> middle, C pred = C{}, P proj = P{}) //
             ->CPP_ret(safe_iterator_t<Rng>)(                                //
                 requires sortable<iterator_t<Rng>, C, P> && random_access_range<Rng>)
@@ -73,7 +73,7 @@ namespace ranges
                            std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(partial_sort)
+    RANGES_FUNC_END(partial_sort)
 
     namespace cpp20
     {

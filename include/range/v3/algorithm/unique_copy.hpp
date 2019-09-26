@@ -112,7 +112,7 @@ namespace ranges
     } // namespace detail
     /// \endcond
 
-    RANGES_BEGIN_NIEBLOID(unique_copy)
+    RANGES_FUNC_BEGIN(unique_copy)
 
         /// \brief template function unique_copy
         ///
@@ -126,7 +126,7 @@ namespace ranges
                  typename O,
                  typename C = equal_to,
                  typename P = identity>
-        auto RANGES_FUN_NIEBLOID(unique_copy)(
+        auto RANGES_FUNC(unique_copy)(
             I first, S last, O out, C pred = C{}, P proj = P{}) //
             ->CPP_ret(unique_copy_result<I, O>)(                //
                 requires input_iterator<I> && sentinel_for<S, I> &&
@@ -146,9 +146,8 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename O, typename C = equal_to, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(unique_copy)(
-            Rng && rng, O out, C pred = C{}, P proj = P{})          //
-            ->CPP_ret(unique_copy_result<safe_iterator_t<Rng>, O>)( //
+        auto RANGES_FUNC(unique_copy)(Rng && rng, O out, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(unique_copy_result<safe_iterator_t<Rng>, O>)(                  //
                 requires input_range<Rng> &&
                 indirect_relation<C, projected<iterator_t<Rng>, P>> &&
                 weakly_incrementable<O> && indirectly_copyable<iterator_t<Rng>, O> &&
@@ -164,7 +163,7 @@ namespace ranges
                                             meta::bool_<forward_iterator<O>>{});
         }
 
-    RANGES_END_NIEBLOID(unique_copy)
+    RANGES_FUNC_END(unique_copy)
 
     namespace cpp20
     {

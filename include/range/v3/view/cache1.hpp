@@ -85,8 +85,7 @@ namespace ranges
 
             cursor() = default;
 
-            constexpr explicit cursor(cache1_view * parent,
-                                      iterator_t<Rng> current)
+            constexpr explicit cursor(cache1_view * parent, iterator_t<Rng> current)
               : parent_(parent)
               , current_(std::move(current))
             {}

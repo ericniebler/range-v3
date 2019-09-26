@@ -244,7 +244,7 @@ namespace ranges
                 concepts::requires_<same_as<iter_difference_t<I>, decltype(i - s)>>
             ) &&
             // Short-circuit the test for sentinel_for if we're emulating concepts:
-            (!defer::is_true<disable_sized_sentinel<meta::_t<std::remove_cv<S>>, meta::_t<std::remove_cv<I>>>> &&
+            bool(!defer::is_true<disable_sized_sentinel<meta::_t<std::remove_cv<S>>, meta::_t<std::remove_cv<I>>>> &&
             defer::sentinel_for<S, I>)
     );
 

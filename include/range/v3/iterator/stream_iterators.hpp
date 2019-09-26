@@ -35,6 +35,7 @@ namespace ranges
     private:
         template<class U>
         using value_t = meta::if_<std::is_void<T>, U, T>;
+
     public:
         using difference_type = std::ptrdiff_t;
         using char_type = Char;

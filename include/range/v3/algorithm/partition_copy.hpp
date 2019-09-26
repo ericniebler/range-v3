@@ -38,7 +38,7 @@ namespace ranges
     template<typename I, typename O0, typename O1>
     using partition_copy_result = detail::in_out1_out2_result<I, O0, O1>;
 
-    RANGES_BEGIN_NIEBLOID(partition_copy)
+    RANGES_FUNC_BEGIN(partition_copy)
 
         /// \brief function template \c partition_copy
         template<typename I,
@@ -47,7 +47,7 @@ namespace ranges
                  typename O1,
                  typename C,
                  typename P = identity>
-        auto RANGES_FUN_NIEBLOID(partition_copy)(
+        auto RANGES_FUNC(partition_copy)(
             I first, S last, O0 o0, O1 o1, C pred, P proj = P{})
             ->CPP_ret(partition_copy_result<I, O0, O1>)( //
                 requires input_iterator<I> && sentinel_for<S, I> &&
@@ -78,7 +78,7 @@ namespace ranges
                  typename O1,
                  typename C,
                  typename P = identity>
-        auto RANGES_FUN_NIEBLOID(partition_copy)(
+        auto RANGES_FUNC(partition_copy)(
             Rng && rng, O0 o0, O1 o1, C pred, P proj = P{})                 //
             ->CPP_ret(partition_copy_result<safe_iterator_t<Rng>, O0, O1>)( //
                 requires input_range<Rng> && weakly_incrementable<O0> &&
@@ -94,7 +94,7 @@ namespace ranges
                            std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(partition_copy)
+    RANGES_FUNC_END(partition_copy)
 
     namespace cpp20
     {

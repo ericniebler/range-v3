@@ -39,13 +39,12 @@ namespace ranges
     /// unstable_remove have O(1) complexity for each element remove, unlike remove O(n)
     /// [for worst case]. Each erased element overwritten (moved in) with last one.
     /// unstable_remove_if does not preserve relative element order.
-    RANGES_BEGIN_NIEBLOID(unstable_remove_if)
+    RANGES_FUNC_BEGIN(unstable_remove_if)
 
         /// \brief function template \c unstable_remove_if
         template<typename I, typename C, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(unstable_remove_if)(
-            I first, I last, C pred, P proj = {}) //
-            ->CPP_ret(I)(                         //
+        auto RANGES_FUNC(unstable_remove_if)(I first, I last, C pred, P proj = {}) //
+            ->CPP_ret(I)(                                                          //
                 requires bidirectional_iterator<I> && permutable<I> &&
                 indirect_unary_predicate<C, projected<I, P>>)
         {
@@ -68,8 +67,8 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(unstable_remove_if)(Rng && rng, C pred, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                           //
+        auto RANGES_FUNC(unstable_remove_if)(Rng && rng, C pred, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                                   //
                 requires bidirectional_range<Rng> && common_range<Rng> &&
                 permutable<iterator_t<Rng>> &&
                 indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
@@ -77,7 +76,7 @@ namespace ranges
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(unstable_remove_if)
+    RANGES_FUNC_END(unstable_remove_if)
     /// @}
 } // namespace ranges
 

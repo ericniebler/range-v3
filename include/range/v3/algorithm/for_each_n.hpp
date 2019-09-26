@@ -32,11 +32,11 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(for_each_n)
+    RANGES_FUNC_BEGIN(for_each_n)
 
         /// \brief function template \c for_each_n
         template<typename I, typename F, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(for_each_n)(
+        auto RANGES_FUNC(for_each_n)(
             I first, iter_difference_t<I> n, F fun, P proj = P{}) //
             ->CPP_ret(I)(                                         //
                 requires input_iterator<I> &&
@@ -52,7 +52,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename F, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(for_each_n)(
+        auto RANGES_FUNC(for_each_n)(
             Rng && rng, range_difference_t<Rng> n, F fun, P proj = P{})
             ->CPP_ret(safe_iterator_t<Rng>)( //
                 requires input_range<Rng> &&
@@ -64,7 +64,7 @@ namespace ranges
             return (*this)(begin(rng), n, detail::move(fun), detail::move(proj));
         }
 
-    RANGES_END_NIEBLOID(for_each_n)
+    RANGES_FUNC_END(for_each_n)
 
     // Not yet!
     //  namespace cpp20

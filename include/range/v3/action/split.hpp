@@ -67,7 +67,7 @@ namespace ranges
             {
                 return lamduh<T, N>{val};
             }
-#else // ^^^ workaround / no workaround vvv
+#else  // ^^^ workaround / no workaround vvv
             template<typename T, std::size_t N>
             static auto bind(split_fn, T (&val)[N])
             {
