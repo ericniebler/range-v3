@@ -122,7 +122,7 @@ namespace ranges
     (
         template(typename I)
         concept readable,
-            requires (uncvref_t<I> const i) (
+            requires (uncvref_t<I> const &i) (
                 // { *i } -> same_as<iter_reference_t<I>>;
                 // { iter_move(i) } -> same_as<iter_rvalue_reference_t<I>>;
                 concepts::requires_<same_as<decltype(*i), iter_reference_t<I>>>,
