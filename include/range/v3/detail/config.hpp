@@ -331,10 +331,16 @@ namespace ranges
 #if __GNUC__ == 7 || __GNUC__ == 8
 #define RANGES_WORKAROUND_GCC_91525 /* Workaround strange GCC ICE */
 #endif
-#if __GNUC__ >= 9 && defined(__cpp_concepts)
-#define RANGES_WORKAROUND_GCC_89953
+#if __GNUC__ >= 9
+#ifdef __cpp_concepts
+#define RANGES_WORKAROUND_GCC_89953 // ICE in nothrow_spec_p, at cp/except.c:1244
+#endif
+#if __cplusplus <= RANGES_CXX_STD_17
+#define RANGES_WORKAROUND_GCC_91923 // Failure-to-SFINAE with class type NTTP in C++17
 #endif
 #endif
+#endif
+
 
 #else
 #define RANGES_DIAGNOSTIC_PUSH
