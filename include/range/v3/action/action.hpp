@@ -21,7 +21,6 @@
 #include <range/v3/range_fwd.hpp>
 
 #include <range/v3/action/concepts.hpp>
-#include <range/v3/functional/arithmetic.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/concepts.hpp>
 #include <range/v3/functional/invoke.hpp>
@@ -29,7 +28,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/view/ref.hpp>
 
 namespace ranges
 {
@@ -207,17 +205,6 @@ namespace ranges
             )
             // clang-format on
         };
-
-        template<typename Rng, typename ActionFn>
-        auto operator|=(Rng & rng, old_action_<ActionFn> act) -> CPP_ret(Rng &)( //
-            requires range<Rng &> &&
-                invocable<bitwise_or, ref_view<Rng>, old_action_<ActionFn>> && same_as<
-                    ref_view<Rng>,
-                    invoke_result_t<bitwise_or, ref_view<Rng>, old_action_<ActionFn>>>)
-        {
-            views::ref(rng) | static_cast<old_action_<ActionFn> &&>(act);
-            return rng;
-        }
 
         template<typename Action>
         using action RANGES_DEPRECATED(
