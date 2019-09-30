@@ -37,26 +37,25 @@ namespace ranges
 
         // clang-format off
         template<typename A, typename B, typename... Ts>
-        static auto CPP_auto_fun(do_)(A &a, B &b, std::false_type, Ts &&... ts)
+        static constexpr auto CPP_auto_fun(do_)(A &&a, B &&b, std::false_type, Ts &&... ts)
         (
-            return invoke(b, invoke(a, (Ts &&) ts...))
+            return invoke((B &&) b, invoke((A &&) a, (Ts &&) ts...))
         )
         template<typename A, typename B, typename... Ts>
-        static auto CPP_auto_fun(do_)(A &a, B &b, std::true_type, Ts &&... ts)
+        static constexpr auto CPP_auto_fun(do_)(A &&a, B &&b, std::true_type, Ts &&... ts)
         (
-            return (invoke(a, (Ts &&) ts...), invoke(b))
+            return (invoke((A &&) a, (Ts &&) ts...), invoke((B &&) b))
         )
-            // clang-format on
-            public
-          : //
-            composed() = default;
-        composed(Second second, First first)
+    public:
+        composed() = default;
+        // clang-format on
+        constexpr composed(Second second, First first)
           : first_(std::move(first))
           , second_(std::move(second))
         {}
         // clang-format off
         template<typename... Ts>
-        auto CPP_auto_fun(operator())(Ts &&... ts)
+        constexpr auto CPP_auto_fun(operator())(Ts &&... ts)(mutable &)
         (
             return composed::do_(first_,
                                  second_,
@@ -64,11 +63,19 @@ namespace ranges
                                  (Ts &&) ts...)
         )
         template<typename... Ts>
-        auto CPP_auto_fun(operator())(Ts &&... ts)(const)
+        constexpr auto CPP_auto_fun(operator())(Ts &&... ts)(const &)
         (
             return composed::do_((First const &)first_,
                                  (Second const &)second_,
                                  std::is_void<invoke_result_t<First const &, Ts...>>{},
+                                 (Ts &&) ts...)
+        )
+        template<typename... Ts>
+        constexpr auto CPP_auto_fun(operator())(Ts &&... ts)(mutable &&)
+        (
+            return composed::do_((First &&)first_,
+                                 (Second &&)second_,
+                                 std::is_void<invoke_result_t<First &&, Ts...>>{},
                                  (Ts &&) ts...)
         )
         // clang-format on
@@ -77,7 +84,7 @@ namespace ranges
     struct compose_fn
     {
         template<typename Second, typename First>
-        composed<Second, First> operator()(Second second, First first) const
+        constexpr composed<Second, First> operator()(Second second, First first) const
         {
             return {std::move(second), std::move(first)};
         }

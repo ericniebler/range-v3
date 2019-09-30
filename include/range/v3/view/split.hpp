@@ -582,7 +582,7 @@ namespace ranges
                 return default_sentinel;
 #else
             return end_(meta::bool_ < forward_range<V> && forward_range<const V> &&
-                        common_range<const V>> {});
+                        common_range<const V> > {});
 #endif
         }
     };

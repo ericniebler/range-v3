@@ -21,6 +21,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/concepts.hpp>
 #include <range/v3/functional/pipeable.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -81,37 +82,16 @@ namespace ranges
 
     namespace views
     {
-        struct view_closure_base
+#ifdef RANGES_WORKAROUND_CLANG_43400
+        namespace view_closure_base_detail
         {
-        private:
-            template<typename View1, typename View2>
-            struct composed_
-            {
-                View1 vw1_;
-                View2 vw2_;
-                // clang-format off
-                template<typename Arg>
-                constexpr auto CPP_auto_fun(operator())(Arg && arg) (const)
-                (
-                    return static_cast<Arg &&>(arg) | vw1_ | vw2_
-                )
-                // clang-format on
-            };
-
-        public:
-            // Piping requires viewable_ranges.
-            CPP_template(typename Rng, typename ViewFn)(                              //
-                requires defer::viewable_range<Rng> && defer::invocable<ViewFn, Rng>) //
-                friend constexpr auto
-                operator|(Rng && rng, view_closure<ViewFn> vw)
-            {
-                return static_cast<ViewFn &&>(vw)(static_cast<Rng &&>(rng));
-            }
+            struct hook
+            {};
 
             // This overload is deleted because when piping a range into an
             // view, it must be moved in.
             template<typename Rng, typename ViewFn>         // **************************
-            friend constexpr auto                           // **************************
+            constexpr auto                                  // **************************
             operator|(Rng &&, view_closure<ViewFn> const &) // ******* READ THIS ********
                                                             // **** IF YOUR COMPILE *****
                 -> CPP_ret(Rng)(                            // ****** BREAKS HERE *******
@@ -124,15 +104,49 @@ namespace ranges
             // *      - The range is an lvalue (not a temporary object), OR             *
             // *      - The range is a view (not a container).                          *
             // **************************************************************************
+        } // namespace view_closure_base_detail
 
-            template<typename View1, typename View2>
-            friend constexpr auto operator|(view_closure<View1> vw1,
-                                            view_closure<View2> vw2)
+#endif // RANGES_WORKAROUND_CLANG_43400
+        struct view_closure_base
+#ifdef RANGES_WORKAROUND_CLANG_43400
+          : private view_closure_base_detail::hook
+#endif // RANGES_WORKAROUND_CLANG_43400
+        {
+            // Piping requires viewable_ranges.
+            CPP_template(typename Rng, typename ViewFn)(                              //
+                requires defer::viewable_range<Rng> && defer::invocable<ViewFn, Rng>) //
+                friend constexpr auto
+                operator|(Rng && rng, view_closure<ViewFn> vw)
+            {
+                return static_cast<ViewFn &&>(vw)(static_cast<Rng &&>(rng));
+            }
+
+#ifndef RANGES_WORKAROUND_CLANG_43400
+            // This overload is deleted because when piping a range into an
+            // view, it must be moved in.
+            template<typename Rng, typename ViewFn>         // **************************
+            friend constexpr auto                           // **************************
+            operator|(Rng &&, view_closure<ViewFn> const &) // ******* READ THIS ********
+                                                            // **** IF YOUR COMPILE *****
+                -> CPP_broken_friend_ret(Rng)(              // ****** BREAKS HERE *******
+                    requires range<Rng> &&                  // **************************
+                    (!viewable_range<Rng>)) = delete;       // **************************
+            // **************************************************************************
+            // *    When piping a range into an adaptor, the range must satisfy the     *
+            // *    "viewable_range" concept. A range is viewable when either or both   *
+            // *    of these things are true:                                           *
+            // *      - The range is an lvalue (not a temporary object), OR             *
+            // *      - The range is a view (not a container).                          *
+            // **************************************************************************
+#endif
+
+            template<typename ViewFn, typename Pipeable>
+            friend constexpr auto operator|(view_closure<ViewFn> vw, Pipeable pipe)
+                -> CPP_broken_friend_ret(view_closure<composed<Pipeable, ViewFn>>)(
+                    requires(is_pipeable_v<Pipeable>))
             {
                 return make_view_closure(
-                    composed_<view_closure<View1>, view_closure<View2>>{
-                        static_cast<view_closure<View1> &&>(vw1),
-                        static_cast<view_closure<View2> &&>(vw2)});
+                    compose(static_cast<Pipeable &&>(pipe), static_cast<ViewFn &&>(vw)));
             }
         };
 
@@ -146,8 +160,6 @@ namespace ranges
             constexpr explicit view_closure(ViewFn fn)
               : ViewFn(static_cast<ViewFn &&>(fn))
             {}
-
-            using ViewFn::operator();
         };
 
         /// \cond
@@ -173,14 +185,14 @@ namespace ranges
             view_access_;
 
         template<typename>
-        struct view;
+        struct old_view_;
 
         struct make_view_fn_
         {
             template<typename Fun>
-            constexpr view<Fun> operator()(Fun fun) const
+            constexpr old_view_<Fun> operator()(Fun fun) const
             {
-                return view<Fun>{static_cast<Fun &&>(fun)};
+                return old_view_<Fun>{static_cast<Fun &&>(fun)};
             }
         };
         using make_view_fn RANGES_DEPRECATED(
@@ -196,50 +208,53 @@ namespace ranges
                 static_const<make_view_fn_>::value;
         } // namespace
 
-        template<typename View>
-        struct RANGES_DEPRECATED(
-            "The views::view<> template is deprecated. Please switch to view_closure")
-            view : pipeable_base
+        template<typename ViewFn>
+        struct old_view_ : pipeable_base
         {
         private:
-            View view_;
+            ViewFn vw_;
             friend pipeable_access;
 
             // Piping requires range arguments or lvalue containers.
             template<typename Rng, typename Vw>
             static constexpr auto CPP_fun(pipe)(Rng && rng, Vw && v)( //
-                requires viewable_range<Rng> && invocable<View &, Rng>)
+                requires viewable_range<Rng> && invocable<ViewFn &, Rng>)
             {
-                return v.view_(static_cast<Rng &&>(rng));
+                return v.vw_(static_cast<Rng &&>(rng));
             }
 
         public:
-            view() = default;
+            old_view_() = default;
 
-            constexpr explicit view(View a) noexcept(
-                std::is_nothrow_move_constructible<View>::value)
-              : view_(std::move(a))
+            constexpr explicit old_view_(ViewFn a) noexcept(
+                std::is_nothrow_move_constructible<ViewFn>::value)
+              : vw_(std::move(a))
             {}
 
             // Calling directly requires a viewable_range.
             template<typename Rng, typename... Rest>
-            constexpr auto operator()(Rng && rng, Rest &&... rest) const
-                -> CPP_ret(invoke_result_t<View const &, Rng, Rest...>)( //
-                    requires viewable_range<Rng> && invocable<View const &, Rng, Rest...>)
+            constexpr auto operator()(Rng && rng, Rest &&... rest) const -> CPP_ret(
+                invoke_result_t<ViewFn const &, Rng, Rest...>)( //
+                requires viewable_range<Rng> && invocable<ViewFn const &, Rng, Rest...>)
             {
-                return view_(static_cast<Rng &&>(rng), static_cast<Rest &&>(rest)...);
+                return vw_(static_cast<Rng &&>(rng), static_cast<Rest &&>(rest)...);
             }
 
             // Currying overload.
             // clang-format off
-            template<typename... Ts, typename V = View>
+            template<typename... Ts, typename V = ViewFn>
             constexpr auto CPP_auto_fun(operator())(Ts &&... ts)(const)
             (
                 return make_view_fn_{}(
-                    view_access::impl<V>::bind(view_, static_cast<Ts &&>(ts)...))
+                    view_access_::impl<V>::bind(vw_, static_cast<Ts &&>(ts)...))
             )
             // clang-format on
         };
+
+        template<typename ViewFn>
+        using view RANGES_DEPRECATED(
+            "The views::view<> template is deprecated. Please switch to view_closure") =
+            old_view_<ViewFn>;
         /// \endcond
     } // namespace views
 

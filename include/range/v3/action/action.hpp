@@ -22,6 +22,7 @@
 
 #include <range/v3/action/concepts.hpp>
 #include <range/v3/functional/arithmetic.hpp>
+#include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/concepts.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/functional/pipeable.hpp>
@@ -51,7 +52,8 @@ namespace ranges
 #ifdef RANGES_WORKAROUND_CLANG_43400
         namespace action_closure_base_detail
         {
-            struct hook {};
+            struct hook
+            {};
 
             template<typename Rng, typename ActionFn>   // ******************************
             constexpr auto                              // ******************************
@@ -62,35 +64,18 @@ namespace ranges
             // **************************************************************************
             // *    When piping a range into an action, the range must be moved in.     *
             // **************************************************************************
-        }
-#endif // RANGES_WORKAROUND_CLANG_43400
+        } // namespace action_closure_base_detail
+#endif    // RANGES_WORKAROUND_CLANG_43400
 
         struct action_closure_base
 #ifdef RANGES_WORKAROUND_CLANG_43400
           : private action_closure_base_detail::hook
 #endif // RANGES_WORKAROUND_CLANG_43400
         {
-        private:
-            template<typename ActionFn1, typename ActionFn2>
-            struct composed
-            {
-                ActionFn1 act1_;
-                ActionFn2 act2_;
-                template<typename Arg>
-                constexpr decltype(auto) CPP_fun(operator())(Arg && arg)(
-                    const //
-                    requires invocable<ActionFn1 const &, Arg &> && invocable<
-                        ActionFn2 const &, invoke_result_t<ActionFn1 const &, Arg &>>)
-                {
-                    return act2_(act1_(arg));
-                }
-            };
-
-        public:
             // Piping requires things are passed by value.
-            CPP_template(typename Rng, typename ActionFn)(                         //
-                requires (!defer::is_true<std::is_lvalue_reference<Rng>::value> && //
-                    defer::range<Rng> && defer::invocable<ActionFn, Rng &>))       //
+            CPP_template(typename Rng, typename ActionFn)(                        //
+                requires(!defer::is_true<std::is_lvalue_reference<Rng>::value> && //
+                         defer::range<Rng> && defer::invocable<ActionFn, Rng &>)) //
                 friend constexpr auto
                 operator|(Rng && rng, action_closure<ActionFn> act)
             {
@@ -102,26 +87,25 @@ namespace ranges
             friend constexpr auto                       // ******************************
             operator|(Rng &,                            // ********* READ THIS **********
                       action_closure<ActionFn> const &) // ****** IF YOUR COMPILE *******
-                -> CPP_ret(Rng)(                        // ******** BREAKS HERE *********
+                -> CPP_broken_friend_ret(Rng)(          // ******** BREAKS HERE *********
                     requires range<Rng>) = delete;      // ******************************
             // **************************************************************************
             // *    When piping a range into an action, the range must be moved in.     *
             // **************************************************************************
 #endif // RANGES_WORKAROUND_CLANG_43400
 
-            template<typename ActionFn1, typename ActionFn2>
-            friend constexpr auto operator|(action_closure<ActionFn1> act1,
-                                            action_closure<ActionFn2> act2)
+            template<typename ActionFn, typename Pipeable>
+            friend constexpr auto operator|(action_closure<ActionFn> act, Pipeable pipe)
+                -> CPP_broken_friend_ret(action_closure<composed<Pipeable, ActionFn>>)(
+                    requires(is_pipeable_v<Pipeable>))
             {
-                return make_action_closure(
-                    composed<action_closure<ActionFn1>, action_closure<ActionFn2>>{
-                        static_cast<action_closure<ActionFn1> &&>(act1),
-                        static_cast<action_closure<ActionFn2> &&>(act2)});
+                return make_action_closure(compose(static_cast<Pipeable &&>(pipe),
+                                                   static_cast<ActionFn &&>(act)));
             }
 
             template<typename Rng, typename ActionFn>
             friend constexpr auto operator|=(Rng & rng, action_closure<ActionFn> act) //
-                -> CPP_ret(Rng &)(                                                    //
+                -> CPP_broken_friend_ret(Rng &)(                                      //
                     requires range<Rng> && invocable<ActionFn, Rng &>)
             {
                 static_cast<ActionFn &&>(act)(rng);
@@ -139,8 +123,6 @@ namespace ranges
             constexpr explicit action_closure(ActionFn fn)
               : ActionFn(static_cast<ActionFn &&>(fn))
             {}
-
-            using ActionFn::operator();
         };
 
         /// \cond
@@ -166,14 +148,14 @@ namespace ranges
             "action_access.") = action_access_;
 
         template<typename>
-        struct action_;
+        struct old_action_;
 
         struct make_action_fn_
         {
             template<typename Fun>
-            constexpr action_<Fun> operator()(Fun fun) const
+            constexpr old_action_<Fun> operator()(Fun fun) const
             {
-                return action_<Fun>{static_cast<Fun &&>(fun)};
+                return old_action_<Fun>{static_cast<Fun &&>(fun)};
             }
         };
         using make_action_fn RANGES_DEPRECATED(
@@ -190,16 +172,16 @@ namespace ranges
         } // namespace
 
         template<typename Action>
-        struct action_ : pipeable_base
+        struct old_action_ : pipeable_base
         {
         private:
             Action act_;
             friend pipeable_access;
 
         public:
-            action_() = default;
+            old_action_() = default;
 
-            constexpr explicit action_(Action a) noexcept(
+            constexpr explicit old_action_(Action a) noexcept(
                 std::is_nothrow_move_constructible<Action>::value)
               : act_(detail::move(a))
             {}
@@ -227,20 +209,20 @@ namespace ranges
         };
 
         template<typename Rng, typename ActionFn>
-        auto operator|=(Rng & rng, action_<ActionFn> act) -> CPP_ret(Rng &)( //
-            requires range<Rng &> && invocable<bitwise_or, ref_view<Rng>,
-                                               action_<ActionFn>> &&
-                same_as<ref_view<Rng>,
-                        invoke_result_t<bitwise_or, ref_view<Rng>, action_<ActionFn>>>)
+        auto operator|=(Rng & rng, old_action_<ActionFn> act) -> CPP_ret(Rng &)( //
+            requires range<Rng &> &&
+                invocable<bitwise_or, ref_view<Rng>, old_action_<ActionFn>> && same_as<
+                    ref_view<Rng>,
+                    invoke_result_t<bitwise_or, ref_view<Rng>, old_action_<ActionFn>>>)
         {
-            views::ref(rng) | static_cast<action_<ActionFn> &&>(act);
+            views::ref(rng) | static_cast<old_action_<ActionFn> &&>(act);
             return rng;
         }
 
         template<typename Action>
         using action RANGES_DEPRECATED(
             "The actions::action<> template is deprecated. Please switch to "
-            "action_closure") = action_<Action>;
+            "action_closure") = old_action_<Action>;
         /// \endcond
     } // namespace actions
 
