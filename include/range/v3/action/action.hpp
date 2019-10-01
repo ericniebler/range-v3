@@ -71,9 +71,9 @@ namespace ranges
 #endif // RANGES_WORKAROUND_CLANG_43400
         {
             // Piping requires things are passed by value.
-            CPP_template(typename Rng, typename ActionFn)(                        //
-                requires(!defer::is_true<std::is_lvalue_reference<Rng>::value> && //
-                         defer::range<Rng> && defer::invocable<ActionFn, Rng &>)) //
+            CPP_template(typename Rng, typename ActionFn)(         //
+                requires(!std::is_lvalue_reference<Rng>::value) && //
+                         range<Rng> && invocable<ActionFn, Rng &>) //
                 friend constexpr auto
                 operator|(Rng && rng, action_closure<ActionFn> act)
             {
