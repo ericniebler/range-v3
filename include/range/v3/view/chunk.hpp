@@ -408,18 +408,8 @@ namespace ranges
         // In:  range<T>
         // Out: range<range<T>>, where each inner range has $n$ elements.
         //                       The last range may have fewer.
-        struct chunk_fn
+        struct chunk_base_fn
         {
-        private:
-            friend view_access;
-            template<typename Int>
-            static constexpr auto CPP_fun(bind)(chunk_fn chunk, Int n)( //
-                requires integral<Int>)
-            {
-                return make_pipeable(bind_back(chunk, n));
-            }
-
-        public:
             template<typename Rng>
             constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> CPP_ret(chunk_view<all_t<Rng>>)( //
@@ -429,9 +419,21 @@ namespace ranges
             }
         };
 
+        struct chunk_fn : chunk_base_fn
+        {
+            using chunk_base_fn::operator();
+
+            template<typename Int>
+            constexpr auto CPP_fun(operator())(Int n)(const //
+                                                      requires detail::integer_like_<Int>)
+            {
+                return make_view_closure(bind_back(chunk_base_fn{}, n));
+            }
+        };
+
         /// \relates chunk_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<chunk_fn>, chunk)
+        RANGES_INLINE_VARIABLE(chunk_fn, chunk)
     } // namespace views
     /// @}
 } // namespace ranges

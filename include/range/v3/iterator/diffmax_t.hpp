@@ -67,46 +67,46 @@ namespace ranges
                              : static_cast<std::uintmax_t>(val))
             {}
 
-            constexpr friend bool operator<(diffmax_t a, diffmax_t b) noexcept
+            friend constexpr bool operator<(diffmax_t a, diffmax_t b) noexcept
             {
                 a._check();
                 b._check();
                 return a.neg_ ? (b.neg_ ? a.val_ > b.val_ : true)
                               : (b.neg_ ? false : a.val_ < b.val_);
             }
-            constexpr friend bool operator>(diffmax_t a, diffmax_t b) noexcept
+            friend constexpr bool operator>(diffmax_t a, diffmax_t b) noexcept
             {
                 return b < a;
             }
-            constexpr friend bool operator<=(diffmax_t a, diffmax_t b) noexcept
+            friend constexpr bool operator<=(diffmax_t a, diffmax_t b) noexcept
             {
                 return !(b < a);
             }
-            constexpr friend bool operator>=(diffmax_t a, diffmax_t b) noexcept
+            friend constexpr bool operator>=(diffmax_t a, diffmax_t b) noexcept
             {
                 return !(a < b);
             }
-            constexpr friend bool operator==(diffmax_t a, diffmax_t b) noexcept
+            friend constexpr bool operator==(diffmax_t a, diffmax_t b) noexcept
             {
                 a._check();
                 b._check();
                 return a.val_ == b.val_ && a.neg_ == b.neg_;
             }
-            constexpr friend bool operator!=(diffmax_t a, diffmax_t b) noexcept
+            friend constexpr bool operator!=(diffmax_t a, diffmax_t b) noexcept
             {
                 return !(a == b);
             }
 
-            constexpr friend diffmax_t operator+(diffmax_t a) noexcept
+            friend constexpr diffmax_t operator+(diffmax_t a) noexcept
             {
                 return a;
             }
-            constexpr friend diffmax_t operator-(diffmax_t a) noexcept
+            friend constexpr diffmax_t operator-(diffmax_t a) noexcept
             {
                 return _normalize(!a.neg_, a.val_);
             }
 
-            constexpr friend diffmax_t operator+(diffmax_t a, diffmax_t b) noexcept
+            friend constexpr diffmax_t operator+(diffmax_t a, diffmax_t b) noexcept
             {
                 return a.neg_ == b.neg_
                            ? diffmax_t{tag{}, a.neg_, a.val_ + b.val_}
@@ -117,19 +117,19 @@ namespace ranges
                                             ? diffmax_t{tag{}, true, b.val_ - a.val_}
                                             : diffmax_t{tag{}, false, a.val_ - b.val_}));
             }
-            constexpr friend diffmax_t operator-(diffmax_t a, diffmax_t b) noexcept
+            friend constexpr diffmax_t operator-(diffmax_t a, diffmax_t b) noexcept
             {
                 return a + -b;
             }
-            constexpr friend diffmax_t operator*(diffmax_t a, diffmax_t b) noexcept
+            friend constexpr diffmax_t operator*(diffmax_t a, diffmax_t b) noexcept
             {
                 return _normalize(a.neg_ ^ b.neg_, a.val_ * b.val_);
             }
-            constexpr friend diffmax_t operator/(diffmax_t a, diffmax_t b) noexcept
+            friend constexpr diffmax_t operator/(diffmax_t a, diffmax_t b) noexcept
             {
                 return _normalize(a.neg_ ^ b.neg_, a.val_ / b.val_);
             }
-            constexpr friend diffmax_t operator%(diffmax_t a, diffmax_t b) noexcept
+            friend constexpr diffmax_t operator%(diffmax_t a, diffmax_t b) noexcept
             {
                 return _normalize(a.neg_, a.val_ % b.val_);
             }
@@ -138,21 +138,21 @@ namespace ranges
             {
                 return neg ? ~val + 1 : val;
             }
-            constexpr friend diffmax_t operator&(diffmax_t a, diffmax_t b) noexcept
+            friend constexpr diffmax_t operator&(diffmax_t a, diffmax_t b) noexcept
             {
                 return _normalize(
                     a.neg_ && b.neg_,
                     compl_if(a.neg_ && b.neg_,
                              compl_if(a.neg_, a.val_) & compl_if(b.neg_, b.val_)));
             }
-            constexpr friend diffmax_t operator|(diffmax_t a, diffmax_t b) noexcept
+            friend constexpr diffmax_t operator|(diffmax_t a, diffmax_t b) noexcept
             {
                 return _normalize(
                     a.neg_ || b.neg_,
                     compl_if(a.neg_ || b.neg_,
                              compl_if(a.neg_, a.val_) | compl_if(b.neg_, b.val_)));
             }
-            constexpr friend diffmax_t operator^(diffmax_t a, diffmax_t b) noexcept
+            friend constexpr diffmax_t operator^(diffmax_t a, diffmax_t b) noexcept
             {
                 return _normalize(
                     bool(a.neg_ ^ b.neg_),
@@ -160,119 +160,119 @@ namespace ranges
                              compl_if(a.neg_, a.val_) ^ compl_if(b.neg_, b.val_)));
             }
 
-            constexpr friend diffmax_t operator<<(diffmax_t a, diffmax_t b) noexcept
+            friend constexpr diffmax_t operator<<(diffmax_t a, diffmax_t b) noexcept
             {
                 RANGES_ENSURE(!a.neg_);
                 return b.neg_ ? diffmax_t{tag{}, false, a.val_ >> b.val_}
                               : diffmax_t{tag{}, false, a.val_ << b.val_};
             }
-            constexpr friend diffmax_t operator>>(diffmax_t a, diffmax_t b) noexcept
+            friend constexpr diffmax_t operator>>(diffmax_t a, diffmax_t b) noexcept
             {
                 return b.neg_ ? diffmax_t{tag{}, a.neg_, a.val_ << b.val_}
                               : diffmax_t{tag{}, a.neg_, a.val_ >> b.val_};
             }
 
-            constexpr friend diffmax_t & operator+=(diffmax_t & a, diffmax_t b) noexcept
+            friend constexpr diffmax_t & operator+=(diffmax_t & a, diffmax_t b) noexcept
             {
                 return (a = a + b);
             }
-            constexpr friend diffmax_t & operator-=(diffmax_t & a, diffmax_t b) noexcept
+            friend constexpr diffmax_t & operator-=(diffmax_t & a, diffmax_t b) noexcept
             {
                 return (a = a - b);
             }
-            constexpr friend diffmax_t & operator*=(diffmax_t & a, diffmax_t b) noexcept
+            friend constexpr diffmax_t & operator*=(diffmax_t & a, diffmax_t b) noexcept
             {
                 return (a = a * b);
             }
-            constexpr friend diffmax_t & operator/=(diffmax_t & a, diffmax_t b) noexcept
+            friend constexpr diffmax_t & operator/=(diffmax_t & a, diffmax_t b) noexcept
             {
                 return (a = a / b);
             }
-            constexpr friend diffmax_t & operator%=(diffmax_t & a, diffmax_t b) noexcept
+            friend constexpr diffmax_t & operator%=(diffmax_t & a, diffmax_t b) noexcept
             {
                 return (a = a % b);
             }
-            constexpr friend diffmax_t & operator&=(diffmax_t & a, diffmax_t b) noexcept
+            friend constexpr diffmax_t & operator&=(diffmax_t & a, diffmax_t b) noexcept
             {
                 return (a = a & b);
             }
-            constexpr friend diffmax_t & operator|=(diffmax_t & a, diffmax_t b) noexcept
+            friend constexpr diffmax_t & operator|=(diffmax_t & a, diffmax_t b) noexcept
             {
                 return (a = a | b);
             }
-            constexpr friend diffmax_t & operator^=(diffmax_t & a, diffmax_t b) noexcept
+            friend constexpr diffmax_t & operator^=(diffmax_t & a, diffmax_t b) noexcept
             {
                 return (a = a ^ b);
             }
-            constexpr friend diffmax_t & operator<<=(diffmax_t & a, diffmax_t b) noexcept
+            friend constexpr diffmax_t & operator<<=(diffmax_t & a, diffmax_t b) noexcept
             {
                 a = (a << b);
                 return a;
             }
-            constexpr friend diffmax_t & operator>>=(diffmax_t & a, diffmax_t b) noexcept
+            friend constexpr diffmax_t & operator>>=(diffmax_t & a, diffmax_t b) noexcept
             {
                 a = (a >> b);
                 return a;
             }
 
             template<typename T>
-            constexpr friend auto operator+=(T & a, diffmax_t b) noexcept
+            friend constexpr auto operator+=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)( //
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} + b));
             }
             template<typename T>
-            constexpr friend auto operator-=(T & a, diffmax_t b) noexcept
+            friend constexpr auto operator-=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)( //
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} - b));
             }
             template<typename T>
-            constexpr friend auto operator*=(T & a, diffmax_t b) noexcept
+            friend constexpr auto operator*=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)( //
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} * b));
             }
             template<typename T>
-            constexpr friend auto operator/=(T & a, diffmax_t b) noexcept
+            friend constexpr auto operator/=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)( //
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} / b));
             }
             template<typename T>
-            constexpr friend auto operator%=(T & a, diffmax_t b) noexcept
+            friend constexpr auto operator%=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)( //
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} % b));
             }
             template<typename T>
-            constexpr friend auto operator&=(T & a, diffmax_t b) noexcept
+            friend constexpr auto operator&=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)( //
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} & b));
             }
             template<typename T>
-            constexpr friend auto operator|=(T & a, diffmax_t b) noexcept
+            friend constexpr auto operator|=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)( //
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} | b));
             }
             template<typename T>
-            constexpr friend auto operator^=(T & a, diffmax_t b) noexcept
+            friend constexpr auto operator^=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)( //
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} ^ b));
             }
             template<typename T>
-            constexpr friend auto operator<<=(T & a, diffmax_t b) noexcept
+            friend constexpr auto operator<<=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)( //
                     requires integral<T>)
             {
@@ -280,7 +280,7 @@ namespace ranges
                 return a;
             }
             template<typename T>
-            constexpr friend auto operator>>=(T & a, diffmax_t b) noexcept
+            friend constexpr auto operator>>=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)( //
                     requires integral<T>)
             {
@@ -288,23 +288,23 @@ namespace ranges
                 return a;
             }
 
-            constexpr friend diffmax_t & operator++(diffmax_t & a) noexcept
+            friend constexpr diffmax_t & operator++(diffmax_t & a) noexcept
             {
                 a.neg_ = (a.neg_ ? --a.val_ : ++a.val_) && a.neg_;
                 return a;
             }
-            constexpr friend diffmax_t & operator--(diffmax_t & a) noexcept
+            friend constexpr diffmax_t & operator--(diffmax_t & a) noexcept
             {
                 a.neg_ = (a.neg_ ? ++a.val_ : --a.val_) && a.neg_;
                 return a;
             }
-            constexpr friend diffmax_t operator++(diffmax_t & a, int) noexcept
+            friend constexpr diffmax_t operator++(diffmax_t & a, int) noexcept
             {
                 auto tmp = a;
                 ++a;
                 return tmp;
             }
-            constexpr friend diffmax_t operator--(diffmax_t & a, int) noexcept
+            friend constexpr diffmax_t operator--(diffmax_t & a, int) noexcept
             {
                 auto tmp = a;
                 --a;

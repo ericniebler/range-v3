@@ -104,7 +104,7 @@ namespace ranges
 
         /// \relates enumerate_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<enumerate_fn>, enumerate)
+        RANGES_INLINE_VARIABLE(view_closure<enumerate_fn>, enumerate)
     } // namespace views
     /// @}
 } // namespace ranges

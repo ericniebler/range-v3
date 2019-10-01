@@ -35,12 +35,12 @@ namespace ranges
     {
         template<typename Rng>
         using join_action_value_t_ =
-            meta::if_c<(bool)ranges::container<range_value_t<Rng>>, range_value_t<Rng>,
+            meta::if_c<(bool)ranges::container<range_value_t<Rng>>, //
+                       range_value_t<Rng>,                          //
                        std::vector<range_value_t<range_value_t<Rng>>>>;
 
         struct join_fn
         {
-        public:
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(join_action_value_t_<Rng>)( //
                 requires input_range<Rng> && input_range<range_value_t<Rng>> &&
@@ -54,10 +54,9 @@ namespace ranges
             }
         };
 
-        /// \ingroup group-actions
-        /// \relates join_fn
-        /// \sa action
-        RANGES_INLINE_VARIABLE(action<join_fn>, join)
+        /// \relates actions::join_fn
+        /// \sa action_closure
+        RANGES_INLINE_VARIABLE(action_closure<join_fn>, join)
     } // namespace actions
     /// @}
 } // namespace ranges

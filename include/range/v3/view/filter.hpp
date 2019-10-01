@@ -49,18 +49,8 @@ namespace ranges
 
         /// Given a source range and a unary predicate,
         /// present a view of the elements that satisfy the predicate.
-        struct cpp20_filter_fn
+        struct cpp20_filter_base_fn
         {
-        private:
-            friend view_access;
-            friend filter_fn;
-            template<typename Pred>
-            static constexpr auto bind(cpp20_filter_fn filter, Pred pred)
-            {
-                return make_pipeable(bind_back(filter, std::move(pred)));
-            }
-
-        public:
             template<typename Rng, typename Pred>
             constexpr auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(filter_view<all_t<Rng>, Pred>)( //
@@ -72,22 +62,23 @@ namespace ranges
             }
         };
 
+        struct cpp20_filter_fn : cpp20_filter_base_fn
+        {
+            using cpp20_filter_base_fn::operator();
+
+            template<typename Pred>
+            constexpr auto operator()(Pred pred) const
+            {
+                return make_view_closure(
+                    bind_back(cpp20_filter_base_fn{}, std::move(pred)));
+            }
+        };
+
         /// Given a source range, unary predicate, and optional projection,
         /// present a view of the elements that satisfy the predicate.
-        struct filter_fn : cpp20_filter_fn
+        struct filter_base_fn : cpp20_filter_base_fn
         {
-        private:
-            friend view_access;
-            using cpp20_filter_fn::bind;
-
-            template<typename Pred, typename Proj>
-            static constexpr auto bind(filter_fn filter, Pred pred, Proj proj)
-            {
-                return make_pipeable(bind_back(filter, std::move(pred), std::move(proj)));
-            }
-
-        public:
-            using cpp20_filter_fn::operator();
+            using cpp20_filter_base_fn::operator();
 
             template<typename Rng, typename Pred, typename Proj>
             constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
@@ -101,17 +92,34 @@ namespace ranges
             }
         };
 
+        struct filter_fn : filter_base_fn
+        {
+            using filter_base_fn::operator();
+
+            template<typename Pred>
+            constexpr auto operator()(Pred pred) const
+            {
+                return make_view_closure(bind_back(filter_base_fn{}, std::move(pred)));
+            }
+
+            template<typename Pred, typename Proj>
+            constexpr auto operator()(Pred pred, Proj proj) const
+            {
+                return make_view_closure(
+                    bind_back(filter_base_fn{}, std::move(pred), std::move(proj)));
+            }
+        };
+
         /// \relates filter_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<filter_fn>, filter)
+        RANGES_INLINE_VARIABLE(filter_fn, filter)
     } // namespace views
 
     namespace cpp20
     {
         namespace views
         {
-            RANGES_INLINE_VARIABLE(ranges::views::view<ranges::views::cpp20_filter_fn>,
-                                   filter)
+            RANGES_INLINE_VARIABLE(ranges::views::cpp20_filter_fn, filter)
         }
         CPP_template(typename V, typename Pred)( //
             requires input_range<V> && indirect_unary_predicate<Pred, iterator_t<V>> &&

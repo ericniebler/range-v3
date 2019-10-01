@@ -33,16 +33,14 @@ namespace ranges
     {
         struct sort_fn
         {
-        private:
-            friend action_access;
             template<typename C, typename P = identity>
-            static auto CPP_fun(bind)(sort_fn sort, C pred, P proj = {})( //
-                requires(!range<C>))
+            constexpr auto CPP_fun(operator())(C pred, P proj = {})(const //
+                                                                    requires(!range<C>))
             {
-                return bind_back(sort, std::move(pred), std::move(proj));
+                return make_action_closure(
+                    bind_back(sort_fn{}, std::move(pred), std::move(proj)));
             }
 
-        public:
             template<typename Rng, typename C = less, typename P = identity>
             auto operator()(Rng && rng, C pred = {}, P proj = {}) const
                 -> CPP_ret(Rng)( //
@@ -53,10 +51,9 @@ namespace ranges
             }
         };
 
-        /// \ingroup group-actions
-        /// \relates sort_fn
-        /// \sa `action`
-        RANGES_INLINE_VARIABLE(action<sort_fn>, sort)
+        /// \relates actions::sort_fn
+        /// \sa action_closure
+        RANGES_INLINE_VARIABLE(action_closure<sort_fn>, sort)
     } // namespace actions
     /// @}
 } // namespace ranges

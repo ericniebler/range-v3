@@ -124,16 +124,9 @@ namespace ranges
 
     namespace views
     {
-        struct drop_exactly_fn
+        struct drop_exactly_base_fn
         {
         private:
-            friend view_access;
-            template<typename Int>
-            static constexpr auto CPP_fun(bind)(drop_exactly_fn drop_exactly, Int n)( //
-                requires integral<Int>)
-            {
-                return make_pipeable(bind_back(drop_exactly, n));
-            }
             template<typename Rng>
             static auto impl_(Rng && rng, range_difference_t<Rng> n, input_range_tag)
                 -> drop_exactly_view<all_t<Rng>>
@@ -152,16 +145,29 @@ namespace ranges
         public:
             template<typename Rng>
             auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(
-                const requires viewable_range<Rng> && input_range<Rng>)
+                const //
+                requires viewable_range<Rng> && input_range<Rng>)
             {
-                return drop_exactly_fn::impl_(
+                return drop_exactly_base_fn::impl_(
                     static_cast<Rng &&>(rng), n, range_tag_of<Rng>{});
+            }
+        };
+
+        struct drop_exactly_fn : drop_exactly_base_fn
+        {
+            using drop_exactly_base_fn::operator();
+
+            template<typename Int>
+            constexpr auto CPP_fun(operator())(Int n)(const //
+                                                      requires detail::integer_like_<Int>)
+            {
+                return make_view_closure(bind_back(drop_exactly_base_fn{}, n));
             }
         };
 
         /// \relates drop_exactly_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<drop_exactly_fn>, drop_exactly)
+        RANGES_INLINE_VARIABLE(drop_exactly_fn, drop_exactly)
     } // namespace views
     /// @}
 } // namespace ranges

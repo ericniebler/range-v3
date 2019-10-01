@@ -36,16 +36,14 @@ namespace ranges
     {
         struct remove_if_fn
         {
-        private:
-            friend action_access;
             template<typename C, typename P = identity>
-            static auto CPP_fun(bind)(remove_if_fn remove_if, C pred, P proj = P{})( //
-                requires(!range<C>))
+            constexpr auto CPP_fun(operator())(C pred, P proj = P{})(const //
+                                                                     requires(!range<C>))
             {
-                return bind_back(remove_if, std::move(pred), std::move(proj));
+                return make_action_closure(
+                    bind_back(remove_if_fn{}, std::move(pred), std::move(proj)));
             }
 
-        public:
             template<typename Rng, typename C, typename P = identity>
             auto operator()(Rng && rng, C pred, P proj = P{}) const -> CPP_ret(Rng)( //
                 requires forward_range<Rng> &&
@@ -59,9 +57,8 @@ namespace ranges
             }
         };
 
-        /// \ingroup group-actions
-        /// \sa action
-        RANGES_INLINE_VARIABLE(action<remove_if_fn>, remove_if)
+        /// \relates actions::remove_if_fn
+        RANGES_INLINE_VARIABLE(remove_if_fn, remove_if)
     } // namespace actions
     /// @}
 } // namespace ranges

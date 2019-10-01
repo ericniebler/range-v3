@@ -223,7 +223,7 @@ namespace ranges
 
         /// \relates cycle_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<cycle_fn>, cycle)
+        RANGES_INLINE_VARIABLE(view_closure<cycle_fn>, cycle)
     } // namespace views
       /// @}
 } // namespace ranges

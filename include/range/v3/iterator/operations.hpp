@@ -584,7 +584,7 @@ namespace ranges
             return enumerate(rng).first;
         }
         template<typename Rng>
-        constexpr static range_difference_t<Rng> impl_r(Rng & rng, sized_range_tag)
+        static constexpr range_difference_t<Rng> impl_r(Rng & rng, sized_range_tag)
         {
             return static_cast<range_difference_t<Rng>>(size(rng));
         }

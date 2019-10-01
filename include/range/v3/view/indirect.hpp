@@ -129,7 +129,7 @@ namespace ranges
 
         /// \relates indirect_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<indirect_fn>, indirect)
+        RANGES_INLINE_VARIABLE(view_closure<indirect_fn>, indirect)
     } // namespace views
     /// @}
 } // namespace ranges

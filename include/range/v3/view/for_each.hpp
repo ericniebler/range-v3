@@ -38,17 +38,8 @@ namespace ranges
         /// Lazily applies an unary function to each element in the source
         /// range that returns another range (possibly empty), flattening
         /// the result.
-        struct for_each_fn
+        struct for_each_base_fn
         {
-        private:
-            friend view_access;
-            template<typename Fun>
-            static constexpr auto bind(for_each_fn for_each, Fun fun)
-            {
-                return make_pipeable(bind_back(for_each, std::move(fun)));
-            }
-
-        public:
             template<typename Rng, typename Fun>
             constexpr auto CPP_fun(operator())(Rng && rng, Fun fun)(
                 const requires viewable_range<Rng> && transformable_range<Rng, Fun> &&
@@ -58,9 +49,20 @@ namespace ranges
             }
         };
 
+        struct for_each_fn : for_each_base_fn
+        {
+            using for_each_base_fn::operator();
+
+            template<typename Fun>
+            constexpr auto operator()(Fun fun) const
+            {
+                return make_view_closure(bind_back(for_each_base_fn{}, std::move(fun)));
+            }
+        };
+
         /// \relates for_each_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<for_each_fn>, for_each)
+        RANGES_INLINE_VARIABLE(for_each_fn, for_each)
     } // namespace views
 
     struct yield_fn

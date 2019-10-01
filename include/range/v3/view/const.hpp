@@ -119,7 +119,7 @@ namespace ranges
 
         /// \relates const_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<const_fn>, const_)
+        RANGES_INLINE_VARIABLE(view_closure<const_fn>, const_)
     } // namespace views
     /// @}
 } // namespace ranges

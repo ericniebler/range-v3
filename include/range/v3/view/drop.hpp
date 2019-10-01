@@ -130,16 +130,9 @@ namespace ranges
 
     namespace views
     {
-        struct drop_fn
+        struct drop_base_fn
         {
         private:
-            friend view_access;
-            template<typename Int>
-            static constexpr auto CPP_fun(bind)(drop_fn drop, Int n)( //
-                requires integral<Int>)
-            {
-                return make_pipeable(bind_back(drop, n));
-            }
             template<typename Rng>
             static auto impl_(Rng && rng, range_difference_t<Rng> n, input_range_tag)
                 -> drop_view<all_t<Rng>>
@@ -158,15 +151,29 @@ namespace ranges
         public:
             template<typename Rng>
             auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(
-                const requires viewable_range<Rng> && input_range<Rng>)
+                const //
+                requires viewable_range<Rng> && input_range<Rng>)
             {
-                return drop_fn::impl_(static_cast<Rng &&>(rng), n, range_tag_of<Rng>{});
+                return drop_base_fn::impl_(
+                    static_cast<Rng &&>(rng), n, range_tag_of<Rng>{});
+            }
+        };
+
+        struct drop_fn : drop_base_fn
+        {
+            using drop_base_fn::operator();
+
+            template<typename Int>
+            constexpr auto CPP_fun(operator())(Int n)(const //
+                                                      requires detail::integer_like_<Int>)
+            {
+                return make_view_closure(bind_back(drop_base_fn{}, n));
             }
         };
 
         /// \relates drop_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<drop_fn>, drop)
+        RANGES_INLINE_VARIABLE(drop_fn, drop)
     } // namespace views
 
     namespace cpp20

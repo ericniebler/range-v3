@@ -216,9 +216,8 @@ namespace ranges
 
     namespace views
     {
-        struct set_difference_fn
+        struct set_difference_base_fn
         {
-        public:
             template<typename Rng1, typename Rng2, typename C = less,
                      typename P1 = identity, typename P2 = identity>
             auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
@@ -237,9 +236,29 @@ namespace ranges
             }
         };
 
+        struct set_difference_fn : set_difference_base_fn
+        {
+            using set_difference_base_fn::operator();
+
+            template<typename Rng2, typename C = less, typename P1 = identity,
+                     typename P2 = identity>
+            constexpr auto CPP_fun(operator())(Rng2 && rng2, C && pred = C{},
+                                               P1 proj1 = P1{}, P2 proj2 = P2{})(
+                const //
+                requires viewable_range<Rng2> && input_range<Rng2> &&
+                (!range<C>))
+            {
+                return make_view_closure(bind_back(set_difference_base_fn{},
+                                                   all(rng2),
+                                                   static_cast<C &&>(pred),
+                                                   std::move(proj1),
+                                                   std::move(proj2)));
+            }
+        };
+
         /// \relates set_difference_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<set_difference_fn>, set_difference)
+        RANGES_INLINE_VARIABLE(set_difference_fn, set_difference)
     } // namespace views
     /// @}
 
@@ -367,9 +386,8 @@ namespace ranges
 
     namespace views
     {
-        struct set_intersection_fn
+        struct set_intersection_base_fn
         {
-        public:
             template<typename Rng1, typename Rng2, typename C = less,
                      typename P1 = identity, typename P2 = identity>
             auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
@@ -388,9 +406,29 @@ namespace ranges
             }
         };
 
+        struct set_intersection_fn : set_intersection_base_fn
+        {
+            using set_intersection_base_fn::operator();
+
+            template<typename Rng2, typename C = less, typename P1 = identity,
+                     typename P2 = identity>
+            constexpr auto CPP_fun(operator())(Rng2 && rng2, C && pred = C{},
+                                               P1 proj1 = P1{}, P2 proj2 = P2{})(
+                const //
+                requires viewable_range<Rng2> && input_range<Rng2> &&
+                (!range<C>))
+            {
+                return make_view_closure(bind_back(set_intersection_base_fn{},
+                                                   all(rng2),
+                                                   static_cast<C &&>(pred),
+                                                   std::move(proj1),
+                                                   std::move(proj2)));
+            }
+        };
+
         /// \relates set_intersection_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<set_intersection_fn>, set_intersection)
+        RANGES_INLINE_VARIABLE(set_intersection_fn, set_intersection)
     } // namespace views
     /// @}
 
@@ -544,7 +582,7 @@ namespace ranges
 
     namespace views
     {
-        struct set_union_fn
+        struct set_union_base_fn
         {
         public:
             template<typename Rng1, typename Rng2, typename C = less,
@@ -570,9 +608,29 @@ namespace ranges
             }
         };
 
+        struct set_union_fn : set_union_base_fn
+        {
+            using set_union_base_fn::operator();
+
+            template<typename Rng2, typename C = less, typename P1 = identity,
+                     typename P2 = identity>
+            constexpr auto CPP_fun(operator())(Rng2 && rng2, C && pred = C{},
+                                               P1 proj1 = P1{}, P2 proj2 = P2{})(
+                const //
+                requires viewable_range<Rng2> && input_range<Rng2> &&
+                (!range<C>))
+            {
+                return make_view_closure(bind_back(set_union_base_fn{},
+                                                   all(rng2),
+                                                   static_cast<C &&>(pred),
+                                                   std::move(proj1),
+                                                   std::move(proj2)));
+            }
+        };
+
         /// \relates set_union_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<set_union_fn>, set_union)
+        RANGES_INLINE_VARIABLE(set_union_fn, set_union)
     } // namespace views
     /// @}
 
@@ -754,9 +812,8 @@ namespace ranges
 
     namespace views
     {
-        struct set_symmetric_difference_fn
+        struct set_symmetric_difference_base_fn
         {
-        public:
             template<typename Rng1, typename Rng2, typename C = less,
                      typename P1 = identity, typename P2 = identity>
             auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
@@ -781,10 +838,29 @@ namespace ranges
             }
         };
 
+        struct set_symmetric_difference_fn : set_symmetric_difference_base_fn
+        {
+            using set_symmetric_difference_base_fn::operator();
+
+            template<typename Rng2, typename C = less, typename P1 = identity,
+                     typename P2 = identity>
+            constexpr auto CPP_fun(operator())(Rng2 && rng2, C && pred = C{},
+                                               P1 proj1 = P1{}, P2 proj2 = P2{})(
+                const //
+                requires viewable_range<Rng2> && input_range<Rng2> &&
+                (!range<C>))
+            {
+                return make_view_closure(bind_back(set_symmetric_difference_base_fn{},
+                                                   all(rng2),
+                                                   static_cast<C &&>(pred),
+                                                   std::move(proj1),
+                                                   std::move(proj2)));
+            }
+        };
+
         /// \relates set_symmetric_difference_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<set_symmetric_difference_fn>,
-                               set_symmetric_difference)
+        RANGES_INLINE_VARIABLE(set_symmetric_difference_fn, set_symmetric_difference)
     } // namespace views
     /// @}
 } // namespace ranges

@@ -204,55 +204,8 @@ namespace ranges
     namespace views
     {
         /// Returns a random sample of a range of length `size(range)`.
-        struct sample_fn
+        struct sample_base_fn
         {
-        private:
-            friend view_access;
-#ifdef RANGES_WORKAROUND_MSVC_OLD_LAMBDA
-            template<typename Size, typename URNG>
-            struct lamduh
-            {
-                Size n;
-                URNG & urng;
-
-                template<typename Rng>
-                auto operator()(Rng && rng) const
-                    -> invoke_result_t<sample_fn, Rng, range_difference_t<Rng>, URNG &>
-                {
-                    return sample_fn{}(static_cast<Rng &&>(rng),
-                                       static_cast<range_difference_t<Rng>>(n),
-                                       urng);
-                }
-            };
-
-            template<typename Size, typename URNG = detail::default_random_engine>
-            static auto CPP_fun(bind)(sample_fn, Size n,
-                                      URNG & urng = detail::get_random_engine())( //
-                requires integral<Size> && uniform_random_bit_generator<URNG>)
-            {
-                return make_pipeable(lamduh<Size, URNG>{std::move(n), urng});
-            }
-#else  // ^^^ workaround / no workaround vvv
-            template<typename Size, typename URNG = detail::default_random_engine>
-            static auto CPP_fun(bind)(sample_fn, Size n,
-                                      URNG & urng = detail::get_random_engine())( //
-                requires integral<Size> && uniform_random_bit_generator<URNG>)
-            {
-                return make_pipeable(
-                    [n, &urng](
-                        auto && rng) -> invoke_result_t<sample_fn,
-                                                        decltype(rng),
-                                                        range_difference_t<decltype(rng)>,
-                                                        URNG &> {
-                        return sample_fn{}(
-                            static_cast<decltype(rng)>(rng),
-                            static_cast<range_difference_t<decltype(rng)>>(n),
-                            urng);
-                    });
-            }
-#endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
-
-        public:
             template<typename Rng, typename URNG = detail::default_random_engine>
             auto operator()(Rng && rng, range_difference_t<Rng> sample_size,
                             URNG & generator = detail::get_random_engine()) const
@@ -269,9 +222,61 @@ namespace ranges
             }
         };
 
+        struct sample_fn : sample_base_fn
+        {
+            using sample_base_fn::operator();
+
+#ifdef RANGES_WORKAROUND_MSVC_OLD_LAMBDA
+            template<typename Size, typename URNG>
+            struct lamduh
+            {
+                Size n;
+                URNG & urng;
+
+                template<typename Rng>
+                auto operator()(Rng && rng) const
+                    -> invoke_result_t<sample_base_fn, Rng, range_difference_t<Rng>,
+                                       URNG &>
+                {
+                    return sample_base_fn{}(static_cast<Rng &&>(rng),
+                                            static_cast<range_difference_t<Rng>>(n),
+                                            urng);
+                }
+            };
+
+            template<typename Size, typename URNG = detail::default_random_engine>
+            constexpr auto CPP_fun(operator())(Size n,
+                                               URNG & urng = detail::get_random_engine())(
+                const //
+                requires integral<Size> && uniform_random_bit_generator<URNG>)
+            {
+                return make_view_closure(lamduh<Size, URNG>{std::move(n), urng});
+            }
+#else  // ^^^ workaround / no workaround vvv
+            template<typename Size, typename URNG = detail::default_random_engine>
+            constexpr auto CPP_fun(operator())(Size n,
+                                               URNG & urng = detail::get_random_engine())(
+                const //
+                requires integral<Size> && uniform_random_bit_generator<URNG>)
+            {
+                return make_view_closure(
+                    [n, &urng](
+                        auto && rng) -> invoke_result_t<sample_base_fn,
+                                                        decltype(rng),
+                                                        range_difference_t<decltype(rng)>,
+                                                        URNG &> {
+                        return sample_base_fn{}(
+                            static_cast<decltype(rng)>(rng),
+                            static_cast<range_difference_t<decltype(rng)>>(n),
+                            urng);
+                    });
+            }
+#endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
+        };
+
         /// \relates sample_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<sample_fn>, sample)
+        RANGES_INLINE_VARIABLE(sample_fn, sample)
     } // namespace views
     /// @}
 } // namespace ranges

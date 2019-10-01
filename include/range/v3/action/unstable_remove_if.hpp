@@ -36,17 +36,14 @@ namespace ranges
     {
         struct unstable_remove_if_fn
         {
-        private:
-            friend action_access;
             template<typename C, typename P = identity>
-            static auto CPP_fun(bind)(unstable_remove_if_fn unstable_remove_if, C pred,
-                                      P proj = P{})( //
-                requires(!range<C>))
+            constexpr auto CPP_fun(operator())(C pred, P proj = P{})(const //
+                                                                     requires(!range<C>))
             {
-                return bind_back(unstable_remove_if, std::move(pred), std::move(proj));
+                return make_action_closure(
+                    bind_back(unstable_remove_if_fn{}, std::move(pred), std::move(proj)));
             }
 
-        public:
             template<typename Rng, typename C, typename P = identity>
             auto operator()(Rng && rng, C pred, P proj = P{}) const -> CPP_ret(Rng)( //
                 requires bidirectional_range<Rng> && common_range<Rng> &&
@@ -63,10 +60,8 @@ namespace ranges
             }
         };
 
-        /// \ingroup group-actions
-        /// \sa `action`
         /// \sa `actions::unstable_remove_if_fn`
-        RANGES_INLINE_VARIABLE(action<unstable_remove_if_fn>, unstable_remove_if)
+        RANGES_INLINE_VARIABLE(unstable_remove_if_fn, unstable_remove_if)
     } // namespace actions
     /// @}
 } // namespace ranges

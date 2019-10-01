@@ -112,7 +112,7 @@ namespace ranges
 
         /// \relates move_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<move_fn>, move)
+        RANGES_INLINE_VARIABLE(view_closure<move_fn>, move)
     } // namespace views
     /// @}
 } // namespace ranges

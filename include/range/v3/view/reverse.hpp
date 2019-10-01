@@ -146,7 +146,7 @@ namespace ranges
 
         /// \relates reverse_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<reverse_fn>, reverse)
+        RANGES_INLINE_VARIABLE(view_closure<reverse_fn>, reverse)
     } // namespace views
 
     namespace cpp20

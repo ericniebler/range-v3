@@ -33,18 +33,8 @@ namespace ranges
     /// @{
     namespace views
     {
-        struct unique_fn
+        struct unique_base_fn
         {
-        private:
-            friend view_access;
-            template<typename C>
-            static constexpr auto CPP_fun(bind)(unique_fn unique, C pred)( //
-                requires(!range<C>))
-            {
-                return bind_back(unique, std::move(pred));
-            }
-
-        public:
             template<typename Rng, typename C = equal_to>
             constexpr auto operator()(Rng && rng, C pred = {}) const
                 -> CPP_ret(adjacent_filter_view<all_t<Rng>, logical_negate<C>>)( //
@@ -55,9 +45,22 @@ namespace ranges
             }
         };
 
+        struct unique_fn : unique_base_fn
+        {
+            using unique_base_fn::operator();
+
+            template<typename C>
+            constexpr auto CPP_fun(operator())(C && pred)(const //
+                                                          requires(!range<C>))
+            {
+                return make_view_closure(
+                    bind_back(unique_base_fn{}, static_cast<C &&>(pred)));
+            }
+        };
+
         /// \relates unique_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<unique_fn>, unique)
+        RANGES_INLINE_VARIABLE(view_closure<unique_fn>, unique)
     } // namespace views
     /// @}
 } // namespace ranges

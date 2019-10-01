@@ -34,17 +34,15 @@ namespace ranges
     {
         struct adjacent_remove_if_fn
         {
-        private:
-            friend action_access;
             template<typename Pred, typename Proj = identity>
-            static auto CPP_fun(bind)(adjacent_remove_if_fn adjacent_remove_if, Pred pred,
-                                      Proj proj = {})( //
-                requires(!range<Pred>))
+            constexpr auto CPP_fun(operator())(Pred pred,
+                                               Proj proj = {})(const //
+                                                               requires(!range<Pred>))
             {
-                return bind_back(adjacent_remove_if, std::move(pred), std::move(proj));
+                return make_action_closure(
+                    bind_back(adjacent_remove_if_fn{}, std::move(pred), std::move(proj)));
             }
 
-        public:
             template<typename Rng, typename Pred, typename Proj = identity>
             auto operator()(Rng && rng, Pred pred, Proj proj = {}) const
                 -> CPP_ret(Rng)( //
@@ -59,10 +57,8 @@ namespace ranges
             }
         };
 
-        /// \ingroup group-actions
-        /// \sa action
-        /// \sa with_braced_init_args
-        RANGES_INLINE_VARIABLE(action<adjacent_remove_if_fn>, adjacent_remove_if)
+        /// \relates actions::adjacent_remove_if_fn
+        RANGES_INLINE_VARIABLE(adjacent_remove_if_fn, adjacent_remove_if)
     } // namespace actions
     /// @}
 } // namespace ranges

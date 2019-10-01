@@ -33,15 +33,8 @@ namespace ranges
     {
         struct shuffle_fn
         {
-        private:
-            friend action_access;
-            template<typename Gen>
-            static auto CPP_fun(bind)(shuffle_fn shuffle, Gen && gen)( //
-                requires uniform_random_bit_generator<Gen>)
-            {
-                return bind_back(shuffle, static_cast<Gen &&>(gen));
-            }
 #ifdef RANGES_WORKAROUND_MSVC_OLD_LAMBDA
+        private:
             template<typename Gen>
             struct lamduh
             {
@@ -55,25 +48,37 @@ namespace ranges
                 }
             };
 
+        public:
             template<typename Gen>
-            static lamduh<Gen> CPP_fun(bind)(shuffle_fn, Gen & gen)( //
+            constexpr auto CPP_fun(operator())(Gen & gen)(
+                const //
                 requires uniform_random_bit_generator<Gen>)
             {
-                return {gen};
+                return make_action_closure(lamduh<Gen>{gen});
             }
 #else  // ^^^ workaround / no workaround vvv
             template<typename Gen>
-            static auto CPP_fun(bind)(shuffle_fn, Gen & gen)( //
+            constexpr auto CPP_fun(operator())(Gen & gen)(
+                const //
                 requires uniform_random_bit_generator<Gen>)
             {
-                return [&gen](auto && rng)
-                           -> invoke_result_t<shuffle_fn, decltype(rng), Gen &> {
-                    return shuffle_fn{}(static_cast<decltype(rng)>(rng), gen);
-                };
+                return make_action_closure(
+                    [&gen](auto && rng)
+                        -> invoke_result_t<shuffle_fn, decltype(rng), Gen &> {
+                        return shuffle_fn{}(static_cast<decltype(rng)>(rng), gen);
+                    });
             }
 #endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
 
-        public:
+            template<typename Gen>
+            constexpr auto CPP_fun(operator())(Gen && gen)(
+                const //
+                requires uniform_random_bit_generator<Gen>)
+            {
+                return make_action_closure(
+                    bind_back(shuffle_fn{}, static_cast<Gen &&>(gen)));
+            }
+
             template<typename Rng, typename Gen>
             auto operator()(Rng && rng, Gen && gen) const -> CPP_ret(Rng)( //
                 requires random_access_range<Rng> && permutable<iterator_t<Rng>> &&
@@ -85,10 +90,9 @@ namespace ranges
             }
         };
 
-        /// \ingroup group-actions
-        /// \relates shuffle_fn
-        /// \sa `action`
-        RANGES_INLINE_VARIABLE(action<shuffle_fn>, shuffle)
+        /// \relates actions::shuffle_fn
+        /// \sa `action_closure`
+        RANGES_INLINE_VARIABLE(shuffle_fn, shuffle)
     } // namespace actions
     /// @}
 } // namespace ranges

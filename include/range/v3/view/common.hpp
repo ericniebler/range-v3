@@ -181,7 +181,7 @@ namespace ranges
 
         /// \relates common_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<common_fn>, common)
+        RANGES_INLINE_VARIABLE(view_closure<common_fn>, common)
     } // namespace views
     /// @}
 
@@ -213,8 +213,8 @@ namespace ranges
     {
         namespace views
         {
-            RANGES_INLINE_VARIABLE(ranges::views::view<ranges::views::cpp20_common_fn>,
-                                   common)
+            RANGES_INLINE_VARIABLE(
+                ranges::views::view_closure<ranges::views::cpp20_common_fn>, common)
         }
         CPP_template(typename Rng)(                      //
             requires view_<Rng> && (!common_range<Rng>)) //

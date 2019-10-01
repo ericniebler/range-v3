@@ -23,7 +23,6 @@
 #include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/invoke.hpp>
-#include <range/v3/functional/pipeable.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -96,27 +95,14 @@ namespace ranges
 
     namespace views
     {
-        struct trim_fn
+        struct trim_base_fn
         {
-        private:
-            friend view_access;
-            template<typename Pred>
-            static constexpr auto bind(trim_fn trim, Pred pred)
-            {
-                return make_pipeable(bind_back(trim, std::move(pred)));
-            }
-            template<typename Pred, typename Proj>
-            static constexpr auto bind(trim_fn trim, Pred pred, Proj proj)
-            {
-                return make_pipeable(bind_back(trim, std::move(pred), std::move(proj)));
-            }
-
-        public:
             template<typename Rng, typename Pred>
-            constexpr auto operator()(Rng && rng, Pred pred) const -> CPP_ret(
-                trim_view<all_t<Rng>, Pred>)( //
-                requires viewable_range<Rng> && bidirectional_range<Rng> &&
-                    indirect_unary_predicate<Pred, iterator_t<Rng>> && common_range<Rng>)
+            constexpr auto operator()(Rng && rng, Pred pred) const //
+                -> CPP_ret(trim_view<all_t<Rng>, Pred>)(           //
+                    requires viewable_range<Rng> && bidirectional_range<Rng> &&
+                        indirect_unary_predicate<Pred, iterator_t<Rng>> &&
+                            common_range<Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
@@ -132,9 +118,28 @@ namespace ranges
             }
         };
 
+        struct trim_fn : trim_base_fn
+        {
+            using trim_base_fn::operator();
+
+            template<typename Pred>
+            constexpr auto operator()(Pred pred) const
+            {
+                return make_view_closure(bind_back(trim_base_fn{}, std::move(pred)));
+            }
+            template<typename Pred, typename Proj>
+            constexpr auto CPP_fun(operator())(Pred && pred,
+                                               Proj proj)(const //
+                                                          requires(!range<Pred>))
+            {
+                return make_view_closure(bind_back(
+                    trim_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));
+            }
+        };
+
         /// \relates trim_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<trim_fn>, trim)
+        RANGES_INLINE_VARIABLE(trim_fn, trim)
     } // namespace views
     /// @}
 } // namespace ranges

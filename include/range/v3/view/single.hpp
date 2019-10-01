@@ -82,7 +82,7 @@ namespace ranges
         {
             return data() + 1;
         }
-        constexpr static std::size_t size() noexcept
+        static constexpr std::size_t size() noexcept
         {
             return 1u;
         }

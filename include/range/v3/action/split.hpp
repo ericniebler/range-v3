@@ -37,18 +37,13 @@ namespace ranges
     {
         struct split_fn
         {
-        private:
-            friend action_access;
             template<typename Rng>
-            using split_value_t = meta::if_c<(bool)ranges::container<Rng>, uncvref_t<Rng>,
-                                             std::vector<range_value_t<Rng>>>;
+            using split_value_t =
+                meta::if_c<(bool)ranges::container<Rng>, //
+                           uncvref_t<Rng>, std::vector<range_value_t<Rng>>>;
 
-            template<typename T>
-            static auto bind(split_fn split, T && val)
-            {
-                return bind_back(split, static_cast<T &&>(val));
-            }
 #ifdef RANGES_WORKAROUND_MSVC_OLD_LAMBDA
+        private:
             template<typename T, std::size_t N>
             struct lamduh
             {
@@ -62,24 +57,30 @@ namespace ranges
                 }
             };
 
+        public:
             template<typename T, std::size_t N>
-            static auto bind(split_fn, T (&val)[N])
+            constexpr auto operator()(T (&val)[N]) const
             {
-                return lamduh<T, N>{val};
+                return make_action_closure(lamduh<T, N>{val});
             }
 #else  // ^^^ workaround / no workaround vvv
             template<typename T, std::size_t N>
-            static auto bind(split_fn, T (&val)[N])
+            constexpr auto operator()(T (&val)[N]) const
             {
-                return [&val](auto && rng)
-                           -> invoke_result_t<split_fn, decltype(rng), T(&)[N]>
-                {
-                    return split_fn{}(static_cast<decltype(rng)>(rng), val);
-                };
+                return make_action_closure(
+                    [&val](auto && rng)
+                        -> invoke_result_t<split_fn, decltype(rng), T(&)[N]> {
+                        return split_fn{}(static_cast<decltype(rng)>(rng), val);
+                    });
             }
 #endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
 
-        public:
+            template<typename T>
+            constexpr auto operator()(T && t) const
+            {
+                return make_action_closure(bind_back(split_fn{}, static_cast<T &&>(t)));
+            }
+
             // BUGBUG something is not right with the actions. It should be possible
             // to move a container into a split and have elements moved into the result.
             template<typename Rng>
@@ -91,6 +92,7 @@ namespace ranges
                 return views::split(rng, std::move(val)) |
                        to<std::vector<split_value_t<Rng>>>();
             }
+
             template<typename Rng, typename Pattern>
             auto operator()(Rng && rng, Pattern && pattern) const
                 -> CPP_ret(std::vector<split_value_t<Rng>>)( //
@@ -104,10 +106,8 @@ namespace ranges
             }
         };
 
-        /// \ingroup group-actions
-        /// \relates split_fn
-        /// \sa action
-        RANGES_INLINE_VARIABLE(action<split_fn>, split)
+        /// \relates actions::split_fn
+        RANGES_INLINE_VARIABLE(split_fn, split)
     } // namespace actions
     /// @}
 } // namespace ranges

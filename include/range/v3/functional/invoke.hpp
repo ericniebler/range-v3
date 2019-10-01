@@ -82,7 +82,7 @@ namespace ranges
     {
     private:
         template<class, class T1>
-        constexpr static decltype(auto) CPP_fun(coerce)(T1 && t1, long)( //
+        static constexpr decltype(auto) CPP_fun(coerce)(T1 && t1, long)( //
             noexcept(noexcept(*static_cast<T1 &&>(t1)))                  //
             requires detail::dereferenceable_<T1>)
         {
@@ -90,14 +90,14 @@ namespace ranges
         }
 
         template<class T, class T1>
-        constexpr static auto coerce(T1 && t1, int) noexcept -> CPP_ret(T1 &&)( //
+        static constexpr auto coerce(T1 && t1, int) noexcept -> CPP_ret(T1 &&)( //
             requires derived_from<detail::decay_t<T1>, T>)
         {
             return static_cast<T1 &&>(t1);
         }
 
         template<class, class T1>
-        constexpr static decltype(auto) CPP_fun(coerce)(T1 && t1, int)(
+        static constexpr decltype(auto) CPP_fun(coerce)(T1 && t1, int)(
             noexcept(true) //
             requires detail::is_reference_wrapper_v<detail::decay_t<T1>>)
         {

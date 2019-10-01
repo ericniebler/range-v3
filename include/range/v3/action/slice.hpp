@@ -36,46 +36,47 @@ namespace ranges
         struct slice_fn
         {
         private:
-            friend action_access;
-
             template<typename D>
             using diff_t = range_difference_t<D>;
 
+        public:
             // Overloads for the pipe syntax: rng | actions::slice(from, to)
             template<typename D>
-            static auto CPP_fun(bind)(slice_fn slice, D from, D to)( //
-                requires integral<D>)
+            constexpr auto CPP_fun(operator())(D from, D to)(const //
+                                                             requires integral<D>)
             {
-                return bind_back(slice, from, to);
+                return make_action_closure(bind_back(slice_fn{}, from, to));
             }
             template<typename D>
-            static auto CPP_fun(bind)(slice_fn slice, D from, detail::from_end_<D> to)( //
+            constexpr auto CPP_fun(operator())(D from, detail::from_end_<D> to)(
+                const //
                 requires integral<D>)
             {
-                return bind_back(slice, from, to);
+                return make_action_closure(bind_back(slice_fn{}, from, to));
             }
             template<typename D>
-            static auto CPP_fun(bind)(slice_fn slice, detail::from_end_<D> from,
-                                      detail::from_end_<D> to)( //
+            constexpr auto CPP_fun(operator())(detail::from_end_<D> from,
+                                               detail::from_end_<D> to)(
+                const //
                 requires integral<D>)
             {
-                return bind_back(slice, from, to);
+                return make_action_closure(bind_back(slice_fn{}, from, to));
             }
             template<typename D>
-            static auto CPP_fun(bind)(slice_fn slice, D from, end_fn const & to)( //
-                requires integral<D>)
+            constexpr auto CPP_fun(operator())(D from,
+                                               end_fn const & to)(const //
+                                                                  requires integral<D>)
             {
-                return bind_back(slice, from, to);
+                return make_action_closure(bind_back(slice_fn{}, from, to));
             }
             template<typename D>
-            static auto CPP_fun(bind)(slice_fn slice, detail::from_end_<D> from,
-                                      end_fn const & to)( //
-                requires integral<D>)
+            constexpr auto CPP_fun(operator())(detail::from_end_<D> from,
+                                               end_fn const & to)(const //
+                                                                  requires integral<D>)
             {
-                return bind_back(slice, from, to);
+                return make_action_closure(bind_back(slice_fn{}, from, to));
             }
 
-        public:
             template<typename Rng, typename I = iterator_t<Rng>>
             auto operator()(Rng && rng, diff_t<Rng> from, diff_t<Rng> to) const
                 -> CPP_ret(Rng)( //
@@ -143,10 +144,8 @@ namespace ranges
             }
         };
 
-        /// \ingroup group-actions
-        /// \relates slice_fn
-        /// \sa action
-        RANGES_INLINE_VARIABLE(action<slice_fn>, slice)
+        /// \relates actions::slice_fn
+        RANGES_INLINE_VARIABLE(slice_fn, slice)
     } // namespace actions
     /// @}
 } // namespace ranges

@@ -134,7 +134,7 @@ namespace ranges
 
         /// \relates const_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<ref_fn>, ref)
+        RANGES_INLINE_VARIABLE(ref_fn, ref)
     } // namespace views
 
     namespace cpp20

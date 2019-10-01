@@ -687,7 +687,7 @@ namespace ranges
         // Optionally support hooking iter_move when the cursor sports a
         // move() member function.
         template<typename C = Cur>
-        constexpr friend auto iter_move(basic_iterator const & it) noexcept(
+        friend constexpr auto iter_move(basic_iterator const & it) noexcept(
             noexcept(range_access::move(std::declval<C const &>())))
             -> CPP_broken_friend_ret(
                 decltype(range_access::move(std::declval<C const &>())))( //

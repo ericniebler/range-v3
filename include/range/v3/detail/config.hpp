@@ -324,7 +324,8 @@ namespace ranges
 #define RANGES_WORKAROUND_CLANG_23135 // constexpr leads to premature instantiation on
                                       // clang-3.x
 #endif
-#else // __GNUC__
+#define RANGES_WORKAROUND_CLANG_43400 // template friend is redefinition of itself
+#else                                 // __GNUC__
 #if __GNUC__ < 6
 #define RANGES_WORKAROUND_GCC_UNFILED0 /* Workaround old GCC name lookup bug */
 #endif
@@ -592,9 +593,7 @@ namespace ranges
     }                         \
     ;                         \
     RANGES_INLINE_VARIABLE(NAME##_fn, NAME)
-#define RANGES_FUNC(NAME) operator()                                                    \
-    RANGES_FUNC_CONST_                                                                  \
-    /**/
+#define RANGES_FUNC(NAME) operator() RANGES_FUNC_CONST_ /**/
 #define RANGES_FUNC_CONST_(...) (__VA_ARGS__) const
 #else
 #define RANGES_FUNC_BEGIN(NAME)
