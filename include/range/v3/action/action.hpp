@@ -47,28 +47,7 @@ namespace ranges
 
     namespace actions
     {
-#ifdef RANGES_WORKAROUND_CLANG_43400
-        namespace action_closure_base_detail
-        {
-            struct hook
-            {};
-
-            template<typename Rng, typename ActionFn>   // ******************************
-            constexpr auto                              // ******************************
-            operator|(Rng &,                            // ********* READ THIS **********
-                      action_closure<ActionFn> const &) // ****** IF YOUR COMPILE *******
-                -> CPP_ret(Rng)(                        // ******** BREAKS HERE *********
-                    requires range<Rng>) = delete;      // ******************************
-            // **************************************************************************
-            // *    When piping a range into an action, the range must be moved in.     *
-            // **************************************************************************
-        } // namespace action_closure_base_detail
-#endif    // RANGES_WORKAROUND_CLANG_43400
-
-        struct action_closure_base
-#ifdef RANGES_WORKAROUND_CLANG_43400
-          : private action_closure_base_detail::hook
-#endif // RANGES_WORKAROUND_CLANG_43400
+        struct RANGES_STRUCT_WITH_ADL_BARRIER(action_closure_base)
         {
             // Piping requires things are passed by value.
             CPP_template(typename Rng, typename ActionFn)(                        //
@@ -110,6 +89,21 @@ namespace ranges
                 return rng;
             }
         };
+
+#ifdef RANGES_WORKAROUND_CLANG_43400
+        namespace RANGES_ADL_BARRIER_FOR(action_closure_base)
+        {
+            template<typename Rng, typename ActionFn>   // ******************************
+            constexpr auto                              // ******************************
+            operator|(Rng &,                            // ********* READ THIS **********
+                      action_closure<ActionFn> const &) // ****** IF YOUR COMPILE *******
+                ->CPP_ret(Rng)(                         // ******** BREAKS HERE *********
+                    requires range<Rng>) = delete;      // ******************************
+            // **************************************************************************
+            // *    When piping a range into an action, the range must be moved in.     *
+            // **************************************************************************
+        } // namespace )
+#endif    // RANGES_WORKAROUND_CLANG_43400
 
         template<typename ActionFn>
         struct RANGES_EMPTY_BASES action_closure

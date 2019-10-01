@@ -44,18 +44,33 @@ namespace ranges
     {
         struct to_container
         {
-            template<typename ToContainer>
+            template<typename MetaFn>
             struct fn;
 
-            template<typename ToContainer, typename Rng>
-            using container_t = meta::invoke<ToContainer, Rng>;
+            template<typename MetaFn, typename Fn>
+            struct closure;
 
-            template<typename Rng, typename ToContainer>
-            friend auto operator|(Rng && rng, fn<ToContainer> (*)(to_container))
-                -> CPP_broken_friend_ret(container_t<ToContainer, Rng>)( //
-                    requires invocable<fn<ToContainer>, Rng>)
+            template<typename MetaFn, typename Rng>
+            using container_t = meta::invoke<MetaFn, Rng>;
+
+            template<typename Rng, typename MetaFn>
+            friend auto operator|(Rng && rng,
+                                  closure<MetaFn, fn<MetaFn>> (*)(to_container))
+                -> CPP_broken_friend_ret(container_t<MetaFn, Rng>)( //
+                    requires invocable<fn<MetaFn>, Rng>)
             {
-                return fn<ToContainer>{}(static_cast<Rng &&>(rng));
+                return fn<MetaFn>{}(static_cast<Rng &&>(rng));
+            }
+
+            template<typename MetaFn, typename Pipeable>
+            friend auto operator|(closure<MetaFn, fn<MetaFn>> (*)(to_container),
+                                  Pipeable pipe)
+                -> CPP_broken_friend_ret(
+                    closure<MetaFn, composed<Pipeable, fn<MetaFn>>>)( //
+                    requires(is_pipeable_v<Pipeable>))
+            {
+                return closure<MetaFn, composed<Pipeable, fn<MetaFn>>>{
+                    compose(static_cast<Pipeable &&>(pipe), fn<MetaFn>{})};
             }
         };
 
@@ -192,7 +207,7 @@ namespace ranges
         CPP_def
         (
             template(typename Rng, typename Cont)
-            concept convertible_to_container_impl_,
+            concept convertible_to_cont_impl_,
                 range<Cont> && (!view_<Cont>) && move_constructible<Cont> &&
                 constructible_from<range_value_t<Cont>, range_reference_t<Rng>> &&
                 constructible_from<
@@ -204,7 +219,7 @@ namespace ranges
         CPP_def
         (
             template(typename Rng, typename Cont)
-            concept convertible_to_container_container_impl_,
+            concept convertible_to_cont_cont_impl_,
                 range<Cont> && (!view_<Cont>) && move_constructible<Cont> &&
                 (bool(ranges::defer::range<range_value_t<Cont>> &&
                     !ranges::defer::view_<range_value_t<Cont>>)) &&
@@ -222,17 +237,17 @@ namespace ranges
         CPP_def
         (
             template(typename Rng, typename Cont)
-            concept convertible_to_container,
+            concept convertible_to_cont,
                 defer::has_allocator_type<Cont> && // HACKHACK
-                defer::convertible_to_container_impl_<Rng, Cont>
+                defer::convertible_to_cont_impl_<Rng, Cont>
         );
 
         CPP_def
         (
             template(typename Rng, typename Cont)
-            concept convertible_to_container_container,
+            concept convertible_to_cont_cont,
                 defer::has_allocator_type<Cont> && // HACKHACK
-                defer::convertible_to_container_container_impl_<Rng, Cont>
+                defer::convertible_to_cont_cont_impl_<Rng, Cont>
         );
 
         CPP_def
@@ -244,8 +259,47 @@ namespace ranges
         );
         // clang-format on
 
+        struct RANGES_STRUCT_WITH_ADL_BARRIER(to_container_closure_base)
+        {
+            template<typename MetaFn, typename Rng>
+            using container_t = meta::invoke<MetaFn, Rng>;
+
+            CPP_template(typename Rng, typename MetaFn, typename Fn)(              //
+                requires input_range<Rng> &&                                       //
+                (bool(defer::convertible_to_cont_cont<Rng,                         //
+                                                      container_t<MetaFn, Rng>> || //
+                      defer::convertible_to_cont<Rng, container_t<MetaFn, Rng>>))) //
+                friend constexpr auto
+                operator|(Rng && rng, to_container::closure<MetaFn, Fn> fn)
+            {
+                return static_cast<Fn &&>(fn)(static_cast<Rng &&>(rng));
+            }
+
+            template<typename MetaFn, typename Fn, typename Pipeable>
+            friend constexpr auto operator|(to_container::closure<MetaFn, Fn> sh,
+                                            Pipeable pipe)
+                -> CPP_broken_friend_ret(
+                    to_container::closure<MetaFn, composed<Pipeable, Fn>>)(
+                    requires(is_pipeable_v<Pipeable>))
+            {
+                return to_container::closure<MetaFn, composed<Pipeable, Fn>>{
+                    compose(static_cast<Pipeable &&>(pipe), static_cast<Fn &&>(sh))};
+            }
+        };
+
+        template<typename MetaFn, typename Fn>
+        struct to_container::closure
+          : to_container_closure_base
+          , Fn
+        {
+            closure() = default;
+            constexpr explicit closure(Fn fn)
+              : Fn(static_cast<Fn &&>(fn))
+            {}
+        };
+
         template<typename ToContainer>
-        struct to_container::fn : pipeable_base
+        struct to_container::fn
         {
         private:
             template<typename Cont, typename I, typename Rng>
@@ -270,11 +324,11 @@ namespace ranges
 
         public:
             template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(container_t<Rng>)(           //
-                requires input_range<Rng> &&                                          //
-                (bool(!defer::convertible_to_container_container<Rng,                 //
-                                                                 container_t<Rng>> && //
-                      defer::convertible_to_container<Rng, container_t<Rng>>)))
+            auto operator()(Rng && rng) const -> CPP_ret(container_t<Rng>)( //
+                requires input_range<Rng> &&                                //
+                (bool(!defer::convertible_to_cont_cont<Rng,                 //
+                                                       container_t<Rng>> && //
+                      defer::convertible_to_cont<Rng, container_t<Rng>>)))
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Attempt to convert an infinite range to a container.");
@@ -287,7 +341,7 @@ namespace ranges
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(container_t<Rng>)( //
                 requires input_range<Rng> &&                                //
-                    convertible_to_container_container<Rng, container_t<Rng>>)
+                    convertible_to_cont_cont<Rng, container_t<Rng>>)
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Attempt to convert an infinite range to a container.");
@@ -299,8 +353,11 @@ namespace ranges
             }
         };
 
-        template<typename ToContainer>
-        using to_container_fn = to_container::fn<ToContainer>;
+        template<typename MetaFn, typename Fn>
+        using to_container_closure = to_container::closure<MetaFn, Fn>;
+
+        template<typename MetaFn>
+        using to_container_fn = to_container_closure<MetaFn, to_container::fn<MetaFn>>;
 
         template<template<typename...> class ContT>
         struct from_range
@@ -351,7 +408,7 @@ namespace ranges
         template<template<typename...> class ContT, typename Rng>
         auto to(Rng && rng) -> CPP_ret(ContT<range_value_t<Rng>>)( //
             requires range<Rng> &&
-                detail::convertible_to_container<Rng, ContT<range_value_t<Rng>>>)
+                detail::convertible_to_cont<Rng, ContT<range_value_t<Rng>>>)
         {
             return detail::to_container_fn<detail::from_range<ContT>>{}(
                 static_cast<Rng &&>(rng));
@@ -368,7 +425,7 @@ namespace ranges
         /// \overload
         template<typename Cont, typename Rng>
         auto to(Rng && rng) -> CPP_ret(Cont)( //
-            requires range<Rng> && detail::convertible_to_container<Rng, Cont>)
+            requires range<Rng> && detail::convertible_to_cont<Rng, Cont>)
         {
             return detail::to_container_fn<meta::id<Cont>>{}(static_cast<Rng &&>(rng));
         }
@@ -377,13 +434,13 @@ namespace ranges
         // Slightly odd initializer_list overloads, undocumented for now.
         template<template<typename...> class ContT, typename T>
         auto to(std::initializer_list<T> il) -> CPP_ret(ContT<T>)( //
-            requires detail::convertible_to_container<std::initializer_list<T>, ContT<T>>)
+            requires detail::convertible_to_cont<std::initializer_list<T>, ContT<T>>)
         {
             return detail::to_container_fn<detail::from_range<ContT>>{}(il);
         }
         template<typename Cont, typename T>
         auto to(std::initializer_list<T> il) -> CPP_ret(Cont)( //
-            requires detail::convertible_to_container<std::initializer_list<T>, Cont>)
+            requires detail::convertible_to_cont<std::initializer_list<T>, Cont>)
         {
             return detail::to_container_fn<meta::id<Cont>>{}(il);
         }
@@ -411,14 +468,14 @@ namespace ranges
         RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
         auto to_(Rng && rng) -> CPP_ret(ContT<range_value_t<Rng>>)( //
             requires range<Rng> &&
-                detail::convertible_to_container<Rng, ContT<range_value_t<Rng>>>)
+                detail::convertible_to_cont<Rng, ContT<range_value_t<Rng>>>)
         {
             return static_cast<Rng &&>(rng) | ranges::to_<ContT>();
         }
         template<template<typename...> class ContT, typename T>
         RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
         auto to_(std::initializer_list<T> il) -> CPP_ret(ContT<T>)( //
-            requires detail::convertible_to_container<std::initializer_list<T>, ContT<T>>)
+            requires detail::convertible_to_cont<std::initializer_list<T>, ContT<T>>)
         {
             return il | ranges::to_<ContT>();
         }
@@ -431,19 +488,23 @@ namespace ranges
         template<typename Cont, typename Rng>
         RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
         auto to_(Rng && rng) -> CPP_ret(Cont)( //
-            requires range<Rng> && detail::convertible_to_container<Rng, Cont>)
+            requires range<Rng> && detail::convertible_to_cont<Rng, Cont>)
         {
             return static_cast<Rng &&>(rng) | ranges::to_<Cont>();
         }
         template<typename Cont, typename T>
         RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
         auto to_(std::initializer_list<T> list) -> CPP_ret(Cont)( //
-            requires detail::convertible_to_container<std::initializer_list<T>, Cont>)
+            requires detail::convertible_to_cont<std::initializer_list<T>, Cont>)
         {
             return list | ranges::to_<Cont>();
         }
     } // namespace _to_
     /// \endcond
+
+    template<typename MetaFn, typename Fn>
+    RANGES_INLINE_VAR constexpr bool
+        is_pipeable_v<detail::to_container_closure<MetaFn, Fn>> = true;
 } // namespace ranges
 
 #endif
