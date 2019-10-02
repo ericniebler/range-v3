@@ -71,11 +71,12 @@ namespace ranges
 #endif // RANGES_WORKAROUND_CLANG_43400
         {
             // Piping requires things are passed by value.
-            CPP_template(typename Rng, typename ActionFn)(         //
-                requires(!std::is_lvalue_reference<Rng>::value) && //
-                         range<Rng> && invocable<ActionFn, Rng &>) //
+            CPP_template(typename Rng, typename ActionFn)(                     //
+                requires(!std::is_lvalue_reference<Rng>::value) && range<Rng>) //
                 friend constexpr auto
-                operator|(Rng && rng, action_closure<ActionFn> act)
+                operator|(Rng && rng, action_closure<ActionFn> act)      //
+                -> CPP_ret(aux::move_t<invoke_result_t<ActionFn, Rng>>)( //
+                    requires invocable<ActionFn, Rng &>)
             {
                 return aux::move(static_cast<ActionFn &&>(act)(rng));
             }

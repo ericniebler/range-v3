@@ -113,10 +113,12 @@ namespace ranges
 #endif // RANGES_WORKAROUND_CLANG_43400
         {
             // Piping requires viewable_ranges.
-            CPP_template(typename Rng, typename ViewFn)(                //
-                requires viewable_range<Rng> && invocable<ViewFn, Rng>) //
+            CPP_template(typename Rng, typename ViewFn)( //
+                requires viewable_range<Rng>)            //
                 friend constexpr auto
                 operator|(Rng && rng, view_closure<ViewFn> vw)
+                    -> CPP_ret(invoke_result_t<ViewFn, Rng>)( //
+                        requires invocable<ViewFn, Rng>)
             {
                 return static_cast<ViewFn &&>(vw)(static_cast<Rng &&>(rng));
             }
