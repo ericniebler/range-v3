@@ -198,9 +198,9 @@ int main()
     // Use ranges::to in a closure with an action
     {
 #ifdef RANGES_WORKAROUND_MSVC_779708
-        auto closure = ranges::to<std::vector>() | action::sort;
+        auto closure = ranges::to<std::vector>() | actions::sort;
 #else // ^^^ workaround / no workaround vvv
-        auto closure = ranges::to<std::vector> | action::sort;
+        auto closure = ranges::to<std::vector> | actions::sort;
 #endif // RANGES_WORKAROUND_MSVC_779708
 
         auto r = views::ints(1, 4) | views::reverse;
