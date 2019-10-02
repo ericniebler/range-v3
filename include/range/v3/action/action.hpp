@@ -70,12 +70,23 @@ namespace ranges
           : private action_closure_base_detail::hook
 #endif // RANGES_WORKAROUND_CLANG_43400
         {
+            /// \cond
+#if CPP_CXX_CONCEPTS
+            template<typename Fn, typename Rng>
+            using invoke_result_t = //
+                invoke_result_t<    //
+                    std::enable_if_t<
+                        !std::is_lvalue_reference<Rng>::value && (bool)range<Rng>, Fn>,
+                    Rng>;
+#endif
+            /// \cond
+
             // Piping requires things are passed by value.
             CPP_template(typename Rng, typename ActionFn)(                     //
                 requires(!std::is_lvalue_reference<Rng>::value) && range<Rng>) //
                 friend constexpr auto
-                operator|(Rng && rng, action_closure<ActionFn> act)      //
-                -> CPP_ret(aux::move_t<invoke_result_t<ActionFn, Rng>>)( //
+                operator|(Rng && rng, action_closure<ActionFn> act)                    //
+                -> CPP_broken_friend_ret(aux::move_t<invoke_result_t<ActionFn, Rng>>)( //
                     requires invocable<ActionFn, Rng &>)
             {
                 return aux::move(static_cast<ActionFn &&>(act)(rng));

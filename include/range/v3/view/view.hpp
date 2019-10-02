@@ -112,6 +112,15 @@ namespace ranges
           : private view_closure_base_detail::hook
 #endif // RANGES_WORKAROUND_CLANG_43400
         {
+            /// \cond
+#if CPP_CXX_CONCEPTS
+            template<typename Fn, typename Rng>
+            using invoke_result_t = //
+                invoke_result_t<
+                    std::enable_if_t<(bool)viewable_range<Rng>, Fn>, Rng>;
+#endif
+            /// \cond
+
             // Piping requires viewable_ranges.
             CPP_template(typename Rng, typename ViewFn)( //
                 requires viewable_range<Rng>)            //
