@@ -97,9 +97,9 @@ namespace
         using Adapted = decltype(rng);
         test_size(rng, meta::bool_<sized_range<Base>>{});
 
-        using IterTagOfBase =
+        using IterTagOfBase = 
             meta::if_c<contiguous_iterator<iterator_t<Base>>,
-                ranges::detail::random_access_iterator_tag_,
+                std::random_access_iterator_tag,
                 iterator_tag_of<iterator_t<Base>>>;
 
         CPP_assert(same_as<

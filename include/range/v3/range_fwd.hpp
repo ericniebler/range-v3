@@ -800,10 +800,6 @@ namespace ranges
     namespace concepts = ::concepts;
     using namespace ::concepts::defs;
     using ::concepts::and_v;
-    // namespace lazy
-    // {
-    //     using namespace ::concepts::defs::lazy;
-    // }
     namespace defer
     {
         using namespace ::concepts::defs::defer;

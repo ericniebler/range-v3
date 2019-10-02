@@ -60,8 +60,7 @@ namespace ranges
         template<typename I1, typename S1, typename I2, typename S2, typename R,
                  typename P>
         subrange<I1> find_end_impl(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred, P proj,
-                                   detail::forward_iterator_tag_,
-                                   detail::forward_iterator_tag_)
+                                   std::forward_iterator_tag, std::forward_iterator_tag)
         {
             bool found = false;
             I1 res_begin, res_end;
@@ -104,8 +103,8 @@ namespace ranges
 
         template<typename I1, typename I2, typename R, typename P>
         subrange<I1> find_end_impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
-                                   detail::bidirectional_iterator_tag_,
-                                   detail::bidirectional_iterator_tag_)
+                                   std::bidirectional_iterator_tag,
+                                   std::bidirectional_iterator_tag)
         {
             // modeled after search algorithm (in reverse)
             if(begin2 == end2)
@@ -141,8 +140,8 @@ namespace ranges
 
         template<typename I1, typename I2, typename R, typename P>
         subrange<I1> find_end_impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
-                                   detail::random_access_iterator_tag_,
-                                   detail::random_access_iterator_tag_)
+                                   std::random_access_iterator_tag,
+                                   std::random_access_iterator_tag)
         {
             // Take advantage of knowing source and pattern lengths.  Stop short when
             // source is smaller than pattern

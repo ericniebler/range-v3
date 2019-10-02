@@ -46,7 +46,7 @@ namespace ranges
     namespace detail
     {
         template<typename I, typename S, typename C, typename P>
-        I partition_impl(I first, S last, C pred, P proj, detail::forward_iterator_tag_)
+        I partition_impl(I first, S last, C pred, P proj, std::forward_iterator_tag)
         {
             while(true)
             {
@@ -68,8 +68,7 @@ namespace ranges
         }
 
         template<typename I, typename S, typename C, typename P>
-        I partition_impl(I first, S end_, C pred, P proj,
-                         detail::bidirectional_iterator_tag_)
+        I partition_impl(I first, S end_, C pred, P proj, std::bidirectional_iterator_tag)
         {
             I last = ranges::next(first, end_);
             while(true)

@@ -358,38 +358,62 @@ namespace ranges
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // range_tag
-    using range_tag = ::concepts::tag<range_concept>;
-    using input_range_tag = ::concepts::tag<input_range_concept, range_tag>;
-    using forward_range_tag = ::concepts::tag<forward_range_concept, input_range_tag>;
-    using bidirectional_range_tag =
-        ::concepts::tag<bidirectional_range_concept, forward_range_tag>;
-    using random_access_range_tag =
-        ::concepts::tag<random_access_range_concept, bidirectional_range_tag>;
-    using contiguous_range_tag =
-        ::concepts::tag<contiguous_range_concept, random_access_range_tag>;
+    struct range_tag
+    {};
 
-    template<typename T>
-    using range_tag_of = ::concepts::tag_of<
-        meta::list<contiguous_range_concept, random_access_range_concept,
-                   bidirectional_range_concept, forward_range_concept,
-                   input_range_concept, range_concept>,
-        T>;
+    struct input_range_tag : range_tag
+    {};
+    struct forward_range_tag : input_range_tag
+    {};
+    struct bidirectional_range_tag : forward_range_tag
+    {};
+    struct random_access_range_tag : bidirectional_range_tag
+    {};
+    struct contiguous_range_tag : random_access_range_tag
+    {};
+
+    template<typename Rng>
+    using range_tag_of =                          //
+        std::enable_if_t<                         //
+            range<Rng>,                           //
+            detail::if_then_t<                    //
+                contiguous_range<Rng>,            //
+                contiguous_range_tag,             //
+                detail::if_then_t<                //
+                    random_access_range<Rng>,     //
+                    random_access_range_tag,      //
+                    detail::if_then_t<            //
+                        bidirectional_range<Rng>, //
+                        bidirectional_range_tag,  //
+                        detail::if_then_t<        //
+                            forward_range<Rng>,   //
+                            forward_range_tag,    //
+                            detail::if_then_t<    //
+                                input_range<Rng>, //
+                                input_range_tag,  //
+                                range_tag>>>>>>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // common_range_tag_of
-    using common_range_tag = ::concepts::tag<common_range_concept, range_tag>;
+    struct common_range_tag : range_tag
+    {};
 
-    template<typename T>
-    using common_range_tag_of =
-        ::concepts::tag_of<meta::list<common_range_concept, range_concept>, T>;
+    template<typename Rng>
+    using common_range_tag_of = //
+        std::enable_if_t<       //
+            range<Rng>,         //
+            detail::if_then_t<common_range<Rng>, common_range_tag, range_tag>>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // sized_range_concept
-    using sized_range_tag = ::concepts::tag<sized_range_concept, range_tag>;
+    struct sized_range_tag : range_tag
+    {};
 
-    template<typename T>
-    using sized_range_tag_of =
-        ::concepts::tag_of<meta::list<sized_range_concept, range_concept>, T>;
+    template<typename Rng>
+    using sized_range_tag_of = //
+        std::enable_if_t<      //
+            range<Rng>,        //
+            detail::if_then_t<sized_range<Rng>, sized_range_tag, range_tag>>;
 
     /// \cond
     namespace view_detail_

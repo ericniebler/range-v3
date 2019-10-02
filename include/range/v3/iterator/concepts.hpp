@@ -328,12 +328,23 @@ namespace ranges
 
     /////////////////////////////////////////////////////////////////////////////////////
     // iterator_tag_of
-    template<typename T>
-    using iterator_tag_of = concepts::tag_of<
-        meta::list<contiguous_iterator_concept, random_access_iterator_concept,
-                   bidirectional_iterator_concept, forward_iterator_concept,
-                   input_iterator_concept>,
-        T>;
+    template<typename Rng>
+    using iterator_tag_of =                              //
+        std::enable_if_t<                                //
+            input_iterator<Rng>,                         //
+            detail::if_then_t<                           //
+                contiguous_iterator<Rng>,                //
+                ranges::contiguous_iterator_tag,         //
+                detail::if_then_t<                       //
+                    random_access_iterator<Rng>,         //
+                    std::random_access_iterator_tag,     //
+                    detail::if_then_t<                   //
+                        bidirectional_iterator<Rng>,     //
+                        std::bidirectional_iterator_tag, //
+                        detail::if_then_t<               //
+                            forward_iterator<Rng>,       //
+                            std::forward_iterator_tag,   //
+                            std::input_iterator_tag>>>>>;
 
     /// \cond
     namespace detail
@@ -345,23 +356,11 @@ namespace ranges
         template<typename I>
         struct iterator_category_<I, true>
         {
-        private:
-            static std::input_iterator_tag test(detail::input_iterator_tag_);
-            static std::forward_iterator_tag test(detail::forward_iterator_tag_);
-            static std::bidirectional_iterator_tag test(
-                detail::bidirectional_iterator_tag_);
-            static std::random_access_iterator_tag test(
-                detail::random_access_iterator_tag_);
-            static ranges::contiguous_iterator_tag test(detail::contiguous_iterator_tag_);
-
-        public:
-            using type = decltype(iterator_category_::test(iterator_tag_of<I>{}));
+            using type = iterator_tag_of<I>;
         };
 
-        template<typename T>
-        using iterator_category =
-            iterator_category_<meta::_t<std::remove_const<T>>,
-                               (bool)input_iterator<meta::_t<std::remove_const<T>>>>;
+        template<typename T, typename U = meta::_t<std::remove_const<T>>>
+        using iterator_category = iterator_category_<U, (bool)input_iterator<U>>;
     } // namespace detail
     /// \endcond
 
@@ -664,13 +663,19 @@ namespace ranges
     );
     // clang-format on
 
-    using sentinel_tag = concepts::tag<sentinel_for_concept>;
-    using sized_sentinel_tag = concepts::tag<sized_sentinel_for_concept, sentinel_tag>;
+    struct sentinel_tag
+    {};
+    struct sized_sentinel_tag : sentinel_tag
+    {};
 
     template<typename S, typename I>
-    using sentinel_tag_of =
-        concepts::tag_of<meta::list<sized_sentinel_for_concept, sentinel_for_concept>, S,
-                         I>;
+    using sentinel_tag_of =               //
+        std::enable_if_t<                 //
+            sentinel_for<S, I>,           //
+            detail::if_then_t<            //
+                sized_sentinel_for<S, I>, //
+                sized_sentinel_tag,       //
+                sentinel_tag>>;
 
     // Deprecated things:
     /// \cond

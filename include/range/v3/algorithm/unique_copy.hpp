@@ -42,7 +42,7 @@ namespace ranges
     {
         template<typename I, typename S, typename O, typename C, typename P>
         unique_copy_result<I, O> unique_copy_impl(I first, S last, O out, C pred, P proj,
-                                                  detail::input_iterator_tag_,
+                                                  std::input_iterator_tag,
                                                   std::false_type)
         {
             if(first != last)
@@ -69,7 +69,7 @@ namespace ranges
 
         template<typename I, typename S, typename O, typename C, typename P>
         unique_copy_result<I, O> unique_copy_impl(I first, S last, O out, C pred, P proj,
-                                                  detail::forward_iterator_tag_,
+                                                  std::forward_iterator_tag,
                                                   std::false_type)
         {
             if(first != last)
@@ -93,8 +93,7 @@ namespace ranges
 
         template<typename I, typename S, typename O, typename C, typename P>
         unique_copy_result<I, O> unique_copy_impl(I first, S last, O out, C pred, P proj,
-                                                  detail::input_iterator_tag_,
-                                                  std::true_type)
+                                                  std::input_iterator_tag, std::true_type)
         {
             if(first != last)
             {
