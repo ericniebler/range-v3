@@ -342,7 +342,6 @@ namespace ranges
 #endif
 #endif
 
-
 #else
 #define RANGES_DIAGNOSTIC_PUSH
 #define RANGES_DIAGNOSTIC_POP
@@ -583,6 +582,21 @@ namespace ranges
 #define RANGES_HIDDEN_DETAIL(...) __VA_ARGS__
 #else
 #define RANGES_HIDDEN_DETAIL(...)
+#endif
+
+#ifndef RANGES_DOXYGEN_INVOKED
+#define RANGES_ADL_BARRIER_FOR(S) S##_ns
+#define RANGES_STRUCT_WITH_ADL_BARRIER(S) \
+    _ranges_adl_barrier_noop_;            \
+    namespace RANGES_ADL_BARRIER_FOR(S)   \
+    {                                     \
+        struct S;                         \
+    }                                     \
+    using RANGES_ADL_BARRIER_FOR(S)::S;   \
+    struct RANGES_ADL_BARRIER_FOR(S)::S /**/
+#else
+#define RANGES_ADL_BARRIER_FOR(S)
+#define RANGES_STRUCT_WITH_ADL_BARRIER(S) S
 #endif
 
 #ifndef RANGES_DOXYGEN_INVOKED
