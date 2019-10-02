@@ -21,6 +21,7 @@
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/zip.hpp>
+#include <range/v3/view/reverse.hpp>
 
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -192,6 +193,22 @@ int main()
         check_equal(m[0], {1, 2, 3});
         check_equal(m[1], {2, 3, 4});
         check_equal(m[2], {3, 4, 5});
+    }
+
+    // Use ranges::to in a closure with an action
+    {
+#ifdef RANGES_WORKAROUND_MSVC_779708
+        auto closure = ranges::to<std::vector>() | actions::sort;
+#else // ^^^ workaround / no workaround vvv
+        auto closure = ranges::to<std::vector> | actions::sort;
+#endif // RANGES_WORKAROUND_MSVC_779708
+
+        auto r = views::ints(1, 4) | views::reverse;
+        auto m = r | closure;
+
+        CPP_assert(same_as<decltype(m), std::vector<int>>);
+        CHECK(m.size() == 3u);
+        check_equal(m, {1, 2, 3});
     }
 
     test_zip_to_map(views::zip(views::ints, views::iota(0, 10)), 0);

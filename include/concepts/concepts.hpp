@@ -260,6 +260,15 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
                     "defer:: concepts");                                        \
                 return {};                                                      \
             }                                                                   \
+            template<typename That>                                             \
+            constexpr auto operator||(That) const noexcept                      \
+                -> ::concepts::detail::or_<Eval, That> {                        \
+                static_assert(                                                  \
+                    !META_IS_SAME(That, bool),                                  \
+                    "All expressions in a disjunction should be "               \
+                    "defer:: concepts");                                        \
+                return {};                                                      \
+            }                                                                   \
         };                                                                      \
     };                                                                          \
     namespace lazy {                                                            \
@@ -325,6 +334,19 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
             template<typename That>                                             \
             constexpr auto operator&&(That) const noexcept                      \
                 -> ::concepts::detail::and_<Eval, That> {                       \
+                static_assert(                                                  \
+                    !META_IS_SAME(That, bool),                                  \
+                    "All expressions in a conjunction should be "               \
+                    "defer:: concepts");                                        \
+                return {};                                                      \
+            }                                                                   \
+            template<typename That>                                             \
+            constexpr auto operator||(That) const noexcept                      \
+                -> ::concepts::detail::or_<Eval, That> {                        \
+                static_assert(                                                  \
+                    !META_IS_SAME(That, bool),                                  \
+                    "All expressions in a disjunction should be "               \
+                    "defer:: concepts");                                        \
                 return {};                                                      \
             }                                                                   \
         };                                                                      \
@@ -768,6 +790,8 @@ namespace concepts
         };
         template<typename T, typename U>
         struct and_;
+        template<typename T, typename U>
+        struct or_;
         template<typename T>
         struct not_ : boolean
         {
@@ -782,7 +806,12 @@ namespace concepts
             template<typename That>
             constexpr and_<not_, That> operator&&(That) const noexcept
             {
-                return and_<not_, That>{};
+                return {};
+            }
+            template<typename That>
+            constexpr or_<not_, That> operator||(That) const noexcept
+            {
+                return {};
             }
         };
 
@@ -806,13 +835,61 @@ namespace concepts
                 return not_<and_>{};
             }
             template<typename That>
-            constexpr detail::and_<and_, That> operator&&(That) const noexcept
+            constexpr and_<and_, That> operator&&(That) const noexcept
             {
                 static_assert(
                     !META_IS_SAME(That, bool),
                     "All expressions in a conjunction should be "
                     "defer:: concepts");
-                return detail::and_<and_, That>{};
+                return {};
+            }
+            template<typename That>
+            constexpr or_<and_, That> operator||(That) const noexcept
+            {
+                static_assert(
+                    !META_IS_SAME(That, bool),
+                    "All expressions in a disjunction should be "
+                    "defer:: concepts");
+                return {};
+            }
+        };
+
+        template<typename T, typename U>
+        struct or_ : boolean
+        {
+            static constexpr bool impl(std::true_type) noexcept
+            {
+                return true;
+            }
+            static constexpr bool impl(std::false_type) noexcept
+            {
+                return (bool) U{};
+            }
+            constexpr operator bool() const noexcept
+            {
+                return or_::impl(bool_<(bool) T{}>{});
+            }
+            constexpr not_<or_> operator!() const noexcept
+            {
+                return {};
+            }
+            template<typename That>
+            constexpr detail::and_<or_, That> operator&&(That) const noexcept
+            {
+                static_assert(
+                    !META_IS_SAME(That, bool),
+                    "All expressions in a disjunction should be "
+                    "defer:: concepts");
+                return {};
+            }
+            template<typename That>
+            constexpr detail::or_<or_, That> operator||(That) const noexcept
+            {
+                static_assert(
+                    !META_IS_SAME(That, bool),
+                    "All expressions in a disjunction should be "
+                    "defer:: concepts");
+                return {};
             }
         };
 
