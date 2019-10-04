@@ -236,50 +236,11 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #else
 #define CPP_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, ...)                           \
-    inline namespace _eager_ {                                                  \
+    namespace defer {                                                           \
         CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
         META_CONCEPT NAME = CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);         \
     }                                                                           \
-    struct CPP_PP_CAT(NAME, _concept) {                                         \
-        CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
-        struct Eval : ::concepts::detail::boolean {                             \
-            using Concept = CPP_PP_CAT(NAME, _concept);                         \
-            constexpr operator bool() const noexcept {                          \
-                return (bool) _eager_::NAME<CPP_PP_EXPAND ARGS>;                \
-            }                                                                   \
-            constexpr auto operator!() const noexcept                           \
-                -> ::concepts::detail::not_<Eval> {                             \
-                return {};                                                      \
-            }                                                                   \
-            template<typename That>                                             \
-            constexpr auto operator&&(That) const noexcept                      \
-                -> ::concepts::detail::and_<Eval, That> {                       \
-                static_assert(                                                  \
-                    !META_IS_SAME(That, bool),                                  \
-                    "All expressions in a conjunction should be "               \
-                    "defer:: concepts");                                        \
-                return {};                                                      \
-            }                                                                   \
-            template<typename That>                                             \
-            constexpr auto operator||(That) const noexcept                      \
-                -> ::concepts::detail::or_<Eval, That> {                        \
-                static_assert(                                                  \
-                    !META_IS_SAME(That, bool),                                  \
-                    "All expressions in a disjunction should be "               \
-                    "defer:: concepts");                                        \
-                return {};                                                      \
-            }                                                                   \
-        };                                                                      \
-    };                                                                          \
-    namespace lazy {                                                            \
-        CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
-        CPP_INLINE_VAR constexpr auto NAME =                                    \
-            CPP_PP_CAT(NAME, _concept)::Eval<CPP_PP_EXPAND ARGS>{};             \
-    }                                                                           \
-    namespace defer {                                                           \
-        using namespace _eager_;                                                \
-    }                                                                           \
-    using _concepts_int_ = int                                                  \
+    using defer::NAME                                                           \
     /**/
 #endif
 #else
@@ -314,54 +275,53 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #endif
 #define CPP_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, ...)                           \
-    struct CPP_PP_CAT(NAME, _concept) {                                         \
-        using Concept = CPP_PP_CAT(NAME, _concept);                             \
-        CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                        \
-        CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
-        static auto Requires_ CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);       \
-        CPP_PP_IGNORE_CXX2A_COMPAT_END                                          \
-        CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
-        struct Eval {                                                           \
-            CPP_PP_DECL_DEF_IMPL_HACK(ARGS)                                     \
-            static constexpr bool impl(long) noexcept { return false; }         \
-            constexpr operator bool() const noexcept {                          \
-                return Eval::impl(0);                                           \
-            }                                                                   \
-            constexpr auto operator!() const noexcept                           \
-                -> ::concepts::detail::not_<Eval> {                             \
-                return {};                                                      \
-            }                                                                   \
-            template<typename That>                                             \
-            constexpr auto operator&&(That) const noexcept                      \
-                -> ::concepts::detail::and_<Eval, That> {                       \
-                static_assert(                                                  \
-                    !META_IS_SAME(That, bool),                                  \
-                    "All expressions in a conjunction should be "               \
-                    "defer:: concepts");                                        \
-                return {};                                                      \
-            }                                                                   \
-            template<typename That>                                             \
-            constexpr auto operator||(That) const noexcept                      \
-                -> ::concepts::detail::or_<Eval, That> {                        \
-                static_assert(                                                  \
-                    !META_IS_SAME(That, bool),                                  \
-                    "All expressions in a disjunction should be "               \
-                    "defer:: concepts");                                        \
-                return {};                                                      \
-            }                                                                   \
+    namespace cpp_detail_ {                                                     \
+        struct CPP_PP_CAT(NAME, _concept) {                                     \
+            using Concept = CPP_PP_CAT(NAME, _concept);                         \
+            CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                    \
+            CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                     \
+            static auto Requires_ CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);   \
+            CPP_PP_IGNORE_CXX2A_COMPAT_END                                      \
+            CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                     \
+            struct Eval {                                                       \
+                CPP_PP_DECL_DEF_IMPL_HACK(ARGS)                                 \
+                static constexpr bool impl(long) noexcept { return false; }     \
+                constexpr operator bool() const noexcept {                      \
+                    return Eval::impl(0);                                       \
+                }                                                               \
+                constexpr auto operator!() const noexcept                       \
+                    -> ::concepts::detail::not_<Eval> {                         \
+                    return {};                                                  \
+                }                                                               \
+                template<typename That>                                         \
+                constexpr auto operator&&(That) const noexcept                  \
+                    -> ::concepts::detail::and_<Eval, That> {                   \
+                    static_assert(                                              \
+                        !META_IS_SAME(That, bool),                              \
+                        "All expressions in a conjunction should be "           \
+                        "defer:: concepts");                                    \
+                    return {};                                                  \
+                }                                                               \
+                template<typename That>                                         \
+                constexpr auto operator||(That) const noexcept                  \
+                    -> ::concepts::detail::or_<Eval, That> {                    \
+                    static_assert(                                              \
+                        !META_IS_SAME(That, bool),                              \
+                        "All expressions in a disjunction should be "           \
+                        "defer:: concepts");                                    \
+                    return {};                                                  \
+                }                                                               \
+            };                                                                  \
         };                                                                      \
-    };                                                                          \
-    CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                             \
-    CPP_INLINE_VAR constexpr bool NAME =                                        \
-        CPP_PP_CAT(NAME, _concept)::Eval<CPP_PP_EXPAND ARGS>{};                 \
-    namespace lazy {                                                            \
-        CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
-        CPP_INLINE_VAR constexpr auto NAME =                                    \
-            CPP_PP_CAT(NAME, _concept)::Eval<CPP_PP_EXPAND ARGS>{};             \
     }                                                                           \
     namespace defer {                                                           \
-        using namespace lazy;                                                   \
+        CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
+        CPP_INLINE_VAR constexpr auto NAME =                                    \
+            cpp_detail_::CPP_PP_CAT(NAME, _concept)::Eval<CPP_PP_EXPAND ARGS>{};\
     }                                                                           \
+    CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                             \
+    CPP_INLINE_VAR constexpr bool NAME =                                        \
+        (bool) defer::NAME<CPP_PP_EXPAND ARGS>;                                 \
     using _concepts_int_ = int                                                  \
     /**/
 #endif
@@ -1266,27 +1226,6 @@ namespace concepts
                 equality_comparable<T>
         );
     } // inline namespace defs
-
-    template<typename Concept, typename... Args>
-    struct is_satisfied_by
-      : meta::bool_<static_cast<bool>(typename Concept::template Eval<Args...>{})>
-    {};
-
-    // For automatically generating tags corresponding to concept
-    // subsumption relationships, for use with tag dispatching.
-    template<typename Concept, typename Base = meta::nil_>
-    struct tag
-      : Base
-    {};
-
-    template<typename Concepts, typename... Ts>
-    using tag_of =
-        meta::reverse_fold<
-            meta::find_if<
-                Concepts,
-                meta::bind_back<meta::quote<is_satisfied_by>, Ts...>>,
-            meta::nil_,
-            meta::flip<meta::quote<tag>>>;
 } // namespace concepts
 
 CPP_PP_IGNORE_CXX2A_COMPAT_END

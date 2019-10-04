@@ -222,7 +222,7 @@ namespace std
         using reference = int&;
         using pointer = int*;
         using difference_type = ptrdiff_t;
-        using iterator_category = input_iterator_tag;
+        using iterator_category = std::input_iterator_tag;
     };
 }
 

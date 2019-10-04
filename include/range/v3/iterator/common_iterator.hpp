@@ -161,12 +161,11 @@ namespace ranges
             return *ranges::get<0>(data_);
         }
         template<typename J = I>
-        auto operator-> () const
-            noexcept(noexcept(common_iterator::operator_arrow_(std::declval<I const &>(),
-                                                               42)))
-                -> CPP_ret(decltype(
-                    common_iterator::operator_arrow_(std::declval<J const &>(), 42)))( //
-                    requires readable<J>)
+        auto operator-> () const noexcept(
+            noexcept(common_iterator::operator_arrow_(std::declval<I const &>(), 42)))
+            -> CPP_ret(decltype(
+                common_iterator::operator_arrow_(std::declval<J const &>(), 42)))( //
+                requires readable<J>)
         {
             return common_iterator::operator_arrow_(ranges::get<0>(data_), 42);
         }

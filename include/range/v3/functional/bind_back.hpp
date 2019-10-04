@@ -37,7 +37,7 @@ namespace ranges
             tuple_t fn_args_;
 
             template<typename... CallArgs>
-                constexpr auto operator()(CallArgs &&... cargs) &&
+            constexpr auto operator()(CallArgs &&... cargs) &&
                 noexcept(is_nothrow_invocable_v<Fn, CallArgs..., Args...>)
                     -> invoke_result_t<Fn, CallArgs..., Args...>
             {
@@ -52,7 +52,7 @@ namespace ranges
 
             /// \overload
             template<typename... CallArgs>
-                constexpr auto operator()(CallArgs &&... cargs) &
+            constexpr auto operator()(CallArgs &&... cargs) &
                 noexcept(is_nothrow_invocable_v<Fn &, CallArgs..., Args &...>)
                     -> invoke_result_t<Fn &, CallArgs..., Args &...>
             {
@@ -65,9 +65,9 @@ namespace ranges
 
             /// \overload
             template<typename... CallArgs>
-            constexpr auto operator()(CallArgs &&... cargs) const & noexcept(
-                is_nothrow_invocable_v<Fn const &, CallArgs..., Args const &...>)
-                -> invoke_result_t<Fn const &, CallArgs..., Args const &...>
+            constexpr auto operator()(CallArgs &&... cargs) const &
+                noexcept(is_nothrow_invocable_v<Fn const &, CallArgs..., Args const &...>)
+                    -> invoke_result_t<Fn const &, CallArgs..., Args const &...>
             {
                 return tuple_apply(
                     [&](auto & fn, auto &... args) -> decltype(auto) {
@@ -90,7 +90,7 @@ namespace ranges
             tuple_t fn_args_;
 
             template<typename... CallArgs>
-                constexpr auto operator()(CallArgs &&... cargs) &&
+            constexpr auto operator()(CallArgs &&... cargs) &&
                 noexcept(is_nothrow_invocable_v<Fn, CallArgs..., Arg>)
                     -> invoke_result_t<Fn, CallArgs..., Arg>
             {
@@ -99,7 +99,7 @@ namespace ranges
             }
 
             template<typename... CallArgs>
-                constexpr auto operator()(CallArgs &&... cargs) &
+            constexpr auto operator()(CallArgs &&... cargs) &
                 noexcept(is_nothrow_invocable_v<Fn &, CallArgs..., Arg &>)
                     -> invoke_result_t<Fn &, CallArgs..., Arg &>
             {
@@ -107,9 +107,9 @@ namespace ranges
             }
 
             template<typename... CallArgs>
-            constexpr auto operator()(CallArgs &&... cargs) const & noexcept(
-                is_nothrow_invocable_v<Fn const &, CallArgs..., Arg const &>)
-                -> invoke_result_t<Fn const &, CallArgs..., Arg const &>
+            constexpr auto operator()(CallArgs &&... cargs) const &
+                noexcept(is_nothrow_invocable_v<Fn const &, CallArgs..., Arg const &>)
+                    -> invoke_result_t<Fn const &, CallArgs..., Arg const &>
             {
                 return invoke(fn_args_.fn_, (CallArgs &&) cargs..., fn_args_.arg_);
             }
@@ -127,7 +127,7 @@ namespace ranges
             tuple_t fn_args_;
 
             template<typename... CallArgs>
-                constexpr auto operator()(CallArgs &&... cargs) &&
+            constexpr auto operator()(CallArgs &&... cargs) &&
                 noexcept(is_nothrow_invocable_v<Fn, CallArgs..., Arg0, Arg1>)
                     -> invoke_result_t<Fn, CallArgs..., Arg0, Arg1>
             {
@@ -138,7 +138,7 @@ namespace ranges
             }
 
             template<typename... CallArgs>
-                constexpr auto operator()(CallArgs &&... cargs) &
+            constexpr auto operator()(CallArgs &&... cargs) &
                 noexcept(is_nothrow_invocable_v<Fn &, CallArgs..., Arg0 &, Arg1 &>)
                     -> invoke_result_t<Fn &, CallArgs..., Arg0 &, Arg1 &>
             {

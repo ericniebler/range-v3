@@ -56,7 +56,7 @@ namespace ranges
     {
         template<typename I, typename C, typename P, typename D, typename Pair>
         I stable_partition_impl(I first, I last, C pred, P proj, D len, Pair const p,
-                                detail::forward_iterator_tag_ fi)
+                                std::forward_iterator_tag fi)
         {
             // *first is known to be false
             // len >= 1
@@ -128,7 +128,7 @@ namespace ranges
 
         template<typename I, typename S, typename C, typename P>
         I stable_partition_impl(I first, S last, C pred, P proj,
-                                detail::forward_iterator_tag_ fi)
+                                std::forward_iterator_tag fi)
         {
             using difference_type = iter_difference_t<I>;
             difference_type const alloc_limit = 3; // might want to make this a function
@@ -156,7 +156,7 @@ namespace ranges
 
         template<typename I, typename C, typename P, typename D, typename Pair>
         I stable_partition_impl(I first, I last, C pred, P proj, D len, Pair p,
-                                detail::bidirectional_iterator_tag_ bi)
+                                std::bidirectional_iterator_tag bi)
         {
             // *first is known to be false
             // *last is known to be true
@@ -251,7 +251,7 @@ namespace ranges
 
         template<typename I, typename S, typename C, typename P>
         I stable_partition_impl(I first, S end_, C pred, P proj,
-                                detail::bidirectional_iterator_tag_ bi)
+                                std::bidirectional_iterator_tag bi)
         {
             using difference_type = iter_difference_t<I>;
             using value_type = iter_value_t<I>;

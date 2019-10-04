@@ -24,7 +24,7 @@
 // Test sequence 1,2,3,4
 template<typename It>
 constexpr /*c++14*/ auto test_it_back(It, It last,
-    ranges::detail::bidirectional_iterator_tag_) -> bool
+    std::bidirectional_iterator_tag) -> bool
 {
     auto end_m1_2 = It{ranges::prev(last, 1)};
     if (*end_m1_2 != 4) { return false; }
@@ -73,7 +73,7 @@ constexpr /*c++14*/ auto test_rit_(It beg, It last) -> bool
     auto end_m1 = It{ranges::next(beg, 3)};
     if (*end_m1 != 1) { return false; }
     if (ranges::detail::is_convertible<ranges::iterator_tag_of<It>,
-                                       ranges::detail::bidirectional_iterator_tag_>{})
+                                       std::bidirectional_iterator_tag>{})
     {
         auto end_m1_2 = It{ranges::prev(last, 1)};
         if (*end_m1_2 != 1) { return false; }

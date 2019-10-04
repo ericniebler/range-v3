@@ -34,7 +34,7 @@ namespace ranges
     namespace detail
     {
         template<typename I>
-        void reverse_impl(I first, I last, detail::bidirectional_iterator_tag_)
+        void reverse_impl(I first, I last, std::bidirectional_iterator_tag)
         {
             while(first != last)
             {
@@ -46,7 +46,7 @@ namespace ranges
         }
 
         template<typename I>
-        void reverse_impl(I first, I last, detail::random_access_iterator_tag_)
+        void reverse_impl(I first, I last, std::random_access_iterator_tag)
         {
             if(first != last)
                 for(; first < --last; ++first)

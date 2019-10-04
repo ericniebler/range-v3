@@ -35,7 +35,7 @@ int main()
         CPP_assert(sized_range<decltype(x)>);
         CPP_assert(random_access_iterator<decltype(x.begin())>);
         using I = decltype(x.begin());
-        CPP_assert(same_as<iterator_tag_of<I>, ranges::detail::random_access_iterator_tag_>);
+        CPP_assert(same_as<iterator_tag_of<I>, std::random_access_iterator_tag>);
         CPP_assert(same_as<
             typename std::iterator_traits<I>::iterator_category,
             std::random_access_iterator_tag>);

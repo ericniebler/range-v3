@@ -40,34 +40,14 @@ namespace ranges
         "Please switch to the standard iterator tags") = std::bidirectional_iterator_tag;
     using random_access_iterator_tag RANGES_DEPRECATED(
         "Please switch to the standard iterator tags") = std::random_access_iterator_tag;
-    /// \cond
+    /// \endcond
 
     struct contiguous_iterator_tag : std::random_access_iterator_tag
     {};
 
     /// \cond
-    struct input_iterator_concept;
-    struct forward_iterator_concept;
-    struct bidirectional_iterator_concept;
-    struct random_access_iterator_concept;
-    struct contiguous_iterator_concept;
-
     namespace detail
     {
-        using input_iterator_tag_ = ::concepts::tag<input_iterator_concept>;
-
-        using forward_iterator_tag_ =
-            ::concepts::tag<forward_iterator_concept, input_iterator_tag_>;
-
-        using bidirectional_iterator_tag_ =
-            ::concepts::tag<bidirectional_iterator_concept, forward_iterator_tag_>;
-
-        using random_access_iterator_tag_ =
-            ::concepts::tag<random_access_iterator_concept, bidirectional_iterator_tag_>;
-
-        using contiguous_iterator_tag_ =
-            ::concepts::tag<contiguous_iterator_concept, random_access_iterator_tag_>;
-
         template<typename I, typename = iter_reference_t<I>,
                  typename R = decltype(iter_move(std::declval<I &>())), typename = R &>
         using iter_rvalue_reference_t = R;
