@@ -23,6 +23,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/functional/concepts.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/get.hpp>
 #include <range/v3/utility/in_place.hpp>
