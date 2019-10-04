@@ -23,6 +23,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/get.hpp>
 #include <range/v3/utility/in_place.hpp>
 
@@ -217,32 +218,30 @@ namespace ranges
         }
         operator T const &&() const && = delete;
         // clang-format off
+        CPP_template(typename... Args)(       //
+            requires invocable<T &, Args...>) //
+        constexpr decltype(auto) operator()(Args &&... args) &
+            noexcept(is_nothrow_invocable_v<T &, Args...>)
+        {
+            return invoke(data_, static_cast<Args &&>(args)...);
+        }
+        CPP_template(typename... Args)(             //
+            requires invocable<T const &, Args...>) //
+        constexpr decltype(auto) operator()(Args &&... args) const &
+            noexcept(is_nothrow_invocable_v<T const &, Args...>)
+        {
+            return invoke(data_, static_cast<Args &&>(args)...);
+        }
+        CPP_template(typename... Args)(     //
+            requires invocable<T, Args...>) //
+        constexpr decltype(auto) operator()(Args &&... args) &&
+            noexcept(is_nothrow_invocable_v<T, Args...>)
+        {
+            return invoke(static_cast<T &&>(data_), static_cast<Args &&>(args)...);
+        }
         template<typename... Args>
-        constexpr auto CPP_auto_fun(operator())(Args &&... args)(mutable &)
-        (
-            return data_(static_cast<Args &&>(args)...)
-        )
-        template<typename... Args>
-        constexpr auto CPP_auto_fun(operator())(Args &&... args)(const &)
-        (
-            return data_(static_cast<Args &&>(args)...)
-        )
-#ifdef RANGES_WORKAROUND_MSVC_786376
-        template<typename... Args, typename U = T>
-        constexpr auto CPP_auto_fun(operator())(Args &&... args)(mutable &&)
-        (
-            return ((U &&) data_)(static_cast<Args &&>(args)...)
-        )
-#else  // ^^^ workaround / no workaround vvv
-        template<typename... Args>
-        constexpr auto CPP_auto_fun(operator())(Args &&... args)(mutable &&)
-        (
-            return ((T &&) data_)(static_cast<Args &&>(args)...)
-        )
-#endif // RANGES_WORKAROUND_MSVC_786376
-       // clang-format on
-                template<typename... Args>
-                void operator()(Args &&...) const && = delete;
+        void operator()(Args &&...) const && = delete;
+        // clang-format on
     };
 
     template<typename T>
