@@ -182,8 +182,7 @@ namespace ranges
             {
                 range_access::write(*cur_, (T &&) t);
             }
-
-        public:
+            // public:
             basic_proxy_reference_() = default;
             basic_proxy_reference_(basic_proxy_reference_ const &) = default;
             template<typename OtherCur>
@@ -275,62 +274,54 @@ namespace ranges
                 this->write_((T &&) t);
                 return *this;
             }
-
-            CPP_member
-            friend constexpr auto operator==(basic_proxy_reference_ const & x,
-                                             cursor_value_t<Cur> const & y) //
-                -> CPP_broken_friend_ret(bool)(                             //
-                    requires readable_cursor<Cur> &&
-                        equality_comparable<cursor_value_t<Cur>>)
-            {
-                return x.read_() == y;
-            }
-            CPP_member
-            friend constexpr auto operator!=(basic_proxy_reference_ const & x,
-                                             cursor_value_t<Cur> const & y) //
-                -> CPP_broken_friend_ret(bool)(                             //
-                    requires readable_cursor<Cur> &&
-                        equality_comparable<cursor_value_t<Cur>>)
-            {
-                return !(x == y);
-            }
-            CPP_member
-            friend constexpr auto operator==(cursor_value_t<Cur> const & x,
-                                             basic_proxy_reference_ const & y) //
-                -> CPP_broken_friend_ret(bool)(                                //
-                    requires readable_cursor<Cur> &&
-                        equality_comparable<cursor_value_t<Cur>>)
-            {
-                return x == y.read_();
-            }
-            CPP_member
-            friend constexpr auto operator!=(cursor_value_t<Cur> const & x,
-                                             basic_proxy_reference_ const & y) //
-                -> CPP_broken_friend_ret(bool)(                                //
-                    requires readable_cursor<Cur> &&
-                        equality_comparable<cursor_value_t<Cur>>)
-            {
-                return !(x == y);
-            }
-            CPP_member
-            friend constexpr auto operator==(basic_proxy_reference_ const & x,
-                                             basic_proxy_reference_ const & y) //
-                -> CPP_broken_friend_ret(bool)(                                //
-                    requires readable_cursor<Cur> &&
-                        equality_comparable<cursor_value_t<Cur>>)
-            {
-                return x.read_() == y.read_();
-            }
-            CPP_member
-            friend constexpr auto operator!=(basic_proxy_reference_ const & x,
-                                             basic_proxy_reference_ const & y) //
-                -> CPP_broken_friend_ret(bool)(                                //
-                    requires readable_cursor<Cur> &&
-                        equality_comparable<cursor_value_t<Cur>>)
-            {
-                return !(x == y);
-            }
         };
+
+        template<typename Cur, bool IsReadable>
+        constexpr auto operator==(basic_proxy_reference_<Cur, IsReadable> const & x,
+                                  cursor_value_t<Cur> const & y) -> CPP_ret(bool)( //
+            requires readable_cursor<Cur> && equality_comparable<cursor_value_t<Cur>>)
+        {
+            return x.read_() == y;
+        }
+        template<typename Cur, bool IsReadable>
+        constexpr auto operator!=(basic_proxy_reference_<Cur, IsReadable> const & x,
+                                  cursor_value_t<Cur> const & y) -> CPP_ret(bool)( //
+            requires readable_cursor<Cur> && equality_comparable<cursor_value_t<Cur>>)
+        {
+            return !(x == y);
+        }
+        template<typename Cur, bool IsReadable>
+        constexpr auto operator==(cursor_value_t<Cur> const & x,
+                                  basic_proxy_reference_<Cur, IsReadable> const & y)
+            -> CPP_ret(bool)( //
+                requires readable_cursor<Cur> && equality_comparable<cursor_value_t<Cur>>)
+        {
+            return x == y.read_();
+        }
+        template<typename Cur, bool IsReadable>
+        constexpr auto operator!=(cursor_value_t<Cur> const & x,
+                                  basic_proxy_reference_<Cur, IsReadable> const & y)
+            -> CPP_ret(bool)( //
+                requires readable_cursor<Cur> && equality_comparable<cursor_value_t<Cur>>)
+        {
+            return !(x == y);
+        }
+        template<typename Cur, bool IsReadable>
+        constexpr auto operator==(basic_proxy_reference_<Cur, IsReadable> const & x,
+                                  basic_proxy_reference_<Cur, IsReadable> const & y)
+            -> CPP_ret(bool)( //
+                requires readable_cursor<Cur> && equality_comparable<cursor_value_t<Cur>>)
+        {
+            return x.read_() == y.read_();
+        }
+        template<typename Cur, bool IsReadable>
+        constexpr auto operator!=(basic_proxy_reference_<Cur, IsReadable> const & x,
+                                  basic_proxy_reference_<Cur, IsReadable> const & y)
+            -> CPP_ret(bool)( //
+                requires readable_cursor<Cur> && equality_comparable<cursor_value_t<Cur>>)
+        {
+            return !(x == y);
+        }
 
         template<typename Cur>
         using cpp20_iter_cat_of_t =                      //
