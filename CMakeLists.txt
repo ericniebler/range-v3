@@ -162,9 +162,11 @@ write_basic_package_version_file(
 set(CMAKE_SIZEOF_VOID_P ${OLD_CMAKE_SIZEOF_VOID_P})
 
 install(TARGETS concepts meta range-v3 EXPORT range-v3-targets DESTINATION lib)
-install(EXPORT range-v3-targets FILE range-v3-config.cmake DESTINATION lib/cmake/range-v3)
+install(EXPORT range-v3-targets NAMESPACE range-v3:: FILE range-v3-targets.cmake DESTINATION lib/cmake/range-v3)
+install(EXPORT range-v3-targets FILE range-v3-targets-compat.cmake DESTINATION lib/cmake/range-v3)
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/range-v3-config-version.cmake
+  cmake/range-v3-config.cmake
   DESTINATION lib/cmake/range-v3)
 install(DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN "*")
 
