@@ -21,18 +21,18 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Export compilation data-base
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 add_library(meta INTERFACE)
-target_include_directories(meta INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
+target_include_directories(meta SYSTEM INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
 target_include_directories(meta SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
 target_compile_options(meta INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
 
 add_library(concepts INTERFACE)
-target_include_directories(concepts INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
+target_include_directories(concepts SYSTEM INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
 target_include_directories(concepts SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
 target_compile_options(concepts INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive- /experimental:preprocessor /wd5105>)
 target_link_libraries(concepts INTERFACE meta)
 
 add_library(range-v3 INTERFACE)
-target_include_directories(range-v3 INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
+target_include_directories(range-v3 SYSTEM INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
 target_include_directories(range-v3 SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
 target_compile_options(range-v3 INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
 target_link_libraries(range-v3 INTERFACE concepts meta)
