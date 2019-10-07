@@ -75,7 +75,6 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
   endif()
 else()
   message(WARNING "[range-v3 warning]: unknown build type, defaults to release!")
-  set(CMAKE_BUILD_TYPE "Release")
   set(RANGES_RELEASE_BUILD TRUE)
 endif()
 
