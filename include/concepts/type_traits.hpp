@@ -132,11 +132,19 @@ namespace concepts
 
     #if !defined(__GNUC__) || defined(__clang__)
         template<typename T, typename U, typename = void>
-        struct _builtin_common_2
+        struct _builtin_common_3
         {};
         template<typename T, typename U>
-        struct _builtin_common_2<T, U, meta::void_<_cond_res<as_cref_t<T>, as_cref_t<U>>>>
+        struct _builtin_common_3<T, U, meta::void_<_cond_res<as_cref_t<T>, as_cref_t<U>>>>
             : std::decay<_cond_res<as_cref_t<T>, as_cref_t<U>>>
+        {};
+        template<typename T, typename U, typename = void>
+        struct _builtin_common_2
+            : _builtin_common_3<T, U>
+        {};
+        template<typename T, typename U>
+        struct _builtin_common_2<T, U, meta::void_<_cond_res<T, U>>>
+            : std::decay<_cond_res<T, U>>
         {};
         template<typename T, typename U, typename /* = void */>
         struct _builtin_common
@@ -164,19 +172,27 @@ namespace concepts
         {};
     #else
         template<typename T, typename U, typename = void>
-        struct _builtin_common_
+        struct _builtin_common_3
         {};
         template<typename T, typename U>
-        struct _builtin_common_<T, U, meta::void_<_cond_res<as_cref_t<T>, as_cref_t<U>>>>
+        struct _builtin_common_3<T, U, meta::void_<_cond_res<as_cref_t<T>, as_cref_t<U>>>>
             : std::decay<_cond_res<as_cref_t<T>, as_cref_t<U>>>
+        {};
+        template<typename T, typename U, typename = void>
+        struct _builtin_common_2
+            : _builtin_common_3<T, U>
+        {};
+        template<typename T, typename U>
+        struct _builtin_common_2<T, U, meta::void_<_cond_res<T, U>>>
+            : std::decay<_cond_res<T, U>>
         {};
         template<typename T, typename U, typename /* = void */>
         struct _builtin_common
-            : _builtin_common_<T, U>
+            : _builtin_common_2<T, U>
         {};
         template<typename T, typename U, typename = void>
         struct _builtin_common_rr
-            : _builtin_common_<T &&, U &&>
+            : _builtin_common_2<T &&, U &&>
         {};
         template<typename T, typename U>
         struct _builtin_common_rr<T, U, if_t<
@@ -195,7 +211,7 @@ namespace concepts
         {};
         template<typename T, typename U, typename = void>
         struct _builtin_common_lr
-            : _builtin_common_<T &, T &&>
+            : _builtin_common_2<T &, T &&>
         {};
         template<typename T, typename U>
         struct _builtin_common_lr<T, U, if_t<

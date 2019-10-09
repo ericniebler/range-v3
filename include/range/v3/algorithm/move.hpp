@@ -35,12 +35,12 @@ namespace ranges
     using move_result = detail::in_out_result<I, O>;
 
     RANGES_HIDDEN_DETAIL(namespace _move CPP_PP_LBRACE())
-    RANGES_BEGIN_NIEBLOID(move)
+    RANGES_FUNC_BEGIN(move)
 
         /// \brief function template \c move
         template<typename I, typename S, typename O>
-        auto RANGES_FUN_NIEBLOID(move)(I first, S last, O out) //
-            ->CPP_ret(move_result<I, O>)(                      //
+        auto RANGES_FUNC(move)(I first, S last, O out) //
+            ->CPP_ret(move_result<I, O>)(              //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                 weakly_incrementable<O> && indirectly_movable<I, O>)
         {
@@ -51,7 +51,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename O>
-        auto RANGES_FUN_NIEBLOID(move)(Rng && rng, O out)    //
+        auto RANGES_FUNC(move)(Rng && rng, O out)            //
             ->CPP_ret(move_result<safe_iterator_t<Rng>, O>)( //
                 requires input_range<Rng> && weakly_incrementable<O> &&
                 indirectly_movable<iterator_t<Rng>, O>)
@@ -59,7 +59,7 @@ namespace ranges
             return (*this)(begin(rng), end(rng), std::move(out));
         }
 
-    RANGES_END_NIEBLOID(move)
+    RANGES_FUNC_END(move)
     RANGES_HIDDEN_DETAIL(CPP_PP_RBRACE())
 
 #ifndef RANGES_DOXYGEN_INVOKED

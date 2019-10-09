@@ -46,7 +46,7 @@ namespace ranges
     namespace detail
     {
         template<typename I, typename S, typename C, typename P>
-        I partition_impl(I first, S last, C pred, P proj, detail::forward_iterator_tag_)
+        I partition_impl(I first, S last, C pred, P proj, std::forward_iterator_tag)
         {
             while(true)
             {
@@ -68,8 +68,7 @@ namespace ranges
         }
 
         template<typename I, typename S, typename C, typename P>
-        I partition_impl(I first, S end_, C pred, P proj,
-                         detail::bidirectional_iterator_tag_)
+        I partition_impl(I first, S end_, C pred, P proj, std::bidirectional_iterator_tag)
         {
             I last = ranges::next(first, end_);
             while(true)
@@ -94,12 +93,12 @@ namespace ranges
     } // namespace detail
     /// \endcond
 
-    RANGES_BEGIN_NIEBLOID(partition)
+    RANGES_FUNC_BEGIN(partition)
 
         /// \brief function template \c partition
         template<typename I, typename S, typename C, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(partition)(I first, S last, C pred, P proj = P{}) //
-            ->CPP_ret(I)(                                                          //
+        auto RANGES_FUNC(partition)(I first, S last, C pred, P proj = P{}) //
+            ->CPP_ret(I)(                                                  //
                 requires permutable<I> && sentinel_for<S, I> &&
                 indirect_unary_predicate<C, projected<I, P>>)
         {
@@ -112,8 +111,8 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(partition)(Rng && rng, C pred, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                  //
+        auto RANGES_FUNC(partition)(Rng && rng, C pred, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                          //
                 requires forward_range<Rng> && permutable<iterator_t<Rng>> &&
                 indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
         {
@@ -124,7 +123,7 @@ namespace ranges
                                           iterator_tag_of<iterator_t<Rng>>());
         }
 
-    RANGES_END_NIEBLOID(partition)
+    RANGES_FUNC_END(partition)
 
     namespace cpp20
     {

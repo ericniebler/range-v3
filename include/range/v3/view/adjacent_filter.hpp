@@ -68,11 +68,12 @@ namespace ranges
 
         public:
             adaptor() = default;
-            constexpr adaptor(Parent & rng) noexcept
-              : rng_(&rng)
+            constexpr adaptor(Parent * rng) noexcept
+              : rng_(rng)
             {}
-            CPP_template(bool Other)( //
-                requires Const && (!Other)) constexpr adaptor(adaptor<Other> that)
+            CPP_template(bool Other)(       //
+                requires Const && (!Other)) //
+                constexpr adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
             constexpr void next(iterator_t<CRng> & it) const
@@ -104,23 +105,23 @@ namespace ranges
         };
         constexpr auto begin_adaptor() noexcept -> adaptor<false>
         {
-            return {*this};
+            return {this};
         }
         CPP_member
         constexpr auto begin_adaptor() const noexcept -> CPP_ret(adaptor<true>)( //
             requires detail::adjacent_filter_constraints<Rng const, Pred const>)
         {
-            return {*this};
+            return {this};
         }
         constexpr auto end_adaptor() noexcept -> adaptor<false>
         {
-            return {*this};
+            return {this};
         }
         CPP_member
         constexpr auto end_adaptor() const noexcept -> CPP_ret(adaptor<true>)( //
             requires detail::adjacent_filter_constraints<Rng const, Pred const>)
         {
-            return {*this};
+            return {this};
         }
 
     public:
@@ -139,17 +140,8 @@ namespace ranges
 
     namespace views
     {
-        struct adjacent_filter_fn
+        struct adjacent_filter_base_fn
         {
-        private:
-            friend view_access;
-            template<typename Pred>
-            constexpr static auto bind(adjacent_filter_fn adjacent_filter, Pred pred)
-            {
-                return make_pipeable(bind_back(adjacent_filter, std::move(pred)));
-            }
-
-        public:
             template<typename Rng, typename Pred>
             constexpr auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(adjacent_filter_view<all_t<Rng>, Pred>)( //
@@ -159,9 +151,21 @@ namespace ranges
             }
         };
 
+        struct adjacent_filter_fn : adjacent_filter_base_fn
+        {
+            using adjacent_filter_base_fn::operator();
+
+            template<typename Pred>
+            constexpr auto operator()(Pred pred) const
+            {
+                return make_view_closure(
+                    bind_back(adjacent_filter_base_fn{}, std::move(pred)));
+            }
+        };
+
         /// \relates adjacent_filter_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<adjacent_filter_fn>, adjacent_filter)
+        RANGES_INLINE_VARIABLE(adjacent_filter_fn, adjacent_filter)
     } // namespace views
     /// @}
 } // namespace ranges

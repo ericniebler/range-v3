@@ -324,15 +324,21 @@ namespace ranges
 #define RANGES_WORKAROUND_CLANG_23135 // constexpr leads to premature instantiation on
                                       // clang-3.x
 #endif
-#else // __GNUC__
+#define RANGES_WORKAROUND_CLANG_43400 // template friend is redefinition of itself
+#else                                 // __GNUC__
 #if __GNUC__ < 6
 #define RANGES_WORKAROUND_GCC_UNFILED0 /* Workaround old GCC name lookup bug */
 #endif
 #if __GNUC__ == 7 || __GNUC__ == 8
 #define RANGES_WORKAROUND_GCC_91525 /* Workaround strange GCC ICE */
 #endif
-#if __GNUC__ >= 9 && defined(__cpp_concepts)
-#define RANGES_WORKAROUND_GCC_89953
+#if __GNUC__ >= 9
+#ifdef __cpp_concepts
+#define RANGES_WORKAROUND_GCC_89953 // ICE in nothrow_spec_p, at cp/except.c:1244
+#endif
+#if __GNUC__ == 9 && __GNUC_MINOR__ < 3 && __cplusplus <= RANGES_CXX_STD_17
+#define RANGES_WORKAROUND_GCC_91923 // Failure-to-SFINAE with class type NTTP in C++17
+#endif
 #endif
 #endif
 
@@ -579,14 +585,34 @@ namespace ranges
 #endif
 
 #ifndef RANGES_DOXYGEN_INVOKED
-#define RANGES_BEGIN_NIEBLOID(NAME) struct NAME ## _fn {
-#define RANGES_END_NIEBLOID(NAME) }; RANGES_INLINE_VARIABLE(NAME ## _fn, NAME)
-#define RANGES_FUN_NIEBLOID(NAME) operator() RANGES_FUN_NIEBLOID_CONST_
-#define RANGES_FUN_NIEBLOID_CONST_(...) (__VA_ARGS__) const
+#define RANGES_ADL_BARRIER_FOR(S) S##_ns
+#define RANGES_STRUCT_WITH_ADL_BARRIER(S) \
+    _ranges_adl_barrier_noop_;            \
+    namespace RANGES_ADL_BARRIER_FOR(S)   \
+    {                                     \
+        struct S;                         \
+    }                                     \
+    using RANGES_ADL_BARRIER_FOR(S)::S;   \
+    struct RANGES_ADL_BARRIER_FOR(S)::S /**/
 #else
-#define RANGES_BEGIN_NIEBLOID(NAME)
-#define RANGES_END_NIEBLOID(NAME)
-#define RANGES_FUN_NIEBLOID(NAME) NAME
+#define RANGES_ADL_BARRIER_FOR(S)
+#define RANGES_STRUCT_WITH_ADL_BARRIER(S) S
+#endif
+
+#ifndef RANGES_DOXYGEN_INVOKED
+#define RANGES_FUNC_BEGIN(NAME) \
+    struct NAME##_fn            \
+    {
+#define RANGES_FUNC_END(NAME) \
+    }                         \
+    ;                         \
+    RANGES_INLINE_VARIABLE(NAME##_fn, NAME)
+#define RANGES_FUNC(NAME) operator() RANGES_FUNC_CONST_ /**/
+#define RANGES_FUNC_CONST_(...) (__VA_ARGS__) const
+#else
+#define RANGES_FUNC_BEGIN(NAME)
+#define RANGES_FUNC_END(NAME)
+#define RANGES_FUNC(NAME) NAME
 #endif
 
 #ifndef RANGES_CXX_DEDUCTION_GUIDES

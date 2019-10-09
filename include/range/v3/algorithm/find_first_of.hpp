@@ -32,7 +32,7 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(find_first_of)
+    RANGES_FUNC_BEGIN(find_first_of)
         // Rationale: return I0 instead of pair<I0,I1> because find_first_of need
         // not actually compute the end of [I1,S0); therefore, it is not necessarily
         // losing information. E.g., if begin0 == end0, we can return begin0 immediately.
@@ -47,14 +47,14 @@ namespace ranges
                  typename R = equal_to,
                  typename P0 = identity,
                  typename P1 = identity>
-        constexpr auto RANGES_FUN_NIEBLOID(find_first_of)(I0 begin0,
-                                                          S0 end0,
-                                                          I1 begin1,
-                                                          S1 end1,
-                                                          R pred = R{},
-                                                          P0 proj0 = P0{},
-                                                          P1 proj1 = P1{}) //
-            ->CPP_ret(I0)(                                                 //
+        constexpr auto RANGES_FUNC(find_first_of)(I0 begin0,
+                                                  S0 end0,
+                                                  I1 begin1,
+                                                  S1 end1,
+                                                  R pred = R{},
+                                                  P0 proj0 = P0{},
+                                                  P1 proj1 = P1{}) //
+            ->CPP_ret(I0)(                                         //
                 requires input_iterator<I0> && sentinel_for<S0, I0> &&
                 forward_iterator<I1> && sentinel_for<S1, I1> &&
                 indirect_relation<R, projected<I0, P0>, projected<I1, P1>>)
@@ -72,7 +72,7 @@ namespace ranges
                  typename R = equal_to,
                  typename P0 = identity,
                  typename P1 = identity>
-        constexpr auto RANGES_FUN_NIEBLOID(find_first_of)(
+        constexpr auto RANGES_FUNC(find_first_of)(
             Rng0 && rng0, Rng1 && rng1, R pred = R{}, P0 proj0 = P0{}, P1 proj1 = P1{}) //
             ->CPP_ret(safe_iterator_t<Rng0>)(                                           //
                 requires input_range<Rng0> && forward_range<Rng1> &&
@@ -89,7 +89,7 @@ namespace ranges
                            std::move(proj1));
         }
 
-    RANGES_END_NIEBLOID(find_first_of)
+    RANGES_FUNC_END(find_first_of)
 
     namespace cpp20
     {

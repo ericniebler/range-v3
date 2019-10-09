@@ -348,31 +348,6 @@ namespace ranges
         );
         // clang-format on
 
-        using cursor_tag = concepts::tag<cursor_concept>;
-
-        using input_cursor_tag = concepts::tag<input_cursor_concept, cursor_tag>;
-
-        using forward_cursor_tag =
-            concepts::tag<forward_cursor_concept, input_cursor_tag>;
-
-        using bidirectional_cursor_tag =
-            concepts::tag<bidirectional_cursor_concept, forward_cursor_tag>;
-
-        using random_access_cursor_tag =
-            concepts::tag<random_access_cursor_concept, bidirectional_cursor_tag>;
-
-        using contiguous_cursor_tag =
-            concepts::tag<contiguous_cursor_concept, random_access_cursor_tag>;
-
-        template<typename T>
-        using cursor_tag_of = concepts::tag_of<meta::list<contiguous_cursor_concept,    //
-                                                          random_access_cursor_concept, //
-                                                          bidirectional_cursor_concept, //
-                                                          forward_cursor_concept,       //
-                                                          input_cursor_concept,         //
-                                                          cursor_concept>,
-                                               T>;
-
         template<typename Cur, bool IsReadable>
         struct is_writable_cursor_ : std::true_type
         {};

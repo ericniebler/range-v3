@@ -48,8 +48,9 @@ namespace ranges
             using rvalue_reference_ =
                 common_reference_t<value_ const &&, range_rvalue_reference_t<CRng>>;
             adaptor() = default;
-            CPP_template(bool Other)( //
-                requires Const && (!Other)) constexpr adaptor(adaptor<Other>)
+            CPP_template(bool Other)(       //
+                requires Const && (!Other)) //
+                constexpr adaptor(adaptor<Other>)
             {}
             reference_ read(iterator_t<CRng> const & it) const
             {
@@ -118,7 +119,7 @@ namespace ranges
 
         /// \relates const_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<const_fn>, const_)
+        RANGES_INLINE_VARIABLE(view_closure<const_fn>, const_)
     } // namespace views
     /// @}
 } // namespace ranges

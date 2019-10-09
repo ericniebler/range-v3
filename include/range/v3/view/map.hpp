@@ -118,11 +118,11 @@ namespace ranges
 
         /// \relates keys_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<keys_fn>, keys)
+        RANGES_INLINE_VARIABLE(view_closure<keys_fn>, keys)
 
         /// \relates values_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<values_fn>, values)
+        RANGES_INLINE_VARIABLE(view_closure<values_fn>, values)
     } // namespace views
 
     namespace cpp20

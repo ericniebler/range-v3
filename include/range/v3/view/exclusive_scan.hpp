@@ -76,8 +76,8 @@ namespace ranges
                 // clang-format on
                 public : using single_pass = exclusive_scan_view::single_pass;
             adaptor() = default;
-            adaptor(exclusive_scan_view_t & rng)
-              : rng_(&rng)
+            adaptor(exclusive_scan_view_t * rng)
+              : rng_(rng)
             {}
             CPP_template(bool Other)( //
                 requires IsConst && (!Other)) adaptor(adaptor<Other> that)
@@ -103,24 +103,24 @@ namespace ranges
 
         adaptor<false> begin_adaptor()
         {
-            return {*this};
+            return {this};
         }
         meta::if_<use_sentinel_t, adaptor_base, adaptor<false>> end_adaptor()
         {
-            return {*this};
+            return {this};
         }
         CPP_member
         auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
             requires exclusive_scan_constraints<Rng const, T, Fun const>)
         {
-            return {*this};
+            return {this};
         }
         CPP_member
         auto end_adaptor() const
             -> CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)( //
                 requires exclusive_scan_constraints<Rng const, T, Fun const>)
         {
-            return {*this};
+            return {this};
         }
 
     public:
@@ -151,19 +151,8 @@ namespace ranges
 
     namespace views
     {
-        struct exclusive_scan_fn
+        struct exclusive_scan_base_fn
         {
-        private:
-            friend view_access;
-            template<typename T, typename Fun = plus>
-            static constexpr auto bind(exclusive_scan_fn exclusive_scan, T init,
-                                       Fun fun = {})
-            {
-                return make_pipeable(
-                    bind_back(exclusive_scan, std::move(init), std::move(fun)));
-            }
-
-        public:
             template<typename Rng, typename T, typename Fun = plus>
             constexpr auto operator()(Rng && rng, T init, Fun fun = Fun{}) const
                 -> CPP_ret(exclusive_scan_view<all_t<Rng>, T, Fun>)( //
@@ -173,9 +162,21 @@ namespace ranges
             }
         };
 
+        struct exclusive_scan_fn : exclusive_scan_base_fn
+        {
+            using exclusive_scan_base_fn::operator();
+
+            template<typename T, typename Fun = plus>
+            constexpr auto operator()(T init, Fun fun = {}) const
+            {
+                return make_view_closure(
+                    bind_back(exclusive_scan_base_fn{}, std::move(init), std::move(fun)));
+            }
+        };
+
         /// \relates exclusive_scan_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<exclusive_scan_fn>, exclusive_scan)
+        RANGES_INLINE_VARIABLE(exclusive_scan_fn, exclusive_scan)
     } // namespace views
     /// @}
 } // namespace ranges

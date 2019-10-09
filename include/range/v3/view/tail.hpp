@@ -79,8 +79,9 @@ namespace ranges
         {
             return ranges::end(rng_);
         }
+        // Strange cast to bool in the requires clause is to work around gcc bug.
         CPP_member
-        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
+        constexpr auto CPP_fun(size)()(requires(bool(sized_range<Rng>)))
         {
             using size_type = range_size_t<Rng>;
             return range_cardinality<Rng>::value >= 0
@@ -88,7 +89,7 @@ namespace ranges
                        : detail::prev_or_zero_(ranges::size(rng_));
         }
         CPP_member
-        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        constexpr auto CPP_fun(size)()(const requires(bool(sized_range<Rng const>)))
         {
             using size_type = range_size_t<Rng>;
             return range_cardinality<Rng>::value >= 0
@@ -102,8 +103,10 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng)(requires viewable_range<Rng>) tail_view(Rng &&)
-        ->tail_view<views::all_t<Rng>>;
+    CPP_template(typename Rng)(       //
+        requires viewable_range<Rng>) //
+        tail_view(Rng &&)
+            ->tail_view<views::all_t<Rng>>;
 #endif
 
     namespace views
@@ -122,7 +125,7 @@ namespace ranges
 
         /// \relates tail_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<tail_fn>, tail)
+        RANGES_INLINE_VARIABLE(view_closure<tail_fn>, tail)
     } // namespace views
     /// @}
 } // namespace ranges

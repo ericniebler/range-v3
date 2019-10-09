@@ -43,8 +43,8 @@ namespace ranges
 
         public:
             cursor() = default;
-            explicit cursor(istream_view & rng)
-              : rng_(&rng)
+            explicit cursor(istream_view * rng)
+              : rng_(rng)
             {}
             void next()
             {
@@ -70,7 +70,7 @@ namespace ranges
         }
         cursor begin_cursor()
         {
-            return cursor{*this};
+            return cursor{this};
         }
 
     public:
@@ -108,6 +108,11 @@ namespace ranges
     using namespace _istream_;
     /// \endcond
 
+    namespace cpp20
+    {
+        template<typename Val>
+        using basic_istream_view = ::ranges::istream_view<Val>;
+    } // namespace cpp20
     /// @}
 } // namespace ranges
 

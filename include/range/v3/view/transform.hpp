@@ -112,7 +112,7 @@ namespace ranges
             friend struct adaptor<!IsConst>;
             using CRng = meta::const_if_c<IsConst, Rng>;
             using fun_ref_ = semiregular_box_ref_or_val_t<Fun, IsConst>;
-            fun_ref_ fun_;
+            RANGES_NO_UNIQUE_ADDRESS fun_ref_ fun_;
 
         public:
             using value_type =
@@ -228,10 +228,10 @@ namespace ranges
 
         public:
             sentinel() = default;
-            sentinel(meta::const_if_c<Const, iter_transform2_view> & parent,
+            sentinel(meta::const_if_c<Const, iter_transform2_view> * parent,
                      decltype(ranges::end))
-              : end1_(end(parent.rng1_))
-              , end2_(end(parent.rng2_))
+              : end1_(end(parent->rng1_))
+              , end2_(end(parent->rng2_))
             {}
             CPP_template(bool Other)( //
                 requires Const && (!Other)) sentinel(sentinel<Other> that)
@@ -261,11 +261,11 @@ namespace ranges
 
             cursor() = default;
             template<typename BeginEndFn>
-            cursor(meta::const_if_c<Const, iter_transform2_view> & parent,
+            cursor(meta::const_if_c<Const, iter_transform2_view> * parent,
                    BeginEndFn begin_end)
-              : fun_(parent.fun_)
-              , it1_(begin_end(parent.rng1_))
-              , it2_(begin_end(parent.rng2_))
+              : fun_(parent->fun_)
+              , it1_(begin_end(parent->rng1_))
+              , it2_(begin_end(parent->rng2_))
             {}
             CPP_template(bool Other)( //
                 requires Const && (!Other)) cursor(cursor<Other> that)
@@ -342,11 +342,11 @@ namespace ranges
 
         cursor<simple_view<Rng1>() && simple_view<Rng2>()> begin_cursor()
         {
-            return {*this, ranges::begin};
+            return {this, ranges::begin};
         }
         end_cursor_t<simple_view<Rng1>() && simple_view<Rng2>()> end_cursor()
         {
-            return {*this, ranges::end};
+            return {this, ranges::end};
         }
         template<bool Const = true>
         auto begin_cursor() const -> CPP_ret(cursor<true>)( //
@@ -355,7 +355,7 @@ namespace ranges
                     Fun const, meta::const_if_c<Const, Rng1>,
                     meta::const_if_c<Const, Rng2>>)
         {
-            return {*this, ranges::begin};
+            return {this, ranges::begin};
         }
         template<bool Const = true>
         auto end_cursor() const -> CPP_ret(end_cursor_t<Const>)( //
@@ -364,7 +364,7 @@ namespace ranges
                     Fun const, meta::const_if_c<Const, Rng1>,
                     meta::const_if_c<Const, Rng2>>)
         {
-            return {*this, ranges::end};
+            return {this, ranges::end};
         }
         template<typename Self>
         static constexpr auto size_(Self & self)
@@ -422,17 +422,8 @@ namespace ranges
 
     namespace views
     {
-        struct iter_transform_fn
+        struct iter_transform_base_fn
         {
-        private:
-            friend view_access;
-            template<typename Fun>
-            static constexpr auto bind(iter_transform_fn iter_transform, Fun fun)
-            {
-                return make_pipeable(bind_back(iter_transform, std::move(fun)));
-            }
-
-        public:
             template<typename Rng, typename Fun>
             constexpr auto operator()(Rng && rng, Fun fun) const
                 -> CPP_ret(iter_transform_view<all_t<Rng>, Fun>)( //
@@ -457,9 +448,21 @@ namespace ranges
             }
         };
 
+        struct iter_transform_fn : iter_transform_base_fn
+        {
+            using iter_transform_base_fn::operator();
+
+            template<typename Fun>
+            constexpr auto operator()(Fun fun) const
+            {
+                return make_view_closure(
+                    bind_back(iter_transform_base_fn{}, std::move(fun)));
+            }
+        };
+
         /// \relates iter_transform_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<iter_transform_fn>, iter_transform)
+        RANGES_INLINE_VARIABLE(iter_transform_fn, iter_transform)
 
         // Don't forget to update views::for_each whenever this set
         // of concepts changes
@@ -486,17 +489,8 @@ namespace ranges
         );
         // clang-format on
 
-        struct transform_fn
+        struct transform_base_fn
         {
-        private:
-            friend view_access;
-            template<typename Fun>
-            static constexpr auto bind(transform_fn transform, Fun fun)
-            {
-                return make_pipeable(bind_back(transform, std::move(fun)));
-            }
-
-        public:
             template<typename Rng, typename Fun>
             constexpr auto operator()(Rng && rng, Fun fun) const
                 -> CPP_ret(transform_view<all_t<Rng>, Fun>)( //
@@ -516,9 +510,20 @@ namespace ranges
             }
         };
 
+        struct transform_fn : transform_base_fn
+        {
+            using transform_base_fn::operator();
+
+            template<typename Fun>
+            constexpr auto operator()(Fun fun) const
+            {
+                return make_view_closure(bind_back(transform_base_fn{}, std::move(fun)));
+            }
+        };
+
         /// \relates transform_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<transform_fn>, transform)
+        RANGES_INLINE_VARIABLE(transform_fn, transform)
     } // namespace views
 
     namespace cpp20

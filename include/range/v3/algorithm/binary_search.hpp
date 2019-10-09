@@ -33,7 +33,7 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(binary_search)
+    RANGES_FUNC_BEGIN(binary_search)
         /// \brief function template \c binary_search
         ///
         /// range-based version of the \c binary_search std algorithm
@@ -44,7 +44,7 @@ namespace ranges
                  typename V,
                  typename C = less,
                  typename P = identity>
-        auto RANGES_FUN_NIEBLOID(binary_search)(
+        auto RANGES_FUNC(binary_search)(
             I first, S last, V const & val, C pred = C{}, P proj = P{})
             ->CPP_ret(bool)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
@@ -57,7 +57,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename V, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(binary_search)(
+        auto RANGES_FUNC(binary_search)(
             Rng && rng, V const & val, C pred = C{}, P proj = P{}) //
             ->CPP_ret(bool)(                                       //
                 requires forward_range<Rng> &&
@@ -67,7 +67,7 @@ namespace ranges
                           "Trying to binary search an infinite range");
             return (*this)(begin(rng), end(rng), val, std::move(pred), std::move(proj));
         }
-    RANGES_END_NIEBLOID(binary_search)
+    RANGES_FUNC_END(binary_search)
 
     namespace cpp20
     {

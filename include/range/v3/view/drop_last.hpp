@@ -19,7 +19,6 @@
 #include <meta/meta.hpp>
 
 #include <range/v3/functional/bind_back.hpp>
-#include <range/v3/functional/pipeable.hpp>
 #include <range/v3/iterator/counted_iterator.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/iterator/operations.hpp>
@@ -35,6 +34,9 @@
 
 namespace ranges
 {
+    /// \addtogroup group-views
+    /// @{
+
     /// \cond
     namespace detail
     {
@@ -328,19 +330,8 @@ namespace ranges
 
     namespace views
     {
-        struct drop_last_fn
+        struct drop_last_base_fn
         {
-        private:
-            friend view_access;
-
-            template<typename Int>
-            static constexpr auto CPP_fun(bind)(drop_last_fn drop_last, Int n)( //
-                requires integral<Int>)
-            {
-                return make_pipeable(bind_back(drop_last, n));
-            }
-
-        public:
             template<typename Rng>
             constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> CPP_ret(drop_last_view<all_t<Rng>>)( //
@@ -350,8 +341,22 @@ namespace ranges
             }
         };
 
-        RANGES_INLINE_VARIABLE(view<drop_last_fn>, drop_last)
+        struct drop_last_fn : drop_last_base_fn
+        {
+            using drop_last_base_fn::operator();
+
+            template<typename Int>
+            constexpr auto CPP_fun(operator())(Int n)(const //
+                                                      requires detail::integer_like_<Int>)
+            {
+                return make_view_closure(bind_back(drop_last_base_fn{}, n));
+            }
+        };
+
+        RANGES_INLINE_VARIABLE(drop_last_fn, drop_last)
     } // namespace views
+
+    /// @}
 } // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>

@@ -265,19 +265,8 @@ namespace ranges
 
     namespace views
     {
-        struct take_fn
+        struct take_base_fn
         {
-        private:
-            friend view_access;
-
-            template<typename Int>
-            static constexpr auto CPP_fun(bind)(take_fn take, Int n)( //
-                requires integral<Int>)
-            {
-                return make_pipeable(bind_back(take, n));
-            }
-
-        public:
             template<typename Rng>
             auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> CPP_ret(take_view<all_t<Rng>>)( //
@@ -287,9 +276,21 @@ namespace ranges
             }
         };
 
+        struct take_fn : take_base_fn
+        {
+            using take_base_fn::operator();
+
+            template<typename Int>
+            constexpr auto CPP_fun(operator())(Int n)(const //
+                                                      requires detail::integer_like_<Int>)
+            {
+                return make_view_closure(bind_back(take_base_fn{}, n));
+            }
+        };
+
         /// \relates take_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<take_fn>, take)
+        RANGES_INLINE_VARIABLE(take_fn, take)
     } // namespace views
 
     namespace cpp20

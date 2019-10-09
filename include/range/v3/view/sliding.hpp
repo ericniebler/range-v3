@@ -187,9 +187,9 @@ namespace ranges
 
         public:
             adaptor() = default;
-            adaptor(sliding_view & v)
-              : base_t{v.base()}
-              , n_{v.n_}
+            adaptor(sliding_view * v)
+              : base_t{v->base()}
+              , n_{v->n_}
             {}
             iterator_t<Rng> begin(sliding_view & v)
             {
@@ -223,11 +223,11 @@ namespace ranges
 
         adaptor begin_adaptor()
         {
-            return {*this};
+            return {this};
         }
         meta::if_c<common_range<Rng>, adaptor, adaptor_base> end_adaptor()
         {
-            return {*this};
+            return {this};
         }
 
     public:
@@ -259,8 +259,8 @@ namespace ranges
 
         public:
             adaptor() = default;
-            adaptor(sliding_view & v)
-              : n_{v.n_}
+            adaptor(sliding_view * v)
+              : n_{v->n_}
             {}
             iterator_t<Rng> end(sliding_view & v)
             {
@@ -275,11 +275,11 @@ namespace ranges
 
         adaptor begin_adaptor()
         {
-            return {*this};
+            return {this};
         }
         adaptor end_adaptor()
         {
-            return {*this};
+            return {this};
         }
 
     public:
@@ -358,18 +358,8 @@ namespace ranges
     {
         // In:  range<T>
         // Out: range<range<T>>, where each inner range has $n$ elements.
-        struct sliding_fn
+        struct sliding_base_fn
         {
-        private:
-            friend view_access;
-            template<typename Int>
-            static constexpr auto CPP_fun(bind)(sliding_fn sliding, Int n)( //
-                requires integral<Int>)
-            {
-                return make_pipeable(bind_back(sliding, n));
-            }
-
-        public:
             template<typename Rng>
             constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> CPP_ret(sliding_view<all_t<Rng>>)( //
@@ -379,9 +369,21 @@ namespace ranges
             }
         };
 
+        struct sliding_fn : sliding_base_fn
+        {
+            using sliding_base_fn::operator();
+
+            template<typename Int>
+            constexpr auto CPP_fun(operator())(Int n)(const //
+                                                      requires detail::integer_like_<Int>)
+            {
+                return make_view_closure(bind_back(sliding_base_fn{}, n));
+            }
+        };
+
         /// \relates sliding_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<sliding_fn>, sliding)
+        RANGES_INLINE_VARIABLE(sliding_fn, sliding)
     } // namespace views
     /// @}
 } // namespace ranges

@@ -71,6 +71,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/iterator/stream_iterators.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/chunk.hpp>
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/group_by.hpp>
 #include <range/v3/view/iota.hpp>
@@ -293,72 +294,6 @@ layout_months()
     });
 }
 
-namespace cal_example
-{
-
-    // In:  range<T>
-    // Out: range<range<T>>, where each inner range has $n$ elements.
-    //                       The last range may have fewer.
-    template<class Rng>
-    class chunk_view : public view_adaptor<chunk_view<Rng>, Rng>
-    {
-        CPP_assert(forward_range<Rng>);
-        ranges::range_difference_t<Rng> n_;
-        friend range_access;
-        class adaptor;
-        adaptor begin_adaptor()
-        {
-            return adaptor{n_, ranges::end(this->base())};
-        }
-
-    public:
-        chunk_view() = default;
-        chunk_view(Rng rng, ranges::range_difference_t<Rng> n)
-          : chunk_view::view_adaptor(std::move(rng))
-          , n_(n)
-        {}
-    };
-
-    template<class Rng>
-    class chunk_view<Rng>::adaptor : public adaptor_base
-    {
-        ranges::range_difference_t<Rng> n_;
-        sentinel_t<Rng> end_;
-
-    public:
-        adaptor() = default;
-        adaptor(ranges::range_difference_t<Rng> n, sentinel_t<Rng> last)
-          : n_(n)
-          , end_(last)
-        {}
-        auto read(iterator_t<Rng> it) const
-        {
-            return views::take(make_subrange(std::move(it), end_), n_);
-        }
-        void next(iterator_t<Rng> &it)
-        {
-            ranges::advance(it, n_, end_);
-        }
-        void prev() = delete;
-        void distance_to() = delete;
-    };
-
-} // namespace cal_example
-
-// In:  range<T>
-// Out: range<range<T>>, where each inner range has $n$ elements.
-//                       The last range may have fewer.
-auto
-chunk(std::size_t n)
-{
-    return make_pipeable([=](auto &&rng) {
-        using Rng = decltype(rng);
-        return cal_example::chunk_view<views::all_t<Rng>>{
-            views::all(std::forward<Rng>(rng)),
-            static_cast<ranges::range_difference_t<Rng>>(n)};
-    });
-}
-
 // Flattens a range of ranges by iterating the inner
 // ranges in round-robin fashion.
 template<class Rngs>
@@ -416,7 +351,7 @@ struct interleave_view<Rngs>::cursor
 auto
 interleave()
 {
-    return make_pipeable([](auto &&rngs) {
+    return make_view_closure([](auto &&rngs) {
         using Rngs = decltype(rngs);
         return interleave_view<views::all_t<Rngs>>(
             views::all(std::forward<Rngs>(rngs)));
@@ -428,12 +363,12 @@ interleave()
 auto
 transpose()
 {
-    return make_pipeable([](auto &&rngs) {
+    return make_view_closure([](auto &&rngs) {
         using Rngs = decltype(rngs);
         CPP_assert(forward_range<Rngs>);
         return std::forward<Rngs>(rngs)
             | interleave()
-            | chunk(static_cast<std::size_t>(distance(rngs)));
+            | views::chunk(static_cast<std::size_t>(distance(rngs)));
     });
 }
 
@@ -460,22 +395,19 @@ join_months()
 auto
 format_calendar(std::size_t months_per_line)
 {
-    return make_pipeable([=](auto &&rng) {
-        using Rng = decltype(rng);
-        return std::forward<Rng>(rng)
-               // Group the dates by month:
-               | by_month()
-               // Format the month into a range of strings:
-               | layout_months()
-               // Group the months that belong side-by-side:
-               | chunk(months_per_line)
-               // Transpose the rows and columns of the size-by-side months:
-               | transpose_months()
-               // Ungroup the side-by-side months:
-               | views::join
-               // Join the strings of the transposed months:
-               | join_months();
-    });
+    return
+        // Group the dates by month:
+        by_month()
+        // Format the month into a range of strings:
+      | layout_months()
+        // Group the months that belong side-by-side:
+      | views::chunk(months_per_line)
+        // Transpose the rows and columns of the size-by-side months:
+      | transpose_months()
+        // Ungroup the side-by-side months:
+      | views::join
+        // Join the strings of the transposed months:
+      | join_months();
 }
 
 

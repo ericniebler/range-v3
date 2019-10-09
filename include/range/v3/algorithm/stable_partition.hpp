@@ -56,7 +56,7 @@ namespace ranges
     {
         template<typename I, typename C, typename P, typename D, typename Pair>
         I stable_partition_impl(I first, I last, C pred, P proj, D len, Pair const p,
-                                detail::forward_iterator_tag_ fi)
+                                std::forward_iterator_tag fi)
         {
             // *first is known to be false
             // len >= 1
@@ -128,7 +128,7 @@ namespace ranges
 
         template<typename I, typename S, typename C, typename P>
         I stable_partition_impl(I first, S last, C pred, P proj,
-                                detail::forward_iterator_tag_ fi)
+                                std::forward_iterator_tag fi)
         {
             using difference_type = iter_difference_t<I>;
             difference_type const alloc_limit = 3; // might want to make this a function
@@ -156,7 +156,7 @@ namespace ranges
 
         template<typename I, typename C, typename P, typename D, typename Pair>
         I stable_partition_impl(I first, I last, C pred, P proj, D len, Pair p,
-                                detail::bidirectional_iterator_tag_ bi)
+                                std::bidirectional_iterator_tag bi)
         {
             // *first is known to be false
             // *last is known to be true
@@ -251,7 +251,7 @@ namespace ranges
 
         template<typename I, typename S, typename C, typename P>
         I stable_partition_impl(I first, S end_, C pred, P proj,
-                                detail::bidirectional_iterator_tag_ bi)
+                                std::bidirectional_iterator_tag bi)
         {
             using difference_type = iter_difference_t<I>;
             using value_type = iter_value_t<I>;
@@ -288,13 +288,12 @@ namespace ranges
     } // namespace detail
     /// endcond
 
-    RANGES_BEGIN_NIEBLOID(stable_partition)
+    RANGES_FUNC_BEGIN(stable_partition)
 
         /// \brief function template \c stable_partition
         template<typename I, typename S, typename C, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(stable_partition)(
-            I first, S last, C pred, P proj = P{}) //
-            ->CPP_ret(I)(                          //
+        auto RANGES_FUNC(stable_partition)(I first, S last, C pred, P proj = P{}) //
+            ->CPP_ret(I)(                                                         //
                 requires bidirectional_iterator<I> && sentinel_for<S, I> &&
                 indirect_unary_predicate<C, projected<I, P>> && permutable<I>)
         {
@@ -308,8 +307,8 @@ namespace ranges
         // BUGBUG Can this be optimized if Rng has O1 size?
         /// \overload
         template<typename Rng, typename C, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(stable_partition)(Rng && rng, C pred, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                         //
+        auto RANGES_FUNC(stable_partition)(Rng && rng, C pred, P proj = P{}) //
+            ->CPP_ret(safe_iterator_t<Rng>)(                                 //
                 requires bidirectional_range<Rng> &&
                 indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> &&
                 permutable<iterator_t<Rng>>)
@@ -317,7 +316,7 @@ namespace ranges
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(stable_partition)
+    RANGES_FUNC_END(stable_partition)
 
     namespace cpp20
     {

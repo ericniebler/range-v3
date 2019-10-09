@@ -20,6 +20,9 @@
 
 namespace ranges
 {
+    /// \addtogroup group-views
+    /// @{
+
     /// \cond
     namespace detail
     {
@@ -47,11 +50,11 @@ namespace ranges
         static_assert(std::is_object<T>::value,
                       "The template parameter to empty_view must be an object type.");
         empty_view() = default;
-        constexpr static T * begin() noexcept
+        static constexpr T * begin() noexcept
         {
             return nullptr;
         }
-        constexpr static T * end() noexcept
+        static constexpr T * end() noexcept
         {
             return nullptr;
         }
@@ -88,6 +91,8 @@ namespace ranges
             requires std::is_object<T>::value) //
             using empty_view = ranges::empty_view<T>;
     } // namespace cpp20
+
+    /// @}
 } // namespace ranges
 
 #include <range/v3/detail/satisfy_boost_range.hpp>

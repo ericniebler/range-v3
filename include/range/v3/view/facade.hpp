@@ -68,8 +68,8 @@ namespace ranges
         struct view_as_cursor : Derived
         {
             view_as_cursor() = default;
-            explicit view_as_cursor(Derived const & derived)
-              : Derived(derived)
+            explicit view_as_cursor(Derived const * derived)
+              : Derived(*derived)
             {}
             explicit operator bool() = delete;
             explicit operator bool() const = delete;
@@ -77,7 +77,7 @@ namespace ranges
         // Default implementations
         constexpr view_as_cursor begin_cursor() const
         {
-            return view_as_cursor{derived()};
+            return view_as_cursor{&derived()};
         }
         constexpr default_sentinel_t end_cursor() const
         {

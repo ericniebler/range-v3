@@ -36,12 +36,12 @@ namespace ranges
     using copy_result = detail::in_out_result<I, O>;
 
     RANGES_HIDDEN_DETAIL(namespace _copy CPP_PP_LBRACE())
-    RANGES_BEGIN_NIEBLOID(copy)
+    RANGES_FUNC_BEGIN(copy)
 
         /// \brief function template \c copy
         template<typename I, typename S, typename O>
-        constexpr auto RANGES_FUN_NIEBLOID(copy)(I first, S last, O out) //
-            ->CPP_ret(copy_result<I, O>)(                                //
+        constexpr auto RANGES_FUNC(copy)(I first, S last, O out) //
+            ->CPP_ret(copy_result<I, O>)(                        //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                 weakly_incrementable<O> && indirectly_copyable<I, O>)
         {
@@ -52,15 +52,15 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename O>
-        constexpr auto RANGES_FUN_NIEBLOID(copy)(Rng && rng, O out) //
-            ->CPP_ret(copy_result<safe_iterator_t<Rng>, O>)(        //
+        constexpr auto RANGES_FUNC(copy)(Rng && rng, O out)  //
+            ->CPP_ret(copy_result<safe_iterator_t<Rng>, O>)( //
                 requires input_range<Rng> && weakly_incrementable<O> &&
                 indirectly_copyable<iterator_t<Rng>, O>)
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }
 
-    RANGES_END_NIEBLOID(copy)
+    RANGES_FUNC_END(copy)
     RANGES_HIDDEN_DETAIL(CPP_PP_RBRACE())
 
 #ifndef RANGES_DOXYGEN_INVOKED

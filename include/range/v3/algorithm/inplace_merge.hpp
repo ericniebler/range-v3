@@ -243,13 +243,13 @@ namespace ranges
 
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(inplace_merge)
+    RANGES_FUNC_BEGIN(inplace_merge)
 
         // TODO reimplement to only need forward iterators
 
         /// \brief function template \c inplace_merge
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(inplace_merge)(
+        auto RANGES_FUNC(inplace_merge)(
             I first, I middle, S last, C pred = C{}, P proj = P{})
             ->CPP_ret(I)( //
                 requires bidirectional_iterator<I> && sortable<I, C, P>)
@@ -279,7 +279,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(inplace_merge)(
+        auto RANGES_FUNC(inplace_merge)(
             Rng && rng, iterator_t<Rng> middle, C pred = C{}, P proj = P{})
             ->CPP_ret(safe_iterator_t<Rng>)( //
                 requires bidirectional_range<Rng> && sortable<iterator_t<Rng>, C, P>)
@@ -291,7 +291,7 @@ namespace ranges
                            std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(inplace_merge)
+    RANGES_FUNC_END(inplace_merge)
 
     namespace cpp20
     {

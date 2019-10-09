@@ -32,16 +32,13 @@ namespace ranges
     {
         struct drop_while_fn
         {
-        private:
-            friend action_access;
             template<typename Fun>
-            static auto CPP_fun(bind)(drop_while_fn drop_while, Fun fun)( //
-                requires(!range<Fun>))
+            constexpr auto CPP_fun(operator())(Fun fun)(const //
+                                                        requires(!range<Fun>))
             {
-                return bind_back(drop_while, std::move(fun));
+                return make_action_closure(bind_back(drop_while_fn{}, std::move(fun)));
             }
 
-        public:
             template<typename Rng, typename Fun>
             auto operator()(Rng && rng, Fun fun) const -> CPP_ret(Rng)( //
                 requires forward_range<Rng> &&
@@ -54,10 +51,8 @@ namespace ranges
             }
         };
 
-        /// \ingroup group-actions
-        /// \relates drop_while_fn
-        /// \sa action
-        RANGES_INLINE_VARIABLE(action<drop_while_fn>, drop_while)
+        /// \relates actions::drop_while_fn
+        RANGES_INLINE_VARIABLE(drop_while_fn, drop_while)
     } // namespace actions
     /// @}
 } // namespace ranges

@@ -32,7 +32,7 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(is_sorted_until)
+    RANGES_FUNC_BEGIN(is_sorted_until)
         /// \brief template function \c is_sorted_until
         ///
         /// range-based version of the \c is_sorted_until std algorithm
@@ -46,8 +46,7 @@ namespace ranges
         /// projected<I, P>>` concept
         ///
         template<typename I, typename S, typename R = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(is_sorted_until)(
-            I first, S last, R pred = R{}, P proj = P{})
+        auto RANGES_FUNC(is_sorted_until)(I first, S last, R pred = R{}, P proj = P{})
             ->CPP_ret(I)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
                 indirect_strict_weak_order<R, projected<I, P>>)
@@ -67,7 +66,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename R = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(is_sorted_until)(Rng && rng, R pred = R{}, P proj = P{})
+        auto RANGES_FUNC(is_sorted_until)(Rng && rng, R pred = R{}, P proj = P{})
             ->CPP_ret(safe_iterator_t<Rng>)( //
                 requires forward_range<Rng> &&
                 indirect_strict_weak_order<R, projected<iterator_t<Rng>, P>>)
@@ -75,7 +74,7 @@ namespace ranges
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(is_sorted_until)
+    RANGES_FUNC_END(is_sorted_until)
 
     namespace cpp20
     {

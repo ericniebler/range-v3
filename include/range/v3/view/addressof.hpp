@@ -51,7 +51,7 @@ namespace ranges
 
         /// \relates addressof_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<addressof_fn>, addressof)
+        RANGES_INLINE_VARIABLE(view_closure<addressof_fn>, addressof)
     } // namespace views
     /// @}
 } // namespace ranges

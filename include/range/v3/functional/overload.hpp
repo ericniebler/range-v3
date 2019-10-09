@@ -17,6 +17,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/functional/concepts.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -40,34 +41,77 @@ namespace ranges
         RANGES_NO_UNIQUE_ADDRESS
         overloaded<Rest...> second_;
 
+#if RANGES_CXX_IF_CONSTEXPR < RANGES_CXX_IF_CONSTEXPR_17
+        template<typename This, typename... Args>
+        static constexpr decltype(auto) select(std::true_type, This && ovr,
+                                               Args &&... args)
+        {
+            return invoke(((This &&) ovr).first_, (Args &&) args...);
+        }
+        template<typename This, typename... Args>
+        static constexpr decltype(auto) select(std::false_type, This && ovr,
+                                               Args &&... args)
+        {
+            return invoke(((This &&) ovr).second_, (Args &&) args...);
+        }
+#endif
+
     public:
         overloaded() = default;
         constexpr overloaded(First first, Rest... rest)
           : first_(static_cast<First &&>(first))
           , second_{static_cast<Rest &&>(rest)...}
         {}
-        // clang-format off
-        template<typename... Args>
-        auto CPP_auto_fun(operator())(Args &&...args)
-        (
-            return invoke(first_, static_cast<Args &&>(args)...)
-        )
-        template<typename... Args>
-        auto CPP_auto_fun(operator())(Args &&...args) (const)
-        (
-            return invoke((First const &) first_, static_cast<Args &&>(args)...)
-        )
-        template<typename... Args>
-        auto CPP_auto_fun(operator())(Args &&...args)
-        (
-            return second_(static_cast<Args &&>(args)...)
-        )
-        template<typename... Args>
-        auto CPP_auto_fun(operator())(Args &&...args) (const)
-        (
-            return ((overloaded<Rest...> const &) second_)(static_cast<Args &&>(args)...)
-        )
-        // clang-format on
+        CPP_template(typename... Args)( //
+            requires(defer::invocable<First &, Args...> ||
+                     defer::invocable<overloaded<Rest...> &, Args...>)) //
+            constexpr decltype(auto)
+            operator()(Args &&... args) &
+        {
+#if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
+            if constexpr(invocable<First &, Args...>)
+                return invoke(first_, (Args &&) args...);
+            else
+                return invoke(second_, (Args &&) args...);
+#else
+            return overloaded::select(
+                meta::bool_<invocable<First &, Args...>>{}, *this, (Args &&) args...);
+#endif
+        }
+        CPP_template(typename... Args)( //
+            requires(defer::invocable<First const &, Args...> ||
+                     defer::invocable<overloaded<Rest...> const &, Args...>)) //
+            constexpr decltype(auto)
+            operator()(Args &&... args) const &
+        {
+#if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
+            if constexpr(invocable<First const &, Args...>)
+                return invoke(first_, (Args &&) args...);
+            else
+                return invoke(second_, (Args &&) args...);
+#else
+            return overloaded::select(meta::bool_<invocable<First const &, Args...>>{},
+                                      *this,
+                                      (Args &&) args...);
+#endif
+        }
+        CPP_template(typename... Args)( //
+            requires(defer::invocable<First, Args...> ||
+                     defer::invocable<overloaded<Rest...>, Args...>)) //
+            constexpr decltype(auto)
+            operator()(Args &&... args) &&
+        {
+#if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
+            if constexpr(invocable<First const &, Args...>)
+                return invoke((First &&) first_, (Args &&) args...);
+            else
+                return invoke((overloaded<Rest...> &&) second_, (Args &&) args...);
+#else
+            return overloaded::select(meta::bool_<invocable<First, Args...>>{},
+                                      (overloaded &&) * this,
+                                      (Args &&) args...);
+#endif
+        }
     };
 
     struct overload_fn

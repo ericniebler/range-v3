@@ -21,7 +21,6 @@
 #include <concepts/concepts.hpp>
 
 #include <range/v3/functional/invoke.hpp>
-#include <range/v3/functional/pipeable.hpp>
 #include <range/v3/utility/addressof.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -123,7 +122,7 @@ namespace ranges
         // clang-format on
     };
 
-    struct ref_fn : pipeable_base
+    struct ref_fn
     {
         template<typename T>
         auto operator()(T & t) const -> CPP_ret(reference_wrapper<T>)( //

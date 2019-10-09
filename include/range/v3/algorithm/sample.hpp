@@ -70,19 +70,19 @@ namespace ranges
     } // namespace detail
     /// \endcond
 
-    RANGES_BEGIN_NIEBLOID(sample)
+    RANGES_FUNC_BEGIN(sample)
 
         /// \brief function template \c sample
         template<typename I,
                  typename S,
                  typename O,
                  typename Gen = detail::default_random_engine &>
-        auto RANGES_FUN_NIEBLOID(sample)(I first,
-                                         S last,
-                                         O out,
-                                         iter_difference_t<O> const n,
-                                         Gen && gen = detail::get_random_engine()) //
-            ->CPP_ret(sample_result<I, O>)(                                        //
+        auto RANGES_FUNC(sample)(I first,
+                                 S last,
+                                 O out,
+                                 iter_difference_t<O> const n,
+                                 Gen && gen = detail::get_random_engine()) //
+            ->CPP_ret(sample_result<I, O>)(                                //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                 weakly_incrementable<O> && indirectly_copyable<I, O> &&
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
@@ -136,11 +136,11 @@ namespace ranges
                  typename S,
                  typename ORng,
                  typename Gen = detail::default_random_engine &>
-        auto RANGES_FUN_NIEBLOID(sample)(I first,
-                                         S last,
-                                         ORng && out,
-                                         Gen && gen = detail::get_random_engine()) //
-            ->CPP_ret(sample_result<I, safe_iterator_t<ORng>>)(                    //
+        auto RANGES_FUNC(sample)(I first,
+                                 S last,
+                                 ORng && out,
+                                 Gen && gen = detail::get_random_engine()) //
+            ->CPP_ret(sample_result<I, safe_iterator_t<ORng>>)(            //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                 weakly_incrementable<iterator_t<ORng>> &&
                 indirectly_copyable<I, iterator_t<ORng>> &&
@@ -171,11 +171,11 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename O, typename Gen = detail::default_random_engine &>
-        auto RANGES_FUN_NIEBLOID(sample)(Rng && rng,
-                                         O out,
-                                         iter_difference_t<O> const n,
-                                         Gen && gen = detail::get_random_engine()) //
-            ->CPP_ret(sample_result<safe_iterator_t<Rng>, O>)(                     //
+        auto RANGES_FUNC(sample)(Rng && rng,
+                                 O out,
+                                 iter_difference_t<O> const n,
+                                 Gen && gen = detail::get_random_engine()) //
+            ->CPP_ret(sample_result<safe_iterator_t<Rng>, O>)(             //
                 requires input_range<Rng> && weakly_incrementable<O> &&
                 indirectly_copyable<iterator_t<Rng>, O> &&
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
@@ -201,9 +201,9 @@ namespace ranges
         template<typename IRng,
                  typename ORng,
                  typename Gen = detail::default_random_engine &>
-        auto RANGES_FUN_NIEBLOID(sample)(IRng && rng,
-                                         ORng && out,
-                                         Gen && gen = detail::get_random_engine())  //
+        auto RANGES_FUNC(sample)(IRng && rng,
+                                 ORng && out,
+                                 Gen && gen = detail::get_random_engine())          //
             ->CPP_ret(sample_result<safe_iterator_t<IRng>, safe_iterator_t<ORng>>)( //
                 requires input_range<IRng> && range<ORng> &&
                 indirectly_copyable<iterator_t<IRng>, iterator_t<ORng>> &&
@@ -230,7 +230,7 @@ namespace ranges
             }
         }
 
-    RANGES_END_NIEBLOID(sample)
+    RANGES_FUNC_END(sample)
 
     // Not yet!
     //  namespace cpp20

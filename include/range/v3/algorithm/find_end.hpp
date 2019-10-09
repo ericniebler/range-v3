@@ -60,8 +60,7 @@ namespace ranges
         template<typename I1, typename S1, typename I2, typename S2, typename R,
                  typename P>
         subrange<I1> find_end_impl(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred, P proj,
-                                   detail::forward_iterator_tag_,
-                                   detail::forward_iterator_tag_)
+                                   std::forward_iterator_tag, std::forward_iterator_tag)
         {
             bool found = false;
             I1 res_begin, res_end;
@@ -104,8 +103,8 @@ namespace ranges
 
         template<typename I1, typename I2, typename R, typename P>
         subrange<I1> find_end_impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
-                                   detail::bidirectional_iterator_tag_,
-                                   detail::bidirectional_iterator_tag_)
+                                   std::bidirectional_iterator_tag,
+                                   std::bidirectional_iterator_tag)
         {
             // modeled after search algorithm (in reverse)
             if(begin2 == end2)
@@ -141,8 +140,8 @@ namespace ranges
 
         template<typename I1, typename I2, typename R, typename P>
         subrange<I1> find_end_impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
-                                   detail::random_access_iterator_tag_,
-                                   detail::random_access_iterator_tag_)
+                                   std::random_access_iterator_tag,
+                                   std::random_access_iterator_tag)
         {
             // Take advantage of knowing source and pattern lengths.  Stop short when
             // source is smaller than pattern
@@ -177,7 +176,7 @@ namespace ranges
 
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(find_end)
+    RANGES_FUNC_BEGIN(find_end)
 
         /// \brief function template \c find_end
         template<typename I1,
@@ -186,7 +185,7 @@ namespace ranges
                  typename S2,
                  typename R = equal_to,
                  typename P = identity>
-        auto RANGES_FUN_NIEBLOID(find_end)(
+        auto RANGES_FUNC(find_end)(
             I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{}, P proj = P{}) //
             ->CPP_ret(subrange<I1>)(                                            //
                 requires forward_iterator<I1> && sentinel_for<S1, I1> &&
@@ -210,7 +209,7 @@ namespace ranges
                  typename Rng2,
                  typename R = equal_to,
                  typename P = identity>
-        auto RANGES_FUN_NIEBLOID(find_end)(
+        auto RANGES_FUNC(find_end)(
             Rng1 && rng1, Rng2 && rng2, R pred = R{}, P proj = P{}) //
             ->CPP_ret(safe_subrange_t<Rng1>)(                       //
                 requires forward_range<Rng1> && forward_range<Rng2> &&
@@ -224,7 +223,7 @@ namespace ranges
                            std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(find_end)
+    RANGES_FUNC_END(find_end)
 
     namespace cpp20
     {

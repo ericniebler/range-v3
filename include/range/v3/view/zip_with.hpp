@@ -403,7 +403,7 @@ namespace ranges
                 -> CPP_ret(zip_with_view<Fun, all_t<Rngs>...>)( //
                     requires and_v<viewable_range<Rngs>...> &&
                         and_v<input_range<Rngs>...> && copy_constructible<Fun> &&
-                            invocable<Fun &, range_reference_t<Rngs> &&...> &&
+                            invocable<Fun &, range_reference_t<Rngs>...> &&
                     (sizeof...(Rngs) != 0))
             {
                 return zip_with_view<Fun, all_t<Rngs>...>{

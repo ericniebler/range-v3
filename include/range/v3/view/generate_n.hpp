@@ -50,8 +50,8 @@ namespace ranges
 
         public:
             cursor() = default;
-            explicit cursor(generate_n_view & rng)
-              : rng_(&rng)
+            explicit cursor(generate_n_view * rng)
+              : rng_(rng)
             {}
             bool equal(default_sentinel_t) const
             {
@@ -75,7 +75,7 @@ namespace ranges
         };
         cursor begin_cursor()
         {
-            return cursor{*this};
+            return cursor{this};
         }
 
     public:

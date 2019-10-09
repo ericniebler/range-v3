@@ -47,7 +47,7 @@ namespace ranges
             template(typename R)
             concept tiny_range,
                 sized_range<R> &&
-                type<std::integral_constant<
+                ranges::type<std::integral_constant<
                     decltype(std::remove_reference_t<R>::size()),
                     std::remove_reference_t<R>::size()>> &&
                 (std::remove_reference_t<R>::size() <= 1)
@@ -546,7 +546,7 @@ namespace ranges
             return base_;
         }
 
-        constexpr auto begin()
+        constexpr auto begin() -> outer_iterator<forward_range<V> && simple_view<V>()>
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(forward_range<V>)
@@ -582,7 +582,7 @@ namespace ranges
                 return default_sentinel;
 #else
             return end_(meta::bool_ < forward_range<V> && forward_range<const V> &&
-                        common_range<const V>> {});
+                        common_range<const V> > {});
 #endif
         }
     };
@@ -604,18 +604,8 @@ namespace ranges
 
     namespace views
     {
-        struct split_fn
+        struct split_base_fn
         {
-        private:
-            friend view_access;
-
-            template<typename T>
-            static constexpr auto bind(split_fn split, T t)
-            {
-                return make_pipeable(bind_back(split, std::move(t)));
-            }
-
-        public:
             template<typename Rng>
             constexpr auto operator()(Rng && rng, range_value_t<Rng> val) const
                 -> CPP_ret(split_view<all_t<Rng>, single_view<range_value_t<Rng>>>)( //
@@ -639,9 +629,20 @@ namespace ranges
             }
         };
 
+        struct split_fn : split_base_fn
+        {
+            using split_base_fn::operator();
+
+            template<typename T>
+            constexpr auto operator()(T t) const
+            {
+                return make_view_closure(bind_back(split_base_fn{}, std::move(t)));
+            }
+        };
+
         /// \relates split_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<split_fn>, split)
+        RANGES_INLINE_VARIABLE(split_fn, split)
     } // namespace views
 
     namespace cpp20

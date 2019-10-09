@@ -25,7 +25,6 @@
 
 #include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/comparisons.hpp>
-#include <range/v3/functional/pipeable.hpp>
 #include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -35,27 +34,11 @@ namespace ranges
     /// @{
     namespace views
     {
-        struct remove_fn
+        struct remove_base_fn
         {
         private:
-            friend view_access;
-
             template<typename Value>
-            static constexpr auto bind(remove_fn remove, Value value)
-            {
-                return make_pipeable(bind_back(remove, std::move(value)));
-            }
-            template<typename Value, typename Proj>
-            static constexpr auto CPP_fun(bind)(remove_fn remove, Value value,
-                                                Proj proj)( //
-                requires(!range<Value>))
-            {
-                return make_pipeable(
-                    bind_back(remove, std::move(value), std::move(proj)));
-            }
-
-            template<typename Value>
-            struct pred
+            struct pred_
             {
                 Value value_;
                 template<typename T>
@@ -73,7 +56,8 @@ namespace ranges
                     input_range<Rng> &&
                         indirectly_comparable<iterator_t<Rng>, Value const *, equal_to>)
             {
-                return remove_if(static_cast<Rng &&>(rng), pred<Value>{std::move(value)});
+                return remove_if(static_cast<Rng &&>(rng),
+                                 pred_<Value>{std::move(value)});
             }
 
             template<typename Rng, typename Value, typename Proj>
@@ -83,14 +67,33 @@ namespace ranges
                         iterator_t<Rng>, Value const *, equal_to, Proj>)
             {
                 return remove_if(static_cast<Rng &&>(rng),
-                                 pred<Value>{std::move(value)},
+                                 pred_<Value>{std::move(value)},
                                  std::move(proj));
+            }
+        };
+
+        struct remove_fn : remove_base_fn
+        {
+            using remove_base_fn::operator();
+
+            template<typename Value>
+            constexpr auto operator()(Value value) const
+            {
+                return make_view_closure(bind_back(remove_base_fn{}, std::move(value)));
+            }
+            template<typename Value, typename Proj>
+            constexpr auto CPP_fun(operator())(Value && value,
+                                               Proj proj)(const //
+                                                          requires(!range<Value>))
+            {
+                return make_view_closure(bind_back(
+                    remove_base_fn{}, static_cast<Value &&>(value), std::move(proj)));
             }
         };
 
         /// \relates remove_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<remove_fn>, remove)
+        RANGES_INLINE_VARIABLE(remove_fn, remove)
     } // namespace views
     /// @}
 } // namespace ranges

@@ -31,11 +31,11 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(replace_if)
+    RANGES_FUNC_BEGIN(replace_if)
 
         /// \brief function template \c replace_if
         template<typename I, typename S, typename C, typename T, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(replace_if)(
+        auto RANGES_FUNC(replace_if)(
             I first, S last, C pred, T const & new_value, P proj = P{}) //
             ->CPP_ret(I)(                                               //
                 requires input_iterator<I> && sentinel_for<S, I> &&
@@ -49,7 +49,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C, typename T, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(replace_if)(
+        auto RANGES_FUNC(replace_if)(
             Rng && rng, C pred, T const & new_value, P proj = P{}) //
             ->CPP_ret(safe_iterator_t<Rng>)(                       //
                 requires input_range<Rng> &&
@@ -60,7 +60,7 @@ namespace ranges
                 begin(rng), end(rng), std::move(pred), new_value, std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(replace_if)
+    RANGES_FUNC_END(replace_if)
 
     namespace cpp20
     {

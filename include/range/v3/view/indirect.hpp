@@ -46,8 +46,9 @@ namespace ranges
             using CRng = meta::const_if_c<IsConst, Rng>;
 
             adaptor() = default;
-            CPP_template(bool Other)( //
-                requires IsConst && (!Other)) constexpr adaptor(adaptor<Other>) noexcept
+            CPP_template(bool Other)(         //
+                requires IsConst && (!Other)) //
+                constexpr adaptor(adaptor<Other>) noexcept
             {}
 
             // clang-format off
@@ -128,7 +129,7 @@ namespace ranges
 
         /// \relates indirect_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<indirect_fn>, indirect)
+        RANGES_INLINE_VARIABLE(view_closure<indirect_fn>, indirect)
     } // namespace views
     /// @}
 } // namespace ranges

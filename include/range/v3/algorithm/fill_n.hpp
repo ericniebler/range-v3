@@ -28,11 +28,11 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(fill_n)
+    RANGES_FUNC_BEGIN(fill_n)
 
         /// \brief function template \c equal
         template<typename O, typename V>
-        auto RANGES_FUN_NIEBLOID(fill_n)(O first, iter_difference_t<O> n, V const & val)
+        auto RANGES_FUNC(fill_n)(O first, iter_difference_t<O> n, V const & val)
             ->CPP_ret(O)( //
                 requires output_iterator<O, V const &>)
         {
@@ -44,7 +44,7 @@ namespace ranges
             return recounted(first, b, norig);
         }
 
-    RANGES_END_NIEBLOID(fill_n)
+    RANGES_FUNC_END(fill_n)
 
     namespace cpp20
     {

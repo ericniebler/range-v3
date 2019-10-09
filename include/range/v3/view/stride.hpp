@@ -157,14 +157,15 @@ namespace ranges
         struct adaptor : adaptor_base
         {
         private:
+            friend struct adaptor<!Const>;
             using CRng = meta::const_if_c<Const, Rng>;
             using stride_view_t = meta::const_if_c<Const, stride_view>;
             stride_view_t * rng_;
 
         public:
             adaptor() = default;
-            constexpr adaptor(stride_view_t & rng) noexcept
-              : rng_(&rng)
+            constexpr adaptor(stride_view_t * rng) noexcept
+              : rng_(rng)
             {}
             CPP_template(bool Other)( //
                 requires Const && (!Other)) adaptor(adaptor<Other> that)
@@ -244,26 +245,26 @@ namespace ranges
         };
         constexpr auto begin_adaptor() noexcept -> adaptor<false>
         {
-            return adaptor<false>{*this};
+            return adaptor<false>{this};
         }
         CPP_member
         constexpr auto begin_adaptor() const noexcept
             -> CPP_ret(adaptor<true>)(requires(const_iterable()))
         {
-            return adaptor<true>{*this};
+            return adaptor<true>{this};
         }
 
         constexpr auto end_adaptor() noexcept
             -> meta::if_c<can_bound<false>(), adaptor<false>, adaptor_base>
         {
-            return {*this};
+            return {this};
         }
         CPP_member
         constexpr auto end_adaptor() const noexcept
             -> CPP_ret(meta::if_c<can_bound<true>(), adaptor<true>, adaptor_base>)( //
                 requires(const_iterable()))
         {
-            return {*this};
+            return {this};
         }
 
     public:
@@ -296,18 +297,8 @@ namespace ranges
 
     namespace views
     {
-        struct stride_fn
+        struct stride_base_fn
         {
-        private:
-            friend view_access;
-            template<typename Difference>
-            constexpr static auto CPP_fun(bind)(stride_fn stride, Difference step)( //
-                requires integral<Difference>)
-            {
-                return make_pipeable(bind_back(stride, std::move(step)));
-            }
-
-        public:
             template<typename Rng>
             constexpr auto operator()(Rng && rng, range_difference_t<Rng> step) const
                 -> CPP_ret(stride_view<all_t<Rng>>)( //
@@ -317,9 +308,22 @@ namespace ranges
             }
         };
 
+        struct stride_fn : stride_base_fn
+        {
+            using stride_base_fn::operator();
+
+            template<typename Difference>
+            constexpr auto CPP_fun(operator())(Difference step)(
+                const //
+                requires detail::integer_like_<Difference>)
+            {
+                return make_view_closure(bind_back(stride_base_fn{}, step));
+            }
+        };
+
         /// \relates stride_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<stride_fn>, stride)
+        RANGES_INLINE_VARIABLE(stride_fn, stride)
     } // namespace views
     /// @}
 } // namespace ranges

@@ -122,12 +122,16 @@ namespace ranges
     (
         template(typename I)
         concept readable,
-            common_reference_with<iter_reference_t<I> &&,
-                                  iter_value_t<std::remove_reference_t<I>> &> &&
+            requires (uncvref_t<I> const &i) (
+                // { *i } -> same_as<iter_reference_t<I>>;
+                // { iter_move(i) } -> same_as<iter_rvalue_reference_t<I>>;
+                concepts::requires_<same_as<decltype(*i), iter_reference_t<I>>>,
+                concepts::requires_<same_as<decltype(iter_move(i)), iter_rvalue_reference_t<I>>>
+            ) &&
+            common_reference_with<iter_reference_t<I> &&, iter_value_t<I> &> &&
             common_reference_with<iter_reference_t<I> &&,
                                   iter_rvalue_reference_t<I> &&> &&
-            common_reference_with<iter_rvalue_reference_t<I> &&,
-                                  iter_value_t<std::remove_reference_t<I>> const &>
+            common_reference_with<iter_rvalue_reference_t<I> &&, iter_value_t<I> const &>
     );
 
     CPP_def
@@ -165,7 +169,7 @@ namespace ranges
         (
             template(typename D)
             concept signed_integer_like_,
-                type<decltype(std::integral_constant<bool, (D(-1) < D(0))>{})> &&
+                concepts::type<decltype(std::integral_constant<bool, (D(-1) < D(0))>{})> &&
                 std::integral_constant<bool, (D(-1) < D(0))>::value
         );
 #else // ^^^ workaround / no workaround vvv
@@ -174,7 +178,7 @@ namespace ranges
             template(typename D)
             concept signed_integer_like_,
                 integer_like_<D> &&
-                type<std::integral_constant<bool, (D(-1) < D(0))>> &&
+                concepts::type<std::integral_constant<bool, (D(-1) < D(0))>> &&
                 std::integral_constant<bool, (D(-1) < D(0))>::value
         );
 #endif // RANGES_WORKAROUND_MSVC_792338
@@ -193,7 +197,7 @@ namespace ranges
                 i++,
                 concepts::requires_<same_as<I&, decltype(++i)>>
             ) &&
-            type<iter_difference_t<I>> &&
+            concepts::type<iter_difference_t<I>> &&
             detail::signed_integer_like_<iter_difference_t<I>> &&
             semiregular<I>
     );
@@ -240,7 +244,7 @@ namespace ranges
                 concepts::requires_<same_as<iter_difference_t<I>, decltype(i - s)>>
             ) &&
             // Short-circuit the test for sentinel_for if we're emulating concepts:
-            (!defer::is_true<disable_sized_sentinel<meta::_t<std::remove_cv<S>>, meta::_t<std::remove_cv<I>>>> &&
+            bool(!defer::is_true<disable_sized_sentinel<meta::_t<std::remove_cv<S>>, meta::_t<std::remove_cv<I>>>> &&
             defer::sentinel_for<S, I>)
     );
 
@@ -324,12 +328,23 @@ namespace ranges
 
     /////////////////////////////////////////////////////////////////////////////////////
     // iterator_tag_of
-    template<typename T>
-    using iterator_tag_of = concepts::tag_of<
-        meta::list<contiguous_iterator_concept, random_access_iterator_concept,
-                   bidirectional_iterator_concept, forward_iterator_concept,
-                   input_iterator_concept>,
-        T>;
+    template<typename Rng>
+    using iterator_tag_of =                              //
+        std::enable_if_t<                                //
+            input_iterator<Rng>,                         //
+            detail::if_then_t<                           //
+                contiguous_iterator<Rng>,                //
+                ranges::contiguous_iterator_tag,         //
+                detail::if_then_t<                       //
+                    random_access_iterator<Rng>,         //
+                    std::random_access_iterator_tag,     //
+                    detail::if_then_t<                   //
+                        bidirectional_iterator<Rng>,     //
+                        std::bidirectional_iterator_tag, //
+                        detail::if_then_t<               //
+                            forward_iterator<Rng>,       //
+                            std::forward_iterator_tag,   //
+                            std::input_iterator_tag>>>>>;
 
     /// \cond
     namespace detail
@@ -341,23 +356,11 @@ namespace ranges
         template<typename I>
         struct iterator_category_<I, true>
         {
-        private:
-            static std::input_iterator_tag test(detail::input_iterator_tag_);
-            static std::forward_iterator_tag test(detail::forward_iterator_tag_);
-            static std::bidirectional_iterator_tag test(
-                detail::bidirectional_iterator_tag_);
-            static std::random_access_iterator_tag test(
-                detail::random_access_iterator_tag_);
-            static ranges::contiguous_iterator_tag test(detail::contiguous_iterator_tag_);
-
-        public:
-            using type = decltype(iterator_category_::test(iterator_tag_of<I>{}));
+            using type = iterator_tag_of<I>;
         };
 
-        template<typename T>
-        using iterator_category =
-            iterator_category_<meta::_t<std::remove_const<T>>,
-                               (bool)input_iterator<meta::_t<std::remove_const<T>>>>;
+        template<typename T, typename U = meta::_t<std::remove_const<T>>>
+        using iterator_category = iterator_category_<U, (bool)input_iterator<U>>;
     } // namespace detail
     /// \endcond
 
@@ -388,7 +391,7 @@ namespace ranges
         (
             template(typename T1, typename T2, typename T3, typename T4)
             concept common_reference_with_4_,
-                type<common_reference_t<T1, T2, T3, T4>> &&
+                concepts::type<common_reference_t<T1, T2, T3, T4>> &&
                 convertible_to<T1, common_reference_t<T1, T2, T3, T4>> &&
                 convertible_to<T2, common_reference_t<T1, T2, T3, T4>> &&
                 convertible_to<T3, common_reference_t<T1, T2, T3, T4>> &&
@@ -609,12 +612,12 @@ namespace ranges
     (
         template(typename I1, typename I2 = I1)
         (concept indirectly_swappable)(I1, I2),
-            requires (I1 && i1, I2 && i2)
+            requires (I1 const i1, I2 const i2)
             (
-                ranges::iter_swap((I1 &&) i1, (I2 &&) i2),
-                ranges::iter_swap((I1 &&) i1, (I1 &&) i1),
-                ranges::iter_swap((I2 &&) i2, (I2 &&) i2),
-                ranges::iter_swap((I2 &&) i2, (I1 &&) i1)
+                ranges::iter_swap(i1, i2),
+                ranges::iter_swap(i1, i1),
+                ranges::iter_swap(i2, i2),
+                ranges::iter_swap(i2, i1)
             ) &&
             readable<I1> && readable<I2>
     );
@@ -660,13 +663,19 @@ namespace ranges
     );
     // clang-format on
 
-    using sentinel_tag = concepts::tag<sentinel_for_concept>;
-    using sized_sentinel_tag = concepts::tag<sized_sentinel_for_concept, sentinel_tag>;
+    struct sentinel_tag
+    {};
+    struct sized_sentinel_tag : sentinel_tag
+    {};
 
     template<typename S, typename I>
-    using sentinel_tag_of =
-        concepts::tag_of<meta::list<sized_sentinel_for_concept, sentinel_for_concept>, S,
-                         I>;
+    using sentinel_tag_of =               //
+        std::enable_if_t<                 //
+            sentinel_for<S, I>,           //
+            detail::if_then_t<            //
+                sized_sentinel_for<S, I>, //
+                sized_sentinel_tag,       //
+                sentinel_tag>>;
 
     // Deprecated things:
     /// \cond
@@ -730,6 +739,7 @@ namespace ranges
         using ranges::random_access_iterator;
         using ranges::readable;
         using ranges::sentinel_for;
+        using ranges::sized_sentinel_for;
         using ranges::sortable;
         using ranges::weakly_incrementable;
         using ranges::writable;

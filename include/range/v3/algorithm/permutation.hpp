@@ -94,7 +94,7 @@ namespace ranges
     } // namespace detail
     /// \endcond
 
-    RANGES_BEGIN_NIEBLOID(is_permutation)
+    RANGES_FUNC_BEGIN(is_permutation)
 
         /// \brief function template \c is_permutation
         template<typename I1,
@@ -106,13 +106,13 @@ namespace ranges
         RANGES_DEPRECATED(
             "Use the variant of ranges::is_permutation that takes an upper bound "
             "for both sequences")
-        auto RANGES_FUN_NIEBLOID(is_permutation)(I1 begin1,
-                                                 S1 end1,
-                                                 I2 begin2,
-                                                 C pred = C{},
-                                                 P1 proj1 = P1{},
-                                                 P2 proj2 = P2{}) //
-            ->CPP_ret(bool)(                                      //
+        auto RANGES_FUNC(is_permutation)(I1 begin1,
+                                         S1 end1,
+                                         I2 begin2,
+                                         C pred = C{},
+                                         P1 proj1 = P1{},
+                                         P2 proj2 = P2{}) //
+            ->CPP_ret(bool)(                              //
                 requires forward_iterator<I1> && sentinel_for<S1, I1> &&
                 forward_iterator<I2> && indirectly_comparable<I1, I2, C, P1, P2>)
         {
@@ -164,14 +164,14 @@ namespace ranges
                  typename C = equal_to,
                  typename P1 = identity,
                  typename P2 = identity>
-        auto RANGES_FUN_NIEBLOID(is_permutation)(I1 begin1,
-                                                 S1 end1,
-                                                 I2 begin2,
-                                                 S2 end2,
-                                                 C pred = C{},
-                                                 P1 proj1 = P1{},
-                                                 P2 proj2 = P2{}) //
-            ->CPP_ret(bool)(                                      //
+        auto RANGES_FUNC(is_permutation)(I1 begin1,
+                                         S1 end1,
+                                         I2 begin2,
+                                         S2 end2,
+                                         C pred = C{},
+                                         P1 proj1 = P1{},
+                                         P2 proj2 = P2{}) //
+            ->CPP_ret(bool)(                              //
                 requires forward_iterator<I1> && sentinel_for<S1, I1> &&
                 forward_iterator<I2> && sentinel_for<S2, I2> &&
                 indirectly_comparable<I1, I2, C, P1, P2>)
@@ -208,12 +208,12 @@ namespace ranges
         RANGES_DEPRECATED(
             "Use the variant of ranges::is_permutation that takes an upper bound "
             "for both sequences")
-        auto RANGES_FUN_NIEBLOID(is_permutation)(Rng1 && rng1,
-                                                 I2Ref && begin2,
-                                                 C pred = C{},
-                                                 P1 proj1 = P1{},
-                                                 P2 proj2 = P2{}) //
-            ->CPP_ret(bool)(                                      //
+        auto RANGES_FUNC(is_permutation)(Rng1 && rng1,
+                                         I2Ref && begin2,
+                                         C pred = C{},
+                                         P1 proj1 = P1{},
+                                         P2 proj2 = P2{}) //
+            ->CPP_ret(bool)(                              //
                 requires forward_range<Rng1> && forward_iterator<uncvref_t<I2Ref>> &&
                 indirectly_comparable<iterator_t<Rng1>, uncvref_t<I2Ref>, C, P1, P2>)
         {
@@ -234,7 +234,7 @@ namespace ranges
                  typename C = equal_to,
                  typename P1 = identity,
                  typename P2 = identity>
-        auto RANGES_FUN_NIEBLOID(is_permutation)(
+        auto RANGES_FUNC(is_permutation)(
             Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) //
             ->CPP_ret(bool)(                                                            //
                 requires forward_range<Rng1> && forward_range<Rng2> &&
@@ -261,15 +261,14 @@ namespace ranges
                                                std::move(proj2));
         }
 
-    RANGES_END_NIEBLOID(is_permutation)
+    RANGES_FUNC_END(is_permutation)
 
-    RANGES_BEGIN_NIEBLOID(next_permutation)
+    RANGES_FUNC_BEGIN(next_permutation)
 
         /// \brief function template \c next_permutation
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(next_permutation)(
-            I first, S end_, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(bool)(                             //
+        auto RANGES_FUNC(next_permutation)(I first, S end_, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(bool)(                                                            //
                 requires bidirectional_iterator<I> && sentinel_for<S, I> &&
                 sortable<I, C, P>)
         {
@@ -300,23 +299,21 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(next_permutation)(
-            Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(bool)(                        //
+        auto RANGES_FUNC(next_permutation)(Rng && rng, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(bool)(                                                       //
                 requires bidirectional_range<Rng> && sortable<iterator_t<Rng>, C, P>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(next_permutation)
+    RANGES_FUNC_END(next_permutation)
 
-    RANGES_BEGIN_NIEBLOID(prev_permutation)
+    RANGES_FUNC_BEGIN(prev_permutation)
 
         /// \brief function template \c prev_permutation
         template<typename I, typename S, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(prev_permutation)(
-            I first, S end_, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(bool)(                             //
+        auto RANGES_FUNC(prev_permutation)(I first, S end_, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(bool)(                                                            //
                 requires bidirectional_iterator<I> && sentinel_for<S, I> &&
                 sortable<I, C, P>)
         {
@@ -347,15 +344,14 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(prev_permutation)(
-            Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(bool)(                        //
+        auto RANGES_FUNC(prev_permutation)(Rng && rng, C pred = C{}, P proj = P{}) //
+            ->CPP_ret(bool)(                                                       //
                 requires bidirectional_range<Rng> && sortable<iterator_t<Rng>, C, P>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(prev_permutation)
+    RANGES_FUNC_END(prev_permutation)
 
     namespace cpp20
     {

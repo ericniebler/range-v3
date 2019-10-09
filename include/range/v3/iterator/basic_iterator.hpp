@@ -323,13 +323,20 @@ namespace ranges
             return !(x == y);
         }
 
-        auto iter_cat(input_cursor_tag) -> std::input_iterator_tag;
-        auto iter_cat(forward_cursor_tag) -> std::forward_iterator_tag;
-        auto iter_cat(bidirectional_cursor_tag) -> std::bidirectional_iterator_tag;
-        auto iter_cat(random_access_cursor_tag) -> std::random_access_iterator_tag;
-
         template<typename Cur>
-        using cpp20_iter_cat_of_t = decltype(detail::iter_cat(cursor_tag_of<Cur>{}));
+        using cpp20_iter_cat_of_t =                      //
+            std::enable_if_t<                            //
+                input_cursor<Cur>,                       //
+                detail::if_then_t<                       //
+                    random_access_cursor<Cur>,           //
+                    std::random_access_iterator_tag,     //
+                    detail::if_then_t<                   //
+                        bidirectional_cursor<Cur>,       //
+                        std::bidirectional_iterator_tag, //
+                        detail::if_then_t<               //
+                            forward_cursor<Cur>,         //
+                            std::forward_iterator_tag,   //
+                            std::input_iterator_tag>>>>;
 
         // clang-format off
         CPP_def
@@ -360,22 +367,6 @@ namespace ranges
         );
         // clang-format on
 
-        using cpp17_input_cursor_tag =
-            concepts::tag<cpp17_input_cursor_concept, cursor_tag>;
-        using cpp17_forward_cursor_tag =
-            concepts::tag<cpp17_forward_cursor_concept, cpp17_input_cursor_tag>;
-        using cpp17_bidirectional_cursor_tag =
-            concepts::tag<bidirectional_cursor_concept, cpp17_forward_cursor_tag>;
-        using cpp17_random_access_cursor_tag =
-            concepts::tag<random_access_cursor_concept, cpp17_bidirectional_cursor_tag>;
-
-        template<typename Cur>
-        using cpp17_cursor_tag_of = concepts::tag_of<
-            meta::list<random_access_cursor_concept, bidirectional_cursor_concept,
-                       cpp17_forward_cursor_concept, cpp17_input_cursor_concept,
-                       cursor_concept>,
-            Cur>;
-
         template<typename Category, typename Base = void>
         struct with_iterator_category : Base
         {
@@ -388,16 +379,20 @@ namespace ranges
             using iterator_category = Category;
         };
 
-        auto cpp17_iter_cat(cpp17_input_cursor_tag) -> std::input_iterator_tag;
-        auto cpp17_iter_cat(cpp17_forward_cursor_tag) -> std::forward_iterator_tag;
-        auto cpp17_iter_cat(cpp17_bidirectional_cursor_tag)
-            -> std::bidirectional_iterator_tag;
-        auto cpp17_iter_cat(cpp17_random_access_cursor_tag)
-            -> std::random_access_iterator_tag;
-
         template<typename Cur>
-        using cpp17_iter_cat_of_t =
-            decltype(detail::cpp17_iter_cat(cpp17_cursor_tag_of<Cur>{}));
+        using cpp17_iter_cat_of_t =                      //
+            std::enable_if_t<                            //
+                cpp17_input_cursor<Cur>,                 //
+                detail::if_then_t<                       //
+                    random_access_cursor<Cur>,           //
+                    std::random_access_iterator_tag,     //
+                    detail::if_then_t<                   //
+                        bidirectional_cursor<Cur>,       //
+                        std::bidirectional_iterator_tag, //
+                        detail::if_then_t<               //
+                            cpp17_forward_cursor<Cur>,   //
+                            std::forward_iterator_tag,   //
+                            std::input_iterator_tag>>>>;
 
         template<typename Cur, typename = void>
         struct readable_iterator_associated_types_base : range_access::mixin_base_t<Cur>
@@ -421,7 +416,6 @@ namespace ranges
             // protected:
             using iter_reference_t = basic_proxy_reference<Cur>;
             using const_reference_t = basic_proxy_reference<Cur const>;
-            using cursor_tag_t = concepts::tag<detail::output_cursor_concept, cursor_tag>;
 
         public:
             using reference = void;
@@ -439,7 +433,6 @@ namespace ranges
         {
             // BUGBUG
             // protected:
-            using cursor_tag_t = cursor_tag_of<Cur>;
             using iter_reference_t =
                 if_then_t<is_writable_cursor<Cur const>::value,
                           basic_proxy_reference<Cur const>,
@@ -577,8 +570,8 @@ namespace ranges
 
         // Use cursor's arrow() member, if any.
         template<typename C = Cur>
-        constexpr auto operator-> () const
-            noexcept(noexcept(range_access::arrow(std::declval<C const &>())))
+        constexpr auto operator-> ()
+            const noexcept(noexcept(range_access::arrow(std::declval<C const &>())))
                 -> CPP_ret(detail::cursor_arrow_t<C>)( //
                     requires detail::has_cursor_arrow<C>)
         {
@@ -587,8 +580,8 @@ namespace ranges
         // Otherwise, if iter_reference_t is an lvalue reference to cv-qualified
         // iter_value_t, return the address of **this.
         template<typename C = Cur>
-        constexpr auto operator-> () const
-            noexcept(noexcept(*std::declval<basic_iterator const &>())) -> CPP_ret(
+        constexpr auto operator-> ()
+            const noexcept(noexcept(*std::declval<basic_iterator const &>())) -> CPP_ret(
                 meta::_t<std::add_pointer<const_reference_t>>)( //
                 requires(!detail::has_cursor_arrow<C>) && detail::readable_cursor<C> &&
                 std::is_lvalue_reference<const_reference_t>::value &&
@@ -640,10 +633,9 @@ namespace ranges
         CPP_member
         constexpr auto operator++(int)
         {
-            return this->post_increment_(
-                meta::bool_<RANGES_IS_SAME(detail::input_cursor_tag,
-                                           detail::cursor_tag_of<Cur>)>{},
-                0);
+            return this->post_increment_(meta::bool_ < detail::input_cursor<Cur> &&
+                                             !detail::forward_cursor<Cur> > {},
+                                         0);
         }
 
         CPP_member
@@ -687,7 +679,7 @@ namespace ranges
         // Optionally support hooking iter_move when the cursor sports a
         // move() member function.
         template<typename C = Cur>
-        constexpr friend auto iter_move(basic_iterator const & it) noexcept(
+        friend constexpr auto iter_move(basic_iterator const & it) noexcept(
             noexcept(range_access::move(std::declval<C const &>())))
             -> CPP_broken_friend_ret(
                 decltype(range_access::move(std::declval<C const &>())))( //

@@ -38,12 +38,12 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(is_partitioned)
+    RANGES_FUNC_BEGIN(is_partitioned)
 
         /// \brief function template \c is_partitioned
         template<typename I, typename S, typename C, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(is_partitioned)(I first, S last, C pred, P proj = P{}) //
-            ->CPP_ret(bool)(                                                            //
+        auto RANGES_FUNC(is_partitioned)(I first, S last, C pred, P proj = P{}) //
+            ->CPP_ret(bool)(                                                    //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                 indirect_unary_predicate<C, projected<I, P>>)
         {
@@ -58,15 +58,15 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename C, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(is_partitioned)(Rng && rng, C pred, P proj = P{}) //
-            ->CPP_ret(bool)(                                                       //
+        auto RANGES_FUNC(is_partitioned)(Rng && rng, C pred, P proj = P{}) //
+            ->CPP_ret(bool)(                                               //
                 requires input_range<Rng> &&
                 indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(is_partitioned)
+    RANGES_FUNC_END(is_partitioned)
 
     namespace cpp20
     {

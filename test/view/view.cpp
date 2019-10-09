@@ -8,25 +8,26 @@
 
 using namespace ranges;
 
-struct my_drop_fn
+struct my_drop_base_fn
 {
-private:
-    friend views::view_access;
-    template<typename Int>
-    static constexpr auto bind(my_drop_fn my_drop, Int n)
-    {
-        return make_pipeable(
-            [=](auto && rng) { return my_drop(std::forward<decltype(rng)>(rng), n); });
-    }
-
-public:
     template<typename Rng>
     auto operator()(Rng && rng, range_difference_t<Rng> n) const
     {
         return drop_view<views::all_t<Rng>>(views::all(static_cast<Rng &&>(rng)), n);
     }
 };
-RANGES_INLINE_VARIABLE(views::view<my_drop_fn>, my_drop)
+struct my_drop_fn : my_drop_base_fn
+{
+    using my_drop_base_fn::operator();
+
+    template<typename Int>
+    constexpr auto operator()(Int n) const
+    {
+        return make_view_closure([=](auto && rng) {
+            return my_drop_base_fn{}(std::forward<decltype(rng)>(rng), n); });
+    }
+};
+RANGES_INLINE_VARIABLE(my_drop_fn, my_drop)
 
 /// #https://github.com/ericniebler/range-v3/issues/1169
 void constexpr_test_1169()

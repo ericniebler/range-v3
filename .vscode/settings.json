@@ -74,7 +74,22 @@
         "__node_handle": "cpp",
         "__tree": "cpp",
         "climits": "cpp",
-        "__memory": "cpp"
+        "__memory": "cpp",
+        "strstream": "cpp",
+        "complex": "cpp",
+        "iomanip": "cpp",
+        "cinttypes": "cpp",
+        "typeindex": "cpp",
+        "variant": "cpp",
+        "__split_buffer": "cpp",
+        "filesystem": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "__errc": "cpp",
+        "__hash_table": "cpp",
+        "__string": "cpp",
+        "algorithm": "cpp",
+        "codecvt": "cpp"
     },
     "C_Cpp.configurationWarnings": "Disabled"
 }

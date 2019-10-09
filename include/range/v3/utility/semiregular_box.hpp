@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_UTILITY_SEMIREGULAR_BOX_HPP
 #define RANGES_V3_UTILITY_SEMIREGULAR_BOX_HPP
 
+#include <type_traits>
 #include <utility>
 
 #include <meta/meta.hpp>
@@ -22,6 +23,8 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/functional/concepts.hpp>
+#include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/get.hpp>
 #include <range/v3/utility/in_place.hpp>
 
@@ -189,17 +192,6 @@ namespace ranges
                 this->reset();
             return *this;
         }
-        semiregular_box & operator=(T t) noexcept(
-            std::is_nothrow_move_constructible<T>::value &&
-            (!std::is_move_assignable<T>::value ||
-             std::is_nothrow_move_assignable<T>::value))
-        {
-            if(engaged_)
-                this->move_assign(detail::move(t), std::is_move_assignable<T>());
-            else
-                this->construct_from(detail::move(t));
-            return *this;
-        }
         constexpr T & get() & noexcept
         {
             return RANGES_ENSURE(engaged_), data_;
@@ -227,32 +219,30 @@ namespace ranges
         }
         operator T const &&() const && = delete;
         // clang-format off
+        CPP_template(typename... Args)(       //
+            requires invocable<T &, Args...>) //
+        constexpr decltype(auto) operator()(Args &&... args) &
+            noexcept(is_nothrow_invocable_v<T &, Args...>)
+        {
+            return invoke(data_, static_cast<Args &&>(args)...);
+        }
+        CPP_template(typename... Args)(             //
+            requires invocable<T const &, Args...>) //
+        constexpr decltype(auto) operator()(Args &&... args) const &
+            noexcept(is_nothrow_invocable_v<T const &, Args...>)
+        {
+            return invoke(data_, static_cast<Args &&>(args)...);
+        }
+        CPP_template(typename... Args)(     //
+            requires invocable<T, Args...>) //
+        constexpr decltype(auto) operator()(Args &&... args) &&
+            noexcept(is_nothrow_invocable_v<T, Args...>)
+        {
+            return invoke(static_cast<T &&>(data_), static_cast<Args &&>(args)...);
+        }
         template<typename... Args>
-        constexpr auto CPP_auto_fun(operator())(Args &&... args)(mutable &)
-        (
-            return data_(static_cast<Args &&>(args)...)
-        )
-        template<typename... Args>
-        constexpr auto CPP_auto_fun(operator())(Args &&... args)(const &)
-        (
-            return data_(static_cast<Args &&>(args)...)
-        )
-#ifdef RANGES_WORKAROUND_MSVC_786376
-        template<typename... Args, typename U = T>
-        constexpr auto CPP_auto_fun(operator())(Args &&... args)(mutable &&)
-        (
-            return ((U &&) data_)(static_cast<Args &&>(args)...)
-        )
-#else  // ^^^ workaround / no workaround vvv
-        template<typename... Args>
-        constexpr auto CPP_auto_fun(operator())(Args &&... args)(mutable &&)
-        (
-            return ((T &&) data_)(static_cast<Args &&>(args)...)
-        )
-#endif // RANGES_WORKAROUND_MSVC_786376
-       // clang-format on
-                template<typename... Args>
-                void operator()(Args &&...) const && = delete;
+        void operator()(Args &&...) const && = delete;
+        // clang-format on
     };
 
     template<typename T>
@@ -295,10 +285,11 @@ namespace ranges
     using semiregular_box_t = meta::if_c<(bool)semiregular<T>, T, semiregular_box<T>>;
 
     template<typename T, bool IsConst = false>
-    using semiregular_box_ref_or_val_t =
-        meta::if_c<(bool)semiregular<T>, meta::if_c<IsConst, T, reference_wrapper<T>>,
-                   reference_wrapper<meta::if_c<IsConst, semiregular_box<T> const,
-                                                semiregular_box<T>>>>;
+    using semiregular_box_ref_or_val_t = meta::if_c<
+        (bool)semiregular<T>,
+        meta::if_c<IsConst || std::is_empty<T>::value, T, reference_wrapper<T>>,
+        reference_wrapper<
+            meta::if_c<IsConst, semiregular_box<T> const, semiregular_box<T>>>>;
     /// @}
 
     /// \cond
@@ -308,7 +299,7 @@ namespace ranges
 
     template<typename T, bool IsConst = false>
     using semiregular_ref_or_val_t RANGES_DEPRECATED(
-        "Please use semiregular_box_t instead.") =
+        "Please use semiregular_box_ref_or_val_t instead.") =
         semiregular_box_ref_or_val_t<T, IsConst>;
     /// \endcond
 

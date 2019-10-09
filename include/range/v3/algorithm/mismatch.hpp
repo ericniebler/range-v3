@@ -38,7 +38,7 @@ namespace ranges
     template<typename I1, typename I2>
     using mismatch_result = detail::in1_in2_result<I1, I2>;
 
-    RANGES_BEGIN_NIEBLOID(mismatch)
+    RANGES_FUNC_BEGIN(mismatch)
 
         /// \brief function template \c mismatch
         template<typename I1,
@@ -50,13 +50,13 @@ namespace ranges
         RANGES_DEPRECATED(
             "Use the variant of ranges::mismatch that takes an upper bound for "
             "both sequences")
-        auto RANGES_FUN_NIEBLOID(mismatch)(I1 begin1,
-                                           S1 end1,
-                                           I2 begin2,
-                                           C pred = C{},
-                                           P1 proj1 = P1{},
-                                           P2 proj2 = P2{}) //
-            ->CPP_ret(mismatch_result<I1, I2>)(             //
+        auto RANGES_FUNC(mismatch)(I1 begin1,
+                                   S1 end1,
+                                   I2 begin2,
+                                   C pred = C{},
+                                   P1 proj1 = P1{},
+                                   P2 proj2 = P2{}) //
+            ->CPP_ret(mismatch_result<I1, I2>)(     //
                 requires input_iterator<I1> && sentinel_for<S1, I1> &&
                 input_iterator<I2> &&
                 indirect_relation<C, projected<I1, P1>, projected<I2, P2>>)
@@ -75,14 +75,14 @@ namespace ranges
                  typename C = equal_to,
                  typename P1 = identity,
                  typename P2 = identity>
-        auto RANGES_FUN_NIEBLOID(mismatch)(I1 begin1,
-                                           S1 end1,
-                                           I2 begin2,
-                                           S2 end2,
-                                           C pred = C{},
-                                           P1 proj1 = P1{},
-                                           P2 proj2 = P2{}) //
-            ->CPP_ret(mismatch_result<I1, I2>)(             //
+        auto RANGES_FUNC(mismatch)(I1 begin1,
+                                   S1 end1,
+                                   I2 begin2,
+                                   S2 end2,
+                                   C pred = C{},
+                                   P1 proj1 = P1{},
+                                   P2 proj2 = P2{}) //
+            ->CPP_ret(mismatch_result<I1, I2>)(     //
                 requires input_iterator<I1> && sentinel_for<S1, I1> &&
                 input_iterator<I2> && sentinel_for<S2, I2> &&
                 indirect_relation<C, projected<I1, P1>, projected<I2, P2>>)
@@ -102,11 +102,11 @@ namespace ranges
         RANGES_DEPRECATED(
             "Use the variant of ranges::mismatch that takes an upper bound for "
             "both sequences")
-        auto RANGES_FUN_NIEBLOID(mismatch)(Rng1 && rng1,
-                                           I2Ref && begin2,
-                                           C pred = C{}, // see below [*]
-                                           P1 proj1 = P1{},
-                                           P2 proj2 = P2{})                      //
+        auto RANGES_FUNC(mismatch)(Rng1 && rng1,
+                                   I2Ref && begin2,
+                                   C pred = C{}, // see below [*]
+                                   P1 proj1 = P1{},
+                                   P2 proj2 = P2{})                              //
             ->CPP_ret(mismatch_result<safe_iterator_t<Rng1>, uncvref_t<I2Ref>>)( //
                 requires input_range<Rng1> && input_iterator<uncvref_t<I2Ref>> &&
                 indirect_relation<C,
@@ -130,7 +130,7 @@ namespace ranges
                  typename C = equal_to,
                  typename P1 = identity,
                  typename P2 = identity>
-        auto RANGES_FUN_NIEBLOID(mismatch)(
+        auto RANGES_FUNC(mismatch)(
             Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) //
             ->CPP_ret(mismatch_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>>)(   //
                 requires input_range<Rng1> && input_range<Rng2> &&
@@ -147,7 +147,7 @@ namespace ranges
                            std::move(proj2));
         }
 
-    RANGES_END_NIEBLOID(mismatch)
+    RANGES_FUNC_END(mismatch)
 
     namespace cpp20
     {

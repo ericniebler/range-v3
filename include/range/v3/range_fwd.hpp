@@ -133,14 +133,14 @@ namespace ranges
 
     namespace actions
     {
-        template<typename Action>
-        struct action;
+        template<typename ActionFn>
+        struct action_closure;
     }
 
     namespace views
     {
-        template<typename View>
-        struct view;
+        template<typename ViewFn>
+        struct view_closure;
     }
 
     struct advance_fn;
@@ -800,10 +800,6 @@ namespace ranges
     namespace concepts = ::concepts;
     using namespace ::concepts::defs;
     using ::concepts::and_v;
-    // namespace lazy
-    // {
-    //     using namespace ::concepts::defs::lazy;
-    // }
     namespace defer
     {
         using namespace ::concepts::defs::defer;

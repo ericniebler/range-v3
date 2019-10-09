@@ -35,7 +35,7 @@ namespace ranges
     template<typename I, typename O>
     using replace_copy_if_result = detail::in_out_result<I, O>;
 
-    RANGES_BEGIN_NIEBLOID(replace_copy_if)
+    RANGES_FUNC_BEGIN(replace_copy_if)
 
         /// \brief function template \c replace_copy_if
         template<typename I,
@@ -44,7 +44,7 @@ namespace ranges
                  typename C,
                  typename T,
                  typename P = identity>
-        auto RANGES_FUN_NIEBLOID(replace_copy_if)(
+        auto RANGES_FUNC(replace_copy_if)(
             I first, S last, O out, C pred, T const & new_value, P proj = {}) //
             ->CPP_ret(replace_copy_if_result<I, O>)(                          //
                 requires input_iterator<I> && sentinel_for<S, I> &&
@@ -64,7 +64,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename O, typename C, typename T, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(replace_copy_if)(
+        auto RANGES_FUNC(replace_copy_if)(
             Rng && rng, O out, C pred, T const & new_value, P proj = {}) //
             ->CPP_ret(replace_copy_if_result<safe_iterator_t<Rng>, O>)(  //
                 requires input_range<Rng> && output_iterator<O, T const &> &&
@@ -79,7 +79,7 @@ namespace ranges
                            std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(replace_copy_if)
+    RANGES_FUNC_END(replace_copy_if)
 
     namespace cpp20
     {

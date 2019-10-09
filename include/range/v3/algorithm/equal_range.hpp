@@ -33,7 +33,7 @@ namespace ranges
 {
     /// \addtogroup group-algorithms
     /// @{
-    RANGES_BEGIN_NIEBLOID(equal_range)
+    RANGES_FUNC_BEGIN(equal_range)
 
         /// \brief function template \c equal_range
         template<typename I,
@@ -41,7 +41,7 @@ namespace ranges
                  typename V,
                  typename C = less,
                  typename P = identity>
-        auto RANGES_FUN_NIEBLOID(equal_range)(
+        auto RANGES_FUNC(equal_range)(
             I first, S last, V const & val, C pred = C{}, P proj = P{})
             ->CPP_ret(subrange<I>)( //
                 requires forward_iterator<I> && sentinel_for<S, I> &&
@@ -100,7 +100,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename V, typename C = less, typename P = identity>
-        auto RANGES_FUN_NIEBLOID(equal_range)(
+        auto RANGES_FUNC(equal_range)(
             Rng && rng, V const & val, C pred = C{}, P proj = P{}) //
             ->CPP_ret(safe_subrange_t<Rng>)(                       //
                 requires forward_range<Rng> &&
@@ -116,7 +116,7 @@ namespace ranges
             return (*this)(begin(rng), end(rng), val, std::move(pred), std::move(proj));
         }
 
-    RANGES_END_NIEBLOID(equal_range)
+    RANGES_FUNC_END(equal_range)
 
     namespace cpp20
     {

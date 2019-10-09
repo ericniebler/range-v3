@@ -52,7 +52,7 @@ namespace ranges
     template<typename I0, typename I1, typename O>
     using merge_result = detail::in1_in2_out_result<I0, I1, O>;
 
-    RANGES_BEGIN_NIEBLOID(merge)
+    RANGES_FUNC_BEGIN(merge)
 
         /// \brief function template \c merge
         template<typename I0,
@@ -63,15 +63,15 @@ namespace ranges
                  typename C = less,
                  typename P0 = identity,
                  typename P1 = identity>
-        auto RANGES_FUN_NIEBLOID(merge)(I0 begin0,
-                                        S0 end0,
-                                        I1 begin1,
-                                        S1 end1,
-                                        O out,
-                                        C pred = C{},
-                                        P0 proj0 = P0{},
-                                        P1 proj1 = P1{}) //
-            ->CPP_ret(merge_result<I0, I1, O>)(          //
+        auto RANGES_FUNC(merge)(I0 begin0,
+                                S0 end0,
+                                I1 begin1,
+                                S1 end1,
+                                O out,
+                                C pred = C{},
+                                P0 proj0 = P0{},
+                                P1 proj1 = P1{}) //
+            ->CPP_ret(merge_result<I0, I1, O>)(  //
                 requires sentinel_for<S0, I0> && sentinel_for<S1, I1> &&
                 mergeable<I0, I1, O, C, P0, P1>)
         {
@@ -100,12 +100,12 @@ namespace ranges
                  typename C = less,
                  typename P0 = identity,
                  typename P1 = identity>
-        auto RANGES_FUN_NIEBLOID(merge)(Rng0 && rng0,
-                                        Rng1 && rng1,
-                                        O out,
-                                        C pred = C{},
-                                        P0 proj0 = P0{},
-                                        P1 proj1 = P1{})
+        auto RANGES_FUNC(merge)(Rng0 && rng0,
+                                Rng1 && rng1,
+                                O out,
+                                C pred = C{},
+                                P0 proj0 = P0{},
+                                P1 proj1 = P1{})
             ->CPP_ret(merge_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>, O>)( //
                 requires range<Rng0> && range<Rng1> &&
                 mergeable<iterator_t<Rng0>, iterator_t<Rng1>, O, C, P0, P1>)
@@ -120,7 +120,7 @@ namespace ranges
                            std::move(proj1));
         }
 
-    RANGES_END_NIEBLOID(merge)
+    RANGES_FUNC_END(merge)
 
     namespace cpp20
     {

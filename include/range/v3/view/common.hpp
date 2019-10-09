@@ -33,9 +33,9 @@ namespace ranges
     /// \addtogroup group-views
     /// @{
 
+    /// \cond
     namespace detail
     {
-        /// \cond
         // clang-format off
         CPP_def
         (
@@ -53,8 +53,8 @@ namespace ranges
         template<typename Rng>
         struct is_common_range : meta::bool_<common_range<Rng>>
         {};
-        /// \endcond
     } // namespace detail
+    /// \endcond
 
     template<typename Rng, bool = detail::is_common_range<Rng>::value>
     struct common_view : view_interface<common_view<Rng>, range_cardinality<Rng>::value>
@@ -137,8 +137,10 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng)(requires !common_range<Rng>) common_view(Rng &&)
-        ->common_view<views::all_t<Rng>>;
+    CPP_template(typename Rng)(       //
+        requires(!common_range<Rng>)) //
+        common_view(Rng &&)
+            ->common_view<views::all_t<Rng>>;
 #endif
 
     template<typename Rng>
@@ -152,6 +154,13 @@ namespace ranges
     {
         struct cpp20_common_fn
         {
+            template<typename Rng>
+            auto operator()(Rng && rng) const -> CPP_ret(all_t<Rng>)( //
+                requires viewable_range<Rng> && common_range<Rng>)
+            {
+                return all(static_cast<Rng &&>(rng));
+            }
+
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(common_view<all_t<Rng>>)( //
                 requires viewable_range<Rng> && (!common_range<Rng>))
@@ -172,7 +181,7 @@ namespace ranges
 
         /// \relates common_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<common_fn>, common)
+        RANGES_INLINE_VARIABLE(view_closure<common_fn>, common)
     } // namespace views
     /// @}
 
@@ -204,8 +213,8 @@ namespace ranges
     {
         namespace views
         {
-            RANGES_INLINE_VARIABLE(ranges::views::view<ranges::views::cpp20_common_fn>,
-                                   common)
+            RANGES_INLINE_VARIABLE(
+                ranges::views::view_closure<ranges::views::cpp20_common_fn>, common)
         }
         CPP_template(typename Rng)(                      //
             requires view_<Rng> && (!common_range<Rng>)) //

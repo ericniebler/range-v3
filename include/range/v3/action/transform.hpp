@@ -32,16 +32,14 @@ namespace ranges
     {
         struct transform_fn
         {
-        private:
-            friend action_access;
             template<typename F, typename P = identity>
-            static auto CPP_fun(bind)(transform_fn transform, F fun, P proj = P{})( //
-                requires(!range<F>))
+            constexpr auto CPP_fun(operator())(F fun, P proj = P{})(const //
+                                                                    requires(!range<F>))
             {
-                return bind_back(transform, std::move(fun), std::move(proj));
+                return make_action_closure(
+                    bind_back(transform_fn{}, std::move(fun), std::move(proj)));
             }
 
-        public:
             template<typename Rng, typename F, typename P = identity>
             auto operator()(Rng && rng, F fun, P proj = P{}) const -> CPP_ret(Rng)( //
                 requires input_range<Rng> && copy_constructible<F> &&
@@ -53,10 +51,8 @@ namespace ranges
             }
         };
 
-        /// \ingroup group-actions
-        /// \relates transform_fn
-        /// \sa action
-        RANGES_INLINE_VARIABLE(action<transform_fn>, transform)
+        /// \relates actions::transform_fn
+        RANGES_INLINE_VARIABLE(transform_fn, transform)
     } // namespace actions
     /// @}
 } // namespace ranges

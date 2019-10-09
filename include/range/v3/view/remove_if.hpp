@@ -58,8 +58,8 @@ namespace ranges
         struct adaptor : adaptor_base
         {
             adaptor() = default;
-            constexpr adaptor(remove_if_view & rng) noexcept
-              : rng_(&rng)
+            constexpr adaptor(remove_if_view * rng) noexcept
+              : rng_(rng)
             {}
             static constexpr iterator_t<Rng> begin(remove_if_view & rng)
             {
@@ -85,7 +85,7 @@ namespace ranges
         constexpr adaptor begin_adaptor()
         {
             cache_begin();
-            return {*this};
+            return {this};
         }
         CPP_member
         constexpr auto end_adaptor() const noexcept -> CPP_ret(adaptor_base)( //
@@ -99,7 +99,7 @@ namespace ranges
         {
             if(bidirectional_range<Rng>)
                 cache_begin();
-            return {*this};
+            return {this};
         }
 
         constexpr void satisfy_forward(iterator_t<Rng> & it)
@@ -144,24 +144,8 @@ namespace ranges
     {
         /// Given a source range, unary predicate, and optional projection,
         /// present a view of the elements that do not satisfy the predicate.
-        struct remove_if_fn
+        struct remove_if_base_fn
         {
-        private:
-            friend view_access;
-
-            template<typename Pred>
-            static constexpr auto bind(remove_if_fn remove_if, Pred pred)
-            {
-                return make_pipeable(bind_back(remove_if, std::move(pred)));
-            }
-            template<typename Pred, typename Proj>
-            static constexpr auto bind(remove_if_fn remove_if, Pred pred, Proj proj)
-            {
-                return make_pipeable(
-                    bind_back(remove_if, std::move(pred), std::move(proj)));
-            }
-
-        public:
             template<typename Rng, typename Pred>
             constexpr auto operator()(Rng && rng, Pred pred) const
                 -> CPP_ret(remove_if_view<all_t<Rng>, Pred>)( //
@@ -183,9 +167,28 @@ namespace ranges
             }
         };
 
+        struct remove_if_fn : remove_if_base_fn
+        {
+            using remove_if_base_fn::operator();
+
+            template<typename Pred>
+            constexpr auto operator()(Pred pred) const
+            {
+                return make_view_closure(bind_back(remove_if_base_fn{}, std::move(pred)));
+            }
+            template<typename Pred, typename Proj>
+            constexpr auto CPP_fun(operator())(Pred && pred,
+                                               Proj proj)(const //
+                                                          requires(!range<Pred>))
+            {
+                return make_view_closure(bind_back(
+                    remove_if_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));
+            }
+        };
+
         /// \relates remove_if_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<remove_if_fn>, remove_if)
+        RANGES_INLINE_VARIABLE(remove_if_fn, remove_if)
     } // namespace views
     /// @}
 } // namespace ranges
