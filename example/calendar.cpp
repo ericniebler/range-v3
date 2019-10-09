@@ -95,6 +95,8 @@ const int chars_per_week = 22;
 // Spaces per day
 const int spaces_per_day = 3;
 
+// Max number of weeks per month
+const int max_weeks = 6;
 
 // This template wrapper class provides the ability to act both as an
 // "incrementable" class which can be used with ranges and also a
@@ -290,7 +292,7 @@ layout_months()
         return views::concat(
             views::single(month_title(front(month))),
             month | by_week() | format_weeks(),
-            views::repeat_n(std::string( chars_per_week, ' '), 6 - week_count));
+            views::repeat_n(std::string( chars_per_week, ' '), max_weeks - week_count));
     });
 }
 
