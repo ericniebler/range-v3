@@ -97,7 +97,7 @@ const int spaces_per_day = 3;
 
 
 // This template wrapper class provides the ability to act both as an
-// "incrementabl" class which can be used with ranges and also a
+// "incrementable" class which can be used with ranges and also a
 // "date" class which can be used to calculate year/month/day and other
 // values.
 template< class T >
