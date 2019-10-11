@@ -157,6 +157,8 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_INSTANCE(...) __VA_ARGS__
 #endif
 
+#define CPP_fwd(ARG) \
+    (decltype(ARG)&&) ARG
 
 #define CPP_type_of(...) \
     CPP_PP_EXPAND(CPP_type_of_2 __VA_ARGS__))
@@ -180,25 +182,35 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     {__VA_ARGS__;}
 #define CPP_defer(CONCEPT, ...) \
     CONCEPT<__VA_ARGS__>
+#define CPP_type(...) \
+    __VA_ARGS__
+#define CPP_literal(...) \
+    __VA_ARGS__
 #else
 #define CPP_concept CPP_INLINE_VAR constexpr auto
 #define CPP_requires_n(N, ...) \
     bool(true ? nullptr : ::concepts::detail::test_concept<\
         CPP_PP_FOR_EACH_N(N, CPP_type_of, __VA_ARGS__)>( [] \
-        (CPP_PP_FOR_EACH_N(N, CPP_param, __VA_ARGS__)) \
+        (auto CPP_arg, CPP_PP_FOR_EACH_N(N, CPP_param, __VA_ARGS__)) \
         CPP_valid_expressions
 #define CPP_valid_expressions(...) \
     -> decltype(__VA_ARGS__, void(), ::concepts::detail::true_type{}) \
-    { return {}; }))
-#define CPP_dependent_type(T) \
-    std::enable_if_t<True.value, T>
-#define CPP_defer(CONCEPT, ...)\
+    { (void)CPP_arg; return {}; }))
+#define CPP_type(...) \
+    ::concepts::detail::first_t<__VA_ARGS__, decltype(CPP_arg)>
+#define CPP_literal(...) \
+    (CPP_arg, void(), __VA_ARGS__)
+#define CPP_type_(ARG) \
+    CPP_type(CPP_PP_IIF(CPP_PP_NOT(CPP_PP_IS_PAREN(ARG)))(, CPP_PP_EXPAND) ARG)
+#define CPP_defer_(CONCEPT, ...)\
     true? nullptr \
          : ::concepts::detail::make_boolean(\
-            [](auto True) { \
-                return std::integral_constant<bool, \
-                    (CONCEPT<CPP_PP_FOR_EACH(CPP_dependent_type, __VA_ARGS__)>)>{};\
+            [](auto CPP_arg) { \
+                (void) CPP_arg; \
+                return std::integral_constant<bool, (CONCEPT<__VA_ARGS__>)>{};\
             })
+#define CPP_defer(CONCEPT, ...)\
+    CPP_defer_(CONCEPT, CPP_PP_FOR_EACH(CPP_type_, __VA_ARGS__))
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -295,7 +307,8 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
         CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
         META_CONCEPT NAME = CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);         \
     }                                                                           \
-    using defer::NAME                                                           \
+    CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                             \
+    META_CONCEPT NAME = defer::NAME<CPP_PP_EXPAND ARGS>                         \
     /**/
 #endif
 #else
@@ -808,7 +821,7 @@ namespace concepts
 
         template<class...Args, class Fn>
         auto test_concept(Fn const fn) ->
-            decltype(fn(std::declval<Args>()...))
+            decltype(fn(0, std::declval<Args>()...))
         {
             return {};
         }
@@ -817,6 +830,16 @@ namespace concepts
         {
             return {};
         }
+
+        template<unsigned U>
+        struct first_impl
+        {
+            template<class T>
+            using invoke = T;
+        };
+
+        template<class T, class U>
+        using first_t = meta::invoke<first_impl<sizeof(U) ^ sizeof(U)>, T>;
 
         template<typename T>
         CPP_INLINE_VAR constexpr T instance_ = T{};
@@ -1038,45 +1061,28 @@ namespace concepts
         // Utility concepts
         ////////////////////////////////////////////////////////////////////////////////////////
 
-        CPP_def
-        (
-            template(bool B)
-            (concept is_true)(B),
-                B
-        );
+        template<bool B>
+        CPP_concept is_true = B;
 
-        CPP_def
-        (
-            template(typename... Args)
-            (concept type)(Args...),
-                true
-        );
+        template<typename... Args>
+        CPP_concept type = true;
 
-        CPP_def
-        (
-            template(class T, template<typename...> class Trait, typename... Args)
-            (concept satisfies)(T, Trait, Args...),
-                static_cast<bool>(Trait<T, Args...>::type::value)
-        );
+        template<class T, template<typename...> class Trait, typename... Args>
+        CPP_concept satisfies =
+            static_cast<bool>(Trait<T, Args...>::type::value);
 
         ////////////////////////////////////////////////////////////////////////////////////////
         // Core language concepts
         ////////////////////////////////////////////////////////////////////////////////////////
 
-        CPP_def
-        (
-            template(typename A, typename B)
-            concept same_as,
-                META_IS_SAME(A, B) && META_IS_SAME(B, A)
-        );
+        template<typename A, typename B>
+        CPP_concept same_as =
+            META_IS_SAME(A, B) && META_IS_SAME(B, A);
 
         /// \cond
-        CPP_def
-        (
-            template(typename A, typename B)
-            concept not_same_as_,
-                (!same_as<detail::remove_cvref_t<A>, detail::remove_cvref_t<B>>)
-        );
+        template<typename A, typename B>
+        CPP_concept not_same_as_ =
+            (!same_as<detail::remove_cvref_t<A>, detail::remove_cvref_t<B>>);
 
         // Workaround bug in the Standard Library:
         // From cannot be an incomplete class type despite that
@@ -1084,17 +1090,15 @@ namespace concepts
         // in such a case.
         template<typename From, typename To>
         CPP_concept implicitly_convertible_to =
-            std::is_convertible<typename std::add_rvalue_reference<From>::type, To>::value;
+            std::is_convertible<std::add_rvalue_reference_t<From>, To>::value;
 
-        CPP_def
-        (
-            template(typename From, typename To)
-            concept explicitly_convertible_to,
-                requires (From (&from)())
-                (
-                    static_cast<To>(from())
-                )
-        );
+        template<typename From, typename To>
+        CPP_concept explicitly_convertible_to =
+            CPP_requires ((int))
+            (
+                static_cast<CPP_type(To)>(
+                    ((CPP_type(From)(*)())nullptr)())
+            );
         /// \endcond
 
         template<typename From, typename To>
@@ -1290,6 +1294,28 @@ namespace concepts
 
         namespace defer
         {
+            template<bool B>
+            CPP_concept is_true =
+                CPP_defer_(defs::is_true, B);
+
+            template<typename... Ts>
+            CPP_concept type =
+                CPP_defer(defs::type, meta::list<Ts...>);
+
+            template<class T, template<typename...> class Trait, typename... Args>
+            CPP_concept satisfies =
+                CPP_defer_(defs::satisfies, CPP_type(T), Trait, Args...);
+
+            template<typename A, typename B>
+            CPP_concept same_as =
+                CPP_defer(defs::same_as, A, B);
+
+            /// \cond
+            template<typename A, typename B>
+            CPP_concept not_same_as_ =
+                CPP_defer(defs::not_same_as_, A, B);
+            /// \endcond
+
             template<typename From, typename To>
             CPP_concept convertible_to =
                 CPP_defer(defs::convertible_to, From, To);
