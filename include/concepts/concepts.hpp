@@ -174,7 +174,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 #if CPP_CXX_CONCEPTS
 #define CPP_concept META_CONCEPT
-#define CPP_concept_auto META_CONCEPT
+#define CPP_concept_bool META_CONCEPT
 #define CPP_arg_2(...) ::concepts::detail::id_t<__VA_ARGS__>
 #define CPP_arg(ARG) CPP_arg_2 ARG
 #define CPP_requires_n(N, ...) \
@@ -191,8 +191,8 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_literal(...) \
     __VA_ARGS__
 #else
-#define CPP_concept CPP_INLINE_VAR constexpr bool
-#define CPP_concept_auto CPP_INLINE_VAR constexpr auto
+#define CPP_concept_bool CPP_INLINE_VAR constexpr bool
+#define CPP_concept CPP_INLINE_VAR constexpr auto
 #define CPP_requires_n(N, ...) \
     bool(true ? nullptr : ::concepts::detail::test_concept( \
         [](auto const CPP_arg) -> \
@@ -313,12 +313,16 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #else
 #define CPP_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, ...)                           \
-    namespace defer {                                                           \
+    namespace _CPP_eager_                                                       \
+    {                                                                           \
         CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
         META_CONCEPT NAME = CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);         \
     }                                                                           \
-    CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                             \
-    META_CONCEPT NAME = defer::NAME<CPP_PP_EXPAND ARGS>                         \
+    namespace defer                                                             \
+    {                                                                           \
+        using _CPP_eager_::NAME;                                                \
+    }                                                                           \
+    using _CPP_eager_::NAME                                                     \
     /**/
 #endif
 #else
@@ -400,7 +404,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                             \
     CPP_INLINE_VAR constexpr bool NAME =                                        \
         (bool) defer::NAME<CPP_PP_EXPAND ARGS>;                                 \
-    using _concepts_int_ = int                                                  \
+    using _CPP_concepts_int_ = int                                              \
     /**/
 #endif
 
@@ -1051,7 +1055,7 @@ namespace concepts
             typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 
         template<typename T, typename U>
-        CPP_concept weakly_equality_comparable_with_ =
+        CPP_concept_bool weakly_equality_comparable_with_ =
             CPP_requires ((detail::as_cref_t<T>) t, (detail::as_cref_t<U>) u)
             (
                 (t == u) ? 1 : 0,
@@ -1077,13 +1081,13 @@ namespace concepts
         ////////////////////////////////////////////////////////////////////////////////////////
 
         template<bool B>
-        CPP_concept is_true = B;
+        CPP_concept_bool is_true = B;
 
         template<typename... Args>
-        CPP_concept type = true;
+        CPP_concept_bool type = true;
 
         template<class T, template<typename...> class Trait, typename... Args>
-        CPP_concept satisfies =
+        CPP_concept_bool satisfies =
             static_cast<bool>(Trait<T, Args...>::type::value);
 
         ////////////////////////////////////////////////////////////////////////////////////////
@@ -1091,12 +1095,12 @@ namespace concepts
         ////////////////////////////////////////////////////////////////////////////////////////
 
         template<typename A, typename B>
-        CPP_concept same_as =
+        CPP_concept_bool same_as =
             META_IS_SAME(A, B) && META_IS_SAME(B, A);
 
         /// \cond
         template<typename A, typename B>
-        CPP_concept not_same_as_ =
+        CPP_concept_bool not_same_as_ =
             (!same_as<detail::remove_cvref_t<A>, detail::remove_cvref_t<B>>);
 
         // Workaround bug in the Standard Library:
@@ -1104,11 +1108,11 @@ namespace concepts
         // is_convertible<X, Y> should be equivalent to is_convertible<X&&, Y>
         // in such a case.
         template<typename From, typename To>
-        CPP_concept implicitly_convertible_to =
+        CPP_concept_bool implicitly_convertible_to =
             std::is_convertible<std::add_rvalue_reference_t<From>, To>::value;
 
         template<typename From, typename To>
-        CPP_concept explicitly_convertible_to =
+        CPP_concept_bool explicitly_convertible_to =
             CPP_requires ((CPP_type(From)(*)()) from)
             (
                 static_cast<To>(from())
@@ -1116,17 +1120,17 @@ namespace concepts
         /// \endcond
 
         template<typename From, typename To>
-        CPP_concept convertible_to =
+        CPP_concept_bool convertible_to =
             implicitly_convertible_to<From, To> &&
             explicitly_convertible_to<From, To>;
 
         template<typename T, typename U>
-        CPP_concept derived_from =
+        CPP_concept_bool derived_from =
             META_IS_BASE_OF(U, T) &&
             convertible_to<T const volatile *, U const volatile *>;
 
         template<typename T, typename U>
-        CPP_concept common_reference_with =
+        CPP_concept_bool common_reference_with =
             CPP_requires((common_reference_t<CPP_type(T), U>(*)()),
                          (common_reference_t<CPP_type(U), T>(*)()))
             (
@@ -1138,7 +1142,7 @@ namespace concepts
             );
 
         template<typename T, typename U>
-        CPP_concept common_with =
+        CPP_concept_bool common_with =
             CPP_requires((common_type_t<CPP_type(T), U>(*)()),
                          (common_type_t<CPP_type(U), T>(*)()))
             (
@@ -1158,21 +1162,21 @@ namespace concepts
             );
 
         template<typename T>
-        CPP_concept integral =
+        CPP_concept_bool integral =
             std::is_integral<T>::value;
 
         template<typename T>
-        CPP_concept signed_integral =
+        CPP_concept_bool signed_integral =
             integral<T> &&
             std::is_signed<T>::value;
 
         template<typename T>
-        CPP_concept unsigned_integral =
+        CPP_concept_bool unsigned_integral =
             integral<T> &&
             !signed_integral<T>;
 
         template<typename T, typename U>
-        CPP_concept assignable_from =
+        CPP_concept_bool assignable_from =
             std::is_lvalue_reference<T>::value &&
             CPP_requires((T) t, (U &&) u)
             (
@@ -1181,14 +1185,14 @@ namespace concepts
             );
 
         template<typename T>
-        CPP_concept swappable =
+        CPP_concept_bool swappable =
             CPP_requires ((T &) t, (T &) u)
             (
                 concepts::swap(t, u)
             );
 
         template<typename T, typename U>
-        CPP_concept swappable_with =
+        CPP_concept_bool swappable_with =
             common_reference_with<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
             CPP_requires ((T &&) t, (U &&) u)
             (
@@ -1203,11 +1207,11 @@ namespace concepts
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         template<typename T>
-        CPP_concept equality_comparable =
+        CPP_concept_bool equality_comparable =
             detail::weakly_equality_comparable_with_<T, T>;
 
         template<typename T, typename U>
-        CPP_concept equality_comparable_with =
+        CPP_concept_bool equality_comparable_with =
             equality_comparable<T> &&
             equality_comparable<U> &&
             detail::weakly_equality_comparable_with_<T, U> &&
@@ -1222,7 +1226,7 @@ namespace concepts
             );
 
         template<typename T>
-        CPP_concept totally_ordered =
+        CPP_concept_bool totally_ordered =
             equality_comparable<T> &&
             CPP_requires ((detail::as_cref_t<T>) t, (detail::as_cref_t<T>) u)
             (
@@ -1233,7 +1237,7 @@ namespace concepts
             );
 
         template<typename T, typename U>
-        CPP_concept totally_ordered_with =
+        CPP_concept_bool totally_ordered_with =
             CPP_requires ((detail::as_cref_t<T>) t, (detail::as_cref_t<U>) u)
             (
                 t < u ? 1 : 0,
@@ -1263,25 +1267,25 @@ namespace concepts
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         template<typename T>
-        CPP_concept destructible =
+        CPP_concept_bool destructible =
             std::is_nothrow_destructible<T>::value;
 
         template<typename T, typename... Args>
-        CPP_concept constructible_from =
+        CPP_concept_bool constructible_from =
             destructible<T> &&
             META_IS_CONSTRUCTIBLE(T, Args...);
 
         template<typename T>
-        CPP_concept default_constructible =
+        CPP_concept_bool default_constructible =
             constructible_from<T>;
 
         template<typename T>
-        CPP_concept move_constructible =
+        CPP_concept_bool move_constructible =
             constructible_from<T, T> &&
             convertible_to<T, T>;
 
         template<typename T>
-        CPP_concept copy_constructible =
+        CPP_concept_bool copy_constructible =
             move_constructible<T> &&
             constructible_from<T, T &> &&
             constructible_from<T, T const &> &&
@@ -1291,144 +1295,144 @@ namespace concepts
             convertible_to<T const, T>;
 
         template<typename T>
-        CPP_concept movable =
+        CPP_concept_bool movable =
             std::is_object<T>::value &&
             move_constructible<T> &&
             assignable_from<T &, T> &&
             swappable<T>;
 
         template<typename T>
-        CPP_concept copyable =
+        CPP_concept_bool copyable =
             copy_constructible<T> &&
             movable<T> &&
             assignable_from<T &, T const &>;
 
         template<typename T>
-        CPP_concept semiregular =
+        CPP_concept_bool semiregular =
             copyable<T> &&
             default_constructible<T>;
             // Axiom: copies are independent. See Fundamentals of Generic Programming
             // http://www.stepanovpapers.com/DeSt98.pdf
 
         template<typename T>
-        CPP_concept regular =
+        CPP_concept_bool regular =
             semiregular<T> &&
             equality_comparable<T>;
 
         namespace defer
         {
             template<bool B>
-            CPP_concept_auto is_true =
+            CPP_concept is_true =
                 CPP_defer_(defs::is_true, B);
 
             template<typename... Ts>
-            CPP_concept_auto type =
+            CPP_concept type =
                 CPP_defer(defs::type, meta::list<Ts...>);
 
             template<class T, template<typename...> class Trait, typename... Args>
-            CPP_concept_auto satisfies =
+            CPP_concept satisfies =
                 CPP_defer_(defs::satisfies, CPP_type(T), Trait, Args...);
 
             template<typename A, typename B>
-            CPP_concept_auto same_as =
+            CPP_concept same_as =
                 CPP_defer(defs::same_as, A, B);
 
             /// \cond
             template<typename A, typename B>
-            CPP_concept_auto not_same_as_ =
+            CPP_concept not_same_as_ =
                 CPP_defer(defs::not_same_as_, A, B);
             /// \endcond
 
             template<typename From, typename To>
-            CPP_concept_auto convertible_to =
+            CPP_concept convertible_to =
                 CPP_defer(defs::convertible_to, From, To);
 
             template<typename T, typename U>
-            CPP_concept_auto derived_from =
+            CPP_concept derived_from =
                 CPP_defer(defs::derived_from, T, U);
 
             template<typename T, typename U>
-            CPP_concept_auto common_reference_with =
+            CPP_concept common_reference_with =
                 CPP_defer(defs::common_reference_with, T, U);
 
             template<typename T, typename U>
-            CPP_concept_auto common_with =
+            CPP_concept common_with =
                 CPP_defer(defs::common_with, T, U);
 
             template<typename T>
-            CPP_concept_auto integral =
+            CPP_concept integral =
                 CPP_defer(defs::integral, T);
 
             template<typename T>
-            CPP_concept_auto signed_integral =
+            CPP_concept signed_integral =
                 CPP_defer(defs::signed_integral, T);
 
             template<typename T>
-            CPP_concept_auto unsigned_integral =
+            CPP_concept unsigned_integral =
                 CPP_defer(defs::unsigned_integral, T);
 
             template<typename T, typename U>
-            CPP_concept_auto assignable_from =
+            CPP_concept assignable_from =
                 CPP_defer(defs::assignable_from, T, U);
 
             template<typename T>
-            CPP_concept_auto swappable =
+            CPP_concept swappable =
                 CPP_defer(defs::swappable, T);
 
             template<typename T, typename U>
-            CPP_concept_auto swappable_with =
+            CPP_concept swappable_with =
                 CPP_defer(defs::swappable_with, T, U);
 
             template<typename T>
-            CPP_concept_auto equality_comparable =
+            CPP_concept equality_comparable =
                 CPP_defer(defs::equality_comparable, T);
 
             template<typename T, typename U>
-            CPP_concept_auto equality_comparable_with =
+            CPP_concept equality_comparable_with =
                 CPP_defer(defs::equality_comparable_with, T, U);
 
             template<typename T>
-            CPP_concept_auto totally_ordered =
+            CPP_concept totally_ordered =
                 CPP_defer(defs::totally_ordered, T);
 
             template<typename T, typename U>
-            CPP_concept_auto totally_ordered_with =
+            CPP_concept totally_ordered_with =
                 CPP_defer(defs::totally_ordered_with, T, U);
 
             template<typename T>
-            CPP_concept_auto destructible =
+            CPP_concept destructible =
                 CPP_defer(defs::destructible, T);
 
             template<typename T, typename... Args>
-            CPP_concept_auto constructible_from =
+            CPP_concept constructible_from =
                 CPP_defer_(defs::constructible_from, CPP_type(T), Args...);
 
             template<typename T>
-            CPP_concept_auto default_constructible =
+            CPP_concept default_constructible =
                 CPP_defer(defs::default_constructible, T);
 
             template<typename T>
-            CPP_concept_auto move_constructible =
+            CPP_concept move_constructible =
                 CPP_defer(defs::move_constructible, T);
 
             template<typename T>
-            CPP_concept_auto copy_constructible =
+            CPP_concept copy_constructible =
                 CPP_defer(defs::copy_constructible, T);
 
             template<typename T>
-            CPP_concept_auto movable =
+            CPP_concept movable =
                 CPP_defer(defs::movable, T);
 
             template<typename T>
-            CPP_concept_auto copyable =
+            CPP_concept copyable =
                 CPP_defer(defs::copyable, T);
 
             template<typename T>
-            CPP_concept_auto semiregular =
+            CPP_concept semiregular =
                 CPP_defer(defs::semiregular, T);
 
             template<typename T>
-            CPP_concept_auto regular =
+            CPP_concept regular =
                 CPP_defer(defs::regular, T);
         }
     } // inline namespace defs
