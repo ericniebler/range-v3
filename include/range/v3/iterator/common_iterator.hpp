@@ -15,6 +15,7 @@
 #define RANGES_V3_ITERATOR_COMMON_ITERATOR_HPP
 
 #include <cstdint>
+#include <iterator>
 #include <type_traits>
 
 #include <meta/meta.hpp>
