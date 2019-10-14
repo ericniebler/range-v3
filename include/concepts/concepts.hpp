@@ -194,7 +194,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_concept_bool CPP_INLINE_VAR constexpr bool
 #define CPP_concept CPP_INLINE_VAR constexpr auto
 #define CPP_requires_n(N, ...) \
-    bool(true ? nullptr : ::concepts::detail::test_concept( \
+    (true ? nullptr : ::concepts::detail::test_concept( \
         [](auto const CPP_arg) -> \
             ::concepts::detail::invoke_result_t<\
                 decltype(CPP_arg), int, \
@@ -205,7 +205,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
         CPP_valid_expressions
 #define CPP_valid_expressions(...) \
     -> decltype(__VA_ARGS__, void(), ::concepts::detail::true_type{}) \
-    { (void)CPP_arg; return {}; }))
+    { (void)CPP_arg; return {}; })).value()
 #define CPP_type(...) \
     ::concepts::detail::first_t<__VA_ARGS__, decltype(CPP_arg)>
 #define CPP_literal(...) \
@@ -824,13 +824,13 @@ namespace concepts
         {
             false_type() = default;
             constexpr false_type(decltype(nullptr)) noexcept {}
-            constexpr explicit operator bool() const noexcept { return false;}
+            static constexpr bool value() noexcept { return false; }
         };
         struct true_type
         {
             true_type() = default;
             constexpr true_type(decltype(nullptr)) noexcept {}
-            constexpr explicit operator bool() const noexcept { return true;}
+            static constexpr bool value() noexcept { return true; }
         };
         template<typename Fun, typename... Args>
         using invoke_result_t =
