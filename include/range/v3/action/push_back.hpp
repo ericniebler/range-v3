@@ -60,15 +60,12 @@ namespace ranges
 
         /// \cond
         // clang-format off
-        CPP_def
-        (
-            template(typename Rng, typename T)
-            concept can_push_back_,
-                requires (Rng &&rng, T &&t)
-                (
-                    push_back(rng, (T &&) t)
-                )
-        );
+        template<typename Rng, typename T>
+        CPP_concept can_push_back_ =
+            CPP_requires ((Rng &&) rng, (T &&) t)
+            (
+                push_back(rng, CPP_fwd(t))
+            );
         // clang-format on
         /// \endcond
 

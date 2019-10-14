@@ -1196,10 +1196,10 @@ namespace concepts
             common_reference_with<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
             CPP_requires ((T &&) t, (U &&) u)
             (
-                concepts::swap((decltype(t) &&) t, (decltype(t) &&) t),
-                concepts::swap((decltype(u) &&) u, (decltype(u) &&) u),
-                concepts::swap((decltype(u) &&) u, (decltype(t) &&) t),
-                concepts::swap((decltype(t) &&) t, (decltype(u) &&) u)
+                concepts::swap(CPP_fwd(t), CPP_fwd(t)),
+                concepts::swap(CPP_fwd(u), CPP_fwd(u)),
+                concepts::swap(CPP_fwd(u), CPP_fwd(t)),
+                concepts::swap(CPP_fwd(t), CPP_fwd(u))
             );
 
         ////////////////////////////////////////////////////////////////////////////////////////////

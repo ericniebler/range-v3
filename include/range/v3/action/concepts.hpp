@@ -52,59 +52,46 @@ namespace ranges
 
     // std::array is a semi_container, native arrays are not.
     // clang-format off
-    CPP_def
-    (
-        template(typename T)
-        concept semi_container,
-            forward_range<T> && default_constructible<uncvref_t<T>> &&
-            movable<uncvref_t<T>> &&
-            !view_<T>
-    );
+    template<typename T>
+    CPP_concept_bool semi_container =
+        forward_range<T> && default_constructible<uncvref_t<T>> &&
+        movable<uncvref_t<T>> &&
+        !view_<T>;
 
     // std::vector is a container, std::array is not
-    CPP_def
-    (
-        template(typename T)
-        concept container,
-            semi_container<T> &&
-            constructible_from<
-                uncvref_t<T>,
-                detail::movable_input_iterator<range_value_t<T>>,
-                detail::movable_input_iterator<range_value_t<T>>>
-    );
+    template<typename T>
+    CPP_concept_bool container =
+        semi_container<T> &&
+        constructible_from<
+            uncvref_t<T>,
+            detail::movable_input_iterator<range_value_t<T>>,
+            detail::movable_input_iterator<range_value_t<T>>>;
 
-    CPP_def
-    (
-        template(typename C)
-        concept reservable,
-            requires (C &c, C const &cc, range_size_t<C> s)
-            (
-                c.reserve(s),
-                cc.capacity(),
-                cc.max_size(),
-                concepts::requires_<same_as<decltype(cc.capacity()), range_size_t<C>>>,
-                concepts::requires_<same_as<decltype(cc.max_size()), range_size_t<C>>>
-            ) &&
-            container<C> && sized_range<C>
-    );
+    template<typename C>
+    CPP_concept_bool reservable =
+        CPP_requires ((C &) c, (C const &) cc, (range_size_t<CPP_type(C)>) s)
+        (
+            c.reserve(s),
+            cc.capacity(),
+            cc.max_size(),
+            concepts::requires_<same_as<decltype(cc.capacity()),
+                                        range_size_t<CPP_type(C)>>>,
+            concepts::requires_<same_as<decltype(cc.max_size()),
+                                        range_size_t<CPP_type(C)>>>
+        ) &&
+        container<C> && sized_range<C>;
 
-    CPP_def
-    (
-        template(typename C, typename I)
-        concept reservable_with_assign,
-            requires (C &c, I i)
-            (
-                c.assign(i, i)
-            ) &&
-            reservable<C> && input_iterator<I>
-    );
+    template<typename C, typename I>
+    CPP_concept_bool reservable_with_assign =
+        CPP_requires ((C &) c, (I) i)
+        (
+            c.assign(i, i)
+        ) &&
+        reservable<C> && input_iterator<I>;
 
-    CPP_def
-    (
-        template(typename C)
-        concept random_access_reservable,
-            reservable<C> && random_access_range<C>
-    );
+    template<typename C>
+    CPP_concept_bool random_access_reservable =
+        reservable<C> && random_access_range<C>;
     // clang-format on
 
     /// \cond
@@ -148,14 +135,16 @@ namespace ranges
     /// \endcond
 
     // clang-format off
-    CPP_def
-    (
-        template(typename T)
-        concept lvalue_container_like,
-            implicitly_convertible_to<detail::is_lvalue_container_like_t<T>,
-                                      std::true_type> &&
-            forward_range<T>
-    );
+    template<typename T>
+    CPP_concept_bool lvalue_container_like =
+        forward_range<T> &&
+        CPP_requires((detail::is_lvalue_container_like_t<CPP_type(T)>))
+        (
+            concepts::requires_<
+                implicitly_convertible_to<
+                    detail::is_lvalue_container_like_t<CPP_type(T)>,
+                    std::true_type>>
+        );
     // clang-format on
     /// @}
 } // namespace ranges
