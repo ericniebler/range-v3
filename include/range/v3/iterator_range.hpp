@@ -33,6 +33,8 @@ RANGES_DEPRECATED_HEADER(
     "This header is deprecated. Please switch to subrange in "
     "<range/v3/view/subrange.hpp>.")
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-views
@@ -378,5 +380,7 @@ namespace std
 /// \endcond
 
 RANGES_DIAGNOSTIC_POP
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

@@ -14,9 +14,6 @@
 #ifndef RANGES_V3_VIEW_HPP
 #define RANGES_V3_VIEW_HPP
 
-#include <range/v3/detail/config.hpp>
-RANGES_DISABLE_WARNINGS
-
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/addressof.hpp>
 #include <range/v3/view/adjacent_filter.hpp>
@@ -87,7 +84,5 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/zip.hpp>
 #include <range/v3/view/zip_with.hpp>
-
-RANGES_RE_ENABLE_WARNINGS
 
 #endif

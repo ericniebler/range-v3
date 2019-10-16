@@ -26,6 +26,8 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/view.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 // TODO: Reuse subrange's pair_like concept here and have get_first and get_second
 // dispatch through get<>()
 
@@ -136,5 +138,7 @@ namespace ranges
     } // namespace cpp20
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

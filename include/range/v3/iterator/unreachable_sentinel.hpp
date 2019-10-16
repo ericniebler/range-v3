@@ -17,6 +17,8 @@
 
 #include <range/v3/iterator/concepts.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-iterator
@@ -62,5 +64,7 @@ namespace ranges
     } // namespace cpp20
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif // RANGES_V3_ITERATOR_UNREACHABLE_SENTINEL_HPP

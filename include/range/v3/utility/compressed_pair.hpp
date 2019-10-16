@@ -27,6 +27,8 @@
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \cond
@@ -222,5 +224,7 @@ namespace std
     };
 } // namespace std
 RANGES_DIAGNOSTIC_POP
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

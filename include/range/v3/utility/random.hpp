@@ -66,6 +66,8 @@
 #include <mutex>
 #endif
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 
@@ -481,5 +483,7 @@ namespace ranges
 } // namespace ranges
 
 RANGES_DIAGNOSTIC_POP
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

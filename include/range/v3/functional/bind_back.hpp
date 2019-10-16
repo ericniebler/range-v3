@@ -11,8 +11,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGE_V3_DETAIL_BIND_BACK_HPP
-#define RANGE_V3_DETAIL_BIND_BACK_HPP
+#ifndef RANGES_V3_DETAIL_BIND_BACK_HPP
+#define RANGES_V3_DETAIL_BIND_BACK_HPP
 
 #include <tuple>
 
@@ -22,6 +22,8 @@
 
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
+
+#include <range/v3/detail/disable_warnings.hpp>
 
 namespace ranges
 {
@@ -183,4 +185,6 @@ namespace ranges
 
 } // namespace ranges
 
-#endif // RANGE_V3_DETAIL_BIND_BACK_HPP
+#include <range/v3/detail/reenable_warnings.hpp>
+
+#endif // RANGES_V3_DETAIL_BIND_BACK_HPP

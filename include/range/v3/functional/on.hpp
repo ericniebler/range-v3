@@ -18,6 +18,8 @@
 #include <range/v3/detail/config.hpp>
 #include <range/v3/functional/invoke.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-functional
@@ -66,5 +68,7 @@ namespace ranges
     RANGES_INLINE_VARIABLE(on_fn, on)
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

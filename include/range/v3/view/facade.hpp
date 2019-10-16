@@ -27,6 +27,8 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/view/interface.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \cond
@@ -129,5 +131,7 @@ namespace ranges
 
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

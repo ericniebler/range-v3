@@ -26,6 +26,8 @@
 #include <range/v3/detail/config.hpp>
 #include <std/detail/associated_types.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     template<typename I>
@@ -235,7 +237,7 @@ namespace ranges
         }
     }
     /// \endcond
-}
+} // namespace ranges
 
 // Hijack the primary std::iterator_traits template from each of the 3 major
 // standard library implementations
@@ -268,6 +270,8 @@ RANGES_BEGIN_NAMESPACE_VERSION
 #endif
 RANGES_END_NAMESPACE_VERSION
 RANGES_END_NAMESPACE_STD
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif // RANGES_DEEP_STL_INTEGRATION
 

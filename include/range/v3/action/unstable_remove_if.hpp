@@ -28,6 +28,8 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-actions
@@ -65,5 +67,7 @@ namespace ranges
     } // namespace actions
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif // RANGES_V3_ACTION_UNSTABLE_REMOVE_IF_HPP

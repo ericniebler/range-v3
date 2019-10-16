@@ -25,6 +25,8 @@
 
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
@@ -47,7 +49,6 @@ namespace ranges
     {
         template<typename U>
         U & can_reference_(U &&);
-
         // clang-format off
         CPP_def
         (
@@ -57,7 +58,7 @@ namespace ranges
                 (
                     detail::can_reference_(*static_cast<T &&>(t))
                 )
-        );
+            );
         // clang-format on
 
         template<class T>
@@ -225,5 +226,7 @@ namespace ranges
 } // namespace ranges
 
 RANGES_DIAGNOSTIC_POP
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif // RANGES_V3_FUNCTIONAL_INVOKE_HPP

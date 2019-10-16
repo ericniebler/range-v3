@@ -28,6 +28,8 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/facade.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \cond
@@ -559,5 +561,7 @@ namespace ranges
 
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

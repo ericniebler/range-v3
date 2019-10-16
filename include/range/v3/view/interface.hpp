@@ -29,6 +29,8 @@
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 #if defined(RANGES_WORKAROUND_GCC_91525)
 #define CPP_template_gcc_workaround CPP_template_sfinae
 #else
@@ -525,5 +527,7 @@ namespace ranges
     }
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

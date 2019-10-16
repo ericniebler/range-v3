@@ -31,6 +31,8 @@
 #include <range/v3/utility/get.hpp>
 #include <range/v3/view/interface.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-views
@@ -488,5 +490,7 @@ namespace std
 } // namespace std
 
 RANGES_DIAGNOSTIC_POP
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

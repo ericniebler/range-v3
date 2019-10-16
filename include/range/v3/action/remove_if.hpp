@@ -26,6 +26,8 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     // TODO Look at all the special cases handled by erase_if in Library Fundamentals 2
@@ -62,5 +64,7 @@ namespace ranges
     } // namespace actions
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

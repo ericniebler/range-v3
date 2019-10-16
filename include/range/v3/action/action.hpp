@@ -29,6 +29,8 @@
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-actions
@@ -52,7 +54,7 @@ namespace ranges
             // Piping requires things are passed by value.
             CPP_template(typename Rng, typename ActionFn)(                         //
                 requires(!defer::is_true<std::is_lvalue_reference<Rng>::value>) && //
-                         defer::range<Rng> && defer::invocable<ActionFn, Rng &>)   //
+                defer::range<Rng> && defer::invocable<ActionFn, Rng &>)            //
                 friend constexpr auto
                 operator|(Rng && rng, action_closure<ActionFn> act)
             {
@@ -212,5 +214,7 @@ namespace ranges
         true;
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

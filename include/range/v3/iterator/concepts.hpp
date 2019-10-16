@@ -34,6 +34,8 @@
 #include <debug/safe_iterator.h>
 #endif
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-iterator
@@ -122,7 +124,7 @@ namespace ranges
     (
         template(typename I)
         concept readable,
-            requires (uncvref_t<I> const &i) (
+            requires (uncvref_t<I> const & i) (
                 // { *i } -> same_as<iter_reference_t<I>>;
                 // { iter_move(i) } -> same_as<iter_rvalue_reference_t<I>>;
                 concepts::requires_<same_as<decltype(*i), iter_reference_t<I>>>,
@@ -130,7 +132,7 @@ namespace ranges
             ) &&
             common_reference_with<iter_reference_t<I> &&, iter_value_t<I> &> &&
             common_reference_with<iter_reference_t<I> &&,
-                                  iter_rvalue_reference_t<I> &&> &&
+                                    iter_rvalue_reference_t<I> &&> &&
             common_reference_with<iter_rvalue_reference_t<I> &&, iter_value_t<I> const &>
     );
 
@@ -770,13 +772,17 @@ namespace __gnu_debug
 // and libstdc++ (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=71771)
 // underconstrained operator- for reverse_iterator by disabling sized_sentinel_for
 // when the base iterators do not model sized_sentinel_for.
+
 namespace ranges
 {
     template<typename S, typename I>
     /*inline*/ constexpr bool
         disable_sized_sentinel<std::reverse_iterator<S>, std::reverse_iterator<I>> =
             !static_cast<bool>(sized_sentinel_for<I, S>);
-}
+} // namespace ranges
+
 #endif // defined(__GLIBCXX__) || (defined(_LIBCPP_VERSION) && _LIBCPP_VERSION <= 3900)
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif // RANGES_V3_ITERATOR_CONCEPTS_HPP

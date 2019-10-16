@@ -22,6 +22,8 @@
 
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     namespace aux
@@ -57,5 +59,7 @@ namespace ranges
                        detail::decay_t<R>>;
     } // namespace aux
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

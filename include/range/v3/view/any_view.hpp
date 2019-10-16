@@ -30,6 +30,8 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/facade.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_INCONSISTENT_OVERRIDE
 
@@ -669,5 +671,7 @@ namespace ranges
 RANGES_SATISFY_BOOST_RANGE(::ranges::any_view)
 
 RANGES_DIAGNOSTIC_POP
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

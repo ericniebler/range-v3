@@ -27,6 +27,8 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     template<typename>
@@ -944,5 +946,7 @@ namespace ranges
     } // namespace detail
     /// \endcond
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

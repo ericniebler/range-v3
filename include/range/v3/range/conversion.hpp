@@ -37,6 +37,8 @@ RANGES_END_NAMESPACE_STD
 #include <vector>
 #endif
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \cond
@@ -506,5 +508,7 @@ namespace ranges
     RANGES_INLINE_VAR constexpr bool
         is_pipeable_v<detail::to_container_closure<MetaFn, Fn>> = true;
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

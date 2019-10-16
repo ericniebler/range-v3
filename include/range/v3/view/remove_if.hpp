@@ -34,7 +34,7 @@
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
 
-RANGES_DISABLE_WARNINGS
+#include <range/v3/detail/disable_warnings.hpp>
 
 namespace ranges
 {
@@ -193,9 +193,9 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-RANGES_RE_ENABLE_WARNINGS
-
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::remove_if_view)
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

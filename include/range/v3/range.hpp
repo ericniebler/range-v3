@@ -14,9 +14,6 @@
 #ifndef RANGES_V3_ITERATOR_HPP
 #define RANGES_V3_ITERATOR_HPP
 
-#include <range/v3/detail/config.hpp>
-RANGES_DISABLE_WARNINGS
-
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/conversion.hpp>
@@ -24,7 +21,5 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/range/operations.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-
-RANGES_RE_ENABLE_WARNINGS
 
 #endif

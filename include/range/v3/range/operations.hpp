@@ -25,6 +25,8 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// Checked indexed range access.
@@ -117,5 +119,7 @@ namespace ranges
     /// \sa `front_fn`
     RANGES_INLINE_VARIABLE(front_fn, front)
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

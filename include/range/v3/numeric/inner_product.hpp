@@ -28,6 +28,8 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-numerics
@@ -149,5 +151,7 @@ namespace ranges
     RANGES_INLINE_VARIABLE(inner_product_fn, inner_product)
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

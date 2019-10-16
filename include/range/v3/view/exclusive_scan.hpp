@@ -11,8 +11,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGE_V3_VIEW_EXCLUSIVE_SCAN_HPP
-#define RANGE_V3_VIEW_EXCLUSIVE_SCAN_HPP
+#ifndef RANGES_V3_VIEW_EXCLUSIVE_SCAN_HPP
+#define RANGES_V3_VIEW_EXCLUSIVE_SCAN_HPP
 
 #include <concepts/concepts.hpp>
 
@@ -23,6 +23,8 @@
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
+
+#include <range/v3/detail/disable_warnings.hpp>
 
 namespace ranges
 {
@@ -180,4 +182,7 @@ namespace ranges
     } // namespace views
     /// @}
 } // namespace ranges
-#endif // RANGE_V3_VIEW_EXCLUSIVE_SCAN_HPP
+
+#include <range/v3/detail/reenable_warnings.hpp>
+
+#endif // RANGES_V3_VIEW_EXCLUSIVE_SCAN_HPP

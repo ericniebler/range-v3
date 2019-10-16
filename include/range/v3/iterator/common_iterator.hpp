@@ -29,6 +29,8 @@
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/utility/common_tuple.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-iterator
@@ -443,5 +445,7 @@ namespace std
 
 RANGES_DIAGNOSTIC_POP
 /// \endcond
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

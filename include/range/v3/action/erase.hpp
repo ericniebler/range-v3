@@ -21,6 +21,8 @@
 #include <range/v3/action/insert.hpp>
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \cond
@@ -68,5 +70,7 @@ namespace ranges
     // clang-format on
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

@@ -18,6 +18,8 @@
 
 #include <range/v3/functional/invoke.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-functional
@@ -60,25 +62,21 @@ namespace ranges
     namespace defer
     {
         template<typename Fun, typename... Args>
-        CPP_concept invocable =
-            CPP_defer_(ranges::invocable, CPP_type(Fun), Args...);
+        CPP_concept invocable = CPP_defer_(ranges::invocable, CPP_type(Fun), Args...);
 
         template<typename Fun, typename... Args>
-        CPP_concept regular_invocable =
-            CPP_defer_(ranges::regular_invocable, CPP_type(Fun), Args...);
+        CPP_concept regular_invocable = CPP_defer_(ranges::regular_invocable,
+                                                   CPP_type(Fun), Args...);
 
         template<typename Fun, typename... Args>
-        CPP_concept predicate =
-            CPP_defer_(ranges::predicate, CPP_type(Fun), Args...);
+        CPP_concept predicate = CPP_defer_(ranges::predicate, CPP_type(Fun), Args...);
 
         template<typename R, typename T, typename U>
-        CPP_concept relation =
-            CPP_defer(ranges::relation, T, U);
+        CPP_concept relation = CPP_defer(ranges::relation, T, U);
 
         template<typename R, typename T, typename U>
-        CPP_concept strict_weak_order =
-            CPP_defer(ranges::strict_weak_order, T, U);
-    }
+        CPP_concept strict_weak_order = CPP_defer(ranges::strict_weak_order, T, U);
+    } // namespace defer
 
     namespace cpp20
     {
@@ -90,5 +88,7 @@ namespace ranges
     } // namespace cpp20
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

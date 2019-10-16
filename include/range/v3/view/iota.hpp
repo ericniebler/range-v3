@@ -32,6 +32,8 @@
 #include <range/v3/view/facade.hpp>
 #include <range/v3/view/take_exactly.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_UNSIGNED_MATH
 RANGES_DIAGNOSTIC_IGNORE_TRUNCATION
@@ -565,5 +567,7 @@ RANGES_SATISFY_BOOST_RANGE(::ranges::closed_iota_view)
 RANGES_SATISFY_BOOST_RANGE(::ranges::iota_view)
 
 RANGES_DIAGNOSTIC_POP
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

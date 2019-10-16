@@ -63,6 +63,8 @@ RANGES_END_NAMESPACE_STD
 #include <unordered_set>
 #endif
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-range
@@ -384,53 +386,41 @@ namespace ranges
     namespace defer
     {
         template<typename T>
-        CPP_concept range =
-            CPP_defer(ranges::range, T);
+        CPP_concept range = CPP_defer(ranges::range, T);
 
         template<typename T>
-        CPP_concept forwarding_range_ =
-            CPP_defer(ranges::forwarding_range_, T);
+        CPP_concept forwarding_range_ = CPP_defer(ranges::forwarding_range_, T);
 
         template<typename T, typename V>
-        CPP_concept output_range =
-            CPP_defer(ranges::output_range, T, V);
+        CPP_concept output_range = CPP_defer(ranges::output_range, T, V);
 
         template<typename T>
-        CPP_concept input_range =
-            CPP_defer(ranges::input_range, T);
+        CPP_concept input_range = CPP_defer(ranges::input_range, T);
 
         template<typename T>
-        CPP_concept forward_range =
-            CPP_defer(ranges::forward_range, T);
+        CPP_concept forward_range = CPP_defer(ranges::forward_range, T);
 
         template<typename T>
-        CPP_concept bidirectional_range =
-            CPP_defer(ranges::bidirectional_range, T);
+        CPP_concept bidirectional_range = CPP_defer(ranges::bidirectional_range, T);
 
         template<typename T>
-        CPP_concept random_access_range =
-            CPP_defer(ranges::random_access_range, T);
+        CPP_concept random_access_range = CPP_defer(ranges::random_access_range, T);
 
         template<typename T>
-        CPP_concept contiguous_range =
-            CPP_defer(ranges::contiguous_range, T);
+        CPP_concept contiguous_range = CPP_defer(ranges::contiguous_range, T);
 
         template<typename T>
-        CPP_concept common_range =
-            CPP_defer(ranges::common_range, T);
+        CPP_concept common_range = CPP_defer(ranges::common_range, T);
 
         template<typename T>
-        CPP_concept sized_range =
-            CPP_defer(ranges::sized_range, T);
+        CPP_concept sized_range = CPP_defer(ranges::sized_range, T);
 
         template<typename T>
-        CPP_concept view_ =
-            CPP_defer(ranges::view_, T);
+        CPP_concept view_ = CPP_defer(ranges::view_, T);
 
         template<typename T>
-        CPP_concept viewable_range =
-            CPP_defer(ranges::viewable_range, T);
-    }
+        CPP_concept viewable_range = CPP_defer(ranges::viewable_range, T);
+    } // namespace defer
 
     /// \cond
     namespace view_detail_
@@ -460,5 +450,7 @@ namespace ranges
     } // namespace cpp20
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

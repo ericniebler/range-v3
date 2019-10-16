@@ -35,6 +35,8 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/get.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     template<std::size_t I>
@@ -891,5 +893,7 @@ namespace std
 } // namespace std
 
 RANGES_DIAGNOSTIC_POP
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

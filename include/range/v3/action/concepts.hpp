@@ -23,6 +23,8 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \cond
@@ -132,7 +134,7 @@ namespace ranges
             decltype(detail::is_lvalue_container_like(std::declval<T>()));
 
     } // namespace detail
-    /// \endcond
+      /// \endcond
 
     // clang-format off
     template<typename T>
@@ -148,5 +150,7 @@ namespace ranges
     // clang-format on
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

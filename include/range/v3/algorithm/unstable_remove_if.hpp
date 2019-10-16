@@ -31,6 +31,8 @@
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-algorithms
@@ -79,5 +81,7 @@ namespace ranges
     RANGES_FUNC_END(unstable_remove_if)
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif // RANGES_V3_ALGORITHM_UNSTABLE_REMOVE_IF_HPP
