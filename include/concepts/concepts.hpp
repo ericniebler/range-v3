@@ -158,7 +158,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #endif
 
 #define CPP_fwd(ARG) \
-    (decltype(ARG)&&) ARG
+    ((decltype(ARG)&&) ARG)
 
 #define CPP_type_of(...) \
     CPP_PP_EXPAND(CPP_type_of_2 __VA_ARGS__))
@@ -190,7 +190,13 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     __VA_ARGS__
 #define CPP_literal(...) \
     __VA_ARGS__
+#define CPP_concept_fragment(NAME, ARGS, ...) \
+    META_CONCEPT NAME = __VA_ARGS__;
+#define CPP_fragment(NAME, ...) \
+    NAME<__VA_ARGS__>
 #else
+// Use CPP_concept_bool instead of CPP_concept on gcc-8 and earlier to avoid:
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=87512
 #define CPP_concept_bool CPP_INLINE_VAR constexpr bool
 #define CPP_concept CPP_INLINE_VAR constexpr auto
 #define CPP_requires_n(N, ...) \
@@ -214,13 +220,24 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     CPP_type(CPP_PP_IIF(CPP_PP_NOT(CPP_PP_IS_PAREN(ARG)))(, CPP_PP_EXPAND) ARG)
 #define CPP_defer_(CONCEPT, ...)\
     true? nullptr \
-         : ::concepts::detail::make_boolean(\
+        : ::concepts::detail::make_boolean(\
             [](auto CPP_arg) { \
                 (void) CPP_arg; \
                 return std::integral_constant<bool, (CONCEPT<__VA_ARGS__>)>{};\
-            })
+            })\
+    /**/
 #define CPP_defer(CONCEPT, ...)\
     CPP_defer_(CONCEPT, CPP_PP_FOR_EACH(CPP_type_, __VA_ARGS__))
+#define CPP_concept_fragment(NAME, ARGS, ...) \
+    std::enable_if_t<__VA_ARGS__, ::concepts::detail::true_type> \
+    CPP_PP_CAT(NAME, CPP_concept_fragment_)(::concepts::detail::tag<CPP_PP_EXPAND ARGS> *);\
+    ::concepts::detail::false_type \
+    CPP_PP_CAT(NAME, CPP_concept_fragment_)(...)
+    /**/
+#define CPP_fragment(NAME, ...) \
+    decltype(CPP_PP_CAT(NAME, CPP_concept_fragment_)(\
+        (::concepts::detail::tag<__VA_ARGS__>*)nullptr))::value() \
+    /**/
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -817,7 +834,7 @@ namespace concepts
         struct ignore
         {
             template<class... Args>
-            ignore(Args&&...) {}
+            constexpr ignore(Args&&...) noexcept {}
         };
 
         struct false_type
@@ -826,15 +843,21 @@ namespace concepts
             constexpr false_type(decltype(nullptr)) noexcept {}
             static constexpr bool value() noexcept { return false; }
         };
+
         struct true_type
         {
             true_type() = default;
             constexpr true_type(decltype(nullptr)) noexcept {}
             static constexpr bool value() noexcept { return true; }
         };
+
+        template<typename...>
+        struct tag
+        {};
+
         template<typename Fun, typename... Args>
         using invoke_result_t =
-            decltype(((Fun (*)()) nullptr)()(((Args (*)()) nullptr)()...));
+            decltype(((Fun &&(*)()) nullptr)()(((Args &&(*)()) nullptr)()...));
 
         template<typename ArgsFn, typename ExprsFn>
         auto test_concept(ArgsFn const args, ExprsFn exprs) ->

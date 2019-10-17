@@ -50,14 +50,11 @@ namespace ranges
         template<typename U>
         U & can_reference_(U &&);
         // clang-format off
-        CPP_def
-        (
-            template(typename T)
-            concept dereferenceable_,
-                requires (T &&t)
-                (
-                    detail::can_reference_(*static_cast<T &&>(t))
-                )
+        template<typename T>
+        CPP_concept_bool dereferenceable_ =
+            CPP_requires ((T &&) t)
+            (
+                detail::can_reference_(*CPP_fwd(t))
             );
         // clang-format on
 
