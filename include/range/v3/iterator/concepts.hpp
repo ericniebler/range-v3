@@ -218,10 +218,7 @@ namespace ranges
     template<typename I>
     CPP_concept_bool input_or_output_iterator =
         weakly_incrementable<I> &&
-        CPP_requires ((I) i)
-        (
-            *i
-        );
+        detail::dereferenceable_<I&>;
 
     template<typename S, typename I>
     CPP_concept_bool sentinel_for =
