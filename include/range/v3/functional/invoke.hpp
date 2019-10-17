@@ -47,6 +47,8 @@ namespace ranges
     /// \cond
     namespace detail
     {
+        RANGES_DIAGNOSTIC_PUSH
+        RANGES_DIAGNOSTIC_IGNORE_VOID_PTR_DEREFERENCE
         template<typename U>
         U & can_reference_(U &&);
         // clang-format off
@@ -57,6 +59,7 @@ namespace ranges
                 detail::can_reference_(*CPP_fwd(t))
             );
         // clang-format on
+        RANGES_DIAGNOSTIC_POP
 
         template<class T>
         RANGES_INLINE_VAR constexpr bool is_reference_wrapper_v =

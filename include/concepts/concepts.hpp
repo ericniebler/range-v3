@@ -191,7 +191,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_literal(...) \
     __VA_ARGS__
 #define CPP_concept_fragment(NAME, ARGS, ...) \
-    META_CONCEPT NAME = __VA_ARGS__;
+    META_CONCEPT NAME = __VA_ARGS__
 #define CPP_fragment(NAME, ...) \
     NAME<__VA_ARGS__>
 #else
