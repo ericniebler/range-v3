@@ -340,7 +340,7 @@ namespace meta
         typename detail::require_constant<decltype(T{}()), T{}()>;
         requires T{}() == T::value;
 
-        { T{} } -> typename T::value_type;
+        // { T{} } -> typename T::value_type;
     };
     // clang-format on
 #endif // META_CONCEPT
