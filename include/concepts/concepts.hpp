@@ -26,10 +26,10 @@
 #include <concepts/swap.hpp>
 #include <concepts/type_traits.hpp>
 
-// disable buggy compatibility warning about "requires" and "concept" being
+// Disable buggy clang compatibility warning about "requires" and "concept" being
 // C++20 keywords.
 // https://bugs.llvm.org/show_bug.cgi?id=43708
-#if (defined(__clang__) || defined(__GNUC__)) && __cplusplus <= 201703L
+#if defined(__clang__) && __cplusplus <= 201703L
 #define CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                                \
     CPP_DIAGNOSTIC_PUSH                                                                 \
     CPP_DIAGNOSTIC_IGNORE_CPP2A_COMPAT                                                  \
