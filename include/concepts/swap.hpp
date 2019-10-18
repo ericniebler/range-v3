@@ -76,10 +76,16 @@
 #endif // CPP_CXX_INLINE_VARIABLES
 
 #if defined(_MSC_VER) && !defined(__clang__)
+#define CPP_DIAGNOSTIC_PUSH __pragma(warning(push))
+#define CPP_DIAGNOSTIC_POP __pragma(warning(pop))
 #define CPP_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME
+#define CPP_DIAGNOSTIC_IGNORE_FLOAT_EQUAL
+#define CPP_DIAGNOSTIC_IGNORE_CPP2A_COMPAT
 #else // ^^^ defined(_MSC_VER) ^^^ / vvv !defined(_MSC_VER) vvv
 #if defined(__GNUC__) || defined(__clang__)
 #define CPP_PRAGMA(X) _Pragma(#X)
+#define CPP_DIAGNOSTIC_PUSH CPP_PRAGMA(GCC diagnostic push)
+#define CPP_DIAGNOSTIC_POP CPP_PRAGMA(GCC diagnostic pop)
 #define CPP_DIAGNOSTIC_IGNORE_PRAGMAS \
     CPP_PRAGMA(GCC diagnostic ignored "-Wpragmas")
 #define CPP_DIAGNOSTIC_IGNORE(X) \
@@ -89,8 +95,14 @@
 #define CPP_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME \
     CPP_DIAGNOSTIC_IGNORE("-Wunknown-warning-option") \
     CPP_DIAGNOSTIC_IGNORE("-Winit-list-lifetime")
+#define CPP_DIAGNOSTIC_IGNORE_FLOAT_EQUAL CPP_DIAGNOSTIC_IGNORE("-Wfloat-equal")
+#define CPP_DIAGNOSTIC_IGNORE_CPP2A_COMPAT CPP_DIAGNOSTIC_IGNORE("-Wc++2a-compat")
 #else
+#define CPP_DIAGNOSTIC_PUSH
+#define CPP_DIAGNOSTIC_POP
 #define CPP_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME
+#define CPP_DIAGNOSTIC_IGNORE_FLOAT_EQUAL
+#define CPP_DIAGNOSTIC_IGNORE_CPP2A_COMPAT
 #endif
 #endif // MSVC/Generic configuration switch
 

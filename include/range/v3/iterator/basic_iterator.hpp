@@ -341,32 +341,30 @@ namespace ranges
                             std::input_iterator_tag>>>>;
 
         // clang-format off
-        CPP_def
-        (
-            template(typename C)
-            concept cpp17_input_cursor,
-                input_cursor<C> &&
-                sentinel_for_cursor<C, C> &&
-                // Either it is not single-pass, or else we can create a
-                // proxy for postfix increment.
-                (
-                    !range_access::single_pass_t<uncvref_t<C>>::value ||
-                    (
-                        constructible_from<
-                            range_access::cursor_value_t<C>,
-                            cursor_reference_t<C>> &&
-                        move_constructible<range_access::cursor_value_t<C>>
-                    )
-                )
+        template<typename C>
+        CPP_concept_fragment(cpp17_input_cursor_, (C),
+            // Either it is not single-pass, or else we can create a
+            // proxy for postfix increment.
+            !range_access::single_pass_t<uncvref_t<C>>::value ||
+            (move_constructible<range_access::cursor_value_t<C>> &&
+             constructible_from<range_access::cursor_value_t<C>, cursor_reference_t<C>>)
         );
 
-        CPP_def
-        (
-            template(typename C)
-            concept cpp17_forward_cursor,
-                forward_cursor<C> &&
-                std::is_reference<cursor_reference_t<C>>::value
+        template<typename C>
+        CPP_concept_bool cpp17_input_cursor =
+            input_cursor<C> &&
+            sentinel_for_cursor<C, C> &&
+            CPP_fragment(cpp17_input_cursor_, C);
+
+        template<typename C>
+        CPP_concept_fragment(cpp17_forward_cursor_, (C),
+            std::is_reference<cursor_reference_t<C>>::value
         );
+
+        template<typename C>
+        CPP_concept_bool cpp17_forward_cursor =
+            forward_cursor<C> &&
+            CPP_fragment(cpp17_forward_cursor_, C);
         // clang-format on
 
         template<typename Category, typename Base = void>

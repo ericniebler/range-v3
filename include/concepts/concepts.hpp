@@ -28,16 +28,15 @@
 
 // disable buggy compatibility warning about "requires" and "concept" being
 // C++20 keywords.
-#if defined(__clang__) || defined(__GNUC__)
-#define CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                        \
-    _Pragma("GCC diagnostic push")                                              \
-    _Pragma("GCC diagnostic ignored \"-Wunknown-pragmas\"")                     \
-    _Pragma("GCC diagnostic ignored \"-Wpragmas\"")                             \
-    _Pragma("GCC diagnostic ignored \"-Wc++2a-compat\"")                        \
-    _Pragma("GCC diagnostic ignored \"-Wfloat-equal\"")                         \
+// https://bugs.llvm.org/show_bug.cgi?id=43708
+#if (defined(__clang__) || defined(__GNUC__)) && __cplusplus <= 201703L
+#define CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                                \
+    CPP_DIAGNOSTIC_PUSH                                                                 \
+    CPP_DIAGNOSTIC_IGNORE_CPP2A_COMPAT                                                  \
     /**/
-#define CPP_PP_IGNORE_CXX2A_COMPAT_END                                          \
-    _Pragma("GCC diagnostic pop")
+#define CPP_PP_IGNORE_CXX2A_COMPAT_END                                                  \
+    CPP_DIAGNOSTIC_POP                                                                  \
+    /**/
 #else
 #define CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_PP_IGNORE_CXX2A_COMPAT_END
@@ -63,8 +62,6 @@
 #define CPP_CXX_CONCEPTS 0L
 #endif
 #endif
-
-CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 #define CPP_PP_CHECK(...) CPP_PP_CHECK_N(__VA_ARGS__, 0,)
 #define CPP_PP_CHECK_N(x, n, ...) n
@@ -255,10 +252,12 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 //             std::is_lvalue_reference_v<T>
 //     );
 #define CPP_def(DECL, ...)                                                      \
+    CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                            \
     CPP_PP_EVAL(                                                                \
         CPP_PP_DECL_DEF,                                                        \
         CPP_PP_CAT(CPP_PP_DEF_DECL_, DECL),                                     \
         __VA_ARGS__)                                                            \
+    CPP_PP_IGNORE_CXX2A_COMPAT_END                                              \
     /**/
 #define CPP_PP_DECL_DEF_NAME(...)                                               \
     CPP_PP_CAT(CPP_PP_DEF_, __VA_ARGS__),                                       \
@@ -377,10 +376,8 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     namespace cpp_detail_ {                                                     \
         struct CPP_PP_CAT(NAME, _concept) {                                     \
             using Concept = CPP_PP_CAT(NAME, _concept);                         \
-            CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                    \
             CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                     \
             static auto Requires_ CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);   \
-            CPP_PP_IGNORE_CXX2A_COMPAT_END                                      \
             CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                     \
             struct Eval {                                                       \
                 CPP_PP_DECL_DEF_IMPL_HACK(ARGS)                                 \
@@ -535,7 +532,10 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_member_sfinae                                                       \
     CPP_broken_friend_member                                                    \
     /**/
-#define CPP_ctor_sfinae(TYPE) TYPE CPP_CTOR_SFINAE_IMPL_1_
+#define CPP_ctor_sfinae(TYPE)                                                   \
+    CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                            \
+    TYPE CPP_CTOR_SFINAE_IMPL_1_                                                \
+    /**/
 #define CPP_CTOR_SFINAE_IMPL_1_(...)                                            \
     (__VA_ARGS__                                                                \
         CPP_PP_COMMA_IIF(                                                       \
@@ -561,6 +561,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
         ),                                                                      \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
+    CPP_PP_IGNORE_CXX2A_COMPAT_END                                              \
     /**/
 // Yes noexcept-clause:
 #define CPP_CTOR_SFINAE_REQUIRES_1(...)                                         \
@@ -576,7 +577,9 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #define CPP_CTOR_SFINAE_EAT_NOEXCEPT_noexcept(...)
 #define CPP_CTOR_SFINAE_SHOW_NOEXCEPT_noexcept(...)                             \
-    noexcept(__VA_ARGS__) CPP_PP_EAT CPP_PP_LPAREN                              \
+    noexcept(__VA_ARGS__)                                                       \
+    CPP_PP_IGNORE_CXX2A_COMPAT_END                                              \
+    CPP_PP_EAT CPP_PP_LPAREN                                                    \
     /**/
 
 #ifdef CPP_DOXYGEN_INVOKED
@@ -671,6 +674,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
         ),                                                                      \
         ::concepts::detail::Nil                                                 \
     > = {}) const                                                               \
+    CPP_PP_IGNORE_CXX2A_COMPAT_END                                              \
     /**/
 
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_1(...)                               \
@@ -688,14 +692,14 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 #define CPP_FUN_IMPL_EAT_NOEXCEPT_noexcept(...)
 #define CPP_FUN_IMPL_SHOW_NOEXCEPT_noexcept(...)                                \
-    noexcept(__VA_ARGS__) CPP_PP_EAT CPP_PP_LPAREN                              \
+    noexcept(__VA_ARGS__) CPP_PP_IGNORE_CXX2A_COMPAT_END                        \
+    CPP_PP_EAT CPP_PP_LPAREN                                                    \
     /**/
 
-#define CPP_FUN_IMPL_EAT_NOEXCEPT_noexcept(...)
-
+/*
 #define CPP_FUN_IMPL_EXPAND_NOEXCEPT_noexcept(...)                              \
     noexcept(__VA_ARGS__)                                                       \
-    /**/
+    / **/
 
 #define CPP_FUN_IMPL_SELECT_CONST_0(...)                                        \
     CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_(__VA_ARGS__,)(__VA_ARGS__)           \
@@ -715,6 +719,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
         ),                                                                      \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
+    CPP_PP_IGNORE_CXX2A_COMPAT_END                                              \
     /**/
 
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_1(...)                            \
@@ -744,7 +749,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 //
 // Note: This macro cannot be used when the last function argument is a
 //       parameter pack.
-#define CPP_fun(X) X CPP_FUN_IMPL_1_
+#define CPP_fun(X) CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN X CPP_FUN_IMPL_1_
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1077,6 +1082,9 @@ namespace concepts
         using remove_cvref_t =
             typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 
+        CPP_DIAGNOSTIC_PUSH
+        CPP_DIAGNOSTIC_IGNORE_FLOAT_EQUAL
+
         template<typename T, typename U>
         CPP_concept_bool weakly_equality_comparable_with_ =
             CPP_requires ((detail::as_cref_t<T>) t, (detail::as_cref_t<U>) u)
@@ -1086,6 +1094,8 @@ namespace concepts
                 (u == t) ? 1 : 0,
                 (u != t) ? 1 : 0
             );
+
+        CPP_DIAGNOSTIC_POP
     } // namespace detail
 
 #if defined(__clang__) || defined(_MSC_VER)
@@ -1460,7 +1470,5 @@ namespace concepts
         }
     } // inline namespace defs
 } // namespace concepts
-
-CPP_PP_IGNORE_CXX2A_COMPAT_END
 
 #endif // RANGES_V3_UTILITY_CONCEPTS_HPP

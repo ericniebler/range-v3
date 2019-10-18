@@ -1,7 +1,6 @@
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-present
-//  Copyright Casey Carter 2016
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -11,13 +10,9 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGES_V3_DETAIL_REENABLE_WARNINGS_HPP
-#define RANGES_V3_DETAIL_REENABLE_WARNINGS_HPP
-
-#ifndef RANGES_V3_DETAIL_DISABLE_WARNINGS_HPP
+#ifndef RANGES_DISABLE_WARNINGS_INCLUDED
 #error "Re-enabling warnings, but never disabled them!"
 #endif
+#undef RANGES_DISABLE_WARNINGS_INCLUDED
 
 RANGES_DIAGNOSTIC_POP
-
-#endif // RANGES_V3_DETAIL_REENABLE_WARNINGS_HPP
