@@ -50,99 +50,115 @@ namespace ranges
         using tuple_element_fun_t = void (*)(meta::_t<std::tuple_element<N, T>> const &);
 
         // clang-format off
-        CPP_def
-        (
-            template(typename From, typename To)
-            concept convertible_to_not_slicing_,
-                convertible_to<From, To> &&
-                // A conversion is a slicing conversion if the source and the destination
-                // are both pointers, and if the pointed-to types differ after removing
-                // cv qualifiers.
-                (!(std::is_pointer<decay_t<From>>::value &&
-                    std::is_pointer<decay_t<To>>::value &&
-                    not_same_as_<meta::_t<std::remove_pointer<decay_t<From>>>,
-                               meta::_t<std::remove_pointer<decay_t<To>>>>))
-        );
-        CPP_def
-        (
-            template(typename T)
-            concept pair_like_gcc_bugs_3_,
-                requires(T t, tuple_element_fun_t<0, T> p0, tuple_element_fun_t<1, T> p1)
-                (
-                    p0( get<0>(t) ),
-                    p1( get<1>(t) )
-                )
-        );
-        CPP_def
-        (
-            template(typename T)
-            concept pair_like_gcc_bugs_2_,
-                derived_from<std::tuple_size<T>, meta::size_t<2>> &&
-                pair_like_gcc_bugs_3_<T>
-        );
-        CPP_def
-        (
-            template(typename T)
-            concept pair_like_gcc_bugs_,
-                bool(ranges::defer::type<meta::_t<std::tuple_size<T>>> &&
-                     defer::pair_like_gcc_bugs_2_<T>)
-        );
-        CPP_def
-        (
-            template(typename T)
-            concept get_first_and_second_,
-                requires(T &t)
-                (
-                    get<0>(t),
-                    get<1>(t)
-                )
-        );
-        CPP_def
-        (
-            template(typename T)
-            concept pair_like_,
-                (!std::is_reference<T>::value) &&
-                bool(defer::get_first_and_second_<T> &&
-                     defer::pair_like_gcc_bugs_<T>)
-        );
+        template<typename From, typename To>
+        CPP_concept_bool convertible_to_not_slicing_ =
+            convertible_to<From, To> &&
+            // A conversion is a slicing conversion if the source and the destination
+            // are both pointers, and if the pointed-to types differ after removing
+            // cv qualifiers.
+            (!(std::is_pointer<decay_t<From>>::value &&
+                std::is_pointer<decay_t<To>>::value &&
+                not_same_as_<std::remove_pointer_t<decay_t<From>>,
+                             std::remove_pointer_t<decay_t<To>>>));
+
+        template<typename T>
+        CPP_concept_bool pair_like_gcc_bugs_3_ =
+            CPP_requires((T) t, (tuple_element_fun_t<0, T>) p0,
+                                (tuple_element_fun_t<1, T>) p1)
+            (
+                p0( get<0>(t) ),
+                p1( get<1>(t) )
+            );
+
+        template<typename T>
+        CPP_concept_bool pair_like_gcc_bugs_2_ =
+            derived_from<std::tuple_size<T>, meta::size_t<2>> &&
+            pair_like_gcc_bugs_3_<T>;
+
+        template<typename T>
+        CPP_concept_bool pair_like_gcc_bugs_ =
+            CPP_requires((meta::_t<std::tuple_size<CPP_type(T)>>&))
+            (
+                concepts::requires_<pair_like_gcc_bugs_2_<CPP_type(T)>>
+            );
+
+        template<typename T>
+        CPP_concept_bool get_first_and_second_ =
+            CPP_requires((T &) t)
+            (
+                get<0>(t),
+                get<1>(t)
+            );
+
+        namespace defer
+        {
+            template<typename T>
+            CPP_concept pair_like_gcc_bugs_ =
+                CPP_defer(detail::pair_like_gcc_bugs_, T);
+
+            template<typename T>
+            CPP_concept get_first_and_second_ =
+                CPP_defer(detail::get_first_and_second_, T);
+        }
+
+        template<typename T>
+        CPP_concept_bool pair_like_ =
+            (!std::is_reference<T>::value) &&
+            bool(defer::get_first_and_second_<T> &&
+                 defer::pair_like_gcc_bugs_<T>);
         // clang-format on
 
         // Short-circuit the PairLike concept for things known to be pairs:
         template<typename T>
-        struct pair_like : meta::bool_<pair_like_<T>>
-        {};
+        RANGES_INLINE_VAR constexpr bool pair_like = pair_like_<T>;
         template<typename F, typename S>
-        struct pair_like<std::pair<F, S>> : meta::bool_<true>
-        {};
+        RANGES_INLINE_VAR constexpr bool pair_like<std::pair<F, S>> = true;
         template<typename... Ts>
-        struct pair_like<std::tuple<Ts...>> : meta::bool_<sizeof...(Ts) == 2u>
-        {};
+        RANGES_INLINE_VAR constexpr bool pair_like<std::tuple<Ts...>> =
+            (sizeof...(Ts) == 2u);
 
         // clang-format off
-        CPP_def
-        (
-            template(typename T, typename U, typename V)
-            concept pair_like_convertible_from_gcc_bugs_,
-                convertible_to_not_slicing_<U, meta::_t<std::tuple_element<0, T>>> &&
-                convertible_to<V, meta::_t<std::tuple_element<1, T>>>
+        template<typename T, typename U, typename V>
+        CPP_concept_fragment(pair_like_convertible_from_gcc_bugs_frag_, (T, U, V),
+            convertible_to_not_slicing_<U, meta::_t<std::tuple_element<0, T>>> &&
+            convertible_to<V, meta::_t<std::tuple_element<1, T>>>
         );
-        CPP_def
-        (
-            template(typename T, typename U, typename V)
-            concept pair_like_convertible_from_,
-                (!range<T>) &&
-                constructible_from<T, U, V> &&
-                bool(ranges::defer::is_true<pair_like<uncvref_t<T>>::value> &&
-                     defer::pair_like_convertible_from_gcc_bugs_<T, U, V>)
+        template<typename T, typename U, typename V>
+        CPP_concept_bool pair_like_convertible_from_gcc_bugs_ =
+            CPP_fragment(detail::pair_like_convertible_from_gcc_bugs_frag_, T, U, V);
+        namespace defer
+        {
+            template<typename T, typename U, typename V>
+            CPP_concept pair_like_convertible_from_gcc_bugs_ =
+                CPP_defer(detail::pair_like_convertible_from_gcc_bugs_, T, U, V);
+        }
+
+        template<typename T, typename U, typename V>
+        CPP_concept_bool pair_like_convertible_from_ =
+            (!range<T>) && constructible_from<T, U, V> &&
+            bool(ranges::defer::is_true<pair_like<uncvref_t<T>>> &&
+                 defer::pair_like_convertible_from_gcc_bugs_<T, U, V>);
+
+        template<typename R, typename I, typename S>
+        CPP_concept_fragment(range_convertible_to_frag_, (R, I, S),
+            convertible_to_not_slicing_<iterator_t<R>, I> &&
+            convertible_to<sentinel_t<R>, S>
         );
-        CPP_def
-        (
-            template(typename R, typename I, typename S)
-            concept range_convertible_to_,
-                forwarding_range_<R> &&
-                convertible_to_not_slicing_<iterator_t<R>, I> &&
-                convertible_to<sentinel_t<R>, S>
-        );
+        template<typename R, typename I, typename S>
+        CPP_concept_bool range_convertible_to_ =
+            forwarding_range_<R> &&
+            CPP_fragment(detail::range_convertible_to_frag_, R, I, S);
+
+        namespace defer
+        {
+            template<typename T, typename U, typename V>
+            CPP_concept pair_like_convertible_from_ =
+                CPP_defer(detail::pair_like_convertible_from_, T, U, V);
+
+            template<typename R, typename I, typename S>
+            CPP_concept range_convertible_to_ =
+                CPP_defer(detail::range_convertible_to_, R, I, S);
+        }
         // clang-format on
 
         template<typename S, typename I>
