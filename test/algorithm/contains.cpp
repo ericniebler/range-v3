@@ -19,8 +19,8 @@ int main()
     using ranges::contains;
 
     constexpr int rng[] = {4, 2};
-    const auto first{rng};
-    const auto last{rng + 2};
+    const auto first = rng;
+    const auto last = rng + 2;
 
     CHECK(!contains(first, first, 0));
     CHECK(!contains(first, last, 1));
