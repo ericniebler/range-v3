@@ -28,10 +28,12 @@ int main()
     CHECK(!contains(first, last, 3));
     CHECK(contains(first, last, 4));
 
+#ifndef RANGES_WORKAROUND_CLANG_23135
     static_assert(!contains(rng, 1), "");
     static_assert(contains(rng, 2), "");
     static_assert(!contains(rng, 3), "");
     static_assert(contains(rng, 4), "");
+#endif
 
     return ::test_result();
 }
