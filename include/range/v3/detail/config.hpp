@@ -342,7 +342,7 @@ namespace ranges
 #ifdef __cpp_concepts
 #define RANGES_WORKAROUND_GCC_89953 // ICE in nothrow_spec_p, at cp/except.c:1244
 #endif
-#if __GNUC__ == 9 && __GNUC_MINOR__ < 3 && __cplusplus <= RANGES_CXX_STD_17
+#if __GNUC__ == 9 && __GNUC_MINOR__ < 3 && __cplusplus == RANGES_CXX_STD_17
 #define RANGES_WORKAROUND_GCC_91923 // Failure-to-SFINAE with class type NTTP in C++17
 #endif
 #endif
