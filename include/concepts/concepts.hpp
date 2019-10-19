@@ -1098,13 +1098,16 @@ namespace concepts
         CPP_DIAGNOSTIC_POP
     } // namespace detail
 
-#if defined(__clang__) || defined(_MSC_VER)
+#if defined(__clang__)
     template<bool B>
     std::enable_if_t<B> requires_()
     {}
-#else
+#elif defined(__GNUC__)
     template<bool B>
     CPP_INLINE_VAR constexpr std::enable_if_t<B, int> requires_ = 0;
+#else
+    template<bool B, std::enable_if_t<B, int> = 0>
+    CPP_INLINE_VAR constexpr bool requires_ = true;
 #endif
 
     inline namespace defs
