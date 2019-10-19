@@ -199,30 +199,29 @@ namespace ranges
             enable_if_t<(bool)range<Rng>, to_container_iterator<Rng, Cont>>;
 
         // clang-format off
-        CPP_def
-        (
-            template(typename Cont)
-            concept has_allocator_type,
-                ranges::type<typename Cont::allocator_type>
+        template<typename Cont>
+        CPP_concept_fragment(has_allocator_type_, (Cont),
+            ranges::type<typename Cont::allocator_type>
         );
+        template<typename Cont>
+        CPP_concept_bool has_allocator_type =
+            CPP_fragment(detail::has_allocator_type_, Cont);
 
-        CPP_def
-        (
-            template(typename Rng, typename Cont)
-            concept convertible_to_cont_impl_,
-                range<Cont> && (!view_<Cont>) && move_constructible<Cont> &&
-                constructible_from<range_value_t<Cont>, range_reference_t<Rng>> &&
-                constructible_from<
-                    Cont,
-                    range_cpp17_iterator_t<Rng>,
-                    range_cpp17_iterator_t<Rng>>
+        template<typename Rng, typename Cont>
+        CPP_concept_fragment(convertible_to_cont_impl_frag_, (Rng, Cont),
+            constructible_from<range_value_t<Cont>, range_reference_t<Rng>> &&
+            constructible_from<
+                Cont,
+                range_cpp17_iterator_t<Rng>,
+                range_cpp17_iterator_t<Rng>>
         );
+        template<typename Rng, typename Cont>
+        CPP_concept_bool convertible_to_cont_impl_ =
+            range<Cont> && (!view_<Cont>) && move_constructible<Cont> &&
+            CPP_fragment(detail::convertible_to_cont_impl_frag_, Rng, Cont);
 
-        CPP_def
-        (
-            template(typename Rng, typename Cont)
-            concept convertible_to_cont_cont_impl_,
-                range<Cont> && (!view_<Cont>) && move_constructible<Cont> &&
+        template<typename Rng, typename Cont>
+        CPP_concept_fragment(convertible_to_cont_cont_impl_frag_, (Rng, Cont),
                 (bool(ranges::defer::range<range_value_t<Cont>> &&
                     !ranges::defer::view_<range_value_t<Cont>>)) &&
                 // Test that each element of the input range can be ranges::to<>
@@ -235,30 +234,51 @@ namespace ranges
                     to_container_iterator_t<Rng, Cont>,
                     to_container_iterator_t<Rng, Cont>>
         );
+        template<typename Rng, typename Cont>
+        CPP_concept_bool convertible_to_cont_cont_impl_ =
+            range<Cont> && (!view_<Cont>) && move_constructible<Cont> &&
+            CPP_fragment(detail::convertible_to_cont_cont_impl_frag_, Rng, Cont);
 
-        CPP_def
-        (
-            template(typename Rng, typename Cont)
-            concept convertible_to_cont,
-                defer::has_allocator_type<Cont> && // HACKHACK
-                defer::convertible_to_cont_impl_<Rng, Cont>
-        );
+        namespace defer
+        {
+            template<typename Cont>
+            CPP_concept has_allocator_type =
+                CPP_defer(detail::has_allocator_type, Cont);
 
-        CPP_def
-        (
-            template(typename Rng, typename Cont)
-            concept convertible_to_cont_cont,
-                defer::has_allocator_type<Cont> && // HACKHACK
-                defer::convertible_to_cont_cont_impl_<Rng, Cont>
-        );
+            template<typename Rng, typename Cont>
+            CPP_concept convertible_to_cont_impl_ =
+                CPP_defer(detail::convertible_to_cont_impl_, Rng, Cont);
 
-        CPP_def
-        (
-            template(typename C, typename I, typename R)
-            concept to_container_reserve,
-                reservable_with_assign<C, I> &&
-                sized_range<R>
-        );
+            template<typename Rng, typename Cont>
+            CPP_concept convertible_to_cont_cont_impl_ =
+                CPP_defer(detail::convertible_to_cont_cont_impl_, Rng, Cont);
+        }
+
+        template<typename Rng, typename Cont>
+        CPP_concept_bool convertible_to_cont =
+            bool(defer::has_allocator_type<Cont> && // HACKHACK
+                 defer::convertible_to_cont_impl_<Rng, Cont>);
+
+        template<typename Rng, typename Cont>
+        CPP_concept_bool convertible_to_cont_cont =
+            bool(defer::has_allocator_type<Cont> && // HACKHACK
+                 defer::convertible_to_cont_cont_impl_<Rng, Cont>);
+
+        namespace defer
+        {
+            template<typename Rng, typename Cont>
+            CPP_concept convertible_to_cont =
+                CPP_defer(detail::convertible_to_cont, Rng, Cont);
+
+            template<typename Rng, typename Cont>
+            CPP_concept convertible_to_cont_cont =
+                CPP_defer(detail::convertible_to_cont_cont, Rng, Cont);
+        }
+
+        template<typename C, typename I, typename R>
+        CPP_concept_bool to_container_reserve =
+            reservable_with_assign<C, I> &&
+            sized_range<R>;
         // clang-format on
 
         struct RANGES_STRUCT_WITH_ADL_BARRIER(to_container_closure_base)

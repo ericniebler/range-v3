@@ -55,26 +55,20 @@ namespace ranges
         auto is_iterator(I) -> CPP_ret(void)(requires input_or_output_iterator<I>);
 
         // clang-format off
-        CPP_def
-        (
-            template(typename T)
-            concept has_member_begin,
-                requires (T &t)
-                (
-                    _begin_::is_iterator(t.begin())
-                ) &&
-                std::is_lvalue_reference<T>::value
-        );
+        template<typename T>
+        CPP_concept_bool has_member_begin =
+            CPP_requires ((T &) t)
+            (
+                _begin_::is_iterator(t.begin())
+            ) &&
+            std::is_lvalue_reference<T>::value;
 
-        CPP_def
-        (
-            template(typename T)
-            concept has_non_member_begin,
-                requires (T &&t)
-                (
-                    _begin_::is_iterator(begin((T &&) t))
-                )
-        );
+        template<typename T>
+        CPP_concept_bool has_non_member_begin =
+            CPP_requires ((T &&) t)
+            (
+                _begin_::is_iterator(begin(CPP_fwd(t)))
+            );
         // clang-format on
 
         struct fn
@@ -199,26 +193,20 @@ namespace ranges
         auto is_sentinel(S) -> CPP_ret(void)(requires sentinel_for<S, I>);
 
         // clang-format off
-        CPP_def
-        (
-            template(typename T)
-            concept has_member_end,
-                requires (T &t)
-                (
-                    _end_::is_sentinel<_begin_::_t<T>>(t.end())
-                ) &&
-                std::is_lvalue_reference<T>::value
-        );
+        template<typename T>
+        CPP_concept_bool has_member_end =
+            CPP_requires ((T &) t)
+            (
+                _end_::is_sentinel<_begin_::_t<CPP_type(T) &>>(t.end())
+            ) &&
+            std::is_lvalue_reference<T>::value;
 
-        CPP_def
-        (
-            template(typename T)
-            concept has_non_member_end,
-                requires (T &&t)
-                (
-                    _end_::is_sentinel<_begin_::_t<T>>(end((T &&) t))
-                )
-        );
+        template<typename T>
+        CPP_concept_bool has_non_member_end =
+            CPP_requires ((T &&) t)
+            (
+                _end_::is_sentinel<_begin_::_t<CPP_type(T)>>(end(CPP_fwd(t)))
+            );
         // clang-format on
 
         struct fn
@@ -395,39 +383,31 @@ namespace ranges
         void rbegin(T (&)[N]) = delete;
 
         // clang-format off
-        CPP_def
-        (
-            template(typename T)
-            concept has_member_rbegin,
-                requires (T &t)
-                (
-                    _begin_::is_iterator(t.rbegin())
-                ) &&
-                std::is_lvalue_reference<T>::value
-        );
+        template<typename T>
+        CPP_concept_bool has_member_rbegin =
+            CPP_requires ((T &) t)
+            (
+                _begin_::is_iterator(t.rbegin())
+            ) &&
+            std::is_lvalue_reference<T>::value;
 
-        CPP_def
-        (
-            template(typename T)
-            concept has_non_member_rbegin,
-                requires (T &&t)
-                (
-                    _begin_::is_iterator(rbegin((T &&) t))
-                )
-        );
+        template<typename T>
+        CPP_concept_bool has_non_member_rbegin =
+            CPP_requires ((T &&) t)
+            (
+                _begin_::is_iterator(rbegin(CPP_fwd(t)))
+            );
 
-        CPP_def
-        (
-            template(typename T)
-            concept can_reverse_end,
-                requires (T &&t)
-                (
-                    // make_reverse_iterator is constrained with
-                    // bidirectional_iterator.
-                    ranges::make_reverse_iterator(ranges::end((T &&) t))
-                ) &&
-                same_as<_begin_::_t<T>, _end_::_t<T>>
-        );
+        template<typename T>
+        CPP_concept_bool can_reverse_end =
+            CPP_requires ((T &&) t)
+            (
+                // make_reverse_iterator is constrained with
+                // bidirectional_iterator.
+                ranges::make_reverse_iterator(ranges::end(CPP_fwd(t))),
+                concepts::requires_<
+                    same_as<_begin_::_t<CPP_type(T)>, _end_::_t<CPP_type(T)>>>
+            );
         // clang-format on
 
         struct fn
@@ -531,39 +511,31 @@ namespace ranges
         void rend(T (&)[N]) = delete;
 
         // clang-format off
-        CPP_def
-        (
-            template(typename T)
-            concept has_member_rend,
-                requires (T &t)
-                (
-                    _end_::is_sentinel<_rbegin_::_t<T &>>(t.rend())
-                ) &&
-                std::is_lvalue_reference<T>::value
-        );
+        template<typename T>
+        CPP_concept_bool has_member_rend =
+            CPP_requires ((T &) t)
+            (
+                _end_::is_sentinel<_rbegin_::_t<CPP_type(T) &>>(t.rend())
+            ) &&
+            std::is_lvalue_reference<T>::value;
 
-        CPP_def
-        (
-            template(typename T)
-            concept has_non_member_rend,
-                requires (T &&t)
-                (
-                    _end_::is_sentinel<_rbegin_::_t<T &>>(rend((T &&) t))
-                )
-        );
+        template<typename T>
+        CPP_concept_bool has_non_member_rend =
+            CPP_requires ((T &&) t)
+            (
+                _end_::is_sentinel<_rbegin_::_t<CPP_type(T) &>>(rend(CPP_fwd(t)))
+            );
 
-        CPP_def
-        (
-            template(typename T)
-            concept can_reverse_begin,
-                requires (T &&t)
-                (
-                    // make_reverse_iterator is constrained with
-                    // bidirectional_iterator.
-                    ranges::make_reverse_iterator(ranges::begin((T &&) t))
-                ) &&
-                same_as<_begin_::_t<T>, _end_::_t<T>>
-        );
+        template<typename T>
+        CPP_concept_bool can_reverse_begin =
+            CPP_requires ((T &&) t)
+            (
+                // make_reverse_iterator is constrained with
+                // bidirectional_iterator.
+                ranges::make_reverse_iterator(ranges::begin(CPP_fwd(t))),
+                concepts::requires_<
+                    same_as<_begin_::_t<CPP_type(T)>, _end_::_t<CPP_type(T)>>>
+            );
         // clang-format on
 
         struct fn
