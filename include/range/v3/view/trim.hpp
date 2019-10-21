@@ -120,23 +120,28 @@ namespace ranges
             }
         };
 
-        struct trim_fn : trim_base_fn
+        struct trim_bind_fn
         {
-            using trim_base_fn::operator();
-
             template<typename Pred>
-            constexpr auto operator()(Pred pred) const
+            constexpr auto operator()(Pred pred) const // TODO: underconstrained
             {
                 return make_view_closure(bind_back(trim_base_fn{}, std::move(pred)));
             }
             template<typename Pred, typename Proj>
             constexpr auto CPP_fun(operator())(Pred && pred,
                                                Proj proj)(const //
-                                                          requires(!range<Pred>))
+                                                          requires(!range<Pred>)) // TODO: underconstrained
             {
                 return make_view_closure(bind_back(
                     trim_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));
             }
+        };
+
+        struct RANGES_EMPTY_BASES trim_fn
+          : trim_base_fn, trim_bind_fn
+        {
+            using trim_base_fn::operator();
+            using trim_bind_fn::operator();
         };
 
         /// \relates trim_fn

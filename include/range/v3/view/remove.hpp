@@ -74,23 +74,28 @@ namespace ranges
             }
         };
 
-        struct remove_fn : remove_base_fn
+        struct remove_bind_fn
         {
-            using remove_base_fn::operator();
-
             template<typename Value>
-            constexpr auto operator()(Value value) const
+            constexpr auto operator()(Value value) const // TODO: underconstrained
             {
                 return make_view_closure(bind_back(remove_base_fn{}, std::move(value)));
             }
             template<typename Value, typename Proj>
             constexpr auto CPP_fun(operator())(Value && value,
                                                Proj proj)(const //
-                                                          requires(!range<Value>))
+                                                          requires(!range<Value>)) // TODO: underconstrained
             {
                 return make_view_closure(bind_back(
                     remove_base_fn{}, static_cast<Value &&>(value), std::move(proj)));
             }
+        };
+
+        struct RANGES_EMPTY_BASES remove_fn
+          : remove_base_fn, remove_bind_fn
+        {
+            using remove_base_fn::operator();
+            using remove_bind_fn::operator();
         };
 
         /// \relates remove_fn
