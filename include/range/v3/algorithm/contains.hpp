@@ -44,7 +44,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename T, typename P = identity>
-        constexpr auto RANGES_FUNC(contains)(Rng && rng, const T & val, P proj = P{})
+        constexpr auto RANGES_FUNC(contains)(Rng && rng, const T & val, P proj = {})
             ->CPP_ret(bool)( //
                 requires input_range<Rng> &&
                 indirect_relation<equal_to, projected<iterator_t<Rng>, P>, const T *>)
