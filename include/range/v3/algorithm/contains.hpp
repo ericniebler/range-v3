@@ -33,7 +33,7 @@ namespace ranges
 
         /// \brief function template \c contains
         template<typename I, typename S, typename T, typename P = identity>
-        constexpr auto RANGES_FUNC(contains)(I first, S last, const T & val, P proj = P{})
+        constexpr auto RANGES_FUNC(contains)(I first, S last, const T & val, P proj = {})
             ->CPP_ret(bool)( //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                 indirect_relation<equal_to, projected<I, P>, const T *>)
