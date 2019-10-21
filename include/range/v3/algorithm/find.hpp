@@ -44,7 +44,7 @@ namespace ranges
         /// \pre `P` is a model of the `invocable<iter_common_reference_t<I>>` concept
         /// \pre The ResultType of `P` is equality_comparable with V
         template<typename I, typename S, typename V, typename P = identity>
-        auto RANGES_FUNC(find)(I first, S last, V const & val, P proj = P{})
+        constexpr auto RANGES_FUNC(find)(I first, S last, V const & val, P proj = P{})
             ->CPP_ret(I)( //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                 indirect_relation<equal_to, projected<I, P>, V const *>)
@@ -57,7 +57,7 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename V, typename P = identity>
-        auto RANGES_FUNC(find)(Rng && rng, V const & val, P proj = P{})
+        constexpr auto RANGES_FUNC(find)(Rng && rng, V const & val, P proj = P{})
             ->CPP_ret(safe_iterator_t<Rng>)( //
                 requires input_range<Rng> &&
                 indirect_relation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
