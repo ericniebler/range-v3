@@ -38,8 +38,7 @@ namespace ranges
                 requires input_iterator<I> && sentinel_for<S, I> &&
                 indirect_relation<equal_to, projected<I, P>, const T *>)
         {
-            first = find(std::move(first), last, val, std::move(proj));
-            return first != last;
+            return find(std::move(first), last, val, std::move(proj)) != last;
         }
 
         /// \overload
