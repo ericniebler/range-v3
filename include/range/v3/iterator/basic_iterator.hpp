@@ -570,8 +570,8 @@ namespace ranges
 
         // Use cursor's arrow() member, if any.
         template<typename C = Cur>
-        constexpr auto operator-> ()
-            const noexcept(noexcept(range_access::arrow(std::declval<C const &>())))
+        constexpr auto operator-> () const
+            noexcept(noexcept(range_access::arrow(std::declval<C const &>())))
                 -> CPP_ret(detail::cursor_arrow_t<C>)( //
                     requires detail::has_cursor_arrow<C>)
         {
@@ -580,8 +580,8 @@ namespace ranges
         // Otherwise, if iter_reference_t is an lvalue reference to cv-qualified
         // iter_value_t, return the address of **this.
         template<typename C = Cur>
-        constexpr auto operator-> ()
-            const noexcept(noexcept(*std::declval<basic_iterator const &>())) -> CPP_ret(
+        constexpr auto operator-> () const
+            noexcept(noexcept(*std::declval<basic_iterator const &>())) -> CPP_ret(
                 meta::_t<std::add_pointer<const_reference_t>>)( //
                 requires(!detail::has_cursor_arrow<C>) && detail::readable_cursor<C> &&
                 std::is_lvalue_reference<const_reference_t>::value &&

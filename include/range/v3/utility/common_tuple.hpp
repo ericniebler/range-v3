@@ -242,8 +242,9 @@ namespace ranges
         // Conversion
         CPP_template(typename... Us)(                                               //
             requires constructible_from<detail::args<Us...>, detail::rargs<Ts...>>) //
-        operator std::tuple<Us...>() & noexcept(
-            meta::and_c<std::is_nothrow_constructible<Us, Ts &>::value...>::value)
+            operator std::tuple<Us...>() &
+            noexcept(
+                meta::and_c<std::is_nothrow_constructible<Us, Ts &>::value...>::value)
         {
             return detail::to_std_tuple<Us...>(
                 *this, meta::make_index_sequence<sizeof...(Ts)>{});
@@ -259,7 +260,7 @@ namespace ranges
         }
         CPP_template(typename... Us)(                                              //
             requires constructible_from<detail::args<Us...>, detail::args<Ts...>>) //
-        operator std::tuple<Us...>() &&
+            operator std::tuple<Us...>() &&
             noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts>::value...>::value)
         {
             return detail::to_std_tuple<Us...>(
@@ -363,7 +364,7 @@ namespace ranges
         // Conversion
         CPP_template(typename F2, typename S2)(                                  //
             requires constructible_from<F2, F &> && constructible_from<S2, S &>) //
-        operator std::pair<F2, S2>() &
+            operator std::pair<F2, S2>() &
             noexcept(std::is_nothrow_constructible<F2, F &>::value &&
                          std::is_nothrow_constructible<S2, S &>::value)
         {
@@ -372,15 +373,15 @@ namespace ranges
         CPP_template(typename F2, typename S2)( //
             requires constructible_from<F2, F const &> &&
                 constructible_from<S2, S const &>) //
-        operator std::pair<F2, S2>() const &
-            noexcept(std::is_nothrow_constructible<F2, F const &>::value &&
-                         std::is_nothrow_constructible<S2, S const &>::value)
+        operator std::pair<F2, S2>() const & noexcept(
+            std::is_nothrow_constructible<F2, F const &>::value &&
+                std::is_nothrow_constructible<S2, S const &>::value)
         {
             return {this->first, this->second};
         }
         CPP_template(typename F2, typename S2)(                              //
             requires constructible_from<F2, F> && constructible_from<S2, S>) //
-        operator std::pair<F2, S2>() &&
+            operator std::pair<F2, S2>() &&
             noexcept(std::is_nothrow_constructible<F2, F>::value &&
                          std::is_nothrow_constructible<S2, S>::value)
         {

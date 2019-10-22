@@ -472,7 +472,8 @@ namespace ranges
         /// \cond
         /// Implicit conversion to something that looks like a container.
         CPP_template(typename Container, bool True = true)( // clang-format off
-            requires detail::convertible_to_cont<D<True>, Container>)
+            requires not_same_as_<Container, Derived> &&
+                detail::convertible_to_cont<D<True>, Container>)
         RANGES_DEPRECATED(
             "Implicit conversion from a view to a container is deprecated. "
             "Please use ranges::to in <range/v3/range/conversion.hpp> instead.")
@@ -482,12 +483,14 @@ namespace ranges
         }
         /// \overload
         CPP_template(typename Container, bool True = true)( // clang-format off
-            requires detail::convertible_to_cont<D<True> const, Container>)
+            requires not_same_as_<Container, Derived> &&
+                detail::convertible_to_cont<D<True> const, Container>)
         RANGES_DEPRECATED(
             "Implicit conversion from a view to a container is deprecated. "
             "Please use ranges::to in <range/v3/range/conversion.hpp> instead.")
         constexpr operator Container() const // clang-format on
         {
+            static_assert((bool)same_as<Container, void>, "");
             return ranges::to<Container>(derived());
         }
         /// \endcond

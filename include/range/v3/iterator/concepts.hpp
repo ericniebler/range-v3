@@ -185,7 +185,7 @@ namespace ranges
         template<typename D>
         CPP_concept_bool signed_integer_like_ =
             CPP_fragment(detail::signed_integer_like_frag_, D);
-       // clang-format on
+        // clang-format on
     } // namespace detail
       /// \endcond
 

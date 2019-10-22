@@ -71,7 +71,7 @@ namespace ranges
             operator()(Args &&... args) &
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-            if constexpr((bool) invocable<First &, Args...>)
+            if constexpr((bool)invocable<First &, Args...>)
                 return invoke(first_, (Args &&) args...);
             else
                 return invoke(second_, (Args &&) args...);
@@ -87,7 +87,7 @@ namespace ranges
             operator()(Args &&... args) const &
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-            if constexpr((bool) invocable<First const &, Args...>)
+            if constexpr((bool)invocable<First const &, Args...>)
                 return invoke(first_, (Args &&) args...);
             else
                 return invoke(second_, (Args &&) args...);
@@ -104,7 +104,7 @@ namespace ranges
             operator()(Args &&... args) &&
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-            if constexpr((bool) invocable<First const &, Args...>)
+            if constexpr((bool)invocable<First const &, Args...>)
                 return invoke((First &&) first_, (Args &&) args...);
             else
                 return invoke((overloaded<Rest...> &&) second_, (Args &&) args...);

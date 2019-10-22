@@ -13,7 +13,6 @@
 #include <forward_list>
 #include <list>
 #include <vector>
-#include <range/v3/core.hpp>
 #include <range/v3/view/chunk.hpp>
 #include <range/v3/view/cycle.hpp>
 #include <range/v3/view/filter.hpp>
@@ -38,7 +37,8 @@ namespace
         auto make_range = [&]{ return debug_input_view<int const>{ints} | views::chunk(K); };
         auto rng = make_range();
         using Rng = decltype(rng);
-        CPP_assert(input_range<Rng> && view_<Rng>);
+        CPP_assert(input_range<Rng>);
+        CPP_assert(view_<Rng>);
         CPP_assert(!forward_range<Rng>);
         CPP_assert(sized_range<Rng>);
         CHECK(ranges::size(rng) == (N + K - 1) / K);

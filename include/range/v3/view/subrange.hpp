@@ -75,12 +75,36 @@ namespace ranges
             derived_from<std::tuple_size<T>, meta::size_t<2>> &&
             pair_like_gcc_bugs_3_<T>;
 
+        namespace defer
+        {
+            template<typename T>
+            CPP_concept pair_like_gcc_bugs_2_ =
+                CPP_defer(detail::pair_like_gcc_bugs_2_, T);
+        }
+
+#if defined(__GNUC__) && !defined(__clang__) && CPP_CXX_CONCEPTS
         template<typename T>
         CPP_concept_bool pair_like_gcc_bugs_ =
-            CPP_requires((meta::_t<std::tuple_size<CPP_type(T)>>&))
-            (
-                concepts::requires_<pair_like_gcc_bugs_2_<CPP_type(T)>>
-            );
+            ranges::defer::type<meta::_t<std::tuple_size<T>>> &&
+            defer::pair_like_gcc_bugs_2_<T>;
+#else
+        template<typename T>
+        CPP_concept_fragment(pair_like_gcc_bugs_, (T),
+            ranges::defer::type<meta::_t<std::tuple_size<T>>> &&
+            defer::pair_like_gcc_bugs_2_<T>
+        );
+
+        template<typename T>
+        CPP_concept_bool pair_like_gcc_bugs_ =
+            CPP_fragment(detail::pair_like_gcc_bugs_, T);
+#endif
+
+        namespace defer
+        {
+            template<typename T>
+            CPP_concept pair_like_gcc_bugs_ =
+                CPP_defer(detail::pair_like_gcc_bugs_, T);
+        }
 
         template<typename T>
         CPP_concept_bool get_first_and_second_ =
@@ -92,10 +116,6 @@ namespace ranges
 
         namespace defer
         {
-            template<typename T>
-            CPP_concept pair_like_gcc_bugs_ =
-                CPP_defer(detail::pair_like_gcc_bugs_, T);
-
             template<typename T>
             CPP_concept get_first_and_second_ =
                 CPP_defer(detail::get_first_and_second_, T);
@@ -114,8 +134,8 @@ namespace ranges
         template<typename F, typename S>
         RANGES_INLINE_VAR constexpr bool pair_like<std::pair<F, S>> = true;
         template<typename... Ts>
-        RANGES_INLINE_VAR constexpr bool pair_like<std::tuple<Ts...>> =
-            (sizeof...(Ts) == 2u);
+        RANGES_INLINE_VAR constexpr bool pair_like<std::tuple<Ts...>> = (sizeof...(Ts) ==
+                                                                         2u);
 
         // clang-format off
         template<typename T, typename U, typename V>
