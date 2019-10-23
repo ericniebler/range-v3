@@ -535,10 +535,10 @@ namespace ranges
 
         struct join_base_fn : cpp20_join_fn
         {
-            /// implementation detail
+        private:
             template<typename Rng>
             using inner_value_t = range_value_t<range_reference_t<Rng>>;
-
+        public:
             using cpp20_join_fn::operator();
 
             template<typename Rng>
@@ -559,13 +559,11 @@ namespace ranges
             }
         };
 
-        struct join_fn : join_base_fn
+        struct join_bind_fn
         {
-            using join_base_fn::operator();
-
             template<typename T>
             constexpr auto CPP_fun(operator())(T && t)(const //
-                                                       requires(!joinable_range<T>))
+                                                       requires(!joinable_range<T>)) // TODO: underconstrained
             {
                 return make_view_closure(bind_back(join_base_fn{}, static_cast<T &&>(t)));
             }
@@ -577,9 +575,9 @@ namespace ranges
 
                 template<typename Rng>
                 auto operator()(Rng && rng) const
-                    -> invoke_result_t<join_fn, Rng, T (&)[N]>
+                    -> invoke_result_t<join_base_fn, Rng, T (&)[N]>
                 {
-                    return join_fn{}(static_cast<Rng &&>(rng), val_);
+                    return join_base_fn{}(static_cast<Rng &&>(rng), val_);
                 }
             };
 
@@ -594,11 +592,18 @@ namespace ranges
             {
                 return make_view_closure(
                     [&val](
-                        auto && rng) -> invoke_result_t<join_fn, decltype(rng), T(&)[N]> {
-                        return join_fn{}(static_cast<decltype(rng)>(rng), val);
+                        auto && rng) -> invoke_result_t<join_base_fn, decltype(rng), T(&)[N]> {
+                        return join_base_fn{}(static_cast<decltype(rng)>(rng), val);
                     });
             }
 #endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
+        };
+
+        struct RANGES_EMPTY_BASES join_fn
+          : join_base_fn, join_bind_fn
+        {
+            using join_base_fn::operator();
+            using join_bind_fn::operator();
         };
 
         /// \relates join_fn
