@@ -80,6 +80,27 @@ struct IntSwappable
     friend void swap(IntSwappable, IntSwappable);
 };
 
+static_assert(ranges::same_as<int, int>, "");
+static_assert(ranges::same_as<void, void>, "");
+static_assert(ranges::same_as<void const, void const>, "");
+static_assert(!ranges::same_as<int&, int>, "");
+static_assert(!ranges::same_as<void, void const>, "");
+static_assert(!ranges::same_as<void(), void(*)()>, "");
+
+static_assert(ranges::convertible_to<int, int>, "");
+static_assert(ranges::convertible_to<short&, short const&>, "");
+static_assert(ranges::convertible_to<int, short>, "");
+static_assert(!ranges::convertible_to<int&, short&>, "");
+static_assert(!ranges::convertible_to<int, void>, "");
+static_assert(!ranges::convertible_to<int, int&>, "");
+
+static_assert(ranges::unsigned_integral<unsigned>, "");
+static_assert(!ranges::unsigned_integral<int>, "");
+
+static_assert(ranges::assignable_from<int&, int>, "");
+static_assert(!ranges::assignable_from<int const&, int>, "");
+static_assert(!ranges::assignable_from<int, int>, "");
+
 static_assert(ranges::destructible<int>, "");
 static_assert(ranges::destructible<const int>, "");
 static_assert(!ranges::destructible<void>, "");
@@ -150,6 +171,10 @@ struct XXX
 };
 
 static_assert(ranges::constructible_from<XXX, int>, "");
+static_assert(!ranges::move_constructible<XXX>, "");
+static_assert(!ranges::movable<XXX>, "");
+static_assert(!ranges::semiregular<XXX>, "");
+static_assert(!ranges::regular<XXX>, "");
 
 static_assert(ranges::default_constructible<int>, "");
 static_assert(ranges::default_constructible<int const>, "");
@@ -197,6 +222,9 @@ static_assert(ranges::copyable<int>, "");
 static_assert(!ranges::copyable<int const>, "");
 static_assert(!ranges::copyable<moveonly>, "");
 static_assert(!ranges::copyable<nonmovable>, "");
+
+// static_assert(ranges::predicate<std::less<int>, int, int>, "");
+// static_assert(!ranges::predicate<std::less<int>, char*, int>, "");
 
 static_assert(ranges::input_iterator<int*>, "");
 static_assert(!ranges::input_iterator<int>, "");
@@ -266,6 +294,23 @@ struct myview {
     const char *end();
 };
 CPP_assert(ranges::view_<myview>);
+
+CPP_template(class T)
+    (requires ranges::regular<T>)
+constexpr bool is_regular(T&&)
+{
+    return true;
+}
+
+CPP_template(class T)
+    (requires (!ranges::regular<T>))
+constexpr bool is_regular(T&&)
+{
+    return false;
+}
+
+static_assert(is_regular(42), "");
+static_assert(!is_regular(XXX{}), "");
 
 int main()
 {
