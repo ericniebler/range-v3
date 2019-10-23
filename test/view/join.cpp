@@ -17,6 +17,7 @@
 #include <range/v3/view/split.hpp>
 #include <range/v3/view/generate_n.hpp>
 #include <range/v3/view/repeat_n.hpp>
+#include <range/v3/view/cache1.hpp>
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/single.hpp>
@@ -197,6 +198,30 @@ int main()
             | views::filter([](auto){ return true; })
             | views::join;
         check_equal(rng, {0,0,1,0,1,2});
+        CPP_assert(input_range<decltype(rng)>);
+        CPP_assert(!range<const decltype(rng)>);
+        CPP_assert(!forward_range<decltype(rng)>);
+        CPP_assert(!common_range<decltype(rng)>);
+    }
+
+    {
+        auto rng = views::iota(0,4)
+            | views::transform([](int i) {return std::string((std::size_t) i, char('a'+i));})
+            | views::cache1
+            | views::join;
+        check_equal(rng, {'b','c','c','d','d','d'});
+        CPP_assert(input_range<decltype(rng)>);
+        CPP_assert(!range<const decltype(rng)>);
+        CPP_assert(!forward_range<decltype(rng)>);
+        CPP_assert(!common_range<decltype(rng)>);
+    }
+
+    {
+        auto rng = views::iota(0,4)
+            | views::transform([](int i) {return std::string((std::size_t) i, char('a'+i));})
+            | views::cache1
+            | views::join('-');
+        check_equal(rng, {'-','b','-','c','c','-','d','d','d'});
         CPP_assert(input_range<decltype(rng)>);
         CPP_assert(!range<const decltype(rng)>);
         CPP_assert(!forward_range<decltype(rng)>);
