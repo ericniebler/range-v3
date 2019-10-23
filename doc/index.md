@@ -70,8 +70,8 @@ file and the CREDITS file for the licensing and acknowledgements.
 --------------------------------------------------------------------------------
 The code is known to work on the following compilers:
 
-- clang 3.6.2
-- GCC 5.0.2
+- clang 3.9
+- GCC 6.5
 - MSVC VS2017 15.9 (`_MSC_VER >= 1916`), with `/std:c++17 /permissive- /experimental:preprocessor`
 
 \section tutorial-quick-start Quick Start

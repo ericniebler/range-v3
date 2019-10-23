@@ -54,8 +54,8 @@ Supported Compilers
 
 The code is known to work on the following compilers:
 
-- clang 3.6.2 (or later)
-- GCC 5.0.2 (or later) (C++14 "extended constexpr" support is poor before 6.1.)
+- clang 3.9 (or later)
+- GCC 6.5 (or later)
 - Clang/LLVM 6 (or later) on Windows (older versions may work - we haven't tested.)
 - Visual Studio 2019 Preview 4 (or later) on Windows, with some caveats due to range-v3's strict conformance requirements:
   - range-v3 needs `/std:c++17 /permissive-`
