@@ -102,12 +102,10 @@ namespace ranges
             }
         };
 
-        struct drop_while_fn : drop_while_base_fn
+        struct drop_while_bind_fn
         {
-            using drop_while_base_fn::operator();
-
             template<typename Pred>
-            constexpr auto operator()(Pred pred) const
+            constexpr auto operator()(Pred pred) const // TODO: underconstrained
             {
                 return make_view_closure(
                     bind_back(drop_while_base_fn{}, std::move(pred)));
@@ -115,11 +113,18 @@ namespace ranges
             template<typename Pred, typename Proj>
             constexpr auto CPP_fun(operator())(Pred && pred,
                                                Proj proj)(const //
-                                                          requires(!range<Pred>))
+                                                          requires(!range<Pred>)) // TODO: underconstrained
             {
                 return make_view_closure(bind_back(
                     drop_while_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));
             }
+        };
+
+        struct RANGES_EMPTY_BASES drop_while_fn
+           : drop_while_base_fn, drop_while_bind_fn
+        {
+            using drop_while_base_fn::operator();
+            using drop_while_bind_fn::operator();
         };
 
         /// \relates drop_while_fn
