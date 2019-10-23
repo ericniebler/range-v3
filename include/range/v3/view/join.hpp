@@ -142,7 +142,8 @@ namespace ranges
     {
         CPP_assert(input_range<Rng> && view_<Rng>);
         CPP_assert(input_range<range_reference_t<Rng>>);
-        CPP_assert(viewable_range<range_reference_t<Rng>>);
+        CPP_assert(std::is_reference<range_reference_t<Rng>>::value ||
+                   view_<range_reference_t<Rng>>);
 
         join_view() = default;
         explicit join_view(Rng rng)
@@ -380,7 +381,8 @@ namespace ranges
     private:
         friend range_access;
         using Outer = views::all_t<Rng>;
-        using Inner = views::all_t<range_reference_t<Outer>>;
+        // Intentionally promote xvalues to lvalues here:
+        using Inner = views::all_t<range_reference_t<Outer> &>;
 
         Outer outer_{};
         Inner inner_{};
@@ -400,7 +402,9 @@ namespace ranges
                     {
                         if(ranges::get<0>(cur_) != ranges::end(rng_->val_))
                             break;
-                        rng_->inner_ = views::all(*outer_it_);
+                        // Intentionally promote xvalues to lvalues here:
+                        auto && tmp = *outer_it_;
+                        rng_->inner_ = views::all(tmp);
                         ranges::emplace<1>(cur_, ranges::begin(rng_->inner_));
                     }
                     else
@@ -428,7 +432,9 @@ namespace ranges
             {
                 if(outer_it_ != ranges::end(rng->outer_))
                 {
-                    rng->inner_ = views::all(*outer_it_);
+                    // Intentionally promote xvalues to lvalues here:
+                    auto && tmp = *outer_it_;
+                    rng->inner_ = views::all(tmp);
                     ranges::emplace<1>(cur_, ranges::begin(rng->inner_));
                     satisfy();
                 }
@@ -490,7 +496,8 @@ namespace ranges
             concept joinable_range,
                 viewable_range<Rng> && input_range<Rng> &&
                 input_range<range_reference_t<Rng>> &&
-                viewable_range<range_reference_t<Rng>>
+                (std::is_reference<range_reference_t<Rng>>::value ||
+                 view_<range_reference_t<Rng>>)
         );
 
         CPP_def
