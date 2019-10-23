@@ -206,7 +206,7 @@ int main()
 
     {
         auto rng = views::iota(0,4)
-            | views::transform([](int i) {return std::string(i, char('a'+i));})
+            | views::transform([](int i) {return std::string((std::size_t) i, char('a'+i));})
             | views::cache1
             | views::join;
         check_equal(rng, {'b','c','c','d','d','d'});
@@ -218,7 +218,7 @@ int main()
 
     {
         auto rng = views::iota(0,4)
-            | views::transform([](int i) {return std::string(i, char('a'+i));})
+            | views::transform([](int i) {return std::string((std::size_t) i, char('a'+i));})
             | views::cache1
             | views::join('-');
         check_equal(rng, {'-','b','-','c','c','-','d','d','d'});
