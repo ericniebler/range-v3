@@ -1,7 +1,9 @@
 var dir_5d271557a9e29854b5ecd53c480daf7c =
 [
     [ "action.hpp", "action_2action_8hpp.html", "action_2action_8hpp" ],
-    [ "adjacent_remove_if.hpp", "action_2adjacent__remove__if_8hpp.html", "action_2adjacent__remove__if_8hpp" ],
+    [ "adjacent_remove_if.hpp", "action_2adjacent__remove__if_8hpp.html", [
+      [ "adjacent_remove_if_fn", "structranges_1_1actions_1_1adjacent__remove__if__fn.html", "structranges_1_1actions_1_1adjacent__remove__if__fn" ]
+    ] ],
     [ "concepts.hpp", "range_2v3_2action_2concepts_8hpp.html", "range_2v3_2action_2concepts_8hpp" ],
     [ "drop.hpp", "action_2drop_8hpp.html", [
       [ "drop_fn", "structranges_1_1actions_1_1drop__fn.html", "structranges_1_1actions_1_1drop__fn" ]
@@ -14,8 +16,12 @@ var dir_5d271557a9e29854b5ecd53c480daf7c =
     [ "join.hpp", "action_2join_8hpp.html", "action_2join_8hpp" ],
     [ "push_back.hpp", "push__back_8hpp.html", "push__back_8hpp" ],
     [ "push_front.hpp", "push__front_8hpp.html", "push__front_8hpp" ],
-    [ "remove.hpp", "action_2remove_8hpp.html", "action_2remove_8hpp" ],
-    [ "remove_if.hpp", "action_2remove__if_8hpp.html", "action_2remove__if_8hpp" ],
+    [ "remove.hpp", "action_2remove_8hpp.html", [
+      [ "remove_fn", "structranges_1_1actions_1_1remove__fn.html", "structranges_1_1actions_1_1remove__fn" ]
+    ] ],
+    [ "remove_if.hpp", "action_2remove__if_8hpp.html", [
+      [ "remove_if_fn", "structranges_1_1actions_1_1remove__if__fn.html", "structranges_1_1actions_1_1remove__if__fn" ]
+    ] ],
     [ "reverse.hpp", "action_2reverse_8hpp.html", [
       [ "reverse_fn", "structranges_1_1actions_1_1reverse__fn.html", "structranges_1_1actions_1_1reverse__fn" ]
     ] ],
@@ -49,8 +55,6 @@ var dir_5d271557a9e29854b5ecd53c480daf7c =
     [ "transform.hpp", "action_2transform_8hpp.html", [
       [ "transform_fn", "structranges_1_1actions_1_1transform__fn.html", "structranges_1_1actions_1_1transform__fn" ]
     ] ],
-    [ "unique.hpp", "action_2unique_8hpp.html", [
-      [ "unique_fn", "structranges_1_1actions_1_1unique__fn.html", "structranges_1_1actions_1_1unique__fn" ]
-    ] ],
+    [ "unique.hpp", "action_2unique_8hpp.html", "action_2unique_8hpp" ],
     [ "unstable_remove_if.hpp", "action_2unstable__remove__if_8hpp.html", "action_2unstable__remove__if_8hpp" ]
 ];

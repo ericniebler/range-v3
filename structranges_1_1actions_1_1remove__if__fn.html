@@ -97,6 +97,7 @@ $(document).ready(function(){initNavTree('structranges_1_1actions_1_1remove__if_
 
 <div class="header">
   <div class="summary">
+<a href="#related">Synopsis of methods</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structranges_1_1actions_1_1remove__if__fn-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -104,8 +105,18 @@ $(document).ready(function(){initNavTree('structranges_1_1actions_1_1remove__if_
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="related"></a>
+Synopsis of methods</h2></td></tr>
+<tr class="memitem:a7a27357aa082ce856413b8f62f8e23ce"><td class="memItemLeft" align="right" valign="top"><a id="a7a27357aa082ce856413b8f62f8e23ce"></a>
+constexpr <a class="el" href="structranges_1_1actions_1_1remove__if__fn.html">remove_if_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>remove_if</b> {}</td></tr>
+<tr class="separator:a7a27357aa082ce856413b8f62f8e23ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:af96cf7899bb625d750c8f7c26ccc4643"><td class="memTemplParams" colspan="2"><a id="af96cf7899bb625d750c8f7c26ccc4643"></a>
+template&lt;typename C , typename P  = identity&gt; </td></tr>
+<tr class="memitem:af96cf7899bb625d750c8f7c26ccc4643"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (C pred, P proj=P{}) const requires(!range&lt; C &gt;)</td></tr>
+<tr class="separator:af96cf7899bb625d750c8f7c26ccc4643"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0d75adbf78fcc34cd44c1e7a309203b"><td class="memTemplParams" colspan="2"><a id="ab0d75adbf78fcc34cd44c1e7a309203b"></a>
 template&lt;typename Rng , typename C , typename P  = identity&gt; </td></tr>
 <tr class="memitem:ab0d75adbf78fcc34cd44c1e7a309203b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, C pred, P proj=P{}) const -&gt; Rng requires forward_range&lt; Rng &gt; &amp;&amp;erasable_range&lt; Rng &amp;, iterator_t&lt; Rng &gt;, iterator_t&lt; Rng &gt;&gt; &amp;&amp;permutable&lt; iterator_t&lt; Rng &gt;&gt; &amp;&amp;indirect_unary_predicate&lt; C, projected&lt; iterator_t&lt; Rng &gt;, P &gt;&gt;</td></tr>

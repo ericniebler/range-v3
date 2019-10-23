@@ -113,6 +113,10 @@ constexpr <a class="el" href="structranges_1_1views_1_1concat__fn.html">concat_f
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a6427e055f21ba6a17a3959d9d6349cad"><td class="memTemplParams" colspan="2"><a id="a6427e055f21ba6a17a3959d9d6349cad"></a>
+template&lt;typename Rng &gt; </td></tr>
+<tr class="memitem:a6427e055f21ba6a17a3959d9d6349cad"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng) const -&gt; all_t&lt; Rng &gt; requires viewable_range&lt; Rng &gt; &amp;&amp;input_range&lt; Rng &gt;</td></tr>
+<tr class="separator:a6427e055f21ba6a17a3959d9d6349cad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d78fd3c8a09e50e534617944d6d5373"><td class="memTemplParams" colspan="2"><a id="a6d78fd3c8a09e50e534617944d6d5373"></a>
 template&lt;typename... Rngs&gt; </td></tr>
 <tr class="memitem:a6d78fd3c8a09e50e534617944d6d5373"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rngs &amp;&amp;... rngs) const -&gt; <a class="el" href="structranges_1_1concat__view.html">concat_view</a>&lt; all_t&lt; Rngs &gt;... &gt; requires and_v&lt;(viewable_range&lt; Rngs &gt; &amp;&amp;input_range&lt; Rngs &gt;)... &gt;</td></tr>

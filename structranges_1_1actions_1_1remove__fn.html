@@ -97,6 +97,7 @@ $(document).ready(function(){initNavTree('structranges_1_1actions_1_1remove__fn.
 
 <div class="header">
   <div class="summary">
+<a href="#related">Synopsis of methods</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structranges_1_1actions_1_1remove__fn-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -104,12 +105,26 @@ $(document).ready(function(){initNavTree('structranges_1_1actions_1_1remove__fn.
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="related"></a>
+Synopsis of methods</h2></td></tr>
+<tr class="memitem:a79dd50f8b3f3c0b0ac22a00b5938ccda"><td class="memItemLeft" align="right" valign="top"><a id="a79dd50f8b3f3c0b0ac22a00b5938ccda"></a>
+constexpr <a class="el" href="structranges_1_1actions_1_1remove__fn.html">remove_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>remove</b> {}</td></tr>
+<tr class="separator:a79dd50f8b3f3c0b0ac22a00b5938ccda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a5d102b1a52313fc338b4e7ff98d34ce7"><td class="memTemplParams" colspan="2"><a id="a5d102b1a52313fc338b4e7ff98d34ce7"></a>
 template&lt;typename Rng , typename V , typename P  = identity&gt; </td></tr>
 <tr class="memitem:a5d102b1a52313fc338b4e7ff98d34ce7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, V const &amp;value, P proj={}) const -&gt; Rng requires forward_range&lt; Rng &gt; &amp;&amp;permutable&lt; iterator_t&lt; Rng &gt;&gt; &amp;&amp;erasable_range&lt; Rng, iterator_t&lt; Rng &gt;, sentinel_t&lt; Rng &gt;&gt; &amp;&amp;indirect_relation&lt; <a class="el" href="structranges_1_1equal__to.html">equal_to</a>, projected&lt; iterator_t&lt; Rng &gt;, P &gt;, V const * &gt;</td></tr>
 <tr class="separator:a5d102b1a52313fc338b4e7ff98d34ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad936c282419493fab69b18e162259d28"><td class="memTemplParams" colspan="2"><a id="ad936c282419493fab69b18e162259d28"></a>
+template&lt;typename V &gt; </td></tr>
+<tr class="memitem:ad936c282419493fab69b18e162259d28"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (V &amp;&amp;value) const</td></tr>
+<tr class="separator:ad936c282419493fab69b18e162259d28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4489b930232df48bfb70fb23ca9daf60"><td class="memTemplParams" colspan="2"><a id="a4489b930232df48bfb70fb23ca9daf60"></a>
+template&lt;typename V , typename P &gt; </td></tr>
+<tr class="memitem:a4489b930232df48bfb70fb23ca9daf60"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (V &amp;&amp;value, P proj) const requires(!range&lt; V &gt;)</td></tr>
+<tr class="separator:a4489b930232df48bfb70fb23ca9daf60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

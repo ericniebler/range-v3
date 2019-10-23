@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['numerics_2161',['Numerics',['../group__group-numerics.html',1,'']]]
+  ['numerics_2187',['Numerics',['../group__group-numerics.html',1,'']]]
 ];

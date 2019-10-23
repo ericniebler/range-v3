@@ -97,6 +97,8 @@ $(document).ready(function(){initNavTree('structranges_1_1actions_1_1split__when
 
 <div class="header">
   <div class="summary">
+<a href="#related">Synopsis of methods</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structranges_1_1actions_1_1split__when__fn-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -104,8 +106,25 @@ $(document).ready(function(){initNavTree('structranges_1_1actions_1_1split__when
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="related"></a>
+Synopsis of methods</h2></td></tr>
+<tr class="memitem:a37f19f9632b24e8631495a25274b3dc7"><td class="memItemLeft" align="right" valign="top"><a id="a37f19f9632b24e8631495a25274b3dc7"></a>
+constexpr <a class="el" href="structranges_1_1actions_1_1split__when__fn.html">split_when_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>split_when</b> {}</td></tr>
+<tr class="separator:a37f19f9632b24e8631495a25274b3dc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a84865fbc1a9cb2bd21093f7fe4f32602"><td class="memTemplParams" colspan="2"><a id="a84865fbc1a9cb2bd21093f7fe4f32602"></a>
+template&lt;typename Rng &gt; </td></tr>
+<tr class="memitem:a84865fbc1a9cb2bd21093f7fe4f32602"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>split_value_t</b> = meta::if_c&lt;(bool) ranges::container&lt; Rng &gt;, uncvref_t&lt; Rng &gt;, std::vector&lt; range_value_t&lt; Rng &gt; &gt;&gt;</td></tr>
+<tr class="separator:a84865fbc1a9cb2bd21093f7fe4f32602"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a2794f9495d939f47aa0366ce875c4ebb"><td class="memTemplParams" colspan="2"><a id="a2794f9495d939f47aa0366ce875c4ebb"></a>
+template&lt;typename Fun &gt; </td></tr>
+<tr class="memitem:a2794f9495d939f47aa0366ce875c4ebb"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Fun fun) const</td></tr>
+<tr class="separator:a2794f9495d939f47aa0366ce875c4ebb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2651471088ea583159cc3368a64584f"><td class="memTemplParams" colspan="2"><a id="ae2651471088ea583159cc3368a64584f"></a>
 template&lt;typename Rng , typename Fun &gt; </td></tr>
 <tr class="memitem:ae2651471088ea583159cc3368a64584f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Fun fun) const -&gt; std::vector&lt; split_value_t&lt; Rng &gt;&gt; requires forward_range&lt; Rng &gt; &amp;&amp;invocable&lt; Fun &amp;, iterator_t&lt; Rng &gt;, sentinel_t&lt; Rng &gt;&gt; &amp;&amp;invocable&lt; Fun &amp;, iterator_t&lt; Rng &gt;, iterator_t&lt; Rng &gt;&gt; &amp;&amp;copy_constructible&lt; Fun &gt; &amp;&amp;convertible_to&lt; invoke_result_t&lt; Fun &amp;, iterator_t&lt; Rng &gt;, sentinel_t&lt; Rng &gt;&gt;, std::pair&lt; bool, iterator_t&lt; Rng &gt;&gt;&gt;</td></tr>

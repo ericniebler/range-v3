@@ -107,16 +107,44 @@ $(document).ready(function(){initNavTree('structranges_1_1actions_1_1sort__fn.ht
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="related"></a>
 Synopsis of methods</h2></td></tr>
-<tr class="memitem:ga4794d711c7f88c00d6511a3e0524a2c1"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1actions_1_1action.html">action</a>&lt; <a class="el" href="structranges_1_1actions_1_1sort__fn.html">sort_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-actions.html#ga4794d711c7f88c00d6511a3e0524a2c1">sort</a> {}</td></tr>
-<tr class="separator:ga4794d711c7f88c00d6511a3e0524a2c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a946d1294ffc1c734b8781f38c7d47ed6"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1actions_1_1action__closure.html">action_closure</a>&lt; <a class="el" href="structranges_1_1actions_1_1sort__fn.html">sort_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1actions_1_1sort__fn.html#a946d1294ffc1c734b8781f38c7d47ed6">sort</a> {}</td></tr>
+<tr class="separator:a946d1294ffc1c734b8781f38c7d47ed6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a971ce97f65d841d6320bfb8af957f5d5"><td class="memTemplParams" colspan="2"><a id="a971ce97f65d841d6320bfb8af957f5d5"></a>
+template&lt;typename C , typename P  = identity&gt; </td></tr>
+<tr class="memitem:a971ce97f65d841d6320bfb8af957f5d5"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (C pred, P proj={}) const requires(!range&lt; C &gt;)</td></tr>
+<tr class="separator:a971ce97f65d841d6320bfb8af957f5d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afaa0ee83c72f77d1c6a08fb72c51429d"><td class="memTemplParams" colspan="2"><a id="afaa0ee83c72f77d1c6a08fb72c51429d"></a>
 template&lt;typename Rng , typename C  = less, typename P  = identity&gt; </td></tr>
 <tr class="memitem:afaa0ee83c72f77d1c6a08fb72c51429d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, C pred={}, P proj={}) const -&gt; Rng requires forward_range&lt; Rng &gt; &amp;&amp;sortable&lt; iterator_t&lt; Rng &gt;, C, P &gt;</td></tr>
 <tr class="separator:afaa0ee83c72f77d1c6a08fb72c51429d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Methods</h2>
+<a id="a946d1294ffc1c734b8781f38c7d47ed6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a946d1294ffc1c734b8781f38c7d47ed6">&#9670;&nbsp;</a></span>sort</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="structranges_1_1actions_1_1action__closure.html">action_closure</a>&lt;<a class="el" href="structranges_1_1actions_1_1sort__fn.html">sort_fn</a>&gt; sort {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structranges_1_1actions_1_1action__closure.html">action_closure</a> </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

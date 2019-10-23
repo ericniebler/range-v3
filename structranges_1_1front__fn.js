@@ -1,4 +1,4 @@
 var structranges_1_1front__fn =
 [
-    [ "operator()", "structranges_1_1front__fn.html#a8d6abbc2b52c8e5b3ffa5f8293da94a6", null ]
+    [ "operator()", "structranges_1_1front__fn.html#a84250c169dc2ed10ef068fc6a1451f1c", null ]
 ];

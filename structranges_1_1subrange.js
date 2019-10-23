@@ -5,7 +5,6 @@ var structranges_1_1subrange =
     [ "empty", "structranges_1_1subrange.html#a33631f7f6c4f182aaaa9d12167d44151", null ],
     [ "end", "structranges_1_1subrange.html#a508ff8d81f6933fae15992eef543e1ab", null ],
     [ "next", "structranges_1_1subrange.html#a86b0dcc265a91c58939b95a7d8e6b155", null ],
-    [ "operator Container", "structranges_1_1subrange.html#a75574c9da4675d838a20acba5596e143", null ],
     [ "operator PairLike", "structranges_1_1subrange.html#ac7f4803522d7dc56882198d8dff22c39", null ],
     [ "prev", "structranges_1_1subrange.html#a99569a8a481243f91cdada7558564665", null ],
     [ "size", "structranges_1_1subrange.html#a5815f7600632e551cc4e5621169eafa9", null ],

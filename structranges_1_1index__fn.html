@@ -108,13 +108,13 @@ $(document).ready(function(){initNavTree('structranges_1_1index__fn.html','');})
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad30889f77b344fbe63438b11e589e4d6"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename Int &gt; </td></tr>
-<tr class="memitem:ad30889f77b344fbe63438b11e589e4d6"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1index__fn.html#ad30889f77b344fbe63438b11e589e4d6">operator()</a> (Rng &amp;&amp;rng, Int n) const -&gt; range_reference_t&lt; Rng &gt; requires random_access_range&lt; Rng &gt; &amp;&amp;integral&lt; Int &gt;</td></tr>
-<tr class="separator:ad30889f77b344fbe63438b11e589e4d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2befa770103e4bba1691635e721734f"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename Int &gt; </td></tr>
+<tr class="memitem:ae2befa770103e4bba1691635e721734f"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1index__fn.html#ae2befa770103e4bba1691635e721734f">operator()</a> (Rng &amp;&amp;rng, Int n) const -&gt; range_reference_t&lt; Rng &gt; requires random_access_range&lt; Rng &gt; &amp;&amp;integral&lt; Int &gt; &amp;&amp;forwarding_range_&lt; Rng &gt;</td></tr>
+<tr class="separator:ae2befa770103e4bba1691635e721734f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ad30889f77b344fbe63438b11e589e4d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad30889f77b344fbe63438b11e589e4d6">&#9670;&nbsp;</a></span>operator()()</h2>
+<a id="ae2befa770103e4bba1691635e721734f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2befa770103e4bba1691635e721734f">&#9670;&nbsp;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -140,7 +140,7 @@ template&lt;typename Rng , typename Int &gt; </div>
           <td></td>
           <td>)</td>
           <td></td><td> const -&gt; range_reference_t&lt;Rng&gt;   
-                requires random_access_range&lt;Rng&gt; &amp;&amp; integral&lt;Int&gt; 
+            requires random_access_range&lt;Rng&gt; &amp;&amp; integral&lt;Int&gt; &amp;&amp; forwarding_range_&lt;Rng&gt; 
         </td>
         </tr>
       </table>

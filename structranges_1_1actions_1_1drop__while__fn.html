@@ -107,11 +107,16 @@ $(document).ready(function(){initNavTree('structranges_1_1actions_1_1drop__while
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="related"></a>
 Synopsis of methods</h2></td></tr>
-<tr class="memitem:gabf7e0a0e9db096aa11eb9d37f242fba8"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1actions_1_1action.html">action</a>&lt; <a class="el" href="structranges_1_1actions_1_1drop__while__fn.html">drop_while_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-actions.html#gabf7e0a0e9db096aa11eb9d37f242fba8">drop_while</a> {}</td></tr>
-<tr class="separator:gabf7e0a0e9db096aa11eb9d37f242fba8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdcccd51ba503e73787e53db684d0ddd"><td class="memItemLeft" align="right" valign="top"><a id="abdcccd51ba503e73787e53db684d0ddd"></a>
+constexpr <a class="el" href="structranges_1_1actions_1_1drop__while__fn.html">drop_while_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>drop_while</b> {}</td></tr>
+<tr class="separator:abdcccd51ba503e73787e53db684d0ddd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a4838d8195cac5208d31fdf1799b0bfce"><td class="memTemplParams" colspan="2"><a id="a4838d8195cac5208d31fdf1799b0bfce"></a>
+template&lt;typename Fun &gt; </td></tr>
+<tr class="memitem:a4838d8195cac5208d31fdf1799b0bfce"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Fun fun) const requires(!range&lt; Fun &gt;)</td></tr>
+<tr class="separator:a4838d8195cac5208d31fdf1799b0bfce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a564da5d1c159319d08e578cca3dd7299"><td class="memTemplParams" colspan="2"><a id="a564da5d1c159319d08e578cca3dd7299"></a>
 template&lt;typename Rng , typename Fun &gt; </td></tr>
 <tr class="memitem:a564da5d1c159319d08e578cca3dd7299"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Fun fun) const -&gt; Rng requires forward_range&lt; Rng &gt; &amp;&amp;indirect_unary_predicate&lt; Fun, iterator_t&lt; Rng &gt;&gt; &amp;&amp;erasable_range&lt; Rng &amp;, iterator_t&lt; Rng &gt;, iterator_t&lt; Rng &gt;&gt;</td></tr>

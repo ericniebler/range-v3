@@ -147,11 +147,6 @@ constexpr S&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> () con
 <tr class="memitem:a86b0dcc265a91c58939b95a7d8e6b155"><td class="memItemLeft" align="right" valign="top"><a id="a86b0dcc265a91c58939b95a7d8e6b155"></a>
 constexpr <a class="el" href="structranges_1_1subrange.html">subrange</a>&#160;</td><td class="memItemRight" valign="bottom"><b>next</b> (iter_difference_t&lt; I &gt; n=1) const</td></tr>
 <tr class="separator:a86b0dcc265a91c58939b95a7d8e6b155"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75574c9da4675d838a20acba5596e143"><td class="memTemplParams" colspan="2"><a id="a75574c9da4675d838a20acba5596e143"></a>
-template&lt;typename Container &gt; </td></tr>
-<tr class="memitem:a75574c9da4675d838a20acba5596e143"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr detail::convertible_to_container&lt; <a class="el" href="structranges_1_1subrange.html">subrange</a> const, Container &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1subrange.html#a75574c9da4675d838a20acba5596e143">operator Container</a> () const</td></tr>
-<tr class="memdesc:a75574c9da4675d838a20acba5596e143"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implicit conversion to something that looks like a container. <br /></td></tr>
-<tr class="separator:a75574c9da4675d838a20acba5596e143"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7f4803522d7dc56882198d8dff22c39"><td class="memTemplParams" colspan="2"><a id="ac7f4803522d7dc56882198d8dff22c39"></a>
 template&lt;typename PairLike &gt; </td></tr>
 <tr class="memitem:ac7f4803522d7dc56882198d8dff22c39"><td class="memTemplItemLeft" align="right" valign="top">requires defer::not_same_as_&lt; PairLike, <a class="el" href="structranges_1_1subrange.html">subrange</a> &gt; &amp;&amp;constexpr detail::defer::pair_like_convertible_from_&lt; PairLike, const I &amp;, const S &amp; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator PairLike</b> () const</td></tr>

@@ -98,6 +98,7 @@ $(document).ready(function(){initNavTree('structranges_1_1actions_1_1split__fn.h
 <div class="header">
   <div class="summary">
 <a href="#related">Synopsis of methods</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structranges_1_1actions_1_1split__fn-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -107,10 +108,16 @@ $(document).ready(function(){initNavTree('structranges_1_1actions_1_1split__fn.h
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="related"></a>
 Synopsis of methods</h2></td></tr>
-<tr class="memitem:ga653ebe4c191bb21f60a1991699f477ff"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1actions_1_1action.html">action</a>&lt; <a class="el" href="structranges_1_1actions_1_1split__fn.html">split_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-actions.html#ga653ebe4c191bb21f60a1991699f477ff">split</a> {}</td></tr>
-<tr class="separator:ga653ebe4c191bb21f60a1991699f477ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae15d3d4e92b6d96587e790cd3c6d4239"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1actions_1_1action.html">action</a>&lt; <a class="el" href="structranges_1_1actions_1_1split__when__fn.html">split_when_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-actions.html#gae15d3d4e92b6d96587e790cd3c6d4239">split_when</a> {}</td></tr>
-<tr class="separator:gae15d3d4e92b6d96587e790cd3c6d4239"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0bc54ff2309365ea40dfd787f666154"><td class="memItemLeft" align="right" valign="top"><a id="ab0bc54ff2309365ea40dfd787f666154"></a>
+constexpr <a class="el" href="structranges_1_1actions_1_1split__fn.html">split_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>split</b> {}</td></tr>
+<tr class="separator:ab0bc54ff2309365ea40dfd787f666154"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a6d7d95ac7e87cc755e2e9cb081690786"><td class="memTemplParams" colspan="2"><a id="a6d7d95ac7e87cc755e2e9cb081690786"></a>
+template&lt;typename Rng &gt; </td></tr>
+<tr class="memitem:a6d7d95ac7e87cc755e2e9cb081690786"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>split_value_t</b> = meta::if_c&lt;(bool) ranges::container&lt; Rng &gt;, uncvref_t&lt; Rng &gt;, std::vector&lt; range_value_t&lt; Rng &gt; &gt;&gt;</td></tr>
+<tr class="separator:a6d7d95ac7e87cc755e2e9cb081690786"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -122,6 +129,14 @@ template&lt;typename Rng , typename Pattern &gt; </td></tr>
 template&lt;typename Rng &gt; </td></tr>
 <tr class="memitem:a74f268426ebae2cf8326649e2e830df2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, range_value_t&lt; Rng &gt; val) const -&gt; std::vector&lt; split_value_t&lt; Rng &gt;&gt; requires input_range&lt; Rng &gt; &amp;&amp;indirectly_comparable&lt; iterator_t&lt; Rng &gt;, range_value_t&lt; Rng &gt; const *, <a class="el" href="structranges_1_1equal__to.html">ranges::equal_to</a> &gt;</td></tr>
 <tr class="separator:a74f268426ebae2cf8326649e2e830df2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a726f13184a1e55071f56800642b8b14e"><td class="memTemplParams" colspan="2"><a id="a726f13184a1e55071f56800642b8b14e"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a726f13184a1e55071f56800642b8b14e"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (T &amp;&amp;t) const</td></tr>
+<tr class="separator:a726f13184a1e55071f56800642b8b14e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac2710ff6adc37bfbaeab6252724b255"><td class="memTemplParams" colspan="2"><a id="aac2710ff6adc37bfbaeab6252724b255"></a>
+template&lt;typename T , std::size_t N&gt; </td></tr>
+<tr class="memitem:aac2710ff6adc37bfbaeab6252724b255"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (T(&amp;val)[N]) const</td></tr>
+<tr class="separator:aac2710ff6adc37bfbaeab6252724b255"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

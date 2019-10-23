@@ -95,6 +95,7 @@ var NAVTREE =
         [ "All", "functions.html", null ],
         [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", null ],
+        [ "Typedefs", "functions_type.html", null ],
         [ "Related Functions", "functions_rela.html", null ]
       ] ],
       [ "Classes", "annotated.html", "annotated" ],
@@ -106,20 +107,20 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"classranges_1_1join__with__view_1_1cursor.html#af84987f9f140204f222a8040e2f7abd5",
-"count_8hpp.html#ga0a6302f276cdf98372e30f45d10ae3a4",
-"group__group-algorithms.html#ga4e5950e393a0aee33b00b34c2f8e97c9",
-"group__group-views.html#ga54be3b0dc5e5a08d857813654b5c32e5",
-"group__runtime.html",
-"meta_8hpp.html#ga4d16896fb397ec3ded21808fc2749b41",
-"pipeable_8hpp.html",
-"structconcepts_1_1common__type_3_01_t_00_01_u_01_4.html",
-"structranges_1_1bitwise__or.html#a2c4f655794d14cca97db73313a95c67f",
-"structranges_1_1getlines__view.html#a203f9c2b1f7dfbeb84433cfebee0bf5a",
-"structranges_1_1move__view.html",
-"structranges_1_1slice__view.html",
-"structranges_1_1views_1_1filter__fn.html",
-"view_2slice_8hpp.html"
+"classranges_1_1sample__view.html",
+"count_8hpp.html",
+"group__group-algorithms.html#ga84410ac06ba27a46c99e2f1dc752741e",
+"group__group-views.html#ga8c5e0d11a27fafb3325fe505895971e4",
+"group__transformation.html#ga8d0d695134bd6b94698ae4f1c0d2f553",
+"meta_8hpp.html#ga6a6c0ca1048b5a877938e8a2d0809134",
+"range_2access_8hpp.html#ga77a2be5a9ab4b5f662866ec619a5bec7",
+"structconcepts_1_1is__satisfied__by.html",
+"structranges_1_1basic__iterator.html#a9e4f807cef0dd8daf6fbdf4abdbc46da",
+"structranges_1_1filter__view.html#a292cb06afc5a4f94bf926991555da6c9",
+"structranges_1_1move__iterator.html#a6040c3218fd301921d8dfc59aa019878",
+"structranges_1_1semiregular__box.html#aab1c6b00a50be31dac2c74e84cda93a3",
+"structranges_1_1views_1_1const__fn.html#af017ea5d6a649478ab897c6fc667301b",
+"structstd_1_1iterator__traits_3_1_1ranges_1_1basic__iterator_3_01_cur_01_4_01_4.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -104,23 +104,43 @@ $(document).ready(function(){initNavTree('structranges_1_1views_1_1drop__while__
 <div class="title">ranges::views::drop_while_fn Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Inheritance diagram for ranges::views::drop_while_fn:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+ <div class="center">
+  <img src="structranges_1_1views_1_1drop__while__fn.png" usemap="#ranges::views::drop_5Fwhile_5Ffn_map" alt=""/>
+  <map id="ranges::views::drop_5Fwhile_5Ffn_map" name="ranges::views::drop_5Fwhile_5Ffn_map">
+<area href="structranges_1_1views_1_1drop__while__base__fn.html" alt="ranges::views::drop_while_base_fn" shape="rect" coords="0,0,209,24"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="related"></a>
 Synopsis of methods</h2></td></tr>
-<tr class="memitem:ga5b47028e334a06fd3d2926e029795f2f"><td class="memItemLeft" align="right" valign="top">
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1drop__while__fn.html">drop_while_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>drop_while</b> {}</td></tr>
-<tr class="separator:ga5b47028e334a06fd3d2926e029795f2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabdcccd51ba503e73787e53db684d0ddd"><td class="memItemLeft" align="right" valign="top">
+constexpr <a class="el" href="structranges_1_1views_1_1drop__while__fn.html">drop_while_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>drop_while</b> {}</td></tr>
+<tr class="separator:gabdcccd51ba503e73787e53db684d0ddd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af1702e85199e7c2b9ac1182d918dbbfd"><td class="memTemplParams" colspan="2"><a id="af1702e85199e7c2b9ac1182d918dbbfd"></a>
+<tr class="memitem:a5b903730107e10aa5746b3c661476ccb"><td class="memTemplParams" colspan="2"><a id="a5b903730107e10aa5746b3c661476ccb"></a>
+template&lt;typename Pred , typename Proj &gt; </td></tr>
+<tr class="memitem:a5b903730107e10aa5746b3c661476ccb"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Pred &amp;&amp;pred, Proj proj) const requires(!range&lt; Pred &gt;)</td></tr>
+<tr class="separator:a5b903730107e10aa5746b3c661476ccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11534a9fe4645a7c1704104ea3590f7b"><td class="memTemplParams" colspan="2"><a id="a11534a9fe4645a7c1704104ea3590f7b"></a>
+template&lt;typename Pred &gt; </td></tr>
+<tr class="memitem:a11534a9fe4645a7c1704104ea3590f7b"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Pred pred) const</td></tr>
+<tr class="separator:a11534a9fe4645a7c1704104ea3590f7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_structranges_1_1views_1_1drop__while__base__fn"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structranges_1_1views_1_1drop__while__base__fn')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structranges_1_1views_1_1drop__while__base__fn.html">ranges::views::drop_while_base_fn</a></td></tr>
+<tr class="memitem:a029ed8d75f70894ba332bf44fe74d548 inherit pub_methods_structranges_1_1views_1_1drop__while__base__fn"><td class="memTemplParams" colspan="2"><a id="a029ed8d75f70894ba332bf44fe74d548"></a>
 template&lt;typename Rng , typename Pred &gt; </td></tr>
-<tr class="memitem:af1702e85199e7c2b9ac1182d918dbbfd"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Pred pred) const -&gt; <a class="el" href="structranges_1_1drop__while__view.html">drop_while_view</a>&lt; all_t&lt; Rng &gt;, Pred &gt; requires viewable_range&lt; Rng &gt; &amp;&amp;input_range&lt; Rng &gt; &amp;&amp;indirect_unary_predicate&lt; Pred, iterator_t&lt; Rng &gt;&gt;</td></tr>
-<tr class="separator:af1702e85199e7c2b9ac1182d918dbbfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d81aebeb17ddc4a71125d2167e2ce8a"><td class="memTemplParams" colspan="2"><a id="a8d81aebeb17ddc4a71125d2167e2ce8a"></a>
+<tr class="memitem:a029ed8d75f70894ba332bf44fe74d548 inherit pub_methods_structranges_1_1views_1_1drop__while__base__fn"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Pred pred) const -&gt; <a class="el" href="structranges_1_1drop__while__view.html">drop_while_view</a>&lt; all_t&lt; Rng &gt;, Pred &gt; requires viewable_range&lt; Rng &gt; &amp;&amp;input_range&lt; Rng &gt; &amp;&amp;indirect_unary_predicate&lt; Pred, iterator_t&lt; Rng &gt;&gt;</td></tr>
+<tr class="separator:a029ed8d75f70894ba332bf44fe74d548 inherit pub_methods_structranges_1_1views_1_1drop__while__base__fn"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17cdf1814756866f0af65c6c28bd67f5 inherit pub_methods_structranges_1_1views_1_1drop__while__base__fn"><td class="memTemplParams" colspan="2"><a id="a17cdf1814756866f0af65c6c28bd67f5"></a>
 template&lt;typename Rng , typename Pred , typename Proj &gt; </td></tr>
-<tr class="memitem:a8d81aebeb17ddc4a71125d2167e2ce8a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Pred pred, Proj proj) const -&gt; <a class="el" href="structranges_1_1drop__while__view.html">drop_while_view</a>&lt; all_t&lt; Rng &gt;, <a class="el" href="structranges_1_1composed.html">composed</a>&lt; Pred, Proj &gt;&gt; requires viewable_range&lt; Rng &gt; &amp;&amp;input_range&lt; Rng &gt; &amp;&amp;indirect_unary_predicate&lt; <a class="el" href="structranges_1_1composed.html">composed</a>&lt; Pred, Proj &gt;, iterator_t&lt; Rng &gt;&gt;</td></tr>
-<tr class="separator:a8d81aebeb17ddc4a71125d2167e2ce8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17cdf1814756866f0af65c6c28bd67f5 inherit pub_methods_structranges_1_1views_1_1drop__while__base__fn"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Pred pred, Proj proj) const -&gt; <a class="el" href="structranges_1_1drop__while__view.html">drop_while_view</a>&lt; all_t&lt; Rng &gt;, <a class="el" href="structranges_1_1composed.html">composed</a>&lt; Pred, Proj &gt;&gt; requires viewable_range&lt; Rng &gt; &amp;&amp;input_range&lt; Rng &gt; &amp;&amp;indirect_unary_predicate&lt; <a class="el" href="structranges_1_1composed.html">composed</a>&lt; Pred, Proj &gt;, iterator_t&lt; Rng &gt;&gt;</td></tr>
+<tr class="separator:a17cdf1814756866f0af65c6c28bd67f5 inherit pub_methods_structranges_1_1views_1_1drop__while__base__fn"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

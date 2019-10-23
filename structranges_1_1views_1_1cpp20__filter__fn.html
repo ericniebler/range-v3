@@ -103,9 +103,7 @@ $(document).ready(function(){initNavTree('structranges_1_1views_1_1cpp20__filter
 <div class="title">ranges::views::cpp20_filter_fn Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a name="details" id="details"></a><h2 class="groupheader">Description</h2>
-<div class="textblock"><p>Given a source range and a unary predicate, present a view of the elements that satisfy the predicate. </p>
-</div><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Inheritance diagram for ranges::views::cpp20_filter_fn:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
@@ -113,16 +111,21 @@ $(document).ready(function(){initNavTree('structranges_1_1views_1_1cpp20__filter
  <div class="center">
   <img src="structranges_1_1views_1_1cpp20__filter__fn.png" usemap="#ranges::views::cpp20_5Ffilter_5Ffn_map" alt=""/>
   <map id="ranges::views::cpp20_5Ffilter_5Ffn_map" name="ranges::views::cpp20_5Ffilter_5Ffn_map">
-<area href="structranges_1_1views_1_1filter__fn.html" title="Given a source range, unary predicate, and optional projection, present a view of the elements that s..." alt="ranges::views::filter_fn" shape="rect" coords="0,56,180,80"/>
+<area href="structranges_1_1views_1_1cpp20__filter__base__fn.html" title="Given a source range and a unary predicate, present a view of the elements that satisfy the predicate..." alt="ranges::views::cpp20_filter_base_fn" shape="rect" coords="0,0,214,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5a884e35fb0eea42be951c077578bc50"><td class="memTemplParams" colspan="2"><a id="a5a884e35fb0eea42be951c077578bc50"></a>
+<tr class="memitem:aa91ff7ba3191a9655be79ea90fe046c9"><td class="memTemplParams" colspan="2"><a id="aa91ff7ba3191a9655be79ea90fe046c9"></a>
+template&lt;typename Pred &gt; </td></tr>
+<tr class="memitem:aa91ff7ba3191a9655be79ea90fe046c9"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Pred pred) const</td></tr>
+<tr class="separator:aa91ff7ba3191a9655be79ea90fe046c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_structranges_1_1views_1_1cpp20__filter__base__fn"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structranges_1_1views_1_1cpp20__filter__base__fn')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structranges_1_1views_1_1cpp20__filter__base__fn.html">ranges::views::cpp20_filter_base_fn</a></td></tr>
+<tr class="memitem:a7db72161c3eb4cae1ca2ab44404f3ddf inherit pub_methods_structranges_1_1views_1_1cpp20__filter__base__fn"><td class="memTemplParams" colspan="2"><a id="a7db72161c3eb4cae1ca2ab44404f3ddf"></a>
 template&lt;typename Rng , typename Pred &gt; </td></tr>
-<tr class="memitem:a5a884e35fb0eea42be951c077578bc50"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Pred pred) const -&gt; <a class="el" href="structranges_1_1filter__view.html">filter_view</a>&lt; all_t&lt; Rng &gt;, Pred &gt; requires viewable_range&lt; Rng &gt; &amp;&amp;input_range&lt; Rng &gt; &amp;&amp;indirect_unary_predicate&lt; Pred, iterator_t&lt; Rng &gt;&gt;</td></tr>
-<tr class="separator:a5a884e35fb0eea42be951c077578bc50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7db72161c3eb4cae1ca2ab44404f3ddf inherit pub_methods_structranges_1_1views_1_1cpp20__filter__base__fn"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Pred pred) const -&gt; <a class="el" href="structranges_1_1filter__view.html">filter_view</a>&lt; all_t&lt; Rng &gt;, Pred &gt; requires viewable_range&lt; Rng &gt; &amp;&amp;input_range&lt; Rng &gt; &amp;&amp;indirect_unary_predicate&lt; Pred, iterator_t&lt; Rng &gt;&gt;</td></tr>
+<tr class="separator:a7db72161c3eb4cae1ca2ab44404f3ddf inherit pub_methods_structranges_1_1views_1_1cpp20__filter__base__fn"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

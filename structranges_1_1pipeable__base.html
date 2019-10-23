@@ -97,35 +97,26 @@ $(document).ready(function(){initNavTree('structranges_1_1pipeable__base.html','
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Instances and minimal complete definitions</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="structranges_1_1pipeable__base-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">ranges::pipeable_base Struct Reference<div class="ingroups"><a class="el" href="group__group-functional.html">Functional</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
-<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Inheritance diagram for ranges::pipeable_base:</div>
-<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-0-content" class="dyncontent" style="display:none;">
- <div class="center">
-  <img src="structranges_1_1pipeable__base.png" usemap="#ranges::pipeable_5Fbase_map" alt=""/>
-  <map id="ranges::pipeable_5Fbase_map" name="ranges::pipeable_5Fbase_map">
-<area href="structranges_1_1experimental_1_1views_1_1shared__fn.html" alt="ranges::experimental::views::shared_fn" shape="rect" coords="0,56,229,80"/>
-<area href="structranges_1_1ref__fn.html" alt="ranges::ref_fn" shape="rect" coords="239,56,468,80"/>
-  </map>
-</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:a69554ed827422ba96c30c97a30a0bc28"><td class="memItemLeft" align="right" valign="top"><a id="a69554ed827422ba96c30c97a30a0bc28"></a>
-constexpr Arg <a class="el" href="classfriend.html">friend</a> <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator|</b> (Arg &amp;&amp;arg, Pipe pipe)</td></tr>
-<tr class="separator:a69554ed827422ba96c30c97a30a0bc28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3b151e6f4826c05bf448c990367ca5b"><td class="memTemplParams" colspan="2"><a id="ac3b151e6f4826c05bf448c990367ca5b"></a>
+<tr class="memitem:a98a27de694eac13e0c5fc4ebfcaf7fd6"><td class="memItemLeft" align="right" valign="top"><a id="a98a27de694eac13e0c5fc4ebfcaf7fd6"></a>
+Arg constexpr <a class="el" href="classfriend.html">friend</a> <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator|</b> (Arg &amp;&amp;arg, Pipe pipe)</td></tr>
+<tr class="separator:a98a27de694eac13e0c5fc4ebfcaf7fd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb7e09832afee06d48a849acc78ed1ca"><td class="memTemplParams" colspan="2"><a id="aeb7e09832afee06d48a849acc78ed1ca"></a>
 template&lt;typename Pipe0 , typename Pipe1 &gt; </td></tr>
-<tr class="memitem:ac3b151e6f4826c05bf448c990367ca5b"><td class="memTemplItemLeft" align="right" valign="top">requires is_pipeable_v&lt; Pipe0 &gt; &amp;&amp;constexpr is_pipeable_v&lt; Pipe1 &gt; <a class="el" href="classfriend.html">friend</a> <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator|</b> (Pipe0 pipe0, Pipe1 pipe1)</td></tr>
-<tr class="separator:ac3b151e6f4826c05bf448c990367ca5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb7e09832afee06d48a849acc78ed1ca"><td class="memTemplItemLeft" align="right" valign="top">requires is_pipeable_v&lt; Pipe0 &gt; &amp;&amp;is_pipeable_v&lt; Pipe1 &gt; constexpr <a class="el" href="classfriend.html">friend</a> <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator|</b> (Pipe0 pipe0, Pipe1 pipe1)</td></tr>
+<tr class="separator:aeb7e09832afee06d48a849acc78ed1ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e73472dcff26817e64bc355da07930f"><td class="memTemplParams" colspan="2"><a id="a0e73472dcff26817e64bc355da07930f"></a>
+template&lt;typename Arg , typename Pipe &gt; </td></tr>
+<tr class="memitem:a0e73472dcff26817e64bc355da07930f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator|=</b> (Arg &amp;arg, Pipe pipe) -&gt; Arg &amp;requires(is_pipeable_v&lt; Pipe &gt;) &amp;&amp;(!is_pipeable_v&lt; Arg &gt;)&amp;&amp;invocable&lt; Pipe, Arg &amp; &gt;</td></tr>
+<tr class="separator:a0e73472dcff26817e64bc355da07930f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

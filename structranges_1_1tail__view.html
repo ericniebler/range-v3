@@ -136,12 +136,12 @@ sentinel_t&lt; Rng &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>en
 template&lt;bool Const = true&gt; </td></tr>
 <tr class="memitem:a122255b9a93d9d4edc93bc7519d67936"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>end</b> () const -&gt; sentinel_t&lt; meta::const_if_c&lt; Const, Rng &gt;&gt; requires Const &amp;&amp;range&lt; meta::const_if_c&lt; Const, Rng &gt;&gt;</td></tr>
 <tr class="separator:a122255b9a93d9d4edc93bc7519d67936"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49a5d6fc56c2ee277b205c44cb4ecbd3"><td class="memItemLeft" align="right" valign="top"><a id="a49a5d6fc56c2ee277b205c44cb4ecbd3"></a>
-constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const requires sized_range&lt; Rng const &gt;</td></tr>
-<tr class="separator:a49a5d6fc56c2ee277b205c44cb4ecbd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7465bbf77b00d2c4e2f1f5bb58e09ad8"><td class="memItemLeft" align="right" valign="top"><a id="a7465bbf77b00d2c4e2f1f5bb58e09ad8"></a>
-constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () requires sized_range&lt; Rng &gt;</td></tr>
-<tr class="separator:a7465bbf77b00d2c4e2f1f5bb58e09ad8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5d102eb36c1b80cf7d379b16b19f1b9"><td class="memItemLeft" align="right" valign="top"><a id="ac5d102eb36c1b80cf7d379b16b19f1b9"></a>
+constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const requires(bool(sized_range&lt; Rng const &gt;))</td></tr>
+<tr class="separator:ac5d102eb36c1b80cf7d379b16b19f1b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad24d4f30183f222a7a6d7f0514eac12d"><td class="memItemLeft" align="right" valign="top"><a id="ad24d4f30183f222a7a6d7f0514eac12d"></a>
+constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () requires(bool(sized_range&lt; Rng &gt;))</td></tr>
+<tr class="separator:ad24d4f30183f222a7a6d7f0514eac12d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15bc5ff2c91a8fe0fe84b20871515e3a"><td class="memItemLeft" align="right" valign="top"><a id="a15bc5ff2c91a8fe0fe84b20871515e3a"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>tail_view</b> (Rng rng)</td></tr>
 <tr class="separator:a15bc5ff2c91a8fe0fe84b20871515e3a"><td class="memSeparator" colspan="2">&#160;</td></tr>

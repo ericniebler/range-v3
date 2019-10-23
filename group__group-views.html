@@ -208,7 +208,7 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1make__subrange__fn.html">ranges::make_subrange_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1make__view__fn.html">ranges::make_view_fn</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1make__view__closure__fn.html">ranges::make_view_closure_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1move__view.html">ranges::move_view&lt; Rng &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -273,6 +273,8 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">View a <code>\0</code>-terminated C string (e.g. from a const char*) as a range.  <a href="structranges_1_1views_1_1c__str__fn.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1views_1_1generate__fn.html">ranges::views::generate_fn</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1views_1_1intersperse__base__fn.html">ranges::views::intersperse_base_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1views_1_1intersperse__fn.html">ranges::views::intersperse_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -474,10 +476,10 @@ template&lt;typename Char , std::size_t N&gt; </td></tr>
 template&lt;typename G &gt; </td></tr>
 <tr class="memitem:gad595902f3f7cfad72dc5ea84eee3db59"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::views::generate_fn::operator()</b> (G g) const -&gt; <a class="el" href="structranges_1_1generate__view.html">generate_view</a>&lt; G &gt; requires invocable&lt; G &amp; &gt; &amp;&amp;copy_constructible&lt; G &gt; &amp;&amp;std::is_object&lt; detail::decay_t&lt; invoke_result_t&lt; G &amp; &gt;&gt;&gt;::value &amp;&amp;constructible_from&lt; detail::decay_t&lt; invoke_result_t&lt; G &amp; &gt;&gt;, invoke_result_t&lt; G &amp; &gt;&gt; &amp;&amp;assignable_from&lt; detail::decay_t&lt; invoke_result_t&lt; G &amp; &gt;&gt; &amp;, invoke_result_t&lt; G &amp; &gt;&gt;</td></tr>
 <tr class="separator:gad595902f3f7cfad72dc5ea84eee3db59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga02aaff617201b500f11a1423c4a955f0"><td class="memTemplParams" colspan="2"><a id="ga02aaff617201b500f11a1423c4a955f0"></a>
+<tr class="memitem:gaa686035032f3eab36f7ded6de69f9ace"><td class="memTemplParams" colspan="2"><a id="gaa686035032f3eab36f7ded6de69f9ace"></a>
 template&lt;typename Rng &gt; </td></tr>
-<tr class="memitem:ga02aaff617201b500f11a1423c4a955f0"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::views::intersperse_fn::operator()</b> (Rng &amp;&amp;rng, range_value_t&lt; Rng &gt; val) const -&gt; <a class="el" href="structranges_1_1intersperse__view.html">intersperse_view</a>&lt; all_t&lt; Rng &gt;&gt; requires viewable_range&lt; Rng &gt; &amp;&amp;input_range&lt; Rng &gt; &amp;&amp;convertible_to&lt; range_reference_t&lt; Rng &gt;, range_value_t&lt; Rng &gt;&gt; &amp;&amp;semiregular&lt; range_value_t&lt; Rng &gt;&gt;</td></tr>
-<tr class="separator:ga02aaff617201b500f11a1423c4a955f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa686035032f3eab36f7ded6de69f9ace"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::views::intersperse_base_fn::operator()</b> (Rng &amp;&amp;rng, range_value_t&lt; Rng &gt; val) const -&gt; <a class="el" href="structranges_1_1intersperse__view.html">intersperse_view</a>&lt; all_t&lt; Rng &gt;&gt; requires viewable_range&lt; Rng &gt; &amp;&amp;input_range&lt; Rng &gt; &amp;&amp;convertible_to&lt; range_reference_t&lt; Rng &gt;, range_value_t&lt; Rng &gt;&gt; &amp;&amp;semiregular&lt; range_value_t&lt; Rng &gt;&gt;</td></tr>
+<tr class="separator:gaa686035032f3eab36f7ded6de69f9ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gada886a4829c4fba03f1423498273522a"><td class="memTemplParams" colspan="2"><a id="gada886a4829c4fba03f1423498273522a"></a>
 template&lt;typename Rng &gt; </td></tr>
 <tr class="memitem:gada886a4829c4fba03f1423498273522a"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::views::ref_fn::operator()</b> (Rng &amp;rng) const noexcept -&gt; <a class="el" href="structranges_1_1ref__view.html">ref_view</a>&lt; Rng &gt; requires range&lt; Rng &gt;</td></tr>
@@ -486,6 +488,10 @@ template&lt;typename Rng &gt; </td></tr>
 template&lt;typename Rng &gt; </td></tr>
 <tr class="memitem:ga30a86249c4fef36e383dcad73f6463c0"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::views::ref_fn::operator()</b> (Rng const &amp;&amp;rng) const =delete</td></tr>
 <tr class="separator:ga30a86249c4fef36e383dcad73f6463c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga98929743726a021ce87a4607c38eb5ca"><td class="memTemplParams" colspan="2"><a id="ga98929743726a021ce87a4607c38eb5ca"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga98929743726a021ce87a4607c38eb5ca"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::views::intersperse_fn::operator()</b> (T t) const requires copyable&lt; T &gt;</td></tr>
+<tr class="separator:ga98929743726a021ce87a4607c38eb5ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga54be3b0dc5e5a08d857813654b5c32e5"><td class="memTemplParams" colspan="2"><a id="ga54be3b0dc5e5a08d857813654b5c32e5"></a>
 template&lt;typename U , index_type M&gt; </td></tr>
 <tr class="memitem:ga54be3b0dc5e5a08d857813654b5c32e5"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::span&lt; T, N &gt;::operator&lt;</b> (<a class="el" href="structranges_1_1span.html">span</a>&lt; U, M &gt; const &amp;that) const -&gt; bool requires totally_ordered_with&lt; T, U &gt;</td></tr>
@@ -535,10 +541,10 @@ template&lt;typename Rng &gt; </td></tr>
 template&lt;bool Other&gt; </td></tr>
 <tr class="memitem:gadd3018c85f0aef7a39647d384ef846a2"><td class="memTemplItemLeft" align="right" valign="top">requires Const &amp;&amp;!Other&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::intersperse_view&lt; Rng &gt;::sentinel_adaptor&lt; Const &gt;::sentinel_adaptor</b> (sentinel_adaptor&lt; Other &gt;)</td></tr>
 <tr class="separator:gadd3018c85f0aef7a39647d384ef846a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2d7a1ca2212da411af6adf28dcfcb7a3"><td class="memTemplParams" colspan="2"><a id="ga2d7a1ca2212da411af6adf28dcfcb7a3"></a>
+<tr class="memitem:ga7d7d19ec2984ad4d0405963be35ec1fd"><td class="memTemplParams" colspan="2"><a id="ga7d7d19ec2984ad4d0405963be35ec1fd"></a>
 template&lt;typename Rng &gt; </td></tr>
-<tr class="memitem:ga2d7a1ca2212da411af6adf28dcfcb7a3"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::simple_view</b> ()</td></tr>
-<tr class="separator:ga2d7a1ca2212da411af6adf28dcfcb7a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7d7d19ec2984ad4d0405963be35ec1fd"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::simple_view</b> () noexcept</td></tr>
+<tr class="separator:ga7d7d19ec2984ad4d0405963be35ec1fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga29932b30733fb7c030d79e61a0f352d2"><td class="memItemLeft" align="right" valign="top"><a id="ga29932b30733fb7c030d79e61a0f352d2"></a>
 constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::views::linear_distribute_view&lt; T &gt;::size</b> () const noexcept</td></tr>
 <tr class="separator:ga29932b30733fb7c030d79e61a0f352d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -578,24 +584,24 @@ constexpr <a class="el" href="structranges_1_1span.html">span</a>&lt; T, dynamic
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:gacf967f85d24ac2a0ebe29f188d0b7780"><td class="memItemLeft" align="right" valign="top"><a id="gacf967f85d24ac2a0ebe29f188d0b7780"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1addressof__fn.html">addressof_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>addressof</b> {}</td></tr>
-<tr class="separator:gacf967f85d24ac2a0ebe29f188d0b7780"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9b15460d94d99748d739599a21dfd737"><td class="memItemLeft" align="right" valign="top"><a id="ga9b15460d94d99748d739599a21dfd737"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1adjacent__filter__fn.html">adjacent_filter_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>adjacent_filter</b> {}</td></tr>
-<tr class="separator:ga9b15460d94d99748d739599a21dfd737"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab900ffae71e0a60404f68934d63346d2"><td class="memItemLeft" align="right" valign="top"><a id="gab900ffae71e0a60404f68934d63346d2"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1adjacent__remove__if__fn.html">adjacent_remove_if_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>adjacent_remove_if</b> {}</td></tr>
-<tr class="separator:gab900ffae71e0a60404f68934d63346d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9c4b2afff3d8677b880acd72d2acb511"><td class="memItemLeft" align="right" valign="top"><a id="ga9c4b2afff3d8677b880acd72d2acb511"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1all__fn.html">all_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>all</b> {}</td></tr>
-<tr class="separator:ga9c4b2afff3d8677b880acd72d2acb511"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaebee141c6725d1bb5a1abd14509f615f"><td class="memItemLeft" align="right" valign="top"><a id="gaebee141c6725d1bb5a1abd14509f615f"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1view__closure.html">view_closure</a>&lt; <a class="el" href="structranges_1_1views_1_1addressof__fn.html">addressof_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>addressof</b> {}</td></tr>
+<tr class="separator:gaebee141c6725d1bb5a1abd14509f615f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac5214735f9368a7ad71509bd7b2d5e3c"><td class="memItemLeft" align="right" valign="top"><a id="gac5214735f9368a7ad71509bd7b2d5e3c"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1adjacent__filter__fn.html">adjacent_filter_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>adjacent_filter</b> {}</td></tr>
+<tr class="separator:gac5214735f9368a7ad71509bd7b2d5e3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga82eafe435e7310bcbd85dcb5a9e44f97"><td class="memItemLeft" align="right" valign="top"><a id="ga82eafe435e7310bcbd85dcb5a9e44f97"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1adjacent__remove__if__fn.html">adjacent_remove_if_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>adjacent_remove_if</b> {}</td></tr>
+<tr class="separator:ga82eafe435e7310bcbd85dcb5a9e44f97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga622f637721cb89bfa34572ab2b3ab229"><td class="memItemLeft" align="right" valign="top"><a id="ga622f637721cb89bfa34572ab2b3ab229"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1view__closure.html">view_closure</a>&lt; <a class="el" href="structranges_1_1views_1_1all__fn.html">all_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>all</b> {}</td></tr>
+<tr class="separator:ga622f637721cb89bfa34572ab2b3ab229"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2b479ed5f302954c8a1dff3582c9f177"><td class="memItemLeft" align="right" valign="top"><a id="ga2b479ed5f302954c8a1dff3582c9f177"></a>
 constexpr <a class="el" href="structranges_1_1views_1_1c__str__fn.html">c_str_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>c_str</b> {}</td></tr>
 <tr class="separator:ga2b479ed5f302954c8a1dff3582c9f177"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5db3cae4e50e5733f548eb4b5840c157"><td class="memItemLeft" align="right" valign="top"><a id="ga5db3cae4e50e5733f548eb4b5840c157"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1cache1__fn.html">cache1_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>cache1</b> {}</td></tr>
-<tr class="separator:ga5db3cae4e50e5733f548eb4b5840c157"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa553be4fb162ee1805a99434e0368b61"><td class="memItemLeft" align="right" valign="top"><a id="gaa553be4fb162ee1805a99434e0368b61"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1view__closure.html">view_closure</a>&lt; <a class="el" href="structranges_1_1views_1_1cache1__fn.html">cache1_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>cache1</b> {}</td></tr>
+<tr class="separator:gaa553be4fb162ee1805a99434e0368b61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1d6ab55ecc357e97bd5bb0de7fa78421"><td class="memItemLeft" align="right" valign="top"><a id="ga1d6ab55ecc357e97bd5bb0de7fa78421"></a>
 concept&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::cartesian_produce_view_can_bidi</b> = CPP_PP_CAT( CPP_PP_DEF_IMPL_IS_PAREN_, 0 )( cartesian_produce_view_can_random&lt;IsConst )( cartesian_produce_view_can_random&lt;IsConst, Views...&gt; || and_v&lt;common_range&lt;meta::const_if&lt;IsConst, Views&gt;&gt;..., bidirectional_iterator&lt;iterator_t&lt; meta::const_if&lt;IsConst, Views&gt;&gt;&gt;...&gt; )</td></tr>
 <tr class="separator:ga1d6ab55ecc357e97bd5bb0de7fa78421"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -611,30 +617,30 @@ concept&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::cartesian_
 <tr class="memitem:ga2dc0abc5bd5b5f58f0550389a00ec040"><td class="memItemLeft" align="right" valign="top"><a id="ga2dc0abc5bd5b5f58f0550389a00ec040"></a>
 concept&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::cartesian_produce_view_can_size</b> = CPP_PP_CAT( CPP_PP_DEF_IMPL_IS_PAREN_, 0 )( and_v&lt;sized_range&lt;meta::const_if&lt;IsConst )( and_v&lt;sized_range&lt;meta::const_if&lt;IsConst, Views&gt;&gt;...&gt; &amp;&amp; ranges::type&lt;common_type_t&lt;std::uintmax_t, range_size_t&lt;meta::const_if&lt;IsConst, Views&gt;&gt;...&gt;&gt; )</td></tr>
 <tr class="separator:ga2dc0abc5bd5b5f58f0550389a00ec040"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga637955b5e2d8a4b9bef531e435740500"><td class="memItemLeft" align="right" valign="top"><a id="ga637955b5e2d8a4b9bef531e435740500"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1chunk__fn.html">chunk_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>chunk</b> {}</td></tr>
-<tr class="separator:ga637955b5e2d8a4b9bef531e435740500"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga535e827ee1afa5b634c748ab16eeab24"><td class="memItemLeft" align="right" valign="top"><a id="ga535e827ee1afa5b634c748ab16eeab24"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1chunk__fn.html">chunk_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>chunk</b> {}</td></tr>
+<tr class="separator:ga535e827ee1afa5b634c748ab16eeab24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga12ba7c89d2c7e763782ef85389df3f11"><td class="memItemLeft" align="right" valign="top"><a id="ga12ba7c89d2c7e763782ef85389df3f11"></a>
 constexpr <a class="el" href="structranges_1_1views_1_1closed__indices__fn.html">closed_indices_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>closed_indices</b> {}</td></tr>
 <tr class="separator:ga12ba7c89d2c7e763782ef85389df3f11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0a192f2f97f1a1f11e23eaf4384303e2"><td class="memItemLeft" align="right" valign="top"><a id="ga0a192f2f97f1a1f11e23eaf4384303e2"></a>
 constexpr <a class="el" href="structranges_1_1views_1_1closed__iota__fn.html">closed_iota_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>closed_iota</b> {}</td></tr>
 <tr class="separator:ga0a192f2f97f1a1f11e23eaf4384303e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae1b2b05f245a0688020d26a7bc29cbed"><td class="memItemLeft" align="right" valign="top"><a id="gae1b2b05f245a0688020d26a7bc29cbed"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1common__fn.html">common_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>common</b> {}</td></tr>
-<tr class="separator:gae1b2b05f245a0688020d26a7bc29cbed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4f98a73dd995b18673b9b70d3d1488c1"><td class="memItemLeft" align="right" valign="top"><a id="ga4f98a73dd995b18673b9b70d3d1488c1"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1view__closure.html">view_closure</a>&lt; <a class="el" href="structranges_1_1views_1_1common__fn.html">common_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>common</b> {}</td></tr>
+<tr class="separator:ga4f98a73dd995b18673b9b70d3d1488c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaadcb7b54d680a4069d98c275cbd67c4e"><td class="memItemLeft" align="right" valign="top"><a id="gaadcb7b54d680a4069d98c275cbd67c4e"></a>
 constexpr <a class="el" href="structranges_1_1views_1_1concat__fn.html">concat_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>concat</b> {}</td></tr>
 <tr class="separator:gaadcb7b54d680a4069d98c275cbd67c4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0891afd4295dd6cc7b3bddff68a2d303"><td class="memItemLeft" align="right" valign="top"><a id="ga0891afd4295dd6cc7b3bddff68a2d303"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1const__fn.html">const_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>const_</b> {}</td></tr>
-<tr class="separator:ga0891afd4295dd6cc7b3bddff68a2d303"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga167279db3746583206c3a21c915a4638"><td class="memItemLeft" align="right" valign="top"><a id="ga167279db3746583206c3a21c915a4638"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1view__closure.html">view_closure</a>&lt; <a class="el" href="structranges_1_1views_1_1const__fn.html">const_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>const_</b> {}</td></tr>
+<tr class="separator:ga167279db3746583206c3a21c915a4638"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4b07eebf989277bf84b3abd97001df6e"><td class="memItemLeft" align="right" valign="top"><a id="ga4b07eebf989277bf84b3abd97001df6e"></a>
 constexpr <a class="el" href="structranges_1_1views_1_1counted__fn.html">counted_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>counted</b> {}</td></tr>
 <tr class="separator:ga4b07eebf989277bf84b3abd97001df6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga63c1f2feed272a28e308452c21baaa19"><td class="memItemLeft" align="right" valign="top"><a id="ga63c1f2feed272a28e308452c21baaa19"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1cycle__fn.html">cycle_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>cycle</b> {}</td></tr>
-<tr class="separator:ga63c1f2feed272a28e308452c21baaa19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2b6b7b8f0535aba951cc8f7db42c8a52"><td class="memItemLeft" align="right" valign="top"><a id="ga2b6b7b8f0535aba951cc8f7db42c8a52"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1view__closure.html">view_closure</a>&lt; <a class="el" href="structranges_1_1views_1_1cycle__fn.html">cycle_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>cycle</b> {}</td></tr>
+<tr class="separator:ga2b6b7b8f0535aba951cc8f7db42c8a52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9f45f145d714032f00831d47e7c73511"><td class="memItemLeft" align="right" valign="top"><a id="ga9f45f145d714032f00831d47e7c73511"></a>
 constexpr <a class="el" href="structranges_1_1views_1_1delimit__fn.html">delimit_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>delimit</b> {}</td></tr>
 <tr class="separator:ga9f45f145d714032f00831d47e7c73511"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -642,33 +648,33 @@ constexpr <a class="el" href="structranges_1_1views_1_1delimit__fn.html">delimit
 template&lt;typename Rng , typename Pred &gt; </td></tr>
 <tr class="memitem:ga2248420925728f88917d1f7a6eb22c06"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::disable_sized_range&lt; trim_view&lt; Rng, Pred &gt; &gt;</b> = true</td></tr>
 <tr class="separator:ga2248420925728f88917d1f7a6eb22c06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1e20e9877bfafed2a975cf71ec439476"><td class="memItemLeft" align="right" valign="top"><a id="ga1e20e9877bfafed2a975cf71ec439476"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1drop__fn.html">drop_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>drop</b> {}</td></tr>
-<tr class="separator:ga1e20e9877bfafed2a975cf71ec439476"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaeab874f67edfb948c2a004e514ae14c4"><td class="memItemLeft" align="right" valign="top"><a id="gaeab874f67edfb948c2a004e514ae14c4"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1drop__exactly__fn.html">drop_exactly_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>drop_exactly</b> {}</td></tr>
-<tr class="separator:gaeab874f67edfb948c2a004e514ae14c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5b47028e334a06fd3d2926e029795f2f"><td class="memItemLeft" align="right" valign="top"><a id="ga5b47028e334a06fd3d2926e029795f2f"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1drop__while__fn.html">drop_while_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>drop_while</b> {}</td></tr>
-<tr class="separator:ga5b47028e334a06fd3d2926e029795f2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad032e209a7d07f0fa9bad8f7a9677276"><td class="memItemLeft" align="right" valign="top"><a id="gad032e209a7d07f0fa9bad8f7a9677276"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1drop__fn.html">drop_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>drop</b> {}</td></tr>
+<tr class="separator:gad032e209a7d07f0fa9bad8f7a9677276"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9d599c36ccf96b0ab3b28fedcf217b30"><td class="memItemLeft" align="right" valign="top"><a id="ga9d599c36ccf96b0ab3b28fedcf217b30"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1drop__exactly__fn.html">drop_exactly_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>drop_exactly</b> {}</td></tr>
+<tr class="separator:ga9d599c36ccf96b0ab3b28fedcf217b30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabdcccd51ba503e73787e53db684d0ddd"><td class="memItemLeft" align="right" valign="top"><a id="gabdcccd51ba503e73787e53db684d0ddd"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1drop__while__fn.html">drop_while_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>drop_while</b> {}</td></tr>
+<tr class="separator:gabdcccd51ba503e73787e53db684d0ddd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga520965e4f9150776383ebcded1d39c54"><td class="memItemLeft" align="right" valign="top"><a id="ga520965e4f9150776383ebcded1d39c54"></a>
 constexpr detail::span_index_t&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::dynamic_extent</b> = -1</td></tr>
 <tr class="separator:ga520965e4f9150776383ebcded1d39c54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8f7c3b5c88358d3f74b25db10aae2ed3"><td class="memItemLeft" align="right" valign="top"><a id="ga8f7c3b5c88358d3f74b25db10aae2ed3"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1enumerate__fn.html">enumerate_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>enumerate</b> {}</td></tr>
-<tr class="separator:ga8f7c3b5c88358d3f74b25db10aae2ed3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6a0585895cbf7e177d950defbd1c8c91"><td class="memItemLeft" align="right" valign="top"><a id="ga6a0585895cbf7e177d950defbd1c8c91"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1exclusive__scan__fn.html">exclusive_scan_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>exclusive_scan</b> {}</td></tr>
-<tr class="separator:ga6a0585895cbf7e177d950defbd1c8c91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6b12d795f477c718d20fe5db97fccfb4"><td class="memItemLeft" align="right" valign="top"><a id="ga6b12d795f477c718d20fe5db97fccfb4"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1view__closure.html">view_closure</a>&lt; <a class="el" href="structranges_1_1views_1_1enumerate__fn.html">enumerate_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>enumerate</b> {}</td></tr>
+<tr class="separator:ga6b12d795f477c718d20fe5db97fccfb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad544123067030050d142609a13b456aa"><td class="memItemLeft" align="right" valign="top"><a id="gad544123067030050d142609a13b456aa"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1exclusive__scan__fn.html">exclusive_scan_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>exclusive_scan</b> {}</td></tr>
+<tr class="separator:gad544123067030050d142609a13b456aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9f849cd3e2acbeeb7bac60713f2dcb0e"><td class="memItemLeft" align="right" valign="top"><a id="ga9f849cd3e2acbeeb7bac60713f2dcb0e"></a>
 static constexpr index_type&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::span&lt; T, N &gt;::extent</b> = N</td></tr>
 <tr class="separator:ga9f849cd3e2acbeeb7bac60713f2dcb0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9510d382f71c1402e14df2ca2ed4bd54"><td class="memItemLeft" align="right" valign="top"><a id="ga9510d382f71c1402e14df2ca2ed4bd54"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1filter__fn.html">filter_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>filter</b> {}</td></tr>
-<tr class="separator:ga9510d382f71c1402e14df2ca2ed4bd54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaedba72e114673fe8d4c223b6a258c50e"><td class="memItemLeft" align="right" valign="top"><a id="gaedba72e114673fe8d4c223b6a258c50e"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1for__each__fn.html">for_each_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>for_each</b> {}</td></tr>
-<tr class="separator:gaedba72e114673fe8d4c223b6a258c50e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaca0e33d5893c3aa58b1639465b5eb5cc"><td class="memItemLeft" align="right" valign="top"><a id="gaca0e33d5893c3aa58b1639465b5eb5cc"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1filter__fn.html">filter_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>filter</b> {}</td></tr>
+<tr class="separator:gaca0e33d5893c3aa58b1639465b5eb5cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab12871af07cd4145c4d749a3bb7d16c3"><td class="memItemLeft" align="right" valign="top"><a id="gab12871af07cd4145c4d749a3bb7d16c3"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1for__each__fn.html">for_each_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>for_each</b> {}</td></tr>
+<tr class="separator:gab12871af07cd4145c4d749a3bb7d16c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae720f3d0617ac5c6459732daf69b8d1d"><td class="memItemLeft" align="right" valign="top"><a id="gae720f3d0617ac5c6459732daf69b8d1d"></a>
 constexpr <a class="el" href="structranges_1_1views_1_1generate__fn.html">generate_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>generate</b> {}</td></tr>
 <tr class="separator:gae720f3d0617ac5c6459732daf69b8d1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -678,36 +684,36 @@ constexpr <a class="el" href="structranges_1_1views_1_1generate__n__fn.html">gen
 <tr class="memitem:ga2ea182045e584ca4c06e8a904ccd2fae"><td class="memItemLeft" align="right" valign="top"><a id="ga2ea182045e584ca4c06e8a904ccd2fae"></a>
 constexpr <a class="el" href="structranges_1_1getlines__fn.html">getlines_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::getlines</b> {}</td></tr>
 <tr class="separator:ga2ea182045e584ca4c06e8a904ccd2fae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0d600dbaa768aadc9abc773d3b3e647a"><td class="memItemLeft" align="right" valign="top"><a id="ga0d600dbaa768aadc9abc773d3b3e647a"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1group__by__fn.html">group_by_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>group_by</b> {}</td></tr>
-<tr class="separator:ga0d600dbaa768aadc9abc773d3b3e647a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad4be3dea11546f4876d9273a2e3203fa"><td class="memItemLeft" align="right" valign="top"><a id="gad4be3dea11546f4876d9273a2e3203fa"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1group__by__fn.html">group_by_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>group_by</b> {}</td></tr>
+<tr class="separator:gad4be3dea11546f4876d9273a2e3203fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaaca0e15912758f80b7c190505d81c30d"><td class="memItemLeft" align="right" valign="top"><a id="gaaca0e15912758f80b7c190505d81c30d"></a>
 constexpr <a class="el" href="structranges_1_1views_1_1indices__fn.html">indices_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>indices</b> {}</td></tr>
 <tr class="separator:gaaca0e15912758f80b7c190505d81c30d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4c9cde279f55148f041a04edca798bc7"><td class="memItemLeft" align="right" valign="top"><a id="ga4c9cde279f55148f041a04edca798bc7"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1intersperse__fn.html">intersperse_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>intersperse</b> {}</td></tr>
-<tr class="separator:ga4c9cde279f55148f041a04edca798bc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga048b9cc897da0cd63eb2a5eb615f5a0a"><td class="memItemLeft" align="right" valign="top"><a id="ga048b9cc897da0cd63eb2a5eb615f5a0a"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1intersperse__fn.html">intersperse_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>intersperse</b> {}</td></tr>
+<tr class="separator:ga048b9cc897da0cd63eb2a5eb615f5a0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga15d41194dbfba0159623be1229d76e66"><td class="memItemLeft" align="right" valign="top"><a id="ga15d41194dbfba0159623be1229d76e66"></a>
 constexpr <a class="el" href="structranges_1_1views_1_1ints__fn.html">ints_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ints</b> {}</td></tr>
 <tr class="separator:ga15d41194dbfba0159623be1229d76e66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1e31a3eb3ed74b4f10f38cbce9e99690"><td class="memItemLeft" align="right" valign="top"><a id="ga1e31a3eb3ed74b4f10f38cbce9e99690"></a>
 constexpr <a class="el" href="structranges_1_1views_1_1iota__fn.html">iota_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>iota</b> {}</td></tr>
 <tr class="separator:ga1e31a3eb3ed74b4f10f38cbce9e99690"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga742b6c79ab473d03086a66be25f13732"><td class="memItemLeft" align="right" valign="top"><a id="ga742b6c79ab473d03086a66be25f13732"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1iter__take__while__fn.html">iter_take_while_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>iter_take_while</b> {}</td></tr>
-<tr class="separator:ga742b6c79ab473d03086a66be25f13732"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3323e895c23aa784b33d68657fb80e6d"><td class="memItemLeft" align="right" valign="top"><a id="ga3323e895c23aa784b33d68657fb80e6d"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1iter__transform__fn.html">iter_transform_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>iter_transform</b> {}</td></tr>
-<tr class="separator:ga3323e895c23aa784b33d68657fb80e6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga80e09922957f470e1cb660e902f50535"><td class="memItemLeft" align="right" valign="top"><a id="ga80e09922957f470e1cb660e902f50535"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1iter__take__while__fn.html">iter_take_while_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>iter_take_while</b> {}</td></tr>
+<tr class="separator:ga80e09922957f470e1cb660e902f50535"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeec371e11eea32b61376ec0230ab28ef"><td class="memItemLeft" align="right" valign="top"><a id="gaeec371e11eea32b61376ec0230ab28ef"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1iter__transform__fn.html">iter_transform_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>iter_transform</b> {}</td></tr>
+<tr class="separator:gaeec371e11eea32b61376ec0230ab28ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5830581adff4ebec57b8ab90e14b8a9f"><td class="memItemLeft" align="right" valign="top"><a id="ga5830581adff4ebec57b8ab90e14b8a9f"></a>
 constexpr <a class="el" href="structranges_1_1views_1_1iter__zip__with__fn.html">iter_zip_with_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>iter_zip_with</b> {}</td></tr>
 <tr class="separator:ga5830581adff4ebec57b8ab90e14b8a9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4c265de67279f05d48f0306864417660"><td class="memItemLeft" align="right" valign="top"><a id="ga4c265de67279f05d48f0306864417660"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1join__fn.html">join_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>join</b> {}</td></tr>
-<tr class="separator:ga4c265de67279f05d48f0306864417660"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7bd0b044dfb3cdb0f682777c05ae1aec"><td class="memItemLeft" align="right" valign="top"><a id="ga7bd0b044dfb3cdb0f682777c05ae1aec"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1keys__fn.html">keys_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>keys</b> {}</td></tr>
-<tr class="separator:ga7bd0b044dfb3cdb0f682777c05ae1aec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga946b530aea0753ae456a3ebf49bb8b29"><td class="memItemLeft" align="right" valign="top"><a id="ga946b530aea0753ae456a3ebf49bb8b29"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1view__closure.html">view_closure</a>&lt; <a class="el" href="structranges_1_1views_1_1join__fn.html">join_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>join</b> {}</td></tr>
+<tr class="separator:ga946b530aea0753ae456a3ebf49bb8b29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac091701b96f2cf2c55819c60de723eb2"><td class="memItemLeft" align="right" valign="top"><a id="gac091701b96f2cf2c55819c60de723eb2"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1view__closure.html">view_closure</a>&lt; <a class="el" href="structranges_1_1views_1_1keys__fn.html">keys_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>keys</b> {}</td></tr>
+<tr class="separator:gac091701b96f2cf2c55819c60de723eb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaac12c9e812712e88ae59d97209d8dc78"><td class="memItemLeft" align="right" valign="top"><a id="gaac12c9e812712e88ae59d97209d8dc78"></a>
 constexpr <a class="el" href="structranges_1_1lazy__yield__if__fn.html">lazy_yield_if_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>lazy_yield_if</b> {}</td></tr>
 <tr class="separator:gaac12c9e812712e88ae59d97209d8dc78"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -717,110 +723,110 @@ constexpr <a class="el" href="structranges_1_1views_1_1linear__distribute__fn.ht
 <tr class="memitem:ga22ce4fbbb34a271ad059e13c5a21c9ac"><td class="memItemLeft" align="right" valign="top"><a id="ga22ce4fbbb34a271ad059e13c5a21c9ac"></a>
 constexpr <a class="el" href="structranges_1_1make__subrange__fn.html">make_subrange_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>make_subrange</b> {}</td></tr>
 <tr class="separator:ga22ce4fbbb34a271ad059e13c5a21c9ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2880c61d0838571249789dc49a862896"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1make__view__fn.html">make_view_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga2880c61d0838571249789dc49a862896">ranges::make_view</a> {}</td></tr>
-<tr class="separator:ga2880c61d0838571249789dc49a862896"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8fe1677d2220fffd7220b42a4a595a08"><td class="memItemLeft" align="right" valign="top"><a id="ga8fe1677d2220fffd7220b42a4a595a08"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1move__fn.html">move_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>move</b> {}</td></tr>
-<tr class="separator:ga8fe1677d2220fffd7220b42a4a595a08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab06caa33316dd3988b47c5b27d3db3ce"><td class="memItemLeft" align="right" valign="top"><a id="gab06caa33316dd3988b47c5b27d3db3ce"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1partial__sum__fn.html">partial_sum_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>partial_sum</b> {}</td></tr>
-<tr class="separator:gab06caa33316dd3988b47c5b27d3db3ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafe80f89a7eb4e07a5eae1c3bc0854788"><td class="memItemLeft" align="right" valign="top"><a id="gafe80f89a7eb4e07a5eae1c3bc0854788"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1ref__fn.html">ref_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ref</b> {}</td></tr>
-<tr class="separator:gafe80f89a7eb4e07a5eae1c3bc0854788"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1acbc31ff4f0b89c9a1ac1e629f3c88c"><td class="memItemLeft" align="right" valign="top"><a id="ga1acbc31ff4f0b89c9a1ac1e629f3c88c"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1remove__fn.html">remove_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>remove</b> {}</td></tr>
-<tr class="separator:ga1acbc31ff4f0b89c9a1ac1e629f3c88c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5f1d41c9939e553a623de92662acbaf5"><td class="memItemLeft" align="right" valign="top"><a id="ga5f1d41c9939e553a623de92662acbaf5"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1remove__if__fn.html">remove_if_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>remove_if</b> {}</td></tr>
-<tr class="separator:ga5f1d41c9939e553a623de92662acbaf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga214da59baf075118417256e2f9ce5d9b"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1make__view__closure__fn.html">make_view_closure_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga214da59baf075118417256e2f9ce5d9b">ranges::make_view_closure</a> {}</td></tr>
+<tr class="separator:ga214da59baf075118417256e2f9ce5d9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga926b4c0f2dff9fbbcbc21c791c25e2c9"><td class="memItemLeft" align="right" valign="top"><a id="ga926b4c0f2dff9fbbcbc21c791c25e2c9"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1view__closure.html">view_closure</a>&lt; <a class="el" href="structranges_1_1views_1_1move__fn.html">move_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>move</b> {}</td></tr>
+<tr class="separator:ga926b4c0f2dff9fbbcbc21c791c25e2c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6153357c947e25d9732079a1bec8ac0d"><td class="memItemLeft" align="right" valign="top"><a id="ga6153357c947e25d9732079a1bec8ac0d"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1view__closure.html">view_closure</a>&lt; <a class="el" href="structranges_1_1views_1_1partial__sum__fn.html">partial_sum_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>partial_sum</b> {}</td></tr>
+<tr class="separator:ga6153357c947e25d9732079a1bec8ac0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga022914abbffbe15fdfa4b134a40356d1"><td class="memItemLeft" align="right" valign="top"><a id="ga022914abbffbe15fdfa4b134a40356d1"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1ref__fn.html">ref_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ref</b> {}</td></tr>
+<tr class="separator:ga022914abbffbe15fdfa4b134a40356d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga79dd50f8b3f3c0b0ac22a00b5938ccda"><td class="memItemLeft" align="right" valign="top"><a id="ga79dd50f8b3f3c0b0ac22a00b5938ccda"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1remove__fn.html">remove_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>remove</b> {}</td></tr>
+<tr class="separator:ga79dd50f8b3f3c0b0ac22a00b5938ccda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7a27357aa082ce856413b8f62f8e23ce"><td class="memItemLeft" align="right" valign="top"><a id="ga7a27357aa082ce856413b8f62f8e23ce"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1remove__if__fn.html">remove_if_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>remove_if</b> {}</td></tr>
+<tr class="separator:ga7a27357aa082ce856413b8f62f8e23ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaaac9f5d918decc35d703b735bd8b348b"><td class="memItemLeft" align="right" valign="top"><a id="gaaac9f5d918decc35d703b735bd8b348b"></a>
 constexpr <a class="el" href="structranges_1_1views_1_1repeat__fn.html">repeat_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>repeat</b> {}</td></tr>
 <tr class="separator:gaaac9f5d918decc35d703b735bd8b348b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga56154eba3d4cb2b95babe38715080b52"><td class="memItemLeft" align="right" valign="top"><a id="ga56154eba3d4cb2b95babe38715080b52"></a>
 constexpr <a class="el" href="structranges_1_1views_1_1repeat__n__fn.html">repeat_n_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>repeat_n</b> {}</td></tr>
 <tr class="separator:ga56154eba3d4cb2b95babe38715080b52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabfa1359f2722d0882770e893de7276ca"><td class="memItemLeft" align="right" valign="top"><a id="gabfa1359f2722d0882770e893de7276ca"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1replace__fn.html">replace_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>replace</b> {}</td></tr>
-<tr class="separator:gabfa1359f2722d0882770e893de7276ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga606f4de6ac61e8af1ae07ba8d3cbc7c0"><td class="memItemLeft" align="right" valign="top"><a id="ga606f4de6ac61e8af1ae07ba8d3cbc7c0"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1replace__if__fn.html">replace_if_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>replace_if</b> {}</td></tr>
-<tr class="separator:ga606f4de6ac61e8af1ae07ba8d3cbc7c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadfd7801c11b7066ffc1ccd89b53b35a5"><td class="memItemLeft" align="right" valign="top"><a id="gadfd7801c11b7066ffc1ccd89b53b35a5"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1reverse__fn.html">reverse_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>reverse</b> {}</td></tr>
-<tr class="separator:gadfd7801c11b7066ffc1ccd89b53b35a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacf5ae519e7589973c7d7bd187a4c9fc3"><td class="memItemLeft" align="right" valign="top"><a id="gacf5ae519e7589973c7d7bd187a4c9fc3"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1sample__fn.html">sample_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sample</b> {}</td></tr>
-<tr class="separator:gacf5ae519e7589973c7d7bd187a4c9fc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9d4de92a0d095812bb08fbd6ccd4fa0f"><td class="memItemLeft" align="right" valign="top"><a id="ga9d4de92a0d095812bb08fbd6ccd4fa0f"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1set__difference__fn.html">set_difference_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>set_difference</b> {}</td></tr>
-<tr class="separator:ga9d4de92a0d095812bb08fbd6ccd4fa0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga212f25ed9d6e04ac422c9d2c4de09a6a"><td class="memItemLeft" align="right" valign="top"><a id="ga212f25ed9d6e04ac422c9d2c4de09a6a"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1set__intersection__fn.html">set_intersection_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>set_intersection</b> {}</td></tr>
-<tr class="separator:ga212f25ed9d6e04ac422c9d2c4de09a6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab52578128e947c0cea6ab6c94464a0bb"><td class="memItemLeft" align="right" valign="top"><a id="gab52578128e947c0cea6ab6c94464a0bb"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1set__symmetric__difference__fn.html">set_symmetric_difference_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>set_symmetric_difference</b> {}</td></tr>
-<tr class="separator:gab52578128e947c0cea6ab6c94464a0bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad45968db49aeb62b063c1d3930c7823b"><td class="memItemLeft" align="right" valign="top"><a id="gad45968db49aeb62b063c1d3930c7823b"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1set__union__fn.html">set_union_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>set_union</b> {}</td></tr>
-<tr class="separator:gad45968db49aeb62b063c1d3930c7823b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga36f11014145a8a566055713a11a30071"><td class="memItemLeft" align="right" valign="top"><a id="ga36f11014145a8a566055713a11a30071"></a>
-constexpr <a class="el" href="structranges_1_1experimental_1_1views_1_1shared__fn.html">shared_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>shared</b> {}</td></tr>
-<tr class="separator:ga36f11014145a8a566055713a11a30071"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacb2085c45be47b2880dc8cf996de4dcc"><td class="memItemLeft" align="right" valign="top"><a id="gacb2085c45be47b2880dc8cf996de4dcc"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1replace__fn.html">replace_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>replace</b> {}</td></tr>
+<tr class="separator:gacb2085c45be47b2880dc8cf996de4dcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6887d7ab1dacf5c1c2b1a50d3da3dfa1"><td class="memItemLeft" align="right" valign="top"><a id="ga6887d7ab1dacf5c1c2b1a50d3da3dfa1"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1replace__if__fn.html">replace_if_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>replace_if</b> {}</td></tr>
+<tr class="separator:ga6887d7ab1dacf5c1c2b1a50d3da3dfa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga578f36e681a1a90e01f35c461e8b93ee"><td class="memItemLeft" align="right" valign="top"><a id="ga578f36e681a1a90e01f35c461e8b93ee"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1view__closure.html">view_closure</a>&lt; <a class="el" href="structranges_1_1views_1_1reverse__fn.html">reverse_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>reverse</b> {}</td></tr>
+<tr class="separator:ga578f36e681a1a90e01f35c461e8b93ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac987b9f36cdeb574cee6966ada014149"><td class="memItemLeft" align="right" valign="top"><a id="gac987b9f36cdeb574cee6966ada014149"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1sample__fn.html">sample_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sample</b> {}</td></tr>
+<tr class="separator:gac987b9f36cdeb574cee6966ada014149"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d39d794406321ae9166f3dfd9cada3b"><td class="memItemLeft" align="right" valign="top"><a id="ga8d39d794406321ae9166f3dfd9cada3b"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1set__difference__fn.html">set_difference_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>set_difference</b> {}</td></tr>
+<tr class="separator:ga8d39d794406321ae9166f3dfd9cada3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga227ede7a259f52cf59ad91944664681a"><td class="memItemLeft" align="right" valign="top"><a id="ga227ede7a259f52cf59ad91944664681a"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1set__intersection__fn.html">set_intersection_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>set_intersection</b> {}</td></tr>
+<tr class="separator:ga227ede7a259f52cf59ad91944664681a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf23b626af84b118d808ea9870cbf2421"><td class="memItemLeft" align="right" valign="top"><a id="gaf23b626af84b118d808ea9870cbf2421"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1set__symmetric__difference__fn.html">set_symmetric_difference_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>set_symmetric_difference</b> {}</td></tr>
+<tr class="separator:gaf23b626af84b118d808ea9870cbf2421"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2b6d44967bb351e5dae16f9ef7daa7ce"><td class="memItemLeft" align="right" valign="top"><a id="ga2b6d44967bb351e5dae16f9ef7daa7ce"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1set__union__fn.html">set_union_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>set_union</b> {}</td></tr>
+<tr class="separator:ga2b6d44967bb351e5dae16f9ef7daa7ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac111c43ecbe04855776dad8c41bfe5fd"><td class="memItemLeft" align="right" valign="top"><a id="gac111c43ecbe04855776dad8c41bfe5fd"></a>
+constexpr <a class="el" href="structranges_1_1experimental_1_1shared__closure.html">shared_closure</a>&lt; <a class="el" href="structranges_1_1experimental_1_1views_1_1shared__fn.html">shared_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>shared</b> {}</td></tr>
+<tr class="separator:gac111c43ecbe04855776dad8c41bfe5fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga092ae11e5c1acfb34552e2030cd8ad80"><td class="memItemLeft" align="right" valign="top"><a id="ga092ae11e5c1acfb34552e2030cd8ad80"></a>
 concept&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::simple_view_</b> = CPP_PP_CAT( CPP_PP_DEF_IMPL_IS_PAREN_, 0 )( view_&lt;Rng&gt; &amp;&amp; range&lt;Rng const&gt; &amp;&amp; same_as&lt;iterator_t&lt;Rng&gt; )( view_&lt;Rng&gt; &amp;&amp; range&lt;Rng const&gt; &amp;&amp; same_as&lt;iterator_t&lt;Rng&gt;, iterator_t&lt;Rng const&gt;&gt; &amp;&amp; same_as&lt;sentinel_t&lt;Rng&gt;, sentinel_t&lt;Rng const&gt;&gt; )</td></tr>
 <tr class="separator:ga092ae11e5c1acfb34552e2030cd8ad80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa83e29f21f6c87865dbe7738bbc55ead"><td class="memItemLeft" align="right" valign="top"><a id="gaa83e29f21f6c87865dbe7738bbc55ead"></a>
 constexpr <a class="el" href="structranges_1_1views_1_1single__fn.html">single_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>single</b> {}</td></tr>
 <tr class="separator:gaa83e29f21f6c87865dbe7738bbc55ead"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae785d6a4cb34267a28911d45a3162b1c"><td class="memItemLeft" align="right" valign="top"><a id="gae785d6a4cb34267a28911d45a3162b1c"></a>
-constexpr view&lt; slice_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>slice</b> {}</td></tr>
-<tr class="separator:gae785d6a4cb34267a28911d45a3162b1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga75e24a73eb4b8b6174525e41b6604b1e"><td class="memItemLeft" align="right" valign="top"><a id="ga75e24a73eb4b8b6174525e41b6604b1e"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1sliding__fn.html">sliding_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sliding</b> {}</td></tr>
-<tr class="separator:ga75e24a73eb4b8b6174525e41b6604b1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2a9426be78e157c731f4b671f6838848"><td class="memItemLeft" align="right" valign="top"><a id="ga2a9426be78e157c731f4b671f6838848"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1split__fn.html">split_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>split</b> {}</td></tr>
-<tr class="separator:ga2a9426be78e157c731f4b671f6838848"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3a4f949dfb654e884d6b05de242561cd"><td class="memItemLeft" align="right" valign="top"><a id="ga3a4f949dfb654e884d6b05de242561cd"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1split__when__fn.html">split_when_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>split_when</b> {}</td></tr>
-<tr class="separator:ga3a4f949dfb654e884d6b05de242561cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga13a4c7717baa2c2b20c71d849ddc97dc"><td class="memItemLeft" align="right" valign="top"><a id="ga13a4c7717baa2c2b20c71d849ddc97dc"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1stride__fn.html">stride_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>stride</b> {}</td></tr>
-<tr class="separator:ga13a4c7717baa2c2b20c71d849ddc97dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf4b838c858ab465d88a956ae30fa6f15"><td class="memItemLeft" align="right" valign="top"><a id="gaf4b838c858ab465d88a956ae30fa6f15"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1tail__fn.html">tail_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>tail</b> {}</td></tr>
-<tr class="separator:gaf4b838c858ab465d88a956ae30fa6f15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga166d16ef6a4f0decc9eaf5f427e67e0b"><td class="memItemLeft" align="right" valign="top"><a id="ga166d16ef6a4f0decc9eaf5f427e67e0b"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1take__fn.html">take_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>take</b> {}</td></tr>
-<tr class="separator:ga166d16ef6a4f0decc9eaf5f427e67e0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9fff202ec2acd2e4374dec410109e9e4"><td class="memItemLeft" align="right" valign="top"><a id="ga9fff202ec2acd2e4374dec410109e9e4"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1take__exactly__fn.html">take_exactly_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>take_exactly</b> {}</td></tr>
-<tr class="separator:ga9fff202ec2acd2e4374dec410109e9e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab74110be2536c34936a7a9c7fc110ede"><td class="memItemLeft" align="right" valign="top"><a id="gab74110be2536c34936a7a9c7fc110ede"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1take__last__fn.html">take_last_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>take_last</b> {}</td></tr>
-<tr class="separator:gab74110be2536c34936a7a9c7fc110ede"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga091928908f98dd8b15a9b918532bc87d"><td class="memItemLeft" align="right" valign="top"><a id="ga091928908f98dd8b15a9b918532bc87d"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1take__while__fn.html">take_while_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>take_while</b> {}</td></tr>
-<tr class="separator:ga091928908f98dd8b15a9b918532bc87d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae62445651e39a0266e713cd25abe01eb"><td class="memItemLeft" align="right" valign="top"><a id="gae62445651e39a0266e713cd25abe01eb"></a>
+constexpr slice_fn&#160;</td><td class="memItemRight" valign="bottom"><b>slice</b> {}</td></tr>
+<tr class="separator:gae62445651e39a0266e713cd25abe01eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad47ecfc90eddad0f3e605925c9414d4b"><td class="memItemLeft" align="right" valign="top"><a id="gad47ecfc90eddad0f3e605925c9414d4b"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1sliding__fn.html">sliding_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sliding</b> {}</td></tr>
+<tr class="separator:gad47ecfc90eddad0f3e605925c9414d4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab0bc54ff2309365ea40dfd787f666154"><td class="memItemLeft" align="right" valign="top"><a id="gab0bc54ff2309365ea40dfd787f666154"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1split__fn.html">split_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>split</b> {}</td></tr>
+<tr class="separator:gab0bc54ff2309365ea40dfd787f666154"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga37f19f9632b24e8631495a25274b3dc7"><td class="memItemLeft" align="right" valign="top"><a id="ga37f19f9632b24e8631495a25274b3dc7"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1split__when__fn.html">split_when_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>split_when</b> {}</td></tr>
+<tr class="separator:ga37f19f9632b24e8631495a25274b3dc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0d796db202768b79dcd19d5de371e540"><td class="memItemLeft" align="right" valign="top"><a id="ga0d796db202768b79dcd19d5de371e540"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1stride__fn.html">stride_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>stride</b> {}</td></tr>
+<tr class="separator:ga0d796db202768b79dcd19d5de371e540"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga48db22d80e721563fb5de551141b9e74"><td class="memItemLeft" align="right" valign="top"><a id="ga48db22d80e721563fb5de551141b9e74"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1view__closure.html">view_closure</a>&lt; <a class="el" href="structranges_1_1views_1_1tail__fn.html">tail_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>tail</b> {}</td></tr>
+<tr class="separator:ga48db22d80e721563fb5de551141b9e74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4ce96417813c5d1d7da9078e2ffa17ac"><td class="memItemLeft" align="right" valign="top"><a id="ga4ce96417813c5d1d7da9078e2ffa17ac"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1take__fn.html">take_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>take</b> {}</td></tr>
+<tr class="separator:ga4ce96417813c5d1d7da9078e2ffa17ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga985f3b8edb5c758399824265596a1c2a"><td class="memItemLeft" align="right" valign="top"><a id="ga985f3b8edb5c758399824265596a1c2a"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1take__exactly__fn.html">take_exactly_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>take_exactly</b> {}</td></tr>
+<tr class="separator:ga985f3b8edb5c758399824265596a1c2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga32faab4f29d15d569cdbd7d8b5beea13"><td class="memItemLeft" align="right" valign="top"><a id="ga32faab4f29d15d569cdbd7d8b5beea13"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1take__last__fn.html">take_last_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>take_last</b> {}</td></tr>
+<tr class="separator:ga32faab4f29d15d569cdbd7d8b5beea13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5f98c5a047c468b633113f29d8ead005"><td class="memItemLeft" align="right" valign="top"><a id="ga5f98c5a047c468b633113f29d8ead005"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1take__while__fn.html">take_while_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>take_while</b> {}</td></tr>
+<tr class="separator:ga5f98c5a047c468b633113f29d8ead005"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae5e14cb6ef78d49768fa60384ad3103e"><td class="memItemLeft" align="right" valign="top"><a id="gae5e14cb6ef78d49768fa60384ad3103e"></a>
 constexpr <a class="el" href="structranges_1_1views_1_1tokenize__fn.html">tokenize_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>tokenize</b> {}</td></tr>
 <tr class="separator:gae5e14cb6ef78d49768fa60384ad3103e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga333737853b64c286fdbd7a22294c06e6"><td class="memItemLeft" align="right" valign="top"><a id="ga333737853b64c286fdbd7a22294c06e6"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1transform__fn.html">transform_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>transform</b> {}</td></tr>
-<tr class="separator:ga333737853b64c286fdbd7a22294c06e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafbd7956a2809c8ab1c7de1733ee05fc5"><td class="memItemLeft" align="right" valign="top"><a id="gafbd7956a2809c8ab1c7de1733ee05fc5"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1trim__fn.html">trim_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>trim</b> {}</td></tr>
-<tr class="separator:gafbd7956a2809c8ab1c7de1733ee05fc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga47043cf83ee5b7323752150c5119998d"><td class="memItemLeft" align="right" valign="top"><a id="ga47043cf83ee5b7323752150c5119998d"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1transform__fn.html">transform_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>transform</b> {}</td></tr>
+<tr class="separator:ga47043cf83ee5b7323752150c5119998d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga202b650cf86d0d5fca3f27760d545bf9"><td class="memItemLeft" align="right" valign="top"><a id="ga202b650cf86d0d5fca3f27760d545bf9"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1trim__fn.html">trim_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>trim</b> {}</td></tr>
+<tr class="separator:ga202b650cf86d0d5fca3f27760d545bf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1cf1b43e89c8951a11a6298a5a2efce3"><td class="memItemLeft" align="right" valign="top"><a id="ga1cf1b43e89c8951a11a6298a5a2efce3"></a>
 constexpr <a class="el" href="structranges_1_1views_1_1unbounded__fn.html">unbounded_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>unbounded</b> {}</td></tr>
 <tr class="separator:ga1cf1b43e89c8951a11a6298a5a2efce3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8dc27e8047a3f3d2c455bb6806ae0142"><td class="memItemLeft" align="right" valign="top"><a id="ga8dc27e8047a3f3d2c455bb6806ae0142"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1unique__fn.html">unique_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>unique</b> {}</td></tr>
-<tr class="separator:ga8dc27e8047a3f3d2c455bb6806ae0142"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga746ada5f255aabfe2c636767e51eb43b"><td class="memItemLeft" align="right" valign="top"><a id="ga746ada5f255aabfe2c636767e51eb43b"></a>
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1values__fn.html">values_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>values</b> {}</td></tr>
-<tr class="separator:ga746ada5f255aabfe2c636767e51eb43b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae563989280d90512478ca96ca8ceca67"><td class="memItemLeft" align="right" valign="top"><a id="gae563989280d90512478ca96ca8ceca67"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1view__closure.html">view_closure</a>&lt; <a class="el" href="structranges_1_1views_1_1unique__fn.html">unique_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>unique</b> {}</td></tr>
+<tr class="separator:gae563989280d90512478ca96ca8ceca67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga617e4cc379b56d9ddba2b2607aefdf86"><td class="memItemLeft" align="right" valign="top"><a id="ga617e4cc379b56d9ddba2b2607aefdf86"></a>
+constexpr <a class="el" href="structranges_1_1views_1_1view__closure.html">view_closure</a>&lt; <a class="el" href="structranges_1_1views_1_1values__fn.html">values_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>values</b> {}</td></tr>
+<tr class="separator:ga617e4cc379b56d9ddba2b2607aefdf86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga058df0f7f842374ffc652bd93bcb6477"><td class="memItemLeft" align="right" valign="top"><a id="ga058df0f7f842374ffc652bd93bcb6477"></a>
 constexpr <a class="el" href="structranges_1_1yield__fn.html">yield_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>yield</b> {}</td></tr>
 <tr class="separator:ga058df0f7f842374ffc652bd93bcb6477"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -844,8 +850,8 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::intersperse
 <tr class="separator:gabc733930d0b9e508f4940fee658e07d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="ga2880c61d0838571249789dc49a862896"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2880c61d0838571249789dc49a862896">&#9670;&nbsp;</a></span>make_view</h2>
+<a id="ga214da59baf075118417256e2f9ce5d9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga214da59baf075118417256e2f9ce5d9b">&#9670;&nbsp;</a></span>make_view_closure</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -854,7 +860,7 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::intersperse
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="structranges_1_1make__view__fn.html">make_view_fn</a> ranges::make_view {}</td>
+          <td class="memname">constexpr <a class="el" href="structranges_1_1make__view__closure__fn.html">make_view_closure_fn</a> ranges::make_view_closure {}</td>
         </tr>
       </table>
   </td>
@@ -865,7 +871,7 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::intersperse
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="view_2view_8hpp.html">range/v3/view/view.hpp</a>&gt;</code></p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structranges_1_1make__view__fn.html">make_view_fn</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>make_view_fn </dd></dl>
 
 </div>
 </div>

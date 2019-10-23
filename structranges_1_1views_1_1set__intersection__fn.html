@@ -104,19 +104,35 @@ $(document).ready(function(){initNavTree('structranges_1_1views_1_1set__intersec
 <div class="title">ranges::views::set_intersection_fn Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Inheritance diagram for ranges::views::set_intersection_fn:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+ <div class="center">
+  <img src="structranges_1_1views_1_1set__intersection__fn.png" usemap="#ranges::views::set_5Fintersection_5Ffn_map" alt=""/>
+  <map id="ranges::views::set_5Fintersection_5Ffn_map" name="ranges::views::set_5Fintersection_5Ffn_map">
+<area href="structranges_1_1views_1_1set__intersection__base__fn.html" alt="ranges::views::set_intersection_base_fn" shape="rect" coords="0,0,235,24"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="related"></a>
 Synopsis of methods</h2></td></tr>
-<tr class="memitem:ga212f25ed9d6e04ac422c9d2c4de09a6a"><td class="memItemLeft" align="right" valign="top">
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1set__intersection__fn.html">set_intersection_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>set_intersection</b> {}</td></tr>
-<tr class="separator:ga212f25ed9d6e04ac422c9d2c4de09a6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga227ede7a259f52cf59ad91944664681a"><td class="memItemLeft" align="right" valign="top">
+constexpr <a class="el" href="structranges_1_1views_1_1set__intersection__fn.html">set_intersection_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>set_intersection</b> {}</td></tr>
+<tr class="separator:ga227ede7a259f52cf59ad91944664681a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a12f9ecbaa0fb2489205adf23d9023724"><td class="memTemplParams" colspan="2"><a id="a12f9ecbaa0fb2489205adf23d9023724"></a>
+<tr class="memitem:a3538dda3d0d5d123103235c98ad3dd42"><td class="memTemplParams" colspan="2"><a id="a3538dda3d0d5d123103235c98ad3dd42"></a>
+template&lt;typename Rng2 , typename C  = less, typename P1  = identity, typename P2  = identity&gt; </td></tr>
+<tr class="memitem:a3538dda3d0d5d123103235c98ad3dd42"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng2 &amp;&amp;rng2, C &amp;&amp;pred=C{}, P1 proj1=P1{}, P2 proj2=P2{}) const requires viewable_range&lt; Rng2 &gt; &amp;&amp;input_range&lt; Rng2 &gt; &amp;&amp;(!range&lt; C &gt;)</td></tr>
+<tr class="separator:a3538dda3d0d5d123103235c98ad3dd42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_structranges_1_1views_1_1set__intersection__base__fn"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structranges_1_1views_1_1set__intersection__base__fn')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structranges_1_1views_1_1set__intersection__base__fn.html">ranges::views::set_intersection_base_fn</a></td></tr>
+<tr class="memitem:a22b6b757575b553beac35e7977876dca inherit pub_methods_structranges_1_1views_1_1set__intersection__base__fn"><td class="memTemplParams" colspan="2"><a id="a22b6b757575b553beac35e7977876dca"></a>
 template&lt;typename Rng1 , typename Rng2 , typename C  = less, typename P1  = identity, typename P2  = identity&gt; </td></tr>
-<tr class="memitem:a12f9ecbaa0fb2489205adf23d9023724"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng1 &amp;&amp;rng1, Rng2 &amp;&amp;rng2, C pred=C{}, P1 proj1=P1{}, P2 proj2=P2{}) const -&gt; set_intersection_view&lt; all_t&lt; Rng1 &gt;, all_t&lt; Rng2 &gt;, C, P1, P2 &gt; requires viewable_range&lt; Rng1 &gt; &amp;&amp;input_range&lt; Rng1 &gt; &amp;&amp;viewable_range&lt; Rng2 &gt; &amp;&amp;input_range&lt; Rng2 &gt; &amp;&amp;indirect_relation&lt; C, projected&lt; iterator_t&lt; Rng1 &gt;, P1 &gt;, projected&lt; iterator_t&lt; Rng2 &gt;, P2 &gt;&gt;</td></tr>
-<tr class="separator:a12f9ecbaa0fb2489205adf23d9023724"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22b6b757575b553beac35e7977876dca inherit pub_methods_structranges_1_1views_1_1set__intersection__base__fn"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng1 &amp;&amp;rng1, Rng2 &amp;&amp;rng2, C pred=C{}, P1 proj1=P1{}, P2 proj2=P2{}) const -&gt; set_intersection_view&lt; all_t&lt; Rng1 &gt;, all_t&lt; Rng2 &gt;, C, P1, P2 &gt; requires viewable_range&lt; Rng1 &gt; &amp;&amp;input_range&lt; Rng1 &gt; &amp;&amp;viewable_range&lt; Rng2 &gt; &amp;&amp;input_range&lt; Rng2 &gt; &amp;&amp;indirect_relation&lt; C, projected&lt; iterator_t&lt; Rng1 &gt;, P1 &gt;, projected&lt; iterator_t&lt; Rng2 &gt;, P2 &gt;&gt;</td></tr>
+<tr class="separator:a22b6b757575b553beac35e7977876dca inherit pub_methods_structranges_1_1views_1_1set__intersection__base__fn"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

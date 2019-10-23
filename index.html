@@ -162,8 +162,8 @@ Supported Compilers</h2>
 <hr  />
 <p> The code is known to work on the following compilers:</p>
 <ul>
-<li>clang 3.6.2</li>
-<li>GCC 5.0.2</li>
+<li>clang 3.9</li>
+<li>GCC 6.5</li>
 <li>MSVC VS2017 15.9 (<code>_MSC_VER &gt;= 1916</code>), with <code>/std:c++17 /permissive- /experimental:preprocessor</code></li>
 </ul>
 <h1><a class="anchor" id="tutorial-quick-start"></a>
@@ -183,14 +183,14 @@ Quick Start</h1>
 <p>For instance, the below uses <em>views</em> to filter a container using a predicate and transform the resulting range with a function. Note that the underlying data is <code>const</code> and is not mutated by the views.</p>
 <div class="fragment"><div class="line">std::vector&lt;int&gt; <span class="keyword">const</span> vi{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};</div>
 <div class="line"><span class="keyword">using namespace </span>ranges;</div>
-<div class="line"><span class="keyword">auto</span> rng = vi | <a class="code" href="group__group-actions.html#ga8fa4d6429c889af4a6b67b2a90cb93a0">views::remove_if</a>([](<span class="keywordtype">int</span> i){ <span class="keywordflow">return</span> i % 2 == 1; })</div>
+<div class="line"><span class="keyword">auto</span> rng = vi | <a class="code" href="group__group-algorithms.html#gad5564c4ecebc4e4ae041229d891f1491">views::remove_if</a>([](<span class="keywordtype">int</span> i){ <span class="keywordflow">return</span> i % 2 == 1; })</div>
 <div class="line">              | <a class="code" href="group__transformation.html#ga24923725e5aa3cc7ee73367935437a1c">views::transform</a>([](<span class="keywordtype">int</span> i){ <span class="keywordflow">return</span> std::to_string(i); });</div>
 <div class="line"><span class="comment">// rng == {&quot;2&quot;,&quot;4&quot;,&quot;6&quot;,&quot;8&quot;,&quot;10&quot;};</span></div>
 </div><!-- fragment --><p>In the code above, <code>rng</code> simply stores a reference to the underlying data and the filter and transformation functions. No work is done until <code>rng</code> is iterated.</p>
 <p>In contrast, <em>actions</em> do their work eagerly, but they also compose. Consider the code below, which reads some data into a vector, sorts it, and makes it unique.</p>
 <div class="fragment"><div class="line"><span class="keyword">extern</span> std::vector&lt;int&gt; read_data();</div>
 <div class="line"><span class="keyword">using namespace </span>ranges;</div>
-<div class="line">std::vector&lt;int&gt; vi = read_data() | <a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">actions::sort</a> | <a class="code" href="group__transformation.html#ga851cff9736691f16f0899eac04839d58">actions::unique</a>;</div>
+<div class="line">std::vector&lt;int&gt; vi = read_data() | <a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">actions::sort</a> | <a class="code" href="action_2unique_8hpp.html#a2df52ed5e91e92ea7d2d7b1ed5408fcf">actions::unique</a>;</div>
 </div><!-- fragment --><p>Unlike views, with actions each step in the pipeline (<code>actions::sort</code> and <code>actions::unique</code>) accepts a container <em>by value</em>, mutates it in place, and returns it.</p>
 <p><b>Correctness</b></p>
 <p>Whether you are using views or actions, you are operating on data in a pure functional, declarative style. You rarely need to trouble yourself with iterators, although they are there under the covers should you need them.</p>
@@ -204,7 +204,7 @@ Views</h2>
 <p>Filter a container using a predicate and transform it.</p>
 <div class="fragment"><div class="line">std::vector&lt;int&gt; <span class="keyword">const</span> vi{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};</div>
 <div class="line"><span class="keyword">using namespace </span>ranges;</div>
-<div class="line"><span class="keyword">auto</span> rng = vi | <a class="code" href="group__group-actions.html#ga8fa4d6429c889af4a6b67b2a90cb93a0">views::remove_if</a>([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i % 2 == 1;})</div>
+<div class="line"><span class="keyword">auto</span> rng = vi | <a class="code" href="group__group-algorithms.html#gad5564c4ecebc4e4ae041229d891f1491">views::remove_if</a>([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i % 2 == 1;})</div>
 <div class="line">              | <a class="code" href="group__transformation.html#ga24923725e5aa3cc7ee73367935437a1c">views::transform</a>([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> std::to_string(i);});</div>
 <div class="line"><span class="comment">// rng == {&quot;2&quot;,&quot;4&quot;,&quot;6&quot;,&quot;8&quot;,&quot;10&quot;};</span></div>
 </div><!-- fragment --><p>Generate an infinite list of integers starting at 1, square them, take the first 10, and sum them:</p>
@@ -365,13 +365,13 @@ Actions</h2>
 <p>Read data into a vector, sort it, and make it unique.</p>
 <div class="fragment"><div class="line"><span class="keyword">extern</span> std::vector&lt;int&gt; read_data();</div>
 <div class="line"><span class="keyword">using namespace </span>ranges;</div>
-<div class="line">std::vector&lt;int&gt; vi = read_data() | <a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">actions::sort</a> | <a class="code" href="group__transformation.html#ga851cff9736691f16f0899eac04839d58">actions::unique</a>;</div>
+<div class="line">std::vector&lt;int&gt; vi = read_data() | <a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">actions::sort</a> | <a class="code" href="action_2unique_8hpp.html#a2df52ed5e91e92ea7d2d7b1ed5408fcf">actions::unique</a>;</div>
 </div><!-- fragment --><p>Do the same to a <code>vector</code> that already contains some data:</p>
-<div class="fragment"><div class="line">vi = <a class="code" href="group__group-utility.html#ga20b5b25347e7f8173b2118fdb5ea5f58">std::move</a>(vi) | <a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">actions::sort</a> | <a class="code" href="group__transformation.html#ga851cff9736691f16f0899eac04839d58">actions::unique</a>;</div>
+<div class="fragment"><div class="line">vi = <a class="code" href="group__group-utility.html#ga20b5b25347e7f8173b2118fdb5ea5f58">std::move</a>(vi) | <a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">actions::sort</a> | <a class="code" href="action_2unique_8hpp.html#a2df52ed5e91e92ea7d2d7b1ed5408fcf">actions::unique</a>;</div>
 </div><!-- fragment --><p>Mutate the container in-place:</p>
-<div class="fragment"><div class="line">vi |= <a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">actions::sort</a> | <a class="code" href="group__transformation.html#ga851cff9736691f16f0899eac04839d58">actions::unique</a>;</div>
+<div class="fragment"><div class="line">vi |= <a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">actions::sort</a> | <a class="code" href="action_2unique_8hpp.html#a2df52ed5e91e92ea7d2d7b1ed5408fcf">actions::unique</a>;</div>
 </div><!-- fragment --><p>Same as above, but with function-call syntax instead of pipe syntax:</p>
-<div class="fragment"><div class="line"><a class="code" href="group__transformation.html#ga851cff9736691f16f0899eac04839d58">actions::unique</a>(<a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">actions::sort</a>(vi));</div>
+<div class="fragment"><div class="line"><a class="code" href="action_2unique_8hpp.html#a2df52ed5e91e92ea7d2d7b1ed5408fcf">actions::unique</a>(<a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">actions::sort</a>(vi));</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
 List of range actions</h2>
 <p>Below is a list of the eager range combinators, or actions, that Range-v3 provides, and a blurb about how each is intended to be used.</p>
@@ -494,7 +494,7 @@ Create Custom Views with view_adaptor</h3>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> Rng, <span class="keyword">class</span> Fun&gt;</div>
-<div class="line">transform_view&lt;Rng, Fun&gt; <a class="code" href="group__group-actions.html#gaf9135baba87fb451e6e904428239ad19">transform</a>(Rng &amp;&amp; rng, Fun fun)</div>
+<div class="line">transform_view&lt;Rng, Fun&gt; <a class="code" href="group__transformation.html#ga24923725e5aa3cc7ee73367935437a1c">transform</a>(Rng &amp;&amp; rng, Fun fun)</div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordflow">return</span> {std::forward&lt;Rng&gt;(rng), <a class="code" href="group__group-utility.html#ga20b5b25347e7f8173b2118fdb5ea5f58">std::move</a>(fun)};</div>
 <div class="line">}</div>
@@ -502,7 +502,7 @@ Create Custom Views with view_adaptor</h3>
 <p>With <code>transform_view</code>, we can print out the first 20 squares:</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> main()</div>
 <div class="line">{</div>
-<div class="line">    <span class="keyword">auto</span> squares = <a class="code" href="group__group-actions.html#gaf9135baba87fb451e6e904428239ad19">::transform</a>(views::ints(1), [](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i*i;});</div>
+<div class="line">    <span class="keyword">auto</span> squares = <a class="code" href="group__transformation.html#ga24923725e5aa3cc7ee73367935437a1c">::transform</a>(views::ints(1), [](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i*i;});</div>
 <div class="line">    <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i : squares | views::take(20))</div>
 <div class="line">        std::cout &lt;&lt; i &lt;&lt; <span class="charliteral">&#39; &#39;</span>;</div>
 <div class="line">    std::cout &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
@@ -811,7 +811,6 @@ Range-v3 and the Future</h2>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="agroup__group-actions_html_gaf9135baba87fb451e6e904428239ad19"><div class="ttname"><a href="group__group-actions.html#gaf9135baba87fb451e6e904428239ad19">ranges::actions::transform_fn::transform</a></div><div class="ttdeci">constexpr action&lt; transform_fn &gt; transform</div><div class="ttdef"><b>Definition:</b> transform.hpp:59</div></div>
 <div class="ttc" id="agroup__runtime_html_ga8beaba5ae537715c97e180b05160cc03"><div class="ttname"><a href="group__runtime.html#ga8beaba5ae537715c97e180b05160cc03">meta::for_each</a></div><div class="ttdeci">constexpr auto &amp;&amp; for_each</div><div class="ttdoc">for_each(List, UnaryFunction) calls the UnaryFunction for each argument in the List.</div><div class="ttdef"><b>Definition:</b> meta.hpp:2844</div></div>
 <div class="ttc" id="agroup__list_html_gae64f0978e680ad1a96438c0756b4644d"><div class="ttname"><a href="group__list.html#gae64f0978e680ad1a96438c0756b4644d">meta::empty</a></div><div class="ttdeci">bool_&lt; 0==size&lt; L &gt;::type::value &gt; empty</div><div class="ttdoc">An Boolean integral constant wrapper around true if L is an empty type list; false,...</div><div class="ttdef"><b>Definition:</b> meta.hpp:2199</div></div>
 <div class="ttc" id="astructranges_1_1basic__mixin_html"><div class="ttname"><a href="structranges_1_1basic__mixin.html">ranges::basic_mixin</a></div><div class="ttdef"><b>Definition:</b> basic_iterator.hpp:44</div></div>
@@ -820,17 +819,17 @@ Range-v3 and the Future</h2>
 <div class="ttc" id="agroup__group-algorithms_html_ga62f56efe45b73d94db6a81f40e12d1b9"><div class="ttname"><a href="group__group-algorithms.html#ga62f56efe45b73d94db6a81f40e12d1b9">ranges::equal</a></div><div class="ttdeci">constexpr auto equal(I0 begin0, S0 end0, I1 begin1, C pred=C{}, P0 proj0=P0{}, P1 proj1=P1{}) -&gt; bool requires input_iterator&lt; I0 &gt; &amp;&amp;sentinel_for&lt; S0, I0 &gt; &amp;&amp;input_iterator&lt; I1 &gt; &amp;&amp;indirectly_comparable&lt; I0, I1, C, P0, P1 &gt;</div><div class="ttdoc">function template equal</div><div class="ttdef"><b>Definition:</b> equal.hpp:64</div></div>
 <div class="ttc" id="abasic__iterator_8hpp_html"><div class="ttname"><a href="basic__iterator_8hpp.html">basic_iterator.hpp</a></div></div>
 <div class="ttc" id="astructranges_1_1adaptor__base_html"><div class="ttname"><a href="structranges_1_1adaptor__base.html">ranges::adaptor_base</a></div><div class="ttdef"><b>Definition:</b> adaptor.hpp:107</div></div>
+<div class="ttc" id="agroup__group-algorithms_html_gad5564c4ecebc4e4ae041229d891f1491"><div class="ttname"><a href="group__group-algorithms.html#gad5564c4ecebc4e4ae041229d891f1491">ranges::remove_if</a></div><div class="ttdeci">auto remove_if(I first, S last, C pred, P proj=P{}) -&gt; I requires permutable&lt; I &gt; &amp;&amp;sentinel_for&lt; S, I &gt; &amp;&amp;indirect_unary_predicate&lt; C, projected&lt; I, P &gt;&gt;</div><div class="ttdoc">function template remove_if</div><div class="ttdef"><b>Definition:</b> remove_if.hpp:40</div></div>
 <div class="ttc" id="agroup__list_html_gafd1e131e4e3ae4b0ae9bd3d2ec3a5f74"><div class="ttname"><a href="group__list.html#gafd1e131e4e3ae4b0ae9bd3d2ec3a5f74">meta::pair</a></div><div class="ttdeci">list&lt; F, S &gt; pair</div><div class="ttdoc">A list with exactly two elements.</div><div class="ttdef"><b>Definition:</b> meta.hpp:2214</div></div>
 <div class="ttc" id="astructranges_1_1view__facade_html"><div class="ttname"><a href="structranges_1_1view__facade.html">ranges::view_facade</a></div><div class="ttdoc">A utility for constructing a view from a (derived) type that implements begin and end cursors.</div><div class="ttdef"><b>Definition:</b> range_fwd.hpp:431</div></div>
 <div class="ttc" id="astructranges_1_1default__sentinel__t_html"><div class="ttname"><a href="structranges_1_1default__sentinel__t.html">ranges::default_sentinel_t</a></div><div class="ttdef"><b>Definition:</b> default_sentinel.hpp:23</div></div>
 <div class="ttc" id="agroup__transformation_html_ga24923725e5aa3cc7ee73367935437a1c"><div class="ttname"><a href="group__transformation.html#ga24923725e5aa3cc7ee73367935437a1c">meta::transform</a></div><div class="ttdeci">_t&lt; detail::transform_&lt; list&lt; Args... &gt; &gt;&gt; transform</div><div class="ttdoc">Return a new meta::list constructed by transforming all the elements in L with the unary invocable Fn...</div><div class="ttdef"><b>Definition:</b> meta.hpp:1823</div></div>
 <div class="ttc" id="agroup__list_html_ga68418643d5aacd0ec2afe5a0e933ccf3"><div class="ttname"><a href="group__list.html#ga68418643d5aacd0ec2afe5a0e933ccf3">meta::first</a></div><div class="ttdeci">front&lt; Pair &gt; first</div><div class="ttdoc">Retrieve the first element of the pair Pair.</div><div class="ttdef"><b>Definition:</b> meta.hpp:2219</div></div>
-<div class="ttc" id="agroup__group-actions_html_ga8fa4d6429c889af4a6b67b2a90cb93a0"><div class="ttname"><a href="group__group-actions.html#ga8fa4d6429c889af4a6b67b2a90cb93a0">ranges::actions::remove_if</a></div><div class="ttdeci">constexpr action&lt; remove_if_fn &gt; remove_if</div><div class="ttdef"><b>Definition:</b> remove_if.hpp:64</div></div>
 <div class="ttc" id="astructranges_1_1view__adaptor_html"><div class="ttname"><a href="structranges_1_1view__adaptor.html">ranges::view_adaptor</a></div><div class="ttdef"><b>Definition:</b> range_fwd.hpp:435</div></div>
 <div class="ttc" id="agroup__group-range_html_ga80d92c391f5b5c0a50156af5f9c9d8c7"><div class="ttname"><a href="group__group-range.html#ga80d92c391f5b5c0a50156af5f9c9d8c7">ranges::end</a></div><div class="ttdeci">constexpr _end_::fn end</div><div class="ttdef"><b>Definition:</b> access.hpp:339</div></div>
 <div class="ttc" id="agroup__group-range_html_ga446b20253a26c93ef3004fcbfcbf3ec3"><div class="ttname"><a href="group__group-range.html#ga446b20253a26c93ef3004fcbfcbf3ec3">ranges::begin</a></div><div class="ttdeci">constexpr _begin_::fn begin</div><div class="ttdef"><b>Definition:</b> access.hpp:179</div></div>
 <div class="ttc" id="agroup__transformation_html_ga24714e0a1e7b99a57052a63d815955a7"><div class="ttname"><a href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">meta::sort</a></div><div class="ttdeci">_t&lt; detail::sort_&lt; L, Fn &gt; &gt; sort</div><div class="ttdoc">Return a new meta::list that is sorted according to invocable predicate Fn.</div><div class="ttdef"><b>Definition:</b> meta.hpp:3244</div></div>
-<div class="ttc" id="agroup__transformation_html_ga851cff9736691f16f0899eac04839d58"><div class="ttname"><a href="group__transformation.html#ga851cff9736691f16f0899eac04839d58">meta::unique</a></div><div class="ttdeci">fold&lt; L, list&lt;&gt;, quote_trait&lt; detail::insert_back_ &gt; &gt; unique</div><div class="ttdoc">Return a new meta::list where all duplicate elements have been removed.</div><div class="ttdef"><b>Definition:</b> meta.hpp:3125</div></div>
+<div class="ttc" id="aaction_2unique_8hpp_html_a2df52ed5e91e92ea7d2d7b1ed5408fcf"><div class="ttname"><a href="action_2unique_8hpp.html#a2df52ed5e91e92ea7d2d7b1ed5408fcf">unique</a></div><div class="ttdeci">constexpr action_closure&lt; unique_fn &gt; unique</div><div class="ttdef"><b>Definition:</b> unique.hpp:60</div></div>
 <div class="ttc" id="astructranges_1_1basic__iterator_html"><div class="ttname"><a href="structranges_1_1basic__iterator.html">ranges::basic_iterator</a></div><div class="ttdef"><b>Definition:</b> basic_iterator.hpp:499</div></div>
 <div class="ttc" id="acommon__tuple_8hpp_html"><div class="ttname"><a href="common__tuple_8hpp.html">common_tuple.hpp</a></div></div>
 <div class="ttc" id="agroup__list_html_gab4b5da3947303335fc4139f163ed4748"><div class="ttname"><a href="group__list.html#gab4b5da3947303335fc4139f163ed4748">meta::repeat_n</a></div><div class="ttdeci">repeat_n_c&lt; N::type::value, T &gt; repeat_n</div><div class="ttdoc">Generate list&lt;T,T,T...T&gt; of size N arguments.</div><div class="ttdef"><b>Definition:</b> meta.hpp:1867</div></div>

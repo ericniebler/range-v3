@@ -21,14 +21,16 @@ var group__group_functional =
     [ "coerce< T && >", "structranges_1_1coerce_3_01_t_01_6_6_01_4.html", null ],
     [ "coerce< T const >", "structranges_1_1coerce_3_01_t_01const_01_4.html", null ],
     [ "compose_fn", "structranges_1_1compose__fn.html", [
-      [ "operator()", "structranges_1_1compose__fn.html#af6f0f3f16bdf48fcd121d6024df68f09", null ]
+      [ "operator()", "structranges_1_1compose__fn.html#ab520a7e8a13b94d9685890affcab26e7", null ]
     ] ],
     [ "composed", "structranges_1_1composed.html", [
-      [ "operator()", "structranges_1_1composed.html#a41afb05ba2af4bf2334257ee9fc2495e", null ],
-      [ "operator()", "structranges_1_1composed.html#a532c11049b6859f2ddcb4409e405231f", null ],
-      [ "ts", "structranges_1_1composed.html#a0f3f0c76969d009fb4ea277267f8803a", null ],
+      [ "composed::do_", "structranges_1_1composed.html#aca7c032e775cd1aa34f2e181648a9df7", null ],
+      [ "composed::do_", "structranges_1_1composed.html#a6dd69d2defac63f67c4842d682b3f145", null ],
+      [ "operator()", "structranges_1_1composed.html#a96e8da2d608fb28826e1b7b62b91a1b2", null ],
+      [ "operator()", "structranges_1_1composed.html#a96e8da2d608fb28826e1b7b62b91a1b2", null ],
+      [ "operator()", "structranges_1_1composed.html#ad50f2342759940d6dab886aa948f6ade", null ],
       [ "composed", "structranges_1_1composed.html#a9ad29df4e61c1ad3db2981a553fe54eb", null ],
-      [ "composed", "structranges_1_1composed.html#a332df06e5bb1dd94af16fb492b377054", null ]
+      [ "composed", "structranges_1_1composed.html#a4858759878de5058b05d98a03a2c2373", null ]
     ] ],
     [ "convert_to", "structranges_1_1convert__to.html", [
       [ "operator()", "structranges_1_1convert__to.html#aaf8030c70044ce3a5c178b941d9a117e", null ]
@@ -80,7 +82,7 @@ var group__group_functional =
       [ "logical_negate", "structranges_1_1logical__negate.html#a035e20c6576366f79999941eef15406f", null ]
     ] ],
     [ "make_pipeable_fn", "structranges_1_1make__pipeable__fn.html", [
-      [ "operator()", "structranges_1_1make__pipeable__fn.html#a9358e126642850f545dc76dae1f9a52a", null ]
+      [ "operator()", "structranges_1_1make__pipeable__fn.html#a837635ef342390482ffb5bff1e6c9897", null ]
     ] ],
     [ "minus", "structranges_1_1minus.html", [
       [ "operator()", "structranges_1_1minus.html#a868e2ac142023f8ddb9ee471a60cb480", null ],
@@ -119,8 +121,9 @@ var group__group_functional =
       [ "impl", "structranges_1_1pipeable__access_1_1impl.html", null ]
     ] ],
     [ "pipeable_base", "structranges_1_1pipeable__base.html", [
-      [ "operator|", "structranges_1_1pipeable__base.html#a69554ed827422ba96c30c97a30a0bc28", null ],
-      [ "operator|", "structranges_1_1pipeable__base.html#ac3b151e6f4826c05bf448c990367ca5b", null ]
+      [ "operator|", "structranges_1_1pipeable__base.html#a98a27de694eac13e0c5fc4ebfcaf7fd6", null ],
+      [ "operator|", "structranges_1_1pipeable__base.html#aeb7e09832afee06d48a849acc78ed1ca", null ],
+      [ "operator|=", "structranges_1_1pipeable__base.html#a0e73472dcff26817e64bc355da07930f", null ]
     ] ],
     [ "plus", "structranges_1_1plus.html", [
       [ "operator()", "structranges_1_1plus.html#a2d2a9fe314ac00c995eaa1eeb304d97e", null ],

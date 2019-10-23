@@ -16,7 +16,6 @@ var structranges_1_1semiregular__box =
     [ "operator()", "structranges_1_1semiregular__box.html#ad1004b6663f9ff34242cad8d02f36a82", null ],
     [ "operator=", "structranges_1_1semiregular__box.html#aa8c2b4c240087e9581a831505d25dedf", null ],
     [ "operator=", "structranges_1_1semiregular__box.html#ad444739afb45d315f0f4586ae49739d3", null ],
-    [ "operator=", "structranges_1_1semiregular__box.html#ac4bd1f4b33b1572ec4d6ca84a3a32d2b", null ],
     [ "return", "structranges_1_1semiregular__box.html#a700429ef83a7baedc72328890ceaee1b", null ],
     [ "return", "structranges_1_1semiregular__box.html#ad172d9f11410357c9cb5953d23dcc9a7", null ],
     [ "ch_", "structranges_1_1semiregular__box.html#a0bc1fb205fe4ac10a10b204f23c28baa", null ],

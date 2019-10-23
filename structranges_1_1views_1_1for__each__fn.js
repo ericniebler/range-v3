@@ -1,6 +1,5 @@
 var structranges_1_1views_1_1for__each__fn =
 [
-    [ "for_each", "group__group-views.html#gaedba72e114673fe8d4c223b6a258c50e", null ],
-    [ "operator()", "structranges_1_1views_1_1for__each__fn.html#a7963b9d9219eab253835fc9cd97edbaa", null ],
-    [ "joinable_range< transform_view< all_t< Rng >, Fun > >", "structranges_1_1views_1_1for__each__fn.html#ad3bef4d5b50d0d7404d7e4722bfe1597", null ]
+    [ "for_each", "group__group-views.html#gab12871af07cd4145c4d749a3bb7d16c3", null ],
+    [ "operator()", "structranges_1_1views_1_1for__each__fn.html#a2d65f1d5edf4968b49d80aa16a602d64", null ]
 ];

@@ -1,6 +1,6 @@
 var range__fwd_8hpp =
 [
-    [ "action", "structranges_1_1actions_1_1action.html", "structranges_1_1actions_1_1action" ],
+    [ "action_closure", "structranges_1_1actions_1_1action__closure.html", "structranges_1_1actions_1_1action__closure" ],
     [ "basic_view", "structranges_1_1basic__view.html", null ],
     [ "begin_tag", "structranges_1_1begin__tag.html", null ],
     [ "compressed_pair", "structranges_1_1compressed__pair.html", "structranges_1_1compressed__pair" ],
@@ -13,7 +13,7 @@ var range__fwd_8hpp =
     [ "take_view", "structranges_1_1take__view.html", "structranges_1_1take__view" ],
     [ "variant", "structranges_1_1variant.html", null ],
     [ "view_base", "structranges_1_1view__base.html", null ],
-    [ "view", "structranges_1_1views_1_1view.html", "structranges_1_1views_1_1view" ],
+    [ "view_closure", "structranges_1_1views_1_1view__closure.html", "structranges_1_1views_1_1view__closure" ],
     [ "is_finite", "range__fwd_8hpp.html#a3e936d57dee4f695b2eaf6d926cae8d2", null ],
     [ "is_infinite", "range__fwd_8hpp.html#a22e82748fcb6b2b6545db3ee010362d7", null ],
     [ "keys_range_view", "range__fwd_8hpp.html#a12f6be5afcd9eef4f3e274b187d0d341", null ],

@@ -107,11 +107,32 @@ $(document).ready(function(){initNavTree('structranges_1_1actions_1_1slice__fn.h
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="related"></a>
 Synopsis of methods</h2></td></tr>
-<tr class="memitem:gaea92c971cf16891792933cf5e86f3527"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1actions_1_1action.html">action</a>&lt; <a class="el" href="structranges_1_1actions_1_1slice__fn.html">slice_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-actions.html#gaea92c971cf16891792933cf5e86f3527">slice</a> {}</td></tr>
-<tr class="separator:gaea92c971cf16891792933cf5e86f3527"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae62445651e39a0266e713cd25abe01eb"><td class="memItemLeft" align="right" valign="top"><a id="ae62445651e39a0266e713cd25abe01eb"></a>
+constexpr <a class="el" href="structranges_1_1actions_1_1slice__fn.html">slice_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>slice</b> {}</td></tr>
+<tr class="separator:ae62445651e39a0266e713cd25abe01eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a394794707ff867820c92673371bbb623"><td class="memTemplParams" colspan="2"><a id="a394794707ff867820c92673371bbb623"></a>
+template&lt;typename D &gt; </td></tr>
+<tr class="memitem:a394794707ff867820c92673371bbb623"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (D from, D to) const requires integral&lt; D &gt;</td></tr>
+<tr class="separator:a394794707ff867820c92673371bbb623"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5a531a89b8fce464732da3ae131c269"><td class="memTemplParams" colspan="2"><a id="ae5a531a89b8fce464732da3ae131c269"></a>
+template&lt;typename D &gt; </td></tr>
+<tr class="memitem:ae5a531a89b8fce464732da3ae131c269"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (D from, detail::from_end_&lt; D &gt; to) const requires integral&lt; D &gt;</td></tr>
+<tr class="separator:ae5a531a89b8fce464732da3ae131c269"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04b9c08d4a084b1780ce5380b3a24e73"><td class="memTemplParams" colspan="2"><a id="a04b9c08d4a084b1780ce5380b3a24e73"></a>
+template&lt;typename D &gt; </td></tr>
+<tr class="memitem:a04b9c08d4a084b1780ce5380b3a24e73"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (D from, end_fn const &amp;to) const requires integral&lt; D &gt;</td></tr>
+<tr class="separator:a04b9c08d4a084b1780ce5380b3a24e73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e84ea223cbed9ed5238978f5fb78d65"><td class="memTemplParams" colspan="2"><a id="a1e84ea223cbed9ed5238978f5fb78d65"></a>
+template&lt;typename D &gt; </td></tr>
+<tr class="memitem:a1e84ea223cbed9ed5238978f5fb78d65"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (detail::from_end_&lt; D &gt; from, detail::from_end_&lt; D &gt; to) const requires integral&lt; D &gt;</td></tr>
+<tr class="separator:a1e84ea223cbed9ed5238978f5fb78d65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc07b14151461fb1cca44e7981dccb32"><td class="memTemplParams" colspan="2"><a id="afc07b14151461fb1cca44e7981dccb32"></a>
+template&lt;typename D &gt; </td></tr>
+<tr class="memitem:afc07b14151461fb1cca44e7981dccb32"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (detail::from_end_&lt; D &gt; from, end_fn const &amp;to) const requires integral&lt; D &gt;</td></tr>
+<tr class="separator:afc07b14151461fb1cca44e7981dccb32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba4159f1fe3b6ae60bd792ba07a39b5a"><td class="memTemplParams" colspan="2"><a id="aba4159f1fe3b6ae60bd792ba07a39b5a"></a>
 template&lt;typename Rng , typename I  = iterator_t&lt;Rng&gt;&gt; </td></tr>
 <tr class="memitem:aba4159f1fe3b6ae60bd792ba07a39b5a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, detail::from_end_&lt; diff_t&lt; Rng &gt;&gt; from, detail::from_end_&lt; diff_t&lt; Rng &gt;&gt; to) const -&gt; Rng requires bidirectional_range&lt; Rng &gt; &amp;&amp;erasable_range&lt; Rng &amp;, I, I &gt;</td></tr>

@@ -106,6 +106,10 @@ $(document).ready(function(){initNavTree('structranges_1_1actions_1_1unstable__r
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a3b51682ab7cc3b9eed7ead67730fc7bf"><td class="memTemplParams" colspan="2"><a id="a3b51682ab7cc3b9eed7ead67730fc7bf"></a>
+template&lt;typename C , typename P  = identity&gt; </td></tr>
+<tr class="memitem:a3b51682ab7cc3b9eed7ead67730fc7bf"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (C pred, P proj=P{}) const requires(!range&lt; C &gt;)</td></tr>
+<tr class="separator:a3b51682ab7cc3b9eed7ead67730fc7bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae63966373dffcaa05b8c114d8adc878e"><td class="memTemplParams" colspan="2"><a id="ae63966373dffcaa05b8c114d8adc878e"></a>
 template&lt;typename Rng , typename C , typename P  = identity&gt; </td></tr>
 <tr class="memitem:ae63966373dffcaa05b8c114d8adc878e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, C pred, P proj=P{}) const -&gt; Rng requires bidirectional_range&lt; Rng &gt; &amp;&amp;common_range&lt; Rng &gt; &amp;&amp;permutable&lt; iterator_t&lt; Rng &gt;&gt; &amp;&amp;indirect_unary_predicate&lt; C, projected&lt; iterator_t&lt; Rng &gt;, P &gt;&gt; &amp;&amp;erasable_range&lt; Rng, iterator_t&lt; Rng &gt;, iterator_t&lt; Rng &gt;&gt;</td></tr>

@@ -112,31 +112,51 @@ $(document).ready(function(){initNavTree('structranges_1_1views_1_1join__fn.html
  <div class="center">
   <img src="structranges_1_1views_1_1join__fn.png" usemap="#ranges::views::join_5Ffn_map" alt=""/>
   <map id="ranges::views::join_5Ffn_map" name="ranges::views::join_5Ffn_map">
-<area href="structranges_1_1views_1_1cpp20__join__fn.html" alt="ranges::views::cpp20_join_fn" shape="rect" coords="0,0,175,24"/>
+<area href="structranges_1_1views_1_1join__base__fn.html" alt="ranges::views::join_base_fn" shape="rect" coords="0,56,315,80"/>
+<area href="structranges_1_1views_1_1cpp20__join__fn.html" alt="ranges::views::cpp20_join_fn" shape="rect" coords="0,0,315,24"/>
+<area href="structranges_1_1views_1_1view__closure.html" alt="ranges::views::view_closure&lt; ranges::views::join_fn &gt;" shape="rect" coords="0,168,315,192"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="related"></a>
 Synopsis of methods</h2></td></tr>
-<tr class="memitem:ga4c265de67279f05d48f0306864417660"><td class="memItemLeft" align="right" valign="top">
-constexpr <a class="el" href="structranges_1_1views_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1views_1_1join__fn.html">join_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>join</b> {}</td></tr>
-<tr class="separator:ga4c265de67279f05d48f0306864417660"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga946b530aea0753ae456a3ebf49bb8b29"><td class="memItemLeft" align="right" valign="top">
+constexpr <a class="el" href="structranges_1_1views_1_1view__closure.html">view_closure</a>&lt; <a class="el" href="structranges_1_1views_1_1join__fn.html">join_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>join</b> {}</td></tr>
+<tr class="separator:ga946b530aea0753ae456a3ebf49bb8b29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac9b55cb8669de790ca3876eb22fbd1fc"><td class="memTemplParams" colspan="2"><a id="ac9b55cb8669de790ca3876eb22fbd1fc"></a>
+<tr class="memitem:af7e9bfe71716f37d18a44196e58dd6ec"><td class="memTemplParams" colspan="2"><a id="af7e9bfe71716f37d18a44196e58dd6ec"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:af7e9bfe71716f37d18a44196e58dd6ec"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (T &amp;&amp;t) const requires(!joinable_range&lt; T &gt;)</td></tr>
+<tr class="separator:af7e9bfe71716f37d18a44196e58dd6ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada11c85747be4bbb47ee318bcdb46302"><td class="memTemplParams" colspan="2"><a id="ada11c85747be4bbb47ee318bcdb46302"></a>
+template&lt;typename T , std::size_t N&gt; </td></tr>
+<tr class="memitem:ada11c85747be4bbb47ee318bcdb46302"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (T(&amp;val)[N]) const</td></tr>
+<tr class="separator:ada11c85747be4bbb47ee318bcdb46302"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_structranges_1_1views_1_1join__base__fn"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structranges_1_1views_1_1join__base__fn')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structranges_1_1views_1_1join__base__fn.html">ranges::views::join_base_fn</a></td></tr>
+<tr class="memitem:ac5c18f11be6922404c5155b1fde3c2bb inherit pub_methods_structranges_1_1views_1_1join__base__fn"><td class="memTemplParams" colspan="2"><a id="ac5c18f11be6922404c5155b1fde3c2bb"></a>
 template&lt;typename Rng &gt; </td></tr>
-<tr class="memitem:ac9b55cb8669de790ca3876eb22fbd1fc"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, inner_value_t&lt; Rng &gt; v) const -&gt; <a class="el" href="structranges_1_1join__with__view.html">join_with_view</a>&lt; all_t&lt; Rng &gt;, <a class="el" href="structranges_1_1single__view.html">single_view</a>&lt; inner_value_t&lt; Rng &gt;&gt;&gt; requires joinable_with_range&lt; Rng, <a class="el" href="structranges_1_1single__view.html">single_view</a>&lt; inner_value_t&lt; Rng &gt;&gt;&gt;</td></tr>
-<tr class="separator:ac9b55cb8669de790ca3876eb22fbd1fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a611a322ef2333fc3836c23c9ae9b8659"><td class="memTemplParams" colspan="2"><a id="a611a322ef2333fc3836c23c9ae9b8659"></a>
+<tr class="memitem:ac5c18f11be6922404c5155b1fde3c2bb inherit pub_methods_structranges_1_1views_1_1join__base__fn"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, <a class="el" href="structranges_1_1views_1_1join__base__fn.html#abc4311433141d9a5ce064a5898cbc622">inner_value_t</a>&lt; Rng &gt; v) const -&gt; <a class="el" href="structranges_1_1join__with__view.html">join_with_view</a>&lt; all_t&lt; Rng &gt;, <a class="el" href="structranges_1_1single__view.html">single_view</a>&lt; <a class="el" href="structranges_1_1views_1_1join__base__fn.html#abc4311433141d9a5ce064a5898cbc622">inner_value_t</a>&lt; Rng &gt;&gt;&gt; requires joinable_with_range&lt; Rng, <a class="el" href="structranges_1_1single__view.html">single_view</a>&lt; <a class="el" href="structranges_1_1views_1_1join__base__fn.html#abc4311433141d9a5ce064a5898cbc622">inner_value_t</a>&lt; Rng &gt;&gt;&gt;</td></tr>
+<tr class="separator:ac5c18f11be6922404c5155b1fde3c2bb inherit pub_methods_structranges_1_1views_1_1join__base__fn"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02ff86aebe33e88cc3bfe65d3ad38205 inherit pub_methods_structranges_1_1views_1_1join__base__fn"><td class="memTemplParams" colspan="2"><a id="a02ff86aebe33e88cc3bfe65d3ad38205"></a>
 template&lt;typename Rng , typename ValRng &gt; </td></tr>
-<tr class="memitem:a611a322ef2333fc3836c23c9ae9b8659"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, ValRng &amp;&amp;val) const -&gt; <a class="el" href="structranges_1_1join__with__view.html">join_with_view</a>&lt; all_t&lt; Rng &gt;, all_t&lt; ValRng &gt;&gt; requires joinable_with_range&lt; Rng, ValRng &gt;</td></tr>
-<tr class="separator:a611a322ef2333fc3836c23c9ae9b8659"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02ff86aebe33e88cc3bfe65d3ad38205 inherit pub_methods_structranges_1_1views_1_1join__base__fn"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, ValRng &amp;&amp;val) const -&gt; <a class="el" href="structranges_1_1join__with__view.html">join_with_view</a>&lt; all_t&lt; Rng &gt;, all_t&lt; ValRng &gt;&gt; requires joinable_with_range&lt; Rng, ValRng &gt;</td></tr>
+<tr class="separator:a02ff86aebe33e88cc3bfe65d3ad38205 inherit pub_methods_structranges_1_1views_1_1join__base__fn"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_structranges_1_1views_1_1cpp20__join__fn"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structranges_1_1views_1_1cpp20__join__fn')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structranges_1_1views_1_1cpp20__join__fn.html">ranges::views::cpp20_join_fn</a></td></tr>
 <tr class="memitem:a3fba017f826ccb4b85c4f26313f87233 inherit pub_methods_structranges_1_1views_1_1cpp20__join__fn"><td class="memTemplParams" colspan="2"><a id="a3fba017f826ccb4b85c4f26313f87233"></a>
 template&lt;typename Rng &gt; </td></tr>
 <tr class="memitem:a3fba017f826ccb4b85c4f26313f87233 inherit pub_methods_structranges_1_1views_1_1cpp20__join__fn"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classauto.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng) const -&gt; <a class="el" href="structranges_1_1join__view.html">join_view</a>&lt; all_t&lt; Rng &gt;&gt; requires joinable_range&lt; Rng &gt;</td></tr>
 <tr class="separator:a3fba017f826ccb4b85c4f26313f87233 inherit pub_methods_structranges_1_1views_1_1cpp20__join__fn"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_types_structranges_1_1views_1_1join__base__fn"><td colspan="2" onclick="javascript:toggleInherit('pub_types_structranges_1_1views_1_1join__base__fn')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="structranges_1_1views_1_1join__base__fn.html">ranges::views::join_base_fn</a></td></tr>
+<tr class="memitem:abc4311433141d9a5ce064a5898cbc622 inherit pub_types_structranges_1_1views_1_1join__base__fn"><td class="memTemplParams" colspan="2"><a id="abc4311433141d9a5ce064a5898cbc622"></a>
+template&lt;typename Rng &gt; </td></tr>
+<tr class="memitem:abc4311433141d9a5ce064a5898cbc622 inherit pub_types_structranges_1_1views_1_1join__base__fn"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1views_1_1join__base__fn.html#abc4311433141d9a5ce064a5898cbc622">inner_value_t</a> = range_value_t&lt; range_reference_t&lt; Rng &gt; &gt;</td></tr>
+<tr class="memdesc:abc4311433141d9a5ce064a5898cbc622 inherit pub_types_structranges_1_1views_1_1join__base__fn"><td class="mdescLeft">&#160;</td><td class="mdescRight">implementation detail <br /></td></tr>
+<tr class="separator:abc4311433141d9a5ce064a5898cbc622 inherit pub_types_structranges_1_1views_1_1join__base__fn"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

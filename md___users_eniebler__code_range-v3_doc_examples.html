@@ -517,7 +517,7 @@ Remove non-unique elements from a container</h2>
 <div class="line">                        1, 4, 5, 3, 8, 5, 0, 2, 9, 3, 7, 5, 7, 5, 5, 6, 1,</div>
 <div class="line">                        4, 3, 1, 8, 4, 0, 7, 8, 8, 2, 6, 5, 3, 4, 5};</div>
 <div class="line">    <span class="keyword">using namespace </span>ranges;</div>
-<div class="line">    vi |= <a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">actions::sort</a> | <a class="code" href="group__transformation.html#ga851cff9736691f16f0899eac04839d58">actions::unique</a>;</div>
+<div class="line">    vi |= <a class="code" href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">actions::sort</a> | <a class="code" href="action_2unique_8hpp.html#a2df52ed5e91e92ea7d2d7b1ed5408fcf">actions::unique</a>;</div>
 <div class="line">    <span class="comment">// prints: [0,1,2,3,4,5,6,7,8,9]</span></div>
 <div class="line">    cout &lt;&lt; views::all(vi) &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
 <div class="line">}</div>
@@ -752,7 +752,7 @@ Calendar</h2>
 <div class="line"><span class="keyword">auto</span></div>
 <div class="line">interleave()</div>
 <div class="line">{</div>
-<div class="line">    <span class="keywordflow">return</span> <a class="code" href="group__group-views.html#ga2880c61d0838571249789dc49a862896">make_view</a>([](<span class="keyword">auto</span> &amp;&amp;rngs) {</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="group__group-views.html#ga214da59baf075118417256e2f9ce5d9b">make_view_closure</a>([](<span class="keyword">auto</span> &amp;&amp;rngs) {</div>
 <div class="line">        <span class="keyword">using</span> Rngs = decltype(rngs);</div>
 <div class="line">        <span class="keywordflow">return</span> interleave_view&lt;views::all_t&lt;Rngs&gt;&gt;(</div>
 <div class="line">            views::all(std::forward&lt;Rngs&gt;(rngs)));</div>
@@ -764,7 +764,7 @@ Calendar</h2>
 <div class="line"><span class="keyword">auto</span></div>
 <div class="line"><a class="code" href="group__transformation.html#ga386fa55fefb4aa3f4df3227379916839">transpose</a>()</div>
 <div class="line">{</div>
-<div class="line">    <span class="keywordflow">return</span> <a class="code" href="group__group-views.html#ga2880c61d0838571249789dc49a862896">make_view</a>([](<span class="keyword">auto</span> &amp;&amp;rngs) {</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="group__group-views.html#ga214da59baf075118417256e2f9ce5d9b">make_view_closure</a>([](<span class="keyword">auto</span> &amp;&amp;rngs) {</div>
 <div class="line">        <span class="keyword">using</span> Rngs = decltype(rngs);</div>
 <div class="line">        CPP_assert(forward_range&lt;Rngs&gt;);</div>
 <div class="line">        <span class="keywordflow">return</span> std::forward&lt;Rngs&gt;(rngs)</div>
@@ -884,7 +884,7 @@ Calendar</h2>
 <div class="ttc" id="aview_2for__each_8hpp_html"><div class="ttname"><a href="view_2for__each_8hpp.html">for_each.hpp</a></div></div>
 <div class="ttc" id="agroup__group-iterator_html_gaf136ff254688f2c24f5c5f58df7ff56d"><div class="ttname"><a href="group__group-iterator.html#gaf136ff254688f2c24f5c5f58df7ff56d">ranges::next</a></div><div class="ttdeci">constexpr next_fn next</div><div class="ttdef"><b>Definition:</b> operations.hpp:335</div></div>
 <div class="ttc" id="agroup__group-utility_html_gaa77a9f8d78fe2ed9c14bde30e7523746"><div class="ttname"><a href="group__group-utility.html#gaa77a9f8d78fe2ed9c14bde30e7523746">ranges::aux::copy</a></div><div class="ttdeci">constexpr copy_fn copy</div><div class="ttdef"><b>Definition:</b> copy.hpp:51</div></div>
-<div class="ttc" id="agroup__group-range_html_ga555b843264809e3765210c42a66d3c3b"><div class="ttname"><a href="group__group-range.html#ga555b843264809e3765210c42a66d3c3b">ranges::to</a></div><div class="ttdeci">auto to() -&gt; detail::to_container_fn&lt; detail::from_range&lt; ContT &gt;&gt;</div><div class="ttdoc">For initializing a container of the specified type with the elements of an Range.</div><div class="ttdef"><b>Definition:</b> conversion.hpp:344</div></div>
+<div class="ttc" id="agroup__group-range_html_ga555b843264809e3765210c42a66d3c3b"><div class="ttname"><a href="group__group-range.html#ga555b843264809e3765210c42a66d3c3b">ranges::to</a></div><div class="ttdeci">auto to() -&gt; detail::to_container_fn&lt; detail::from_range&lt; ContT &gt;&gt;</div><div class="ttdoc">For initializing a container of the specified type with the elements of an Range.</div><div class="ttdef"><b>Definition:</b> conversion.hpp:401</div></div>
 <div class="ttc" id="agroup__list_html_gadd1d8e54275858523926ab20aa88ed0a"><div class="ttname"><a href="group__list.html#gadd1d8e54275858523926ab20aa88ed0a">meta::front</a></div><div class="ttdeci">_t&lt; detail::front_&lt; L &gt; &gt; front</div><div class="ttdoc">Return the first element in meta::list L.</div><div class="ttdef"><b>Definition:</b> meta.hpp:2038</div></div>
 <div class="ttc" id="aview_2transform_8hpp_html"><div class="ttname"><a href="view_2transform_8hpp.html">transform.hpp</a></div></div>
 <div class="ttc" id="agroup__transformation_html_gadec7869718bf0ddf69579775156b351d"><div class="ttname"><a href="group__transformation.html#gadec7869718bf0ddf69579775156b351d">meta::accumulate</a></div><div class="ttdeci">fold&lt; L, State, Fn &gt; accumulate</div><div class="ttdoc">An alias for meta::fold.</div><div class="ttdef"><b>Definition:</b> meta.hpp:1565</div></div>
@@ -921,8 +921,9 @@ Calendar</h2>
 <div class="ttc" id="aalgorithm_2for__each_8hpp_html"><div class="ttname"><a href="algorithm_2for__each_8hpp.html">for_each.hpp</a></div></div>
 <div class="ttc" id="agroup__group-range_html_ga80d92c391f5b5c0a50156af5f9c9d8c7"><div class="ttname"><a href="group__group-range.html#ga80d92c391f5b5c0a50156af5f9c9d8c7">ranges::end</a></div><div class="ttdeci">constexpr _end_::fn end</div><div class="ttdef"><b>Definition:</b> access.hpp:339</div></div>
 <div class="ttc" id="agroup__group-range_html_ga446b20253a26c93ef3004fcbfcbf3ec3"><div class="ttname"><a href="group__group-range.html#ga446b20253a26c93ef3004fcbfcbf3ec3">ranges::begin</a></div><div class="ttdeci">constexpr _begin_::fn begin</div><div class="ttdef"><b>Definition:</b> access.hpp:179</div></div>
+<div class="ttc" id="agroup__group-views_html_ga214da59baf075118417256e2f9ce5d9b"><div class="ttname"><a href="group__group-views.html#ga214da59baf075118417256e2f9ce5d9b">ranges::make_view_closure</a></div><div class="ttdeci">constexpr make_view_closure_fn make_view_closure</div><div class="ttdef"><b>Definition:</b> view.hpp:81</div></div>
 <div class="ttc" id="agroup__transformation_html_ga24714e0a1e7b99a57052a63d815955a7"><div class="ttname"><a href="group__transformation.html#ga24714e0a1e7b99a57052a63d815955a7">meta::sort</a></div><div class="ttdeci">_t&lt; detail::sort_&lt; L, Fn &gt; &gt; sort</div><div class="ttdoc">Return a new meta::list that is sorted according to invocable predicate Fn.</div><div class="ttdef"><b>Definition:</b> meta.hpp:3244</div></div>
-<div class="ttc" id="agroup__transformation_html_ga851cff9736691f16f0899eac04839d58"><div class="ttname"><a href="group__transformation.html#ga851cff9736691f16f0899eac04839d58">meta::unique</a></div><div class="ttdeci">fold&lt; L, list&lt;&gt;, quote_trait&lt; detail::insert_back_ &gt; &gt; unique</div><div class="ttdoc">Return a new meta::list where all duplicate elements have been removed.</div><div class="ttdef"><b>Definition:</b> meta.hpp:3125</div></div>
+<div class="ttc" id="aaction_2unique_8hpp_html_a2df52ed5e91e92ea7d2d7b1ed5408fcf"><div class="ttname"><a href="action_2unique_8hpp.html#a2df52ed5e91e92ea7d2d7b1ed5408fcf">unique</a></div><div class="ttdeci">constexpr action_closure&lt; unique_fn &gt; unique</div><div class="ttdef"><b>Definition:</b> unique.hpp:60</div></div>
 <div class="ttc" id="agroup__query_html_gaf33139f1b442de0272477e126d6d66a7"><div class="ttname"><a href="group__query.html#gaf33139f1b442de0272477e126d6d66a7">meta::find_if</a></div><div class="ttdeci">_t&lt; detail::find_if_&lt; L, Fn &gt; &gt; find_if</div><div class="ttdoc">Return the tail of the list L starting at the first element A such that invoke&lt;Fn,...</div><div class="ttdef"><b>Definition:</b> meta.hpp:2474</div></div>
 <div class="ttc" id="anone__of_8hpp_html"><div class="ttname"><a href="none__of_8hpp.html">none_of.hpp</a></div></div>
 <div class="ttc" id="asingle_8hpp_html"><div class="ttname"><a href="single_8hpp.html">single.hpp</a></div></div>
@@ -937,7 +938,6 @@ Calendar</h2>
 <div class="ttc" id="amismatch_8hpp_html"><div class="ttname"><a href="mismatch_8hpp.html">mismatch.hpp</a></div></div>
 <div class="ttc" id="agroup__query_html_gae65ae2955249d7b8322e1135f680103b"><div class="ttname"><a href="group__query.html#gae65ae2955249d7b8322e1135f680103b">meta::all_of</a></div><div class="ttdeci">empty&lt; find_if&lt; L, not_fn&lt; Fn &gt; &gt;&gt; all_of</div><div class="ttdoc">A Boolean integral constant wrapper around true if invoke&lt;Fn, A&gt;::value is true for all elements A in...</div><div class="ttdef"><b>Definition:</b> meta.hpp:2995</div></div>
 <div class="ttc" id="agroup__transformation_html_gae8b919ad4c2cfe9b0fc7549cedae5e37"><div class="ttname"><a href="group__transformation.html#gae8b919ad4c2cfe9b0fc7549cedae5e37">meta::join</a></div><div class="ttdeci">apply&lt; quote&lt; concat &gt;, ListOfLists &gt; join</div><div class="ttdoc">Joins a list of lists into a single list.</div><div class="ttdef"><b>Definition:</b> meta.hpp:1754</div></div>
-<div class="ttc" id="agroup__group-views_html_ga2880c61d0838571249789dc49a862896"><div class="ttname"><a href="group__group-views.html#ga2880c61d0838571249789dc49a862896">ranges::make_view</a></div><div class="ttdeci">constexpr make_view_fn make_view</div><div class="ttdef"><b>Definition:</b> view.hpp:87</div></div>
 <div class="ttc" id="aall_8hpp_html"><div class="ttname"><a href="all_8hpp.html">all.hpp</a></div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
