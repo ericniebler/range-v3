@@ -63,7 +63,7 @@ namespace ranges
         // clang-format off
         template<typename Rng, typename T>
         CPP_concept can_push_front_ =
-            CPP_requires ((Rng &&) rng, (T &&) t)
+            CPP_requires ((Rng &&) rng, (T &&) t) //
             (
                 push_front(rng, CPP_fwd(t))
             );

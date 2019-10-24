@@ -36,7 +36,7 @@ namespace ranges
         ///
         /// range-based version of the \c adjacent_find std algorithm
         ///
-        /// \pre `Rng` is a model of the `Range` concept
+        /// \pre `Rng` is a model of the `range` concept
         /// \pre `C` is a model of the `BinaryPredicate` concept
         template<typename I, typename S, typename C = equal_to, typename P = identity>
         auto RANGES_FUNC(adjacent_find)(I first, S last, C pred = C{}, P proj = P{}) //

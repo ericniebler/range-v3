@@ -28,7 +28,7 @@ namespace ranges
     // clang-format off
     template<typename Fun, typename... Args>
     CPP_concept_bool invocable =
-        CPP_requires ((Fun&&) fn)
+        CPP_requires ((Fun&&) fn) //
         (
             invoke(CPP_fwd(fn), std::declval<Args>()...)
         );
@@ -41,7 +41,7 @@ namespace ranges
     template<typename Fun, typename... Args>
     CPP_concept_bool predicate =
         regular_invocable<Fun, Args...> &&
-        CPP_requires((invoke_result_t<CPP_type(Fun), Args...>(*)()))
+        CPP_requires ((invoke_result_t<CPP_type(Fun), Args...>(*)())) //
         (
             concepts::requires_<
                 convertible_to<invoke_result_t<CPP_type(Fun), Args...>, bool>>

@@ -57,7 +57,7 @@ namespace ranges
         // clang-format off
         template<typename T>
         CPP_concept_bool has_member_begin =
-            CPP_requires ((T &) t)
+            CPP_requires ((T &) t) //
             (
                 _begin_::is_iterator(t.begin())
             ) &&
@@ -65,7 +65,7 @@ namespace ranges
 
         template<typename T>
         CPP_concept_bool has_non_member_begin =
-            CPP_requires ((T &&) t)
+            CPP_requires ((T &&) t) //
             (
                 _begin_::is_iterator(begin(CPP_fwd(t)))
             );
@@ -195,7 +195,7 @@ namespace ranges
         // clang-format off
         template<typename T>
         CPP_concept_bool has_member_end =
-            CPP_requires ((T &) t)
+            CPP_requires ((T &) t) //
             (
                 _end_::is_sentinel<_begin_::_t<CPP_type(T) &>>(t.end())
             ) &&
@@ -203,7 +203,7 @@ namespace ranges
 
         template<typename T>
         CPP_concept_bool has_non_member_end =
-            CPP_requires ((T &&) t)
+            CPP_requires ((T &&) t) //
             (
                 _end_::is_sentinel<_begin_::_t<CPP_type(T)>>(end(CPP_fwd(t)))
             );
@@ -385,7 +385,7 @@ namespace ranges
         // clang-format off
         template<typename T>
         CPP_concept_bool has_member_rbegin =
-            CPP_requires ((T &) t)
+            CPP_requires ((T &) t) //
             (
                 _begin_::is_iterator(t.rbegin())
             ) &&
@@ -393,14 +393,14 @@ namespace ranges
 
         template<typename T>
         CPP_concept_bool has_non_member_rbegin =
-            CPP_requires ((T &&) t)
+            CPP_requires ((T &&) t) //
             (
                 _begin_::is_iterator(rbegin(CPP_fwd(t)))
             );
 
         template<typename T>
         CPP_concept_bool can_reverse_end =
-            CPP_requires ((T &&) t)
+            CPP_requires ((T &&) t) //
             (
                 // make_reverse_iterator is constrained with
                 // bidirectional_iterator.
@@ -491,11 +491,11 @@ namespace ranges
 
     /// \ingroup group-range
     /// \param r
-    /// \return `make_reverse_iterator(r+size(r))` if r is an array. Otherwise,
+    /// \return `make_reverse_iterator(r + ranges::size(r))` if r is an array. Otherwise,
     ///   `r.rbegin()` if that expression is well-formed and returns an
     ///   input_or_output_iterator. Otherwise, `make_reverse_iterator(ranges::end(r))` if
     ///   `ranges::begin(r)` and `ranges::end(r)` are both well-formed and have the same
-    ///   type that satisfies bidirectional_iterator.
+    ///   type that satisfies `bidirectional_iterator`.
     RANGES_DEFINE_CPO(_rbegin_::fn, rbegin)
 
     /// \cond
@@ -513,7 +513,7 @@ namespace ranges
         // clang-format off
         template<typename T>
         CPP_concept_bool has_member_rend =
-            CPP_requires ((T &) t)
+            CPP_requires ((T &) t) //
             (
                 _end_::is_sentinel<_rbegin_::_t<CPP_type(T) &>>(t.rend())
             ) &&
@@ -521,14 +521,14 @@ namespace ranges
 
         template<typename T>
         CPP_concept_bool has_non_member_rend =
-            CPP_requires ((T &&) t)
+            CPP_requires ((T &&) t) //
             (
                 _end_::is_sentinel<_rbegin_::_t<CPP_type(T) &>>(rend(CPP_fwd(t)))
             );
 
         template<typename T>
         CPP_concept_bool can_reverse_begin =
-            CPP_requires ((T &&) t)
+            CPP_requires ((T &&) t) //
             (
                 // make_reverse_iterator is constrained with
                 // bidirectional_iterator.
@@ -618,12 +618,12 @@ namespace ranges
 
     /// \ingroup group-range
     /// \param r
-    /// \return `make_reverse_iterator(r))` if r is an array. Otherwise,
+    /// \return `make_reverse_iterator(r)` if `r` is an array. Otherwise,
     ///   `r.rend()` if that expression is well-formed and returns a type that
     ///   satisfies `sentinel_for<S, I>` where `I` is the type of `ranges::rbegin(r)`.
     ///   Otherwise, `make_reverse_iterator(ranges::begin(r))` if `ranges::begin(r)`
     ///   and `ranges::end(r)` are both well-formed and have the same type that
-    ///   satisfies bidirectional_iterator.
+    ///   satisfies `bidirectional_iterator`.
     RANGES_DEFINE_CPO(_rend_::fn, rend)
 
     /// \cond

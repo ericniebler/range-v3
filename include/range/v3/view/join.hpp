@@ -115,7 +115,7 @@ namespace ranges
         // clang-format off
         template<typename I>
         CPP_concept_bool has_member_arrow_ =
-            CPP_requires ((I) i)
+            CPP_requires ((I) i) //
             (
                 i.operator->()
             );

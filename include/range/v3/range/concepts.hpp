@@ -78,7 +78,7 @@ namespace ranges
     // clang-format off
     template<typename T>
     CPP_concept_bool range_impl_ =
-        CPP_requires((T &&) t)
+        CPP_requires ((T &&) t) //
         (
             ranges::begin(CPP_fwd(t)), // not necessarily equality-preserving
             ranges::end(CPP_fwd(t))
@@ -96,67 +96,45 @@ namespace ranges
     /// \endcond
 
     template<typename T, typename V>
+    CPP_concept_fragment(output_range_, (T, V),
+        output_iterator<iterator_t<T>, V>
+    );
+    template<typename T, typename V>
     CPP_concept_bool output_range =
-        range<T> && CPP_requires((iterator_t<CPP_type(T)>))
-        (
-            concepts::requires_<output_iterator<iterator_t<CPP_type(T)>, V>>
-        );
+        range<T> && CPP_fragment(ranges::output_range_, T, V);
 
-    /// \cond
-    // Needed to work around a bug in GCC
     template<typename T>
-    CPP_concept_bool input_range_ =
-        CPP_requires((iterator_t<CPP_type(T)>))
-        (
-            concepts::requires_<input_iterator<iterator_t<CPP_type(T)>>>
-        );
-    /// \endcond
-
+    CPP_concept_fragment(input_range_, (T),
+        input_iterator<iterator_t<T>>
+    );
     template<typename T>
     CPP_concept_bool input_range =
-        range<T> && input_range_<T>;
+        range<T> && CPP_fragment(ranges::input_range_, T);
 
-    /// \cond
-    // Needed to work around a bug in GCC
     template<typename T>
-    CPP_concept_bool forward_range_ =
-        CPP_requires((iterator_t<CPP_type(T)>))
-        (
-            concepts::requires_<forward_iterator<iterator_t<CPP_type(T)>>>
-        );
-    /// \endcond
-
+    CPP_concept_fragment(forward_range_, (T),
+        forward_iterator<iterator_t<T>>
+    );
     template<typename T>
     CPP_concept_bool forward_range =
-        input_range<T> && forward_range_<T>;
+        input_range<T> && CPP_fragment(ranges::forward_range_, T);
 
-    /// \cond
-    // Needed to work around a bug in GCC
     template<typename T>
-    CPP_concept_bool bidirectional_range_ =
-        CPP_requires((iterator_t<CPP_type(T)>))
-        (
-            concepts::requires_<bidirectional_iterator<iterator_t<CPP_type(T)>>>
-        );
-    /// \endcond
-
+    CPP_concept_fragment(bidirectional_range_, (T),
+        bidirectional_iterator<iterator_t<T>>
+    );
     template<typename T>
     CPP_concept_bool bidirectional_range =
-        forward_range<T> && bidirectional_range_<T>;
+        forward_range<T> && CPP_fragment(ranges::bidirectional_range_, T);
 
-    /// \cond
-    // Needed to work around a bug in GCC
     template<typename T>
-    CPP_concept_bool random_access_range_ =
-        CPP_requires((iterator_t<CPP_type(T)>))
-        (
-            concepts::requires_<random_access_iterator<iterator_t<CPP_type(T)>>>
-        );
-    /// \endcond
+    CPP_concept_fragment(random_access_range_, (T),
+        random_access_iterator<iterator_t<T>>
+    );
 
     template<typename T>
     CPP_concept_bool random_access_range =
-        bidirectional_range<T> && random_access_range_<T>;
+        bidirectional_range<T> && CPP_fragment(ranges::random_access_range_, T);
     // clang-format on
 
     /// \cond
@@ -170,39 +148,25 @@ namespace ranges
     } // namespace detail
       /// \endcond
 
-    /// \cond
-    // Needed to work around a bug in GCC
     // clang-format off
     template<typename T>
-    CPP_concept_bool contiguous_range_ =
-        CPP_requires((iterator_t<CPP_type(T)>), (detail::data_t<CPP_type(T)>))
-        (
-            concepts::requires_<
-                contiguous_iterator<iterator_t<CPP_type(T)>> &&
-                same_as<
-                    detail::data_t<CPP_type(T)>,
-                    std::add_pointer_t<iter_reference_t<iterator_t<CPP_type(T)>>>>>
-        );
-    /// \endcond
+    CPP_concept_fragment(contiguous_range_, (T),
+        contiguous_iterator<iterator_t<T>> &&
+        same_as<detail::data_t<T>, std::add_pointer_t<iter_reference_t<iterator_t<T>>>>
+    );
 
     template<typename T>
     CPP_concept_bool contiguous_range =
-        random_access_range<T> && contiguous_range_<T>;
+        random_access_range<T> && CPP_fragment(ranges::contiguous_range_, T);
 
-    /// \cond
-    // Needed to work around a bug in GCC
     template<typename T>
-    CPP_concept_bool common_range_ =
-        CPP_requires((iterator_t<CPP_type(T)>), (sentinel_t<CPP_type(T)>))
-        (
-            concepts::requires_<
-                same_as<iterator_t<CPP_type(T)>, sentinel_t<CPP_type(T)>>>
-        );
-    /// \endcond
+    CPP_concept_fragment(common_range_, (T),
+        same_as<iterator_t<T>, sentinel_t<T>>
+    );
 
     template<typename T>
     CPP_concept_bool common_range =
-        range<T> && common_range_<T>;
+        range<T> && CPP_fragment(ranges::common_range_, T);
 
     /// \cond
     template<typename T>
@@ -211,14 +175,19 @@ namespace ranges
     /// \endcond
 
     template<typename T>
+    CPP_concept_fragment(sized_range_, (T),
+        detail::integer_like_<range_size_t<T>>
+    );
+    #define CPP_noop
+    template<typename T>
     CPP_concept_bool sized_range =
         range<T> &&
         !disable_sized_range<uncvref_t<T>> &&
-        CPP_requires ((T &) t, (range_size_t<CPP_type(T)>))
+        CPP_requires ((T &) t) //
         (
-            ranges::size(t),
-            concepts::requires_<detail::integer_like_<range_size_t<CPP_type(T)>>>
-        );
+            ranges::size(t)
+        ) &&
+        CPP_fragment(ranges::sized_range_, T);
     // clang-format on
 
     /// \cond

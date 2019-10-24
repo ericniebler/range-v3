@@ -237,13 +237,13 @@ namespace ranges
             //   exceptions.
         template<typename T>
         CPP_concept_bool has_cursor_next =
-            CPP_requires ((T &) t)
+            CPP_requires ((T &) t) //
             (
                 range_access::next(t)
             );
         template<typename S, typename C>
         CPP_concept_bool sentinel_for_cursor =
-            CPP_requires ((S &)s, (C &)c)
+            CPP_requires ((S &)s, (C &)c) //
             (
                 range_access::equal(c, s),
                 concepts::requires_<convertible_to<decltype(
@@ -252,25 +252,25 @@ namespace ranges
             semiregular<S> && cursor<C>;
         template<typename T>
         CPP_concept_bool readable_cursor =
-            CPP_requires ((T &)t)
+            CPP_requires ((T &)t) //
             (
                 range_access::read(t)
             );
         template<typename T>
         CPP_concept_bool has_cursor_arrow =
-            CPP_requires ((T const &)t)
+            CPP_requires ((T const &)t) //
             (
                 range_access::arrow(t)
             );
         template<typename T, typename U>
         CPP_concept_bool writable_cursor =
-            CPP_requires ((T &)t, (U &&)u)
+            CPP_requires ((T &)t, (U &&)u) //
             (
                 range_access::write(t, CPP_fwd(u))
             );
         template<typename S, typename C>
         CPP_concept_bool sized_sentinel_for_cursor =
-            CPP_requires ((S &)s, (C &)c)
+            CPP_requires ((S &)s, (C &)c) //
             (
                 range_access::distance_to(c, s),
                 concepts::requires_<signed_integer_like_<decltype(
@@ -289,21 +289,21 @@ namespace ranges
             !range_access::single_pass_t<uncvref_t<T>>::value;
         template<typename T>
         CPP_concept_bool bidirectional_cursor =
-            CPP_requires ((T &)t)
+            CPP_requires ((T &)t) //
             (
                 range_access::prev(t)
             ) &&
             forward_cursor<T>;
         template<typename T>
         CPP_concept_bool random_access_cursor =
-            CPP_requires ((T &)t)
+            CPP_requires ((T &)t) //
             (
                 range_access::advance(t, range_access::distance_to(t, t))
             ) &&
             bidirectional_cursor<T> && sized_sentinel_for_cursor<T, T>;
         template<typename T>
         CPP_concept_bool contiguous_cursor =
-            CPP_requires ((T &)t)
+            CPP_requires ((T &)t) //
             (
                 concepts::requires_<std::is_lvalue_reference<
                     decltype(range_access::read(t))>::value>

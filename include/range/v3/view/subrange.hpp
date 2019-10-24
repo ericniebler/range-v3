@@ -108,7 +108,7 @@ namespace ranges
 
         template<typename T>
         CPP_concept_bool get_first_and_second_ =
-            CPP_requires((T &) t)
+            CPP_requires ((T &) t) //
             (
                 get<0>(t),
                 get<1>(t)

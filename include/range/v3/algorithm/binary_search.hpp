@@ -40,7 +40,7 @@ namespace ranges
         ///
         /// range-based version of the \c binary_search std algorithm
         ///
-        /// \pre `Rng` is a model of the `Range` concept
+        /// \pre `Rng` is a model of the `range` concept
         template<typename I,
                  typename S,
                  typename V,

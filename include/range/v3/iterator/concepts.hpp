@@ -134,7 +134,7 @@ namespace ranges
 
     template<typename I>
     CPP_concept_bool readable =
-        CPP_requires ((uncvref_t<I> const &) i, (detail::readable_types_t<CPP_type(I)>))
+        CPP_requires ((uncvref_t<I> const &) i, (detail::readable_types_t<CPP_type(I)>)) //
         (
             // { *i } -> same_as<iter_reference_t<I>>;
             concepts::requires_<same_as<decltype(*i), iter_reference_t<CPP_type(I)>>>,
@@ -146,7 +146,7 @@ namespace ranges
 
     template<typename Out, typename T>
     CPP_concept_bool writable =
-        CPP_requires ((Out &&) o, (T &&) t, (iter_reference_t<CPP_type(Out)>&))
+        CPP_requires ((Out &&) o, (T &&) t, (iter_reference_t<CPP_type(Out)>&)) //
         (
             *o = CPP_fwd(t),
             *CPP_fwd(o) = CPP_fwd(t),
@@ -200,7 +200,7 @@ namespace ranges
     CPP_concept_bool weakly_incrementable =
         semiregular<I> &&
         CPP_fragment(ranges::weakly_incrementable_, I) &&
-        CPP_requires ((I) i)
+        CPP_requires ((I) i) //
         (
             ++i,
             i++,
@@ -210,7 +210,7 @@ namespace ranges
     template<typename I>
     CPP_concept_bool incrementable =
         regular<I> && weakly_incrementable<I> &&
-        CPP_requires ((I) i)
+        CPP_requires ((I) i) //
         (
             concepts::requires_<same_as<I, decltype(i++)>>
         );
@@ -234,7 +234,7 @@ namespace ranges
 
     template<typename S, typename I>
     CPP_concept_bool sized_sentinel_for =
-        CPP_requires ((S const &) s, (I const &) i, (iter_difference_t<CPP_type(I)>))
+        CPP_requires ((S const &) s, (I const &) i, (iter_difference_t<CPP_type(I)>)) //
         (
             s - i,
             i - s,
@@ -249,7 +249,7 @@ namespace ranges
     template<typename Out, typename T>
     CPP_concept_bool output_iterator =
         input_or_output_iterator<Out> && writable<Out, T> &&
-        CPP_requires ((Out) o, (T &&) t)
+        CPP_requires ((Out) o, (T &&) t) //
         (
             *o++ = CPP_fwd(t)
         );
@@ -272,7 +272,7 @@ namespace ranges
 
     template<typename I>
     CPP_concept_bool bidirectional_iterator =
-        CPP_requires ((I) i)
+        CPP_requires ((I) i) //
         (
             --i,
             i--,
@@ -617,7 +617,7 @@ namespace ranges
     template<typename I1, typename I2 = I1>
     CPP_concept_bool indirectly_swappable =
         readable<I1> && readable<I2> &&
-        CPP_requires ((I1 const) i1, (I2 const) i2)
+        CPP_requires ((I1 const) i1, (I2 const) i2) //
         (
             ranges::iter_swap(i1, i2),
             ranges::iter_swap(i1, i1),

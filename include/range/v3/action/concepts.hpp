@@ -71,7 +71,7 @@ namespace ranges
 
     template<typename C>
     CPP_concept_bool reservable =
-        CPP_requires ((C &) c, (C const &) cc, (range_size_t<CPP_type(C)>) s)
+        CPP_requires ((C &) c, (C const &) cc, (range_size_t<CPP_type(C)>) s) //
         (
             c.reserve(s),
             cc.capacity(),
@@ -85,7 +85,7 @@ namespace ranges
 
     template<typename C, typename I>
     CPP_concept_bool reservable_with_assign =
-        CPP_requires ((C &) c, (I) i)
+        CPP_requires ((C &) c, (I) i) //
         (
             c.assign(i, i)
         ) &&
@@ -138,15 +138,13 @@ namespace ranges
 
     // clang-format off
     template<typename T>
+    CPP_concept_fragment(lvalue_container_like_, (T),
+        implicitly_convertible_to<detail::is_lvalue_container_like_t<T>, std::true_type>
+    );
+    template<typename T>
     CPP_concept_bool lvalue_container_like =
         forward_range<T> &&
-        CPP_requires((detail::is_lvalue_container_like_t<CPP_type(T)>))
-        (
-            concepts::requires_<
-                implicitly_convertible_to<
-                    detail::is_lvalue_container_like_t<CPP_type(T)>,
-                    std::true_type>>
-        );
+        CPP_fragment(ranges::lvalue_container_like_, T);
     // clang-format on
     /// @}
 } // namespace ranges

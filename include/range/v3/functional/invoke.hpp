@@ -54,7 +54,7 @@ namespace ranges
         // clang-format off
         template<typename T>
         CPP_concept_bool dereferenceable_ =
-            CPP_requires ((T &&) t)
+            CPP_requires ((T &&) t) //
             (
                 detail::can_reference_(*CPP_fwd(t))
             );

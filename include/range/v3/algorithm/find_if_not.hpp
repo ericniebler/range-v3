@@ -38,7 +38,7 @@ namespace ranges
         ///
         /// range-based version of the \c find_if_not std algorithm
         ///
-        /// \pre `Rng` is a model of the `Range` concept
+        /// \pre `Rng` is a model of the `range` concept
         /// \pre `I` is a model of the `input_iterator` concept
         /// \pre `S` is a model of the `sentinel_for<I>` concept
         /// \pre `P` is a model of the `invocable<V>` concept, where `V` is the

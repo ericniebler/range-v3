@@ -61,7 +61,7 @@ namespace ranges
             ///
             /// range-based version of the `upper_bound` std algorithm
             ///
-            /// \pre `Rng` is a model of the `Range` concept
+            /// \pre `Rng` is a model of the `range` concept
             template<typename I, typename V, typename C = less, typename P = identity>
             auto operator()(I first, iter_difference_t<I> d, V const & val, C pred = C{},
                             P proj = P{}) const -> CPP_ret(I)( //

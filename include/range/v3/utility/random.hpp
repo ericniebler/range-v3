@@ -85,7 +85,7 @@ namespace ranges
     template<typename Gen>
     CPP_concept_bool uniform_random_bit_generator =
         invocable<Gen &> &&
-        CPP_requires((int))
+        CPP_requires ((int)) //
         (
             CPP_type(Gen)::min(),
             CPP_type(Gen)::max()

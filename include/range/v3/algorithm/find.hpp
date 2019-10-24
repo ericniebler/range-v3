@@ -38,7 +38,7 @@ namespace ranges
         ///
         /// range-based version of the \c find std algorithm
         ///
-        /// \pre `Rng` is a model of the `Range` concept
+        /// \pre `Rng` is a model of the `range` concept
         /// \pre `I` is a model of the `input_iterator` concept
         /// \pre `S` is a model of the `sentinel_for<I>` concept
         /// \pre `P` is a model of the `invocable<iter_common_reference_t<I>>` concept

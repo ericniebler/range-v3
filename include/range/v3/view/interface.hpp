@@ -79,7 +79,7 @@ namespace ranges
         // clang-format off
         template<typename Rng>
         CPP_concept_bool can_empty_ =
-            CPP_requires ((Rng &) rng)
+            CPP_requires ((Rng &) rng) //
             (
                 ranges::empty(rng)
             );

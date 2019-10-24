@@ -188,16 +188,21 @@
 #define CPP_requires(...) \
     CPP_requires_n(CPP_PP_COUNT(__VA_ARGS__), __VA_ARGS__)
 
-#if CPP_CXX_CONCEPTS
+#if CPP_CXX_CONCEPTS || defined(CPP_DOXYGEN_INVOKED)
 #define CPP_concept META_CONCEPT
 #define CPP_concept_bool META_CONCEPT
+#ifdef CPP_DOXYGEN_INVOKED
+#define CPP_arg_2(...) __VA_ARGS__
+#define CPP_valid_expressions
+#else
 #define CPP_arg_2(...) ::concepts::detail::id_t<__VA_ARGS__>
+#define CPP_valid_expressions(...) \
+    {__VA_ARGS__;}
+#endif
 #define CPP_arg(ARG) CPP_arg_2 ARG
 #define CPP_requires_n(N, ...) \
     requires(CPP_PP_FOR_EACH_N(N, CPP_arg, __VA_ARGS__)) \
         CPP_valid_expressions
-#define CPP_valid_expressions(...) \
-    {__VA_ARGS__;}
 #define CPP_defer_(CONCEPT, ...) \
     CONCEPT<__VA_ARGS__>
 #define CPP_defer(CONCEPT, ...) \
@@ -867,7 +872,7 @@ namespace concepts
 
         template<typename T, typename U>
         CPP_concept_bool weakly_equality_comparable_with_ =
-            CPP_requires ((detail::as_cref_t<T>) t, (detail::as_cref_t<U>) u)
+            CPP_requires ((detail::as_cref_t<T>) t, (detail::as_cref_t<U>) u) //
             (
                 (t == u) ? 1 : 0,
                 (t != u) ? 1 : 0,
@@ -926,7 +931,7 @@ namespace concepts
 
         template<typename From, typename To>
         CPP_concept_bool explicitly_convertible_to =
-            CPP_requires ((CPP_type(From)(*)()) from)
+            CPP_requires ((CPP_type(From)(*)()) from) //
             (
                 static_cast<To>(from())
             );
@@ -991,7 +996,7 @@ namespace concepts
         template<typename T, typename U>
         CPP_concept_bool assignable_from =
             std::is_lvalue_reference<T>::value &&
-            CPP_requires((T) t, (U &&) u)
+            CPP_requires ((T) t, (U &&) u) //
             (
                 t = (U &&) u,
                 requires_<same_as<T, decltype(t = (U &&) u)>>
@@ -999,7 +1004,7 @@ namespace concepts
 
         template<typename T>
         CPP_concept_bool swappable =
-            CPP_requires ((T &) t, (T &) u)
+            CPP_requires ((T &) t, (T &) u) //
             (
                 concepts::swap(t, u)
             );
@@ -1007,7 +1012,7 @@ namespace concepts
         template<typename T, typename U>
         CPP_concept_bool swappable_with =
             common_reference_with<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
-            CPP_requires ((T &&) t, (U &&) u)
+            CPP_requires ((T &&) t, (U &&) u) //
             (
                 concepts::swap(CPP_fwd(t), CPP_fwd(t)),
                 concepts::swap(CPP_fwd(u), CPP_fwd(u)),
@@ -1041,7 +1046,7 @@ namespace concepts
         template<typename T>
         CPP_concept_bool totally_ordered =
             equality_comparable<T> &&
-            CPP_requires ((detail::as_cref_t<T>) t, (detail::as_cref_t<T>) u)
+            CPP_requires ((detail::as_cref_t<T>) t, (detail::as_cref_t<T>) u) //
             (
                 t < u ? 1 : 0,
                 t > u ? 1 : 0,
@@ -1051,7 +1056,7 @@ namespace concepts
 
         template<typename T, typename U>
         CPP_concept_bool totally_ordered_with =
-            CPP_requires ((detail::as_cref_t<T>) t, (detail::as_cref_t<U>) u)
+            CPP_requires ((detail::as_cref_t<T>) t, (detail::as_cref_t<U>) u) //
             (
                 t < u ? 1 : 0,
                 t > u ? 1 : 0,
