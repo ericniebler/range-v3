@@ -207,8 +207,9 @@ namespace ranges
                 fun_ref_ &, copy_tag, iterator_t<meta::const_if_c<Const, Rngs>>...>>;
 
             cursor() = default;
+			template<typename... Its>
             cursor(fun_ref_ fun,
-                   std::tuple<iterator_t<meta::const_if_c<Const, Rngs>>...> its)
+                   std::tuple<Its...> its) //iterator_t<meta::const_if_c<Const, Rngs>>...> its)
               : fun_(std::move(fun))
               , its_(std::move(its))
             {}
@@ -298,8 +299,8 @@ namespace ranges
 
         template<bool Const>
         using end_cursor_t =
-            meta::if_c<concepts::and_v<(bool)common_range<Rngs>...,
-                                       !(bool)single_pass_iterator_<iterator_t<Rngs>>...>,
+            meta::if_c<concepts::and_v<(bool)common_range<Rngs>...> &&
+                       concepts::and_v<(!(bool)single_pass_iterator_<iterator_t<Rngs>>)...>,
                        cursor<Const>, sentinel<Const>>;
 
         cursor<false> begin_cursor()

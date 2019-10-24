@@ -184,12 +184,13 @@ namespace ranges
                                            sized_sentinel_for<S, I> > {});
         }
 
-        template<typename Cont, typename I, typename Rng>
+		// BUGBUG WORKAROUND MSVC 19.23 likes CPP_template here instead of CPP_ret 
+        CPP_template(typename Cont, typename I, typename Rng)( //
+            requires lvalue_container_like<Cont> && input_iterator<I> && range<Rng>)
         auto insert(Cont && cont, I p, Rng && rng)
-            -> CPP_ret(decltype(detail::insert_impl(
+            -> decltype(detail::insert_impl(
                 static_cast<Cont &&>(cont), std::move(p), static_cast<Rng &&>(rng),
-                meta::bool_<random_access_reservable<Cont> && sized_range<Rng>>{})))( //
-                requires lvalue_container_like<Cont> && input_iterator<I> && range<Rng>)
+                meta::bool_<random_access_reservable<Cont> && sized_range<Rng>>{}))
         {
             return detail::insert_impl(static_cast<Cont &&>(cont),
                                        std::move(p),

@@ -353,6 +353,20 @@ namespace ranges
                 return c;
             }
 
+//#if defined(_MSC_VER) && !defined(__clang__)
+//			CPP_template(typename Rng)( //
+//				requires to_container_reserve<container_t<MetaFn, Rng>, range_cpp17_iterator_t<Rng>, Rng > )
+//				static constexpr std::true_type has_reserve_(int)
+//			{
+//				return {};
+//			}
+//			template<typename Rng>
+//			static constexpr std::false_type has_reserve_(long)
+//			{
+//				return {};
+//			}
+//#endif
+
         public:
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(container_t<MetaFn, Rng>)( //
@@ -363,9 +377,14 @@ namespace ranges
                               "Attempt to convert an infinite range to a container.");
                 using cont_t = container_t<MetaFn, Rng>;
                 using iter_t = range_cpp17_iterator_t<Rng>;
-                using use_reserve_t =
+#if defined(_MSC_VER) && !defined(__clang__)
+				// BUGBUG FIXME MSVC
+				return impl<cont_t, iter_t>(static_cast<Rng&&>(rng), std::false_type{});// fn::has_reserve_<Rng>(0));
+#else
+				using use_reserve_t =
                     meta::bool_<(bool)to_container_reserve<cont_t, iter_t, Rng>>;
-                return impl<cont_t, iter_t>(static_cast<Rng &&>(rng), use_reserve_t{});
+				return impl<cont_t, iter_t>(static_cast<Rng&&>(rng), use_reserve_t{});
+#endif
             }
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(container_t<MetaFn, Rng>)( //
