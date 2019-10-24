@@ -89,14 +89,14 @@ namespace ranges
             defer::pair_like_gcc_bugs_2_<T>;
 #else
         template<typename T>
-        CPP_concept_fragment(pair_like_gcc_bugs_, (T),
+        CPP_concept_fragment(pair_like_gcc_bugs_frag_, (T),
             ranges::defer::type<meta::_t<std::tuple_size<T>>> &&
             defer::pair_like_gcc_bugs_2_<T>
         );
 
         template<typename T>
         CPP_concept_bool pair_like_gcc_bugs_ =
-            CPP_fragment(detail::pair_like_gcc_bugs_, T);
+            CPP_fragment(detail::pair_like_gcc_bugs_frag_, T);
 #endif
 
         namespace defer
