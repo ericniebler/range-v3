@@ -39,12 +39,9 @@ namespace ranges
     namespace detail
     {
         // clang-format off
-        CPP_def
-        (
-            template(typename R)
-            concept random_access_and_sized_range,
-                random_access_range<R> && sized_range<R>
-        );
+        template<typename R>
+        CPP_concept_bool random_access_and_sized_range =
+            random_access_range<R> && sized_range<R>;
         // clang-format on
 
         template<typename R>

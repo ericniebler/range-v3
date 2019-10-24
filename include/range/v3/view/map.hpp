@@ -81,13 +81,10 @@ namespace ranges
         };
 
         // clang-format off
-        CPP_def
-        (
-            template(typename T)
-            concept kv_pair_like_,
-                invocable<get_first const &, T> &&
-                invocable<get_second const &, T>
-        );
+        template<typename T>
+        CPP_concept_bool kv_pair_like_ =
+            invocable<get_first const &, T> &&
+            invocable<get_second const &, T>;
         // clang-format on
     } // namespace detail
     /// \endcond

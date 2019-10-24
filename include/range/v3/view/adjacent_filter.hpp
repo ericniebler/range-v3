@@ -37,13 +37,14 @@ namespace ranges
     namespace detail
     {
         // clang-format off
-        CPP_def
-        (
-            template(typename Rng, typename Pred)
-            concept adjacent_filter_constraints,
-                viewable_range<Rng> && forward_range<Rng> &&
-                indirect_binary_predicate_<Pred, iterator_t<Rng>, iterator_t<Rng>>
+        template<typename Rng, typename Pred>
+        CPP_concept_fragment(adjacent_filter_constraints_, (Rng, Pred),
+            indirect_binary_predicate_<Pred, iterator_t<Rng>, iterator_t<Rng>>
         );
+        template<typename Rng, typename Pred>
+        CPP_concept_bool adjacent_filter_constraints =
+            viewable_range<Rng> && forward_range<Rng> &&
+            CPP_fragment(detail::adjacent_filter_constraints_, Rng, Pred);
         // clang-format on
     } // namespace detail
     /// \endcond
@@ -135,7 +136,8 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)(requires copy_constructible<Rng>)
+    CPP_template(typename Rng, typename Fun)( //
+        requires copy_constructible<Rng>)
         adjacent_filter_view(Rng &&, Fun)
             ->adjacent_filter_view<views::all_t<Rng>, Fun>;
 #endif

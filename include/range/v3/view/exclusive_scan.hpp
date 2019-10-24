@@ -29,15 +29,16 @@
 namespace ranges
 {
     // clang-format off
-    CPP_def
-    (
-        template(typename Rng, typename T, typename Fun)
-        concept exclusive_scan_constraints,
-            viewable_range<Rng> && input_range<Rng> &&
-            copy_constructible<T> &&
-            invocable<Fun &, T, range_reference_t<Rng>> &&
-            assignable_from<T &, invoke_result_t<Fun &, T, range_reference_t<Rng>>>
+    template<typename Rng, typename T, typename Fun>
+    CPP_concept_fragment(exclusive_scan_constraints_, (Rng, T, Fun),
+        invocable<Fun &, T, range_reference_t<Rng>> &&
+        assignable_from<T &, invoke_result_t<Fun &, T, range_reference_t<Rng>>>
     );
+    template<typename Rng, typename T, typename Fun>
+    CPP_concept_bool exclusive_scan_constraints =
+        viewable_range<Rng> && input_range<Rng> &&
+        copy_constructible<T> &&
+        CPP_fragment(ranges::exclusive_scan_constraints_, Rng, T, Fun);
     // clang-format on
 
     /// \addtogroup group-views

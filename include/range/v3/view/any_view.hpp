@@ -154,12 +154,19 @@ namespace ranges
         };
 
         // clang-format off
-        CPP_def
-        (
-            template(typename Rng, typename Ref)
-            concept any_compatible_range,
-                convertible_to<range_reference_t<Rng>, Ref>
+        template<typename Rng, typename Ref>
+        CPP_concept_fragment(any_compatible_range_, (Rng, Ref),
+            convertible_to<range_reference_t<Rng>, Ref>
         );
+        template<typename Rng, typename Ref>
+        CPP_concept_bool any_compatible_range =
+            CPP_fragment(detail::any_compatible_range_, Rng, Ref);
+        namespace defer
+        {
+            template<typename Rng, typename Ref>
+            CPP_concept any_compatible_range =
+                CPP_defer(detail::any_compatible_range, Rng, Ref);
+        }
         // clang-format on
 
         template<typename Rng, typename = void>

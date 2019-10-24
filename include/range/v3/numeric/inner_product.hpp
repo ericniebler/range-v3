@@ -35,36 +35,38 @@ namespace ranges
     /// \addtogroup group-numerics
     /// @{
     // clang-format off
-    CPP_def
-    (
-        template(typename I1, typename I2, typename T, typename BOp1 = plus,
-            typename BOp2 = multiplies, typename P1 = identity, typename P2 = identity)
-        (concept inner_product_constraints)(I1, I2, T, BOp1, BOp2, P1, P2),
-            input_iterator<I1> &&
-            input_iterator<I2> &&
-            invocable<P1&, iter_value_t<I1>> &&
-            invocable<P2&, iter_value_t<I2>> &&
-            invocable<
+    template<typename I1, typename I2, typename T, typename BOp1, typename BOp2,
+        typename P1, typename P2>
+    CPP_concept_fragment(inner_product_constraints_, (I1, I2, T, BOp1, BOp2, P1, P2),
+        invocable<P1&, iter_value_t<I1>> &&
+        invocable<P2&, iter_value_t<I2>> &&
+        invocable<
+            BOp2&,
+            invoke_result_t<P1&, iter_value_t<I1>>,
+            invoke_result_t<P2&, iter_value_t<I2>>> &&
+        invocable<
+            BOp1&,
+            T,
+            invoke_result_t<
                 BOp2&,
                 invoke_result_t<P1&, iter_value_t<I1>>,
-                invoke_result_t<P2&, iter_value_t<I2>>> &&
-            invocable<
+                invoke_result_t<P2&, iter_value_t<I2>>>> &&
+        assignable_from<
+            T&,
+            invoke_result_t<
                 BOp1&,
                 T,
                 invoke_result_t<
                     BOp2&,
                     invoke_result_t<P1&, iter_value_t<I1>>,
-                    invoke_result_t<P2&, iter_value_t<I2>>>> &&
-            assignable_from<
-                T&,
-                invoke_result_t<
-                    BOp1&,
-                    T,
-                    invoke_result_t<
-                        BOp2&,
-                        invoke_result_t<P1&, iter_value_t<I1>>,
-                        invoke_result_t<P2&, iter_value_t<I2>>>>>
+                    invoke_result_t<P2&, iter_value_t<I2>>>>>
     );
+    template<typename I1, typename I2, typename T, typename BOp1 = plus,
+        typename BOp2 = multiplies, typename P1 = identity, typename P2 = identity>
+    CPP_concept_bool inner_product_constraints =
+        input_iterator<I1> &&
+        input_iterator<I2> &&
+        CPP_fragment(ranges::inner_product_constraints_, I1, I2, T, BOp1, BOp2, P1, P2);
     // clang-format on
 
     struct inner_product_fn

@@ -471,26 +471,29 @@ namespace ranges
         // Don't forget to update views::for_each whenever this set
         // of concepts changes
         // clang-format off
-        CPP_def
-        (
-            template(typename Rng, typename Fun)
-            concept transformable_range,
-                viewable_range<Rng> && input_range<Rng> &&
-                copy_constructible<Fun> &&
-                regular_invocable<Fun &, range_reference_t<Rng>> &&
-                (!std::is_void<indirect_result_t<Fun &, iterator_t<Rng>>>::value)
+        template<typename Rng, typename Fun>
+        CPP_concept_fragment(transformable_range_, (Rng, Fun),
+            regular_invocable<Fun &, range_reference_t<Rng>> &&
+            (!std::is_void<indirect_result_t<Fun &, iterator_t<Rng>>>::value)
         );
+        template<typename Rng, typename Fun>
+        CPP_concept_bool transformable_range =
+            viewable_range<Rng> && input_range<Rng> &&
+            copy_constructible<Fun> &&
+            CPP_fragment(views::transformable_range_, Rng, Fun);
 
-        CPP_def
-        (
-            template(typename Rng1, typename Rng2, typename Fun)
-            concept transformable_ranges,
-                viewable_range<Rng1> && input_range<Rng1> &&
-                viewable_range<Rng2> && input_range<Rng2> &&
-                copy_constructible<Fun> &&
-                (!std::is_void<
-                    indirect_result_t<Fun &, iterator_t<Rng1>, iterator_t<Rng2>>>::value)
+        template<typename Rng1, typename Rng2, typename Fun>
+        CPP_concept_fragment(transformable_ranges_, (Rng1, Rng2, Fun),
+            regular_invocable<Fun &, range_reference_t<Rng1>, range_reference_t<Rng2>> &&
+            (!std::is_void<
+                indirect_result_t<Fun &, iterator_t<Rng1>, iterator_t<Rng2>>>::value)
         );
+        template<typename Rng1, typename Rng2, typename Fun>
+        CPP_concept_bool transformable_ranges =
+            viewable_range<Rng1> && input_range<Rng1> &&
+            viewable_range<Rng2> && input_range<Rng2> &&
+            copy_constructible<Fun> &&
+            CPP_fragment(views::transformable_ranges_, Rng1, Rng2, Fun);
         // clang-format on
 
         struct transform_base_fn

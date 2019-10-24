@@ -135,6 +135,25 @@
     M(_1), M(_2)
 #define CPP_PP_FOR_EACH_3(M, _1, _2, _3) \
     M(_1), M(_2), M(_3)
+#define CPP_PP_FOR_EACH_4(M, _1, _2, _3, _4) \
+    M(_1), M(_2), M(_3), M(_4)
+#define CPP_PP_FOR_EACH_5(M, _1, _2, _3, _4, _5) \
+    M(_1), M(_2), M(_3), M(_4), M(_5)
+#define CPP_PP_FOR_EACH_6(M, _1, _2, _3, _4, _5, _6) \
+    M(_1), M(_2), M(_3), M(_4), M(_5), M(_6)
+#define CPP_PP_FOR_EACH_7(M, _1, _2, _3, _4, _5, _6, _7) \
+    M(_1), M(_2), M(_3), M(_4), M(_5), M(_6), M(_7)
+#define CPP_PP_FOR_EACH_8(M, _1, _2, _3, _4, _5, _6, _7, _8) \
+    M(_1), M(_2), M(_3), M(_4), M(_5), M(_6), M(_7), M(_8)
+
+#define CPP_PP_PROBE_EMPTY_PROBE_CPP_PP_PROBE_EMPTY                             \
+    CPP_PP_PROBE(~)                                                             \
+
+#define CPP_PP_PROBE_EMPTY()
+#define CPP_PP_IS_NOT_EMPTY(...)                                                \
+    CPP_PP_CHECK(CPP_PP_CAT(CPP_PP_PROBE_EMPTY_PROBE_,                          \
+        CPP_PP_PROBE_EMPTY __VA_ARGS__ ()))                                     \
+    /**/
 
 #define CPP_assert(...)                                                         \
     static_assert(static_cast<bool>(__VA_ARGS__),                               \
@@ -236,245 +255,6 @@
         (::concepts::detail::tag<__VA_ARGS__>*)nullptr))::value() \
     /**/
 #endif
-
-////////////////////////////////////////////////////////////////////////////////
-// CPP_def
-//   For defining concepts with a syntax similar to C++20. For example:
-//
-//     CPP_def(
-//         // The assignable_from concept from the C++20
-//         template(typename T, typename U)
-//         concept assignable_from,
-//             requires (T t, U &&u) (
-//                 t = (U &&) u,
-//                 ::concepts::requires_<same_as<decltype(t = (U &&) u), T>>
-//             ) &&
-//             std::is_lvalue_reference_v<T>
-//     );
-#define CPP_def(DECL, ...)                                                      \
-    CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                            \
-    CPP_PP_EVAL(                                                                \
-        CPP_PP_DECL_DEF,                                                        \
-        CPP_PP_CAT(CPP_PP_DEF_DECL_, DECL),                                     \
-        __VA_ARGS__)                                                            \
-    CPP_PP_IGNORE_CXX2A_COMPAT_END                                              \
-    /**/
-#define CPP_PP_DECL_DEF_NAME(...)                                               \
-    CPP_PP_CAT(CPP_PP_DEF_, __VA_ARGS__),                                       \
-    /**/
-#define CPP_PP_DECL_DEF(TPARAM, NAME, ...)                                      \
-    CPP_PP_CAT(CPP_PP_DECL_DEF_, CPP_PP_IS_PAREN(NAME))(                        \
-        TPARAM,                                                                 \
-        NAME,                                                                   \
-        __VA_ARGS__)                                                            \
-    /**/
-// The defn is of the form:
-//   template(typename A, typename B = void, typename... Rest)
-//   (concept Name)(A, B, Rest...),
-//      // requirements...
-#define CPP_PP_DECL_DEF_1(TPARAM, NAME, ...)                                    \
-    CPP_PP_EVAL2(                                                               \
-        CPP_PP_DECL_DEF_IMPL,                                                   \
-        TPARAM,                                                                 \
-        CPP_PP_DECL_DEF_NAME NAME,                                              \
-        __VA_ARGS__)                                                            \
-    /**/
-// The defn is of the form:
-//   template(typename A, typename B)
-//   concept Name,
-//      // requirements...
-// Compute the template arguments (A, B) from the template introducer.
-#define CPP_PP_DECL_DEF_0(TPARAM, NAME, ...)                                    \
-    CPP_PP_DECL_DEF_IMPL(                                                       \
-        TPARAM,                                                                 \
-        CPP_PP_CAT(CPP_PP_DEF_, NAME),                                          \
-        (CPP_PP_CAT(CPP_PP_AUX_, TPARAM)),                                      \
-        __VA_ARGS__)                                                            \
-    /**/
-// Expand the template definition into a struct and template alias like:
-//    struct NameConcept {
-//      template<typename A, typename B>
-//      static auto Requires_(/* args (optional)*/) ->
-//          decltype(/*requirements...*/);
-//      template<typename A, typename B>
-//      static constexpr auto is_satisfied_by(int) ->
-//          decltype(bool(&Requires_<A,B>)) { return true; }
-//      template<typename A, typename B>
-//      static constexpr bool is_satisfied_by(long) { return false; }
-//    };
-//    template<typename A, typename B>
-//    inline constexpr bool Name = NameConcept::is_satisfied_by<A, B>(0);
-#if CPP_CXX_CONCEPTS
-// No requires expression
-#define CPP_PP_DEF_IMPL_0(...)                                                  \
-    __VA_ARGS__                                                                 \
-    /**/
-// Requires expression
-#define CPP_PP_DEF_IMPL_1(...)                                                  \
-    CPP_PP_CAT(CPP_PP_DEF_IMPL_1_, __VA_ARGS__)                                 \
-    /**/
-#define CPP_PP_DEF_IMPL_1_requires                                              \
-    requires CPP_PP_DEF_IMPL_1_REQUIRES                                         \
-    /**/
-#define CPP_PP_DEF_IMPL_1_REQUIRES(...)                                         \
-    (__VA_ARGS__) CPP_PP_DEF_IMPL_1_REQUIRES_BODY                               \
-    /**/
-#define CPP_PP_DEF_IMPL_1_REQUIRES_BODY(...)                                    \
-    { __VA_ARGS__; }                                                            \
-    /**/
-#ifdef CPP_DOXYGEN_INVOKED
-#define CPP_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, ...)                           \
-    CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                             \
-    META_CONCEPT NAME = CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__)              \
-    /**/
-#else
-#define CPP_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, ...)                           \
-    namespace _CPP_eager_                                                       \
-    {                                                                           \
-        CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
-        META_CONCEPT NAME = CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);         \
-    }                                                                           \
-    namespace defer                                                             \
-    {                                                                           \
-        using _CPP_eager_::NAME;                                                \
-    }                                                                           \
-    using _CPP_eager_::NAME                                                     \
-    /**/
-#endif
-#else
-// No requires expression:
-#define CPP_PP_DEF_IMPL_0(...)                                                  \
-    () -> std::enable_if_t<CPP_FORCE_TO_BOOL(__VA_ARGS__), int>                 \
-    /**/
-// Requires expression:
-#define CPP_PP_DEF_IMPL_1(...)                                                  \
-    CPP_PP_CAT(CPP_PP_DEF_IMPL_1_, __VA_ARGS__) ) , int>                        \
-    /**/
-#define CPP_PP_DEF_IMPL_1_requires(...)                                         \
-    (__VA_ARGS__) ->                                                            \
-        std::enable_if_t<CPP_FORCE_TO_BOOL(                                     \
-            ::concepts::detail::requires_ CPP_PP_DEF_REQUIRES_BODY              \
-    /**/
- #define CPP_PP_DEF_REQUIRES_BODY(...)                                          \
-    <decltype(__VA_ARGS__, void())>()                                           \
-    /**/
-#ifdef CPP_WORKAROUND_MSVC_780775
-#define CPP_PP_DECL_DEF_IMPL_HACK(ARGS)                                         \
-    template<typename C_ = Concept,                                             \
-        decltype(&C_::template Requires_<CPP_PP_EXPAND ARGS>) = nullptr>        \
-    static constexpr bool impl(int) noexcept { return true; }                   \
-    /**/
-#else
-#define CPP_PP_DECL_DEF_IMPL_HACK(ARGS)                                         \
-    template<typename C_ = Concept>                                             \
-    static constexpr decltype(                                                  \
-        &C_::template Requires_<CPP_PP_EXPAND ARGS>, true)                      \
-    impl(int) noexcept { return true; }                                         \
-    /**/
-#endif
-#define CPP_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, ...)                           \
-    namespace cpp_detail_ {                                                     \
-        struct CPP_PP_CAT(NAME, _concept) {                                     \
-            using Concept = CPP_PP_CAT(NAME, _concept);                         \
-            CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                     \
-            static auto Requires_ CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);   \
-            CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                     \
-            struct Eval {                                                       \
-                CPP_PP_DECL_DEF_IMPL_HACK(ARGS)                                 \
-                static constexpr bool impl(long) noexcept { return false; }     \
-                constexpr operator bool() const noexcept {                      \
-                    return Eval::impl(0);                                       \
-                }                                                               \
-                constexpr auto operator!() const noexcept                       \
-                    -> ::concepts::detail::not_<Eval> {                         \
-                    return {};                                                  \
-                }                                                               \
-                template<typename That>                                         \
-                constexpr auto operator&&(That) const noexcept                  \
-                    -> ::concepts::detail::and_<Eval, That> {                   \
-                    static_assert(                                              \
-                        !META_IS_SAME(That, bool),                              \
-                        "All expressions in a conjunction should be "           \
-                        "defer:: concepts");                                    \
-                    return {};                                                  \
-                }                                                               \
-                template<typename That>                                         \
-                constexpr auto operator||(That) const noexcept                  \
-                    -> ::concepts::detail::or_<Eval, That> {                    \
-                    static_assert(                                              \
-                        !META_IS_SAME(That, bool),                              \
-                        "All expressions in a disjunction should be "           \
-                        "defer:: concepts");                                    \
-                    return {};                                                  \
-                }                                                               \
-            };                                                                  \
-        };                                                                      \
-    }                                                                           \
-    namespace defer {                                                           \
-        CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
-        CPP_INLINE_VAR constexpr auto NAME =                                    \
-            cpp_detail_::CPP_PP_CAT(NAME, _concept)::Eval<CPP_PP_EXPAND ARGS>{};\
-    }                                                                           \
-    CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                             \
-    CPP_INLINE_VAR constexpr bool NAME =                                        \
-        (bool) defer::NAME<CPP_PP_EXPAND ARGS>;                                 \
-    using _CPP_concepts_int_ = int                                              \
-    /**/
-#endif
-
-#define CPP_PP_REQUIRES_PROBE_requires                                          \
-    CPP_PP_PROBE(~)                                                             \
-    /**/
-#define CPP_PP_DEF_IMPL(REQUIRES, ...)                                          \
-    CPP_PP_CAT(                                                                 \
-        CPP_PP_DEF_IMPL_IS_PAREN_,                                              \
-        CPP_PP_IS_PAREN(REQUIRES))(REQUIRES)                                    \
-    /**/
-#define CPP_PP_DEF_IMPL_IS_PAREN_0(REQUIRES)                                    \
-    CPP_PP_CAT(                                                                 \
-        CPP_PP_DEF_IMPL_,                                                       \
-        CPP_PP_CHECK(CPP_PP_CAT(CPP_PP_REQUIRES_PROBE_, REQUIRES)))             \
-    /**/
-#define CPP_PP_DEF_IMPL_IS_PAREN_1(REQUIRES)                                    \
-    CPP_PP_DEF_IMPL_0                                                           \
-    /**/
-#define CPP_PP_DEF_DECL_template(...)                                           \
-    template(__VA_ARGS__),                                                      \
-    /**/
-#define CPP_PP_DEF_template(...)                                                \
-    template<__VA_ARGS__>                                                       \
-    /**/
-#define CPP_PP_DEF_concept
-#define CPP_PP_DEF_class
-#define CPP_PP_DEF_typename
-#define CPP_PP_DEF_int
-#define CPP_PP_DEF_bool
-#define CPP_PP_DEF_size_t
-#define CPP_PP_DEF_unsigned
-#define CPP_PP_AUX_template(...)                                                \
-    CPP_PP_CAT2(                                                                \
-        CPP_PP_TPARAM_,                                                         \
-        CPP_PP_COUNT(__VA_ARGS__))(__VA_ARGS__)                                 \
-    /**/
-#define CPP_PP_TPARAM_1(_1)                                                     \
-    CPP_PP_CAT2(CPP_PP_DEF_, _1)
-#define CPP_PP_TPARAM_2(_1, ...)                                                \
-    CPP_PP_CAT2(CPP_PP_DEF_, _1), CPP_PP_TPARAM_1(__VA_ARGS__)
-#define CPP_PP_TPARAM_3(_1, ...)                                                \
-    CPP_PP_CAT2(CPP_PP_DEF_, _1), CPP_PP_TPARAM_2(__VA_ARGS__)
-#define CPP_PP_TPARAM_4(_1, ...)                                                \
-    CPP_PP_CAT2(CPP_PP_DEF_, _1), CPP_PP_TPARAM_3(__VA_ARGS__)
-#define CPP_PP_TPARAM_5(_1, ...)                                                \
-    CPP_PP_CAT2(CPP_PP_DEF_, _1), CPP_PP_TPARAM_4(__VA_ARGS__)
-
-#define CPP_PP_PROBE_EMPTY_PROBE_CPP_PP_PROBE_EMPTY                             \
-    CPP_PP_PROBE(~)                                                             \
-
-#define CPP_PP_PROBE_EMPTY()
-#define CPP_PP_IS_NOT_EMPTY(...)                                                \
-    CPP_PP_CHECK(CPP_PP_CAT(CPP_PP_PROBE_EMPTY_PROBE_,                          \
-        CPP_PP_PROBE_EMPTY __VA_ARGS__ ()))                                     \
-    /**/
 
 ////////////////////////////////////////////////////////////////////////////////
 // CPP_template
@@ -756,7 +536,7 @@
 // CPP_auto_fun
 // Usage:
 //   template <typename A, typename B>
-//   auto CPP_auto_fun(foo)(A a, B b)([const]opt [noexcept(true)]opt)opt
+//   auto CPP_auto_fun(foo)(A a, B b)([const]opt [noexcept(cond)]opt)opt
 //   (
 //       return a + b
 //   )

@@ -77,15 +77,12 @@ namespace ranges
         using from_end_of_t = from_end_<range_difference_t<Rng>>;
 
         // clang-format off
-        CPP_def
-        (
-            template(typename Rng)
-            concept can_empty_,
-                requires (Rng &rng)
-                (
-                    ranges::empty(rng)
-                )
-        );
+        template<typename Rng>
+        CPP_concept_bool can_empty_ =
+            CPP_requires ((Rng &) rng)
+            (
+                ranges::empty(rng)
+            );
         // clang-format on
 
         constexpr bool has_fixed_size_(cardinality c) noexcept

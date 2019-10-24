@@ -78,45 +78,39 @@ namespace ranges
             with_difference_type_<iter_difference_t<I>>>::difference_type;
 
         // clang-format off
-        CPP_def
-        (
-            template(typename I)
-            concept decrementable_,
-                requires (I i)
-                (
-                    --i,
-                    i--,
-                    concepts::requires_<same_as<I&, decltype(--i)>>,
-                    concepts::requires_<same_as<I, decltype(i--)>>
-                ) &&
-                incrementable<I>
-        );
+        template<typename I>
+        CPP_concept_bool decrementable_ =
+            incrementable<I> &&
+            CPP_requires ((I) i)
+            (
+                --i,
+                i--,
+                concepts::requires_<same_as<I&, decltype(--i)>>,
+                concepts::requires_<same_as<I, decltype(i--)>>
+            );
 
-        CPP_def
-        (
-            template(typename I)
-            concept advanceable_,
-                requires (I i, I const j, iota_difference_t<I> const n)
-                (
-                    j - j,
-                    i += n,
-                    i -= n,
-                    static_cast<I>(j - n),
-                    static_cast<I>(j + n),
-                    static_cast<I>(n + j),
-                    // NOT TO SPEC:
-                    // Unsigned integers are advanceable, but subtracting them results in
-                    // an unsigned integral, which is not the same as the difference type,
-                    // which is signed.
-                    concepts::requires_<convertible_to<decltype(j - j), iota_difference_t<I>>>,
-                    concepts::requires_<same_as<I&, decltype(i += n)>>,
-                    concepts::requires_<same_as<I&, decltype(i -= n)>> //,
-                    // concepts::requires_<convertible_to<decltype(i - n), I>>,
-                    // concepts::requires_<convertible_to<decltype(i + n), I>>,
-                    // concepts::requires_<convertible_to<decltype(n + i), I>>
-                ) &&
-                decrementable_<I> && totally_ordered<I>
-        );
+        template<typename I>
+        CPP_concept_bool advanceable_ =
+            decrementable_<I> && totally_ordered<I> &&
+            CPP_requires ((I) i, (I const) j, (iota_difference_t<CPP_type(I)> const) n)
+            (
+                j - j,
+                i += n,
+                i -= n,
+                static_cast<I>(j - n),
+                static_cast<I>(j + n),
+                static_cast<I>(n + j),
+                // NOT TO SPEC:
+                // Unsigned integers are advanceable, but subtracting them results in
+                // an unsigned integral, which is not the same as the difference type,
+                // which is signed.
+                concepts::requires_<convertible_to<decltype(j - j), iota_difference_t<CPP_type(I)>>>,
+                concepts::requires_<same_as<I&, decltype(i += n)>>,
+                concepts::requires_<same_as<I&, decltype(i -= n)>> //,
+                // concepts::requires_<convertible_to<decltype(i - n), I>>,
+                // concepts::requires_<convertible_to<decltype(i + n), I>>,
+                // concepts::requires_<convertible_to<decltype(n + i), I>>
+            );
         // clang-format on
 
         template<typename I>
