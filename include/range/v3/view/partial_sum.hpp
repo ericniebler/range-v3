@@ -35,26 +35,29 @@
 #include <range/v3/view/facade.hpp>
 #include <range/v3/view/view.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \cond
     namespace detail
     {
         // clang-format off
-        CPP_def
-        (
-            template(typename Rng, typename Fun)
-            concept partial_sum_view_constraints,
-                input_range<Rng> &&
-                copy_constructible<Fun> &&
-                copy_constructible<range_value_t<Rng>> &&
-                constructible_from<range_value_t<Rng>, range_reference_t<Rng>> &&
-                assignable_from<range_value_t<Rng> &, range_reference_t<Rng>> &&
-                indirectly_binary_invocable_<Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
-                assignable_from<
-                    range_value_t<Rng> &,
-                    indirect_result_t<Fun &, iterator_t<Rng>, iterator_t<Rng>>>
+        template<typename Rng, typename Fun>
+        CPP_concept_fragment(partial_sum_view_constraints_, (Rng, Fun),
+            copy_constructible<range_value_t<Rng>> &&
+            constructible_from<range_value_t<Rng>, range_reference_t<Rng>> &&
+            assignable_from<range_value_t<Rng> &, range_reference_t<Rng>> &&
+            indirectly_binary_invocable_<Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
+            assignable_from<
+                range_value_t<Rng> &,
+                indirect_result_t<Fun &, iterator_t<Rng>, iterator_t<Rng>>>
         );
+        template<typename Rng, typename Fun>
+        CPP_concept_bool partial_sum_view_constraints =
+            input_range<Rng> &&
+            copy_constructible<Fun> &&
+            CPP_fragment(detail::partial_sum_view_constraints_, Rng, Fun);
         // clang-format on
     } // namespace detail
     /// \endcond
@@ -214,6 +217,8 @@ namespace ranges
     } // namespace views
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::partial_sum_view)

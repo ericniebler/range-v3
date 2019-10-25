@@ -14,9 +14,6 @@
 #ifndef RANGES_V3_ITERATOR_HPP
 #define RANGES_V3_ITERATOR_HPP
 
-#include <range/v3/detail/config.hpp>
-RANGES_DISABLE_WARNINGS
-
 #include <range/v3/utility/any.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/common_tuple.hpp>
@@ -36,7 +33,5 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/utility/variant.hpp>
-
-RANGES_RE_ENABLE_WARNINGS
 
 #endif

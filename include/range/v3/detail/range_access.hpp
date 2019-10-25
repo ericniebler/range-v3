@@ -26,6 +26,8 @@
 
 #include <range/v3/iterator/concepts.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-views
@@ -225,127 +227,89 @@ namespace ranges
         // Concepts that the range cursor must model
         // clang-format off
         //
-        CPP_def
-        (
-            template(typename T)
-            concept cursor,
-                semiregular<T> && semiregular<range_access::mixin_base_t<T>> &&
-                constructible_from<range_access::mixin_base_t<T>, T> &&
-                constructible_from<range_access::mixin_base_t<T>, T const &>
-                // Axiom: mixin_base_t<T> has a member get(), accessible to derived classes,
-                //   which perfectly-returns the contained cursor object and does not throw
-                //   exceptions.
-        );
-        CPP_def
-        (
-            template(typename T)
-            concept has_cursor_next,
-                requires (T &t)
-                (
-                    range_access::next(t)
-                )
-        );
-        CPP_def
-        (
-            template(typename S, typename C)
-            concept sentinel_for_cursor,
-                requires (S &s, C &c)
-                (
-                    range_access::equal(c, s),
-                    concepts::requires_<convertible_to<decltype(
-                        range_access::equal(c, s)), bool>>
-                ) &&
-                semiregular<S> && cursor<C>
-        );
-        CPP_def
-        (
-            template(typename T)
-            concept readable_cursor,
-                requires (T &t)
-                (
-                    range_access::read(t)
-                )
-        );
-        CPP_def
-        (
-            template(typename T)
-            concept has_cursor_arrow,
-                requires (T const &t)
-                (
-                    range_access::arrow(t)
-                )
-        );
-        CPP_def
-        (
-            template(typename T, typename U)
-            concept writable_cursor,
-                requires (T &t, U &&u)
-                (
-                    range_access::write(t, (U &&) u)
-                )
-        );
-        CPP_def
-        (
-            template(typename S, typename C)
-            concept sized_sentinel_for_cursor,
-                requires (S &s, C &c)
-                (
-                    range_access::distance_to(c, s),
-                    concepts::requires_<signed_integer_like_<decltype(
-                        range_access::distance_to(c, s))>>
-                ) &&
-                sentinel_for_cursor<S, C>
-        );
-        CPP_def
-        (
-            template(typename T, typename U)
-            concept output_cursor,
-                writable_cursor<T, U> && cursor<T>
-        );
-        CPP_def
-        (
-            template(typename T)
-            concept input_cursor,
-                readable_cursor<T> && cursor<T> && has_cursor_next<T>
-        );
-        CPP_def
-        (
-            template(typename T)
-            concept forward_cursor,
-                input_cursor<T> && sentinel_for_cursor<T, T> &&
-                !range_access::single_pass_t<uncvref_t<T>>::value
-        );
-        CPP_def
-        (
-            template(typename T)
-            concept bidirectional_cursor,
-                requires (T &t)
-                (
-                    range_access::prev(t)
-                ) &&
-                forward_cursor<T>
-        );
-        CPP_def
-        (
-            template(typename T)
-            concept random_access_cursor,
-                requires (T &t)
-                (
-                    range_access::advance(t, range_access::distance_to(t, t))
-                ) &&
-                bidirectional_cursor<T> && sized_sentinel_for_cursor<T, T>
-        );
-        CPP_def
-        (
-            template(typename T)
-            concept contiguous_cursor,
-                requires (T &t)
-                (
-                    concepts::requires_<std::is_lvalue_reference<decltype(range_access::read(t))>::value>
-                ) &&
-                random_access_cursor<T> &&
-                range_access::contiguous_t<uncvref_t<T>>::value
-        );
+        template<typename T>
+        CPP_concept_bool cursor =
+            semiregular<T> && semiregular<range_access::mixin_base_t<T>> &&
+            constructible_from<range_access::mixin_base_t<T>, T> &&
+            constructible_from<range_access::mixin_base_t<T>, T const &>;
+            // Axiom: mixin_base_t<T> has a member get(), accessible to derived classes,
+            //   which perfectly-returns the contained cursor object and does not throw
+            //   exceptions.
+        template<typename T>
+        CPP_concept_bool has_cursor_next =
+            CPP_requires ((T &) t) //
+            (
+                range_access::next(t)
+            );
+        template<typename S, typename C>
+        CPP_concept_bool sentinel_for_cursor =
+            CPP_requires ((S &)s, (C &)c) //
+            (
+                range_access::equal(c, s),
+                concepts::requires_<convertible_to<decltype(
+                    range_access::equal(c, s)), bool>>
+            ) &&
+            semiregular<S> && cursor<C>;
+        template<typename T>
+        CPP_concept_bool readable_cursor =
+            CPP_requires ((T &)t) //
+            (
+                range_access::read(t)
+            );
+        template<typename T>
+        CPP_concept_bool has_cursor_arrow =
+            CPP_requires ((T const &)t) //
+            (
+                range_access::arrow(t)
+            );
+        template<typename T, typename U>
+        CPP_concept_bool writable_cursor =
+            CPP_requires ((T &)t, (U &&)u) //
+            (
+                range_access::write(t, CPP_fwd(u))
+            );
+        template<typename S, typename C>
+        CPP_concept_bool sized_sentinel_for_cursor =
+            CPP_requires ((S &)s, (C &)c) //
+            (
+                range_access::distance_to(c, s),
+                concepts::requires_<signed_integer_like_<decltype(
+                    range_access::distance_to(c, s))>>
+            ) &&
+            sentinel_for_cursor<S, C>;
+        template<typename T, typename U>
+        CPP_concept_bool output_cursor =
+            writable_cursor<T, U> && cursor<T>;
+        template<typename T>
+        CPP_concept_bool input_cursor =
+            readable_cursor<T> && cursor<T> && has_cursor_next<T>;
+        template<typename T>
+        CPP_concept_bool forward_cursor =
+            input_cursor<T> && sentinel_for_cursor<T, T> &&
+            !range_access::single_pass_t<uncvref_t<T>>::value;
+        template<typename T>
+        CPP_concept_bool bidirectional_cursor =
+            CPP_requires ((T &)t) //
+            (
+                range_access::prev(t)
+            ) &&
+            forward_cursor<T>;
+        template<typename T>
+        CPP_concept_bool random_access_cursor =
+            CPP_requires ((T &)t) //
+            (
+                range_access::advance(t, range_access::distance_to(t, t))
+            ) &&
+            bidirectional_cursor<T> && sized_sentinel_for_cursor<T, T>;
+        template<typename T>
+        CPP_concept_bool contiguous_cursor =
+            CPP_requires ((T &)t) //
+            (
+                concepts::requires_<std::is_lvalue_reference<
+                    decltype(range_access::read(t))>::value>
+            ) &&
+            random_access_cursor<T> &&
+            range_access::contiguous_t<uncvref_t<T>>::value;
         // clang-format on
 
         template<typename Cur, bool IsReadable>
@@ -364,5 +328,7 @@ namespace ranges
     } // namespace detail
     /// \endcond
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

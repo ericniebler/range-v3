@@ -23,6 +23,8 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     namespace views
@@ -110,5 +112,7 @@ namespace ranges
         RANGES_INLINE_VARIABLE(linear_distribute_fn, linear_distribute)
     } // namespace views
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

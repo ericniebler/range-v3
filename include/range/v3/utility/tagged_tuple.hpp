@@ -19,6 +19,8 @@
 
 #include <range/v3/utility/tagged_pair.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
 
@@ -37,5 +39,7 @@ namespace ranges
 } // namespace ranges
 
 RANGES_DIAGNOSTIC_POP
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

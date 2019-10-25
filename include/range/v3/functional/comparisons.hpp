@@ -18,6 +18,8 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-functional
@@ -102,5 +104,7 @@ namespace ranges
     } // namespace cpp20
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

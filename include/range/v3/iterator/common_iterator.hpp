@@ -15,6 +15,7 @@
 #define RANGES_V3_ITERATOR_COMMON_ITERATOR_HPP
 
 #include <cstdint>
+#include <iterator>
 #include <type_traits>
 
 #include <meta/meta.hpp>
@@ -27,6 +28,8 @@
 #include <range/v3/iterator/basic_iterator.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/utility/common_tuple.hpp>
+
+#include <range/v3/detail/disable_warnings.hpp>
 
 namespace ranges
 {
@@ -161,11 +164,12 @@ namespace ranges
             return *ranges::get<0>(data_);
         }
         template<typename J = I>
-        auto operator-> () const noexcept(
-            noexcept(common_iterator::operator_arrow_(std::declval<I const &>(), 42)))
-            -> CPP_ret(decltype(
-                common_iterator::operator_arrow_(std::declval<J const &>(), 42)))( //
-                requires readable<J>)
+        auto operator-> () const
+            noexcept(noexcept(common_iterator::operator_arrow_(std::declval<I const &>(),
+                                                               42)))
+                -> CPP_ret(decltype(
+                    common_iterator::operator_arrow_(std::declval<J const &>(), 42)))( //
+                    requires readable<J>)
         {
             return common_iterator::operator_arrow_(ranges::get<0>(data_), 42);
         }
@@ -442,5 +446,7 @@ namespace std
 
 RANGES_DIAGNOSTIC_POP
 /// \endcond
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

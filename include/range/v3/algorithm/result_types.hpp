@@ -16,6 +16,8 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \cond
@@ -161,5 +163,7 @@ namespace ranges
     } // namespace detail
     /// \endcond
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

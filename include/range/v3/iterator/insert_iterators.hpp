@@ -21,6 +21,8 @@
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/addressof.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-iterator
@@ -188,6 +190,9 @@ namespace ranges
 } // namespace ranges
 
 /// \cond
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
+
 namespace std
 {
     template<typename Container>
@@ -205,5 +210,10 @@ namespace std
       : ::ranges::detail::std_output_iterator_traits<>
     {};
 } // namespace std
+
+RANGES_DIAGNOSTIC_POP
 /// \endcond
+
+#include <range/v3/detail/reenable_warnings.hpp>
+
 #endif // RANGES_V3_ITERATOR_INSERT_ITERATORS_HPP

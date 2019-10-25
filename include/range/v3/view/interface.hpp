@@ -29,6 +29,8 @@
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 #if defined(RANGES_WORKAROUND_GCC_91525)
 #define CPP_template_gcc_workaround CPP_template_sfinae
 #else
@@ -75,15 +77,12 @@ namespace ranges
         using from_end_of_t = from_end_<range_difference_t<Rng>>;
 
         // clang-format off
-        CPP_def
-        (
-            template(typename Rng)
-            concept can_empty_,
-                requires (Rng &rng)
-                (
-                    ranges::empty(rng)
-                )
-        );
+        template<typename Rng>
+        CPP_concept_bool can_empty_ =
+            CPP_requires ((Rng &) rng) //
+            (
+                ranges::empty(rng)
+            );
         // clang-format on
 
         constexpr bool has_fixed_size_(cardinality c) noexcept
@@ -470,7 +469,8 @@ namespace ranges
         /// \cond
         /// Implicit conversion to something that looks like a container.
         CPP_template(typename Container, bool True = true)( // clang-format off
-            requires detail::convertible_to_cont<D<True>, Container>)
+            requires not_same_as_<Container, Derived> &&
+                detail::convertible_to_cont<D<True>, Container>)
         RANGES_DEPRECATED(
             "Implicit conversion from a view to a container is deprecated. "
             "Please use ranges::to in <range/v3/range/conversion.hpp> instead.")
@@ -480,12 +480,14 @@ namespace ranges
         }
         /// \overload
         CPP_template(typename Container, bool True = true)( // clang-format off
-            requires detail::convertible_to_cont<D<True> const, Container>)
+            requires not_same_as_<Container, Derived> &&
+                detail::convertible_to_cont<D<True> const, Container>)
         RANGES_DEPRECATED(
             "Implicit conversion from a view to a container is deprecated. "
             "Please use ranges::to in <range/v3/range/conversion.hpp> instead.")
         constexpr operator Container() const // clang-format on
         {
+            static_assert((bool)same_as<Container, void>, "");
             return ranges::to<Container>(derived());
         }
         /// \endcond
@@ -525,5 +527,7 @@ namespace ranges
     }
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

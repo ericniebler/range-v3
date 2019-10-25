@@ -26,6 +26,8 @@
 #include <range/v3/iterator/access.hpp> // for iter_move, iter_swap
 #include <range/v3/utility/common_type.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-iterator
@@ -168,5 +170,7 @@ namespace ranges
     } // namespace cpp20
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif // RANGES_V3_ITERATOR_TRAITS_HPP

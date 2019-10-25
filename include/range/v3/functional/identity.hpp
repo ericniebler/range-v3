@@ -15,6 +15,8 @@
 
 #include <range/v3/detail/config.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-functional
@@ -40,5 +42,7 @@ namespace ranges
     }
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

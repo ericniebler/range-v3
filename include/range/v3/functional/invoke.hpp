@@ -25,6 +25,8 @@
 
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
@@ -45,20 +47,19 @@ namespace ranges
     /// \cond
     namespace detail
     {
+        RANGES_DIAGNOSTIC_PUSH
+        RANGES_DIAGNOSTIC_IGNORE_VOID_PTR_DEREFERENCE
         template<typename U>
         U & can_reference_(U &&);
-
         // clang-format off
-        CPP_def
-        (
-            template(typename T)
-            concept dereferenceable_,
-                requires (T &&t)
-                (
-                    detail::can_reference_(*static_cast<T &&>(t))
-                )
-        );
+        template<typename T>
+        CPP_concept_bool dereferenceable_ =
+            CPP_requires ((T &&) t) //
+            (
+                detail::can_reference_(*CPP_fwd(t))
+            );
         // clang-format on
+        RANGES_DIAGNOSTIC_POP
 
         template<class T>
         RANGES_INLINE_VAR constexpr bool is_reference_wrapper_v =
@@ -225,5 +226,7 @@ namespace ranges
 } // namespace ranges
 
 RANGES_DIAGNOSTIC_POP
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif // RANGES_V3_FUNCTIONAL_INVOKE_HPP

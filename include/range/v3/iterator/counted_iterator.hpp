@@ -24,6 +24,8 @@
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/traits.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-iterator
@@ -457,5 +459,7 @@ namespace std
     {};
 } // namespace std
 /// \endcond
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

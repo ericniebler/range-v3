@@ -21,6 +21,8 @@
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-functional
@@ -69,7 +71,7 @@ namespace ranges
             operator()(Args &&... args) &
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-            if constexpr(invocable<First &, Args...>)
+            if constexpr((bool)invocable<First &, Args...>)
                 return invoke(first_, (Args &&) args...);
             else
                 return invoke(second_, (Args &&) args...);
@@ -85,7 +87,7 @@ namespace ranges
             operator()(Args &&... args) const &
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-            if constexpr(invocable<First const &, Args...>)
+            if constexpr((bool)invocable<First const &, Args...>)
                 return invoke(first_, (Args &&) args...);
             else
                 return invoke(second_, (Args &&) args...);
@@ -102,7 +104,7 @@ namespace ranges
             operator()(Args &&... args) &&
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-            if constexpr(invocable<First const &, Args...>)
+            if constexpr((bool)invocable<First const &, Args...>)
                 return invoke((First &&) first_, (Args &&) args...);
             else
                 return invoke((overloaded<Rest...> &&) second_, (Args &&) args...);
@@ -133,5 +135,7 @@ namespace ranges
     RANGES_INLINE_VARIABLE(overload_fn, overload)
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

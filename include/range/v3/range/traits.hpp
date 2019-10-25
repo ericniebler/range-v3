@@ -26,6 +26,8 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \cond
@@ -134,5 +136,7 @@ namespace ranges
         using ranges::range_value_t;
     } // namespace cpp20
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

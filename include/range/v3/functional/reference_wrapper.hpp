@@ -24,6 +24,8 @@
 #include <range/v3/utility/addressof.hpp>
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-functional
@@ -187,5 +189,7 @@ namespace ranges
     using unwrap_reference_t = decltype(unwrap_reference(std::declval<T>()));
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

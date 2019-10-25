@@ -27,6 +27,8 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     template<typename>
@@ -457,32 +459,26 @@ namespace ranges
     /// \endcond
 
     // clang-format off
-    CPP_def
-    (
-        template(typename U, typename T)
-        concept optional_should_convert,
-            requires(int)(void()) && !(
-                constructible_from<T, optional<U> &       > ||
-                constructible_from<T, optional<U> &&      > ||
-                constructible_from<T, optional<U> const & > ||
-                constructible_from<T, optional<U> const &&> ||
-                convertible_to<optional<U> &,        T> ||
-                convertible_to<optional<U> &&,       T> ||
-                convertible_to<optional<U> const &,  T> ||
-                convertible_to<optional<U> const &&, T>
-            )
-    );
+    template<typename U, typename T>
+    CPP_concept_bool optional_should_convert =
+        !(
+            constructible_from<T, optional<U> &       > ||
+            constructible_from<T, optional<U> &&      > ||
+            constructible_from<T, optional<U> const & > ||
+            constructible_from<T, optional<U> const &&> ||
+            convertible_to<optional<U> &,        T> ||
+            convertible_to<optional<U> &&,       T> ||
+            convertible_to<optional<U> const &,  T> ||
+            convertible_to<optional<U> const &&, T>
+        );
 
-    CPP_def
-    (
-        template(typename U, typename T)
-        concept optional_should_convert_assign,
-            optional_should_convert<U, T> &&
-            !(assignable_from<T &, optional<U> &> ||
-            assignable_from<T &, optional<U> &&> ||
-            assignable_from<T &, optional<U> const &> ||
-            assignable_from<T &, optional<U> const &&>)
-    );
+    template<typename U, typename T>
+    CPP_concept_bool optional_should_convert_assign =
+        optional_should_convert<U, T> &&
+        !(assignable_from<T &, optional<U> &> ||
+        assignable_from<T &, optional<U> &&> ||
+        assignable_from<T &, optional<U> const &> ||
+        assignable_from<T &, optional<U> const &&>);
     // clang-format on
 
     template<typename T>
@@ -944,5 +940,7 @@ namespace ranges
     } // namespace detail
     /// \endcond
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

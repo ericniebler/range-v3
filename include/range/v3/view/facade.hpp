@@ -27,6 +27,8 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/view/interface.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \cond
@@ -64,7 +66,6 @@ namespace ranges
     {
     protected:
         friend range_access;
-        using view_interface<Derived, Cardinality>::derived;
         struct view_as_cursor : Derived
         {
             view_as_cursor() = default;
@@ -77,7 +78,7 @@ namespace ranges
         // Default implementations
         constexpr view_as_cursor begin_cursor() const
         {
-            return view_as_cursor{&derived()};
+            return view_as_cursor{static_cast<Derived const *>(this)};
         }
         constexpr default_sentinel_t end_cursor() const
         {
@@ -94,7 +95,8 @@ namespace ranges
         constexpr auto begin() -> CPP_ret(detail::facade_iterator_t<D>)( //
             requires same_as<D, Derived>)
         {
-            return detail::facade_iterator_t<D>{range_access::begin_cursor(derived())};
+            return detail::facade_iterator_t<D>{
+                range_access::begin_cursor(*static_cast<Derived *>(this))};
         }
         /// \overload
         template<typename D = Derived>
@@ -102,7 +104,7 @@ namespace ranges
             requires same_as<D, Derived>)
         {
             return detail::facade_iterator_t<D const>{
-                range_access::begin_cursor(derived())};
+                range_access::begin_cursor(*static_cast<Derived const *>(this))};
         }
         /// Let `d` be `static_cast<Derived &>(*this)`. Let `e` be
         /// `std::as_const(d).end_cursor()` if that expression is well-formed;
@@ -115,7 +117,7 @@ namespace ranges
             requires same_as<D, Derived>)
         {
             return static_cast<detail::facade_sentinel_t<D>>(
-                range_access::end_cursor(derived()));
+                range_access::end_cursor(*static_cast<Derived *>(this)));
         }
         /// \overload
         template<typename D = Derived>
@@ -123,11 +125,13 @@ namespace ranges
             requires same_as<D, Derived>)
         {
             return static_cast<detail::facade_sentinel_t<D const>>(
-                range_access::end_cursor(derived()));
+                range_access::end_cursor(*static_cast<Derived const *>(this)));
         }
     };
 
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

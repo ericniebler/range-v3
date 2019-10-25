@@ -29,6 +29,8 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-algorithms
@@ -38,7 +40,7 @@ namespace ranges
         ///
         /// range-based version of the \c binary_search std algorithm
         ///
-        /// \pre `Rng` is a model of the `Range` concept
+        /// \pre `Rng` is a model of the `range` concept
         template<typename I,
                  typename S,
                  typename V,
@@ -76,4 +78,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#endif // include guard
+#include <range/v3/detail/reenable_warnings.hpp>
+
+#endif

@@ -23,6 +23,8 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/view.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-views
@@ -55,5 +57,7 @@ namespace ranges
     } // namespace views
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif // RANGES_V3_VIEW_ADDRESSOF_HPP

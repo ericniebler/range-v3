@@ -20,6 +20,8 @@
 
 #include <range/v3/detail/adl_get.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-utility Utility
@@ -65,5 +67,7 @@ namespace ranges
 
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

@@ -49,6 +49,8 @@
 /// \defgroup group-numerics Numerics
 /// Numeric utilities
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 
@@ -795,6 +797,7 @@ namespace ranges
     } // namespace views
 } // namespace ranges
 
+/// \cond
 namespace ranges
 {
     namespace concepts = ::concepts;
@@ -805,9 +808,10 @@ namespace ranges
         using namespace ::concepts::defs::defer;
     }
 } // namespace ranges
+/// \endcond
 
 RANGES_DIAGNOSTIC_POP
 
-/// \endcond
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

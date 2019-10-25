@@ -26,6 +26,8 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-algorithms
@@ -96,4 +98,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#endif // include guard
+#include <range/v3/detail/reenable_warnings.hpp>
+
+#endif

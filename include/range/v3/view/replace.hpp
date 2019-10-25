@@ -29,7 +29,7 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/view.hpp>
 
-RANGES_DISABLE_WARNINGS
+#include <range/v3/detail/disable_warnings.hpp>
 
 namespace ranges
 {
@@ -135,6 +135,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-RANGES_RE_ENABLE_WARNINGS
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

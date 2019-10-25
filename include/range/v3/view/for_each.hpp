@@ -31,6 +31,8 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/view.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     namespace views
@@ -132,5 +134,7 @@ namespace ranges
     }
     /// \endcond
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

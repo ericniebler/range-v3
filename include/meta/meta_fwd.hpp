@@ -140,11 +140,11 @@
 #endif
 #endif
 
-#if defined(__cpp_concepts) && __cpp_concepts > 0
+#if (defined(__cpp_concepts) && __cpp_concepts > 0) || defined(META_DOXYGEN_INVOKED)
 #if !META_CXX_VARIABLE_TEMPLATES
 #error Concepts, but no variable templates?
 #endif
-#if __cpp_concepts <= 201507L
+#if __cpp_concepts <= 201507L && !defined(META_DOXYGEN_INVOKED)
 #define META_CONCEPT concept bool
 // TS concepts subsumption barrier for atomic expressions
 #define META_CONCEPT_BARRIER(...) ::meta::detail::barrier<__VA_ARGS__>

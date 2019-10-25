@@ -50,6 +50,8 @@
 #endif
 #endif // RANGES_SILENCE_COROUTINE_WARNINGS
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-view
@@ -359,6 +361,9 @@ namespace ranges
 
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
+
 #endif // RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
 
 #endif // RANGES_V3_EXPERIMENTAL_UTILITY_GENERATOR_HPP

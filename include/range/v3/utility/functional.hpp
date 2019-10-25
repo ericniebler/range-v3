@@ -37,6 +37,6 @@ RANGES_DEPRECATED_HEADER(
 namespace ranges
 {
     using detail::with_braced_init_args;
-}
+} // namespace ranges
 
 #endif

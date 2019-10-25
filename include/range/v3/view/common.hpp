@@ -28,6 +28,8 @@
 #include <range/v3/view/interface.hpp>
 #include <range/v3/view/view.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-views
@@ -37,12 +39,9 @@ namespace ranges
     namespace detail
     {
         // clang-format off
-        CPP_def
-        (
-            template(typename R)
-            concept random_access_and_sized_range,
-                random_access_range<R> && sized_range<R>
-        );
+        template<typename R>
+        CPP_concept_bool random_access_and_sized_range =
+            random_access_range<R> && sized_range<R>;
         // clang-format on
 
         template<typename R>
@@ -221,6 +220,8 @@ namespace ranges
             using common_view = ranges::common_view<Rng>;
     } // namespace cpp20
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::common_view)

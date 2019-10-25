@@ -28,6 +28,8 @@
 #include <range/v3/utility/get.hpp>
 #include <range/v3/utility/in_place.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \cond
@@ -304,5 +306,7 @@ namespace ranges
     /// \endcond
 
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

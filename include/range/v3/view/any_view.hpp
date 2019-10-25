@@ -30,6 +30,8 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/facade.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_INCONSISTENT_OVERRIDE
 
@@ -152,12 +154,19 @@ namespace ranges
         };
 
         // clang-format off
-        CPP_def
-        (
-            template(typename Rng, typename Ref)
-            concept any_compatible_range,
-                convertible_to<range_reference_t<Rng>, Ref>
+        template<typename Rng, typename Ref>
+        CPP_concept_fragment(any_compatible_range_, (Rng, Ref),
+            convertible_to<range_reference_t<Rng>, Ref>
         );
+        template<typename Rng, typename Ref>
+        CPP_concept_bool any_compatible_range =
+            CPP_fragment(detail::any_compatible_range_, Rng, Ref);
+        namespace defer
+        {
+            template<typename Rng, typename Ref>
+            CPP_concept any_compatible_range =
+                CPP_defer(detail::any_compatible_range, Rng, Ref);
+        }
         // clang-format on
 
         template<typename Rng, typename = void>
@@ -669,5 +678,7 @@ namespace ranges
 RANGES_SATISFY_BOOST_RANGE(::ranges::any_view)
 
 RANGES_DIAGNOSTIC_POP
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

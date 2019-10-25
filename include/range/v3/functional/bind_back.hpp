@@ -11,8 +11,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGE_V3_DETAIL_BIND_BACK_HPP
-#define RANGE_V3_DETAIL_BIND_BACK_HPP
+#ifndef RANGES_V3_DETAIL_BIND_BACK_HPP
+#define RANGES_V3_DETAIL_BIND_BACK_HPP
 
 #include <tuple>
 
@@ -22,6 +22,8 @@
 
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
+
+#include <range/v3/detail/disable_warnings.hpp>
 
 namespace ranges
 {
@@ -37,7 +39,7 @@ namespace ranges
             tuple_t fn_args_;
 
             template<typename... CallArgs>
-            constexpr auto operator()(CallArgs &&... cargs) &&
+                constexpr auto operator()(CallArgs &&... cargs) &&
                 noexcept(is_nothrow_invocable_v<Fn, CallArgs..., Args...>)
                     -> invoke_result_t<Fn, CallArgs..., Args...>
             {
@@ -52,7 +54,7 @@ namespace ranges
 
             /// \overload
             template<typename... CallArgs>
-            constexpr auto operator()(CallArgs &&... cargs) &
+                constexpr auto operator()(CallArgs &&... cargs) &
                 noexcept(is_nothrow_invocable_v<Fn &, CallArgs..., Args &...>)
                     -> invoke_result_t<Fn &, CallArgs..., Args &...>
             {
@@ -65,9 +67,9 @@ namespace ranges
 
             /// \overload
             template<typename... CallArgs>
-            constexpr auto operator()(CallArgs &&... cargs) const &
-                noexcept(is_nothrow_invocable_v<Fn const &, CallArgs..., Args const &...>)
-                    -> invoke_result_t<Fn const &, CallArgs..., Args const &...>
+            constexpr auto operator()(CallArgs &&... cargs) const & noexcept(
+                is_nothrow_invocable_v<Fn const &, CallArgs..., Args const &...>)
+                -> invoke_result_t<Fn const &, CallArgs..., Args const &...>
             {
                 return tuple_apply(
                     [&](auto & fn, auto &... args) -> decltype(auto) {
@@ -90,7 +92,7 @@ namespace ranges
             tuple_t fn_args_;
 
             template<typename... CallArgs>
-            constexpr auto operator()(CallArgs &&... cargs) &&
+                constexpr auto operator()(CallArgs &&... cargs) &&
                 noexcept(is_nothrow_invocable_v<Fn, CallArgs..., Arg>)
                     -> invoke_result_t<Fn, CallArgs..., Arg>
             {
@@ -99,7 +101,7 @@ namespace ranges
             }
 
             template<typename... CallArgs>
-            constexpr auto operator()(CallArgs &&... cargs) &
+                constexpr auto operator()(CallArgs &&... cargs) &
                 noexcept(is_nothrow_invocable_v<Fn &, CallArgs..., Arg &>)
                     -> invoke_result_t<Fn &, CallArgs..., Arg &>
             {
@@ -107,9 +109,9 @@ namespace ranges
             }
 
             template<typename... CallArgs>
-            constexpr auto operator()(CallArgs &&... cargs) const &
-                noexcept(is_nothrow_invocable_v<Fn const &, CallArgs..., Arg const &>)
-                    -> invoke_result_t<Fn const &, CallArgs..., Arg const &>
+            constexpr auto operator()(CallArgs &&... cargs) const & noexcept(
+                is_nothrow_invocable_v<Fn const &, CallArgs..., Arg const &>)
+                -> invoke_result_t<Fn const &, CallArgs..., Arg const &>
             {
                 return invoke(fn_args_.fn_, (CallArgs &&) cargs..., fn_args_.arg_);
             }
@@ -127,7 +129,7 @@ namespace ranges
             tuple_t fn_args_;
 
             template<typename... CallArgs>
-            constexpr auto operator()(CallArgs &&... cargs) &&
+                constexpr auto operator()(CallArgs &&... cargs) &&
                 noexcept(is_nothrow_invocable_v<Fn, CallArgs..., Arg0, Arg1>)
                     -> invoke_result_t<Fn, CallArgs..., Arg0, Arg1>
             {
@@ -138,7 +140,7 @@ namespace ranges
             }
 
             template<typename... CallArgs>
-            constexpr auto operator()(CallArgs &&... cargs) &
+                constexpr auto operator()(CallArgs &&... cargs) &
                 noexcept(is_nothrow_invocable_v<Fn &, CallArgs..., Arg0 &, Arg1 &>)
                     -> invoke_result_t<Fn &, CallArgs..., Arg0 &, Arg1 &>
             {
@@ -183,4 +185,6 @@ namespace ranges
 
 } // namespace ranges
 
-#endif // RANGE_V3_DETAIL_BIND_BACK_HPP
+#include <range/v3/detail/reenable_warnings.hpp>
+
+#endif // RANGES_V3_DETAIL_BIND_BACK_HPP

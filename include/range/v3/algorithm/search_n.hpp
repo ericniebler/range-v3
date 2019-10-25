@@ -38,6 +38,8 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/subrange.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-algorithms
@@ -194,4 +196,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#endif // include guard
+#include <range/v3/detail/reenable_warnings.hpp>
+
+#endif

@@ -28,6 +28,8 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-views
@@ -50,15 +52,16 @@ namespace ranges
       /// \endcond
 
     // clang-format off
-    CPP_def
-    (
-        template(typename Rng)
-        concept simple_view_,
-            view_<Rng> &&
-            range<Rng const> &&
-            same_as<iterator_t<Rng>, iterator_t<Rng const>> &&
-            same_as<sentinel_t<Rng>, sentinel_t<Rng const>>
+    template<typename Rng>
+    CPP_concept_fragment(simple_view_frag_, (Rng),
+        same_as<iterator_t<Rng>, iterator_t<Rng const>> &&
+        same_as<sentinel_t<Rng>, sentinel_t<Rng const>>
     );
+    template<typename Rng>
+    CPP_concept_bool simple_view_ =
+        view_<Rng> &&
+        range<Rng const> &&
+        CPP_fragment(ranges::simple_view_frag_, Rng);
     // clang-format on
 
     template<typename Rng>
@@ -256,5 +259,7 @@ namespace ranges
     RANGES_INLINE_VAR constexpr bool is_pipeable_v<views::view_closure<ViewFn>> = true;
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

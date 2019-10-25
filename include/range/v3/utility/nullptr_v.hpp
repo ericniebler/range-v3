@@ -17,6 +17,8 @@
 RANGES_DEPRECATED_HEADER(
     "This header is deprecated and will be removed from a future version of range-v3.")
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \ingroup group-utility
@@ -32,5 +34,7 @@ namespace ranges
     constexpr T * nullptr_v = nullptr;
 #endif
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

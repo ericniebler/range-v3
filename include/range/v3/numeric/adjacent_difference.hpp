@@ -32,23 +32,26 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-numerics
     /// @{
     // clang-format off
-    CPP_def
-    (
-        template(typename I, typename O, typename BOp = minus, typename P = identity)
-        (concept differenceable)(I, O, BOp, P),
-            input_iterator<I> &&
-            invocable<P&, iter_value_t<I>> &&
-            copy_constructible<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> &&
-            movable<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> &&
-            output_iterator<O, invoke_result_t<P&, iter_value_t<I>>> &&
-            invocable<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>> &&
-            output_iterator<O, invoke_result_t<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>>>
+    template<typename I, typename O, typename BOp, typename P>
+    CPP_concept_fragment(differenceable_, (I, O, BOp, P),
+        invocable<P&, iter_value_t<I>> &&
+        copy_constructible<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> &&
+        movable<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> &&
+        output_iterator<O, invoke_result_t<P&, iter_value_t<I>>> &&
+        invocable<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>> &&
+        output_iterator<O, invoke_result_t<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>>>
     );
+    template<typename I, typename O, typename BOp = minus, typename P = identity>
+    CPP_concept_bool differenceable =
+        input_iterator<I> &&
+        CPP_fragment(ranges::differenceable_, I, O, BOp, P);
     // clang-format on
 
     template<typename I, typename O>
@@ -131,5 +134,7 @@ namespace ranges
     RANGES_INLINE_VARIABLE(adjacent_difference_fn, adjacent_difference)
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

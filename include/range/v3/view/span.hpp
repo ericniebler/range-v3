@@ -29,6 +29,8 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/view/interface.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-views
@@ -115,30 +117,38 @@ namespace ranges
     } // namespace detail
 
     // clang-format off
-    CPP_def
-    (
-        template(typename Rng, typename T)
-        concept span_compatible_range,
-            sized_range<Rng> && contiguous_range<Rng> &&
-            detail::is_convertible<
-                detail::element_t<Rng>(*)[],
-                T(*)[]>::value
+    template<typename Rng, typename T>
+    CPP_concept_fragment(span_compatible_range_, (Rng, T),
+        detail::is_convertible<detail::element_t<Rng>(*)[], T(*)[]>::value
     );
+    template<typename Rng, typename T>
+    CPP_concept_bool span_compatible_range =
+        sized_range<Rng> && contiguous_range<Rng> &&
+        CPP_fragment(ranges::span_compatible_range_, Rng, T);
 
-    CPP_def
-    (
-        template(typename Rng, detail::span_index_t N)
-        (concept span_dynamic_conversion)(Rng, N),
-            N == dynamic_extent ||
-                range_cardinality<Rng>::value < cardinality()
-    );
+    template<typename Rng, detail::span_index_t N>
+    CPP_concept_bool span_dynamic_conversion =
+        N == dynamic_extent ||
+            range_cardinality<Rng>::value < cardinality();
 
-    CPP_def
-    (
-        template(typename Rng, detail::span_index_t N)
-        (concept span_static_conversion)(Rng, N),
-            N != dynamic_extent && range_cardinality<Rng>::value == N
-    );
+    template<typename Rng, detail::span_index_t N>
+    CPP_concept_bool span_static_conversion =
+        N != dynamic_extent && range_cardinality<Rng>::value == N;
+
+    namespace defer
+    {
+        template<typename Rng, typename T>
+        CPP_concept span_compatible_range =
+            CPP_defer(ranges::span_compatible_range, Rng, T);
+
+        template<typename Rng, detail::span_index_t N>
+        CPP_concept span_dynamic_conversion =
+            CPP_defer_(ranges::span_dynamic_conversion, CPP_type(Rng), N);
+
+        template<typename Rng, detail::span_index_t N>
+        CPP_concept span_static_conversion =
+            CPP_defer_(ranges::span_static_conversion, CPP_type(Rng), N);
+    }
     // clang-format on
     /// \endcond
 
@@ -414,5 +424,7 @@ namespace ranges
 
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif // RANGES_V3_VIEW_SPAN_HPP

@@ -24,6 +24,8 @@
 
 #include <range/v3/iterator/concepts.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_UNSIGNED_MATH
 
@@ -454,8 +456,10 @@ namespace std
     inline constexpr bool numeric_limits<::ranges::detail::diffmax_t>::tinyness_before;
 #endif
 } // namespace std
+/// \endcond
 
 RANGES_DIAGNOSTIC_POP
-/// \endcond
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

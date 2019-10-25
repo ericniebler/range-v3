@@ -19,6 +19,8 @@
 
 #include <meta/meta.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     template<typename Fun>
@@ -89,5 +91,7 @@ namespace ranges
         return ScopeExit((Fun &&) fun);
     }
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

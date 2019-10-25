@@ -33,6 +33,8 @@
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/view.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-views
@@ -42,16 +44,16 @@ namespace ranges
     namespace detail
     {
         // clang-format off
-        CPP_def
-        (
-            template(typename R)
-            concept tiny_range,
-                sized_range<R> &&
-                ranges::type<std::integral_constant<
-                    decltype(std::remove_reference_t<R>::size()),
-                    std::remove_reference_t<R>::size()>> &&
-                (std::remove_reference_t<R>::size() <= 1)
+        template<typename R>
+        CPP_concept_fragment(tiny_range_, (R),
+            ranges::type<std::integral_constant<
+                decltype(std::remove_reference_t<R>::size()),
+                std::remove_reference_t<R>::size()>> &&
+            (std::remove_reference_t<R>::size() <= 1)
         );
+        template<typename R>
+        CPP_concept_bool tiny_range =
+            sized_range<R> && CPP_fragment(detail::tiny_range_, R);
         // clang-format on
     } // namespace detail
 
@@ -662,6 +664,8 @@ namespace ranges
 
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::split_view)

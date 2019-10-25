@@ -18,55 +18,65 @@
 
 #include <range/v3/functional/invoke.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-functional
     /// @{
 
     // clang-format off
-    CPP_def
-    (
-        template(typename Fun, typename... Args)
-        (concept invocable)(Fun, Args...),
-            requires (Fun&& fn)
-            (
-                invoke(static_cast<Fun &&>(fn), std::declval<Args>()...)
-            )
-    );
+    template<typename Fun, typename... Args>
+    CPP_concept_bool invocable =
+        CPP_requires ((Fun&&) fn) //
+        (
+            invoke(CPP_fwd(fn), std::declval<Args>()...)
+        );
 
-    CPP_def
-    (
-        template(typename Fun, typename... Args)
-        (concept regular_invocable)(Fun, Args...),
-            invocable<Fun, Args...>
-            // Axiom: equality_preserving(invoke(f, args...))
-    );
+    template<typename Fun, typename... Args>
+    CPP_concept_bool regular_invocable =
+        invocable<Fun, Args...>;
+        // Axiom: equality_preserving(invoke(f, args...))
 
-    CPP_def
-    (
-        template(typename Fun, typename... Args)
-        (concept predicate)(Fun, Args...),
-            regular_invocable<Fun, Args...> &&
-            convertible_to<invoke_result_t<Fun, Args...>, bool>
-    );
+    template<typename Fun, typename... Args>
+    CPP_concept_bool predicate =
+        regular_invocable<Fun, Args...> &&
+        CPP_requires ((invoke_result_t<CPP_type(Fun), Args...>(*)())) //
+        (
+            concepts::requires_<
+                convertible_to<invoke_result_t<CPP_type(Fun), Args...>, bool>>
+        );
 
-    CPP_def
-    (
-        template(typename R, typename T, typename U)
-        concept relation,
-            predicate<R, T, T> &&
-            predicate<R, U, U> &&
-            predicate<R, T, U> &&
-            predicate<R, U, T>
-    );
+    template<typename R, typename T, typename U>
+    CPP_concept_bool relation =
+        predicate<R, T, T> &&
+        predicate<R, U, U> &&
+        predicate<R, T, U> &&
+        predicate<R, U, T>;
 
-    CPP_def
-    (
-        template(typename R, typename T, typename U)
-        concept strict_weak_order,
-            relation<R, T, U>
-    );
+    template<typename R, typename T, typename U>
+    CPP_concept_bool strict_weak_order =
+        relation<R, T, U>;
     // clang-format on
+
+    namespace defer
+    {
+        template<typename Fun, typename... Args>
+        CPP_concept invocable = CPP_defer_(ranges::invocable, CPP_type(Fun), Args...);
+
+        template<typename Fun, typename... Args>
+        CPP_concept regular_invocable = CPP_defer_(ranges::regular_invocable,
+                                                   CPP_type(Fun), Args...);
+
+        template<typename Fun, typename... Args>
+        CPP_concept predicate = CPP_defer_(ranges::predicate, CPP_type(Fun), Args...);
+
+        template<typename R, typename T, typename U>
+        CPP_concept relation = CPP_defer(ranges::relation, T, U);
+
+        template<typename R, typename T, typename U>
+        CPP_concept strict_weak_order = CPP_defer(ranges::strict_weak_order, T, U);
+    } // namespace defer
 
     namespace cpp20
     {
@@ -78,5 +88,7 @@ namespace ranges
     } // namespace cpp20
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

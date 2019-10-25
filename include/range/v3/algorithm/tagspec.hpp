@@ -20,6 +20,8 @@ RANGES_DEPRECATED_HEADER(
     "This file is deprecated. Please discontinue using the tag types defined here and "
     "define your own.")
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \cond
@@ -44,5 +46,7 @@ namespace ranges
     RANGES_DEFINE_TAG_SPECIFIER(second)
     /// \endcond
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

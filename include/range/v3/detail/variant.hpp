@@ -30,10 +30,11 @@
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
-#include <range/v3/functional/reference_wrapper.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/get.hpp>
+
+#include <range/v3/detail/disable_warnings.hpp>
 
 namespace ranges
 {
@@ -43,19 +44,6 @@ namespace ranges
     template<std::size_t I>
     struct emplaced_index_t : meta::size_t<I>
     {};
-
-/// \cond
-#if !RANGES_CXX_VARIABLE_TEMPLATES
-    template<std::size_t I>
-    inline emplaced_index_t<I> emplaced_index()
-    {
-        return {};
-    }
-    template<std::size_t I>
-    using _emplaced_index_t_ = emplaced_index_t<I> (&)();
-#define RANGES_EMPLACED_INDEX_T(I) _emplaced_index_t_<I>
-#else
-    /// \endcond
 
 #if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17
     namespace
@@ -67,11 +55,6 @@ namespace ranges
     template<std::size_t I>
     inline constexpr emplaced_index_t<I> emplaced_index{};
 #endif // RANGES_CXX_INLINE_VARIABLES
-
-/// \cond
-#define RANGES_EMPLACED_INDEX_T(I) emplaced_index_t<I>
-#endif
-    /// \endcond
 
     struct bad_variant_access : std::logic_error
     {
@@ -87,15 +70,30 @@ namespace ranges
     struct indexed_element
     {
     private:
-        reference_wrapper<T> ref_;
+        std::add_pointer_t<T> t_;
 
     public:
-        constexpr indexed_element(reference_wrapper<T> r) noexcept
-          : ref_(r)
+        constexpr explicit indexed_element(T & t) noexcept
+          : t_(std::addressof(t))
         {}
-        constexpr decltype(auto) get() const noexcept
+        constexpr T & get() const noexcept
         {
-            return ref_.get();
+            return *t_;
+        }
+    };
+    template<typename T, std::size_t Index>
+    struct indexed_element<T &&, Index>
+    {
+    private:
+        T * t_;
+
+    public:
+        constexpr explicit indexed_element(T && t) noexcept
+          : t_(std::addressof(t))
+        {}
+        constexpr T && get() const noexcept
+        {
+            return static_cast<T &&>(*t_);
         }
     };
     template<std::size_t Index>
@@ -160,13 +158,13 @@ namespace ranges
                 convertible_to<U, T>)
               : datum_(std::move(that.datum_))
             {}
-            constexpr indexed_element<T, Index::value> ref() noexcept
+            constexpr auto ref() noexcept
             {
-                return {datum_};
+                return indexed_element<T, Index::value>{datum_};
             }
-            constexpr indexed_element<T const, Index::value> ref() const noexcept
+            constexpr auto ref() const noexcept
             {
-                return {datum_};
+                return indexed_element<T const, Index::value>{datum_};
             }
             constexpr T & get() noexcept
             {
@@ -187,15 +185,19 @@ namespace ranges
         private:
             template<typename, typename>
             friend struct indexed_datum;
-            reference_wrapper<T &> ref_;
+            T * t_;
 
         public:
-            constexpr indexed_datum(reference_wrapper<T &> ref) noexcept
-              : ref_(ref)
+            constexpr indexed_datum(T & t) noexcept
+              : t_(std::addressof(t))
             {}
-            constexpr indexed_element<T &, Index::value> ref() const noexcept
+            constexpr T & get() const noexcept
             {
-                return {ref_.get()};
+                return *t_;
+            }
+            constexpr auto ref() const noexcept
+            {
+                return indexed_element<T &, Index::value>{*t_};
             }
         };
         template<typename T, typename Index>
@@ -204,15 +206,19 @@ namespace ranges
         private:
             template<typename, typename>
             friend struct indexed_datum;
-            reference_wrapper<T &&> ref_;
+            T * t_;
 
         public:
-            constexpr indexed_datum(reference_wrapper<T &&> ref) noexcept
-              : ref_(ref)
+            constexpr indexed_datum(T && t) noexcept
+              : t_(std::addressof(t))
             {}
-            constexpr indexed_element<T &&, Index::value> ref() const noexcept
+            constexpr T && get() const noexcept
             {
-                return {ref_.get()};
+                return static_cast<T &&>(*t_);
+            }
+            constexpr auto ref() const noexcept
+            {
+                return indexed_element<T &&, Index::value>{static_cast<T &&>(*t_)};
             }
         };
         template<typename Index>
@@ -687,7 +693,7 @@ namespace ranges
         {}
         CPP_template(std::size_t N, typename... Args)(        //
             requires constructible_from<datum_t<N>, Args...>) //
-            constexpr variant(RANGES_EMPLACED_INDEX_T(N), Args &&... args) noexcept(
+            constexpr variant(emplaced_index_t<N>, Args &&... args) noexcept(
                 std::is_nothrow_constructible<datum_t<N>, Args...>::value)
           : detail::variant_data<Ts...>{meta::size_t<N>{}, static_cast<Args &&>(args)...}
           , index_(N)
@@ -696,7 +702,7 @@ namespace ranges
             requires constructible_from<datum_t<N>, std::initializer_list<T> &,
                                         Args...>) //
             constexpr variant(
-                RANGES_EMPLACED_INDEX_T(N), std::initializer_list<T> il,
+                emplaced_index_t<N>, std::initializer_list<T> il,
                 Args &&... args) noexcept(std::
                                               is_nothrow_constructible<
                                                   datum_t<N>, std::initializer_list<T> &,
@@ -707,7 +713,7 @@ namespace ranges
           , index_(N)
         {}
         template<std::size_t N>
-        constexpr CPP_ctor(variant)(RANGES_EMPLACED_INDEX_T(N), meta::nil_)(       //
+        constexpr CPP_ctor(variant)(emplaced_index_t<N>, meta::nil_)(              //
             noexcept(std::is_nothrow_constructible<datum_t<N>, meta::nil_>::value) //
             requires constructible_from<datum_t<N>, meta::nil_>)
           : detail::variant_data<Ts...>{meta::size_t<N>{}, meta::nil_{}}
@@ -891,5 +897,7 @@ namespace std
 } // namespace std
 
 RANGES_DIAGNOSTIC_POP
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

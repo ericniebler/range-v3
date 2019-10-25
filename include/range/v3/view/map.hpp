@@ -26,6 +26,8 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/view.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 // TODO: Reuse subrange's pair_like concept here and have get_first and get_second
 // dispatch through get<>()
 
@@ -79,13 +81,10 @@ namespace ranges
         };
 
         // clang-format off
-        CPP_def
-        (
-            template(typename T)
-            concept kv_pair_like_,
-                invocable<get_first const &, T> &&
-                invocable<get_second const &, T>
-        );
+        template<typename T>
+        CPP_concept_bool kv_pair_like_ =
+            invocable<get_first const &, T> &&
+            invocable<get_second const &, T>;
         // clang-format on
     } // namespace detail
     /// \endcond
@@ -136,5 +135,7 @@ namespace ranges
     } // namespace cpp20
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

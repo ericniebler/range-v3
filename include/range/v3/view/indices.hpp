@@ -24,6 +24,8 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/take_exactly.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     namespace views
@@ -73,5 +75,7 @@ namespace ranges
         RANGES_INLINE_VARIABLE(closed_indices_fn, closed_indices)
     } // namespace views
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif // RANGES_V3_VIEW_INDICES_HPP

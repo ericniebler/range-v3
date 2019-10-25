@@ -19,6 +19,8 @@
 
 #include <range/v3/detail/config.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-iterator
@@ -126,10 +128,11 @@ namespace ranges
         template<typename T>
         struct incrementable_traits_2_<
             T,
-#if (defined(_MSC_VER) && !defined(__clang__) && !defined(__EDG__)) || \
-    defined(RANGES_WORKAROUND_GCC_91923)
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(__EDG__)
             std::enable_if_t<std::is_integral_v<difference_result_t<T>>>>
-#else  // ^^^ MSVC / not MSVC vvv
+#elif defined(RANGES_WORKAROUND_GCC_91923)
+            std::enable_if_t<std::is_integral<difference_result_t<T>>::value>>
+#else
             always_<void, int[is_integral_<difference_result_t<T>>(0)]>>
 #endif // detect MSVC
         {
@@ -296,5 +299,7 @@ namespace ranges
     } // namespace detail
     /// \endcond
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

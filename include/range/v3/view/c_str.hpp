@@ -22,6 +22,8 @@
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/view/subrange.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \cond
@@ -86,5 +88,7 @@ namespace ranges
         RANGES_INLINE_VARIABLE(c_str_fn, c_str)
     } // namespace views
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

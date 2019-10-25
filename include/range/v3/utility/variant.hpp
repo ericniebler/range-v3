@@ -23,6 +23,8 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \cond
@@ -103,13 +105,15 @@ namespace ranges
                 ranges::copy(r, data_);
                 return *this;
             }
-            constexpr indexed_element<T[N], Index::value> ref()
+            constexpr auto ref()
             {
-                return {data_};
+                return indexed_element<T(&)[N], Index::value>{data_};
             }
-            constexpr indexed_element<T const [N], Index::value> ref() const {
-                return {data_};
-            } constexpr T (&get() noexcept)[N]
+            constexpr auto ref() const
+            {
+                return indexed_element<T const(&)[N], Index::value>{data_};
+            }
+            constexpr T (&get() noexcept)[N]
             {
                 return data_;
             }
@@ -121,5 +125,7 @@ namespace ranges
     } // namespace detail
     /// \endcond
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

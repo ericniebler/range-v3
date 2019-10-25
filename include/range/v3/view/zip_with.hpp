@@ -38,6 +38,8 @@
 #include <range/v3/view/empty.hpp>
 #include <range/v3/view/facade.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \cond
@@ -133,16 +135,17 @@ namespace ranges
     namespace views
     {
         // clang-format off
-        CPP_def
-        (
-            template(typename Fun, typename ...Rngs)
-            (concept zippable_with)(Fun, Rngs...),
-                and_v<input_range<Rngs>...> &&
-                copy_constructible<Fun> &&
-                invocable<Fun&, iterator_t<Rngs>...> &&
-                invocable<Fun&, copy_tag, iterator_t<Rngs>...> &&
-                invocable<Fun&, move_tag, iterator_t<Rngs>...>
+        template<typename Fun, typename ...Rngs>
+        CPP_concept_fragment(zippable_with_, (Fun, Rngs...),
+            invocable<Fun&, iterator_t<Rngs>...> &&
+            invocable<Fun&, copy_tag, iterator_t<Rngs>...> &&
+            invocable<Fun&, move_tag, iterator_t<Rngs>...>
         );
+        template<typename Fun, typename ...Rngs>
+        CPP_concept_bool zippable_with =
+            and_v<input_range<Rngs>...> &&
+            copy_constructible<Fun> &&
+            CPP_fragment(views::zippable_with_, Fun, Rngs...);
         // clang-format on
     } // namespace views
 
@@ -425,6 +428,8 @@ namespace ranges
     } // namespace views
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::iter_zip_with_view)

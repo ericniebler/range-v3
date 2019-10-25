@@ -18,6 +18,8 @@
 
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \ingroup group-utility
@@ -25,5 +27,7 @@ namespace ranges
     {};
     RANGES_INLINE_VARIABLE(in_place_t, in_place)
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

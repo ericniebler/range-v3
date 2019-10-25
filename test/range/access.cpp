@@ -80,22 +80,17 @@ void test_array(std::integer_sequence<T, Is...>)
 
 namespace begin_testing
 {
-    CPP_def
-    (
-        template(class R)
-        concept can_begin,
-            requires(R&& r) (
-                ranges::begin((R&&)r)
-            )
-    );
-    CPP_def
-    (
-        template(class R)
-        concept can_cbegin,
-            requires(R&& r) (
-                ranges::cbegin((R&&)r)
-            )
-    );
+    template<class R>
+    CPP_concept_bool can_begin =
+        CPP_requires((R&&) r) (
+            ranges::begin(CPP_fwd(r))
+        );
+
+    template<class R>
+    CPP_concept_bool can_cbegin =
+        CPP_requires((R&&) r) (
+            ranges::cbegin(CPP_fwd(r))
+        );
 
     struct A
     {

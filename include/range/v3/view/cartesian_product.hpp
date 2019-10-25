@@ -34,6 +34,8 @@
 #include <range/v3/view/facade.hpp>
 #include <range/v3/view/view.hpp> // for dereference_fn
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \cond
@@ -79,45 +81,48 @@ namespace ranges
     /// @{
 
     // clang-format off
-    CPP_def
-    (
-        template(typename...Views)
-        (concept cartesian_produce_view_can_const)(Views...),
-            and_v<range<Views const>...>
+    template<typename...Views>
+    CPP_concept_bool cartesian_produce_view_can_const =
+        and_v<range<Views const>...>;
+
+    template<typename IsConst, typename...Views>
+    CPP_concept_fragment(cartesian_produce_view_can_size_, (IsConst, Views...),
+        and_v<common_with<std::uintmax_t, range_size_t<meta::const_if<IsConst, Views>>>...>
     );
-    CPP_def
-    (
-        template(typename IsConst, typename...Views)
-        (concept cartesian_produce_view_can_size)(IsConst, Views...),
-            and_v<sized_range<meta::const_if<IsConst, Views>>...> &&
-                ranges::type<common_type_t<std::uintmax_t, range_size_t<meta::const_if<IsConst, Views>>...>>
+    template<typename IsConst, typename...Views>
+    CPP_concept_bool cartesian_produce_view_can_size =
+        and_v<sized_range<meta::const_if<IsConst, Views>>...> &&
+        CPP_fragment(ranges::cartesian_produce_view_can_size_, IsConst, Views...);
+
+    template<typename IsConst, typename...Views>
+    CPP_concept_fragment(cartesian_produce_view_can_distance_, (IsConst, Views...),
+        and_v<sized_sentinel_for<
+            iterator_t<meta::const_if<IsConst, Views>>,
+            iterator_t<meta::const_if<IsConst, Views>>>...>
     );
-    CPP_def
-    (
-        template(typename IsConst, typename...Views)
-        (concept cartesian_produce_view_can_distance)(IsConst, Views...),
-            cartesian_produce_view_can_size<IsConst, Views...> &&
-            and_v<sized_sentinel_for<
-                iterator_t<meta::const_if<IsConst, Views>>,
-                iterator_t<meta::const_if<IsConst, Views>>>...>
+    template<typename IsConst, typename...Views>
+    CPP_concept_bool cartesian_produce_view_can_distance =
+        cartesian_produce_view_can_size<IsConst, Views...> &&
+        CPP_fragment(ranges::cartesian_produce_view_can_distance_, IsConst, Views...);
+
+    template<typename IsConst, typename...Views>
+    CPP_concept_fragment(cartesian_produce_view_can_random_, (IsConst, Views...),
+        and_v<random_access_iterator<iterator_t<meta::const_if<IsConst, Views>>>...>
     );
-    CPP_def
-    (
-        template(typename IsConst, typename...Views)
-        (concept cartesian_produce_view_can_random)(IsConst, Views...),
-            cartesian_produce_view_can_distance<IsConst, Views...> &&
-            and_v<random_access_iterator<iterator_t<
-                meta::const_if<IsConst, Views>>>...>
+    template<typename IsConst, typename...Views>
+    CPP_concept_bool cartesian_produce_view_can_random =
+        cartesian_produce_view_can_distance<IsConst, Views...> &&
+        CPP_fragment(ranges::cartesian_produce_view_can_random_, IsConst, Views...);
+
+    template<typename IsConst, typename...Views>
+    CPP_concept_fragment(cartesian_produce_view_can_bidi_, (IsConst, Views...),
+        and_v<common_range<meta::const_if<IsConst, Views>>...,
+            bidirectional_iterator<iterator_t<meta::const_if<IsConst, Views>>>...>
     );
-    CPP_def
-    (
-        template(typename IsConst, typename...Views)
-        (concept cartesian_produce_view_can_bidi)(IsConst, Views...),
-            cartesian_produce_view_can_random<IsConst, Views...> ||
-            and_v<common_range<meta::const_if<IsConst, Views>>...,
-                bidirectional_iterator<iterator_t<
-                    meta::const_if<IsConst, Views>>>...>
-    );
+    template<typename IsConst, typename...Views>
+    CPP_concept_bool cartesian_produce_view_can_bidi =
+        cartesian_produce_view_can_random<IsConst, Views...> ||
+        CPP_fragment(ranges::cartesian_produce_view_can_bidi_, IsConst, Views...);
     // clang-format on
 
     template<typename... Views>
@@ -442,5 +447,7 @@ namespace ranges
 
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif

@@ -25,6 +25,8 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-algorithms
@@ -34,7 +36,7 @@ namespace ranges
         ///
         /// range-based version of the \c adjacent_find std algorithm
         ///
-        /// \pre `Rng` is a model of the `Range` concept
+        /// \pre `Rng` is a model of the `range` concept
         /// \pre `C` is a model of the `BinaryPredicate` concept
         template<typename I, typename S, typename C = equal_to, typename P = identity>
         auto RANGES_FUNC(adjacent_find)(I first, S last, C pred = C{}, P proj = P{}) //
@@ -68,5 +70,7 @@ namespace ranges
     }
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif // RANGE_ALGORITHM_ADJACENT_FIND_HPP

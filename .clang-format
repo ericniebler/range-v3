@@ -46,6 +46,8 @@
   ForEachMacros: ['RANGES_FOR',],
   IncludeBlocks: Regroup,
   IncludeCategories: [
+    { Regex:           '^<range/v3/detail/disable_warnings.hpp',
+      Priority:        7},
     { Regex:           '^<range/v3/range_fwd.hpp',
       Priority:        5},
     { Regex:           '^<range/v3',

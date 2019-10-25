@@ -11,8 +11,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGE_V3_VIEW_EXCLUSIVE_SCAN_HPP
-#define RANGE_V3_VIEW_EXCLUSIVE_SCAN_HPP
+#ifndef RANGES_V3_VIEW_EXCLUSIVE_SCAN_HPP
+#define RANGES_V3_VIEW_EXCLUSIVE_SCAN_HPP
 
 #include <concepts/concepts.hpp>
 
@@ -24,18 +24,21 @@
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     // clang-format off
-    CPP_def
-    (
-        template(typename Rng, typename T, typename Fun)
-        concept exclusive_scan_constraints,
-            viewable_range<Rng> && input_range<Rng> &&
-            copy_constructible<T> &&
-            invocable<Fun &, T, range_reference_t<Rng>> &&
-            assignable_from<T &, invoke_result_t<Fun &, T, range_reference_t<Rng>>>
+    template<typename Rng, typename T, typename Fun>
+    CPP_concept_fragment(exclusive_scan_constraints_, (Rng, T, Fun),
+        invocable<Fun &, T, range_reference_t<Rng>> &&
+        assignable_from<T &, invoke_result_t<Fun &, T, range_reference_t<Rng>>>
     );
+    template<typename Rng, typename T, typename Fun>
+    CPP_concept_bool exclusive_scan_constraints =
+        viewable_range<Rng> && input_range<Rng> &&
+        copy_constructible<T> &&
+        CPP_fragment(ranges::exclusive_scan_constraints_, Rng, T, Fun);
     // clang-format on
 
     /// \addtogroup group-views
@@ -180,4 +183,7 @@ namespace ranges
     } // namespace views
     /// @}
 } // namespace ranges
-#endif // RANGE_V3_VIEW_EXCLUSIVE_SCAN_HPP
+
+#include <range/v3/detail/reenable_warnings.hpp>
+
+#endif // RANGES_V3_VIEW_EXCLUSIVE_SCAN_HPP

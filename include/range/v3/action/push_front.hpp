@@ -26,6 +26,8 @@
 #include <range/v3/functional/bind_back.hpp>
 #include <range/v3/utility/static_const.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     /// \addtogroup group-actions
@@ -59,15 +61,12 @@ namespace ranges
         }
 
         // clang-format off
-        CPP_def
-        (
-            template(typename Rng, typename T)
-            concept can_push_front_,
-                requires (Rng &&rng, T &&t)
-                (
-                    push_front(rng, (T &&) t)
-                )
-        );
+        template<typename Rng, typename T>
+        CPP_concept can_push_front_ =
+            CPP_requires ((Rng &&) rng, (T &&) t) //
+            (
+                push_front(rng, CPP_fwd(t))
+            );
         // clang-format on
 
         struct push_front_fn
@@ -151,5 +150,7 @@ namespace ranges
 
     /// @}
 } // namespace ranges
+
+#include <range/v3/detail/reenable_warnings.hpp>
 
 #endif
