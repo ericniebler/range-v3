@@ -487,7 +487,6 @@ namespace ranges
             "Please use ranges::to in <range/v3/range/conversion.hpp> instead.")
         constexpr operator Container() const // clang-format on
         {
-            static_assert((bool)same_as<Container, void>, "");
             return ranges::to<Container>(derived());
         }
         /// \endcond
