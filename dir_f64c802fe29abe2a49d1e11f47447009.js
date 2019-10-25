@@ -5,6 +5,7 @@ var dir_f64c802fe29abe2a49d1e11f47447009 =
     [ "all_of.hpp", "all__of_8hpp.html", "all__of_8hpp" ],
     [ "any_of.hpp", "any__of_8hpp.html", "any__of_8hpp" ],
     [ "binary_search.hpp", "binary__search_8hpp.html", "binary__search_8hpp" ],
+    [ "contains.hpp", "contains_8hpp.html", "contains_8hpp" ],
     [ "copy.hpp", "algorithm_2copy_8hpp.html", "algorithm_2copy_8hpp" ],
     [ "copy_backward.hpp", "copy__backward_8hpp.html", "copy__backward_8hpp" ],
     [ "copy_if.hpp", "copy__if_8hpp.html", "copy__if_8hpp" ],

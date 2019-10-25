@@ -6,18 +6,25 @@ var group__group_range =
     [ "back_fn", "structranges_1_1back__fn.html", [
       [ "operator()", "structranges_1_1back__fn.html#aeb9c7c828b3a5feb7302207d17bdc018", null ]
     ] ],
+    [ "bidirectional_range_tag", "structranges_1_1bidirectional__range__tag.html", null ],
+    [ "common_range_tag", "structranges_1_1common__range__tag.html", null ],
+    [ "contiguous_range_tag", "structranges_1_1contiguous__range__tag.html", null ],
     [ "dangling", "structranges_1_1dangling.html", [
       [ "dangling", "structranges_1_1dangling.html#a8ede204d09338bddccf16625cf261d12", null ],
       [ "dangling", "structranges_1_1dangling.html#a8e903145ab676e2220426ab757813e30", null ]
     ] ],
+    [ "forward_range_tag", "structranges_1_1forward__range__tag.html", null ],
     [ "front_fn", "structranges_1_1front__fn.html", [
       [ "operator()", "structranges_1_1front__fn.html#a84250c169dc2ed10ef068fc6a1451f1c", null ]
     ] ],
     [ "index_fn", "structranges_1_1index__fn.html", [
       [ "operator()", "structranges_1_1index__fn.html#ae2befa770103e4bba1691635e721734f", null ]
     ] ],
+    [ "input_range_tag", "structranges_1_1input__range__tag.html", null ],
+    [ "random_access_range_tag", "structranges_1_1random__access__range__tag.html", null ],
     [ "range_cardinality", "structranges_1_1range__cardinality.html", null ],
-    [ "CPP_PP_CAT", "group__group-range.html#gadd3b6581a0848444dc30139b31578a81", null ],
+    [ "range_tag", "structranges_1_1range__tag.html", null ],
+    [ "sized_range_tag", "structranges_1_1sized__range__tag.html", null ],
     [ "to", "group__group-range.html#ga555b843264809e3765210c42a66d3c3b", null ],
     [ "to", "group__group-range.html#gad969a6d81fcddc8aa33de1b958cddfa5", null ],
     [ "at", "group__group-range.html#ga0efca9ce24e0d51e02eea34082678e53", null ],
@@ -32,7 +39,9 @@ var group__group_range =
     [ "end", "group__group-range.html#ga80d92c391f5b5c0a50156af5f9c9d8c7", null ],
     [ "front", "group__group-range.html#ga04fe2b749aefc72f4b7f0e955be3c5a0", null ],
     [ "index", "group__group-range.html#ga41b7ab1260f190082298c0f917659531", null ],
+    [ "range", "group__group-range.html#ga6e0101df798918724a68c9605df13d28", null ],
     [ "rbegin", "group__group-range.html#ga404b782687899283f0a7c4f432954604", null ],
     [ "rend", "group__group-range.html#ga2da42ee2c87481f8e8e62d7fb4d1a850", null ],
-    [ "size", "group__group-range.html#ga4e6d035b8bc656ea3435ccb106f4000b", null ]
+    [ "size", "group__group-range.html#ga4e6d035b8bc656ea3435ccb106f4000b", null ],
+    [ "view_", "group__group-range.html#ga49f8b37abb6b823373f091f329f32afd", null ]
 ];

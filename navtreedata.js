@@ -1,17 +1,18 @@
 /*
-@licstart  The following is the entire license notice for the
+@ @licstart  The following is the entire license notice for the
 JavaScript code in this file.
 
-Copyright (C) 1997-2019 by Dimitri van Heesch
+Copyright (C) 1997-2017 by Dimitri van Heesch
 
 This program is free software; you can redistribute it and/or modify
-it under the terms of version 2 of the GNU General Public License as published by
-the Free Software Foundation
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
@@ -31,18 +32,8 @@ var NAVTREE =
       ] ],
       [ "Quick Start", "index.html#tutorial-quick-start", [
         [ "Views", "index.html#tutorial-views", null ],
-        [ "View const-ness", "index.html#autotoc_md6", null ],
-        [ "View validity", "index.html#autotoc_md7", null ],
-        [ "List of range views", "index.html#autotoc_md8", null ],
         [ "Actions", "index.html#tutorial-actions", null ],
-        [ "List of range actions", "index.html#autotoc_md10", null ],
-        [ "Utilities", "index.html#tutorial-utilities", [
-          [ "Create Custom Views with view_facade", "index.html#autotoc_md12", null ],
-          [ "Create Custom Views with view_adaptor", "index.html#autotoc_md13", [
-            [ "view_adaptor in details", "index.html#autotoc_md14", null ]
-          ] ],
-          [ "Create Custom Iterators with basic_iterator", "index.html#autotoc_md15", null ]
-        ] ],
+        [ "Utilities", "index.html#tutorial-utilities", null ],
         [ "Concept Checking", "index.html#tutorial-concepts", null ],
         [ "Range-v3 and the Future", "index.html#tutorial-future", null ]
       ] ]
@@ -95,7 +86,6 @@ var NAVTREE =
         [ "All", "functions.html", null ],
         [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", null ],
-        [ "Typedefs", "functions_type.html", null ],
         [ "Related Functions", "functions_rela.html", null ]
       ] ],
       [ "Classes", "annotated.html", "annotated" ],
@@ -107,20 +97,20 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"classranges_1_1sample__view.html",
-"count_8hpp.html",
-"group__group-algorithms.html#ga84410ac06ba27a46c99e2f1dc752741e",
-"group__group-views.html#ga8c5e0d11a27fafb3325fe505895971e4",
-"group__transformation.html#ga8d0d695134bd6b94698ae4f1c0d2f553",
-"meta_8hpp.html#ga6a6c0ca1048b5a877938e8a2d0809134",
-"range_2access_8hpp.html#ga77a2be5a9ab4b5f662866ec619a5bec7",
-"structconcepts_1_1is__satisfied__by.html",
-"structranges_1_1basic__iterator.html#a9e4f807cef0dd8daf6fbdf4abdbc46da",
-"structranges_1_1filter__view.html#a292cb06afc5a4f94bf926991555da6c9",
-"structranges_1_1move__iterator.html#a6040c3218fd301921d8dfc59aa019878",
-"structranges_1_1semiregular__box.html#aab1c6b00a50be31dac2c74e84cda93a3",
-"structranges_1_1views_1_1const__fn.html#af017ea5d6a649478ab897c6fc667301b",
-"structstd_1_1iterator__traits_3_1_1ranges_1_1basic__iterator_3_01_cur_01_4_01_4.html"
+"classranges_1_1join__with__view_1_1cursor.html#af84987f9f140204f222a8040e2f7abd5",
+"concepts_2swap_8hpp.html#a40294a919c0317762b5e090e2de854ec",
+"group__group-algorithms.html#ga4c5a843b7663cfd1bd361b9dfaefaf01",
+"group__group-views.html#ga4ce96417813c5d1d7da9078e2ffa17ac",
+"group__query.html#ga665bd44f6d231438a3200df8030f593a",
+"meta_8hpp.html#ga4e7b439f707e529f3df7745ff7e2eb19",
+"partition__point_8hpp.html#gafe997b7753be04c30cdf8dc4e0db5053",
+"semiregular__box_8hpp.html",
+"structranges_1_1any.html#ab1e93a6d17d6eadfabe6ae59011b2d3e",
+"structranges_1_1drop__last__view_3_01_rng_00_01detail_1_1drop__last__view_1_1mode__bidi_01_4.html",
+"structranges_1_1join__with__view.html#a2d007adc9540874ea55d871b1b484bde",
+"structranges_1_1raw__storage__iterator.html#a4a85eea6f61e5c6fdd2185098219b5ed",
+"structranges_1_1view__interface.html#a1e28ce4b2d269d077db53420ec0cc81f",
+"structranges_1_1views_1_1stride__base__fn.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

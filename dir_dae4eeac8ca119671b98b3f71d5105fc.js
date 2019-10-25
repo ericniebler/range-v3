@@ -100,10 +100,12 @@ var dir_dae4eeac8ca119671b98b3f71d5105fc =
     [ "ref.hpp", "ref_8hpp.html", "ref_8hpp" ],
     [ "remove.hpp", "view_2remove_8hpp.html", [
       [ "remove_base_fn", "structranges_1_1views_1_1remove__base__fn.html", "structranges_1_1views_1_1remove__base__fn" ],
+      [ "remove_bind_fn", "structranges_1_1views_1_1remove__bind__fn.html", "structranges_1_1views_1_1remove__bind__fn" ],
       [ "remove_fn", "structranges_1_1views_1_1remove__fn.html", "structranges_1_1views_1_1remove__fn" ]
     ] ],
     [ "remove_if.hpp", "view_2remove__if_8hpp.html", [
       [ "remove_if_base_fn", "structranges_1_1views_1_1remove__if__base__fn.html", "structranges_1_1views_1_1remove__if__base__fn" ],
+      [ "remove_if_bind_fn", "structranges_1_1views_1_1remove__if__bind__fn.html", "structranges_1_1views_1_1remove__if__bind__fn" ],
       [ "remove_if_fn", "structranges_1_1views_1_1remove__if__fn.html", "structranges_1_1views_1_1remove__if__fn" ]
     ] ],
     [ "repeat.hpp", "repeat_8hpp.html", [

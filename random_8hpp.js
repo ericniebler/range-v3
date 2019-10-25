@@ -1,5 +1,5 @@
 var random_8hpp =
 [
-    [ "CPP_PP_CAT", "random_8hpp.html#ga8b557dbcf9c21a9825b002a965e3cebc", null ],
-    [ "uniform_random_bit_generator", "random_8hpp.html#ga5b8ef24260a297de345ab4ddcf084037", null ]
+    [ "uniform_random_bit_generator", "random_8hpp.html#gaa4c0df585d64aee70fb2a92e3fca3959", null ],
+    [ "uniform_random_bit_generator_", "random_8hpp.html#ga94477301c132f1d310da5aefbb46aa5b", null ]
 ];

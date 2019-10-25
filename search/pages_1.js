@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['release_20notes_2196',['Release Notes',['../release_notes.html',1,'']]]
+  ['release_20notes',['Release Notes',['../release_notes.html',1,'']]]
 ];

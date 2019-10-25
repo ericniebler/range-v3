@@ -5,8 +5,8 @@ var view_2transform_8hpp =
     [ "transform_base_fn", "structranges_1_1views_1_1transform__base__fn.html", "structranges_1_1views_1_1transform__base__fn" ],
     [ "transform_fn", "structranges_1_1views_1_1transform__fn.html", "structranges_1_1views_1_1transform__fn" ],
     [ "transform_view", "view_2transform_8hpp.html#afed745724105c00fb86fb4f347ff226f", null ],
-    [ "CPP_PP_CAT", "view_2transform_8hpp.html#ae083fcb35b57527e84530a4c9ba67057", null ],
-    [ "CPP_PP_CAT", "view_2transform_8hpp.html#ab17a0d23c102396186e9b972738c057c", null ],
-    [ "transformable_range", "view_2transform_8hpp.html#a29d619f981eb48473b43b941c1b5c545", null ],
-    [ "transformable_ranges", "view_2transform_8hpp.html#ab1b93b14862aebec046a036acd0bc5a4", null ]
+    [ "transformable_range", "view_2transform_8hpp.html#a42aa7ce0e6108c0760c19d886722c317", null ],
+    [ "transformable_range_", "view_2transform_8hpp.html#a15702b0983a3079de47dff40654aebbb", null ],
+    [ "transformable_ranges", "view_2transform_8hpp.html#a2d634ec55235d6468bb00b5be140f012", null ],
+    [ "transformable_ranges_", "view_2transform_8hpp.html#a3497c4e99c3a7f9ea4782b92e52b811f", null ]
 ];

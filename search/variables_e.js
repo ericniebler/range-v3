@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['rbegin_2024',['rbegin',['../group__group-range.html#ga404b782687899283f0a7c4f432954604',1,'ranges']]],
-  ['ref_2025',['ref',['../group__group-functional.html#ga251c7b8f81fd520e52412fc767a80a5e',1,'ranges']]],
-  ['rend_2026',['rend',['../group__group-range.html#ga2da42ee2c87481f8e8e62d7fb4d1a850',1,'ranges']]],
-  ['reverse_2027',['reverse',['../structranges_1_1actions_1_1reverse__fn.html#a6caf4667c86aad8a6167e45a52fd96b7',1,'ranges::actions::reverse_fn']]]
+  ['range',['range',['../group__group-range.html#ga6e0101df798918724a68c9605df13d28',1,'ranges']]],
+  ['rbegin',['rbegin',['../group__group-range.html#ga404b782687899283f0a7c4f432954604',1,'ranges']]],
+  ['ref',['ref',['../group__group-functional.html#ga251c7b8f81fd520e52412fc767a80a5e',1,'ranges']]],
+  ['remove',['remove',['../structranges_1_1actions_1_1remove__fn.html#a79dd50f8b3f3c0b0ac22a00b5938ccda',1,'ranges::actions::remove_fn']]],
+  ['remove_5fif',['remove_if',['../structranges_1_1actions_1_1remove__if__fn.html#a7a27357aa082ce856413b8f62f8e23ce',1,'ranges::actions::remove_if_fn']]],
+  ['rend',['rend',['../group__group-range.html#ga2da42ee2c87481f8e8e62d7fb4d1a850',1,'ranges']]],
+  ['reverse',['reverse',['../structranges_1_1actions_1_1reverse__fn.html#a6caf4667c86aad8a6167e45a52fd96b7',1,'ranges::actions::reverse_fn']]]
 ];
