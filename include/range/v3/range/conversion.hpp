@@ -295,13 +295,20 @@ namespace ranges
         CPP_concept_bool convertible_to_cont_and_not_cont_cont =
             !defer::convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>> && //
             defer::convertible_to_cont<Rng, container_t<MetaFn, Rng>>;
+
+        namespace defer
+        {
+            template<typename Rng, typename MetaFn>
+            CPP_concept convertible_to_cont_cont_or_cont =
+                CPP_defer(detail::convertible_to_cont_cont_or_cont, Rng, MetaFn);
+        }
         // clang-format on
 
         struct RANGES_STRUCT_WITH_ADL_BARRIER(to_container_closure_base)
         {
-            CPP_template(typename Rng, typename MetaFn, typename Fn)( //
-                requires input_range<Rng> &&                          //
-                    convertible_to_cont_cont_or_cont<Rng, MetaFn>)    //
+            CPP_template(typename Rng, typename MetaFn, typename Fn)(     //
+                requires ranges::defer::input_range<Rng> &&               //
+                    defer::convertible_to_cont_cont_or_cont<Rng, MetaFn>) //
                 friend constexpr auto
                 operator|(Rng && rng, to_container::closure<MetaFn, Fn> fn)
             {
