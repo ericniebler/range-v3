@@ -42,8 +42,6 @@ namespace ranges
     template<typename T>
     using is_pipeable = meta::bool_<is_pipeable_v<T>>;
 
-    struct pipeable_base;
-
     struct make_pipeable_fn
     {
         template<typename Fun, typename PipeableBase = pipeable_base>

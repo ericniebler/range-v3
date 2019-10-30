@@ -74,7 +74,6 @@ namespace ranges
     /// Range concepts below
     ///
 
-    /// \cond
     // clang-format off
     template<typename T>
     CPP_concept_bool range_impl_ =
@@ -83,17 +82,14 @@ namespace ranges
             ranges::begin(CPP_fwd(t)), // not necessarily equality-preserving
             ranges::end(CPP_fwd(t))
         );
-    /// \endcond
 
     template<typename T>
     CPP_concept_bool range =
         range_impl_<T &>;
 
-    /// \cond
     template<typename T>
     CPP_concept_bool forwarding_range_ =
         range<T> && range_impl_<T>;
-    /// \endcond
 
     template<typename T, typename V>
     CPP_concept_fragment(output_range_, (T, V),
