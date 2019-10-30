@@ -72,10 +72,10 @@ namespace ranges
         CPP_concept predicate = CPP_defer_(ranges::predicate, CPP_type(Fun), Args...);
 
         template<typename R, typename T, typename U>
-        CPP_concept relation = CPP_defer(ranges::relation, T, U);
+        CPP_concept relation = CPP_defer(ranges::relation, R, T, U);
 
         template<typename R, typename T, typename U>
-        CPP_concept strict_weak_order = CPP_defer(ranges::strict_weak_order, T, U);
+        CPP_concept strict_weak_order = CPP_defer(ranges::strict_weak_order, R, T, U);
     } // namespace defer
 
     namespace cpp20
