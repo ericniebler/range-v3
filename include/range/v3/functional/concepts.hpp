@@ -41,10 +41,12 @@ namespace ranges
     template<typename Fun, typename... Args>
     CPP_concept_bool predicate =
         regular_invocable<Fun, Args...> &&
-        CPP_requires ((invoke_result_t<CPP_type(Fun), Args...>(*)())) //
+        CPP_requires ((Fun&&) fn) //
         (
             concepts::requires_<
-                convertible_to<invoke_result_t<CPP_type(Fun), Args...>, bool>>
+                convertible_to<
+                    decltype(invoke(CPP_fwd(fn), std::declval<Args>()...)),
+                    bool>>
         );
 
     template<typename R, typename T, typename U>

@@ -71,25 +71,25 @@ namespace ranges
 
     template<typename C>
     CPP_concept_bool reservable =
-        CPP_requires ((C &) c, (C const &) cc, (range_size_t<CPP_type(C)>) s) //
+        container<C> && sized_range<C> &&
+        CPP_requires ((C &) c, (C const &) cc) //
         (
-            c.reserve(s),
+            c.reserve(ranges::size(c)),
             cc.capacity(),
             cc.max_size(),
             concepts::requires_<same_as<decltype(cc.capacity()),
-                                        range_size_t<CPP_type(C)>>>,
+                                        decltype(ranges::size(c))>>,
             concepts::requires_<same_as<decltype(cc.max_size()),
-                                        range_size_t<CPP_type(C)>>>
-        ) &&
-        container<C> && sized_range<C>;
+                                        decltype(ranges::size(c))>>
+        );
 
     template<typename C, typename I>
     CPP_concept_bool reservable_with_assign =
+        reservable<C> && input_iterator<I> &&
         CPP_requires ((C &) c, (I) i) //
         (
             c.assign(i, i)
-        ) &&
-        reservable<C> && input_iterator<I>;
+        );
 
     template<typename C>
     CPP_concept_bool random_access_reservable =
