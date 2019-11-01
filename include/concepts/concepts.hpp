@@ -188,6 +188,9 @@
 #define CPP_requires(...) \
     CPP_requires_n(CPP_PP_COUNT(__VA_ARGS__), __VA_ARGS__)
 
+#define CPP_requires_(...) \
+    CPP_requires_n_(CPP_PP_COUNT(__VA_ARGS__), __VA_ARGS__)
+
 #if CPP_CXX_CONCEPTS || defined(CPP_DOXYGEN_INVOKED)
 #define CPP_concept META_CONCEPT
 #define CPP_concept_bool META_CONCEPT
@@ -203,6 +206,7 @@
 #define CPP_requires_n(N, ...) \
     requires(CPP_PP_FOR_EACH_N(N, CPP_arg, __VA_ARGS__)) \
         CPP_valid_expressions
+#define CPP_requires_n_ CPP_requires_n
 #define CPP_defer_(CONCEPT, ...) \
     CONCEPT<__VA_ARGS__>
 #define CPP_defer(CONCEPT, ...) \
@@ -220,14 +224,20 @@
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=87512
 #define CPP_concept_bool CPP_INLINE_VAR constexpr bool
 #define CPP_concept CPP_INLINE_VAR constexpr auto
-#define CPP_requires_n(N, ...) \
-    (true ? nullptr : ::concepts::detail::test_concept( \
+#define CPP_requires_n_(N, ...) \
+    (true ? nullptr : ::concepts::detail::test_concept_( \
         [](auto const CPP_arg) -> \
             ::concepts::detail::invoke_result_t<\
                 decltype(CPP_arg), int, \
                 CPP_PP_FOR_EACH_N(N, CPP_type_of, __VA_ARGS__)> {\
                     return {}; \
                 }, \
+        [](auto CPP_arg, CPP_PP_FOR_EACH_N(N, CPP_param, __VA_ARGS__)) \
+        CPP_valid_expressions
+#define CPP_requires_n(N, ...) \
+    (true ? nullptr : ::concepts::detail::test_concept( \
+        (::concepts::detail::tag< \
+            CPP_PP_FOR_EACH_N(N, CPP_type_of, __VA_ARGS__) > *) nullptr, \
         [](auto CPP_arg, CPP_PP_FOR_EACH_N(N, CPP_param, __VA_ARGS__)) \
         CPP_valid_expressions
 #define CPP_valid_expressions(...) \
@@ -258,7 +268,7 @@
     /**/
 #define CPP_fragment(NAME, ...) \
     decltype(CPP_PP_CAT(NAME, CPP_concept_fragment_)(\
-        (::concepts::detail::tag<__VA_ARGS__>*)nullptr))::value() \
+        (::concepts::detail::tag<__VA_ARGS__> *) nullptr))::value() \
     /**/
 #endif
 
@@ -638,23 +648,7 @@ namespace concepts
         };
 
         template<typename...>
-        struct tag
-        {};
-
-        template<typename Fun, typename... Args>
-        using invoke_result_t =
-            decltype(((Fun &&(*)()) nullptr)()(((Args &&(*)()) nullptr)()...));
-
-        template<typename ArgsFn, typename ExprsFn>
-        auto test_concept(ArgsFn const args, ExprsFn exprs) ->
-            decltype(args((ExprsFn &&) exprs))
-        {
-            return {};
-        }
-        inline false_type test_concept(ignore, ignore)
-        {
-            return {};
-        }
+        struct tag;
 
         template<unsigned U>
         struct first_impl
@@ -665,6 +659,31 @@ namespace concepts
 
         template<class T, class U>
         using first_t = meta::invoke<first_impl<sizeof(U) ^ sizeof(U)>, T>;
+
+        template<typename Fun, typename... Args>
+        using invoke_result_t =
+            decltype(((Fun &&(*)()) nullptr)()(((Args &&(*)()) nullptr)()...));
+
+        template<typename ...Args, typename ExprsFn>
+        auto test_concept(tag<Args...> *, ExprsFn) ->
+            first_t<true_type, invoke_result_t<ExprsFn, int, Args...>>
+        {
+            return {};
+        }
+        inline false_type test_concept(void *, ignore)
+        {
+            return {};
+        }
+        template<typename ArgsFn, typename ExprsFn>
+        auto test_concept_(ArgsFn const args, ExprsFn exprs) ->
+            decltype(args((ExprsFn &&) exprs))
+        {
+            return {};
+        }
+        inline false_type test_concept_(ignore, ignore)
+        {
+            return {};
+        }
 
         template<class T>
         using id_t = T;
@@ -927,7 +946,7 @@ namespace concepts
 
         template<typename From, typename To>
         CPP_concept_bool explicitly_convertible_to =
-            CPP_requires ((CPP_type(From)(*)()) from) //
+            CPP_requires_ ((CPP_type(From)(*)()) from) //
             (
                 static_cast<To>(from())
             );

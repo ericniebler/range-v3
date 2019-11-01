@@ -38,7 +38,7 @@
 
 namespace ranges
 {
-    /// \addtogroup group-iterator
+    /// \addtogroup group-iterator-concepts
     /// @{
 
     /// \cond
@@ -134,24 +134,25 @@ namespace ranges
 
     template<typename I>
     CPP_concept_bool readable =
-        CPP_requires ((uncvref_t<I> const &) i, (detail::readable_types_t<CPP_type(I)>)) //
+        CPP_requires ((uncvref_t<I> const) i, (uncvref_t<I>) j) //
         (
             // { *i } -> same_as<iter_reference_t<I>>;
-            concepts::requires_<same_as<decltype(*i), iter_reference_t<CPP_type(I)>>>,
+            concepts::requires_<same_as<decltype(*i),
+                                        iter_reference_t<decltype(j)>>>,
             // { iter_move(i) } -> same_as<iter_rvalue_reference_t<I>>;
             concepts::requires_<same_as<decltype(iter_move(i)),
-                                        iter_rvalue_reference_t<CPP_type(I)>>>
+                                        iter_rvalue_reference_t<decltype(j)>>>
         ) &&
-        CPP_fragment(readable_, I);
+        CPP_fragment(readable_, uncvref_t<I>);
 
     template<typename Out, typename T>
     CPP_concept_bool writable =
-        CPP_requires ((Out &&) o, (T &&) t, (iter_reference_t<CPP_type(Out)>&)) //
+        CPP_requires ((Out &&) o, (T &&) t) //
         (
             *o = CPP_fwd(t),
             *CPP_fwd(o) = CPP_fwd(t),
-            const_cast<iter_reference_t<CPP_type(Out)> const &&>(*o) = CPP_fwd(t),
-            const_cast<iter_reference_t<CPP_type(Out)> const &&>(*CPP_fwd(o)) = CPP_fwd(t)
+            const_cast<iter_reference_t<decltype(o)> const &&>(*o) = CPP_fwd(t),
+            const_cast<iter_reference_t<decltype(o)> const &&>(*CPP_fwd(o)) = CPP_fwd(t)
         );
     // clang-format on
 
@@ -234,12 +235,12 @@ namespace ranges
 
     template<typename S, typename I>
     CPP_concept_bool sized_sentinel_for =
-        CPP_requires ((S const &) s, (I const &) i, (iter_difference_t<CPP_type(I)>)) //
+        CPP_requires ((S const &) s, (I const &) i) //
         (
             s - i,
             i - s,
-            concepts::requires_<same_as<iter_difference_t<CPP_type(I)>, decltype(s - i)>>,
-            concepts::requires_<same_as<iter_difference_t<CPP_type(I)>, decltype(i - s)>>
+            concepts::requires_<same_as<iter_difference_t<decltype(i)>, decltype(s - i)>>,
+            concepts::requires_<same_as<iter_difference_t<decltype(i)>, decltype(i - s)>>
         ) &&
         // Short-circuit the test for sentinel_for if we're emulating concepts:
         bool(!defer::is_true<disable_sized_sentinel<std::remove_cv_t<S>,
@@ -284,8 +285,8 @@ namespace ranges
 
     template<typename I>
     CPP_concept_bool random_access_iterator =
-        CPP_requires ((I) i, (iter_difference_t<CPP_type(I)>) n,
-                      (iter_reference_t<CPP_type(I)>&))
+        CPP_requires_ ((I) i, (iter_difference_t<CPP_type(I)>) n,
+                       (iter_reference_t<CPP_type(I)>&))
         (
             i + n,
             n + i,

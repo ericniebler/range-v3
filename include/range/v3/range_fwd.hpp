@@ -28,8 +28,16 @@
 /// \defgroup group-iterator Iterator
 /// Iterator functionality
 
+/// \defgroup group-iterator-concepts Iterator Concepts
+/// \ingroup group-iterator
+/// Iterator concepts
+
 /// \defgroup group-range Range
 /// Core range functionality
+
+/// \defgroup group-range-concepts Range Concepts
+/// \ingroup group-range
+/// Range concepts
 
 /// \defgroup group-algorithms Algorithms
 /// Iterator- and range-based algorithms, like the standard algorithms

@@ -92,7 +92,7 @@ namespace ranges
         template<typename I>
         CPP_concept_bool advanceable_ =
             decrementable_<I> && totally_ordered<I> &&
-            CPP_requires ((I) i, (I const) j, (iota_difference_t<CPP_type(I)> const) n) //
+            CPP_requires_ ((I) i, (I const) j, (iota_difference_t<CPP_type(I)> const) n) //
             (
                 j - j,
                 i += n,
