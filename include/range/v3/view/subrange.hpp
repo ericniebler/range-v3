@@ -163,37 +163,14 @@ namespace ranges
                  static_cast<subrange_kind>(detail::is_sized_sentinel_<S, I>())>
     struct subrange;
 
+    template<typename I, typename S, subrange_kind K>
+      RANGES_INLINE_VAR constexpr bool enable_safe_range<subrange<I, S, K>> = true;
+
     /// \cond
     namespace _subrange_
     {
         struct adl_hook
         {};
-
-        // A temporary subrange can be safely passed to ranges::begin and ranges::end.
-        template<typename I, typename S, subrange_kind K>
-        constexpr I begin(subrange<I, S, K> && r) noexcept(
-            std::is_nothrow_copy_constructible<I>::value)
-        {
-            return r.begin();
-        }
-        template<typename I, typename S, subrange_kind K>
-        constexpr I begin(subrange<I, S, K> const && r) noexcept(
-            std::is_nothrow_copy_constructible<I>::value)
-        {
-            return r.begin();
-        }
-        template<typename I, typename S, subrange_kind K>
-        constexpr S end(subrange<I, S, K> && r) noexcept(
-            std::is_nothrow_copy_constructible<S>::value)
-        {
-            return r.end();
-        }
-        template<typename I, typename S, subrange_kind K>
-        constexpr S end(subrange<I, S, K> const && r) noexcept(
-            std::is_nothrow_copy_constructible<S>::value)
-        {
-            return r.end();
-        }
 
         template<std::size_t N, typename I, typename S, subrange_kind K>
         constexpr auto get(subrange<I, S, K> const & r) -> CPP_ret(I)( //

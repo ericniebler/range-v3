@@ -393,6 +393,9 @@ namespace ranges
     template<typename S, typename I>
     RANGES_INLINE_VAR constexpr bool disable_sized_sentinel = false;
 
+    template<typename R>
+    RANGES_INLINE_VAR constexpr bool enable_safe_range = false;
+
     template<typename Cur>
     struct basic_mixin;
 
