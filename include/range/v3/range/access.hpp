@@ -203,7 +203,7 @@ namespace ranges
         // clang-format off
         template<typename T>
         CPP_concept_bool has_member_end =
-            CPP_requires ((T &) t) //
+            CPP_requires ((T &&) t) //
             (
                 _end_::is_sentinel<_begin_::_t<CPP_type(T)>>(CPP_fwd(t).end())
             );
@@ -519,7 +519,7 @@ namespace ranges
         // clang-format off
         template<typename T>
         CPP_concept_bool has_member_rend =
-            CPP_requires ((T &) t) //
+            CPP_requires ((T &&) t) //
             (
                 _end_::is_sentinel<_rbegin_::_t<CPP_type(T) &>>(CPP_fwd(t).rend())
             );
