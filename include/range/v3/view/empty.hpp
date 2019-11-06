@@ -24,30 +24,9 @@ namespace ranges
 {
     /// \addtogroup group-views
     /// @{
-
-    /// \cond
-    namespace detail
-    {
-        struct empty_view_base
-        {
-            template<typename T>
-            friend constexpr T * begin(empty_view<T>) noexcept
-            {
-                return nullptr;
-            }
-            template<typename T>
-            friend constexpr T * end(empty_view<T>) noexcept
-            {
-                return nullptr;
-            }
-        };
-    } // namespace detail
-    /// \endcond
-
     template<typename T>
     struct empty_view
       : view_interface<empty_view<T>, (cardinality)0>
-      , private detail::empty_view_base
     {
         static_assert(std::is_object<T>::value,
                       "The template parameter to empty_view must be an object type.");
@@ -76,6 +55,9 @@ namespace ranges
             return *this;
         }
     };
+
+    template<typename T>
+      RANGES_INLINE_VAR constexpr bool enable_safe_range<empty_view<T>> = true;
 
     namespace views
     {
