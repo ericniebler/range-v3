@@ -25,8 +25,7 @@ namespace ranges
     /// \addtogroup group-views
     /// @{
     template<typename T>
-    struct empty_view
-      : view_interface<empty_view<T>, (cardinality)0>
+    struct empty_view : view_interface<empty_view<T>, (cardinality)0>
     {
         static_assert(std::is_object<T>::value,
                       "The template parameter to empty_view must be an object type.");
@@ -57,7 +56,7 @@ namespace ranges
     };
 
     template<typename T>
-      RANGES_INLINE_VAR constexpr bool enable_safe_range<empty_view<T>> = true;
+    RANGES_INLINE_VAR constexpr bool enable_safe_range<empty_view<T>> = true;
 
     namespace views
     {

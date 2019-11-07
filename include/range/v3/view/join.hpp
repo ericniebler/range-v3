@@ -534,6 +534,7 @@ namespace ranges
         private:
             template<typename Rng>
             using inner_value_t = range_value_t<range_reference_t<Rng>>;
+
         public:
             using cpp20_join_fn::operator();
 
@@ -558,8 +559,9 @@ namespace ranges
         struct join_bind_fn
         {
             template<typename T>
-            constexpr auto CPP_fun(operator())(T && t)(const //
-                                                       requires(!joinable_range<T>)) // TODO: underconstrained
+            constexpr auto CPP_fun(operator())(T && t)(
+                const                         //
+                requires(!joinable_range<T>)) // TODO: underconstrained
             {
                 return make_view_closure(bind_back(join_base_fn{}, static_cast<T &&>(t)));
             }
@@ -580,15 +582,15 @@ namespace ranges
             template<typename T, std::size_t N>
             constexpr view_closure<lamduh<T, N>> operator()(T (&val)[N]) const
             {
-                return view_closure<lamduh<T, N>>{lamduh<T, N> { val }};
+                return view_closure<lamduh<T, N>>{lamduh<T, N>{val}};
             }
 #else  // ^^^ workaround / no workaround vvv
             template<typename T, std::size_t N>
             constexpr auto operator()(T (&val)[N]) const
             {
                 return make_view_closure(
-                    [&val](
-                        auto && rng) -> invoke_result_t<join_base_fn, decltype(rng), T(&)[N]> {
+                    [&val](auto && rng)
+                        -> invoke_result_t<join_base_fn, decltype(rng), T(&)[N]> {
                         return join_base_fn{}(static_cast<decltype(rng)>(rng), val);
                     });
             }
@@ -596,7 +598,8 @@ namespace ranges
         };
 
         struct RANGES_EMPTY_BASES join_fn
-          : join_base_fn, join_bind_fn
+          : join_base_fn
+          , join_bind_fn
         {
             using join_base_fn::operator();
             using join_bind_fn::operator();

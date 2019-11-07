@@ -139,7 +139,6 @@ namespace ranges
             CPP_assert(derived_from<Derived, view_interface>);
             return static_cast<Derived const &>(*this);
         }
-        ~view_interface() = default;
 
     public:
         view_interface() = default;
