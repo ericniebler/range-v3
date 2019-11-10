@@ -49,8 +49,10 @@ namespace ranges
     {
         RANGES_DIAGNOSTIC_PUSH
         RANGES_DIAGNOSTIC_IGNORE_VOID_PTR_DEREFERENCE
+
         template<typename U>
         U & can_reference_(U &&);
+
         // clang-format off
         template<typename T>
         CPP_concept_bool dereferenceable_ =
@@ -59,30 +61,33 @@ namespace ranges
                 detail::can_reference_(*CPP_fwd(t))
             );
         // clang-format on
+
         RANGES_DIAGNOSTIC_POP
 
-        template<class T>
+        template<typename T>
         RANGES_INLINE_VAR constexpr bool is_reference_wrapper_v =
             meta::is<T, reference_wrapper>::value ||
             meta::is<T, std::reference_wrapper>::value;
     } // namespace detail
     /// \endcond
 
-    template<class T>
+    template<typename T>
     RANGES_INLINE_VAR constexpr bool is_reference_wrapper_v =
         detail::is_reference_wrapper_v<detail::decay_t<T>>;
 
     template<typename T>
     using is_reference_wrapper = meta::bool_<is_reference_wrapper_v<T>>;
 
+    /// \cond
     template<typename T>
     using is_reference_wrapper_t RANGES_DEPRECATED(
         "is_reference_wrapper_t is deprecated.") = meta::_t<is_reference_wrapper<T>>;
+    /// \endcond
 
     struct invoke_fn
     {
     private:
-        template<class, class T1>
+        template<typename, typename T1>
         static constexpr decltype(auto) CPP_fun(coerce)(T1 && t1, long)( //
             noexcept(noexcept(*static_cast<T1 &&>(t1)))                  //
             requires detail::dereferenceable_<T1>)
@@ -90,14 +95,14 @@ namespace ranges
             return *static_cast<T1 &&>(t1);
         }
 
-        template<class T, class T1>
+        template<typename T, typename T1>
         static constexpr auto coerce(T1 && t1, int) noexcept -> CPP_ret(T1 &&)( //
             requires derived_from<detail::decay_t<T1>, T>)
         {
             return static_cast<T1 &&>(t1);
         }
 
-        template<class, class T1>
+        template<typename, typename T1>
         static constexpr decltype(auto) CPP_fun(coerce)(T1 && t1, int)(
             noexcept(true) //
             requires detail::is_reference_wrapper_v<detail::decay_t<T1>>)
@@ -106,27 +111,30 @@ namespace ranges
         }
 
     public:
-        // clang-format off
-        template<class F, class T, class T1, class... Args>
-        constexpr auto CPP_auto_fun(operator())(F T::*f, T1&& t1, Args&&... args)(const)
-        (
-            return (invoke_fn::coerce<T>(static_cast<T1&&>(t1), 0).*f)
-                (static_cast<Args&&>(args)...)
-        )
+        template<typename F, typename T, typename T1, typename... Args>
+        constexpr auto operator()(F T::*f, T1&& t1, Args&&... args) const
+            noexcept(noexcept((invoke_fn::coerce<T>((T1&&) t1, 0).*f)((Args&&) args...)))
+            -> decltype((invoke_fn::coerce<T>((T1&&) t1, 0).*f)((Args&&) args...))
+        {
+            return (invoke_fn::coerce<T>((T1&&) t1, 0).*f)((Args&&) args...);
+        }
 
-        template<class D, class T, class T1>
-        constexpr auto CPP_auto_fun(operator())(D T::*f, T1&& t1)(const)
-        (
-            return invoke_fn::coerce<T>(static_cast<T1&&>(t1), 0).*f
-        )
+        template<typename D, typename T, typename T1>
+        constexpr auto operator()(D T::*f, T1&& t1) const
+            noexcept(noexcept(invoke_fn::coerce<T>((T1&&) t1, 0).*f))
+            -> decltype(invoke_fn::coerce<T>((T1&&) t1, 0).*f)
+        {
+            return invoke_fn::coerce<T>((T1&&) t1, 0).*f;
+        }
 
-        template<class F, class... Args>
+        template<typename F, typename... Args>
         CPP_PP_IIF(RANGES_CONSTEXPR_INVOKE)(CPP_PP_EXPAND, CPP_PP_EAT)(constexpr)
-        auto CPP_auto_fun(operator())(F&& f, Args&&... args)(const)
-        (
-            return static_cast<F&&>(f)(static_cast<Args&&>(args)...)
-        )
-        // clang-format on
+        auto operator()(F&& f, Args&&... args) const
+            noexcept(noexcept(((F&&) f)((Args&&) args...)))
+            -> decltype(((F&&) f)((Args&&) args...))
+        {
+            return ((F&&) f)((Args&&) args...);
+        }
     };
 
     RANGES_INLINE_VARIABLE(invoke_fn, invoke)
