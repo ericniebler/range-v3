@@ -462,7 +462,7 @@ Range-v3 provides a utility for easily creating your own range types, called
 `view_facade` to create a range that traverses a null-terminated string:
 
 ~~~~~~~{.cpp}
-    #include <range/v3/all.hpp>
+    #include <range/v3/view/facade.hpp>
 
     // A range that iterates over all the characters in a
     // null-terminated string.
@@ -519,7 +519,8 @@ Below in roughly 2 dozen lines of code is the `transform` view, which takes one
 range and transforms all the elements with a unary function.
 
 ~~~~~~~{.cpp}
-    #include <range/v3/all.hpp>
+    #include <range/v3/view/adaptor.hpp>
+    #include <range/v3/utility/semiregular_box.hpp>
 
     // A class that adapts an existing range with a function
     template<class Rng, class Fun>
@@ -608,11 +609,11 @@ to inject things into the public interface of the iterator:
 ~~~~~~~{.cpp}
     class adaptor : public ranges::adaptor_base
     {
-        template<class base_mixin>
-        struct mixin : base_mixin
+        template<class BaseMixin>
+        struct mixin : BaseMixin
         {
               // everything inside this class will be accessible from iterator
-              using base_mixin::base_mixin;
+              using BaseMixin::BaseMixin;
 
               auto& base_value() const
               {
