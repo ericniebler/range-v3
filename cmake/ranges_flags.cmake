@@ -131,7 +131,6 @@ if (RANGES_DEBUG_BUILD AND RANGES_RELEASE_BUILD)
 endif()
 
 if (RANGES_DEBUG_BUILD)
-  ranges_append_flag(RANGES_HAS_O0 -O0)
   ranges_append_flag(RANGES_HAS_NO_INLINE -fno-inline)
   ranges_append_flag(RANGES_HAS_STACK_PROTECTOR_ALL -fstack-protector-all)
   ranges_append_flag(RANGES_HAS_G3 -g3)
