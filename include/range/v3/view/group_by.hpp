@@ -30,7 +30,9 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/concat.hpp>
 #include <range/v3/view/facade.hpp>
+#include <range/v3/view/single.hpp>
 #include <range/v3/view/subrange.hpp>
 #include <range/v3/view/take_while.hpp>
 #include <range/v3/view/view.hpp>
@@ -76,22 +78,25 @@ namespace ranges
                     return invoke(fun_, *first_, r);
                 }
             };
-#ifdef RANGES_WORKAROUND_MSVC_787074
-            template<bool Const = IsConst>
             auto read() const
-                -> take_while_view<subrange<iterator_t<meta::const_if_c<Const, Rng>>,
-                                            sentinel_t<meta::const_if_c<Const, Rng>>>,
-                                   pred>
-#else  // ^^^ workaround / no workaround vvv
-            auto read() const
-                -> take_while_view<subrange<iterator_t<CRng>, sentinel_t<CRng>>, pred>
-#endif // RANGES_WORKAROUND_MSVC_787074
             {
-                return {{cur_, last_}, {cur_, fun_}};
+                auto first = cur_;
+                return views::concat(
+                        views::single(*cur_),
+#ifdef RANGES_WORKAROUND_MSVC_787074
+                        take_while_view<subrange<iterator_t<meta::const_if_c<IsConst, Rng>>,
+                                                 sentinel_t<meta::const_if_c<IsConst, Rng>>>,
+                                        pred>
+#else  // ^^^ workaround / no workaround vvv
+                        take_while_view<subrange<iterator_t<CRng>, sentinel_t<CRng>>, pred>
+#endif // RANGES_WORKAROUND_MSVC_787074
+                        {{++first, last_}, {cur_, fun_}}
+                    );
             }
             void next()
             {
-                cur_ = find_if_not(cur_, last_, pred{cur_, fun_});
+                auto first = cur_;
+                cur_ = find_if_not(++first, last_, pred{cur_, fun_});
             }
             bool equal(default_sentinel_t) const
             {

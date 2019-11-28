@@ -96,5 +96,15 @@ int main()
         CHECK(distance(rng0) == 4);
     }
 
+    {
+        std::vector<int> v3 = {2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 3, 0};
+        auto rng = v3 | views::group_by(std::less<>{});
+        CHECK(distance(rng) == 4);
+        check_equal(*rng.begin(), {2, 3, 4, 5});
+        check_equal(*next(rng.begin()), {0, 1, 2, 3, 4, 5, 6});
+        check_equal(*next(rng.begin(), 2), {0, 1, 2, 3});
+        check_equal(*next(rng.begin(), 3), {0});
+    }
+
     return test_result();
 }
