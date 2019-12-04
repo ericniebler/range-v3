@@ -20,22 +20,25 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Export compilation data-base
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-add_library(meta INTERFACE)
-target_include_directories(meta INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
-target_include_directories(meta SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
-target_compile_options(meta INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
+add_library(range-v3-meta INTERFACE)
+add_library(range-v3::meta ALIAS range-v3-meta)
+target_include_directories(range-v3-meta INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
+target_include_directories(range-v3-meta SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
+target_compile_options(range-v3-meta INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
 
-add_library(concepts INTERFACE)
-target_include_directories(concepts INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
-target_include_directories(concepts SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
-target_compile_options(concepts INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive- /experimental:preprocessor /wd5105>)
-target_link_libraries(concepts INTERFACE meta)
+add_library(range-v3-concepts INTERFACE)
+add_library(range-v3::concepts ALIAS range-v3-concepts)
+target_include_directories(range-v3-concepts INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
+target_include_directories(range-v3-concepts SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
+target_compile_options(range-v3-concepts INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive- /experimental:preprocessor /wd5105>)
+target_link_libraries(range-v3-concepts INTERFACE range-v3::meta)
 
 add_library(range-v3 INTERFACE)
+add_library(range-v3::range-v3 ALIAS range-v3)
 target_include_directories(range-v3 INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
 target_include_directories(range-v3 SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
 target_compile_options(range-v3 INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
-target_link_libraries(range-v3 INTERFACE concepts meta)
+target_link_libraries(range-v3 INTERFACE range-v3::concepts range-v3::meta)
 
 function(rv3_add_test TESTNAME EXENAME FIRSTSOURCE)
   add_executable(${EXENAME} ${FIRSTSOURCE} ${ARGN})
@@ -162,9 +165,8 @@ write_basic_package_version_file(
 )
 set(CMAKE_SIZEOF_VOID_P ${OLD_CMAKE_SIZEOF_VOID_P})
 
-install(TARGETS concepts meta range-v3 EXPORT range-v3-targets DESTINATION lib)
-install(EXPORT range-v3-targets NAMESPACE range-v3:: FILE range-v3-targets.cmake DESTINATION lib/cmake/range-v3)
-install(EXPORT range-v3-targets FILE range-v3-targets-compat.cmake DESTINATION lib/cmake/range-v3)
+install(TARGETS range-v3-concepts range-v3-meta range-v3 EXPORT range-v3-targets DESTINATION lib)
+install(EXPORT range-v3-targets FILE range-v3-targets.cmake DESTINATION lib/cmake/range-v3)
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/range-v3-config-version.cmake
   cmake/range-v3-config.cmake

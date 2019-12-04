@@ -84,8 +84,8 @@ namespace ranges
                 auto const last = ranges::end(rng_->base());
                 auto & pred = rng_->adjacent_filter_view::box::get();
                 RANGES_EXPECT(it != last);
-                for(auto prev = it; ++it != last; prev = it)
-                    if(invoke(pred, *prev, *it))
+                for(auto tmp = it; ++it != last; tmp = it)
+                    if(invoke(pred, *tmp, *it))
                         break;
             }
             CPP_member
@@ -98,10 +98,10 @@ namespace ranges
                 --it;
                 while(it != first)
                 {
-                    auto prev = it;
-                    if(invoke(pred, *--prev, *it))
+                    auto tmp = it;
+                    if(invoke(pred, *--tmp, *it))
                         break;
-                    it = prev;
+                    it = tmp;
                 }
             }
             void distance_to() = delete;
