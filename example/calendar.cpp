@@ -22,28 +22,28 @@
 //
 // Output:
 /*
-        January              February                March
+     January 2015         February 2015          March 2015
               1  2  3   1  2  3  4  5  6  7   1  2  3  4  5  6  7
   4  5  6  7  8  9 10   8  9 10 11 12 13 14   8  9 10 11 12 13 14
  11 12 13 14 15 16 17  15 16 17 18 19 20 21  15 16 17 18 19 20 21
  18 19 20 21 22 23 24  22 23 24 25 26 27 28  22 23 24 25 26 27 28
  25 26 27 28 29 30 31                        29 30 31
 
-         April                  May                  June
+      April 2015             May 2015             June 2015
            1  2  3  4                  1  2      1  2  3  4  5  6
   5  6  7  8  9 10 11   3  4  5  6  7  8  9   7  8  9 10 11 12 13
  12 13 14 15 16 17 18  10 11 12 13 14 15 16  14 15 16 17 18 19 20
  19 20 21 22 23 24 25  17 18 19 20 21 22 23  21 22 23 24 25 26 27
  26 27 28 29 30        24 25 26 27 28 29 30  28 29 30
                        31
-         July                 August               September
+      July 2015           August 2015         September 2015
            1  2  3  4                     1         1  2  3  4  5
   5  6  7  8  9 10 11   2  3  4  5  6  7  8   6  7  8  9 10 11 12
  12 13 14 15 16 17 18   9 10 11 12 13 14 15  13 14 15 16 17 18 19
  19 20 21 22 23 24 25  16 17 18 19 20 21 22  20 21 22 23 24 25 26
  26 27 28 29 30 31     23 24 25 26 27 28 29  27 28 29 30
                        30 31
-        October              November              December
+     October 2015         November 2015        December 2015
               1  2  3   1  2  3  4  5  6  7         1  2  3  4  5
   4  5  6  7  8  9 10   8  9 10 11 12 13 14   6  7  8  9 10 11 12
  11 12 13 14 15 16 17  15 16 17 18 19 20 21  13 14 15 16 17 18 19
@@ -58,13 +58,11 @@
 //   Thanks to github's Arzar for bringing date::week_number
 //     to my attention.
 
-#include <boost/date_time/gregorian/gregorian.hpp>
-#include <boost/format.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/program_options.hpp>
+
 #include <algorithm>
 #include <cstddef>
 #include <functional>
+#include <iomanip>
 #include <iostream>
 #include <range/v3/action/join.hpp>
 #include <range/v3/algorithm/copy.hpp>
@@ -87,102 +85,214 @@
 #include <utility>
 #include <vector>
 
-namespace po = boost::program_options;
-namespace greg = boost::gregorian;
-using date = greg::date;
-using day = greg::date_duration;
+#include "date.h"
+
 using namespace ranges;
 
-namespace boost
+// Characters per week line.
+const int chars_per_week = 22;
+
+// Spaces per day
+const int spaces_per_day = 3;
+
+// Max number of weeks per month
+const int max_weeks = 6;
+
+// This template wrapper class provides the ability to act both as an
+// "incrementable" class which can be used with ranges and also a
+// "date" class which can be used to calculate year/month/day and other
+// values.
+template< class T >
+class CalDateWrapper
 {
-    namespace gregorian
+  public:
+
+    using value_type = T;
+
+    using difference_type = T;
+
+    CalDateWrapper( ) : m_Date( )
     {
-        date &operator++(date &d)
-        {
-            return d = d + day(1);
-        }
-        date operator++(date &d, int)
-        {
-            return ++d - day(1);
-        }
+
     }
-}
+
+    CalDateWrapper( const date::year_month_day &d_ )
+      : m_Date( d_ )
+    {
+    }
+
+    operator T( ) const
+    {
+      return date::sys_days( m_Date ).time_since_epoch( ).count( );
+    }
+
+    // helpers
+
+    int week_day_count( )
+    {
+      date::year_month_weekday wd( m_Date );
+      date::days days = wd.weekday( ) - date::Sunday;
+      return days.count( );
+    }
+
+    int week_number_in_month( ) const
+    {
+      // Get the first Sunday before the current date.
+      date::year_month_day date1 = m_Date.year( ) / m_Date.month( ) / 1;
+      date::weekday weekday = date::sys_days( date1 );
+      date1 = date::sys_days( date1 ) - ( weekday - date::Sunday );
+      auto d1 = date::sys_days( date1 );
+      auto d2 = date::sys_days( m_Date );
+      int wn = std::chrono::duration_cast< date::weeks >( d2 - d1 ).count( ) + 1;
+      return wn;
+    }
+
+    // modifiers
+
+    CalDateWrapper &operator++( )
+    {
+      date::sys_days d( m_Date );
+      d = d + date::days{ 1 };
+      m_Date = d;
+      return *this;
+    }
+
+    CalDateWrapper operator++( int )
+    {
+      CalDateWrapper< T > d = *this;
+      ++( *this );
+      return d;
+    }
+
+    // accessors
+
+    date::year_month_day ymd( )
+    {
+      return m_Date;
+    }
+
+    date::year year( )
+    {
+      return m_Date.year( );
+    }
+
+    date::month month( )
+    {
+      return m_Date.month( );
+    }
+
+    date::day day( )
+    {
+      return m_Date.day( );
+    }
+
+  private:
+
+    date::year_month_day m_Date;
+};
+
+
+using CalDate = CalDateWrapper< date::sys_days::rep >;
+
+
 namespace ranges
 {
-    template<>
-    struct incrementable_traits<date>
+    template< >
+    struct incrementable_traits< CalDate >
     {
-        using difference_type = date::duration_type::duration_rep::int_type;
+        using difference_type = CalDate::difference_type;
     };
 }
-CPP_assert(incrementable<date>);
+
+CPP_assert( incrementable< CalDate > );
 
 auto
 dates(unsigned short start, unsigned short stop)
 {
-    return views::iota(date{start, greg::Jan, 1}, date{stop, greg::Jan, 1});
+    const CalDate startDate( CalDate{ date::year( start ) / date::jan / 1 } );
+    const CalDate stopDate(  CalDate{ date::year( stop  ) / date::jan / 1 } );
+    return views::iota( startDate, stopDate  );
 }
 
 auto
-dates_from(unsigned short year)
+dates_from(unsigned short startYear)
 {
-    return views::iota(date{year, greg::Jan, 1});
+    const CalDate startDate{ date::year( startYear ) / date::jan / 1 };
+    return views::iota( startDate );
 }
 
 auto
 by_month()
 {
     return views::group_by(
-        [](date a, date b) { return a.month() == b.month(); });
+        []( CalDate a, CalDate b )
+    {
+      return a.month( ) == b.month( );
+    });
 }
 
 auto
 by_week()
 {
-    return views::group_by([](date a, date b) {
-        // ++a because week_number is Mon-Sun and we want Sun-Sat
-        return (++a).week_number() == (++b).week_number();
+    return views::group_by([](CalDate a, CalDate b) {
+        int weekA = a.week_number_in_month( );
+        int weekB = b.week_number_in_month( );
+        return weekA == weekB;
     });
 }
 
 std::string
-format_day(date d)
+format_day(CalDate d)
 {
-    return boost::str(boost::format("%|3|") % d.day());
+    // 3 spaces for each day.
+    std::stringstream ss;
+    ss << std::setw( spaces_per_day ) << std::setfill( ' ' ) << (int) (unsigned) d.day( );
+    return ss.str( );
 }
 
-// In:  range<range<date>>: month grouped by weeks.
+// In:  range<range<CalDate>>: month grouped by weeks.
 // Out: range<std::string>: month with formatted weeks.
 auto
 format_weeks()
 {
-    return views::transform([](/*range<date>*/ auto week) {
-        return boost::str(boost::format("%1%%2%%|22t|") %
-                          std::string(front(week).day_of_week() * 3u, ' ') %
-                          (week | views::transform(format_day) | actions::join));
+    return views::transform([](/*range<CalDate>*/ auto week) {
+        std::stringstream ss;
+        ss << std::string( front( week ).week_day_count( ) * spaces_per_day, ' ' );
+        size_t len = ss.str( ).length( );
+        ss << (week | views::transform( format_day ) | actions::join );
+        ss << std::string( chars_per_week - len, ' ' );
+        return ss.str( ).substr( 0, chars_per_week );
     });
 }
 
 // Return a formatted string with the title of the month
 // corresponding to a date.
 std::string
-month_title(date d)
+month_title(CalDate d)
 {
-    return boost::str(boost::format("%|=22|") % d.month().as_long_string());
+    std::stringstream ss;
+    ss << date::format( "%B", d.ymd( ) ) << " " << d.year( );
+    std::string longMonth = ss.str( );
+    ss.str( "" );
+    const size_t totalSize = chars_per_week;
+    ss << std::string( ( totalSize - longMonth.length( ) ) / 2, ' ' );
+    ss << longMonth;
+    ss << std::string( ( totalSize - longMonth.length( ) ) / 2, ' ' );
+    return ss.str( );
 }
 
-// In:  range<range<date>>: year of months of days
+// In:  range<range<CalDate>>: year of months of days
 // Out: range<range<std::string>>: year of months of formatted wks
 auto
 layout_months()
 {
-    return views::transform([](/*range<date>*/ auto month) {
+    return views::transform([](/*range<CalDate>*/ auto month) {
         auto week_count =
             static_cast<std::ptrdiff_t>(distance(month | by_week()));
         return views::concat(
             views::single(month_title(front(month))),
             month | by_week() | format_weeks(),
-            views::repeat_n(std::string(22, ' '), 6 - week_count));
+            views::repeat_n(std::string( chars_per_week, ' '), max_weeks - week_count));
     });
 }
 
@@ -282,7 +392,7 @@ join_months()
         [](/*range<string>*/ auto rng) { return actions::join(rng); });
 }
 
-// In:  range<date>
+// In:  range<CalDate>
 // Out: range<string>, lines of formatted output
 auto
 format_calendar(std::size_t months_per_line)
@@ -302,41 +412,69 @@ format_calendar(std::size_t months_per_line)
       | join_months();
 }
 
+
+void usage( )
+{
+  std::cout << "Allowed options:"                              << std::endl;
+  std::cout << "  --help               produce help message"   << std::endl;
+  std::cout << "  --start arg          Year to start"          << std::endl;
+  std::cout << "  --stop arg           Year to stop"           << std::endl;
+  std::cout << "  --per-line arg (=3)  Nbr of months per line" << std::endl;
+}
+
+
 int
 main(int argc, char *argv[]) try
 {
-    // Declare the supported options.
-    po::options_description desc("Allowed options");
-    desc.add_options()("help", "produce help message")(
-        "start", po::value<unsigned short>(), "Year to start")(
-        "stop", po::value<std::string>(), "Year to stop")(
-        "per-line",
-        po::value<std::size_t>()->default_value(3u),
-        "Nbr of months per line");
+    // Configuration.
+    bool help            = false;
+    auto start           = 0;
+    auto stop            = 0;
+    auto months_per_line = 3;
 
-    po::positional_options_description p;
-    p.add("start", 1).add("stop", 1);
-
-    po::variables_map vm;
-    po::store(
-        po::command_line_parser(argc, argv).options(desc).positional(p).run(),
-        vm);
-    po::notify(vm);
-
-    if(vm.count("help") || 1 != vm.count("start"))
+    for ( int i = 1; i < argc; ++i )
     {
-        std::cerr << desc << '\n';
-        return 1;
+      std::string arg = argv[ i ];
+
+      if ( arg == "--help" )
+      {
+        help = true;
+        continue;
+      }
+
+      if ( arg == "--start" )
+      {
+        arg = argv[ ++i ];
+        start = atoi( arg.c_str( ) );
+        continue;
+      }
+
+      if ( arg == "--stop" )
+      {
+        arg = argv[ ++i ];
+        stop = atoi( arg.c_str( ) );
+        continue;
+      }
+
+      if ( arg == "--per-line" )
+      {
+        arg = argv[ ++i ];
+        months_per_line = atoi( arg.c_str( ) );
+        continue;
+      }
+
+      if ( !arg.empty( ) )
+      {
+        start = atoi( arg.c_str( ) );
+        stop  = start + 1;
+      }
     }
 
-    auto const start = vm["start"].as<unsigned short>();
-    auto const stop = 0 == vm.count("stop")
-                          ? (unsigned short)(start + 1)
-                          : vm["stop"].as<std::string>() == "never"
-                                ? (unsigned short)-1
-                                : boost::lexical_cast<unsigned short>(
-                                      vm["stop"].as<std::string>());
-    auto const months_per_line = vm["per-line"].as<std::size_t>();
+    if ( help || ( start == 0 && stop == 0 ) )
+    {
+      usage( );
+      return 0;
+    }
 
     if(stop != (unsigned short)-1 && stop <= start)
     {
