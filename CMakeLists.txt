@@ -64,6 +64,8 @@ if(RANGE_V3_EXAMPLES)
 endif()
 
 if(RANGE_V3_PERF)
+  include(gtest)
+  include(gbenchmark)
   add_subdirectory(perf)
 endif()
 
