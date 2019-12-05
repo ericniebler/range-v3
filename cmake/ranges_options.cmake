@@ -45,9 +45,9 @@ CMAKE_DEPENDENT_OPTION(RANGE_V3_EXAMPLES
   "Build the Range-v3 examples and integrate with ctest"
   ON "${is_standalone}" OFF)
 
-CMAKE_DEPENDENT_OPTION(RANGE_V3_PERF
+option(RANGE_V3_PERF
   "Build the Range-v3 performance benchmarks"
-  ON "${is_standalone}" OFF)
+  OFF)
 
 CMAKE_DEPENDENT_OPTION(RANGE_V3_DOCS
   "Build the Range-v3 documentation"
