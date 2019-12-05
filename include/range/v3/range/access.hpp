@@ -36,6 +36,21 @@
 
 namespace ranges
 {
+#if defined(__cpp_lib_string_view) && __cpp_lib_string_view > 0
+    template<class CharT, class Traits>
+    RANGES_INLINE_VAR constexpr bool
+        enable_safe_range<std::basic_string_view<CharT, Traits>> = true;
+#endif
+
+    namespace detail
+    {
+        template<typename T>
+        RANGES_INLINE_VAR constexpr bool _safe_range = enable_safe_range<uncvref_t<T>>;
+
+        template<typename T>
+        RANGES_INLINE_VAR constexpr bool _safe_range<T &> = true;
+    }
+
     /// \cond
     namespace _begin_
     {
@@ -60,14 +75,13 @@ namespace ranges
             CPP_requires ((T &) t) //
             (
                 _begin_::is_iterator(t.begin())
-            ) &&
-            std::is_lvalue_reference<T>::value;
+            );
 
         template<typename T>
         CPP_concept_bool has_non_member_begin =
-            CPP_requires ((T &&) t) //
+            CPP_requires ((T &) t) //
             (
-                _begin_::is_iterator(begin(CPP_fwd(t)))
+                _begin_::is_iterator(begin(t))
             );
         // clang-format on
 
@@ -107,30 +121,20 @@ namespace ranges
 #ifdef RANGES_WORKAROUND_GCC_89953
             constexpr auto CPP_fun(operator())(R && r)(
                 const                                   //
-                noexcept(noexcept(impl_v<R>((R &&) r))) //
-                requires(has_member_begin<R> || has_non_member_begin<R>))
+                noexcept(noexcept(impl_v<R>(r))) //
+                requires((detail::_safe_range<R>) && (has_member_begin<R> || has_non_member_begin<R>)))
 #else
             constexpr auto CPP_fun(operator())(R && r)(
                 const                                   //
-                noexcept(noexcept(impl<R>{}((R &&) r))) //
-                requires(has_member_begin<R> || has_non_member_begin<R>))
+                noexcept(noexcept(impl<R>{}(r))) //
+                requires((detail::_safe_range<R>) && (has_member_begin<R> || has_non_member_begin<R>)))
 #endif
             {
-                return impl<R>{}((R &&) r);
+                return impl<R>{}(r);
             }
-
-#if defined(__cpp_lib_string_view) && __cpp_lib_string_view > 0
-            template<class CharT, class Traits>
-            constexpr auto operator()(std::basic_string_view<CharT, Traits> r) const
-                noexcept
-            {
-                return r.begin();
-            }
-#endif
-
             template<typename T, typename Fn = fn>
             RANGES_DEPRECATED(
-                "Using a reference_wrapper as a Range is deprecated. Use views::ref "
+                "Using a reference_wrapper as a range is deprecated. Use views::ref "
                 "instead.")
             constexpr auto
             operator()(std::reference_wrapper<T> ref) const
@@ -141,7 +145,7 @@ namespace ranges
 
             template<typename T, typename Fn = fn>
             RANGES_DEPRECATED(
-                "Using a reference_wrapper as a Range is deprecated. Use views::ref "
+                "Using a reference_wrapper as a range is deprecated. Use views::ref "
                 "instead.")
             constexpr auto
             operator()(ranges::reference_wrapper<T> ref) const
@@ -156,9 +160,9 @@ namespace ranges
         struct fn::impl_<false>
         {
             template<typename R>
-            constexpr auto operator()(R && r) const noexcept(noexcept(begin((R &&) r)))
+            constexpr auto operator()(R && r) const noexcept(noexcept(begin(r)))
             {
-                return begin((R &&) r);
+                return begin(r);
             }
         };
 
@@ -190,22 +194,21 @@ namespace ranges
         void end(std::initializer_list<T>) = delete;
 
         template<typename I, typename S>
-        auto is_sentinel(S) -> CPP_ret(void)(requires sentinel_for<S, I>);
+        auto _is_sentinel(S, I) -> CPP_ret(void)(requires sentinel_for<S, I>);
 
         // clang-format off
         template<typename T>
         CPP_concept_bool has_member_end =
             CPP_requires ((T &) t) //
             (
-                _end_::is_sentinel<_begin_::_t<CPP_type(T) &>>(t.end())
-            ) &&
-            std::is_lvalue_reference<T>::value;
+                _end_::_is_sentinel(t.end(), ranges::begin(t))
+            );
 
         template<typename T>
         CPP_concept_bool has_non_member_end =
-            CPP_requires ((T &&) t) //
+            CPP_requires ((T &) t) //
             (
-                _end_::is_sentinel<_begin_::_t<CPP_type(T)>>(end(CPP_fwd(t)))
+                _end_::_is_sentinel(end(t), ranges::begin(t))
             );
         // clang-format on
 
@@ -249,29 +252,20 @@ namespace ranges
             template<typename R>
 #ifdef RANGES_WORKAROUND_GCC_89953
             constexpr auto CPP_fun(operator())(R && r)(
-                const noexcept(noexcept(impl_v<R>((R &&) r))) //
-                requires(has_member_end<R> || has_non_member_end<R>))
+                const noexcept(noexcept(impl_v<R>(r))) //
+                requires((detail::_safe_range<R>) && (has_member_end<R> || has_non_member_end<R>)))
 #else
             constexpr auto CPP_fun(operator())(R && r)(
-                const noexcept(noexcept(impl<R>{}((R &&) r))) //
-                requires(has_member_end<R> || has_non_member_end<R>))
+                const noexcept(noexcept(impl<R>{}(r))) //
+                requires((detail::_safe_range<R>) && (has_member_end<R> || has_non_member_end<R>)))
 #endif
             {
-                return impl<R>{}((R &&) r);
+                return impl<R>{}(r);
             }
-
-#if defined(__cpp_lib_string_view) && __cpp_lib_string_view > 0
-            template<class CharT, class Traits>
-            constexpr auto operator()(std::basic_string_view<CharT, Traits> r) const
-                noexcept
-            {
-                return r.end();
-            }
-#endif
 
             template<typename T, typename Fn = fn>
             RANGES_DEPRECATED(
-                "Using a reference_wrapper as a Range is deprecated. Use views::ref "
+                "Using a reference_wrapper as a range is deprecated. Use views::ref "
                 "instead.")
             constexpr auto
             operator()(std::reference_wrapper<T> ref) const
@@ -282,7 +276,7 @@ namespace ranges
 
             template<typename T, typename Fn = fn>
             RANGES_DEPRECATED(
-                "Using a reference_wrapper as a Range is deprecated. Use views::ref "
+                "Using a reference_wrapper as a range is deprecated. Use views::ref "
                 "instead.")
             constexpr auto
             operator()(ranges::reference_wrapper<T> ref) const
@@ -309,9 +303,9 @@ namespace ranges
         struct fn::impl_<false>
         {
             template<typename R>
-            constexpr auto operator()(R && r) const noexcept(noexcept(end((R &&) r)))
+            constexpr auto operator()(R && r) const noexcept(noexcept(end(r)))
             {
-                return end((R &&) r);
+                return end(r);
             }
         };
 
@@ -335,9 +329,9 @@ namespace ranges
         {
             template<typename R>
             constexpr _begin_::_t<detail::as_const_t<R>> operator()(R && r) const
-                noexcept(noexcept(ranges::begin(detail::as_const((R &&) r))))
+                noexcept(noexcept(ranges::begin(detail::as_const(r))))
             {
-                return ranges::begin(detail::as_const((R &&) r));
+                return ranges::begin(detail::as_const(r));
             }
         };
     } // namespace _cbegin_
@@ -356,9 +350,9 @@ namespace ranges
         {
             template<typename R>
             constexpr _end_::_t<detail::as_const_t<R>> operator()(R && r) const
-                noexcept(noexcept(ranges::end(detail::as_const((R &&) r))))
+                noexcept(noexcept(ranges::end(detail::as_const(r))))
             {
-                return ranges::end(detail::as_const((R &&) r));
+                return ranges::end(detail::as_const(r));
             }
         };
     } // namespace _cend_
@@ -388,15 +382,17 @@ namespace ranges
             CPP_requires ((T &) t) //
             (
                 _begin_::is_iterator(t.rbegin())
-            ) &&
-            std::is_lvalue_reference<T>::value;
+            );
 
         template<typename T>
         CPP_concept_bool has_non_member_rbegin =
-            CPP_requires ((T &&) t) //
+            CPP_requires ((T &) t) //
             (
-                _begin_::is_iterator(rbegin(CPP_fwd(t)))
+                _begin_::is_iterator(rbegin(t))
             );
+
+        template<typename I>
+        void _same_type(I, I);
 
         template<typename T>
         CPP_concept_bool can_reverse_end =
@@ -404,9 +400,8 @@ namespace ranges
             (
                 // make_reverse_iterator is constrained with
                 // bidirectional_iterator.
-                ranges::make_reverse_iterator(ranges::end(CPP_fwd(t))),
-                concepts::requires_<
-                    same_as<_begin_::_t<CPP_type(T)>, _end_::_t<CPP_type(T)>>>
+                ranges::make_reverse_iterator(ranges::end(t)),
+                _rbegin_::_same_type(ranges::begin(t), ranges::end(t))
             );
         // clang-format on
 
@@ -431,16 +426,16 @@ namespace ranges
         public:
             template<typename R>
             constexpr auto CPP_fun(operator())(R && r)(
-                const noexcept(noexcept(impl<R>{}((R &&) r))) //
-                requires(has_member_rbegin<R> || has_non_member_rbegin<R> ||
-                         can_reverse_end<R>))
+                const noexcept(noexcept(impl<R>{}(r))) //
+                requires((detail::_safe_range<R>) && (has_member_rbegin<R> || has_non_member_rbegin<R> ||
+                         can_reverse_end<R>)))
             {
-                return impl<R>{}((R &&) r);
+                return impl<R>{}(r);
             }
 
             template<typename T, typename Fn = fn>
             RANGES_DEPRECATED(
-                "Using a reference_wrapper as a Range is deprecated. Use views::ref "
+                "Using a reference_wrapper as a range is deprecated. Use views::ref "
                 "instead.")
             constexpr auto
             operator()(std::reference_wrapper<T> ref) const
@@ -451,7 +446,7 @@ namespace ranges
 
             template<typename T, typename Fn = fn>
             RANGES_DEPRECATED(
-                "Using a reference_wrapper as a Range is deprecated. Use views::ref "
+                "Using a reference_wrapper as a range is deprecated. Use views::ref "
                 "instead.")
             constexpr auto
             operator()(ranges::reference_wrapper<T> ref) const
@@ -466,9 +461,9 @@ namespace ranges
         struct fn::impl_<1>
         {
             template<typename R>
-            constexpr auto operator()(R && r) const noexcept(noexcept(rbegin((R &&) r)))
+            constexpr auto operator()(R && r) const noexcept(noexcept(rbegin(r)))
             {
-                return rbegin((R &&) r);
+                return rbegin(r);
             }
         };
 
@@ -478,9 +473,9 @@ namespace ranges
         {
             template<typename R>
             constexpr auto operator()(R && r) const
-                noexcept(noexcept(ranges::make_reverse_iterator(ranges::end((R &&) r))))
+                noexcept(noexcept(ranges::make_reverse_iterator(ranges::end(r))))
             {
-                return ranges::make_reverse_iterator(ranges::end((R &&) r));
+                return ranges::make_reverse_iterator(ranges::end(r));
             }
         };
 
@@ -515,15 +510,14 @@ namespace ranges
         CPP_concept_bool has_member_rend =
             CPP_requires ((T &) t) //
             (
-                _end_::is_sentinel<_rbegin_::_t<CPP_type(T) &>>(t.rend())
-            ) &&
-            std::is_lvalue_reference<T>::value;
+                _end_::_is_sentinel(t.rend(), ranges::rbegin(t))
+            );
 
         template<typename T>
         CPP_concept_bool has_non_member_rend =
-            CPP_requires ((T &&) t) //
+            CPP_requires ((T &) t) //
             (
-                _end_::is_sentinel<_rbegin_::_t<CPP_type(T) &>>(rend(CPP_fwd(t)))
+                _end_::_is_sentinel(rend(t), ranges::rbegin(t))
             );
 
         template<typename T>
@@ -532,9 +526,8 @@ namespace ranges
             (
                 // make_reverse_iterator is constrained with
                 // bidirectional_iterator.
-                ranges::make_reverse_iterator(ranges::begin(CPP_fwd(t))),
-                concepts::requires_<
-                    same_as<_begin_::_t<CPP_type(T)>, _end_::_t<CPP_type(T)>>>
+                ranges::make_reverse_iterator(ranges::begin(t)),
+                _rbegin_::_same_type(ranges::begin(t), ranges::end(t))
             );
         // clang-format on
 
@@ -558,16 +551,16 @@ namespace ranges
         public:
             template<typename R>
             constexpr auto CPP_fun(operator())(R && r)(
-                const noexcept(noexcept(impl<R>{}((R &&) r))) //
-                requires(has_member_rend<R> || has_non_member_rend<R> ||
-                         can_reverse_begin<R>))
+                const noexcept(noexcept(impl<R>{}(r))) //
+                requires((detail::_safe_range<R>) && (has_member_rend<R> || has_non_member_rend<R> ||
+                         can_reverse_begin<R>)))
             {
-                return impl<R>{}((R &&) r);
+                return impl<R>{}(r);
             }
 
             template<typename T, typename Fn = fn>
             RANGES_DEPRECATED(
-                "Using a reference_wrapper as a Range is deprecated. Use views::ref "
+                "Using a reference_wrapper as a range is deprecated. Use views::ref "
                 "instead.")
             constexpr auto
             operator()(std::reference_wrapper<T> ref) const
@@ -578,7 +571,7 @@ namespace ranges
 
             template<typename T, typename Fn = fn>
             RANGES_DEPRECATED(
-                "Using a reference_wrapper as a Range is deprecated. Use views::ref "
+                "Using a reference_wrapper as a range is deprecated. Use views::ref "
                 "instead.")
             constexpr auto
             operator()(ranges::reference_wrapper<T> ref) const
@@ -593,9 +586,9 @@ namespace ranges
         struct fn::impl_<1>
         {
             template<typename R>
-            constexpr auto operator()(R && r) const noexcept(noexcept(rend((R &&) r)))
+            constexpr auto operator()(R && r) const noexcept(noexcept(rend(r)))
             {
-                return rend((R &&) r);
+                return rend(r);
             }
         };
 
@@ -605,9 +598,9 @@ namespace ranges
         {
             template<typename R>
             constexpr auto operator()(R && r) const
-                noexcept(noexcept(ranges::make_reverse_iterator(ranges::begin((R &&) r))))
+                noexcept(noexcept(ranges::make_reverse_iterator(ranges::begin(r))))
             {
-                return ranges::make_reverse_iterator(ranges::begin((R &&) r));
+                return ranges::make_reverse_iterator(ranges::begin(r));
             }
         };
 
@@ -633,9 +626,9 @@ namespace ranges
         {
             template<typename R>
             constexpr _rbegin_::_t<detail::as_const_t<R>> operator()(R && r) const
-                noexcept(noexcept(ranges::rbegin(detail::as_const((R &&) r))))
+                noexcept(noexcept(ranges::rbegin(detail::as_const(r))))
             {
-                return ranges::rbegin(detail::as_const((R &&) r));
+                return ranges::rbegin(detail::as_const(r));
             }
         };
     } // namespace _crbegin_
@@ -654,9 +647,9 @@ namespace ranges
         {
             template<typename R>
             constexpr _rend_::_t<detail::as_const_t<R>> operator()(R && r) const
-                noexcept(noexcept(ranges::rend(detail::as_const((R &&) r))))
+                noexcept(noexcept(ranges::rend(detail::as_const(r))))
             {
-                return ranges::rend(detail::as_const((R &&) r));
+                return ranges::rend(detail::as_const(r));
             }
         };
     } // namespace _crend_
