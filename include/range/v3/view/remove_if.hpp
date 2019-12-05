@@ -176,9 +176,8 @@ namespace ranges
             }
             template<typename Pred, typename Proj>
             constexpr auto CPP_fun(operator())(Pred && pred,
-                                               Proj proj)(
-                const                   //
-                requires(!range<Pred>)) // TODO: underconstrained
+                                               Proj proj)(const //
+                                                          requires(!range<Pred>)) // TODO: underconstrained
             {
                 return make_view_closure(bind_back(
                     remove_if_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));
@@ -186,8 +185,7 @@ namespace ranges
         };
 
         struct RANGES_EMPTY_BASES remove_if_fn
-          : remove_if_base_fn
-          , remove_if_bind_fn
+          : remove_if_base_fn, remove_if_bind_fn
         {
             using remove_if_base_fn::operator();
             using remove_if_bind_fn::operator();
