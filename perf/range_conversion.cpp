@@ -1,6 +1,7 @@
 // Range v3 library
 //
-//  Copyright Eric Niebler 2019-present
+//  Copyright 2019-present Christopher Di Bella
+//  Copyright 2019-present Eric Niebler
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -31,7 +32,7 @@ namespace
     auto palindrome_range_common(std::vector<std::string> const & words)
     {
         auto is_palindrome = [](auto const & word) {
-            return not ranges::empty(word) and ranges::equal(word, word | views::reverse);
+            return !ranges::empty(word) && ranges::equal(word, word | views::reverse);
         };
 
         auto palindrome_excalim = [&is_palindrome](auto const & word) {
@@ -46,7 +47,7 @@ namespace
     auto palindrome_range_to(std::vector<std::string> const & words)
     {
         auto is_palindrome = [](auto const & word) {
-            return not ranges::empty(word) and ranges::equal(word, word | views::reverse);
+            return !ranges::empty(word) && ranges::equal(word, word | views::reverse);
         };
 
         auto palindrome_excalim = [&is_palindrome](auto const & word) {
@@ -83,8 +84,8 @@ BENCHMARK_F(Words, RangeCommon)(benchmark::State & st)
 {
     for(auto _ : st)
     {
-        auto words = ::palindrome_range_common(words_);
-        benchmark::DoNotOptimize(words.data());
+        auto result = ::palindrome_range_common(words_);
+        benchmark::DoNotOptimize(result.data());
         benchmark::ClobberMemory();
     }
 }
@@ -93,8 +94,8 @@ BENCHMARK_F(Words, RangeTo)(benchmark::State & st)
 {
     for(auto _ : st)
     {
-        auto words = ::palindrome_range_to(words_);
-        benchmark::DoNotOptimize(words_.data());
+        auto result = ::palindrome_range_to(words_);
+        benchmark::DoNotOptimize(result.data());
         benchmark::ClobberMemory();
     }
 }
