@@ -54,7 +54,7 @@ namespace ranges
             requires convertible_to<U, value_t<U> const &>)
         {
             RANGES_EXPECT(sout_);
-            *sout_ << value;
+            *sout_ << static_cast<value_t<U> const &>(static_cast<U &&>(value));
             if(delim_)
                 *sout_ << delim_;
             return *this;
