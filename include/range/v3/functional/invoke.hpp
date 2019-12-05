@@ -53,14 +53,12 @@ namespace ranges
         template<typename U>
         U & can_reference_(U &&);
 
-        // clang-format off
         template<typename T>
-        CPP_concept_bool dereferenceable_ =
-            CPP_requires ((T &&) t) //
-            (
-                detail::can_reference_(*CPP_fwd(t))
+        CPP_concept_bool dereferenceable_ =         //
+            CPP_requires((T &&) t)                  //
+            (                                       //
+                detail::can_reference_(*CPP_fwd(t)) //
             );
-        // clang-format on
 
         RANGES_DIAGNOSTIC_POP
 
@@ -80,8 +78,9 @@ namespace ranges
 
     /// \cond
     template<typename T>
-    using is_reference_wrapper_t RANGES_DEPRECATED(
-        "is_reference_wrapper_t is deprecated.") = meta::_t<is_reference_wrapper<T>>;
+    using is_reference_wrapper_t                                     //
+        RANGES_DEPRECATED("is_reference_wrapper_t is deprecated.") = //
+        meta::_t<is_reference_wrapper<T>>;
     /// \endcond
 
     struct invoke_fn
@@ -103,8 +102,8 @@ namespace ranges
         }
 
         template<typename, typename T1>
-        static constexpr decltype(auto) CPP_fun(coerce)(T1 && t1, int)(
-            noexcept(true) //
+        static constexpr decltype(auto) CPP_fun(coerce)(T1 && t1, int)( //
+            noexcept(true)                                              //
             requires detail::is_reference_wrapper_v<detail::decay_t<T1>>)
         {
             return static_cast<T1 &&>(t1).get();
@@ -112,28 +111,30 @@ namespace ranges
 
     public:
         template<typename F, typename T, typename T1, typename... Args>
-        constexpr auto operator()(F T::*f, T1&& t1, Args&&... args) const
-            noexcept(noexcept((invoke_fn::coerce<T>((T1&&) t1, 0).*f)((Args&&) args...)))
-            -> decltype((invoke_fn::coerce<T>((T1&&) t1, 0).*f)((Args&&) args...))
+        constexpr auto operator()(F T::*f, T1 && t1, Args &&... args) const
+            noexcept(noexcept((invoke_fn::coerce<T>((T1 &&) t1, 0).*f)((Args &&)
+                                                                           args...)))
+                -> decltype((invoke_fn::coerce<T>((T1 &&) t1, 0).*f)((Args &&) args...))
         {
-            return (invoke_fn::coerce<T>((T1&&) t1, 0).*f)((Args&&) args...);
+            return (invoke_fn::coerce<T>((T1 &&) t1, 0).*f)((Args &&) args...);
         }
 
         template<typename D, typename T, typename T1>
-        constexpr auto operator()(D T::*f, T1&& t1) const
-            noexcept(noexcept(invoke_fn::coerce<T>((T1&&) t1, 0).*f))
-            -> decltype(invoke_fn::coerce<T>((T1&&) t1, 0).*f)
+        constexpr auto operator()(D T::*f, T1 && t1) const
+            noexcept(noexcept(invoke_fn::coerce<T>((T1 &&) t1, 0).*f))
+                -> decltype(invoke_fn::coerce<T>((T1 &&) t1, 0).*f)
         {
-            return invoke_fn::coerce<T>((T1&&) t1, 0).*f;
+            return invoke_fn::coerce<T>((T1 &&) t1, 0).*f;
         }
 
         template<typename F, typename... Args>
-        CPP_PP_IIF(RANGES_CONSTEXPR_INVOKE)(CPP_PP_EXPAND, CPP_PP_EAT)(constexpr)
-        auto operator()(F&& f, Args&&... args) const
-            noexcept(noexcept(((F&&) f)((Args&&) args...)))
-            -> decltype(((F&&) f)((Args&&) args...))
+        CPP_PP_IIF(RANGES_CONSTEXPR_INVOKE)
+        (CPP_PP_EXPAND, CPP_PP_EAT)(constexpr) auto operator()(F && f,
+                                                               Args &&... args) const
+            noexcept(noexcept(((F &&) f)((Args &&) args...)))
+                -> decltype(((F &&) f)((Args &&) args...))
         {
-            return ((F&&) f)((Args&&) args...);
+            return ((F &&) f)((Args &&) args...);
         }
     };
 

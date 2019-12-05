@@ -100,7 +100,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<class T>
-    explicit single_view(T &&)->single_view<detail::decay_t<T>>;
+    explicit single_view(T &&) -> single_view<detail::decay_t<T>>;
 #endif
 
     namespace views

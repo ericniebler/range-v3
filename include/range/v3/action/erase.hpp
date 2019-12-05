@@ -60,14 +60,13 @@ namespace ranges
 
     /// \addtogroup group-range
     /// @{
-    // clang-format off
     template<typename Rng, typename I, typename S>
-    CPP_concept_bool erasable_range =
-        range<Rng> && CPP_requires ((Rng &&) rng, (I) first, (S) last) //
-        (
-            ranges::erase(CPP_fwd(rng), first, last)
+    CPP_concept_bool erasable_range =                 //
+        range<Rng> &&                                 //
+        CPP_requires((Rng &&) rng, (I)first, (S)last) //
+        (                                             //
+            ranges::erase(CPP_fwd(rng), first, last)  //
         );
-    // clang-format on
     /// @}
 } // namespace ranges
 

@@ -235,8 +235,8 @@ namespace ranges
         }
 
         template<index_type Offset, index_type Count>
-        constexpr span<T, detail::subspan_extent(N, Offset, Count)> subspan() const
-            noexcept
+        constexpr span<T, detail::subspan_extent(N, Offset, Count)> subspan()
+            const noexcept
         {
             static_assert(Offset >= 0,
                           "Offset of first element to extract cannot be negative.");
@@ -253,8 +253,8 @@ namespace ranges
                        data_ + Offset, Count == dynamic_extent ? size() - Offset : Count};
         }
         template<index_type Offset>
-        constexpr span<T, (N >= Offset ? N - Offset : dynamic_extent)> subspan() const
-            noexcept
+        constexpr span<T, (N >= Offset ? N - Offset : dynamic_extent)> subspan()
+            const noexcept
         {
             static_assert(Offset >= 0,
                           "Offset of first element to extract cannot be negative.");
@@ -273,8 +273,8 @@ namespace ranges
                    RANGES_EXPECT((offset == 0 && size() == 0) || data_ != nullptr),
                    span<T, dynamic_extent>{data_ + offset, size() - offset};
         }
-        constexpr span<T, dynamic_extent> subspan(index_type offset, index_type cnt) const
-            noexcept
+        constexpr span<T, dynamic_extent> subspan(index_type offset,
+                                                  index_type cnt) const noexcept
         {
             return RANGES_EXPECT(offset >= 0), RANGES_EXPECT(cnt >= 0),
                    RANGES_EXPECT(size() >= offset + cnt),

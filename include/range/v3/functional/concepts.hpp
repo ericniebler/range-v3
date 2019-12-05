@@ -25,59 +25,59 @@ namespace ranges
     /// \addtogroup group-functional
     /// @{
 
-    // clang-format off
     template<typename Fun, typename... Args>
-    CPP_concept_bool invocable =
-        CPP_requires ((Fun&&) fn) //
-        (
-            invoke(CPP_fwd(fn), std::declval<Args>()...)
+    CPP_concept_bool invocable =                         //
+        CPP_requires((Fun &&) fn)                        //
+        (                                                //
+            invoke(CPP_fwd(fn), std::declval<Args>()...) //
         );
 
     template<typename Fun, typename... Args>
-    CPP_concept_bool regular_invocable =
+    CPP_concept_bool regular_invocable = //
         invocable<Fun, Args...>;
-        // Axiom: equality_preserving(invoke(f, args...))
+    // Axiom: equality_preserving(invoke(f, args...))
 
     template<typename Fun, typename... Args>
-    CPP_concept_bool predicate =
-        regular_invocable<Fun, Args...> &&
-        CPP_requires ((Fun&&) fn) //
-        (
-            concepts::requires_<
-                convertible_to<
-                    decltype(invoke(CPP_fwd(fn), std::declval<Args>()...)),
-                    bool>>
+    CPP_concept_bool predicate =           //
+        regular_invocable<Fun, Args...> && //
+        CPP_requires((Fun &&) fn)          //
+        (                                  //
+            concepts::requires_<convertible_to<
+                decltype(invoke(CPP_fwd(fn), std::declval<Args>()...)), bool>> //
         );
 
     template<typename R, typename T, typename U>
-    CPP_concept_bool relation =
-        predicate<R, T, T> &&
-        predicate<R, U, U> &&
-        predicate<R, T, U> &&
-        predicate<R, U, T>;
+    CPP_concept_bool relation = //
+        (predicate<R, T, T>)&&  //
+        (predicate<R, U, U>)&&  //
+        (predicate<R, T, U>)&&  //
+        (predicate<R, U, T>);
 
     template<typename R, typename T, typename U>
-    CPP_concept_bool strict_weak_order =
+    CPP_concept_bool strict_weak_order = //
         relation<R, T, U>;
-    // clang-format on
 
     namespace defer
     {
         template<typename Fun, typename... Args>
-        CPP_concept invocable = CPP_defer_(ranges::invocable, CPP_type(Fun), Args...);
+        CPP_concept invocable = //
+            CPP_defer_(ranges::invocable, CPP_type(Fun), Args...);
 
         template<typename Fun, typename... Args>
-        CPP_concept regular_invocable = CPP_defer_(ranges::regular_invocable,
-                                                   CPP_type(Fun), Args...);
+        CPP_concept regular_invocable = //
+            CPP_defer_(ranges::regular_invocable, CPP_type(Fun), Args...);
 
         template<typename Fun, typename... Args>
-        CPP_concept predicate = CPP_defer_(ranges::predicate, CPP_type(Fun), Args...);
+        CPP_concept predicate = //
+            CPP_defer_(ranges::predicate, CPP_type(Fun), Args...);
 
         template<typename R, typename T, typename U>
-        CPP_concept relation = CPP_defer(ranges::relation, R, T, U);
+        CPP_concept relation = //
+            CPP_defer(ranges::relation, R, T, U);
 
         template<typename R, typename T, typename U>
-        CPP_concept strict_weak_order = CPP_defer(ranges::strict_weak_order, R, T, U);
+        CPP_concept strict_weak_order = //
+            CPP_defer(ranges::strict_weak_order, R, T, U);
     } // namespace defer
 
     namespace cpp20

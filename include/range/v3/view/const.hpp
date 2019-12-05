@@ -104,7 +104,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    const_view(Rng &&)->const_view<views::all_t<Rng>>;
+    const_view(Rng &&) -> const_view<views::all_t<Rng>>;
 #endif
 
     namespace views

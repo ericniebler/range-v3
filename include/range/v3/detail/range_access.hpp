@@ -225,92 +225,109 @@ namespace ranges
     {
         //
         // Concepts that the range cursor must model
-        // clang-format off
         //
         template<typename T>
         CPP_concept_bool cursor =
-            semiregular<T> && semiregular<range_access::mixin_base_t<T>> &&
-            constructible_from<range_access::mixin_base_t<T>, T> &&
-            constructible_from<range_access::mixin_base_t<T>, T const &>;
-            // Axiom: mixin_base_t<T> has a member get(), accessible to derived classes,
-            //   which perfectly-returns the contained cursor object and does not throw
-            //   exceptions.
+            semiregular<T> &&                                        //
+            (semiregular<range_access::mixin_base_t<T>>)&&           //
+            (constructible_from<range_access::mixin_base_t<T>, T>)&& //
+            (constructible_from<range_access::mixin_base_t<T>, T const &>);
+        // Axiom: mixin_base_t<T> has a member get(), accessible to derived classes,
+        //   which perfectly-returns the contained cursor object and does not throw
+        //   exceptions.
+
         template<typename T>
-        CPP_concept_bool has_cursor_next =
-            CPP_requires ((T &) t) //
-            (
-                range_access::next(t)
+        CPP_concept_bool has_cursor_next = //
+            CPP_requires((T &)t)           //
+            (                              //
+                range_access::next(t)      //
             );
+
         template<typename S, typename C>
-        CPP_concept_bool sentinel_for_cursor =
-            CPP_requires ((S &)s, (C &)c) //
-            (
-                range_access::equal(c, s),
-                concepts::requires_<convertible_to<decltype(
-                    range_access::equal(c, s)), bool>>
-            ) &&
-            semiregular<S> && cursor<C>;
-        template<typename T>
-        CPP_concept_bool readable_cursor =
-            CPP_requires ((T &)t) //
-            (
-                range_access::read(t)
+        CPP_concept_bool sentinel_for_cursor = //
+            semiregular<S> &&                  //
+            (cursor<C>)&&                      //
+            CPP_requires((S &)s, (C &)c)       //
+            (                                  //
+                range_access::equal(c, s),     //
+                concepts::requires_<
+                    convertible_to<decltype(range_access::equal(c, s)), bool>> //
             );
+
         template<typename T>
-        CPP_concept_bool has_cursor_arrow =
-            CPP_requires ((T const &)t) //
-            (
-                range_access::arrow(t)
+        CPP_concept_bool readable_cursor = //
+            CPP_requires((T &)t)           //
+            (                              //
+                range_access::read(t)      //
             );
+
+        template<typename T>
+        CPP_concept_bool has_cursor_arrow = //
+            CPP_requires((T const &)t)      //
+            (                               //
+                range_access::arrow(t)      //
+            );
+
         template<typename T, typename U>
-        CPP_concept_bool writable_cursor =
-            CPP_requires ((T &)t, (U &&)u) //
-            (
-                range_access::write(t, CPP_fwd(u))
+        CPP_concept_bool writable_cursor =         //
+            CPP_requires((T &)t, (U &&) u)         //
+            (                                      //
+                range_access::write(t, CPP_fwd(u)) //
             );
+
         template<typename S, typename C>
-        CPP_concept_bool sized_sentinel_for_cursor =
-            CPP_requires ((S &)s, (C &)c) //
-            (
-                range_access::distance_to(c, s),
-                concepts::requires_<signed_integer_like_<decltype(
-                    range_access::distance_to(c, s))>>
-            ) &&
-            sentinel_for_cursor<S, C>;
+        CPP_concept_bool sized_sentinel_for_cursor = //
+            sentinel_for_cursor<S, C> &&             //
+            CPP_requires((S &)s, (C &)c)             //
+            (                                        //
+                range_access::distance_to(c, s),     //
+                concepts::requires_<
+                    signed_integer_like_<decltype(range_access::distance_to(c, s))>> //
+            );
+
         template<typename T, typename U>
-        CPP_concept_bool output_cursor =
-            writable_cursor<T, U> && cursor<T>;
+        CPP_concept_bool output_cursor = //
+            writable_cursor<T, U> &&     //
+            (cursor<T>);
+
         template<typename T>
-        CPP_concept_bool input_cursor =
-            readable_cursor<T> && cursor<T> && has_cursor_next<T>;
+        CPP_concept_bool input_cursor = //
+            readable_cursor<T> &&       //
+            (cursor<T>)&&               //
+            (has_cursor_next<T>);
+
         template<typename T>
-        CPP_concept_bool forward_cursor =
-            input_cursor<T> && sentinel_for_cursor<T, T> &&
+        CPP_concept_bool forward_cursor = //
+            input_cursor<T> &&            //
+            (sentinel_for_cursor<T, T>)&& //
             !range_access::single_pass_t<uncvref_t<T>>::value;
+
         template<typename T>
-        CPP_concept_bool bidirectional_cursor =
-            CPP_requires ((T &)t) //
-            (
-                range_access::prev(t)
-            ) &&
-            forward_cursor<T>;
+        CPP_concept_bool bidirectional_cursor = //
+            forward_cursor<T> &&                //
+            CPP_requires((T &)t)                //
+            (                                   //
+                range_access::prev(t)           //
+            );
+
         template<typename T>
-        CPP_concept_bool random_access_cursor =
-            CPP_requires ((T &)t) //
-            (
-                range_access::advance(t, range_access::distance_to(t, t))
-            ) &&
-            bidirectional_cursor<T> && sized_sentinel_for_cursor<T, T>;
+        CPP_concept_bool random_access_cursor =                           //
+            bidirectional_cursor<T> &&                                    //
+            (sized_sentinel_for_cursor<T, T>)&&                           //
+            CPP_requires((T &)t)                                          //
+            (                                                             //
+                range_access::advance(t, range_access::distance_to(t, t)) //
+            );
+
         template<typename T>
-        CPP_concept_bool contiguous_cursor =
-            CPP_requires ((T &)t) //
-            (
-                concepts::requires_<std::is_lvalue_reference<
-                    decltype(range_access::read(t))>::value>
-            ) &&
-            random_access_cursor<T> &&
-            range_access::contiguous_t<uncvref_t<T>>::value;
-        // clang-format on
+        CPP_concept_bool contiguous_cursor =                     //
+            random_access_cursor<T> &&                           //
+            (range_access::contiguous_t<uncvref_t<T>>::value) && //
+            CPP_requires((T &)t)                                 //
+            (                                                    //
+                concepts::requires_<std::is_lvalue_reference<    //
+                    decltype(range_access::read(t))>::value>     //
+            );
 
         template<typename Cur, bool IsReadable>
         struct is_writable_cursor_ : std::true_type

@@ -121,7 +121,7 @@ namespace ranges
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
     drop_exactly_view(Rng &&, range_difference_t<Rng>)
-        ->drop_exactly_view<views::all_t<Rng>>;
+        -> drop_exactly_view<views::all_t<Rng>>;
 #endif
 
     namespace views

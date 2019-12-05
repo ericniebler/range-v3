@@ -137,7 +137,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Rng, typename Fun)( //
-        requires copy_constructible<Rng>)
+        requires copy_constructible<Rng>)     //
         adjacent_filter_view(Rng &&, Fun)
             ->adjacent_filter_view<views::all_t<Rng>, Fun>;
 #endif

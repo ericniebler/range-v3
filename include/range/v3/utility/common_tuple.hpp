@@ -242,9 +242,8 @@ namespace ranges
         // Conversion
         CPP_template(typename... Us)(                                               //
             requires constructible_from<detail::args<Us...>, detail::rargs<Ts...>>) //
-            operator std::tuple<Us...>() &
-            noexcept(
-                meta::and_c<std::is_nothrow_constructible<Us, Ts &>::value...>::value)
+        operator std::tuple<Us...>() & noexcept(
+            meta::and_c<std::is_nothrow_constructible<Us, Ts &>::value...>::value)
         {
             return detail::to_std_tuple<Us...>(
                 *this, meta::make_index_sequence<sizeof...(Ts)>{});
@@ -260,8 +259,8 @@ namespace ranges
         }
         CPP_template(typename... Us)(                                              //
             requires constructible_from<detail::args<Us...>, detail::args<Ts...>>) //
-            operator std::tuple<Us...>() &&
-            noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts>::value...>::value)
+        operator std::tuple<Us...>() && noexcept(
+            meta::and_c<std::is_nothrow_constructible<Us, Ts>::value...>::value)
         {
             return detail::to_std_tuple<Us...>(
                 std::move(*this), meta::make_index_sequence<sizeof...(Ts)>{});
@@ -364,9 +363,9 @@ namespace ranges
         // Conversion
         CPP_template(typename F2, typename S2)(                                  //
             requires constructible_from<F2, F &> && constructible_from<S2, S &>) //
-            operator std::pair<F2, S2>() &
-            noexcept(std::is_nothrow_constructible<F2, F &>::value &&
-                         std::is_nothrow_constructible<S2, S &>::value)
+        operator std::pair<F2, S2>() & noexcept(
+            std::is_nothrow_constructible<F2, F &>::value &&
+                std::is_nothrow_constructible<S2, S &>::value)
         {
             return {this->first, this->second};
         }
@@ -381,9 +380,9 @@ namespace ranges
         }
         CPP_template(typename F2, typename S2)(                              //
             requires constructible_from<F2, F> && constructible_from<S2, S>) //
-            operator std::pair<F2, S2>() &&
-            noexcept(std::is_nothrow_constructible<F2, F>::value &&
-                         std::is_nothrow_constructible<S2, S>::value)
+        operator std::pair<F2, S2>() && noexcept(
+            std::is_nothrow_constructible<F2, F>::value &&
+                std::is_nothrow_constructible<S2, S>::value)
         {
             return {std::forward<F>(this->first), std::forward<S>(this->second)};
         }

@@ -89,7 +89,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng, typename Pred>
-    trim_view(Rng &&, Pred)->trim_view<views::all_t<Rng>, Pred>;
+    trim_view(Rng &&, Pred) -> trim_view<views::all_t<Rng>, Pred>;
 #endif
 
     template<typename Rng, typename Pred>
@@ -129,8 +129,9 @@ namespace ranges
             }
             template<typename Pred, typename Proj>
             constexpr auto CPP_fun(operator())(Pred && pred,
-                                               Proj proj)(const //
-                                                          requires(!range<Pred>)) // TODO: underconstrained
+                                               Proj proj)(
+                const                   //
+                requires(!range<Pred>)) // TODO: underconstrained
             {
                 return make_view_closure(bind_back(
                     trim_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));
@@ -138,7 +139,8 @@ namespace ranges
         };
 
         struct RANGES_EMPTY_BASES trim_fn
-          : trim_base_fn, trim_bind_fn
+          : trim_base_fn
+          , trim_bind_fn
         {
             using trim_base_fn::operator();
             using trim_bind_fn::operator();

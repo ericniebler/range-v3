@@ -262,7 +262,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    take_view(Rng &&, range_difference_t<Rng>)->take_view<views::all_t<Rng>>;
+    take_view(Rng &&, range_difference_t<Rng>) -> take_view<views::all_t<Rng>>;
 #endif
 
     namespace views

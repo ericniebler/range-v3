@@ -134,10 +134,10 @@ namespace ranges
         auto is_indirectly_movable_(...) -> std::false_type;
 
         template<typename I, typename O>
-        auto is_nothrow_indirectly_movable_(iter_value_t<I> * v) -> meta::bool_<
-            noexcept(iter_value_t<I>(iter_move(std::declval<I &>()))) &&
-            noexcept(*v = iter_move(std::declval<I &>())) &&
-            noexcept(*std::declval<O &>() = (iter_value_t<I> &&) * v) &&
+        auto is_nothrow_indirectly_movable_(iter_value_t<I> * v) -> meta::bool_< //
+            noexcept(iter_value_t<I>(iter_move(std::declval<I &>()))) &&         //
+            noexcept(*v = iter_move(std::declval<I &>())) &&                     //
+            noexcept(*std::declval<O &>() = (iter_value_t<I> &&) * v) &&         //
             noexcept(*std::declval<O &>() = iter_move(std::declval<I &>()))>;
         template<typename I, typename O>
         auto is_nothrow_indirectly_movable_(...) -> std::false_type;

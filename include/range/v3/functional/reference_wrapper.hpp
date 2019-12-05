@@ -162,8 +162,8 @@ namespace ranges
         }
         /// \overload
         template<typename T>
-        typename reference_wrapper<T>::reference operator()(reference_wrapper<T> t) const
-            noexcept
+        typename reference_wrapper<T>::reference operator()(
+            reference_wrapper<T> t) const noexcept
         {
             return t.get();
         }

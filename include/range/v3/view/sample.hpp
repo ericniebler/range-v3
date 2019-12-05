@@ -200,7 +200,7 @@ namespace ranges
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng, typename URNG>
     sample_view(Rng &&, range_difference_t<Rng>, URNG &)
-        ->sample_view<views::all_t<Rng>, URNG>;
+        -> sample_view<views::all_t<Rng>, URNG>;
 #endif
 
     namespace views

@@ -89,6 +89,11 @@
     'CPP_member',
     'CPP_broken_friend_member',
   ],
+  ForEachMacros: [
+    'CPP_requires',
+    'CPP_fragment',
+    'RANGES_FOR',
+  ],
   TabWidth: 4,
   UseTab: Never,
 }

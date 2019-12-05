@@ -123,38 +123,39 @@ namespace ranges
     } // namespace detail
       /// \endcond
 
-    // clang-format off
     template<typename I>
-    CPP_concept_fragment(readable_, (I),
-        common_reference_with<iter_reference_t<I> &&, iter_value_t<I> &> &&
-        common_reference_with<iter_reference_t<I> &&,
-                              iter_rvalue_reference_t<I> &&> &&
-        common_reference_with<iter_rvalue_reference_t<I> &&, iter_value_t<I> const &>
+    CPP_concept_fragment(
+        readable_, (I),                                                      //
+        (common_reference_with<iter_reference_t<I> &&, iter_value_t<I> &>)&& //
+        (common_reference_with<iter_reference_t<I> &&,                       //
+                               iter_rvalue_reference_t<I> &&>)&&             //
+        (common_reference_with<iter_rvalue_reference_t<I> &&,                //
+                               iter_value_t<I> const &>)                     //
     );
 
     template<typename I>
     CPP_concept_bool readable =
-        CPP_requires ((uncvref_t<I> const) i, (uncvref_t<I>) j) //
+        CPP_fragment(readable_, uncvref_t<I>) &&             //
+        CPP_requires((uncvref_t<I> const)i, (uncvref_t<I>)j) //
         (
             // { *i } -> same_as<iter_reference_t<I>>;
-            concepts::requires_<same_as<decltype(*i),
-                                        iter_reference_t<decltype(j)>>>,
             // { iter_move(i) } -> same_as<iter_rvalue_reference_t<I>>;
-            concepts::requires_<same_as<decltype(iter_move(i)),
-                                        iter_rvalue_reference_t<decltype(j)>>>
-        ) &&
-        CPP_fragment(readable_, uncvref_t<I>);
+            concepts::requires_<same_as<decltype(*i),                          //
+                                        iter_reference_t<decltype(j)>>>,       //
+            concepts::requires_<same_as<decltype(iter_move(i)),                //
+                                        iter_rvalue_reference_t<decltype(j)>>> //
+        );
 
     template<typename Out, typename T>
-    CPP_concept_bool writable =
-        CPP_requires ((Out &&) o, (T &&) t) //
-        (
-            *o = CPP_fwd(t),
-            *CPP_fwd(o) = CPP_fwd(t),
-            const_cast<iter_reference_t<decltype(o)> const &&>(*o) = CPP_fwd(t),
-            const_cast<iter_reference_t<decltype(o)> const &&>(*CPP_fwd(o)) = CPP_fwd(t)
+    CPP_concept_bool writable =                                                  //
+        CPP_requires((Out &&) o, (T &&) t)                                       //
+        (                                                                        //
+            *o = CPP_fwd(t),                                                     //
+            *CPP_fwd(o) = CPP_fwd(t),                                            //
+            const_cast<iter_reference_t<decltype(o)> const &&>(*o) = CPP_fwd(t), //
+            const_cast<iter_reference_t<decltype(o)> const &&>(*CPP_fwd(o)) =
+                CPP_fwd(t) //
         );
-    // clang-format on
 
     /// \cond
     namespace detail
@@ -162,161 +163,170 @@ namespace ranges
         template<typename D>
         RANGES_INLINE_VAR constexpr bool _is_integer_like_ = std::is_integral<D>::value;
 
-        // clang-format off
         template<typename D>
-        CPP_concept_bool integer_like_ =
+        CPP_concept_bool integer_like_ = //
             _is_integer_like_<D>;
-            // TODO additional syntactic and semantic requirements
+        // TODO additional syntactic and semantic requirements
 
 #ifdef RANGES_WORKAROUND_MSVC_792338
         template<typename D>
-        CPP_concept_fragment(signed_integer_like_frag_, (D),
-            integer_like_<D> &&
-            concepts::type<decltype(std::integral_constant<bool, (D(-1) < D(0))>{})> &&
-            std::integral_constant<bool, (D(-1) < D(0))>::value
+        CPP_concept_fragment(               //
+            signed_integer_like_frag_, (D), //
+            (integer_like_<D>)&&            //
+            (concepts::type<
+                decltype(std::integral_constant<bool, (D(-1) < D(0))>{})>)&& //
+            (std::integral_constant<bool, (D(-1) < D(0))>::value)            //
         );
-#else // ^^^ workaround / no workaround vvv
+#else  // ^^^ workaround / no workaround vvv
         template<typename D>
-        CPP_concept_fragment(signed_integer_like_frag_, (D),
-            integer_like_<D> &&
-            concepts::type<std::integral_constant<bool, (D(-1) < D(0))>> &&
-            std::integral_constant<bool, (D(-1) < D(0))>::value
+        CPP_concept_fragment(
+            signed_integer_like_frag_, (D),                                  //
+            (integer_like_<D>)&&                                             //
+            (concepts::type<std::integral_constant<bool, (D(-1) < D(0))>>)&& //
+            (std::integral_constant<bool, (D(-1) < D(0))>::value)            //
         );
 #endif // RANGES_WORKAROUND_MSVC_792338
         template<typename D>
-        CPP_concept_bool signed_integer_like_ =
+        CPP_concept_bool signed_integer_like_ = //
             CPP_fragment(detail::signed_integer_like_frag_, D);
-        // clang-format on
     } // namespace detail
       /// \endcond
 
-    // clang-format off
     template<typename I>
-    CPP_concept_fragment(weakly_incrementable_, (I),
-        concepts::type<iter_difference_t<I>> &&
-        detail::signed_integer_like_<iter_difference_t<I>>
+    CPP_concept_fragment(                                    //
+        weakly_incrementable_, (I),                          //
+        (concepts::type<iter_difference_t<I>>)&&             //
+        (detail::signed_integer_like_<iter_difference_t<I>>) //
     );
 
     template<typename I>
-    CPP_concept_bool weakly_incrementable =
-        semiregular<I> &&
-        CPP_fragment(ranges::weakly_incrementable_, I) &&
-        CPP_requires ((I) i) //
-        (
-            ++i,
-            i++,
-            concepts::requires_<same_as<I&, decltype(++i)>>
+    CPP_concept_bool weakly_incrementable =                  //
+        semiregular<I> &&                                    //
+        CPP_fragment(ranges::weakly_incrementable_, I) &&    //
+        CPP_requires((I)i)                                   //
+        (                                                    //
+            ++i,                                             //
+            i++,                                             //
+            concepts::requires_<same_as<I &, decltype(++i)>> //
         );
 
     template<typename I>
-    CPP_concept_bool incrementable =
-        regular<I> && weakly_incrementable<I> &&
-        CPP_requires ((I) i) //
-        (
-            concepts::requires_<same_as<I, decltype(i++)>>
+    CPP_concept_bool incrementable =                       //
+        (regular<I>)&&                                     //
+        (weakly_incrementable<I>)&&                        //
+        CPP_requires((I)i)                                 //
+        (                                                  //
+            concepts::requires_<same_as<I, decltype(i++)>> //
         );
 
     template<typename I>
-    CPP_concept_bool input_or_output_iterator =
-        weakly_incrementable<I> &&
-        detail::dereferenceable_<I&>;
+    CPP_concept_bool input_or_output_iterator = //
+        (weakly_incrementable<I>)&&             //
+        (detail::dereferenceable_<I &>);
 
     template<typename S, typename I>
-    CPP_concept_bool sentinel_for =
-        semiregular<S> && input_or_output_iterator<I> &&
-        detail::weakly_equality_comparable_with_<S, I>;
+    CPP_concept_bool sentinel_for =     //
+        (semiregular<S>)&&              //
+        (input_or_output_iterator<I>)&& //
+        (detail::weakly_equality_comparable_with_<S, I>);
 
     namespace defer
     {
         template<typename S, typename I>
-        CPP_concept sentinel_for =
+        CPP_concept sentinel_for = //
             CPP_defer(ranges::sentinel_for, S, I);
     } // namespace defer
 
     template<typename S, typename I>
     CPP_concept_bool sized_sentinel_for =
-        CPP_requires ((S const &) s, (I const &) i) //
-        (
-            s - i,
-            i - s,
-            concepts::requires_<same_as<iter_difference_t<decltype(i)>, decltype(s - i)>>,
-            concepts::requires_<same_as<iter_difference_t<decltype(i)>, decltype(i - s)>>
-        ) &&
         // Short-circuit the test for sentinel_for if we're emulating concepts:
-        bool(!defer::is_true<disable_sized_sentinel<std::remove_cv_t<S>,
-                                                    std::remove_cv_t<I>>> &&
-            defer::sentinel_for<S, I>);
+        bool(!defer::is_true<
+                 disable_sized_sentinel<std::remove_cv_t<S>, std::remove_cv_t<I>>> &&
+             defer::sentinel_for<S, I>) &&                                 //
+        CPP_requires((S const &)s, (I const &)i)                           //
+        (                                                                  //
+            s - i,                                                         //
+            i - s,                                                         //
+            concepts::requires_<                                           //
+                same_as<iter_difference_t<decltype(i)>, decltype(s - i)>>, //
+            concepts::requires_<                                           //
+                same_as<iter_difference_t<decltype(i)>, decltype(i - s)>>  //
+        );
 
     template<typename Out, typename T>
-    CPP_concept_bool output_iterator =
-        input_or_output_iterator<Out> && writable<Out, T> &&
-        CPP_requires ((Out) o, (T &&) t) //
-        (
-            *o++ = CPP_fwd(t)
+    CPP_concept_bool output_iterator =    //
+        (input_or_output_iterator<Out>)&& //
+        (writable<Out, T>)&&              //
+        CPP_requires((Out)o, (T &&) t)    //
+        (                                 //
+            *o++ = CPP_fwd(t)             //
         );
 
     template<typename I, typename Tag>
-    CPP_concept_fragment(with_category_, (I, Tag),
-        derived_from<detail::iter_concept_t<I>, Tag>
+    CPP_concept_fragment(                            //
+        with_category_, (I, Tag),                    //
+        derived_from<detail::iter_concept_t<I>, Tag> //
     );
 
     template<typename I>
-    CPP_concept_bool input_iterator =
-        input_or_output_iterator<I> && readable<I> &&
+    CPP_concept_bool input_iterator =   //
+        (input_or_output_iterator<I>)&& //
+        (readable<I>)&&                 //
         CPP_fragment(ranges::with_category_, I, std::input_iterator_tag);
 
     template<typename I>
-    CPP_concept_bool forward_iterator =
-        input_iterator<I> && incrementable<I> &&
-        sentinel_for<I, I> &&
+    CPP_concept_bool forward_iterator = //
+        (input_iterator<I>)&&           //
+        (incrementable<I>)&&            //
+        (sentinel_for<I, I>)&&          //
         CPP_fragment(ranges::with_category_, I, std::forward_iterator_tag);
 
     template<typename I>
-    CPP_concept_bool bidirectional_iterator =
-        CPP_requires ((I) i) //
-        (
-            --i,
-            i--,
-            concepts::requires_<same_as<I&, decltype(--i)>>,
-            concepts::requires_<same_as<I, decltype(i--)>>
-        ) &&
-        forward_iterator<I> &&
-        CPP_fragment(ranges::with_category_, I, std::bidirectional_iterator_tag);
+    CPP_concept_bool bidirectional_iterator = //
+        forward_iterator<I> &&                //
+        CPP_fragment(ranges::with_category_, I, std::bidirectional_iterator_tag) &&
+        CPP_requires((I)i)                                    //
+        (                                                     //
+            --i,                                              //
+            i--,                                              //
+            concepts::requires_<same_as<I &, decltype(--i)>>, //
+            concepts::requires_<same_as<I, decltype(i--)>>    //
+        );
 
     template<typename I>
-    CPP_concept_bool random_access_iterator =
-        CPP_requires_ ((I) i, (iter_difference_t<CPP_type(I)>) n,
-                       (iter_reference_t<CPP_type(I)>&))
-        (
-            i + n,
-            n + i,
-            i - n,
-            i += n,
-            i -= n,
-            concepts::requires_<same_as<decltype(i + n), I>>,
-            concepts::requires_<same_as<decltype(n + i), I>>,
-            concepts::requires_<same_as<decltype(i - n), I>>,
-            concepts::requires_<same_as<decltype(i += n), I&>>,
-            concepts::requires_<same_as<decltype(i -= n), I&>>,
-            concepts::requires_<same_as<decltype(i[n]), iter_reference_t<CPP_type(I)>>>
-        ) &&
-        bidirectional_iterator<I> &&
-        totally_ordered<I> &&
-        sized_sentinel_for<I, I> &&
-        CPP_fragment(ranges::with_category_, I, std::random_access_iterator_tag);
+    CPP_concept_bool random_access_iterator =                                           //
+        (bidirectional_iterator<I>)&&                                                   //
+        (totally_ordered<I>)&&                                                          //
+        (sized_sentinel_for<I, I>)&&                                                    //
+        CPP_fragment(ranges::with_category_, I, std::random_access_iterator_tag) &&     //
+        CPP_requires_((I)i, (iter_difference_t<CPP_type(I)>)n,                          //
+                      (iter_reference_t<CPP_type(I)> &))                                //
+        (                                                                               //
+            i + n,                                                                      //
+            n + i,                                                                      //
+            i - n,                                                                      //
+            i += n,                                                                     //
+            i -= n,                                                                     //
+            concepts::requires_<same_as<decltype(i + n), I>>,                           //
+            concepts::requires_<same_as<decltype(n + i), I>>,                           //
+            concepts::requires_<same_as<decltype(i - n), I>>,                           //
+            concepts::requires_<same_as<decltype(i += n), I &>>,                        //
+            concepts::requires_<same_as<decltype(i -= n), I &>>,                        //
+            concepts::requires_<same_as<decltype(i[n]), iter_reference_t<CPP_type(I)>>> //
+        );
 
     template<typename I>
-    CPP_concept_fragment(contiguous_iterator_, (I),
-        std::is_lvalue_reference<iter_reference_t<I>>::value &&
-        same_as<iter_value_t<I>, uncvref_t<iter_reference_t<I>>> &&
-        derived_from<detail::iter_concept_t<I>, ranges::contiguous_iterator_tag>
+    CPP_concept_fragment(                                                              //
+        contiguous_iterator_, (I),                                                     //
+        (std::is_lvalue_reference<iter_reference_t<I>>::value) &&                      //
+            (same_as<iter_value_t<I>, uncvref_t<iter_reference_t<I>>>)&&               //
+            (derived_from<detail::iter_concept_t<I>, ranges::contiguous_iterator_tag>) //
     );
 
     template<typename I>
-    CPP_concept_bool contiguous_iterator =
-        random_access_iterator<I> &&
+    CPP_concept_bool contiguous_iterator = //
+        random_access_iterator<I> &&       //
         CPP_fragment(ranges::contiguous_iterator_, I);
-    // clang-format on
 
     /////////////////////////////////////////////////////////////////////////////////////
     // iterator_tag_of
@@ -358,11 +368,10 @@ namespace ranges
 
     /// \cond
     // Generally useful to know if an iterator is single-pass or not:
-    // clang-format off
     template<typename I>
-    CPP_concept_bool single_pass_iterator_ =
-        input_or_output_iterator<I> && !forward_iterator<I>;
-    // clang-format on
+    CPP_concept_bool single_pass_iterator_ = //
+        input_or_output_iterator<I> &&       //
+        !forward_iterator<I>;
     /// \endcond
 
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -375,159 +384,171 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        // clang-format off
         template<typename T1, typename T2, typename T3, typename T4>
-        CPP_concept_fragment(common_reference_with_4_, (T1, T2, T3, T4),
-            concepts::type<common_reference_t<T1, T2, T3, T4>> &&
-            convertible_to<T1, common_reference_t<T1, T2, T3, T4>> &&
-            convertible_to<T2, common_reference_t<T1, T2, T3, T4>> &&
-            convertible_to<T3, common_reference_t<T1, T2, T3, T4>> &&
-            convertible_to<T4, common_reference_t<T1, T2, T3, T4>>
+        CPP_concept_fragment(                                          //
+            common_reference_with_4_, (T1, T2, T3, T4),                //
+            (concepts::type<common_reference_t<T1, T2, T3, T4>>)&&     //
+            (convertible_to<T1, common_reference_t<T1, T2, T3, T4>>)&& //
+            (convertible_to<T2, common_reference_t<T1, T2, T3, T4>>)&& //
+            (convertible_to<T3, common_reference_t<T1, T2, T3, T4>>)&& //
+            (convertible_to<T4, common_reference_t<T1, T2, T3, T4>>)   //
         );
         // axiom: all permutations of T1,T2,T3,T4 have the same
         // common reference type.
 
         template<typename F, typename I>
-        CPP_concept_fragment(indirectly_unary_invocable_frag_, (F, I),
-            invocable<F &, iter_value_t<I> &> &&
-            invocable<F &, iter_reference_t<I>> &&
-            invocable<F &, iter_common_reference_t<I>> &&
-            common_reference_with<
-                invoke_result_t<F &, iter_value_t<I> &>,
-                invoke_result_t<F &, iter_reference_t<I>>>
+        CPP_concept_fragment(                               //
+            indirectly_unary_invocable_frag_, (F, I),       //
+            (invocable<F &, iter_value_t<I> &>)&&           //
+            (invocable<F &, iter_reference_t<I>>)&&         //
+            (invocable<F &, iter_common_reference_t<I>>)&&  //
+            (common_reference_with<                         //
+                invoke_result_t<F &, iter_value_t<I> &>,    //
+                invoke_result_t<F &, iter_reference_t<I>>>) //
         );
 
         template<typename F, typename I>
-        CPP_concept_bool indirectly_unary_invocable_ =
-            readable<I> &&
+        CPP_concept_bool indirectly_unary_invocable_ = //
+            readable<I> &&                             //
             CPP_fragment(detail::indirectly_unary_invocable_frag_, F, I);
-        // clang-format on
     } // namespace detail
       /// \endcond
 
-    // clang-format off
     template<typename F, typename I>
-    CPP_concept_bool indirectly_unary_invocable =
-        detail::indirectly_unary_invocable_<F, I> &&
-        copy_constructible<F>;
+    CPP_concept_bool indirectly_unary_invocable =    //
+        detail::indirectly_unary_invocable_<F, I> && //
+        (copy_constructible<F>);
 
     template<typename F, typename I>
-    CPP_concept_fragment(indirectly_regular_unary_invocable_, (F, I),
-        regular_invocable<F &, iter_value_t<I> &> &&
-        regular_invocable<F &, iter_reference_t<I>> &&
-        regular_invocable<F &, iter_common_reference_t<I>> &&
-        common_reference_with<
-            invoke_result_t<F &, iter_value_t<I> &>,
-            invoke_result_t<F &, iter_reference_t<I>>>
+    CPP_concept_fragment(                                      //
+        indirectly_regular_unary_invocable_, (F, I),           //
+        (regular_invocable<F &, iter_value_t<I> &>)&&          //
+        (regular_invocable<F &, iter_reference_t<I>>)&&        //
+        (regular_invocable<F &, iter_common_reference_t<I>>)&& //
+        (common_reference_with<                                //
+            invoke_result_t<F &, iter_value_t<I> &>,           //
+            invoke_result_t<F &, iter_reference_t<I>>>)        //
     );
 
     template<typename F, typename I>
-    CPP_concept_bool indirectly_regular_unary_invocable =
-        readable<I> &&
-        copy_constructible<F> &&
+    CPP_concept_bool indirectly_regular_unary_invocable = //
+        readable<I> &&                                    //
+        (copy_constructible<F>)&&                         //
         CPP_fragment(ranges::indirectly_regular_unary_invocable_, F, I);
 
     /// \cond
     // Non-standard indirect invocable concepts
     template<typename F, typename I1, typename I2>
-    CPP_concept_fragment(indirectly_binary_invocable_frag_, (F, I1, I2),
-        invocable<F &, iter_value_t<I1> &, iter_value_t<I2> &> &&
-        invocable<F &, iter_value_t<I1> &, iter_reference_t<I2>> &&
-        invocable<F &, iter_reference_t<I1>, iter_value_t<I2> &> &&
-        invocable<F &, iter_reference_t<I1>, iter_reference_t<I2>> &&
-        invocable<F &, iter_common_reference_t<I1>, iter_common_reference_t<I2>> &&
-        CPP_fragment(detail::common_reference_with_4_,
-            invoke_result_t<F &, iter_value_t<I1> &, iter_value_t<I2> &>,
-            invoke_result_t<F &, iter_value_t<I1> &, iter_reference_t<I2>>,
-            invoke_result_t<F &, iter_reference_t<I1>, iter_value_t<I2> &>,
-            invoke_result_t<F &, iter_reference_t<I1>, iter_reference_t<I2>>)
+    CPP_concept_fragment(                                                              //
+        indirectly_binary_invocable_frag_, (F, I1, I2),                                //
+        (invocable<F &, iter_value_t<I1> &, iter_value_t<I2> &>)&&                     //
+        (invocable<F &, iter_value_t<I1> &, iter_reference_t<I2>>)&&                   //
+        (invocable<F &, iter_reference_t<I1>, iter_value_t<I2> &>)&&                   //
+        (invocable<F &, iter_reference_t<I1>, iter_reference_t<I2>>)&&                 //
+        (invocable<F &, iter_common_reference_t<I1>, iter_common_reference_t<I2>>)&&   //
+        CPP_fragment(detail::common_reference_with_4_,                                 //
+                     invoke_result_t<F &, iter_value_t<I1> &, iter_value_t<I2> &>,     //
+                     invoke_result_t<F &, iter_value_t<I1> &, iter_reference_t<I2>>,   //
+                     invoke_result_t<F &, iter_reference_t<I1>, iter_value_t<I2> &>,   //
+                     invoke_result_t<F &, iter_reference_t<I1>, iter_reference_t<I2>>) //
     );
 
     template<typename F, typename I1, typename I2>
-    CPP_concept_bool indirectly_binary_invocable_ =
-        readable<I1> && readable<I2> &&
-        copy_constructible<F> &&
+    CPP_concept_bool indirectly_binary_invocable_ = //
+        (readable<I1>)&&                            //
+        (readable<I2>)&&                            //
+        (copy_constructible<F>)&&                   //
         CPP_fragment(ranges::indirectly_binary_invocable_frag_, F, I1, I2);
 
     template<typename F, typename I1, typename I2>
-    CPP_concept_fragment(indirectly_regular_binary_invocable_frag_, (F, I1, I2),
-        regular_invocable<F &, iter_value_t<I1> &, iter_value_t<I2> &> &&
-        regular_invocable<F &, iter_value_t<I1> &, iter_reference_t<I2>> &&
-        regular_invocable<F &, iter_reference_t<I1>, iter_value_t<I2> &> &&
-        regular_invocable<F &, iter_reference_t<I1>, iter_reference_t<I2>> &&
-        regular_invocable<F &, iter_common_reference_t<I1>, iter_common_reference_t<I2>> &&
-        CPP_fragment(detail::common_reference_with_4_,
-            invoke_result_t<F &, iter_value_t<I1> &, iter_value_t<I2> &>,
-            invoke_result_t<F &, iter_value_t<I1> &, iter_reference_t<I2>>,
-            invoke_result_t<F &, iter_reference_t<I1>, iter_value_t<I2> &>,
-            invoke_result_t<F &, iter_reference_t<I1>, iter_reference_t<I2>>)
+    CPP_concept_fragment(                                                      //
+        indirectly_regular_binary_invocable_frag_, (F, I1, I2),                //
+        (regular_invocable<F &, iter_value_t<I1> &, iter_value_t<I2> &>)&&     //
+        (regular_invocable<F &, iter_value_t<I1> &, iter_reference_t<I2>>)&&   //
+        (regular_invocable<F &, iter_reference_t<I1>, iter_value_t<I2> &>)&&   //
+        (regular_invocable<F &, iter_reference_t<I1>, iter_reference_t<I2>>)&& //
+        (regular_invocable<F &, iter_common_reference_t<I1>,
+                           iter_common_reference_t<I2>>)&&                             //
+        CPP_fragment(detail::common_reference_with_4_,                                 //
+                     invoke_result_t<F &, iter_value_t<I1> &, iter_value_t<I2> &>,     //
+                     invoke_result_t<F &, iter_value_t<I1> &, iter_reference_t<I2>>,   //
+                     invoke_result_t<F &, iter_reference_t<I1>, iter_value_t<I2> &>,   //
+                     invoke_result_t<F &, iter_reference_t<I1>, iter_reference_t<I2>>) //
     );
 
     template<typename F, typename I1, typename I2>
-    CPP_concept_bool indirectly_regular_binary_invocable_ =
-        readable<I1> && readable<I2> &&
-        copy_constructible<F> &&
+    CPP_concept_bool indirectly_regular_binary_invocable_ = //
+        (readable<I1>)&&                                    //
+        (readable<I2>)&&                                    //
+        (copy_constructible<F>)&&                           //
         CPP_fragment(ranges::indirectly_regular_binary_invocable_frag_, F, I1, I2);
     /// \endcond
 
     template<typename F, typename I>
-    CPP_concept_fragment(indirect_unary_predicate_, (F, I),
-        predicate<F &, iter_value_t<I> &> &&
-        predicate<F &, iter_reference_t<I>> &&
-        predicate<F &, iter_common_reference_t<I>>
+    CPP_concept_fragment(                            //
+        indirect_unary_predicate_, (F, I),           //
+        (predicate<F &, iter_value_t<I> &>)&&        //
+        (predicate<F &, iter_reference_t<I>>)&&      //
+        (predicate<F &, iter_common_reference_t<I>>) //
     );
 
     template<typename F, typename I>
-    CPP_concept_bool indirect_unary_predicate =
-        readable<I> &&
-        copy_constructible<F> &&
+    CPP_concept_bool indirect_unary_predicate = //
+        (readable<I>)&&                         //
+        (copy_constructible<F>)&&               //
         CPP_fragment(ranges::indirect_unary_predicate_, F, I);
 
     template<typename F, typename I1, typename I2>
-    CPP_concept_fragment(indirect_binary_predicate_frag_, (F, I1, I2),
-        predicate<F &, iter_value_t<I1> &, iter_value_t<I2> &> &&
-        predicate<F &, iter_value_t<I1> &, iter_reference_t<I2>> &&
-        predicate<F &, iter_reference_t<I1>, iter_value_t<I2> &> &&
-        predicate<F &, iter_reference_t<I1>, iter_reference_t<I2>> &&
-        predicate<F &, iter_common_reference_t<I1>, iter_common_reference_t<I2>>
+    CPP_concept_fragment(                                                          //
+        indirect_binary_predicate_frag_, (F, I1, I2),                              //
+        (predicate<F &, iter_value_t<I1> &, iter_value_t<I2> &>)&&                 //
+        (predicate<F &, iter_value_t<I1> &, iter_reference_t<I2>>)&&               //
+        (predicate<F &, iter_reference_t<I1>, iter_value_t<I2> &>)&&               //
+        (predicate<F &, iter_reference_t<I1>, iter_reference_t<I2>>)&&             //
+        (predicate<F &, iter_common_reference_t<I1>, iter_common_reference_t<I2>>) //
     );
 
     template<typename F, typename I1, typename I2>
-    CPP_concept_bool indirect_binary_predicate_ =
-        readable<I1> && readable<I2> &&
-        copy_constructible<F> &&
+    CPP_concept_bool indirect_binary_predicate_ = //
+        (readable<I1>)&&                          //
+        (readable<I2>)&&                          //
+        (copy_constructible<F>)&&                 //
         CPP_fragment(ranges::indirect_binary_predicate_frag_, F, I1, I2);
 
     template<typename F, typename I1, typename I2>
-    CPP_concept_fragment(indirect_relation_, (F, I1, I2),
-        relation<F &, iter_value_t<I1> &, iter_value_t<I2> &> &&
-        relation<F &, iter_value_t<I1> &, iter_reference_t<I2>> &&
-        relation<F &, iter_reference_t<I1>, iter_value_t<I2> &> &&
-        relation<F &, iter_reference_t<I1>, iter_reference_t<I2>> &&
-        relation<F &, iter_common_reference_t<I1>, iter_common_reference_t<I2>>
+    CPP_concept_fragment(                                                         //
+        indirect_relation_, (F, I1, I2),                                          //
+        (relation<F &, iter_value_t<I1> &, iter_value_t<I2> &>)&&                 //
+        (relation<F &, iter_value_t<I1> &, iter_reference_t<I2>>)&&               //
+        (relation<F &, iter_reference_t<I1>, iter_value_t<I2> &>)&&               //
+        (relation<F &, iter_reference_t<I1>, iter_reference_t<I2>>)&&             //
+        (relation<F &, iter_common_reference_t<I1>, iter_common_reference_t<I2>>) //
     );
 
     template<typename F, typename I1, typename I2 = I1>
-    CPP_concept_bool indirect_relation =
-        readable<I1> && readable<I2> &&
-        copy_constructible<F> &&
+    CPP_concept_bool indirect_relation = //
+        (readable<I1>)&&                 //
+        (readable<I2>)&&                 //
+        (copy_constructible<F>)&&        //
         CPP_fragment(ranges::indirect_relation_, F, I1, I2);
 
     template<typename F, typename I1, typename I2>
-    CPP_concept_fragment(indirect_strict_weak_order_, (F, I1, I2),
-        strict_weak_order<F &, iter_value_t<I1> &, iter_value_t<I2> &> &&
-        strict_weak_order<F &, iter_value_t<I1> &, iter_reference_t<I2>> &&
-        strict_weak_order<F &, iter_reference_t<I1>, iter_value_t<I2> &> &&
-        strict_weak_order<F &, iter_reference_t<I1>, iter_reference_t<I2>> &&
-        strict_weak_order<F &, iter_common_reference_t<I1>, iter_common_reference_t<I2>>
+    CPP_concept_fragment(                                                      //
+        indirect_strict_weak_order_, (F, I1, I2),                              //
+        (strict_weak_order<F &, iter_value_t<I1> &, iter_value_t<I2> &>)&&     //
+        (strict_weak_order<F &, iter_value_t<I1> &, iter_reference_t<I2>>)&&   //
+        (strict_weak_order<F &, iter_reference_t<I1>, iter_value_t<I2> &>)&&   //
+        (strict_weak_order<F &, iter_reference_t<I1>, iter_reference_t<I2>>)&& //
+        (strict_weak_order<F &, iter_common_reference_t<I1>,                   //
+                           iter_common_reference_t<I2>>)                       //
     );
 
     template<typename F, typename I1, typename I2 = I1>
-    CPP_concept_bool indirect_strict_weak_order =
-        readable<I1> && readable<I2> &&
-        copy_constructible<F> &&
+    CPP_concept_bool indirect_strict_weak_order = //
+        (readable<I1>)&&                          //
+        (readable<I2>)&&                          //
+        (copy_constructible<F>)&&                 //
         CPP_fragment(ranges::indirect_strict_weak_order_, F, I1, I2);
-    // clang-format on
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // projected struct, for "projecting" a readable with a unary callable
@@ -570,100 +591,107 @@ namespace ranges
     struct incrementable_traits<detail::projected_<I, Proj>> : incrementable_traits<I>
     {};
 
-    // clang-format off
     template<typename I, typename O>
-    CPP_concept_fragment(indirectly_movable_, (I, O),
-        writable<O, iter_rvalue_reference_t<I>>
+    CPP_concept_fragment(                       //
+        indirectly_movable_, (I, O),            //
+        writable<O, iter_rvalue_reference_t<I>> //
     );
 
     template<typename I, typename O>
-    CPP_concept_bool indirectly_movable =
-        readable<I> && CPP_fragment(ranges::indirectly_movable_, I, O);
+    CPP_concept_bool indirectly_movable = //
+        readable<I> &&                    //
+        CPP_fragment(ranges::indirectly_movable_, I, O);
 
     template<typename I, typename O>
-    CPP_concept_fragment(indirectly_movable_storable_, (I, O),
-        writable<O, iter_value_t<I>> &&
-        movable<iter_value_t<I>> &&
-        constructible_from<iter_value_t<I>, iter_rvalue_reference_t<I>> &&
-        assignable_from<iter_value_t<I> &, iter_rvalue_reference_t<I>>
+    CPP_concept_fragment(                                                   //
+        indirectly_movable_storable_, (I, O),                               //
+        (writable<O, iter_value_t<I>>)&&                                    //
+        (movable<iter_value_t<I>>)&&                                        //
+        (constructible_from<iter_value_t<I>, iter_rvalue_reference_t<I>>)&& //
+        (assignable_from<iter_value_t<I> &, iter_rvalue_reference_t<I>>)    //
     );
 
     template<typename I, typename O>
-    CPP_concept_bool indirectly_movable_storable =
-        indirectly_movable<I, O> &&
+    CPP_concept_bool indirectly_movable_storable = //
+        indirectly_movable<I, O> &&                //
         CPP_fragment(ranges::indirectly_movable_storable_, I, O);
 
     template<typename I, typename O>
-    CPP_concept_fragment(indirectly_copyable_, (I, O),
-        writable<O, iter_reference_t<I>>
+    CPP_concept_fragment(                //
+        indirectly_copyable_, (I, O),    //
+        writable<O, iter_reference_t<I>> //
     );
 
     template<typename I, typename O>
-    CPP_concept_bool indirectly_copyable =
-        readable<I> && CPP_fragment(ranges::indirectly_copyable_, I, O);
+    CPP_concept_bool indirectly_copyable = //
+        readable<I> &&                     //
+        CPP_fragment(ranges::indirectly_copyable_, I, O);
 
     template<typename I, typename O>
-    CPP_concept_fragment(indirectly_copyable_storable_, (I, O),
-        writable<O, iter_value_t<I> const &> &&
-        copyable<iter_value_t<I>> &&
-        constructible_from<iter_value_t<I>, iter_reference_t<I>> &&
-        assignable_from<iter_value_t<I> &, iter_reference_t<I>>
+    CPP_concept_fragment(                                            //
+        indirectly_copyable_storable_, (I, O),                       //
+        (writable<O, iter_value_t<I> const &>)&&                     //
+        (copyable<iter_value_t<I>>)&&                                //
+        (constructible_from<iter_value_t<I>, iter_reference_t<I>>)&& //
+        (assignable_from<iter_value_t<I> &, iter_reference_t<I>>)    //
     );
 
     template<typename I, typename O>
-    CPP_concept_bool indirectly_copyable_storable =
-        indirectly_copyable<I, O> &&
+    CPP_concept_bool indirectly_copyable_storable = //
+        indirectly_copyable<I, O> &&                //
         CPP_fragment(ranges::indirectly_copyable_storable_, I, O);
 
     template<typename I1, typename I2 = I1>
-    CPP_concept_bool indirectly_swappable =
-        readable<I1> && readable<I2> &&
-        CPP_requires ((I1 const) i1, (I2 const) i2) //
-        (
-            ranges::iter_swap(i1, i2),
-            ranges::iter_swap(i1, i1),
-            ranges::iter_swap(i2, i2),
-            ranges::iter_swap(i2, i1)
+    CPP_concept_bool indirectly_swappable =      //
+        (readable<I1>)&&                         //
+        (readable<I2>)&&                         //
+        CPP_requires((I1 const)i1, (I2 const)i2) //
+        (                                        //
+            ranges::iter_swap(i1, i2),           //
+            ranges::iter_swap(i1, i1),           //
+            ranges::iter_swap(i2, i2),           //
+            ranges::iter_swap(i2, i1)            //
         );
 
     template<typename C, typename I1, typename P1, typename I2, typename P2>
-    CPP_concept_fragment(projected_indirect_relation_, (C, I1, P1, I2, P2),
-        indirect_relation<C, projected<I1, P1>, projected<I2, P2>>
+    CPP_concept_fragment(                                          //
+        projected_indirect_relation_, (C, I1, P1, I2, P2),         //
+        indirect_relation<C, projected<I1, P1>, projected<I2, P2>> //
     );
 
     template<typename I1, typename I2, typename C, typename P1 = identity,
-        typename P2 = identity>
-    CPP_concept_bool indirectly_comparable =
+             typename P2 = identity>
+    CPP_concept_bool indirectly_comparable = //
         CPP_fragment(ranges::projected_indirect_relation_, C, I1, P1, I2, P2);
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // Composite concepts for use defining algorithms:
     template<typename I>
-    CPP_concept_bool permutable =
-        forward_iterator<I> &&
-        indirectly_swappable<I, I> &&
-        indirectly_movable_storable<I, I>;
+    CPP_concept_bool permutable =      //
+        (forward_iterator<I>)&&        //
+        (indirectly_swappable<I, I>)&& //
+        (indirectly_movable_storable<I, I>);
 
     template<typename C, typename I1, typename P1, typename I2, typename P2>
-    CPP_concept_fragment(projected_indirect_strict_weak_order_, (C, I1, P1, I2, P2),
-        indirect_strict_weak_order<C, projected<I1, P1>, projected<I2, P2>>
+    CPP_concept_fragment(                                                   //
+        projected_indirect_strict_weak_order_, (C, I1, P1, I2, P2),         //
+        indirect_strict_weak_order<C, projected<I1, P1>, projected<I2, P2>> //
     );
 
     template<typename I1, typename I2, typename Out, typename C = less,
-        typename P1 = identity, typename P2 = identity>
-    CPP_concept_bool mergeable =
-        input_iterator<I1> &&
-        input_iterator<I2> &&
-        weakly_incrementable<Out> &&
-        indirectly_copyable<I1, Out> &&
-        indirectly_copyable<I2, Out> &&
+             typename P1 = identity, typename P2 = identity>
+    CPP_concept_bool mergeable =         //
+        (input_iterator<I1>)&&           //
+        (input_iterator<I2>)&&           //
+        (weakly_incrementable<Out>)&&    //
+        (indirectly_copyable<I1, Out>)&& //
+        (indirectly_copyable<I2, Out>)&& //
         CPP_fragment(ranges::projected_indirect_strict_weak_order_, C, I1, P1, I2, P2);
 
     template<typename I, typename C = less, typename P = identity>
-    CPP_concept_bool sortable =
-        permutable<I> &&
+    CPP_concept_bool sortable = //
+        permutable<I> &&        //
         CPP_fragment(ranges::projected_indirect_strict_weak_order_, C, I, P, I, P);
-    // clang-format on
 
     struct sentinel_tag
     {};

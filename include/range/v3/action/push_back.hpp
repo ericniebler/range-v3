@@ -61,14 +61,12 @@ namespace ranges
         }
 
         /// \cond
-        // clang-format off
         template<typename Rng, typename T>
-        CPP_concept can_push_back_ =
-            CPP_requires ((Rng &&) rng, (T &&) t) //
-            (
-                push_back(rng, CPP_fwd(t))
+        CPP_concept can_push_back_ =             //
+            CPP_requires((Rng &&) rng, (T &&) t) //
+            (                                    //
+                push_back(rng, CPP_fwd(t))       //
             );
-        // clang-format on
         /// \endcond
 
         struct push_back_fn

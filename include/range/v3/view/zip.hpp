@@ -78,9 +78,8 @@ namespace ranges
 
             // pair reference
             template<typename It1, typename It2>
-            auto operator()(It1 const & it1, It2 const & it2) const noexcept(
-                noexcept(iter_reference_t<It1>(*it1)) &&
-                noexcept(iter_reference_t<It2>(*it2)))
+            auto operator()(It1 const & it1, It2 const & it2) const noexcept(noexcept(
+                iter_reference_t<It1>(*it1)) && noexcept(iter_reference_t<It2>(*it2)))
                 -> CPP_ret(common_pair<iter_reference_t<It1>, iter_reference_t<It2>>)( //
                     requires readable<It1> && readable<It2>)
             {
@@ -90,8 +89,8 @@ namespace ranges
             // pair rvalue reference
             template<typename It1, typename It2>
             auto operator()(move_tag, It1 const & it1, It2 const & it2) const
-                noexcept(noexcept(iter_rvalue_reference_t<It1>(iter_move(it1))) &&
-                         noexcept(iter_rvalue_reference_t<It2>(iter_move(it2))))
+                noexcept(noexcept(iter_rvalue_reference_t<It1>(iter_move(
+                    it1))) && noexcept(iter_rvalue_reference_t<It2>(iter_move(it2))))
                     -> CPP_ret(common_pair<iter_rvalue_reference_t<It1>,
                                            iter_rvalue_reference_t<It2>>)( //
                         requires readable<It1> && readable<It2>)
@@ -119,7 +118,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename... Rng>
-    zip_view(Rng &&...)->zip_view<views::all_t<Rng>...>;
+    zip_view(Rng &&...) -> zip_view<views::all_t<Rng>...>;
 #endif
 
     namespace views

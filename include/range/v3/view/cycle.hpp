@@ -205,7 +205,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    cycled_view(Rng &&)->cycled_view<views::all_t<Rng>>;
+    cycled_view(Rng &&) -> cycled_view<views::all_t<Rng>>;
 #endif
 
     namespace views

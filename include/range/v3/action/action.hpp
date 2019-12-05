@@ -52,22 +52,23 @@ namespace ranges
     {
         struct action_closure_base_
         {};
-    }
+    } // namespace detail
     /// \endcond
 
     template<typename ActionFn, typename Rng>
-    CPP_concept_fragment(invocable_action_closure_, (ActionFn, Rng),
-        !derived_from<invoke_result_t<ActionFn, Rng>, detail::action_closure_base_>
+    CPP_concept_fragment(
+        invocable_action_closure_, (ActionFn, Rng),                                 //
+        !derived_from<invoke_result_t<ActionFn, Rng>, detail::action_closure_base_> //
     );
     template<typename ActionFn, typename Rng>
-    CPP_concept_bool invocable_action_closure =
-        invocable<ActionFn, Rng> &&
+    CPP_concept_bool invocable_action_closure = //
+        invocable<ActionFn, Rng> &&             //
         CPP_fragment(ranges::invocable_action_closure_, ActionFn, Rng);
 
     namespace defer
     {
         template<typename ActionFn, typename Rng>
-        CPP_concept invocable_action_closure =
+        CPP_concept invocable_action_closure = //
             CPP_defer(ranges::invocable_action_closure, ActionFn, Rng);
     }
 

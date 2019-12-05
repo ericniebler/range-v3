@@ -163,8 +163,9 @@ namespace ranges
             }
             template<typename Pred, typename Proj>
             constexpr auto CPP_fun(operator())(Pred && pred,
-                                               Proj proj)(const //
-                                                          requires(!range<Pred>)) // TODO: underconstrained
+                                               Proj proj)(
+                const                   //
+                requires(!range<Pred>)) // TODO: underconstrained
             {
                 return make_view_closure(bind_back(
                     take_while_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));
@@ -172,7 +173,8 @@ namespace ranges
         };
 
         struct RANGES_EMPTY_BASES take_while_fn
-          : take_while_base_fn, take_while_bind_fn
+          : take_while_base_fn
+          , take_while_bind_fn
         {
             using take_while_base_fn::operator();
             using take_while_bind_fn::operator();

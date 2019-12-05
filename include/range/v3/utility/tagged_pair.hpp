@@ -189,43 +189,44 @@ namespace ranges
     }
 } // namespace ranges
 
-#define RANGES_DEFINE_TAG_SPECIFIER(NAME)                                               \
-    namespace tag                                                                       \
-    {                                                                                   \
-        struct NAME                                                                     \
-        {                                                                               \
-            template<typename Untagged, std::size_t I, typename Next>                   \
-            class getter : public Next                                                  \
-            {                                                                           \
-            protected:                                                                  \
-                ~getter() = default;                                                    \
-                                                                                        \
-            public:                                                                     \
-                getter() = default;                                                     \
-                getter(getter &&) = default;                                            \
-                getter(getter const &) = default;                                       \
-                using Next::Next;                                                       \
-                getter & operator=(getter &&) = default;                                \
-                getter & operator=(getter const &) = default;                           \
-                constexpr meta::_t<std::tuple_element<I, Untagged>> & NAME() &          \
-                    noexcept(noexcept(detail::adl_get<I>(std::declval<Untagged &>())))  \
-                {                                                                       \
-                    return detail::adl_get<I>(static_cast<Untagged &>(*this));          \
-                }                                                                       \
-                constexpr meta::_t<std::tuple_element<I, Untagged>> && NAME() &&        \
-                    noexcept(noexcept(detail::adl_get<I>(std::declval<Untagged>())))    \
-                {                                                                       \
-                    return detail::adl_get<I>(static_cast<Untagged &&>(*this));         \
-                }                                                                       \
-                constexpr meta::_t<std::tuple_element<I, Untagged>> const & NAME()      \
-                    const & noexcept(                                                   \
-                        noexcept(detail::adl_get<I>(std::declval<Untagged const &>()))) \
-                {                                                                       \
-                    return detail::adl_get<I>(static_cast<Untagged const &>(*this));    \
-                }                                                                       \
-            };                                                                          \
-        };                                                                              \
-    }                                                                                   \
+#define RANGES_DEFINE_TAG_SPECIFIER(NAME)                                                \
+    namespace tag                                                                        \
+    {                                                                                    \
+        struct NAME                                                                      \
+        {                                                                                \
+            template<typename Untagged, std::size_t I, typename Next>                    \
+            class getter : public Next                                                   \
+            {                                                                            \
+            protected:                                                                   \
+                ~getter() = default;                                                     \
+                                                                                         \
+            public:                                                                      \
+                getter() = default;                                                      \
+                getter(getter &&) = default;                                             \
+                getter(getter const &) = default;                                        \
+                using Next::Next;                                                        \
+                getter & operator=(getter &&) = default;                                 \
+                getter & operator=(getter const &) = default;                            \
+                constexpr meta::_t<std::tuple_element<I, Untagged>> & NAME() & noexcept( \
+                    noexcept(detail::adl_get<I>(std::declval<Untagged &>())))            \
+                {                                                                        \
+                    return detail::adl_get<I>(static_cast<Untagged &>(*this));           \
+                }                                                                        \
+                constexpr meta::_t<std::tuple_element<I, Untagged>> &&                   \
+                NAME() && noexcept(                                                      \
+                    noexcept(detail::adl_get<I>(std::declval<Untagged>())))              \
+                {                                                                        \
+                    return detail::adl_get<I>(static_cast<Untagged &&>(*this));          \
+                }                                                                        \
+                constexpr meta::_t<std::tuple_element<I, Untagged>> const & NAME()       \
+                    const & noexcept(                                                    \
+                        noexcept(detail::adl_get<I>(std::declval<Untagged const &>())))  \
+                {                                                                        \
+                    return detail::adl_get<I>(static_cast<Untagged const &>(*this));     \
+                }                                                                        \
+            };                                                                           \
+        };                                                                               \
+    }                                                                                    \
     /**/
 
 RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS

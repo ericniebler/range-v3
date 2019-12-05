@@ -401,7 +401,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename I, typename S>
-    subrange(I, S)->subrange<I, S>;
+    subrange(I, S) -> subrange<I, S>;
 
     CPP_template(typename I, typename S)(                           //
         requires input_or_output_iterator<I> && sentinel_for<S, I>) //
