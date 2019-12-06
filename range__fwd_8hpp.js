@@ -30,5 +30,6 @@ var range__fwd_8hpp =
       [ "unknown", "range__fwd_8hpp.html#ae8661b50963536cff6fa89c699741efdab85c1e29d8e68079f39885412371399a", null ],
       [ "finite", "range__fwd_8hpp.html#ae8661b50963536cff6fa89c699741efda8679698cbba1c1b177bf478a4c837917", null ]
     ] ],
-    [ "disable_sized_sentinel", "range__fwd_8hpp.html#a80bef414dc9d1574a22ae177cc8e9613", null ]
+    [ "disable_sized_sentinel", "range__fwd_8hpp.html#a80bef414dc9d1574a22ae177cc8e9613", null ],
+    [ "enable_safe_range", "range__fwd_8hpp.html#a7e0be06738edaf993327244e0aa2efdf", null ]
 ];

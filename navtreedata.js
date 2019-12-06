@@ -1,17 +1,18 @@
 /*
-@licstart  The following is the entire license notice for the
+@ @licstart  The following is the entire license notice for the
 JavaScript code in this file.
 
-Copyright (C) 1997-2019 by Dimitri van Heesch
+Copyright (C) 1997-2017 by Dimitri van Heesch
 
 This program is free software; you can redistribute it and/or modify
-it under the terms of version 2 of the GNU General Public License as published by
-the Free Software Foundation
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
@@ -31,18 +32,8 @@ var NAVTREE =
       ] ],
       [ "Quick Start", "index.html#tutorial-quick-start", [
         [ "Views", "index.html#tutorial-views", null ],
-        [ "View const-ness", "index.html#autotoc_md6", null ],
-        [ "View validity", "index.html#autotoc_md7", null ],
-        [ "List of range views", "index.html#autotoc_md8", null ],
         [ "Actions", "index.html#tutorial-actions", null ],
-        [ "List of range actions", "index.html#autotoc_md10", null ],
-        [ "Utilities", "index.html#tutorial-utilities", [
-          [ "Create Custom Views with view_facade", "index.html#autotoc_md12", null ],
-          [ "Create Custom Views with view_adaptor", "index.html#autotoc_md13", [
-            [ "view_adaptor in details", "index.html#autotoc_md14", null ]
-          ] ],
-          [ "Create Custom Iterators with basic_iterator", "index.html#autotoc_md15", null ]
-        ] ],
+        [ "Utilities", "index.html#tutorial-utilities", null ],
         [ "Concept Checking", "index.html#tutorial-concepts", null ],
         [ "Range-v3 and the Future", "index.html#tutorial-future", null ]
       ] ]
@@ -108,18 +99,18 @@ var NAVTREEINDEX =
 ".html",
 "classranges_1_1join__with__view_1_1cursor.html#ad5ea31dc14abbe67661ba168c4a53fb6",
 "concepts_2concepts_8hpp.html#af2206648a3a7dac3515068eab84d13c3",
-"group__group-algorithms.html#ga3d2e5f3567c0db685cc20290b2ca0ebe",
-"group__group-views.html#ga32faab4f29d15d569cdbd7d8b5beea13",
-"group__math.html#gab5e2f54a307613cfd97223ca45fb2419",
-"meta_8hpp.html#ga3174f1e6fadebf7d11f3934c93911706",
-"optional_8hpp.html#ab0463d2f50943f425a149e1b866a22c2",
-"replace__copy__if_8hpp.html#gaf4f4af78a9add9145c784b58d209e16e",
-"structranges_1_1adjacent__difference__fn.html#abbb1faa1db33497b9cdb9d6009c046ed",
-"structranges_1_1delimit__view.html#abd4c4df679de5755628f93ab9a394cca",
-"structranges_1_1join__view.html#a57aa77b7b3c9958bdeb750d8b56560d7",
-"structranges_1_1protect__fn.html",
-"structranges_1_1view__adaptor.html#abf591d95a0d85b78dfa59730526874bb",
-"structranges_1_1views_1_1single__fn.html"
+"group__group-algorithms.html#ga39738e10668ac14c55c17a554ae72a55",
+"group__group-views.html#ga30a86249c4fef36e383dcad73f6463c0",
+"group__math.html#ga9f3a3adf2556161e23d0b181d075498a",
+"meta_8hpp.html#ga3d39dff0bca84dd8fd802126c1e8ddae",
+"partial__sort_8hpp.html#gafbd4c9c1cbca2961915d60ab126c5599",
+"reverse__copy_8hpp.html#ga7bff287e5ec676e01a086ac147d4b618",
+"structranges_1_1adjacent__filter__view.html#aea3d9ca1d6ec8e26cffddc84b885d990",
+"structranges_1_1detail_1_1bind__back__fn__.html#a8e26c129315f5db80a9d6a9144b6db1e",
+"structranges_1_1join__view.html#ace8ba3b4a949a6262f110ba6ed46b63f",
+"structranges_1_1protect__fn.html#ae31c0004d6f7cb7b2e2ff188149f34f6",
+"structranges_1_1view__adaptor.html#acdf4196ea0cdbef454d032f0b86924a9",
+"structranges_1_1views_1_1slice__base__fn.html#a53cf8eea32df8c864262aa392e4213cf"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

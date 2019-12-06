@@ -78,11 +78,7 @@ var dir_dae4eeac8ca119671b98b3f71d5105fc =
     [ "indirect.hpp", "view_2indirect_8hpp.html", null ],
     [ "interface.hpp", "interface_8hpp.html", "interface_8hpp" ],
     [ "intersperse.hpp", "intersperse_8hpp.html", null ],
-    [ "iota.hpp", "view_2iota_8hpp.html", [
-      [ "closed_iota_fn", "structranges_1_1views_1_1closed__iota__fn.html", "structranges_1_1views_1_1closed__iota__fn" ],
-      [ "ints_fn", "structranges_1_1views_1_1ints__fn.html", "structranges_1_1views_1_1ints__fn" ],
-      [ "iota_fn", "structranges_1_1views_1_1iota__fn.html", "structranges_1_1views_1_1iota__fn" ]
-    ] ],
+    [ "iota.hpp", "view_2iota_8hpp.html", "view_2iota_8hpp" ],
     [ "istream.hpp", "istream_8hpp.html", "istream_8hpp" ],
     [ "join.hpp", "view_2join_8hpp.html", "view_2join_8hpp" ],
     [ "linear_distribute.hpp", "linear__distribute_8hpp.html", null ],
