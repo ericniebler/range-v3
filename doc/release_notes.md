@@ -1,6 +1,69 @@
 Release Notes           {#release_notes}
 =============
 
+\section v0-10-0 Version 0.10.0 "To Err is Human"
+
+_Released:_ Dec 6, 2019.
+
+**IMPORTANT:** Before upgrading, please note that several older compiler versions
+and build configurations are no longer supported! In particular, MSVC now needs
+`/std:c++latest`.
+
+**ALSO:** When taking a dependency on the `range-v3`, `meta`, or `concepts`
+libraries via CMake, please now use the namespace qualified target names:
+  - `range-v3::range-v3`
+  - `range-v3::meta`
+  - `range-v3::concepts`
+
+Changes:
+* **NEW:** Rewritten concepts portability layer with simpler macros for better
+  diagnostics.
+* **NEW:** The `views::cache1` view caches the most recent value in the
+  range. This can help avoid reevaluation of transformations in complex view
+  pipelines.
+* **NEW:** `ranges::contains` algorithm.
+* **NEW:** `enable_safe_range` trait for opting in to the _forwarding-range_
+  concept. These are ranges whose iterators remain valid even after the
+  range itself has been destroyed; _e.g._, `std::string_view` and
+  `ranges::subrange`.
+* The `readable` concept has changed such that types that are not _indirectly_
+  readable with `operator*` (_e.g., `std::optional`) no longer satisfy that
+  concept.
+* Using `views::join` to join a range of xvalue ranges works again.
+* The following range access primitives no longer accept temporary containers
+  (_i.e._, they refuse to return references known to be dangling):
+  - `range::front`
+  - `range::back`
+  - `range::at`
+  - `range::index`
+* `views::concat` with a single argument now simply returns its argument.
+* `ranges::ostream_iterator<T>` now coerces arguments to `T` before inserting
+  them into the wrapped ostream.
+* Smaller iterators for `views::transform` and `views::take_while`.
+* `actions::split` and `actions::split_when` now support partial application and
+  pipelining ([\#1085](https://github.com/ericniebler/range-v3/issues/1085)).
+* `views::group_by` and its iterator both get a `.base()` member to access the
+  underlying range and iterator, respectively.
+* Improved diagnostics with clang.
+* Assorted bug fixes and compiler work-arounds:
+  [\#284](https://github.com/ericniebler/range-v3/issues/284),
+  [\#491](https://github.com/ericniebler/range-v3/issues/491),
+  [\#499](https://github.com/ericniebler/range-v3/issues/499),
+  [\#871](https://github.com/ericniebler/range-v3/issues/871),
+  [\#1022](https://github.com/ericniebler/range-v3/issues/1022),
+  [\#1043](https://github.com/ericniebler/range-v3/issues/1043),
+  [\#1081](https://github.com/ericniebler/range-v3/issues/1081),
+  [\#1085](https://github.com/ericniebler/range-v3/issues/1085),
+  [\#1101](https://github.com/ericniebler/range-v3/issues/1101),
+  [\#1116](https://github.com/ericniebler/range-v3/issues/1116),
+  [\#1296](https://github.com/ericniebler/range-v3/issues/1296),
+  [\#1305](https://github.com/ericniebler/range-v3/issues/1305), and
+  [\#1335](https://github.com/ericniebler/range-v3/issues/1335).
+
+Many thanks to GitHub users @CaseyCarter, @morinmorin, @h-2, @MichaelWJung,
+@johelegp, @marehr, @alkino, @xuning97, @BRevzin, and @mpusz for their
+contributions.
+
 \section v0-9-1 Version 0.9.1
 
 _Released:_ Sept 1, 2019.
@@ -13,7 +76,7 @@ _Released:_ Aug 26, 2019.
 
 Bring many interfaces into sync with the C++20 draft.
 
-* **NEW:** An improved concepts portability layer with  macros that use C++20
+* **NEW:** An improved concepts portability layer with macros that use C++20
   concepts when the compiler supports them.
 * **NEW:** An improved directory structure that keeps disjoint parts of the
   library -- iterators, ranges, algorithms, actions, views, functional
