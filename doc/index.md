@@ -72,7 +72,8 @@ The code is known to work on the following compilers:
 
 - clang 3.9
 - GCC 6.5
-- MSVC VS2017 15.9 (`_MSC_VER >= 1916`), with `/std:c++17 /permissive- /experimental:preprocessor`
+- Clang/LLVM 6 (or later) on Windows
+- MSVC VS2019, with `/std:c++latest /permissive- /experimental:preprocessor`
 
 \section tutorial-quick-start Quick Start
 
