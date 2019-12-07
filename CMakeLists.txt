@@ -64,6 +64,8 @@ if(RANGE_V3_EXAMPLES)
 endif()
 
 if(RANGE_V3_PERF)
+  include(gtest)
+  include(gbenchmark)
   add_subdirectory(perf)
 endif()
 
@@ -113,7 +115,7 @@ file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/include/range/v3/version.hpp RANGE_V3_N
 # If the new version.hpp is materially different from the one in the source
 # directory, update it, commit, and tag.
 if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
-  # Check that README.md and Version.cmake are the only changed file:
+  # Check that doc/release_notes.md and Version.cmake are the only changed file:
   execute_process(
     COMMAND ${GIT_EXECUTABLE} -C "${CMAKE_CURRENT_SOURCE_DIR}" status --porcelain -uno
     OUTPUT_VARIABLE RANGE_V3_GIT_STATUS

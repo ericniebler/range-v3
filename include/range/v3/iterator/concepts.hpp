@@ -139,12 +139,13 @@ namespace ranges
         CPP_requires((uncvref_t<I> const)i, (uncvref_t<I>)j) //
         (
             // { *i } -> same_as<iter_reference_t<I>>;
-            // { iter_move(i) } -> same_as<iter_rvalue_reference_t<I>>;
-            concepts::requires_<same_as<decltype(*i),                          //
+            concepts::requires_<same_as<iter_reference_t<decltype(i)>,         //
                                         iter_reference_t<decltype(j)>>>,       //
-            concepts::requires_<same_as<decltype(iter_move(i)),                //
+            // { iter_move(i) } -> same_as<iter_rvalue_reference_t<I>>;        // 
+            concepts::requires_<same_as<iter_rvalue_reference_t<decltype(i)>,  //
                                         iter_rvalue_reference_t<decltype(j)>>> //
-        );
+        ) &&
+        CPP_fragment(readable_, uncvref_t<I>);
 
     template<typename Out, typename T>
     CPP_concept_bool writable =                                                  //
