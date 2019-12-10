@@ -9,8 +9,8 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 //
-#ifndef RANGES_V3_UTLITY_ADDRESSOF_HPP
-#define RANGES_V3_UTLITY_ADDRESSOF_HPP
+#ifndef RANGES_V3_UTILITY_ADDRESSOF_HPP
+#define RANGES_V3_UTILITY_ADDRESSOF_HPP
 
 #include <memory>
 #include <type_traits>
