@@ -155,7 +155,7 @@ namespace ranges
 
         // clang-format off
         template<typename Rng, typename Ref>
-        CPP_concept_fragment(any_compatible_range_, (Rng, Ref),
+        CPP_concept_fragment(any_compatible_range_, requires()(0) &&
             convertible_to<range_reference_t<Rng>, Ref>
         );
         template<typename Rng, typename Ref>

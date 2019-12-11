@@ -215,8 +215,11 @@
     __VA_ARGS__
 #define CPP_literal(...) \
     __VA_ARGS__
-#define CPP_concept_fragment(NAME, ARGS, ...) \
-    META_CONCEPT NAME = __VA_ARGS__
+#define CPP_concept_fragment(NAME, ...) \
+    META_CONCEPT NAME = CPP_PP_CAT(CPP_concept_fragment_reqs_, __VA_ARGS__)
+#define CPP_concept_fragment_reqs_requires(...) \
+    requires(__VA_ARGS__) CPP_concept_fragment_reqs_
+#define CPP_concept_fragment_reqs_(...) { __VA_ARGS__ ; }
 #define CPP_fragment(NAME, ...) \
     NAME<__VA_ARGS__>
 #else
@@ -259,16 +262,20 @@
     /**/
 #define CPP_defer(CONCEPT, ...)\
     CPP_defer_(CONCEPT, CPP_PP_FOR_EACH(CPP_type_, __VA_ARGS__))
-#define CPP_concept_fragment(NAME, ARGS, ...) \
-    std::enable_if_t<__VA_ARGS__, ::concepts::detail::true_type> \
-    CPP_PP_CAT(NAME, CPP_concept_fragment_)( \
-        ::concepts::detail::tag<CPP_PP_EXPAND ARGS> *); \
-    ::concepts::detail::false_type \
-    CPP_PP_CAT(NAME, CPP_concept_fragment_)(void *) \
+#define CPP_concept_fragment(NAME, ...) \
+    auto CPP_PP_CAT(NAME, CPP_concept_fragment_impl_) \
+        CPP_PP_CAT(CPP_concept_fragment_reqs_, __VA_ARGS__)> {} \
+    template<typename... As>\
+    char CPP_PP_CAT(NAME, CPP_concept_fragment_)(\
+        decltype(&CPP_PP_CAT(NAME, CPP_concept_fragment_impl_)<As...>, 0)); \
+    template<typename... As>\
+    char (&CPP_PP_CAT(NAME, CPP_concept_fragment_)(long))[2] \
     /**/
+#define CPP_concept_fragment_reqs_requires(...) \
+    (__VA_ARGS__) -> std::enable_if_t<CPP_concept_fragment_reqs_2_
+#define CPP_concept_fragment_reqs_2_(...) !(decltype(__VA_ARGS__, void(), false){})
 #define CPP_fragment(NAME, ...) \
-    decltype(CPP_PP_CAT(NAME, CPP_concept_fragment_)(\
-        (::concepts::detail::tag<__VA_ARGS__> *) nullptr))::value() \
+    (1u==sizeof(CPP_PP_CAT(NAME, CPP_concept_fragment_)<__VA_ARGS__>(0))) \
     /**/
 #endif
 
@@ -958,7 +965,7 @@ namespace concepts
             explicitly_convertible_to<From, To>;
 
         template<typename T, typename U>
-        CPP_concept_fragment(derived_from_, (T, U),
+        CPP_concept_fragment(derived_from_, requires()(0) &&
             convertible_to<T const volatile *, U const volatile *>
         );
         template<typename T, typename U>
@@ -967,7 +974,7 @@ namespace concepts
             CPP_fragment(concepts::derived_from_, T, U);
 
         template<typename T, typename U>
-        CPP_concept_fragment(common_reference_with_, (T, U),
+        CPP_concept_fragment(common_reference_with_, requires()(0) &&
             same_as<common_reference_t<T, U>,
                     common_reference_t<U, T>> &&
             convertible_to<T, common_reference_t<T, U>> &&
@@ -978,7 +985,7 @@ namespace concepts
             CPP_fragment(concepts::common_reference_with_, T, U);
 
         template<typename T, typename U>
-        CPP_concept_fragment(common_with_, (T, U),
+        CPP_concept_fragment(common_with_, requires()(0) &&
             same_as<common_type_t<T, U>,
                     common_type_t<U, T>> &&
             convertible_to<T, common_type_t<T, U>> &&
@@ -1046,7 +1053,7 @@ namespace concepts
             detail::weakly_equality_comparable_with_<T, T>;
 
         template<typename T, typename U>
-        CPP_concept_fragment(equality_comparable_with_, (T, U),
+        CPP_concept_fragment(equality_comparable_with_, requires()(0) &&
             equality_comparable<
                 common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
         );
@@ -1070,7 +1077,7 @@ namespace concepts
             );
 
         template<typename T, typename U>
-        CPP_concept_fragment(totally_ordered_with_, (T, U),
+        CPP_concept_fragment(totally_ordered_with_, requires()(0) &&
             totally_ordered<
                 common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
         );

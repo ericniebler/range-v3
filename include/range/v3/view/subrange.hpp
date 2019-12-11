@@ -89,7 +89,7 @@ namespace ranges
             defer::pair_like_gcc_bugs_2_<T>;
 #else
         template<typename T>
-        CPP_concept_fragment(pair_like_gcc_bugs_frag_, (T),
+        CPP_concept_fragment(pair_like_gcc_bugs_frag_, requires()(0) &&
             ranges::defer::type<meta::_t<std::tuple_size<T>>> &&
             defer::pair_like_gcc_bugs_2_<T>
         );
@@ -139,7 +139,7 @@ namespace ranges
 
         // clang-format off
         template<typename T, typename U, typename V>
-        CPP_concept_fragment(pair_like_convertible_from_gcc_bugs_frag_, (T, U, V),
+        CPP_concept_fragment(pair_like_convertible_from_gcc_bugs_frag_, requires()(0) &&
             convertible_to_not_slicing_<U, meta::_t<std::tuple_element<0, T>>> &&
             convertible_to<V, meta::_t<std::tuple_element<1, T>>>
         );
@@ -160,7 +160,7 @@ namespace ranges
                  defer::pair_like_convertible_from_gcc_bugs_<T, U, V>);
 
         template<typename R, typename I, typename S>
-        CPP_concept_fragment(range_convertible_to_frag_, (R, I, S),
+        CPP_concept_fragment(range_convertible_to_frag_, requires()(0) &&
             convertible_to_not_slicing_<iterator_t<R>, I> &&
             convertible_to<sentinel_t<R>, S>
         );

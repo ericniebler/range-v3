@@ -136,7 +136,7 @@ namespace ranges
     {
         // clang-format off
         template<typename Fun, typename ...Rngs>
-        CPP_concept_fragment(zippable_with_, (Fun, Rngs...),
+        CPP_concept_fragment(zippable_with_, requires()(0) &&
             invocable<Fun&, iterator_t<Rngs>...> &&
             invocable<Fun&, copy_tag, iterator_t<Rngs>...> &&
             invocable<Fun&, move_tag, iterator_t<Rngs>...>

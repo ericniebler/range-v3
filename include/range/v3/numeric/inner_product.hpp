@@ -37,7 +37,7 @@ namespace ranges
     // clang-format off
     template<typename I1, typename I2, typename T, typename BOp1, typename BOp2,
         typename P1, typename P2>
-    CPP_concept_fragment(inner_product_constraints_, (I1, I2, T, BOp1, BOp2, P1, P2),
+    CPP_concept_fragment(inner_product_constraints_, requires()(0) &&
         invocable<P1&, iter_value_t<I1>> &&
         invocable<P2&, iter_value_t<I2>> &&
         invocable<

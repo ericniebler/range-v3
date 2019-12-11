@@ -92,7 +92,7 @@ namespace ranges
         range<T> && range_impl_<T>;
 
     template<typename T, typename V>
-    CPP_concept_fragment(output_range_, (T, V),
+    CPP_concept_fragment(output_range_, requires()(0) &&
         output_iterator<iterator_t<T>, V>
     );
     template<typename T, typename V>
@@ -100,7 +100,7 @@ namespace ranges
         range<T> && CPP_fragment(ranges::output_range_, T, V);
 
     template<typename T>
-    CPP_concept_fragment(input_range_, (T),
+    CPP_concept_fragment(input_range_, requires()(0) &&
         input_iterator<iterator_t<T>>
     );
     template<typename T>
@@ -108,7 +108,7 @@ namespace ranges
         range<T> && CPP_fragment(ranges::input_range_, T);
 
     template<typename T>
-    CPP_concept_fragment(forward_range_, (T),
+    CPP_concept_fragment(forward_range_, requires()(0) &&
         forward_iterator<iterator_t<T>>
     );
     template<typename T>
@@ -116,7 +116,7 @@ namespace ranges
         input_range<T> && CPP_fragment(ranges::forward_range_, T);
 
     template<typename T>
-    CPP_concept_fragment(bidirectional_range_, (T),
+    CPP_concept_fragment(bidirectional_range_, requires()(0) &&
         bidirectional_iterator<iterator_t<T>>
     );
     template<typename T>
@@ -124,7 +124,7 @@ namespace ranges
         forward_range<T> && CPP_fragment(ranges::bidirectional_range_, T);
 
     template<typename T>
-    CPP_concept_fragment(random_access_range_, (T),
+    CPP_concept_fragment(random_access_range_, requires()(0) &&
         random_access_iterator<iterator_t<T>>
     );
 
@@ -146,7 +146,7 @@ namespace ranges
 
     // clang-format off
     template<typename T>
-    CPP_concept_fragment(contiguous_range_, (T),
+    CPP_concept_fragment(contiguous_range_, requires()(0) &&
         contiguous_iterator<iterator_t<T>> &&
         same_as<detail::data_t<T>, std::add_pointer_t<iter_reference_t<iterator_t<T>>>>
     );
@@ -156,7 +156,7 @@ namespace ranges
         random_access_range<T> && CPP_fragment(ranges::contiguous_range_, T);
 
     template<typename T>
-    CPP_concept_fragment(common_range_, (T),
+    CPP_concept_fragment(common_range_, requires()(0) &&
         same_as<iterator_t<T>, sentinel_t<T>>
     );
 
@@ -171,7 +171,7 @@ namespace ranges
     /// \endcond
 
     template<typename T>
-    CPP_concept_fragment(sized_range_, (T),
+    CPP_concept_fragment(sized_range_, requires()(0) &&
         detail::integer_like_<range_size_t<T>>
     );
     #define CPP_noop

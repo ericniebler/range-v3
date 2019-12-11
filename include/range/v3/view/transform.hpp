@@ -56,7 +56,7 @@ namespace ranges
 
         // clang-format off
         template<typename Fun, typename Rng>
-        CPP_concept_fragment(iter_transform_1_readable_, (Fun, Rng),
+        CPP_concept_fragment(iter_transform_1_readable_, requires()(0) &&
             regular_invocable<Fun &, iterator_t<Rng>> &&
             regular_invocable<Fun &, copy_tag, iterator_t<Rng>> &&
             regular_invocable<Fun &, move_tag, iterator_t<Rng>> &&
@@ -75,7 +75,7 @@ namespace ranges
             CPP_fragment(detail::iter_transform_1_readable_, Fun, Rng);
 
         template<typename Fun, typename Rng1, typename Rng2>
-        CPP_concept_fragment(iter_transform_2_readable_, (Fun, Rng1, Rng2),
+        CPP_concept_fragment(iter_transform_2_readable_, requires()(0) &&
             regular_invocable<Fun &, iterator_t<Rng1>, iterator_t<Rng2>> &&
             regular_invocable<Fun &, copy_tag, iterator_t<Rng1>, iterator_t<Rng2>> &&
             regular_invocable<Fun &, move_tag, iterator_t<Rng1>, iterator_t<Rng2>> &&
@@ -472,7 +472,7 @@ namespace ranges
         // of concepts changes
         // clang-format off
         template<typename Rng, typename Fun>
-        CPP_concept_fragment(transformable_range_, (Rng, Fun),
+        CPP_concept_fragment(transformable_range_, requires()(0) &&
             regular_invocable<Fun &, range_reference_t<Rng>> &&
             (!std::is_void<indirect_result_t<Fun &, iterator_t<Rng>>>::value)
         );
@@ -483,7 +483,7 @@ namespace ranges
             CPP_fragment(views::transformable_range_, Rng, Fun);
 
         template<typename Rng1, typename Rng2, typename Fun>
-        CPP_concept_fragment(transformable_ranges_, (Rng1, Rng2, Fun),
+        CPP_concept_fragment(transformable_ranges_, requires()(0) &&
             regular_invocable<Fun &, range_reference_t<Rng1>, range_reference_t<Rng2>> &&
             (!std::is_void<
                 indirect_result_t<Fun &, iterator_t<Rng1>, iterator_t<Rng2>>>::value)

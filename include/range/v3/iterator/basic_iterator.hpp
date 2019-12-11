@@ -342,7 +342,7 @@ namespace ranges
 
         // clang-format off
         template<typename C>
-        CPP_concept_fragment(cpp17_input_cursor_, (C),
+        CPP_concept_fragment(cpp17_input_cursor_, requires()(0) &&
             // Either it is not single-pass, or else we can create a
             // proxy for postfix increment.
             !range_access::single_pass_t<uncvref_t<C>>::value ||
@@ -357,7 +357,7 @@ namespace ranges
             CPP_fragment(cpp17_input_cursor_, C);
 
         template<typename C>
-        CPP_concept_fragment(cpp17_forward_cursor_, (C),
+        CPP_concept_fragment(cpp17_forward_cursor_, requires()(0) &&
             std::is_reference<cursor_reference_t<C>>::value
         );
 

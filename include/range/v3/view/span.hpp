@@ -118,7 +118,7 @@ namespace ranges
 
     // clang-format off
     template<typename Rng, typename T>
-    CPP_concept_fragment(span_compatible_range_, (Rng, T),
+    CPP_concept_fragment(span_compatible_range_, requires()(0) &&
         detail::is_convertible<detail::element_t<Rng>(*)[], T(*)[]>::value
     );
     template<typename Rng, typename T>

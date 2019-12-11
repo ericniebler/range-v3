@@ -200,7 +200,7 @@ namespace ranges
 
         // clang-format off
         template<typename Cont>
-        CPP_concept_fragment(has_allocator_type_, (Cont),
+        CPP_concept_fragment(has_allocator_type_, requires()(0) &&
             ranges::type<typename Cont::allocator_type>
         );
         template<typename Cont>
@@ -212,7 +212,7 @@ namespace ranges
             defer::range<Rng> && !defer::view_<Rng>;
 
         template<typename Rng, typename Cont>
-        CPP_concept_fragment(convertible_to_cont_impl_frag_, (Rng, Cont),
+        CPP_concept_fragment(convertible_to_cont_impl_frag_, requires()(0) &&
             constructible_from<range_value_t<Cont>, range_reference_t<Rng>> &&
             constructible_from<
                 Cont,
@@ -225,7 +225,7 @@ namespace ranges
             CPP_fragment(detail::convertible_to_cont_impl_frag_, Rng, Cont);
 
         template<typename Rng, typename Cont>
-        CPP_concept_fragment(convertible_to_cont_cont_impl_frag_, (Rng, Cont),
+        CPP_concept_fragment(convertible_to_cont_cont_impl_frag_, requires()(0) &&
                 range_and_not_view<range_value_t<Cont>> &&
                 // Test that each element of the input range can be ranges::to<>
                 // to the output container.

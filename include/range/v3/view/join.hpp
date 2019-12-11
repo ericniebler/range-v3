@@ -487,7 +487,7 @@ namespace ranges
         // of concepts changes
         // clang-format off
         template<typename Rng>
-        CPP_concept_fragment(joinable_range_, (Rng),
+        CPP_concept_fragment(joinable_range_, requires()(0) &&
             input_range<range_reference_t<Rng>> &&
             (std::is_reference<range_reference_t<Rng>>::value ||
                 view_<range_reference_t<Rng>>)
@@ -498,7 +498,7 @@ namespace ranges
             CPP_fragment(views::joinable_range_, Rng);
 
         template<typename Rng, typename ValRng>
-        CPP_concept_fragment(joinable_with_range_, (Rng, ValRng),
+        CPP_concept_fragment(joinable_with_range_, requires()(0) &&
             common_with<range_value_t<ValRng>, range_value_t<range_reference_t<Rng>>> &&
             semiregular<
                 common_type_t<

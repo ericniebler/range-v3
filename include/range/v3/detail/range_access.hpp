@@ -236,47 +236,75 @@ namespace ranges
             //   which perfectly-returns the contained cursor object and does not throw
             //   exceptions.
         template<typename T>
-        CPP_concept_bool has_cursor_next =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_cursor_next_,
+            requires(T & t)
             (
                 range_access::next(t)
-            );
+            )
+        );
+        template<typename T>
+        CPP_concept_bool has_cursor_next = CPP_fragment(detail::has_cursor_next_, T);
+
         template<typename S, typename C>
-        CPP_concept_bool sentinel_for_cursor =
-            CPP_requires ((S &)s, (C &)c) //
+        CPP_concept_fragment(sentinel_for_cursor_,
+            requires(S & s, C & c) //
             (
                 range_access::equal(c, s),
                 concepts::requires_<convertible_to<decltype(
                     range_access::equal(c, s)), bool>>
-            ) &&
-            semiregular<S> && cursor<C>;
+            )
+        );
+        template<typename S, typename C>
+        CPP_concept_bool sentinel_for_cursor =
+            semiregular<S> &&
+            cursor<C> &&
+            CPP_fragment(detail::sentinel_for_cursor_, S, C);
+
         template<typename T>
-        CPP_concept_bool readable_cursor =
-            CPP_requires ((T &)t) //
+        CPP_concept_fragment(readable_cursor_,
+            requires(T & t) //
             (
                 range_access::read(t)
-            );
+            )
+        );
         template<typename T>
-        CPP_concept_bool has_cursor_arrow =
-            CPP_requires ((T const &)t) //
+        CPP_concept_bool readable_cursor = CPP_fragment(detail::readable_cursor_, T);
+
+        template<typename T>
+        CPP_concept_fragment(has_cursor_arrow_,
+            requires(T const & t) //
             (
                 range_access::arrow(t)
-            );
+            )
+        );
+        template<typename T>
+        CPP_concept_bool has_cursor_arrow = CPP_fragment(detail::has_cursor_arrow_, T);
+
         template<typename T, typename U>
-        CPP_concept_bool writable_cursor =
-            CPP_requires ((T &)t, (U &&)u) //
+        CPP_concept_fragment(writable_cursor_,
+            requires(T & t, U && u) //
             (
                 range_access::write(t, CPP_fwd(u))
-            );
+            )
+        );
+        template<typename T, typename U>
+        CPP_concept_bool writable_cursor =
+            CPP_fragment(detail::writable_cursor_, T, U);
+
         template<typename S, typename C>
-        CPP_concept_bool sized_sentinel_for_cursor =
-            CPP_requires ((S &)s, (C &)c) //
+        CPP_concept_fragment(sized_sentinel_for_cursor_,
+            requires(S & s, C & c) //
             (
                 range_access::distance_to(c, s),
                 concepts::requires_<signed_integer_like_<decltype(
                     range_access::distance_to(c, s))>>
-            ) &&
-            sentinel_for_cursor<S, C>;
+            )
+        );
+        template<typename S, typename C>
+        CPP_concept_bool sized_sentinel_for_cursor =
+            sentinel_for_cursor<S, C> &&
+            CPP_fragment(detail::sized_sentinel_for_cursor_, S, C);
+
         template<typename T, typename U>
         CPP_concept_bool output_cursor =
             writable_cursor<T, U> && cursor<T>;

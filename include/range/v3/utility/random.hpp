@@ -77,7 +77,7 @@ namespace ranges
     /// @{
     // clang-format off
     template<typename Gen>
-    CPP_concept_fragment(uniform_random_bit_generator_, (Gen),
+    CPP_concept_fragment(uniform_random_bit_generator_, requires()(0) &&
         unsigned_integral<invoke_result_t<Gen &>> &&
         same_as<invoke_result_t<Gen &>, decltype(Gen::min())> &&
         same_as<invoke_result_t<Gen &>, decltype(Gen::max())>

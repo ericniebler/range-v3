@@ -86,7 +86,7 @@ namespace ranges
         and_v<range<Views const>...>;
 
     template<typename IsConst, typename...Views>
-    CPP_concept_fragment(cartesian_produce_view_can_size_, (IsConst, Views...),
+    CPP_concept_fragment(cartesian_produce_view_can_size_, requires()(0) &&
         and_v<common_with<std::uintmax_t, range_size_t<meta::const_if<IsConst, Views>>>...>
     );
     template<typename IsConst, typename...Views>
@@ -95,7 +95,7 @@ namespace ranges
         CPP_fragment(ranges::cartesian_produce_view_can_size_, IsConst, Views...);
 
     template<typename IsConst, typename...Views>
-    CPP_concept_fragment(cartesian_produce_view_can_distance_, (IsConst, Views...),
+    CPP_concept_fragment(cartesian_produce_view_can_distance_, requires()(0) &&
         and_v<sized_sentinel_for<
             iterator_t<meta::const_if<IsConst, Views>>,
             iterator_t<meta::const_if<IsConst, Views>>>...>
@@ -106,7 +106,7 @@ namespace ranges
         CPP_fragment(ranges::cartesian_produce_view_can_distance_, IsConst, Views...);
 
     template<typename IsConst, typename...Views>
-    CPP_concept_fragment(cartesian_produce_view_can_random_, (IsConst, Views...),
+    CPP_concept_fragment(cartesian_produce_view_can_random_, requires()(0) &&
         and_v<random_access_iterator<iterator_t<meta::const_if<IsConst, Views>>>...>
     );
     template<typename IsConst, typename...Views>
@@ -115,7 +115,7 @@ namespace ranges
         CPP_fragment(ranges::cartesian_produce_view_can_random_, IsConst, Views...);
 
     template<typename IsConst, typename...Views>
-    CPP_concept_fragment(cartesian_produce_view_can_bidi_, (IsConst, Views...),
+    CPP_concept_fragment(cartesian_produce_view_can_bidi_, requires()(0) &&
         and_v<common_range<meta::const_if<IsConst, Views>>...,
             bidirectional_iterator<iterator_t<meta::const_if<IsConst, Views>>>...>
     );
