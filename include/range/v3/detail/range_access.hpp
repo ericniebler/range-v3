@@ -316,28 +316,38 @@ namespace ranges
             input_cursor<T> && sentinel_for_cursor<T, T> &&
             !range_access::single_pass_t<uncvref_t<T>>::value;
         template<typename T>
-        CPP_concept_bool bidirectional_cursor =
-            CPP_requires ((T &)t) //
+        CPP_concept_fragment(bidirectional_cursor_,
+            requires(T & t) //
             (
                 range_access::prev(t)
-            ) &&
-            forward_cursor<T>;
+            ));
         template<typename T>
-        CPP_concept_bool random_access_cursor =
-            CPP_requires ((T &)t) //
+        CPP_concept_bool bidirectional_cursor =
+            forward_cursor<T> &&
+            CPP_fragment(detail::bidirectional_cursor_, T);
+        template<typename T>
+        CPP_concept_fragment(random_access_cursor_,
+            requires(T & t) //
             (
                 range_access::advance(t, range_access::distance_to(t, t))
-            ) &&
-            bidirectional_cursor<T> && sized_sentinel_for_cursor<T, T>;
+            ));
         template<typename T>
-        CPP_concept_bool contiguous_cursor =
-            CPP_requires ((T &)t) //
+        CPP_concept_bool random_access_cursor =
+            bidirectional_cursor<T> && //
+            sized_sentinel_for_cursor<T, T> && //
+            CPP_fragment(detail::random_access_cursor_, T);
+        template<typename T>
+        CPP_concept_fragment(contiguous_cursor_,
+            requires(T & t) //
             (
                 concepts::requires_<std::is_lvalue_reference<
                     decltype(range_access::read(t))>::value>
-            ) &&
-            random_access_cursor<T> &&
-            range_access::contiguous_t<uncvref_t<T>>::value;
+            ));
+        template<typename T>
+        CPP_concept_bool contiguous_cursor =
+            random_access_cursor<T> && //
+            range_access::contiguous_t<uncvref_t<T>>::value && //
+            CPP_fragment(detail::contiguous_cursor_, T);
         // clang-format on
 
         template<typename Cur, bool IsReadable>

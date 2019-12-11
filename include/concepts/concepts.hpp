@@ -263,19 +263,20 @@
 #define CPP_defer(CONCEPT, ...)\
     CPP_defer_(CONCEPT, CPP_PP_FOR_EACH(CPP_type_, __VA_ARGS__))
 #define CPP_concept_fragment(NAME, ...) \
-    auto CPP_PP_CAT(NAME, CPP_concept_fragment_impl_) \
-        CPP_PP_CAT(CPP_concept_fragment_reqs_, __VA_ARGS__)> {} \
+    auto NAME ## CPP_concept_fragment_impl_ \
+        CPP_concept_fragment_reqs_ ## __VA_ARGS__> {} \
     template<typename... As>\
-    char CPP_PP_CAT(NAME, CPP_concept_fragment_)(\
-        decltype(&CPP_PP_CAT(NAME, CPP_concept_fragment_impl_)<As...>, 0)); \
-    template<typename... As>\
-    char (&CPP_PP_CAT(NAME, CPP_concept_fragment_)(long))[2] \
+    char NAME ## CPP_concept_fragment_(\
+        ::concepts::detail::tag<As...> *, \
+        decltype(&NAME ## CPP_concept_fragment_impl_<As...>, 0)); \
+    char (&NAME ## CPP_concept_fragment_(void*, long))[2] \
     /**/
 #define CPP_concept_fragment_reqs_requires(...) \
     (__VA_ARGS__) -> std::enable_if_t<CPP_concept_fragment_reqs_2_
 #define CPP_concept_fragment_reqs_2_(...) !(decltype(__VA_ARGS__, void(), false){})
 #define CPP_fragment(NAME, ...) \
-    (1u==sizeof(CPP_PP_CAT(NAME, CPP_concept_fragment_)<__VA_ARGS__>(0))) \
+    (1u==sizeof(NAME ## CPP_concept_fragment_(\
+        static_cast<::concepts::detail::tag<__VA_ARGS__> *>(nullptr), 0))) \
     /**/
 #endif
 
@@ -893,14 +894,17 @@ namespace concepts
         CPP_DIAGNOSTIC_IGNORE_FLOAT_EQUAL
 
         template<typename T, typename U>
-        CPP_concept_bool weakly_equality_comparable_with_ =
-            CPP_requires ((detail::as_cref_t<T>) t, (detail::as_cref_t<U>) u) //
+        CPP_concept_fragment(weakly_equality_comparable_with_frag_,
+            requires(detail::as_cref_t<T> t, detail::as_cref_t<U> u) //
             (
                 (t == u) ? 1 : 0,
                 (t != u) ? 1 : 0,
                 (u == t) ? 1 : 0,
                 (u != t) ? 1 : 0
-            );
+            ));
+        template<typename T, typename U>
+        CPP_concept_bool weakly_equality_comparable_with_ =
+            CPP_fragment(detail::weakly_equality_comparable_with_frag_, T, U);
 
         CPP_DIAGNOSTIC_POP
     } // namespace detail
@@ -952,11 +956,15 @@ namespace concepts
             std::is_convertible<std::add_rvalue_reference_t<From>, To>::value;
 
         template<typename From, typename To>
-        CPP_concept_bool explicitly_convertible_to =
-            CPP_requires_ ((CPP_type(From)(*)()) from) //
+        CPP_concept_fragment(explicitly_convertible_to_,
+            requires(From(*from)()) //
             (
                 static_cast<To>(from())
-            );
+            )
+        );
+        template<typename From, typename To>
+        CPP_concept_bool explicitly_convertible_to =
+            CPP_fragment(concepts::explicitly_convertible_to_, From, To);
         /// \endcond
 
         template<typename From, typename To>
@@ -1018,31 +1026,40 @@ namespace concepts
             !signed_integral<T>;
 
         template<typename T, typename U>
-        CPP_concept_bool assignable_from =
-            std::is_lvalue_reference<T>::value &&
-            CPP_requires ((T) t, (U &&) u) //
+        CPP_concept_fragment(assignable_from_,
+            requires(T t, U && u) //
             (
                 t = (U &&) u,
                 requires_<same_as<T, decltype(t = (U &&) u)>>
-            );
+            ));
+        template<typename T, typename U>
+        CPP_concept_bool assignable_from =
+            std::is_lvalue_reference<T>::value &&
+            CPP_fragment(defs::assignable_from_, T, U);
 
         template<typename T>
-        CPP_concept_bool swappable =
-            CPP_requires ((T &) t, (T &) u) //
+        CPP_concept_fragment(swappable_,
+            requires(T & t, T & u) //
             (
                 concepts::swap(t, u)
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool swappable =
+            CPP_fragment(defs::swappable_, T);
 
         template<typename T, typename U>
-        CPP_concept_bool swappable_with =
-            common_reference_with<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
-            CPP_requires ((T &&) t, (U &&) u) //
+        CPP_concept_fragment(swappable_with_,
+            requires(T && t, U && u) //
             (
                 concepts::swap(CPP_fwd(t), CPP_fwd(t)),
                 concepts::swap(CPP_fwd(u), CPP_fwd(u)),
                 concepts::swap(CPP_fwd(u), CPP_fwd(t)),
                 concepts::swap(CPP_fwd(t), CPP_fwd(u))
-            );
+            ));
+        template<typename T, typename U>
+        CPP_concept_bool swappable_with =
+            common_reference_with<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
+            CPP_fragment(defs::swappable_with_, T, U);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Comparison concepts
@@ -1066,24 +1083,22 @@ namespace concepts
             CPP_fragment(concepts::equality_comparable_with_, T, U);
 
         template<typename T>
-        CPP_concept_bool totally_ordered =
-            equality_comparable<T> &&
-            CPP_requires ((detail::as_cref_t<T>) t, (detail::as_cref_t<T>) u) //
+        CPP_concept_fragment(totally_ordered_,
+            requires(detail::as_cref_t<T> t, detail::as_cref_t<T> u) //
             (
                 t < u ? 1 : 0,
                 t > u ? 1 : 0,
                 u <= t ? 1 : 0,
                 u >= t ? 1 : 0
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool totally_ordered =
+            equality_comparable<T> &&
+            CPP_fragment(defs::totally_ordered_, T);
 
         template<typename T, typename U>
-        CPP_concept_fragment(totally_ordered_with_, requires()(0) &&
-            totally_ordered<
-                common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
-        );
-        template<typename T, typename U>
-        CPP_concept_bool totally_ordered_with =
-            CPP_requires ((detail::as_cref_t<T>) t, (detail::as_cref_t<U>) u) //
+        CPP_concept_fragment(totally_ordered_with_,
+            requires(detail::as_cref_t<T> t, detail::as_cref_t<U> u) //
             (
                 t < u ? 1 : 0,
                 t > u ? 1 : 0,
@@ -1094,6 +1109,11 @@ namespace concepts
                 u <= t ? 1 : 0,
                 u >= t ? 1 : 0
             ) &&
+            totally_ordered<
+                common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
+        );
+        template<typename T, typename U>
+        CPP_concept_bool totally_ordered_with =
             totally_ordered<T> &&
             totally_ordered<U> &&
             equality_comparable_with<T, U> &&
