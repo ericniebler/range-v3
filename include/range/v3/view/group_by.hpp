@@ -71,8 +71,8 @@ namespace ranges
             {
                 iterator_t<CRng> first_;
                 semiregular_box_ref_or_val_t<Fun, IsConst> fun_;
-                mutable bool first_invokation_{true};
-                bool operator()(range_reference_t<CRng> r) const
+                bool first_invokation_{true};
+                bool operator()(range_reference_t<CRng> r)
                 {
                     if (first_invokation_) {
                         first_invokation_ = false;
