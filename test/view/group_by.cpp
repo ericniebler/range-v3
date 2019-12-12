@@ -109,11 +109,11 @@ int main()
     }
 
     {
-        std::vector<int> v = { 0, 1, 2 };
-        auto rng = views::cycle(v) | views::take(6) | views::group_by(std::less<>{});
+        std::vector<int> v4 = { 0, 1, 2 };
+        auto rng = views::cycle(v4) | views::take(6) | views::group_by(std::less<>{});
         CHECK(distance(rng) == 2);
-        check_equal(*rng.begin(), {0, 1, 2});
-        check_equal(*next(rng.begin()), {0, 1, 2});
+        check_equal(*rng.begin(), v4);
+        check_equal(*next(rng.begin()), v4);
     }
 
     return test_result();
