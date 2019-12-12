@@ -30,9 +30,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/view/concat.hpp>
 #include <range/v3/view/facade.hpp>
-#include <range/v3/view/single.hpp>
 #include <range/v3/view/subrange.hpp>
 #include <range/v3/view/take_while.hpp>
 #include <range/v3/view/view.hpp>
@@ -73,30 +71,32 @@ namespace ranges
             {
                 iterator_t<CRng> first_;
                 semiregular_box_ref_or_val_t<Fun, IsConst> fun_;
+                mutable bool first_invokation_{true};
                 bool operator()(range_reference_t<CRng> r) const
                 {
+                    if (first_invokation_) {
+                        first_invokation_ = false;
+                        return true;
+                    }
                     return invoke(fun_, *first_, r);
                 }
             };
-            auto read() const
-            {
-                auto first = cur_;
-                return views::concat(
-                        views::single(*cur_),
 #ifdef RANGES_WORKAROUND_MSVC_787074
-                        take_while_view<subrange<iterator_t<meta::const_if_c<IsConst, Rng>>,
-                                                 sentinel_t<meta::const_if_c<IsConst, Rng>>>,
-                                        pred>
+            template<bool Const = IsConst>
+            auto read() const
+                -> take_while_view<subrange<iterator_t<meta::const_if_c<Const, Rng>>,
+                                            sentinel_t<meta::const_if_c<Const, Rng>>>,
+                                   pred>
 #else  // ^^^ workaround / no workaround vvv
-                        take_while_view<subrange<iterator_t<CRng>, sentinel_t<CRng>>, pred>
+            auto read() const
+                -> take_while_view<subrange<iterator_t<CRng>, sentinel_t<CRng>>, pred>
 #endif // RANGES_WORKAROUND_MSVC_787074
-                        {{++first, last_}, {cur_, fun_}}
-                    );
+            {
+                return {{cur_, last_}, {cur_, fun_}};
             }
             void next()
             {
-                auto first = cur_;
-                cur_ = find_if_not(++first, last_, pred{cur_, fun_});
+                cur_ = find_if_not(cur_, last_, pred{cur_, fun_});
             }
             bool equal(default_sentinel_t) const
             {

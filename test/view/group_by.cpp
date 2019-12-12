@@ -13,8 +13,10 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/view/counted.hpp>
+#include <range/v3/view/cycle.hpp>
 #include <range/v3/view/group_by.hpp>
 #include <range/v3/view/remove_if.hpp>
+#include <range/v3/view/take.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -104,6 +106,14 @@ int main()
         check_equal(*next(rng.begin()), {0, 1, 2, 3, 4, 5, 6});
         check_equal(*next(rng.begin(), 2), {0, 1, 2, 3});
         check_equal(*next(rng.begin(), 3), {0});
+    }
+
+    {
+        std::vector<int> v = { 0, 1, 2 };
+        auto rng = views::cycle(v) | views::take(6) | views::group_by(std::less<>{});
+        CHECK(distance(rng) == 2);
+        check_equal(*rng.begin(), {0, 1, 2});
+        check_equal(*next(rng.begin()), {0, 1, 2});
     }
 
     return test_result();
