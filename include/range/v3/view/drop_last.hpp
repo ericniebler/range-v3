@@ -91,9 +91,9 @@ namespace ranges
             {
                 // keep range bound
                 // Sized Bidi O(N)
-                return (random_access_range<Rng> && view_<Rng> && sized_range<Rng> &&
+                return (random_access_range<Rng> && sized_range<Rng> &&
                         view_<Rng>) ||
-                               (bidirectional_range<Rng> && view_<Rng> &&
+                               (bidirectional_range<Rng> &&
                                 common_range<Rng> && view_<Rng>)    //
                            ? mode_enum::bidi                        //
                            : sized_range<Rng> && view_<Rng>         //
@@ -131,8 +131,8 @@ namespace ranges
                            : range_cardinality<Rng>::value> // finite at best
     {
         CPP_assert(
-            (random_access_range<Rng> && view_<Rng> && sized_range<Rng> && view_<Rng>) ||
-            (bidirectional_range<Rng> && view_<Rng> && common_range<Rng> && view_<Rng>));
+            (random_access_range<Rng> && sized_range<Rng> && view_<Rng>) ||
+            (bidirectional_range<Rng> && common_range<Rng> && view_<Rng>));
 
     private:
         friend range_access;
