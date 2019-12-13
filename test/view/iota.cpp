@@ -214,6 +214,15 @@ int main()
         CHECK((i - cstr2.begin()) == 4);
     }
 
+
+    {
+       // test step
+       ::check_equal(views::iota(0, 10, 2), {0, 2, 4, 6, 8});
+       ::check_equal(views::iota(5, 0, -1), {5, 4, 3, 2, 1});
+       ::check_equal(size(views::iota(1, 9, 3)), 3U);
+       ::check_equal(size(views::iota(9, 1, -3)), 3U);
+    }
+
     {  // test views::indices/closed_indices
         ::check_equal(views::indices | views::take(10), std::initializer_list<std::size_t>{0,1,2,3,4,5,6,7,8,9});
 

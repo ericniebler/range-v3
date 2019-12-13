@@ -111,6 +111,11 @@ namespace ranges
                 // concepts::requires_<convertible_to<decltype(i + n), I>>,
                 // concepts::requires_<convertible_to<decltype(n + i), I>>
             );
+
+        template<typename From, typename To>
+        CPP_concept_bool iota_stridable_ =
+            advanceable_<From> && totally_ordered_with<To, From>;
+
         // clang-format on
 
         template<typename I>
@@ -310,10 +315,45 @@ namespace ranges
                               ? finite
                               : unknown>
     {
+
     private:
+        struct step
+        {
+            detail::iota_difference_t<From> value() const
+            {
+                return value_;
+            }
+
+            constexpr operator detail::iota_difference_t<From>() const
+            {
+                return value();
+            }
+
+            constexpr step() = default;
+            constexpr step(detail::iota_difference_t<From> i)
+              : value_(i)
+            {}
+
+            struct empty
+            {
+                constexpr empty() = default;
+                constexpr empty(detail::iota_difference_t<From>)
+                {}
+                constexpr operator detail::iota_difference_t<From>() const
+                {
+                    return 1;
+                }
+            };
+            RANGES_NO_UNIQUE_ADDRESS
+            std::conditional_t<detail::iota_stridable_<From, To>,
+                               detail::iota_difference_t<From>, empty>
+                value_{1};
+        };
+
         friend range_access;
         From from_ = From();
         RANGES_NO_UNIQUE_ADDRESS To to_ = To();
+        RANGES_NO_UNIQUE_ADDRESS step step_;
 
         struct cursor;
         struct sentinel
@@ -336,18 +376,35 @@ namespace ranges
         private:
             friend range_access;
             From from_;
+            step step_;
 
             From read() const
             {
                 return from_;
             }
-            void next()
+            CPP_member
+            auto next() -> CPP_ret(void)( //
+                requires(!detail::iota_stridable_<From, To>))
             {
                 ++from_;
             }
-            bool equal(sentinel const & that) const
+            CPP_member
+            auto next() -> CPP_ret(void)( //
+                requires detail::iota_stridable_<From, To>)
+            {
+                detail::iota_advance_(from_, step_.value());
+            }
+            CPP_member
+            auto equal(sentinel const & that) const -> CPP_ret(bool)( //
+                requires(!detail::iota_stridable_<From, To>))
             {
                 return from_ == that.to_;
+            }
+            CPP_member
+            auto equal(sentinel const & that) const -> CPP_ret(bool)( //
+                requires detail::iota_stridable_<From, To>)
+            {
+                return detail::iota_distance_(from_, that.to_) >= std::abs(step_) ;
             }
             CPP_member
             auto equal(cursor const & that) const -> CPP_ret(bool)( //
@@ -357,15 +414,22 @@ namespace ranges
             }
             CPP_member
             auto prev() -> CPP_ret(void)( //
-                requires detail::decrementable_<From>)
+                requires(detail::decrementable_<From> &&
+                         (!detail::iota_stridable_<From, To>)))
             {
                 --from_;
+            }
+            CPP_member
+            auto prev() -> CPP_ret(void)( //
+                requires detail::iota_stridable_<From, To>)
+            {
+                detail::iota_advance_(from_, -step_.value());
             }
             CPP_member
             auto advance(difference_type n) -> CPP_ret(void)( //
                 requires detail::advanceable_<From>)
             {
-                detail::iota_advance_(from_, n);
+                detail::iota_advance_(from_, n * step_);
             }
             // Not to spec: TODO the relational operators will effectively be constrained
             // with Advanceable, but they should be constrained with totally_ordered.
@@ -374,39 +438,53 @@ namespace ranges
             auto distance_to(cursor const & that) const -> CPP_ret(difference_type)( //
                 requires detail::advanceable_<From>)
             {
-                return detail::iota_distance_(from_, that.from_);
+                const auto d = detail::iota_distance_(from_, that.from_);
+                return (d / step_.value()) + (d % step_.value() ? 1 : 0);
             }
             // Extension: see https://github.com/ericniebler/stl2/issues/613
             CPP_member
             auto distance_to(sentinel const & that) const -> CPP_ret(difference_type)( //
                 requires sized_sentinel_for<To, From>)
             {
-                return that.to_ - from_;
+                const auto d = that.to_ - from_;
+                return (d / step_.value()) + (d % step_.value() ? 1 : 0);
             }
 
         public:
             cursor() = default;
-            constexpr explicit cursor(From from)
+            constexpr explicit cursor(From from, step step)
               : from_(std::move(from))
+              , step_(std::move(step))
             {}
         };
         cursor begin_cursor() const
         {
-            return cursor{from_};
+            return cursor{from_, step_};
         }
         CPP_member
-        auto CPP_fun(end_cursor)()(const requires(same_as<To, unreachable_sentinel_t>))
+        auto CPP_fun(end_cursor)()(const requires same_as<To, unreachable_sentinel_t>)
         {
             return unreachable;
         }
         CPP_member
-        auto CPP_fun(end_cursor)()(const requires(!same_as<To, unreachable_sentinel_t>))
+        auto CPP_fun(end_cursor)()(const requires(!same_as<To, unreachable_sentinel_t> &&
+                                                  !same_as<From, To>))
         {
-            return detail::if_then_t<same_as<From, To>, cursor, sentinel>{to_};
+            return sentinel{to_};
+        }
+        CPP_member
+        auto CPP_fun(end_cursor)()(const requires same_as<From, To>)
+        {
+            return cursor{to_, step_};
         }
         constexpr void check_bounds_(std::true_type)
         {
-            RANGES_EXPECT(from_ <= to_);
+
+            RANGES_EXPECT(step_.value() != 0);
+            if(step_.value() > 0)
+                RANGES_EXPECT(from_ <= to_);
+            else
+                RANGES_EXPECT(from_ >= to_);
         }
         constexpr void check_bounds_(std::false_type)
         {}
@@ -418,10 +496,23 @@ namespace ranges
             iota_view() = default;
         constexpr explicit iota_view(From from)
           : from_(std::move(from))
+          , step_(1)
         {}
         constexpr iota_view(meta::id_t<From> from, meta::id_t<To> to)
           : from_(std::move(from))
           , to_(std::move(to))
+          , step_(1)
+        {
+            check_bounds_(meta::bool_<totally_ordered_with<From, To>>{});
+        }
+
+        CPP_member
+        constexpr CPP_ctor(iota_view)(meta::id_t<From> from, meta::id_t<To> to,
+                                      detail::iota_difference_t<From> step)(
+            requires detail::iota_stridable_<From, To>)
+          : from_(std::move(from))
+          , to_(std::move(to))
+          , step_(std::move(step))
         {
             check_bounds_(meta::bool_<totally_ordered_with<From, To>>{});
         }
@@ -457,6 +548,13 @@ namespace ranges
                  std::is_signed<From>::value == std::is_signed<To>::value))
             {
                 return {std::move(from), std::move(to)};
+            }
+            template<typename From, typename To>
+            auto operator()(From from, To to, detail::iota_difference_t<To> step) const
+                -> CPP_ret(iota_view<From, To>)( //
+                    requires semiregular<To> && detail::iota_stridable_<From, To>)
+            {
+                return {std::move(from), std::move(to), std::move(step)};
             }
         };
 
