@@ -66,7 +66,7 @@ namespace ranges
         CPP_concept_fragment(can_push_back_frag_,
             requires(Rng && rng, T && t) //
             (
-                push_back(rng, CPP_fwd(t))
+                push_back(rng, (T &&) t)
             )
         );
         template<typename Rng, typename T>

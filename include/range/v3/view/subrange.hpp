@@ -62,18 +62,17 @@ namespace ranges
                              std::remove_pointer_t<decay_t<To>>>));
 
         template<typename T>
-        CPP_concept_bool pair_like_gcc_bugs_3_ =
-            CPP_requires((T) t, (tuple_element_fun_t<0, T>) p0,
-                                (tuple_element_fun_t<1, T>) p1)
+        CPP_concept_fragment(pair_like_gcc_bugs_3_,
+            requires(T t, tuple_element_fun_t<0, T> p0, tuple_element_fun_t<1, T> p1)
             (
                 p0( get<0>(t) ),
                 p1( get<1>(t) )
-            );
+            ));
 
         template<typename T>
         CPP_concept_bool pair_like_gcc_bugs_2_ =
             derived_from<std::tuple_size<T>, meta::size_t<2>> &&
-            pair_like_gcc_bugs_3_<T>;
+            CPP_fragment(detail::pair_like_gcc_bugs_3_, T);
 
         namespace defer
         {
@@ -107,12 +106,15 @@ namespace ranges
         }
 
         template<typename T>
-        CPP_concept_bool get_first_and_second_ =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(_get_first_and_second_,
+            requires(T & t) //
             (
                 get<0>(t),
                 get<1>(t)
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool get_first_and_second_ =
+            CPP_fragment(detail::_get_first_and_second_, T);
 
         namespace defer
         {

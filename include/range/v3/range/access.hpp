@@ -71,18 +71,24 @@ namespace ranges
 
         // clang-format off
         template<typename T>
-        CPP_concept_bool has_member_begin =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_member_begin_,
+            requires(T & t) //
             (
                 _begin_::is_iterator(t.begin())
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool has_member_begin =
+            CPP_fragment(_begin_::has_member_begin_, T);
 
         template<typename T>
-        CPP_concept_bool has_non_member_begin =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_non_member_begin_,
+            requires(T & t) //
             (
                 _begin_::is_iterator(begin(t))
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool has_non_member_begin =
+            CPP_fragment(_begin_::has_non_member_begin_, T);
         // clang-format on
 
         struct fn
@@ -198,18 +204,24 @@ namespace ranges
 
         // clang-format off
         template<typename T>
-        CPP_concept_bool has_member_end =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_member_end_,
+            requires(T & t) //
             (
                 _end_::_is_sentinel(t.end(), ranges::begin(t))
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool has_member_end =
+            CPP_fragment(_end_::has_member_end_, T);
 
         template<typename T>
-        CPP_concept_bool has_non_member_end =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_non_member_end_,
+            requires(T & t) //
             (
                 _end_::_is_sentinel(end(t), ranges::begin(t))
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool has_non_member_end =
+            CPP_fragment(_end_::has_non_member_end_, T);
         // clang-format on
 
         struct fn
@@ -378,31 +390,40 @@ namespace ranges
 
         // clang-format off
         template<typename T>
-        CPP_concept_bool has_member_rbegin =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_member_rbegin_,
+            requires(T & t) //
             (
                 _begin_::is_iterator(t.rbegin())
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool has_member_rbegin =
+            CPP_fragment(_rbegin_::has_member_rbegin_, T);
 
         template<typename T>
-        CPP_concept_bool has_non_member_rbegin =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_non_member_rbegin_,
+            requires(T & t) //
             (
                 _begin_::is_iterator(rbegin(t))
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool has_non_member_rbegin =
+            CPP_fragment(_rbegin_::has_non_member_rbegin_, T);
 
         template<typename I>
         void _same_type(I, I);
 
         template<typename T>
-        CPP_concept_bool can_reverse_end =
-            CPP_requires ((T &&) t) //
+        CPP_concept_fragment(can_reverse_end_,
+            requires(T & t) //
             (
                 // make_reverse_iterator is constrained with
                 // bidirectional_iterator.
                 ranges::make_reverse_iterator(ranges::end(t)),
                 _rbegin_::_same_type(ranges::begin(t), ranges::end(t))
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool can_reverse_end =
+            CPP_fragment(_rbegin_::can_reverse_end_, T);
         // clang-format on
 
         struct fn
@@ -507,28 +528,37 @@ namespace ranges
 
         // clang-format off
         template<typename T>
-        CPP_concept_bool has_member_rend =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_member_rend_,
+            requires(T & t) //
             (
                 _end_::_is_sentinel(t.rend(), ranges::rbegin(t))
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool has_member_rend =
+            CPP_fragment(_rend_::has_member_rend_, T);
 
         template<typename T>
-        CPP_concept_bool has_non_member_rend =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_non_member_rend_,
+            requires(T & t) //
             (
                 _end_::_is_sentinel(rend(t), ranges::rbegin(t))
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool has_non_member_rend =
+            CPP_fragment(_rend_::has_non_member_rend_, T);
 
         template<typename T>
-        CPP_concept_bool can_reverse_begin =
-            CPP_requires ((T &&) t) //
+        CPP_concept_fragment(can_reverse_begin_,
+            requires(T & t) //
             (
                 // make_reverse_iterator is constrained with
                 // bidirectional_iterator.
                 ranges::make_reverse_iterator(ranges::begin(t)),
                 _rbegin_::_same_type(ranges::begin(t), ranges::end(t))
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool can_reverse_begin =
+            CPP_fragment(_rend_::can_reverse_begin_, T);
         // clang-format on
 
         struct fn

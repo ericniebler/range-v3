@@ -284,7 +284,7 @@ namespace ranges
         CPP_concept_fragment(writable_cursor_,
             requires(T & t, U && u) //
             (
-                range_access::write(t, CPP_fwd(u))
+                range_access::write(t, (U &&) u)
             )
         );
         template<typename T, typename U>

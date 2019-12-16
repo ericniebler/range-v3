@@ -1051,10 +1051,10 @@ namespace concepts
         CPP_concept_fragment(swappable_with_,
             requires(T && t, U && u) //
             (
-                concepts::swap(CPP_fwd(t), CPP_fwd(t)),
-                concepts::swap(CPP_fwd(u), CPP_fwd(u)),
-                concepts::swap(CPP_fwd(u), CPP_fwd(t)),
-                concepts::swap(CPP_fwd(t), CPP_fwd(u))
+                concepts::swap((T &&) t, (T &&) t),
+                concepts::swap((U &&) u, (U &&) u),
+                concepts::swap((U &&) u, (T &&) t),
+                concepts::swap((T &&) t, (U &&) u)
             ));
         template<typename T, typename U>
         CPP_concept_bool swappable_with =

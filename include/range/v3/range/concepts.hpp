@@ -76,12 +76,15 @@ namespace ranges
 
     // clang-format off
     template<typename T>
-    CPP_concept_bool range_impl_ =
-        CPP_requires ((T &&) t) //
+    CPP_concept_fragment(_range_impl_,
+        requires(T && t) //
         (
-            ranges::begin(CPP_fwd(t)), // not necessarily equality-preserving
-            ranges::end(CPP_fwd(t))
-        );
+            ranges::begin((T &&) t), // not necessarily equality-preserving
+            ranges::end((T &&) t)
+        ));
+    template<typename T>
+    CPP_concept_bool range_impl_ =
+        CPP_fragment(ranges::_range_impl_, T);
 
     template<typename T>
     CPP_concept_bool range =
@@ -171,18 +174,17 @@ namespace ranges
     /// \endcond
 
     template<typename T>
-    CPP_concept_fragment(sized_range_, requires()(0) &&
+    CPP_concept_fragment(sized_range_,
+        requires(T & t) //
+        (
+            ranges::size(t)
+        ) &&
         detail::integer_like_<range_size_t<T>>
     );
-    #define CPP_noop
     template<typename T>
     CPP_concept_bool sized_range =
         range<T> &&
         !disable_sized_range<uncvref_t<T>> &&
-        CPP_requires ((T &) t) //
-        (
-            ranges::size(t)
-        ) &&
         CPP_fragment(ranges::sized_range_, T);
     // clang-format on
 

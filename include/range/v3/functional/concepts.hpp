@@ -30,7 +30,7 @@ namespace ranges
     CPP_concept_fragment(invocable_,
         requires(Fun && fn) //
         (
-            invoke(CPP_fwd(fn), std::declval<Args>()...)
+            invoke((Fun &&) fn, std::declval<Args>()...)
         ));
     template<typename Fun, typename... Args>
     CPP_concept_bool invocable =
@@ -47,7 +47,7 @@ namespace ranges
         (
             concepts::requires_<
                 convertible_to<
-                    decltype(invoke(CPP_fwd(fn), std::declval<Args>()...)),
+                    decltype(invoke((Fun &&) fn, std::declval<Args>()...)),
                     bool>>
         ));
     template<typename Fun, typename... Args>

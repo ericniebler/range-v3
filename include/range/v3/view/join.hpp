@@ -114,15 +114,16 @@ namespace ranges
 
         // clang-format off
         template<typename I>
-        CPP_concept_bool has_member_arrow_ =
-            CPP_requires ((I) i) //
+        CPP_concept_fragment(has_member_arrow_,
+            requires(I i) //
             (
                 i.operator->()
-            );
+            ));
 
         template<typename I>
         CPP_concept_bool has_arrow_ =
-            input_iterator<I> && (std::is_pointer<I>::value || has_member_arrow_<I>);
+            input_iterator<I> &&
+            (std::is_pointer<I>::value || CPP_fragment(detail::has_member_arrow_, I));
         // clang-format on
     } // namespace detail
     /// \endcond
