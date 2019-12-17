@@ -97,9 +97,9 @@ int main()
     }
 
     {
-        std::vector<int> v{1, 2, 3, 4, 5};
+        std::vector<int> v3{1, 2, 3, 4, 5};
         int count_invoc = 0;
-        auto rng = ranges::view::group_by(v, [&](int, int) {
+        auto rng = ranges::views::group_by(v3, [&](int, int) {
             ++count_invoc;
             return false;
         });
