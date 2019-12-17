@@ -89,13 +89,12 @@ namespace ranges
             };
 #ifdef RANGES_WORKAROUND_MSVC_787074
             template<bool Const = IsConst>
-            auto read() const -> subrange<iterator_t<meta::const_if_c<Const, Rng>>,
-                                          sentinel_t<meta::const_if_c<Const, Rng>>>
+            auto read() const -> subrange<iterator_t<meta::const_if_c<Const, Rng>>>
 #else  // ^^^ workaround / no workaround vvv
-            auto read() const
+            auto read() const -> subrange<iterator_t<CRng>>
 #endif // RANGES_WORKAROUND_MSVC_787074
             {
-                return subrange{cur_, local_last_};
+                return {cur_, local_last_};
             }
             void next()
             {
