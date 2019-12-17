@@ -66,6 +66,7 @@ namespace ranges
             iterator_t<CRng> cur_;
             sentinel_t<CRng> last_;
             semiregular_box_ref_or_val_t<Fun, IsConst> fun_;
+            iterator_t<CRng> local_last_;
 
             struct mixin : basic_mixin<cursor>
             {
@@ -88,21 +89,26 @@ namespace ranges
             };
 #ifdef RANGES_WORKAROUND_MSVC_787074
             template<bool Const = IsConst>
-            auto read() const
-                -> take_while_view<subrange<iterator_t<meta::const_if_c<Const, Rng>>,
-                                            sentinel_t<meta::const_if_c<Const, Rng>>>,
-                                   pred>
+            auto read() const -> subrange<iterator_t<meta::const_if_c<Const, Rng>>,
+                                          sentinel_t<meta::const_if_c<Const, Rng>>>
 #else  // ^^^ workaround / no workaround vvv
             auto read() const
-                -> take_while_view<subrange<iterator_t<CRng>, sentinel_t<CRng>>, pred>
 #endif // RANGES_WORKAROUND_MSVC_787074
             {
-                return {{cur_, last_}, {cur_, fun_}};
+                return subrange{cur_, local_last_};
             }
             void next()
             {
-                cur_ = find_if_not(cur_, last_, pred{cur_, fun_});
+                cur_ = local_last_;
+                local_last_ = next_local();
             }
+            iterator_t<CRng> next_local()
+            {
+                return cur_ != last_
+                           ? find_if_not(ranges::next(cur_), last_, pred{cur_, fun_})
+                           : cur_;
+            }
+
             bool equal(default_sentinel_t) const
             {
                 return cur_ == last_;
@@ -116,6 +122,7 @@ namespace ranges
               : cur_(first)
               , last_(last)
               , fun_(fun)
+              , local_last_(next_local())
             {}
 
         public:

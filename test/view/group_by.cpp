@@ -96,5 +96,25 @@ int main()
         CHECK(distance(rng0) == 4);
     }
 
+    {
+        std::vector<int> v{1, 2, 3, 4, 5};
+        int count_invoc = 0;
+        auto rng = ranges::view::group_by(v, [&](int, int) {
+            ++count_invoc;
+            return false;
+        });
+
+        CHECK(distance(rng) == 5);
+        CHECK(count_invoc == 4);
+
+        auto it = rng.begin();
+        check_equal(*it, {1});
+        check_equal(*++it, {2});
+        check_equal(*++it, {3});
+        check_equal(*++it, {4});
+        check_equal(*++it, {5});
+        CHECK(count_invoc == 8);
+    }
+
     return test_result();
 }
