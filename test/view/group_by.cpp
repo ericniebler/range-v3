@@ -113,7 +113,8 @@ int main()
         check_equal(*++it, {3});
         check_equal(*++it, {4});
         check_equal(*++it, {5});
-        CHECK(count_invoc == 8);
+        // 7, not 8, because caching in begin()
+        CHECK(count_invoc == 7);
     }
 
     return test_result();
