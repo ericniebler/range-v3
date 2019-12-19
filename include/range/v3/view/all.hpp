@@ -55,7 +55,7 @@ namespace ranges
                 return ranges::views::ref(t);
             }
 
-            /// Not a view and not an lvalue? If it's a forwarding_range_, then
+            /// Not a view and not an lvalue? If it's a safe_range, then
             /// return a subrange holding the range's begin/end.
             template<typename T>
             static constexpr auto from_range_(T && t, std::false_type, std::false_type,
@@ -71,7 +71,7 @@ namespace ranges
                 return all_fn::from_range_(static_cast<T &&>(t),
                                            meta::bool_<view_<uncvref_t<T>>>{},
                                            std::is_lvalue_reference<T>{},
-                                           meta::bool_<forwarding_range_<T>>{});
+                                           meta::bool_<safe_range<T>>{});
             }
 
             template<typename T>
