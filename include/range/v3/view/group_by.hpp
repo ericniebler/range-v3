@@ -54,9 +54,19 @@ namespace ranges
     private:
         friend range_access;
         Rng rng_;
-        // cached version of the end of the first subrange
-        detail::non_propagating_cache<iterator_t<Rng>> next_cur_;
+        // cached version of the end of the first subrange / start of the second subrange
+        detail::non_propagating_cache<iterator_t<Rng>> second_;
         semiregular_box_t<Fun> fun_;
+
+        struct pred
+        {
+            iterator_t<Rng> first_;
+            semiregular_box_ref_or_val_t<Fun, false> fun_;
+            bool operator()(range_reference_t<Rng> r) const
+            {
+                return invoke(fun_, *first_, r);
+            }
+        };
 
         struct cursor
         {
@@ -64,7 +74,7 @@ namespace ranges
             friend range_access;
             friend group_by_view;
             iterator_t<Rng> cur_;
-            iterator_t<Rng> next_cur_;
+            iterator_t<Rng> second_;
             sentinel_t<Rng> last_;
             semiregular_box_ref_or_val_t<Fun, false> fun_;
 
@@ -78,25 +88,16 @@ namespace ranges
                 }
             };
 
-            struct pred
-            {
-                iterator_t<Rng> first_;
-                semiregular_box_ref_or_val_t<Fun, false> fun_;
-                bool operator()(range_reference_t<Rng> r) const
-                {
-                    return invoke(fun_, *first_, r);
-                }
-            };
             auto read() const -> subrange<iterator_t<Rng>>
             {
-                return {cur_, next_cur_};
+                return {cur_, second_};
             }
             void next()
             {
-                cur_ = next_cur_;
-                next_cur_ = cur_ != last_
-                                ? find_if_not(ranges::next(cur_), last_, pred{cur_, fun_})
-                                : cur_;
+                cur_ = second_;
+                second_ = cur_ != last_
+                              ? find_if_not(ranges::next(cur_), last_, pred{cur_, fun_})
+                              : cur_;
             }
 
             bool equal(default_sentinel_t) const
@@ -110,7 +111,7 @@ namespace ranges
             cursor(semiregular_box_ref_or_val_t<Fun, false> fun, iterator_t<Rng> first,
                    iterator_t<Rng> next_first, sentinel_t<Rng> last)
               : cur_(first)
-              , next_cur_(next_first)
+              , second_(next_first)
               , last_(last)
               , fun_(fun)
             {}
@@ -122,14 +123,11 @@ namespace ranges
         {
             auto b = ranges::begin(rng_);
             auto e = ranges::end(rng_);
-            if(!next_cur_)
+            if(!second_)
             {
-                next_cur_ =
-                    b != e
-                        ? find_if_not(ranges::next(b), e, typename cursor::pred{b, fun_})
-                        : b;
+                second_ = b != e ? find_if_not(ranges::next(b), e, pred{b, fun_}) : b;
             }
-            return {fun_, b, *next_cur_, e};
+            return {fun_, b, *second_, e};
         }
 
     public:
