@@ -145,9 +145,8 @@ int main()
 
     {
         std::vector<int> single{2};
-        auto rng = single | views::group_by([](int, int){
+        auto rng = single | views::group_by([](int, int) -> bool {
             throw 0;
-            return false;
         });
 
         CHECK(distance(rng) == 1);
