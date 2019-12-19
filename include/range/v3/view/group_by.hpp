@@ -74,7 +74,7 @@ namespace ranges
             friend range_access;
             friend group_by_view;
             iterator_t<Rng> cur_;
-            iterator_t<Rng> second_;
+            iterator_t<Rng> next_cur_;
             sentinel_t<Rng> last_;
             semiregular_box_ref_or_val_t<Fun, false> fun_;
 
@@ -90,12 +90,12 @@ namespace ranges
 
             auto read() const -> subrange<iterator_t<Rng>>
             {
-                return {cur_, second_};
+                return {cur_, next_cur_};
             }
             void next()
             {
-                cur_ = second_;
-                second_ = cur_ != last_
+                cur_ = next_cur_;
+                next_cur_ = cur_ != last_
                               ? find_if_not(ranges::next(cur_), last_, pred{cur_, fun_})
                               : cur_;
             }
@@ -109,9 +109,9 @@ namespace ranges
                 return cur_ == that.cur_;
             }
             cursor(semiregular_box_ref_or_val_t<Fun, false> fun, iterator_t<Rng> first,
-                   iterator_t<Rng> next_first, sentinel_t<Rng> last)
+                   iterator_t<Rng> next_cur, sentinel_t<Rng> last)
               : cur_(first)
-              , second_(next_first)
+              , next_cur_(next_cur)
               , last_(last)
               , fun_(fun)
             {}
