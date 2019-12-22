@@ -139,7 +139,7 @@ namespace ranges
             static auto impl_(Rng && rng, range_difference_t<Rng> n,
                               random_access_range_tag)
                 -> CPP_ret(subrange<iterator_t<Rng>, sentinel_t<Rng>>)( //
-                    requires forwarding_range_<Rng>)
+                    requires safe_range<Rng>)
             {
                 return {begin(rng) + n, end(rng)};
             }

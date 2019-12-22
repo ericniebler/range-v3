@@ -203,7 +203,7 @@ namespace ranges
                               range_difference_t<Rng> count, random_access_range_tag,
                               common_range_tag = {})
                 -> CPP_ret(subrange<iterator_t<Rng>>)( //
-                    requires forwarding_range_<Rng>)
+                    requires safe_range<Rng>)
             {
                 auto it =
                     detail::pos_at_(rng, from, range_tag_of<Rng>{}, is_infinite<Rng>{});

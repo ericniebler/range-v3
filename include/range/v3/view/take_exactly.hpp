@@ -155,7 +155,7 @@ namespace ranges
             static constexpr auto impl_(Rng && rng, range_difference_t<Rng> n,
                                         random_access_range_tag)
                 -> CPP_ret(subrange<iterator_t<Rng>>)( //
-                    requires forwarding_range_<Rng>)
+                    requires safe_range<Rng>)
             {
                 return {begin(rng), next(begin(rng), n)};
             }
