@@ -76,23 +76,19 @@ namespace ranges
 
     // clang-format off
     template<typename T>
-    CPP_concept_fragment(_range_impl_,
-        requires(T && t) //
+    CPP_concept_fragment(_range_,
+        requires(T & t) //
         (
-            ranges::begin((T &&) t), // not necessarily equality-preserving
-            ranges::end((T &&) t)
+            ranges::begin(t), // not necessarily equality-preserving
+            ranges::end(t)
         ));
     template<typename T>
-    CPP_concept_bool range_impl_ =
-        CPP_fragment(ranges::_range_impl_, T);
-
-    template<typename T>
     CPP_concept_bool range =
-        range_impl_<T &>;
+        CPP_fragment(ranges::_range_, T);
 
     template<typename T>
-    CPP_concept_bool forwarding_range_ =
-        range<T> && range_impl_<T>;
+    CPP_concept_bool safe_range =
+        range<T> && detail::_safe_range<T>;
 
     template<typename T, typename V>
     CPP_concept_fragment(output_range_, requires()(0) &&
@@ -181,6 +177,7 @@ namespace ranges
         ) &&
         detail::integer_like_<range_size_t<T>>
     );
+
     template<typename T>
     CPP_concept_bool sized_range =
         range<T> &&
@@ -288,7 +285,7 @@ namespace ranges
     template<typename T>
     CPP_concept_bool viewable_range =
         range<T> &&
-        (forwarding_range_<T> || view_<detail::decay_t<T>>);
+        (safe_range<T> || view_<uncvref_t<T>>);
     // clang-format on
 
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -356,7 +353,7 @@ namespace ranges
         CPP_concept range = CPP_defer(ranges::range, T);
 
         template<typename T>
-        CPP_concept forwarding_range_ = CPP_defer(ranges::forwarding_range_, T);
+        CPP_concept safe_range = CPP_defer(ranges::safe_range, T);
 
         template<typename T, typename V>
         CPP_concept output_range = CPP_defer(ranges::output_range, T, V);
