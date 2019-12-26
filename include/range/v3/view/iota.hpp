@@ -429,21 +429,7 @@ namespace ranges
             auto equal(cursor const & that) const -> CPP_ret(bool)( //
             requires detail::iota_stridable_<From, To>)
             {
-                if(from_ == that.from_)
-                    return true;
-
-                if(detail::iota_abs_(step_.value() == 1))
-                    return false;
-
-                //If the step is not 1, we may overshoot the end cursor
-                //which may not be aligned to a multiple of step
-                if(step_.value() > 0 && from_ > that.from_) {
-                    return detail::iota_distance_(that.from_, from_) < step_.value();
-                }
-                else if(step_.value() < 0 && that.from_ > from_) {
-                    return detail::iota_distance_(from_, that.from_) < -(step_.value());
-                }
-                return false;
+                return from_ == that.from_;
             }
             CPP_member
             auto prev() -> CPP_ret(void)( //
@@ -472,7 +458,7 @@ namespace ranges
                 requires detail::advanceable_<From>)
             {
                 const auto d = detail::iota_distance_(from_, that.from_);
-                return (d / step_.value()) + (d % step_.value() ? 1 : 0);
+                return d / step_.value();
             }
             // Extension: see https://github.com/ericniebler/stl2/issues/613
             CPP_member
@@ -480,7 +466,7 @@ namespace ranges
                 requires sized_sentinel_for<To, From>)
             {
                 const auto d = that.to_ - from_;
-                return (d / step_.value()) + (d % step_.value() ? 1 : 0);
+                return d / step_.value();
             }
 
         public:
@@ -506,10 +492,21 @@ namespace ranges
             return sentinel{to_};
         }
         CPP_member
-        auto CPP_fun(end_cursor)()(const requires same_as<From, To>)
+        auto CPP_fun(end_cursor)()(const requires (same_as<From, To> && !detail::iota_stridable_<From, To>))
         {
             return cursor{to_, step_};
         }
+        CPP_member
+            auto CPP_fun(end_cursor)()(const requires detail::iota_stridable_<From, To>)
+        {
+            const auto d = detail::iota_distance_(from_, to_);
+            const auto m = d % step_.value();
+            if(m == 0) {
+                return cursor{to_, step_};
+            }
+            return cursor{To(to_ - m + step_), step_};
+        }
+
         constexpr void check_bounds_(std::true_type)
         {
 

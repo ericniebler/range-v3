@@ -224,7 +224,7 @@ int main()
        ::check_equal(views::iota(5, 0, -1) | views::reverse, {1, 2, 3, 4, 5});
        ::check_equal(size(views::iota(9, 1, -3)), 3U);
        ::check_equal(views::iota(1, 9, 3), {1, 4, 7});
-       ::check_equal(views::iota(1, 9, 3) | views::reverse, {6, 3});
+       ::check_equal(views::iota(1, 9, 3) | views::reverse, {7, 4, 1});
 
 
     }
