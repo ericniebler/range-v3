@@ -18,6 +18,7 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/drop_exactly.hpp>
+#include <range/v3/view/reverse.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -220,7 +221,12 @@ int main()
        ::check_equal(views::iota(0, 10, 2), {0, 2, 4, 6, 8});
        ::check_equal(views::iota(5, 0, -1), {5, 4, 3, 2, 1});
        ::check_equal(size(views::iota(1, 9, 3)), 3U);
+       ::check_equal(views::iota(5, 0, -1) | views::reverse, {1, 2, 3, 4, 5});
        ::check_equal(size(views::iota(9, 1, -3)), 3U);
+       ::check_equal(views::iota(1, 9, 3), {1, 4, 7});
+       ::check_equal(views::iota(1, 9, 3) | views::reverse, {6, 3});
+
+
     }
 
     {  // test views::indices/closed_indices

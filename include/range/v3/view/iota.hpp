@@ -163,6 +163,19 @@ namespace ranges
                                    -static_cast<iota_difference_t<Int>>(i0 - i1))
                              : static_cast<iota_difference_t<Int>>(i1 - i0);
         }
+
+        template<typename Int>
+        auto iota_abs_(Int i) -> CPP_ret(Int)( //
+            requires signed_integral<Int>)
+        {
+            return i < 0 ? -i : i;
+        }
+        template<typename Int>
+        auto iota_abs_(Int i) -> CPP_ret(Int)( //
+            requires unsigned_integral<Int>)
+        {
+            return i;
+        }
     } // namespace detail
     /// \endcond
 
@@ -404,13 +417,33 @@ namespace ranges
             auto equal(sentinel const & that) const -> CPP_ret(bool)( //
                 requires detail::iota_stridable_<From, To>)
             {
-                return detail::iota_distance_(from_, that.to_) >= std::abs(step_) ;
+                return detail::iota_distance_(from_, that.to_) >= detail::iota_abs_(step_.value());
             }
             CPP_member
             auto equal(cursor const & that) const -> CPP_ret(bool)( //
-                requires equality_comparable<From>)
+            requires (equality_comparable<From> &&!detail::iota_stridable_<From, To>))
             {
                 return that.from_ == from_;
+            }
+            CPP_member
+            auto equal(cursor const & that) const -> CPP_ret(bool)( //
+            requires detail::iota_stridable_<From, To>)
+            {
+                if(from_ == that.from_)
+                    return true;
+
+                if(detail::iota_abs_(step_.value() == 1))
+                    return false;
+
+                //If the step is not 1, we may overshoot the end cursor
+                //which may not be aligned to a multiple of step
+                if(step_.value() > 0 && from_ > that.from_) {
+                    return detail::iota_distance_(that.from_, from_) < step_.value();
+                }
+                else if(step_.value() < 0 && that.from_ > from_) {
+                    return detail::iota_distance_(from_, that.from_) < -(step_.value());
+                }
+                return false;
             }
             CPP_member
             auto prev() -> CPP_ret(void)( //
