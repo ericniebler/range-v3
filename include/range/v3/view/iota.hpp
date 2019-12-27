@@ -421,20 +421,13 @@ namespace ranges
             }
             CPP_member
             auto equal(cursor const & that) const -> CPP_ret(bool)( //
-            requires (equality_comparable<From> &&!detail::iota_stridable_<From, To>))
+            requires equality_comparable<From>)
             {
                 return that.from_ == from_;
             }
             CPP_member
-            auto equal(cursor const & that) const -> CPP_ret(bool)( //
-            requires detail::iota_stridable_<From, To>)
-            {
-                return from_ == that.from_;
-            }
-            CPP_member
             auto prev() -> CPP_ret(void)( //
-                requires(detail::decrementable_<From> &&
-                         (!detail::iota_stridable_<From, To>)))
+            requires(detail::decrementable_<From> && !detail::iota_stridable_<From, To>))
             {
                 --from_;
             }
