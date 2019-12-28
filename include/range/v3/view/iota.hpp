@@ -414,12 +414,6 @@ namespace ranges
                 return from_ == that.to_;
             }
             CPP_member
-            auto equal(sentinel const & that) const -> CPP_ret(bool)( //
-                requires detail::iota_stridable_<From, To>)
-            {
-                return detail::iota_distance_(from_, that.to_) >= detail::iota_abs_(step_.value());
-            }
-            CPP_member
             auto equal(cursor const & that) const -> CPP_ret(bool)( //
             requires equality_comparable<From>)
             {
