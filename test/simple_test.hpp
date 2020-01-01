@@ -159,9 +159,11 @@ inline int test_result()
     return ::test_impl::test_failures() ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
-#define CHECK(...)                                                           \
-    (void)(::test_impl::S{__FILE__, __LINE__, #__VA_ARGS__} ->* __VA_ARGS__) \
+#define CHECK_LINE(file, line, ...)                                          \
+    (void)(::test_impl::S{file, line, #__VA_ARGS__} ->* __VA_ARGS__)         \
     /**/
+
+#define CHECK(...) CHECK_LINE(__FILE__, __LINE__, __VA_ARGS__)
 
 template<class>
 struct undef;
