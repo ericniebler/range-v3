@@ -196,6 +196,13 @@ namespace ranges
         {}
     };
 
+    // the implementation here stores the function in the adapter itself when
+    // it's semiregular and empty, so transform_view can be safe in those circumstances.
+    // this allows views::keys and views::values to be safe as well.
+    template<typename Rng, typename Fun>
+    RANGES_INLINE_VAR constexpr bool enable_safe_range<transform_view<Rng, Fun>> =
+        enable_safe_range<Rng> && semiregular<Fun> && std::is_empty<Fun>::value;
+
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Rng, typename Fun)(requires copy_constructible<Fun>)
         transform_view(Rng &&, Fun)
