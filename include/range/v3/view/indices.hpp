@@ -22,7 +22,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/iota.hpp>
-#include <range/v3/view/take_exactly.hpp>
 
 #include <range/v3/detail/disable_warnings.hpp>
 
