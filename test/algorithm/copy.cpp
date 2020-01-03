@@ -78,7 +78,7 @@ int main()
         auto str = delimit(sz, '\0');
         auto res3 = ranges::copy(std::move(str), buf);
         *res3.out = '\0';
-        CHECK(::is_dangling(res3.in));
+        CHECK(!::is_dangling(res3.in));
         CHECK(res3.out == buf + std::strlen(sz));
         CHECK(std::strcmp(sz, buf) == 0);
     }
