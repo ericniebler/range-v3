@@ -196,6 +196,9 @@ namespace ranges
         range_value_t<Rng> val_;
     };
 
+    template<typename Rng>
+    RANGES_INLINE_VAR constexpr bool enable_safe_range<intersperse_view<Rng>> = enable_safe_range<Rng>;
+
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
     intersperse_view(Rng &&, range_value_t<Rng>)->intersperse_view<views::all_t<Rng>>;

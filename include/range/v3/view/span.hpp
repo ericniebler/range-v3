@@ -366,6 +366,9 @@ namespace ranges
     };
 
     template<typename T, detail::span_index_t N>
+    RANGES_INLINE_VAR constexpr bool enable_safe_range<span<T, N>> = true;
+
+    template<typename T, detail::span_index_t N>
     constexpr detail::span_index_t span<T, N>::extent;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
