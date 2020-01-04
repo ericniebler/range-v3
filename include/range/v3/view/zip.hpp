@@ -117,12 +117,9 @@ namespace ranges
         {}
     };
 
-    // zip_view<Rng...> can be conditionally safe because of the following
-    static_assert(semiregular<detail::indirect_zip_fn_> &&
-        std::is_empty<detail::indirect_zip_fn_>::value, "!");
     template<typename... Rng>
     RANGES_INLINE_VAR constexpr bool enable_safe_range<zip_view<Rng...>> =
-        and_v<enable_safe_range<Rng>...>;
+        enable_safe_range<iter_zip_with_view<detail::indirect_zip_fn_, Rng...>>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename... Rng>

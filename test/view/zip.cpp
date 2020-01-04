@@ -16,10 +16,12 @@
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/move.hpp>
+#include <range/v3/algorithm/find_if.hpp>
 #include <range/v3/utility/copy.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/insert_iterators.hpp>
 #include <range/v3/view/common.hpp>
+#include <range/v3/view/filter.hpp>
 #include <range/v3/view/for_each.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/map.hpp>
@@ -235,6 +237,19 @@ int main()
         static_assert(ranges::range_cardinality<R>::value == ranges::cardinality(0), "");
         CHECK(ranges::begin(rng) == ranges::end(rng));
         CHECK(ranges::size(rng) == 0u);
+    }
+
+    {
+        // test dangling
+        auto true_ = [](auto&&){ return true; };
+
+        CHECK(!::is_dangling(ranges::find_if(views::zip(vi, vs), true_)));
+        CHECK(!::is_dangling(ranges::find_if(views::zip(
+            vi | views::move,
+            vs | views::common
+            ), true_)));
+        CHECK(::is_dangling(ranges::find_if(views::zip(
+            vi | views::filter(true_)), true_)));
     }
 
     return test_result();
