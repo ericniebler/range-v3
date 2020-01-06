@@ -102,10 +102,10 @@ namespace ranges
 
     template<typename Rng, typename Fun>
     RANGES_INLINE_VAR constexpr bool enable_safe_range<iter_take_while_view<Rng, Fun>> =
-        enable_safe_range<Rng> && is_safe_fun_<Fun>;
+        enable_safe_range<Rng> && detail::is_safe_fun<Fun>;
     template<typename Rng, typename Fun>
     RANGES_INLINE_VAR constexpr bool enable_safe_range<take_while_view<Rng, Fun>> =
-        enable_safe_range<Rng> && is_safe_fun_<Fun>;
+        enable_safe_range<Rng> && detail::is_safe_fun<Fun>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Rng, typename Fun)(requires copy_constructible<Fun>)

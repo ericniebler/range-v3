@@ -293,13 +293,16 @@ namespace ranges
         reference_wrapper<
             meta::if_c<IsConst, semiregular_box<T> const, semiregular_box<T>>>>;
 
-    // for those range adapters that store a function by way of semiregular_box_ref_or_val_t
-    // if that alias is actually a T (that is, it owns the callable), then the range can
-    // be a safe_range since the adapter will not depend on the outer range surviving
-    // this is a necessary, but not sufficient, condition
-    template <typename T>
-    RANGES_INLINE_VAR constexpr bool is_safe_fun_ =
-        defer::same_as<T, semiregular_box_ref_or_val_t<T>>;
+    namespace detail {
+        // For those range adapters that store a function by way of
+        // semiregular_box_ref_or_val_t if that alias is actually a T (that is,
+        // it owns the callable), then the range can be a safe_range since the
+        // adapter will not depend on the outer range surviving.
+        // This is a necessary, but not sufficient, condition
+        template <typename T>
+        RANGES_INLINE_VAR constexpr bool is_safe_fun =
+            defer::same_as<T, semiregular_box_ref_or_val_t<T>>;
+    }
     /// @}
 
     /// \cond

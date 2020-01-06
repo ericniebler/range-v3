@@ -368,10 +368,10 @@ namespace ranges
 
     template<typename Fun, typename... Rngs>
     RANGES_INLINE_VAR constexpr bool enable_safe_range<iter_zip_with_view<Fun, Rngs...>> =
-        and_v<enable_safe_range<Rngs>...> && is_safe_fun_<Fun>;
+        and_v<enable_safe_range<Rngs>...> && detail::is_safe_fun<Fun>;
     template<typename Fun, typename... Rngs>
     RANGES_INLINE_VAR constexpr bool enable_safe_range<zip_with_view<Fun, Rngs...>> =
-        and_v<enable_safe_range<Rngs>...> && is_safe_fun_<Fun>;
+        and_v<enable_safe_range<Rngs>...> && detail::is_safe_fun<Fun>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Fun, typename... Rng)(requires copy_constructible<Fun>)
