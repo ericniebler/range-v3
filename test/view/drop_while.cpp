@@ -37,6 +37,7 @@ int main()
     CPP_assert(view_<decltype(rng0)>);
     CPP_assert(random_access_range<decltype(rng0)>);
     CPP_assert(!common_range<decltype(rng0)>);
+    CPP_assert(!sized_range<decltype(rng0)>);
     CPP_assert(random_access_iterator<decltype(rng0.begin())>);
     auto b = rng0.begin();
     CHECK(*b == 25);
@@ -49,6 +50,7 @@ int main()
     CPP_assert(view_<decltype(rng1)>);
     CPP_assert(bidirectional_range<decltype(rng1)>);
     CPP_assert(common_range<decltype(rng1)>);
+    CPP_assert(!sized_range<decltype(rng1)>);
     CPP_assert(bidirectional_iterator<decltype(rng1.begin())>);
     CHECK(rng1.begin() == rng1.end());
 
@@ -66,6 +68,7 @@ int main()
         CPP_assert(input_range<R> && view_<R>);
         CPP_assert(!forward_range<R>);
         CPP_assert(!common_range<R>);
+        CPP_assert(!sized_range<R>);
         CPP_assert(same_as<int const&, range_reference_t<R>>);
         ::check_equal(rng, {4,5,6,7,8,9});
     }
@@ -76,6 +79,15 @@ int main()
         auto rng = data_list | views::drop_while([](int i){ return i <= 2; }, &my_data::i);
         ::check_equal(rng, std::list<my_data>{{3}, {1}});
     }
+
+    auto rng2 = rgi | views::drop_while([](int i) { return i != 50; });
+    CPP_assert(range_cardinality<decltype(rng2)>::value == ranges::finite);
+    CPP_assert(view_<decltype(rng2)>);
+    CPP_assert(contiguous_range<decltype(rng2)>);
+    CPP_assert(common_range<decltype(rng2)>);
+    CPP_assert(!sized_range<decltype(rng2)>);
+    CPP_assert(contiguous_iterator<decltype(rng2.begin())>);
+    CHECK(ranges::size(rng2) == 0u);
 
     return test_result();
 }

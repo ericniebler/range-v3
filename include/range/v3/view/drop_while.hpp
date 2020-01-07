@@ -81,6 +81,9 @@ namespace ranges
             ->drop_while_view<views::all_t<Rng>, Fun>;
 #endif
 
+    template<typename Rng, typename Pred>
+    RANGES_INLINE_VAR constexpr bool disable_sized_range<drop_while_view<Rng, Pred>> = true;
+
     namespace views
     {
         struct drop_while_base_fn
