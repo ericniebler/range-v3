@@ -19,6 +19,7 @@
 #include <range/v3/algorithm/count_if.hpp>
 #include <range/v3/view/cycle.hpp>
 #include <range/v3/view/take.hpp>
+#include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/slice.hpp>
