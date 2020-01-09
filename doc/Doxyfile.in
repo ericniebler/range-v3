@@ -3,7 +3,7 @@ PROJECT_BRIEF           = "Range algorithms, views, and actions for the Standard
 PROJECT_LOGO            =
 PROJECT_NUMBER          =
 
-STRIP_FROM_PATH         = @Range-v3_SOURCE_DIR@/include
+STRIP_FROM_PATH         = @Range-v3_SOURCE_DIR@/include @Range-v3_SOURCE_DIR@/doc
 BUILTIN_STL_SUPPORT     = YES
 STRIP_FROM_INC_PATH     = @Range-v3_SOURCE_DIR@/include
 ALIASES                 =
