@@ -475,7 +475,7 @@ namespace ranges
                          detail::is_sized_sentinel_<S, I>()))(            //
             requires input_or_output_iterator<I> && sentinel_for<S, I> && //
             (K == subrange_kind::sized || !sized_sentinel_for<S, I>))     //
-            using subrange = ranges::subrange<I, S>;
+            using subrange = ranges::subrange<I, S, K>;
 
         using ranges::safe_subrange_t;
     } // namespace cpp20
