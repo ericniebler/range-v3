@@ -27,6 +27,36 @@
 #include "./simple_test.hpp"
 #include "./test_iterators.hpp"
 
+#if __has_include(<source_location>)
+#  include <source_location>
+#  if __cpp_lib_source_location
+#    define RANGES_HAS_SLOC 1
+     using source_location = std::source_location;
+#  endif
+#elif __has_include(<experimental/source_location>)
+#  include <experimental/source_location>
+#  if __cpp_lib_experimental_source_location
+#    define RANGES_HAS_SLOC 1
+     using source_location = std::experimental::source_location;
+#  endif
+#endif
+
+#ifndef RANGES_HAS_SLOC
+  struct source_location
+  {
+    static source_location current() { return {}; }
+  };
+#  define CHECK_SLOC(sloc, ...) \
+    do                        \
+    {                         \
+        (void)sloc;           \
+        CHECK(__VA_ARGS__);   \
+    } while(false)
+#else
+#  define CHECK_SLOC(sloc, ...) CHECK_LINE(sloc.file_name(), (int)sloc.line(), __VA_ARGS__)
+#endif
+
+
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_THIS_CAPTURE
 
@@ -38,30 +68,30 @@ struct check_equal_fn
 {
     CPP_template(typename T, typename U)(
         requires (!both_ranges<T, U>))
-    void operator()(T &&actual, U &&expected) const
+    void operator()(T &&actual, U &&expected, source_location sloc = source_location::current()) const
     {
-        CHECK((T &&) actual == (U &&) expected);
+        CHECK_SLOC(sloc, (T &&) actual == (U &&) expected);
     }
 
     CPP_template(typename Rng1, typename Rng2)(
         requires both_ranges<Rng1, Rng2>)
-    void operator()(Rng1 &&actual, Rng2 &&expected) const
+    void operator()(Rng1 &&actual, Rng2 &&expected, source_location sloc = source_location::current()) const
     {
         auto begin0 = ranges::begin(actual);
         auto end0 = ranges::end(actual);
         auto begin1 = ranges::begin(expected);
         auto end1 = ranges::end(expected);
         for(; begin0 != end0 && begin1 != end1; ++begin0, ++begin1)
-            (*this)(*begin0, *begin1);
-        CHECK(begin0 == end0);
-        CHECK(begin1 == end1);
+            (*this)(*begin0, *begin1, sloc);
+        CHECK_SLOC(sloc, begin0 == end0);
+        CHECK_SLOC(sloc, begin1 == end1);
     }
 
     CPP_template(typename Rng, typename Val)(
         requires ranges::input_range<Rng>)
-    void operator()(Rng &&actual, std::initializer_list<Val> && expected) const
+    void operator()(Rng &&actual, std::initializer_list<Val> && expected, source_location sloc = source_location::current()) const
     {
-        (*this)(actual, expected);
+        (*this)(actual, expected, sloc);
     }
 };
 
