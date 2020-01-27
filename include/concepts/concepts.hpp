@@ -269,15 +269,23 @@
     template<typename... As>\
     char NAME ## CPP_concept_fragment_(\
         ::concepts::detail::tag<As...> *, \
-        decltype(&NAME ## CPP_concept_fragment_impl_<As...>, 0)); \
-    char (&NAME ## CPP_concept_fragment_(void*, long))[2] \
+        decltype(&NAME ## CPP_concept_fragment_impl_<As...>)); \
+    char (&NAME ## CPP_concept_fragment_(...))[2] \
     /**/
+#if defined(_MSC_VER) && !defined(__clang__)
+#define CPP_concept_fragment_true(...) \
+    ::concepts::detail::true_<decltype(__VA_ARGS__, void())>()
+#else
+#define CPP_concept_fragment_true(...) \
+    !(decltype(__VA_ARGS__, void(), false){})
+#endif
 #define CPP_concept_fragment_reqs_requires(...) \
     (__VA_ARGS__) -> std::enable_if_t<CPP_concept_fragment_reqs_2_
-#define CPP_concept_fragment_reqs_2_(...) !(decltype(__VA_ARGS__, void(), false){})
+#define CPP_concept_fragment_reqs_2_(...) \
+    CPP_concept_fragment_true(__VA_ARGS__)
 #define CPP_fragment(NAME, ...) \
     (1u==sizeof(NAME ## CPP_concept_fragment_(\
-        static_cast<::concepts::detail::tag<__VA_ARGS__> *>(nullptr), 0))) \
+        static_cast<::concepts::detail::tag<__VA_ARGS__> *>(nullptr), nullptr))) \
     /**/
 #endif
 
@@ -655,6 +663,12 @@ namespace concepts
             constexpr true_type(decltype(nullptr)) noexcept {}
             static constexpr bool value() noexcept { return true; }
         };
+
+        template<class>
+        constexpr bool true_()
+        {
+            return true;
+        }
 
         template<typename...>
         struct tag;
@@ -1165,6 +1179,17 @@ namespace concepts
             copy_constructible<T> &&
             movable<T> &&
             assignable_from<T &, T const &>;
+
+#if !CPP_CXX_CONCEPTS
+        template<>
+        CPP_concept_bool copy_constructible<void> = false;
+
+        template<>
+        CPP_concept_bool movable<void> = false;
+
+        template<>
+        CPP_concept_bool copyable<void> = false;
+#endif
 
         template<typename T>
         CPP_concept_bool semiregular =

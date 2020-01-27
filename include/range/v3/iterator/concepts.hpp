@@ -232,6 +232,11 @@ namespace ranges
         input_or_output_iterator<I> &&
         detail::weakly_equality_comparable_with_<S, I>;
 
+#if !CPP_CXX_CONCEPTS
+    template<>
+    CPP_concept_bool input_or_output_iterator<void> = false;
+#endif
+
     namespace defer
     {
         template<typename S, typename I>
