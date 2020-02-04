@@ -41,11 +41,8 @@ namespace ranges
     namespace detail
     {
         template<typename T>
-        std::pair<T *, std::ptrdiff_t> get_temporary_buffer_impl(
-            std::size_t count) noexcept
+        std::pair<T *, std::ptrdiff_t> get_temporary_buffer_impl(std::size_t n) noexcept
         {
-            RANGES_EXPECT(count >= 0);
-            std::size_t n = static_cast<std::size_t>(count);
             if(n > PTRDIFF_MAX / sizeof(T))
                 n = PTRDIFF_MAX / sizeof(T);
 
