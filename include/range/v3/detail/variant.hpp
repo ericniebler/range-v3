@@ -236,14 +236,7 @@ namespace ranges
         using variant_datum_t =
             detail::indexed_datum<meta::at_c<meta::list<Ts...>, Index>,
                                   meta::size_t<Index>>;
-    } // namespace detail
 
-    template<std::size_t N, typename... Ts, typename... Args>
-    meta::if_c<(bool)constructible_from<detail::variant_datum_t<N, Ts...>, Args...>>
-    emplace(variant<Ts...> &, Args &&...);
-
-    namespace detail
-    {
         using variant_nil = indexed_datum<void, meta::npos>;
 
         template<typename Ts,
@@ -485,7 +478,7 @@ namespace ranges
             template<typename...Ts>
             auto CPP_auto_fun(operator())(Ts &&...ts) (const)
             (
-                return ranges::emplace<N>(*var_, static_cast<Ts &&>(ts)...)
+                return var_->template emplace<N>(static_cast<Ts &&>(ts)...)
             )
             // clang-format on
         };
@@ -846,8 +839,8 @@ namespace ranges
     ////////////////////////////////////////////////////////////////////////////////////////////
     // emplace
     template<std::size_t N, typename... Ts, typename... Args>
-    meta::if_c<(bool)constructible_from<detail::variant_datum_t<N, Ts...>, Args...>>
-    emplace(variant<Ts...> & var, Args &&... args)
+    auto emplace(variant<Ts...> & var, Args &&... args) -> CPP_ret(void)(//
+        requires constructible_from<detail::variant_datum_t<N, Ts...>, Args...>)
     {
         var.template emplace<N>(static_cast<Args &&>(args)...);
     }
