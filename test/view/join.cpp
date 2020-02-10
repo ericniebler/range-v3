@@ -9,20 +9,24 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
-#include <vector>
 #include <iterator>
+#include <forward_list>
 #include <functional>
+#include <vector>
+
 #include <range/v3/core.hpp>
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/split.hpp>
 #include <range/v3/view/generate_n.hpp>
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/cache1.hpp>
+#include <range/v3/view/chunk.hpp>
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/filter.hpp>
+
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -76,6 +80,15 @@ RANGES_DIAGNOSTIC_IGNORE("-Wunused-member-function")
         };
         const auto flat_nums = ranges::views::join( nums ) | ranges::to<std::vector>();
         ::check_equal(flat_nums, {1,2,3,4,5,6});
+    }
+
+    // https://github.com/ericniebler/range-v3/issues/1414
+    void test_issue_1414()
+    {
+        std::forward_list<char> u2; // this can also be a vector
+        std::vector<char> i2;
+        auto v2 = u2 | ranges::views::chunk(3) | ranges::views::join(i2);
+        CPP_assert(ranges::input_range<decltype(v2)>);
     }
 }
 
@@ -229,6 +242,7 @@ int main()
     }
 
     test_issue_283();
+    test_issue_1414();
 
     return ::test_result();
 }
