@@ -26,7 +26,7 @@ if (RANGES_ENV_MACOSX)
   ranges_append_flag(RANGES_HAS_WNO_EXIT_TIME_DESTRUCTORS -Wno-exit-time-destructors)
 endif()
 
-if (RANGES_CXX_COMPILER_CLANG)
+if (RANGES_CXX_COMPILER_CLANG OR RANGES_CXX_COMPILER_CLANGCL)
   ranges_append_flag(RANGES_HAS_WNO_MISSING_PROTOTYPES -Wno-missing-prototypes)
 endif()
 
