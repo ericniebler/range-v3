@@ -26,6 +26,10 @@ if (RANGES_ENV_MACOSX)
   ranges_append_flag(RANGES_HAS_WNO_EXIT_TIME_DESTRUCTORS -Wno-exit-time-destructors)
 endif()
 
+if (RANGES_CXX_COMPILER_CLANG)
+  ranges_append_flag(RANGES_HAS_WNO_MISSING_PROTOTYPES -Wno-missing-prototypes)
+endif()
+
 if (RANGES_CXX_COMPILER_GCC)
   if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS "6.0")
     ranges_append_flag(RANGES_HAS_WNO_STRICT_OVERFLOW -Wno-strict-overflow)
