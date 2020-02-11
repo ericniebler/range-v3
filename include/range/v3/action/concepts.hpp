@@ -62,12 +62,17 @@ namespace ranges
 
     // std::vector is a container, std::array is not
     template<typename T>
-    CPP_concept_bool container =
-        semi_container<T> &&
+    CPP_concept_fragment(container_, (T),
         constructible_from<
             uncvref_t<T>,
             detail::movable_input_iterator<range_value_t<T>>,
-            detail::movable_input_iterator<range_value_t<T>>>;
+            detail::movable_input_iterator<range_value_t<T>>>
+    );
+
+    template<typename T>
+    CPP_concept_bool container =
+        semi_container<T> &&
+        CPP_fragment(ranges::container_, T);
 
     template<typename C>
     CPP_concept_bool reservable =
