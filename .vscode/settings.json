@@ -89,7 +89,8 @@
         "__hash_table": "cpp",
         "__string": "cpp",
         "algorithm": "cpp",
-        "codecvt": "cpp"
+        "codecvt": "cpp",
+        "valarray": "cpp"
     },
     "C_Cpp.configurationWarnings": "Disabled"
 }

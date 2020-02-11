@@ -173,5 +173,12 @@ int main()
         CHECK(rng.empty());
     }
 
+    // test issue #1424 <https://github.com/ericniebler/range-v3/issues/1424>
+    {
+        std::vector<int> v{1, 2, 3, 4};
+        auto rng = views::filter(v, is_odd());
+        ::check_equal(rng, {1, 3});
+    }
+
     return test_result();
 }
