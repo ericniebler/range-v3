@@ -90,7 +90,7 @@ namespace ranges
 
         template<typename T>
         CPP_concept_bool pair_like_gcc_bugs_ =
-            CPP_requires((int))(sizeof(std::tuple_size<T>)) &&
+            CPP_requires((int))(sizeof(std::tuple_size<CPP_type(T)>)) &&
             CPP_fragment(detail::pair_like_gcc_bugs_frag_, T);
 
         namespace defer
