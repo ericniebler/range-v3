@@ -82,12 +82,6 @@ namespace ranges
                 CPP_defer(detail::pair_like_gcc_bugs_2_, T);
         }
 
-#if defined(__GNUC__) && !defined(__clang__) && CPP_CXX_CONCEPTS
-        template<typename T>
-        CPP_concept_bool pair_like_gcc_bugs_ =
-            ranges::defer::type<meta::_t<std::tuple_size<T>>> &&
-            defer::pair_like_gcc_bugs_2_<T>;
-#else
         template<typename T>
         CPP_concept_fragment(pair_like_gcc_bugs_frag_, (T),
             ranges::defer::type<meta::_t<std::tuple_size<T>>> &&
@@ -96,8 +90,8 @@ namespace ranges
 
         template<typename T>
         CPP_concept_bool pair_like_gcc_bugs_ =
+            CPP_requires((int))(sizeof(std::tuple_size<CPP_type(T)>)) &&
             CPP_fragment(detail::pair_like_gcc_bugs_frag_, T);
-#endif
 
         namespace defer
         {
