@@ -35,42 +35,14 @@ namespace ranges
     {
         struct shuffle_fn
         {
-#ifdef RANGES_WORKAROUND_MSVC_OLD_LAMBDA
-        private:
-            template<typename Gen>
-            struct lamduh
-            {
-                Gen & gen_;
-
-                template<typename Rng>
-                auto operator()(Rng && rng) const
-                    -> invoke_result_t<shuffle_fn, Rng, Gen &>
-                {
-                    return shuffle_fn{}(static_cast<Rng &&>(rng), gen_);
-                }
-            };
-
-        public:
-            template<typename Gen>
-            constexpr auto CPP_fun(operator())(Gen & gen)(
-                const //
-                requires uniform_random_bit_generator<Gen>)
-            {
-                return make_action_closure(lamduh<Gen>{gen});
-            }
-#else  // ^^^ workaround / no workaround vvv
             template<typename Gen>
             constexpr auto CPP_fun(operator())(Gen & gen)(
                 const //
                 requires uniform_random_bit_generator<Gen>)
             {
                 return make_action_closure(
-                    [&gen](auto && rng)
-                        -> invoke_result_t<shuffle_fn, decltype(rng), Gen &> {
-                        return shuffle_fn{}(static_cast<decltype(rng)>(rng), gen);
-                    });
+                    bind_back(shuffle_fn{}, detail::reference_wrapper_<Gen>(gen)));
             }
-#endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
 
             template<typename Gen>
             constexpr auto CPP_fun(operator())(Gen && gen)(
@@ -90,6 +62,15 @@ namespace ranges
                 ranges::shuffle(rng, static_cast<Gen &&>(gen));
                 return static_cast<Rng &&>(rng);
             }
+
+            /// \cond
+            template<typename Rng, typename T>
+            auto operator()(Rng && rng, detail::reference_wrapper_<T> r) const
+                -> invoke_result_t<shuffle_fn, Rng, T &>
+            {
+                return (*this)(static_cast<Rng &&>(rng), r.get());
+            }
+            /// \endcond
         };
 
         /// \relates actions::shuffle_fn

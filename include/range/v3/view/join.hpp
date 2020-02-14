@@ -553,6 +553,15 @@ namespace ranges
             {
                 return {all(static_cast<Rng &&>(rng)), all(static_cast<ValRng &&>(val))};
             }
+
+            /// \cond
+            template<typename Rng, typename T>
+            auto operator()(Rng && rng, detail::reference_wrapper_<T> r) const
+                -> invoke_result_t<join_base_fn, Rng, T &>
+            {
+                return (*this)(static_cast<Rng &&>(rng), r.get());
+            }
+            /// \endcond
         };
 
         struct join_bind_fn
@@ -563,36 +572,12 @@ namespace ranges
             {
                 return make_view_closure(bind_back(join_base_fn{}, static_cast<T &&>(t)));
             }
-#ifdef RANGES_WORKAROUND_MSVC_OLD_LAMBDA
-            template<typename T, std::size_t N>
-            struct lamduh
+            template<typename T>
+            constexpr auto CPP_fun(operator())(T & t)(const //
+                requires(!joinable_range<T &>) && range<T &>)
             {
-                T (&val_)[N];
-
-                template<typename Rng>
-                auto operator()(Rng && rng) const
-                    -> invoke_result_t<join_base_fn, Rng, T (&)[N]>
-                {
-                    return join_base_fn{}(static_cast<Rng &&>(rng), val_);
-                }
-            };
-
-            template<typename T, std::size_t N>
-            constexpr view_closure<lamduh<T, N>> operator()(T (&val)[N]) const
-            {
-                return view_closure<lamduh<T, N>>{lamduh<T, N> { val }};
+                return make_view_closure(bind_back(join_base_fn{}, detail::reference_wrapper_<T>(t)));
             }
-#else  // ^^^ workaround / no workaround vvv
-            template<typename T, std::size_t N>
-            constexpr auto operator()(T (&val)[N]) const
-            {
-                return make_view_closure(
-                    [&val](
-                        auto && rng) -> invoke_result_t<join_base_fn, decltype(rng), T(&)[N]> {
-                        return join_base_fn{}(static_cast<decltype(rng)>(rng), val);
-                    });
-            }
-#endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
         };
 
         struct RANGES_EMPTY_BASES join_fn

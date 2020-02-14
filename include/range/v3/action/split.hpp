@@ -44,38 +44,13 @@ namespace ranges
                 meta::if_c<(bool)ranges::container<Rng>, //
                            uncvref_t<Rng>, std::vector<range_value_t<Rng>>>;
 
-#ifdef RANGES_WORKAROUND_MSVC_OLD_LAMBDA
-        private:
-            template<typename T, std::size_t N>
-            struct lamduh
-            {
-                T (&val_)[N];
-
-                template<class Rng>
-                constexpr auto operator()(Rng && rng)
-                    -> decltype(split_fn{}(std::declval<Rng>(), val_))
-                {
-                    return split_fn{}(static_cast<Rng &&>(rng), val_);
-                }
-            };
-
-        public:
-            template<typename T, std::size_t N>
-            constexpr auto operator()(T (&val)[N]) const
-            {
-                return make_action_closure(lamduh<T, N>{val});
-            }
-#else  // ^^^ workaround / no workaround vvv
-            template<typename T, std::size_t N>
-            constexpr auto operator()(T (&val)[N]) const
+            template<typename T>
+            constexpr auto CPP_fun(operator())(T & t)(const //
+                requires range<T &>)
             {
                 return make_action_closure(
-                    [&val](auto && rng)
-                        -> invoke_result_t<split_fn, decltype(rng), T(&)[N]> {
-                        return split_fn{}(static_cast<decltype(rng)>(rng), val);
-                    });
+                    bind_back(split_fn{}, detail::reference_wrapper_<T>(t)));
             }
-#endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
 
             template<typename T>
             constexpr auto operator()(T && t) const
@@ -106,6 +81,15 @@ namespace ranges
                 return views::split(rng, static_cast<Pattern &&>(pattern)) |
                        to<std::vector<split_value_t<Rng>>>();
             }
+
+            /// \cond
+            template<typename Rng, typename T>
+            auto operator()(Rng && rng, detail::reference_wrapper_<T> r) const
+                -> invoke_result_t<split_fn, Rng, T &>
+            {
+                return (*this)(static_cast<Rng &&>(rng), r.get());
+            }
+            /// \endcond
         };
 
         /// \relates actions::split_fn

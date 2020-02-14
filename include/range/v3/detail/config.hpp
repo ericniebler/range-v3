@@ -678,7 +678,9 @@ namespace ranges
 #define RANGES_IS_SAME(...) std::is_same<__VA_ARGS__>::value
 #endif
 
-#if defined(__has_cpp_attribute) && __has_cpp_attribute(no_unique_address)
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=93667
+#if defined(__has_cpp_attribute) && __has_cpp_attribute(no_unique_address) && \
+    !(defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 10)
 #define RANGES_NO_UNIQUE_ADDRESS [[no_unique_address]]
 #else
 #define RANGES_NO_UNIQUE_ADDRESS
