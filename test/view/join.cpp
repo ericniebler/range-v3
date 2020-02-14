@@ -243,7 +243,7 @@ int main()
 
     // https://github.com/ericniebler/range-v3/issues/1320
     {
-        auto op = [](auto & input, size_t i, auto & ins)
+        auto op = [](auto & input, int i, auto & ins)
         {
             return input | ranges::views::chunk(i)
                          | ranges::views::join(ins);
@@ -257,7 +257,7 @@ int main()
     }
 
     {
-        auto op = [](auto & input, size_t i, auto & ins)
+        auto op = [](auto & input, int i, auto & ins)
         {
             return input | ranges::views::chunk(i)
                          | ranges::views::join(ins);
