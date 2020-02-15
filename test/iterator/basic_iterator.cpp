@@ -10,6 +10,7 @@
 // Project home: https://github.com/ericniebler/range-v3
 
 #include <cstring>
+#include <type_traits>
 #include <tuple>
 #include <range/v3/iterator/basic_iterator.hpp>
 #include <range/v3/utility/common_tuple.hpp>
@@ -82,12 +83,13 @@ namespace test_weak_input
     }
 }
 
-namespace test_random_access
+namespace test_contiguous
 {
     template<typename I>
     struct cursor
     {
         I it_;
+        using contiguous = std::true_type;
         struct mixin : ranges::basic_mixin<cursor>
         {
             mixin() = default;
@@ -116,10 +118,12 @@ namespace test_random_access
         }
     };
 
-    CPP_assert(ranges::detail::random_access_cursor<cursor<char *>>);
+    CPP_assert(ranges::detail::contiguous_cursor<cursor<char *>>);
 
     template<class I>
     using iterator = ranges::basic_iterator<cursor<I>>;
+
+    CPP_assert(ranges::contiguous_iterator<iterator<char *>>);
 
     static_assert(
         std::is_same<
@@ -428,7 +432,7 @@ int main()
     std::cout << "\nTesting basic_iterator\n";
 
     ::test_weak_input::test();
-    ::test_random_access::test();
+    ::test_contiguous::test();
     ::test_weak_output::test();
     ::test_output::test();
     ::test_move_only::test();

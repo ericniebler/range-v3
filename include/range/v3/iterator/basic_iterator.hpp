@@ -326,19 +326,22 @@ namespace ranges
         }
 
         template<typename Cur>
-        using cpp20_iter_cat_of_t =                      //
-            std::enable_if_t<                            //
-                input_cursor<Cur>,                       //
-                detail::if_then_t<                       //
-                    random_access_cursor<Cur>,           //
-                    std::random_access_iterator_tag,     //
-                    detail::if_then_t<                   //
-                        bidirectional_cursor<Cur>,       //
-                        std::bidirectional_iterator_tag, //
-                        detail::if_then_t<               //
-                            forward_cursor<Cur>,         //
-                            std::forward_iterator_tag,   //
-                            std::input_iterator_tag>>>>;
+        using cpp20_iter_cat_of_t =                          //
+            std::enable_if_t<                                //
+                input_cursor<Cur>,                           //
+                detail::if_then_t<                           //
+                    contiguous_cursor<Cur>,                  //
+                    contiguous_iterator_tag,                 //
+                    detail::if_then_t<                       //
+                        random_access_cursor<Cur>,           //
+                        std::random_access_iterator_tag,     //
+                        detail::if_then_t<                   //
+                            bidirectional_cursor<Cur>,       //
+                            std::bidirectional_iterator_tag, //
+                            detail::if_then_t<               //
+                                forward_cursor<Cur>,         //
+                                std::forward_iterator_tag,   //
+                                std::input_iterator_tag>>>>>;
 
         // clang-format off
         template<typename C>
