@@ -561,16 +561,6 @@ namespace ranges
                 meta::lazy::invoke<TupleLike, meta::lazy::_t<common_type<Ts, Us>>...>>
         {};
 
-        template<typename T, typename U>
-        using make_common_pair =
-            meta::if_<meta::or_<std::is_reference<T>, std::is_reference<U>>,
-                      common_pair<T, U>, std::pair<T, U>>;
-
-        template<typename... Ts>
-        using make_common_tuple =
-            meta::if_<meta::any_of<meta::list<Ts...>, meta::quote<std::is_reference>>,
-                      common_tuple<Ts...>, std::tuple<Ts...>>;
-
         template<typename, typename, typename, typename = void>
         struct common_ref_tuple_like
         {};
@@ -594,13 +584,13 @@ namespace concepts
     struct common_type<std::pair<F1, S1>, ranges::common_pair<F2, S2>>
       : ranges::detail::common_type_tuple_like<
             std::pair<F1, S1>, ranges::common_pair<F2, S2>,
-            meta::quote<ranges::detail::make_common_pair>>
+            meta::quote<ranges::common_pair>>
     {};
     template<typename F1, typename S1, typename F2, typename S2>
     struct common_type<ranges::common_pair<F1, S1>, std::pair<F2, S2>>
       : ranges::detail::common_type_tuple_like<
             ranges::common_pair<F1, S1>, std::pair<F2, S2>,
-            meta::quote<ranges::detail::make_common_pair>>
+            meta::quote<ranges::common_pair>>
     {};
     template<typename F1, typename S1, typename F2, typename S2>
     struct common_type<ranges::common_pair<F1, S1>, ranges::common_pair<F2, S2>>
@@ -613,13 +603,13 @@ namespace concepts
     struct common_type<ranges::common_tuple<Ts...>, std::tuple<Us...>>
       : ranges::detail::common_type_tuple_like<
             ranges::common_tuple<Ts...>, std::tuple<Us...>,
-            meta::quote<ranges::detail::make_common_tuple>>
+            meta::quote<ranges::common_tuple>>
     {};
     template<typename... Ts, typename... Us>
     struct common_type<std::tuple<Ts...>, ranges::common_tuple<Us...>>
       : ranges::detail::common_type_tuple_like<
             std::tuple<Ts...>, ranges::common_tuple<Us...>,
-            meta::quote<ranges::detail::make_common_tuple>>
+            meta::quote<ranges::common_tuple>>
     {};
     template<typename... Ts, typename... Us>
     struct common_type<ranges::common_tuple<Ts...>, ranges::common_tuple<Us...>>
@@ -635,7 +625,7 @@ namespace concepts
                                   Qual2>
       : ranges::detail::common_ref_tuple_like<
             ranges::common_pair<Qual1<F1>, Qual1<S1>>, std::pair<Qual2<F2>, Qual2<S2>>,
-            meta::quote<ranges::detail::make_common_pair>>
+            meta::quote<ranges::common_pair>>
     {};
     template<typename F1, typename S1, typename F2, typename S2,
              template<typename> class Qual1, template<typename> class Qual2>
@@ -643,7 +633,7 @@ namespace concepts
                                   Qual2>
       : ranges::detail::common_ref_tuple_like<
             std::pair<Qual1<F1>, Qual1<S1>>, ranges::common_pair<Qual2<F2>, Qual2<S2>>,
-            meta::quote<ranges::detail::make_common_pair>>
+            meta::quote<ranges::common_pair>>
     {};
     template<typename F1, typename S1, typename F2, typename S2,
              template<typename> class Qual1, template<typename> class Qual2>
@@ -660,7 +650,7 @@ namespace concepts
                                   Qual2>
       : ranges::detail::common_ref_tuple_like<
             ranges::common_tuple<Qual1<Ts>...>, std::tuple<Qual2<Us>...>,
-            meta::quote<ranges::detail::make_common_tuple>>
+            meta::quote<ranges::common_tuple>>
     {};
     template<typename... Ts, typename... Us, template<typename> class Qual1,
              template<typename> class Qual2>
@@ -668,7 +658,7 @@ namespace concepts
                                   Qual2>
       : ranges::detail::common_ref_tuple_like<
             std::tuple<Qual1<Ts>...>, ranges::common_tuple<Qual2<Us>...>,
-            meta::quote<ranges::detail::make_common_tuple>>
+            meta::quote<ranges::common_tuple>>
     {};
     template<typename... Ts, typename... Us, template<typename> class Qual1,
              template<typename> class Qual2>
