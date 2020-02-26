@@ -30,6 +30,7 @@
 #include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/filter.hpp>
+#include <range/v3/view/enumerate.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -37,7 +38,8 @@ RANGES_DIAGNOSTIC_IGNORE_RANGE_LOOP_ANALYSIS
 
 using namespace ranges;
 
-struct printer {
+struct printer
+{
     std::ostream &os_;
     bool &first_;
 
@@ -50,7 +52,8 @@ struct printer {
     }
 };
 
-namespace std {
+namespace std
+{
     template<typename... Ts>
     std::ostream &operator<<(std::ostream &os, std::tuple<Ts...> const &t)
     {
@@ -278,6 +281,16 @@ void test_bug_1296()
 
     CHECK(ranges::size(v) == 1u);
     CHECK(*ranges::begin(v) == 42);
+}
+
+// https://github.com/ericniebler/range-v3/issues/1422
+void test_1422()
+{
+    int v1[] = {1,2,3};
+    auto e = v1 | ranges::views::enumerate;
+    auto cp = ranges::views::cartesian_product(e, e);
+    using CP = decltype(cp);
+    CPP_assert(ranges::input_range<CP>);
 }
 
 int main()
