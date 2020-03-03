@@ -159,8 +159,13 @@ namespace ranges
     /// \cond
     namespace detail
     {
+#if RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
         template<typename D>
-        RANGES_INLINE_VAR constexpr bool _is_integer_like_ = std::is_integral<D>::value;
+        inline constexpr bool _is_integer_like_ = std::is_integral<D>::value;
+#else
+        template<typename D, typename = void>
+        constexpr bool _is_integer_like_ = std::is_integral<D>::value;
+#endif
 
         // clang-format off
         template<typename D>
