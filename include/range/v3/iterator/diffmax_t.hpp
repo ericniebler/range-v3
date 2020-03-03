@@ -340,8 +340,13 @@ namespace ranges
             }
         };
 
+#if RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
         template<>
-        RANGES_INLINE_VAR constexpr bool _is_integer_like_<diffmax_t> = true;
+        inline constexpr bool _is_integer_like_<diffmax_t> = true;
+#else
+        template<typename Enable>
+        constexpr bool _is_integer_like_<diffmax_t, Enable> = true;
+#endif
     } // namespace detail
     /// \endcond
 } // namespace ranges
