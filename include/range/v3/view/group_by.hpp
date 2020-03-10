@@ -124,7 +124,7 @@ namespace ranges
                 requires IsConst && (!Other)) //
                 cursor(cursor<Other> that)
               : cur_(std::move(that.cur_))
-              , last_(std::move(last_))
+              , last_(std::move(that.last_))
               , fun_(std::move(that.fun_))
             {}
         };
