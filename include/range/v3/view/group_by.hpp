@@ -28,6 +28,7 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
+#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/semiregular_box.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
@@ -53,56 +54,52 @@ namespace ranges
     private:
         friend range_access;
         Rng rng_;
+        // cached version of the end of the first subrange / start of the second subrange
+        detail::non_propagating_cache<iterator_t<Rng>> second_;
         semiregular_box_t<Fun> fun_;
 
-        template<bool IsConst>
+        struct pred
+        {
+            iterator_t<Rng> first_;
+            semiregular_box_ref_or_val_t<Fun, false> fun_;
+            bool operator()(range_reference_t<Rng> r) const
+            {
+                return invoke(fun_, *first_, r);
+            }
+        };
+
         struct cursor
         {
         private:
-            friend struct cursor<!IsConst>;
             friend range_access;
             friend group_by_view;
-            using CRng = meta::const_if_c<IsConst, Rng>;
-            iterator_t<CRng> cur_;
-            sentinel_t<CRng> last_;
-            semiregular_box_ref_or_val_t<Fun, IsConst> fun_;
+            iterator_t<Rng> cur_;
+            iterator_t<Rng> next_cur_;
+            sentinel_t<Rng> last_;
+            semiregular_box_ref_or_val_t<Fun, false> fun_;
 
             struct mixin : basic_mixin<cursor>
             {
                 mixin() = default;
                 using basic_mixin<cursor>::basic_mixin;
-                iterator_t<CRng> base() const
+                iterator_t<Rng> base() const
                 {
                     return this->get().cur_;
                 }
             };
 
-            struct pred
+            auto read() const -> subrange<iterator_t<Rng>>
             {
-                iterator_t<CRng> first_;
-                semiregular_box_ref_or_val_t<Fun, IsConst> fun_;
-                bool operator()(range_reference_t<CRng> r) const
-                {
-                    return invoke(fun_, *first_, r);
-                }
-            };
-#ifdef RANGES_WORKAROUND_MSVC_787074
-            template<bool Const = IsConst>
-            auto read() const
-                -> take_while_view<subrange<iterator_t<meta::const_if_c<Const, Rng>>,
-                                            sentinel_t<meta::const_if_c<Const, Rng>>>,
-                                   pred>
-#else  // ^^^ workaround / no workaround vvv
-            auto read() const
-                -> take_while_view<subrange<iterator_t<CRng>, sentinel_t<CRng>>, pred>
-#endif // RANGES_WORKAROUND_MSVC_787074
-            {
-                return {{cur_, last_}, {cur_, fun_}};
+                return {cur_, next_cur_};
             }
             void next()
             {
-                cur_ = find_if_not(cur_, last_, pred{cur_, fun_});
+                cur_ = next_cur_;
+                next_cur_ = cur_ != last_
+                              ? find_if_not(ranges::next(cur_), last_, pred{cur_, fun_})
+                              : cur_;
             }
+
             bool equal(default_sentinel_t) const
             {
                 return cur_ == last_;
@@ -111,34 +108,26 @@ namespace ranges
             {
                 return cur_ == that.cur_;
             }
-            cursor(semiregular_box_ref_or_val_t<Fun, IsConst> fun, iterator_t<CRng> first,
-                   sentinel_t<CRng> last)
+            cursor(semiregular_box_ref_or_val_t<Fun, false> fun, iterator_t<Rng> first,
+                   iterator_t<Rng> next_cur, sentinel_t<Rng> last)
               : cur_(first)
+              , next_cur_(next_cur)
               , last_(last)
               , fun_(fun)
             {}
 
         public:
             cursor() = default;
-            CPP_template(bool Other)(         //
-                requires IsConst && (!Other)) //
-                cursor(cursor<Other> that)
-              : cur_(std::move(that.cur_))
-              , last_(std::move(last_))
-              , fun_(std::move(that.fun_))
-            {}
         };
-        cursor<false> begin_cursor()
+        cursor begin_cursor()
         {
-            return {fun_, ranges::begin(rng_), ranges::end(rng_)};
-        }
-        template<bool Const = true>
-        auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
-            requires Const && range<meta::const_if_c<Const, Rng>> && invocable<
-                Fun const &, range_common_reference_t<meta::const_if_c<Const, Rng>>,
-                range_common_reference_t<meta::const_if_c<Const, Rng>>>)
-        {
-            return {fun_, ranges::begin(rng_), ranges::end(rng_)};
+            auto b = ranges::begin(rng_);
+            auto e = ranges::end(rng_);
+            if(!second_)
+            {
+                second_ = b != e ? find_if_not(ranges::next(b), e, pred{b, fun_}) : b;
+            }
+            return {fun_, b, *second_, e};
         }
 
     public:
