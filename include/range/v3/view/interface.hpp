@@ -25,7 +25,6 @@
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
-#include <range/v3/range/conversion.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
 
@@ -465,30 +464,6 @@ namespace ranges
         {
             return Slice{}(detail::move(derived()), offs.from, offs.to);
         }
-        /// \cond
-        /// Implicit conversion to something that looks like a container.
-        CPP_template(typename Container, bool True = true)( // clang-format off
-            requires not_same_as_<Container, Derived> &&
-                detail::convertible_to_cont<D<True>, Container>)
-        RANGES_DEPRECATED(
-            "Implicit conversion from a view to a container is deprecated. "
-            "Please use ranges::to in <range/v3/range/conversion.hpp> instead.")
-        constexpr operator Container() // clang-format on
-        {
-            return ranges::to<Container>(derived());
-        }
-        /// \overload
-        CPP_template(typename Container, bool True = true)( // clang-format off
-            requires not_same_as_<Container, Derived> &&
-                detail::convertible_to_cont<D<True> const, Container>)
-        RANGES_DEPRECATED(
-            "Implicit conversion from a view to a container is deprecated. "
-            "Please use ranges::to in <range/v3/range/conversion.hpp> instead.")
-        constexpr operator Container() const // clang-format on
-        {
-            return ranges::to<Container>(derived());
-        }
-        /// \endcond
     private:
         /// \brief Print a range to an ostream
         template<bool True = true>
