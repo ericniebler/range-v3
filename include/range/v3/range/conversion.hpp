@@ -209,7 +209,7 @@ namespace ranges
 
         template<typename Rng>
         CPP_concept_bool range_and_not_view =
-            defer::range<Rng> && !defer::view_<Rng>;
+            ranges::defer::range<Rng> && !ranges::defer::view_<Rng>;
 
         template<typename Rng, typename Cont>
         CPP_concept_fragment(convertible_to_cont_impl_frag_, (Rng, Cont),
