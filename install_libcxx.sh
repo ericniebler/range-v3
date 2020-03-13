@@ -53,9 +53,9 @@ if [ ${VERSION} == $TRUNK_VERSION ]; then
     git clone --depth=1 https://github.com/llvm-mirror/libcxxabi.git llvm-source/projects/libcxxabi
 else
     echo "Fetching libc++/libc++abi version: ${VERSION}..."
-    LLVM_URL="http://releases.llvm.org/${VERSION}/llvm-${VERSION}.src.tar.xz"
-    LIBCXX_URL="http://releases.llvm.org/${VERSION}/libcxx-${VERSION}.src.tar.xz"
-    LIBCXXABI_URL="http://releases.llvm.org/${VERSION}/libcxxabi-${VERSION}.src.tar.xz"
+    LLVM_URL="https://releases.llvm.org/${VERSION}/llvm-${VERSION}.src.tar.xz"
+    LIBCXX_URL="https://releases.llvm.org/${VERSION}/libcxx-${VERSION}.src.tar.xz"
+    LIBCXXABI_URL="https://releases.llvm.org/${VERSION}/libcxxabi-${VERSION}.src.tar.xz"
     curl -O $LLVM_URL
     curl -O $LIBCXX_URL
     curl -O $LIBCXXABI_URL
