@@ -13,6 +13,7 @@
 #include <forward_list>
 #include <list>
 #include <vector>
+#include <range/v3/range/conversion.hpp>
 #include <range/v3/view/chunk.hpp>
 #include <range/v3/view/cycle.hpp>
 #include <range/v3/view/filter.hpp>

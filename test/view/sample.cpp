@@ -15,7 +15,7 @@ int main ()
     std::vector<int> pop(100);
     std::iota(std::begin(pop), std::end(pop), 0);
     {
-        constexpr std::size_t N = 32;
+        constexpr int N = 32;
         std::array<int, N> tmp;
         auto rng = pop | views::sample(N, engine);
         using Rng = decltype(rng);

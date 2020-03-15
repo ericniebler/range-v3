@@ -222,58 +222,31 @@ namespace ranges
                 return sample_view<all_t<Rng>, URNG>{
                     all(static_cast<Rng &&>(rng)), sample_size, generator};
             }
+
+            /// \cond
+            template<typename Rng, typename URNG>
+            auto operator()(Rng && rng, range_difference_t<Rng> sample_size,
+                            detail::reference_wrapper_<URNG> r) const
+                -> invoke_result_t<sample_base_fn, Rng, range_difference_t<Rng>, URNG &>
+            {
+                return (*this)(static_cast<Rng &&>(rng), sample_size, r.get());
+            }
+            /// \endcond
         };
 
         struct sample_fn : sample_base_fn
         {
             using sample_base_fn::operator();
 
-#ifdef RANGES_WORKAROUND_MSVC_OLD_LAMBDA
-            template<typename Size, typename URNG>
-            struct lamduh
-            {
-                Size n;
-                URNG & urng;
-
-                template<typename Rng>
-                auto operator()(Rng && rng) const
-                    -> invoke_result_t<sample_base_fn, Rng, range_difference_t<Rng>,
-                                       URNG &>
-                {
-                    return sample_base_fn{}(static_cast<Rng &&>(rng),
-                                            static_cast<range_difference_t<Rng>>(n),
-                                            urng);
-                }
-            };
-
             template<typename Size, typename URNG = detail::default_random_engine>
             constexpr auto CPP_fun(operator())(Size n,
                                                URNG & urng = detail::get_random_engine())(
                 const //
                 requires integral<Size> && uniform_random_bit_generator<URNG>)
             {
-                return make_view_closure(lamduh<Size, URNG>{std::move(n), urng});
+                return make_view_closure(bind_back(
+                    sample_base_fn{}, n, detail::reference_wrapper_<URNG>(urng)));
             }
-#else  // ^^^ workaround / no workaround vvv
-            template<typename Size, typename URNG = detail::default_random_engine>
-            constexpr auto CPP_fun(operator())(Size n,
-                                               URNG & urng = detail::get_random_engine())(
-                const //
-                requires integral<Size> && uniform_random_bit_generator<URNG>)
-            {
-                return make_view_closure(
-                    [n, &urng](
-                        auto && rng) -> invoke_result_t<sample_base_fn,
-                                                        decltype(rng),
-                                                        range_difference_t<decltype(rng)>,
-                                                        URNG &> {
-                        return sample_base_fn{}(
-                            static_cast<decltype(rng)>(rng),
-                            static_cast<range_difference_t<decltype(rng)>>(n),
-                            urng);
-                    });
-            }
-#endif // RANGES_WORKAROUND_MSVC_OLD_LAMBDA
         };
 
         /// \relates sample_fn

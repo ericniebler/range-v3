@@ -241,6 +241,34 @@ int main()
         CPP_assert(!common_range<decltype(rng)>);
     }
 
+    // https://github.com/ericniebler/range-v3/issues/1320
+    {
+        auto op = [](auto & input, int i, auto & ins)
+        {
+            return input | ranges::views::chunk(i)
+                         | ranges::views::join(ins);
+        };
+        std::string input{"foobarbaxbat"};
+        std::string insert{"X"};
+        auto rng = op(input, 2, insert);
+        std::cout << rng << '\n';
+        ::check_equal(rng, {'f','o','X','o','b','X','a','r','X','b','a','X','x','b','X',
+            'a','t'});
+    }
+
+    {
+        auto op = [](auto & input, int i, auto & ins)
+        {
+            return input | ranges::views::chunk(i)
+                         | ranges::views::join(ins);
+        };
+        std::vector<std::string> input{"foo","bar","bax","bat"};
+        std::string insert{"XX"};
+        auto rng = op(input, 2, insert);
+        std::cout << rng << '\n';
+        ::check_equal(rng, {"foo","bar","XX","bax","bat"});
+    }
+
     test_issue_283();
     test_issue_1414();
 

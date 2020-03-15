@@ -13,8 +13,10 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/view/counted.hpp>
+#include <range/v3/view/cycle.hpp>
 #include <range/v3/view/group_by.hpp>
 #include <range/v3/view/remove_if.hpp>
+#include <range/v3/view/take.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -94,6 +96,61 @@ int main()
         check_equal(*next(rng0.begin(), 2), {6, 7, 8});
         check_equal(*next(rng0.begin(), 3), {9});
         CHECK(distance(rng0) == 4);
+    }
+
+    {
+        std::vector<int> v3{1, 2, 3, 4, 5};
+        int count_invoc = 0;
+        auto rng = views::group_by(v3, [&](int, int) {
+            ++count_invoc;
+            return false;
+        });
+
+        CHECK(distance(rng) == 5);
+        CHECK(count_invoc == 4);
+
+        auto it = rng.begin();
+        check_equal(*it, {1});
+        check_equal(*++it, {2});
+        check_equal(*++it, {3});
+        check_equal(*++it, {4});
+        check_equal(*++it, {5});
+        // 7, not 8, because caching in begin()
+        CHECK(count_invoc == 7);
+    }
+
+    {
+        std::vector<int> v4 = {2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 3, 0};
+        auto rng = v4 | views::group_by(std::less<>{});
+        CHECK(distance(rng) == 4);
+        check_equal(*rng.begin(), {2, 3, 4, 5});
+        check_equal(*next(rng.begin()), {0, 1, 2, 3, 4, 5, 6});
+        check_equal(*next(rng.begin(), 2), {0, 1, 2, 3});
+        check_equal(*next(rng.begin(), 3), {0});
+    }
+
+    {
+        std::vector<int> v5 = { 0, 1, 2 };
+        auto rng = views::cycle(v5) | views::take(6) | views::group_by(std::less<>{});
+        CHECK(distance(rng) == 2);
+        check_equal(*rng.begin(), v5);
+        check_equal(*next(rng.begin()), v5);
+    }
+
+    {
+        std::vector<int> e;
+        auto rng = e | views::group_by(std::less<>{});
+        CHECK(distance(rng) == 0);
+    }
+
+    {
+        std::vector<int> single{2};
+        auto rng = single | views::group_by([](int, int) -> bool {
+            throw 0;
+        });
+
+        CHECK(distance(rng) == 1);
+        check_equal(*rng.begin(), {2});
     }
 
     return test_result();
