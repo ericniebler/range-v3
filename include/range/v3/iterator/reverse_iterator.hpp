@@ -42,6 +42,12 @@ namespace ranges
             {
                 mixin() = default;
                 using basic_mixin<reverse_cursor>::basic_mixin;
+                explicit mixin(reverse_cursor && cur)
+                  : basic_mixin<reverse_cursor>(static_cast<reverse_cursor &&>(cur))
+                {}
+                explicit mixin(reverse_cursor const & cur)
+                  : basic_mixin<reverse_cursor>(cur)
+                {}
                 constexpr mixin(I it)
                   : mixin{reverse_cursor{it}}
                 {}

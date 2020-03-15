@@ -49,7 +49,7 @@ namespace ranges
 
         template<typename T>
         RANGES_INLINE_VAR constexpr bool _safe_range<T &> = true;
-    }
+    } // namespace detail
 
     /// \cond
     namespace _begin_
@@ -67,7 +67,8 @@ namespace ranges
         void begin(std::initializer_list<T>) = delete;
 
         template<class I>
-        auto is_iterator(I) -> CPP_ret(void)(requires input_or_output_iterator<I>);
+        auto is_iterator(I)
+            -> CPP_ret(void)(requires input_or_output_iterator<I>);
 
         // clang-format off
         template<typename T>
@@ -126,14 +127,16 @@ namespace ranges
             template<typename R>
 #ifdef RANGES_WORKAROUND_GCC_89953
             constexpr auto CPP_fun(operator())(R && r)(
-                const                                   //
+                const                            //
                 noexcept(noexcept(impl_v<R>(r))) //
-                requires((detail::_safe_range<R>) && (has_member_begin<R> || has_non_member_begin<R>)))
+                requires((detail::_safe_range<R>)&&(has_member_begin<R> ||
+                                                    has_non_member_begin<R>)))
 #else
             constexpr auto CPP_fun(operator())(R && r)(
-                const                                   //
+                const                            //
                 noexcept(noexcept(impl<R>{}(r))) //
-                requires((detail::_safe_range<R>) && (has_member_begin<R> || has_non_member_begin<R>)))
+                requires((detail::_safe_range<R>)&&(has_member_begin<R> ||
+                                                    has_non_member_begin<R>)))
 #endif
             {
                 return impl<R>{}(r);
@@ -265,11 +268,13 @@ namespace ranges
 #ifdef RANGES_WORKAROUND_GCC_89953
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl_v<R>(r))) //
-                requires((detail::_safe_range<R>) && (has_member_end<R> || has_non_member_end<R>)))
+                requires((detail::_safe_range<R>)&&(has_member_end<R> ||
+                                                    has_non_member_end<R>)))
 #else
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl<R>{}(r))) //
-                requires((detail::_safe_range<R>) && (has_member_end<R> || has_non_member_end<R>)))
+                requires((detail::_safe_range<R>)&&(has_member_end<R> ||
+                                                    has_non_member_end<R>)))
 #endif
             {
                 return impl<R>{}(r);
@@ -448,8 +453,9 @@ namespace ranges
             template<typename R>
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl<R>{}(r))) //
-                requires((detail::_safe_range<R>) && (has_member_rbegin<R> || has_non_member_rbegin<R> ||
-                         can_reverse_end<R>)))
+                requires((detail::_safe_range<R>)&&(has_member_rbegin<R> ||
+                                                    has_non_member_rbegin<R> ||
+                                                    can_reverse_end<R>)))
             {
                 return impl<R>{}(r);
             }
@@ -582,8 +588,9 @@ namespace ranges
             template<typename R>
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl<R>{}(r))) //
-                requires((detail::_safe_range<R>) && (has_member_rend<R> || has_non_member_rend<R> ||
-                         can_reverse_begin<R>)))
+                requires((detail::_safe_range<R>)&&(has_member_rend<R> ||
+                                                    has_non_member_rend<R> ||
+                                                    can_reverse_begin<R>)))
             {
                 return impl<R>{}(r);
             }

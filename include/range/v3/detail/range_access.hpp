@@ -69,6 +69,7 @@ namespace ranges
             using type = decltype(range_access::mixin_base_2_<Cur>(42));
         };
 
+
     public:
         template<typename Cur>
         using single_pass_t = meta::_t<single_pass_<Cur>>;

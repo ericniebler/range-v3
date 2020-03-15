@@ -361,6 +361,13 @@ namespace ranges
             {
                 mixin() = default;
                 using basic_mixin<cpp17_iterator_cursor>::basic_mixin;
+                explicit mixin(cpp17_iterator_cursor && cur)
+                  : basic_mixin<cpp17_iterator_cursor>(
+                        static_cast<cpp17_iterator_cursor &&>(cur))
+                {}
+                explicit mixin(cpp17_iterator_cursor const & cur)
+                  : basic_mixin<cpp17_iterator_cursor>(cur)
+                {}
                 explicit mixin(I it)
                   : mixin{cpp17_iterator_cursor{std::move(it)}}
                 {}
