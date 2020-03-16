@@ -55,13 +55,28 @@ struct range_call
     using begin_t = Iter;
     using sentinel_t = typename sentinel_type<Iter>::type;
 
-    template<class B, class E, class... Args>
-    auto operator()(B &&b, E &&e, Args &&... args)
-     -> decltype(ranges::is_sorted(ranges::make_subrange(begin_t{b}, sentinel_t{e}),
-                                   std::forward<Args>(args)...))
+    template<class B, class E>
+    auto operator()(B && b, E && e)
+        -> decltype(ranges::is_sorted(ranges::make_subrange(begin_t{b}, sentinel_t{e})))
+    {
+        return ranges::is_sorted(ranges::make_subrange(begin_t{b}, sentinel_t{e}));
+    }
+    template<class B, class E, class A0>
+    auto operator()(B && b, E && e, A0 && a0)
+        -> decltype(ranges::is_sorted(ranges::make_subrange(begin_t{b}, sentinel_t{e}),
+                                      static_cast<A0 &&>(a0)))
     {
         return ranges::is_sorted(ranges::make_subrange(begin_t{b}, sentinel_t{e}),
-                                 std::forward<Args>(args)...);
+                                 static_cast<A0 &&>(a0));
+    }
+    template<class B, class E, class A0, class A1>
+    auto operator()(B && b, E && e, A0 && a0, A1 && a1)
+        -> decltype(ranges::is_sorted(ranges::make_subrange(begin_t{b}, sentinel_t{e}),
+                                      static_cast<A0 &&>(a0), static_cast<A1 &&>(a1)))
+    {
+        return ranges::is_sorted(ranges::make_subrange(begin_t{b}, sentinel_t{e}),
+                                 static_cast<A0 &&>(a0),
+                                 static_cast<A1 &&>(a1));
     }
 };
 

@@ -167,29 +167,29 @@ meta::if_c<B, T, T const &> rvalue_if(T const & t)
     return t;
 }
 
-template<bool RvalueOK, typename Algo, typename I, typename... Rest>
-auto _do_test_range_algo_1(Algo algo, I first, I last, Rest &&... rest)
-    -> ::checker<decltype(algo(first, last, rest...))>
-{
-    using S = meta::_t<sentinel_type<I>>;
-    using R = std::invoke_result_t<Algo const &, I const &, I const &, Rest...>;
-    //        using R = decltype(algo_(first, last, rest...));
-    auto check_algo = [algo, first, last, rest...](
-                          function_ref<void(R)> const & check) {
-        check(algo(first, last, rest...));
-        check(algo(first, S{base(last)}, rest...));
-        check(algo(::rvalue_if<RvalueOK>(ranges::make_subrange(first, last)), rest...));
-        check(algo(::rvalue_if<RvalueOK>(ranges::make_subrange(first, S{base(last)})),
-                   rest...));
-    };
-    return ::checker<R>{check_algo};
-}
-
 template<typename Algo, bool RvalueOK = false>
 struct test_range_algo_1
 {
 private:
     Algo algo_;
+
+    template<typename I, typename... Rest>
+    static auto _impl(Algo algo, I first, I last, Rest &&... rest)
+        -> ::checker<decltype(algo(first, last, rest...))>
+    {
+        using S = meta::_t<sentinel_type<I>>;
+        using R = decltype(algo(first, last, rest...));
+        auto check_algo = [algo, first, last, rest...](
+                              function_ref<void(R)> const & check) {
+            check(algo(first, last, rest...));
+            check(algo(first, S{base(last)}, rest...));
+            check(
+                algo(::rvalue_if<RvalueOK>(ranges::make_subrange(first, last)), rest...));
+            check(algo(::rvalue_if<RvalueOK>(ranges::make_subrange(first, S{base(last)})),
+                       rest...));
+        };
+        return ::checker<R>{check_algo};
+    }
 
 public:
     explicit test_range_algo_1(Algo algo)
@@ -198,24 +198,24 @@ public:
     template<typename I>
     auto operator()(I first, I last) const -> ::checker<decltype(algo_(first, last))>
     {
-        return _do_test_range_algo_1<RvalueOK>(algo_, first, last);
+        return test_range_algo_1::_impl(algo_, first, last);
     }
     template<typename I, typename T>
     auto operator()(I first, I last, T t) const -> ::checker<decltype(algo_(first, last, t))>
     {
-        return _do_test_range_algo_1<RvalueOK>(algo_, first, last, t);
+        return test_range_algo_1::_impl(algo_, first, last, t);
     }
     template<typename I, typename T, typename U>
     auto operator()(I first, I last, T t, U u) const
         -> ::checker<decltype(algo_(first, last, t, u))>
     {
-        return _do_test_range_algo_1<RvalueOK>(algo_, first, last, t, u);
+        return test_range_algo_1::_impl(algo_, first, last, t, u);
     }
     template<typename I, typename T, typename U, typename V>
     auto operator()(I first, I last, T t, U u, V v) const
         -> ::checker<decltype(algo_(first, last, t, u, v))>
     {
-        return _do_test_range_algo_1<RvalueOK>(algo_, first, last, t, u, v);
+        return test_range_algo_1::_impl(algo_, first, last, t, u, v);
     }
 };
 

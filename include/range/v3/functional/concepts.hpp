@@ -26,6 +26,12 @@ namespace ranges
     /// @{
 
     // clang-format off
+    // WORKAROUND mysterious msvc bug
+#if defined(_MSC_VER)
+    template<typename Fun, typename... Args>
+    CPP_concept_bool invocable =
+        std::is_invocable_v<Fun, Args...>;
+#else
     template<typename Fun, typename... Args>
     CPP_concept_fragment(invocable_,
         requires(Fun && fn) //
@@ -35,6 +41,7 @@ namespace ranges
     template<typename Fun, typename... Args>
     CPP_concept_bool invocable =
         CPP_fragment(ranges::invocable_, Fun, Args...);
+#endif
 
     template<typename Fun, typename... Args>
     CPP_concept_bool regular_invocable =
