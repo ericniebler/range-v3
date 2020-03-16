@@ -251,13 +251,16 @@ namespace ranges
         struct basic_adaptor_mixin : basic_mixin<adaptor_cursor>
         {
             basic_adaptor_mixin() = default;
-            // using basic_mixin<adaptor_cursor>::basic_mixin;
-            basic_adaptor_mixin(adaptor_cursor && cur)
+            #ifndef _MSC_VER
+            using basic_mixin<adaptor_cursor>::basic_mixin;
+            #else
+            explicit constexpr basic_adaptor_mixin(adaptor_cursor && cur)
               : basic_mixin<adaptor_cursor>(static_cast<adaptor_cursor &&>(cur))
             {}
-            basic_adaptor_mixin(adaptor_cursor const & cur)
+            explicit constexpr basic_adaptor_mixin(adaptor_cursor const & cur)
               : basic_mixin<adaptor_cursor>(cur)
             {}
+            #endif
             // All iterators into adapted ranges have a base() member for fetching
             // the underlying iterator.
             BaseIter base() const

@@ -81,13 +81,16 @@ namespace ranges
             struct mixin : basic_mixin<cursor>
             {
                 mixin() = default;
-                // using basic_mixin<cursor>::basic_mixin;
-                explicit mixin(cursor && cur)
+                #ifndef _MSC_VER
+                using basic_mixin<cursor>::basic_mixin;
+                #else
+                explicit constexpr mixin(cursor && cur)
                   : basic_mixin<cursor>(static_cast<cursor &&>(cur))
                 {}
-                explicit mixin(cursor const & cur)
+                explicit constexpr mixin(cursor const & cur)
                   : basic_mixin<cursor>(cur)
                 {}
+                #endif
                 iterator_t<Rng> base() const
                 {
                     return this->get().cur_;
