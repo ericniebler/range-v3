@@ -308,7 +308,13 @@ namespace ranges
             struct mixin : basic_mixin<move_into_cursor>
             {
                 mixin() = default;
-                using basic_mixin<move_into_cursor>::basic_mixin;
+                // using basic_mixin<move_into_cursor>::basic_mixin;
+                explicit mixin(move_into_cursor && cur)
+                  : basic_mixin<move_into_cursor>(static_cast<move_into_cursor &&>(cur))
+                {}
+                explicit mixin(move_into_cursor const & cur)
+                  : basic_mixin<move_into_cursor>(cur)
+                {}
                 explicit mixin(I it)
                   : mixin{move_into_cursor{std::move(it)}}
                 {}

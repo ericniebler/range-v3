@@ -402,6 +402,31 @@ namespace ranges
             {
                 return all(static_cast<Rng &&>(rng));
             }
+            // MSVC doesn't like variadics in operator() for some reason
+#if defined(_MSC_VER)
+            template<typename Rng0, typename Rng1>
+            auto operator()(Rng0 && rng0, Rng1 && rng1) const
+                -> CPP_ret(concat_view<all_t<Rng0>, all_t<Rng1>>)(        //
+                    requires viewable_range<Rng0> && input_range<Rng0> && //
+                        viewable_range<Rng1> && input_range<Rng1>)
+            {
+                return concat_view<all_t<Rng0>, all_t<Rng1>>{
+                    all(static_cast<Rng0 &&>(rng0)),
+                    all(static_cast<Rng1 &&>(rng1))};
+            }
+            template<typename Rng0, typename Rng1, typename Rng2>
+            auto operator()(Rng0 && rng0, Rng1 && rng1, Rng2 && rng2) const
+                -> CPP_ret(concat_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>>)( //
+                    requires viewable_range<Rng0> && input_range<Rng0> && //
+                        viewable_range<Rng1> && input_range<Rng1> &&
+                        viewable_range<Rng2> && input_range<Rng2>)
+            {
+                return concat_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>>{
+                    all(static_cast<Rng0 &&>(rng0)),
+                    all(static_cast<Rng1 &&>(rng1)),
+                    all(static_cast<Rng2 &&>(rng2))};
+            }
+#endif
         };
 
         /// \relates concat_fn

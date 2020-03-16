@@ -41,7 +41,7 @@ namespace ranges
             struct mixin : basic_mixin<reverse_cursor>
             {
                 mixin() = default;
-                using basic_mixin<reverse_cursor>::basic_mixin;
+                // using basic_mixin<reverse_cursor>::basic_mixin;
                 explicit mixin(reverse_cursor && cur)
                   : basic_mixin<reverse_cursor>(static_cast<reverse_cursor &&>(cur))
                 {}
