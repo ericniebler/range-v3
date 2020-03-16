@@ -126,6 +126,10 @@ namespace ranges
     {
         struct zip_fn
         {
+            constexpr empty_view<std::tuple<>> operator()() const noexcept
+            {
+                return {};
+            }
             template<typename... Rngs>
             auto operator()(Rngs &&... rngs) const -> CPP_ret(
                 zip_view<all_t<Rngs>...>)( //
@@ -134,11 +138,37 @@ namespace ranges
             {
                 return zip_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
             }
-
-            constexpr empty_view<std::tuple<>> operator()() const noexcept
+#if defined(_MSC_VER)
+            template<typename Rng0>
+            constexpr auto operator()(Rng0 && rng0) const
+                -> CPP_ret(zip_view<all_t<Rng0>>)( //
+                    requires input_range<Rng0> && viewable_range<Rng0>)
             {
-                return {};
+                return zip_view<all_t<Rng0>>{all(static_cast<Rng0 &&>(rng0))};
             }
+            template<typename Rng0, typename Rng1>
+            constexpr auto operator()(Rng0 && rng0, Rng1 && rng1) const
+                -> CPP_ret(zip_view<all_t<Rng0>, all_t<Rng1>>)(           //
+                    requires input_range<Rng0> && viewable_range<Rng0> && //
+                             input_range<Rng1> && viewable_range<Rng1>)
+            {
+                return zip_view<all_t<Rng0>, all_t<Rng1>>{ //
+                    all(static_cast<Rng0 &&>(rng0)),       //
+                    all(static_cast<Rng1 &&>(rng1))};
+            }
+            template<typename Rng0, typename Rng1, typename Rng2>
+            constexpr auto operator()(Rng0 && rng0, Rng1 && rng1, Rng2 && rng2) const
+                -> CPP_ret(zip_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>>)( //
+                    requires input_range<Rng0> && viewable_range<Rng0> &&    //
+                             input_range<Rng1> && viewable_range<Rng1> &&    //
+                             input_range<Rng2> && viewable_range<Rng2>)
+            {
+                return zip_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>>{ //
+                    all(static_cast<Rng0 &&>(rng0)),                    //
+                    all(static_cast<Rng1 &&>(rng1)),                    //
+                    all(static_cast<Rng2 &&>(rng2))};
+            }
+#endif
         };
 
         /// \relates zip_fn

@@ -13,7 +13,10 @@ add_subdirectory(view)
 add_subdirectory(experimental)
 
 rv3_add_test(test.config config config.cpp)
-# rv3_add_test(test.constexpr_core constexpr_core constexpr_core.cpp)
+if (NOT RANGES_CXX_COMPILER_MSVC)
+	# MSVC doesn't fare well on the constexpr tests.
+	rv3_add_test(test.constexpr_core constexpr_core constexpr_core.cpp)
+endif()
 rv3_add_test(test.multiple multiple multiple1.cpp multiple2.cpp)
 rv3_add_test(test.bug474 bug474 bug474.cpp)
 rv3_add_test(test.bug566 bug566 bug566.cpp)
