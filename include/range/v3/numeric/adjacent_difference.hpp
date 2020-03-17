@@ -40,7 +40,7 @@ namespace ranges
     /// @{
     // clang-format off
     template<typename I, typename O, typename BOp, typename P>
-    CPP_concept_fragment(differenceable_, (I, O, BOp, P),
+    CPP_concept_fragment(differenceable_, requires()(0) &&
         invocable<P&, iter_value_t<I>> &&
         copy_constructible<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> &&
         movable<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> &&

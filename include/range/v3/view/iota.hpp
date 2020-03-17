@@ -78,20 +78,22 @@ namespace ranges
 
         // clang-format off
         template<typename I>
-        CPP_concept_bool decrementable_ =
-            incrementable<I> &&
-            CPP_requires ((I) i) //
+        CPP_concept_fragment(_decrementable_,
+            requires(I i) //
             (
                 --i,
                 i--,
                 concepts::requires_<same_as<I&, decltype(--i)>>,
                 concepts::requires_<same_as<I, decltype(i--)>>
-            );
+            ));
+        template<typename I>
+        CPP_concept_bool decrementable_ =
+            incrementable<I> &&
+            CPP_fragment(detail::_decrementable_, I);
 
         template<typename I>
-        CPP_concept_bool advanceable_ =
-            decrementable_<I> && totally_ordered<I> &&
-            CPP_requires_ ((I) i, (I const) j, (iota_difference_t<CPP_type(I)> const) n) //
+        CPP_concept_fragment(_advanceable_,
+            requires(I i, I const j, iota_difference_t<I> const n) //
             (
                 j - j,
                 i += n,
@@ -103,13 +105,17 @@ namespace ranges
                 // Unsigned integers are advanceable, but subtracting them results in
                 // an unsigned integral, which is not the same as the difference type,
                 // which is signed.
-                concepts::requires_<convertible_to<decltype(j - j), iota_difference_t<CPP_type(I)>>>,
+                concepts::requires_<convertible_to<decltype(j - j), iota_difference_t<I>>>,
                 concepts::requires_<same_as<I&, decltype(i += n)>>,
                 concepts::requires_<same_as<I&, decltype(i -= n)>> //,
                 // concepts::requires_<convertible_to<decltype(i - n), I>>,
                 // concepts::requires_<convertible_to<decltype(i + n), I>>,
                 // concepts::requires_<convertible_to<decltype(n + i), I>>
-            );
+            ));
+        template<typename I>
+        CPP_concept_bool advanceable_ =
+            decrementable_<I> && totally_ordered<I> &&
+            CPP_fragment(detail::_advanceable_, I);
         // clang-format on
 
         template<typename I>

@@ -49,7 +49,7 @@ namespace ranges
 
         template<typename T>
         RANGES_INLINE_VAR constexpr bool _safe_range<T &> = true;
-    }
+    } // namespace detail
 
     /// \cond
     namespace _begin_
@@ -67,22 +67,29 @@ namespace ranges
         void begin(std::initializer_list<T>) = delete;
 
         template<class I>
-        auto is_iterator(I) -> CPP_ret(void)(requires input_or_output_iterator<I>);
+        auto is_iterator(I)
+            -> CPP_ret(void)(requires input_or_output_iterator<I>);
 
         // clang-format off
         template<typename T>
-        CPP_concept_bool has_member_begin =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_member_begin_,
+            requires(T & t) //
             (
                 _begin_::is_iterator(t.begin())
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool has_member_begin =
+            CPP_fragment(_begin_::has_member_begin_, T);
 
         template<typename T>
-        CPP_concept_bool has_non_member_begin =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_non_member_begin_,
+            requires(T & t) //
             (
                 _begin_::is_iterator(begin(t))
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool has_non_member_begin =
+            CPP_fragment(_begin_::has_non_member_begin_, T);
         // clang-format on
 
         struct fn
@@ -120,14 +127,16 @@ namespace ranges
             template<typename R>
 #ifdef RANGES_WORKAROUND_GCC_89953
             constexpr auto CPP_fun(operator())(R && r)(
-                const                                   //
+                const                            //
                 noexcept(noexcept(impl_v<R>(r))) //
-                requires((detail::_safe_range<R>) && (has_member_begin<R> || has_non_member_begin<R>)))
+                requires((detail::_safe_range<R>)&&(has_member_begin<R> ||
+                                                    has_non_member_begin<R>)))
 #else
             constexpr auto CPP_fun(operator())(R && r)(
-                const                                   //
+                const                            //
                 noexcept(noexcept(impl<R>{}(r))) //
-                requires((detail::_safe_range<R>) && (has_member_begin<R> || has_non_member_begin<R>)))
+                requires((detail::_safe_range<R>)&&(has_member_begin<R> ||
+                                                    has_non_member_begin<R>)))
 #endif
             {
                 return impl<R>{}(r);
@@ -198,18 +207,24 @@ namespace ranges
 
         // clang-format off
         template<typename T>
-        CPP_concept_bool has_member_end =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_member_end_,
+            requires(T & t) //
             (
                 _end_::_is_sentinel(t.end(), ranges::begin(t))
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool has_member_end =
+            CPP_fragment(_end_::has_member_end_, T);
 
         template<typename T>
-        CPP_concept_bool has_non_member_end =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_non_member_end_,
+            requires(T & t) //
             (
                 _end_::_is_sentinel(end(t), ranges::begin(t))
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool has_non_member_end =
+            CPP_fragment(_end_::has_non_member_end_, T);
         // clang-format on
 
         struct fn
@@ -253,11 +268,13 @@ namespace ranges
 #ifdef RANGES_WORKAROUND_GCC_89953
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl_v<R>(r))) //
-                requires((detail::_safe_range<R>) && (has_member_end<R> || has_non_member_end<R>)))
+                requires((detail::_safe_range<R>)&&(has_member_end<R> ||
+                                                    has_non_member_end<R>)))
 #else
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl<R>{}(r))) //
-                requires((detail::_safe_range<R>) && (has_member_end<R> || has_non_member_end<R>)))
+                requires((detail::_safe_range<R>)&&(has_member_end<R> ||
+                                                    has_non_member_end<R>)))
 #endif
             {
                 return impl<R>{}(r);
@@ -378,31 +395,40 @@ namespace ranges
 
         // clang-format off
         template<typename T>
-        CPP_concept_bool has_member_rbegin =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_member_rbegin_,
+            requires(T & t) //
             (
                 _begin_::is_iterator(t.rbegin())
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool has_member_rbegin =
+            CPP_fragment(_rbegin_::has_member_rbegin_, T);
 
         template<typename T>
-        CPP_concept_bool has_non_member_rbegin =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_non_member_rbegin_,
+            requires(T & t) //
             (
                 _begin_::is_iterator(rbegin(t))
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool has_non_member_rbegin =
+            CPP_fragment(_rbegin_::has_non_member_rbegin_, T);
 
         template<typename I>
         void _same_type(I, I);
 
         template<typename T>
-        CPP_concept_bool can_reverse_end =
-            CPP_requires ((T &&) t) //
+        CPP_concept_fragment(can_reverse_end_,
+            requires(T & t) //
             (
                 // make_reverse_iterator is constrained with
                 // bidirectional_iterator.
                 ranges::make_reverse_iterator(ranges::end(t)),
                 _rbegin_::_same_type(ranges::begin(t), ranges::end(t))
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool can_reverse_end =
+            CPP_fragment(_rbegin_::can_reverse_end_, T);
         // clang-format on
 
         struct fn
@@ -427,8 +453,9 @@ namespace ranges
             template<typename R>
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl<R>{}(r))) //
-                requires((detail::_safe_range<R>) && (has_member_rbegin<R> || has_non_member_rbegin<R> ||
-                         can_reverse_end<R>)))
+                requires((detail::_safe_range<R>)&&(has_member_rbegin<R> ||
+                                                    has_non_member_rbegin<R> ||
+                                                    can_reverse_end<R>)))
             {
                 return impl<R>{}(r);
             }
@@ -507,28 +534,37 @@ namespace ranges
 
         // clang-format off
         template<typename T>
-        CPP_concept_bool has_member_rend =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_member_rend_,
+            requires(T & t) //
             (
                 _end_::_is_sentinel(t.rend(), ranges::rbegin(t))
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool has_member_rend =
+            CPP_fragment(_rend_::has_member_rend_, T);
 
         template<typename T>
-        CPP_concept_bool has_non_member_rend =
-            CPP_requires ((T &) t) //
+        CPP_concept_fragment(has_non_member_rend_,
+            requires(T & t) //
             (
                 _end_::_is_sentinel(rend(t), ranges::rbegin(t))
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool has_non_member_rend =
+            CPP_fragment(_rend_::has_non_member_rend_, T);
 
         template<typename T>
-        CPP_concept_bool can_reverse_begin =
-            CPP_requires ((T &&) t) //
+        CPP_concept_fragment(can_reverse_begin_,
+            requires(T & t) //
             (
                 // make_reverse_iterator is constrained with
                 // bidirectional_iterator.
                 ranges::make_reverse_iterator(ranges::begin(t)),
                 _rbegin_::_same_type(ranges::begin(t), ranges::end(t))
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool can_reverse_begin =
+            CPP_fragment(_rend_::can_reverse_begin_, T);
         // clang-format on
 
         struct fn
@@ -552,8 +588,9 @@ namespace ranges
             template<typename R>
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl<R>{}(r))) //
-                requires((detail::_safe_range<R>) && (has_member_rend<R> || has_non_member_rend<R> ||
-                         can_reverse_begin<R>)))
+                requires((detail::_safe_range<R>)&&(has_member_rend<R> ||
+                                                    has_non_member_rend<R> ||
+                                                    can_reverse_begin<R>)))
             {
                 return impl<R>{}(r);
             }

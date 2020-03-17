@@ -62,11 +62,15 @@ namespace ranges
     /// @{
     // clang-format off
     template<typename Rng, typename I, typename S>
-    CPP_concept_bool erasable_range =
-        range<Rng> && CPP_requires ((Rng &&) rng, (I) first, (S) last) //
+    CPP_concept_fragment(erasable_range_,
+        requires(Rng && rng, I first, S last)
         (
-            ranges::erase(CPP_fwd(rng), first, last)
-        );
+            ranges::erase((Rng &&) rng, first, last)
+        )
+    );
+    template<typename Rng, typename I, typename S>
+    CPP_concept_bool erasable_range =
+        range<Rng> && CPP_fragment(ranges::erasable_range_, Rng, I, S);
     // clang-format on
     /// @}
 } // namespace ranges

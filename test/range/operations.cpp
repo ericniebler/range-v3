@@ -110,7 +110,7 @@ int main()
     }
 
     {
-        test_range(views::iota(0) | views::take_while([](int i) { return i < 4; }), 4);
+         test_range(views::iota(0) | views::take_while([](int i) { return i < 4; }), 4);
     }
 
     {

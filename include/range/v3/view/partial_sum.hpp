@@ -44,7 +44,7 @@ namespace ranges
     {
         // clang-format off
         template<typename Rng, typename Fun>
-        CPP_concept_fragment(partial_sum_view_constraints_, (Rng, Fun),
+        CPP_concept_fragment(partial_sum_view_constraints_, requires()(0) &&
             copy_constructible<range_value_t<Rng>> &&
             constructible_from<range_value_t<Rng>, range_reference_t<Rng>> &&
             assignable_from<range_value_t<Rng> &, range_reference_t<Rng>> &&

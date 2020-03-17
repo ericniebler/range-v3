@@ -30,7 +30,7 @@ namespace ranges
 {
     // clang-format off
     template<typename Rng, typename T, typename Fun>
-    CPP_concept_fragment(exclusive_scan_constraints_, (Rng, T, Fun),
+    CPP_concept_fragment(exclusive_scan_constraints_, requires()(0) &&
         invocable<Fun &, T, range_reference_t<Rng>> &&
         assignable_from<T &, invoke_result_t<Fun &, T, range_reference_t<Rng>>>
     );

@@ -62,11 +62,15 @@ namespace ranges
 
         // clang-format off
         template<typename Rng, typename T>
-        CPP_concept can_push_front_ =
-            CPP_requires ((Rng &&) rng, (T &&) t) //
+        CPP_concept_fragment(can_push_front_frag_,
+            requires(Rng && rng, T && t) //
             (
-                push_front(rng, CPP_fwd(t))
-            );
+                push_front(rng, (T &&) t)
+            )
+        );
+        template<typename Rng, typename T>
+        CPP_concept can_push_front_ =
+            CPP_fragment(adl_push_front_detail::can_push_front_frag_, Rng, T);
         // clang-format on
 
         struct push_front_fn

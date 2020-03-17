@@ -342,7 +342,7 @@ namespace ranges
 
         // clang-format off
         template<typename C>
-        CPP_concept_fragment(cpp17_input_cursor_, (C),
+        CPP_concept_fragment(cpp17_input_cursor_, requires()(0) &&
             // Either it is not single-pass, or else we can create a
             // proxy for postfix increment.
             !range_access::single_pass_t<uncvref_t<C>>::value ||
@@ -357,7 +357,7 @@ namespace ranges
             CPP_fragment(cpp17_input_cursor_, C);
 
         template<typename C>
-        CPP_concept_fragment(cpp17_forward_cursor_, (C),
+        CPP_concept_fragment(cpp17_forward_cursor_, requires()(0) &&
             std::is_reference<cursor_reference_t<C>>::value
         );
 
@@ -397,7 +397,14 @@ namespace ranges
         template<typename Cur, typename = void>
         struct readable_iterator_associated_types_base : range_access::mixin_base_t<Cur>
         {
+            readable_iterator_associated_types_base() = default;
             using range_access::mixin_base_t<Cur>::mixin_base_t;
+            readable_iterator_associated_types_base(Cur && cur)
+              : range_access::mixin_base_t<Cur>(static_cast<Cur &&>(cur))
+            {}
+            readable_iterator_associated_types_base(Cur const & cur)
+              : range_access::mixin_base_t<Cur>(cur)
+            {}
         };
 
         template<typename Cur>
@@ -405,8 +412,15 @@ namespace ranges
             Cur, always_<void, cpp17_iter_cat_of_t<Cur>>>
           : range_access::mixin_base_t<Cur>
         {
-            using range_access::mixin_base_t<Cur>::mixin_base_t;
             using iterator_category = cpp17_iter_cat_of_t<Cur>;
+            readable_iterator_associated_types_base() = default;
+            using range_access::mixin_base_t<Cur>::mixin_base_t;
+            readable_iterator_associated_types_base(Cur && cur)
+              : range_access::mixin_base_t<Cur>(static_cast<Cur &&>(cur))
+            {}
+            readable_iterator_associated_types_base(Cur const & cur)
+              : range_access::mixin_base_t<Cur>(cur)
+            {}
         };
 
         template<typename Cur, bool IsReadable /*= (bool) readable_cursor<Cur>*/>
@@ -421,7 +435,14 @@ namespace ranges
             using reference = void;
             using difference_type = range_access::cursor_difference_t<Cur>;
 
+            iterator_associated_types_base_() = default;
             using range_access::mixin_base_t<Cur>::mixin_base_t;
+            iterator_associated_types_base_(Cur && cur)
+              : range_access::mixin_base_t<Cur>(static_cast<Cur &&>(cur))
+            {}
+            iterator_associated_types_base_(Cur const & cur)
+              : range_access::mixin_base_t<Cur>(cur)
+            {}
         };
 
         template<typename Cur>
@@ -452,8 +473,15 @@ namespace ranges
                           std::add_pointer<reference>>>;
             using common_reference = common_reference_t<reference, value_type &>;
 
+            iterator_associated_types_base_() = default;
             using readable_iterator_associated_types_base<
                 Cur>::readable_iterator_associated_types_base;
+            iterator_associated_types_base_(Cur && cur)
+              : readable_iterator_associated_types_base<Cur>(static_cast<Cur &&>(cur))
+            {}
+            iterator_associated_types_base_(Cur const & cur)
+              : readable_iterator_associated_types_base<Cur>(cur)
+            {}
         };
 
         template<typename Cur>
@@ -525,6 +553,14 @@ namespace ranges
         {}
         // Mix in any additional constructors provided by the mixin
         using base_t::base_t;
+
+        explicit basic_iterator(Cur && cur)
+          : base_t(static_cast<Cur &&>(cur))
+        {}
+
+        explicit basic_iterator(Cur const & cur)
+          : base_t(cur)
+        {}
 
         template<typename OtherCur>
         constexpr auto operator=(basic_iterator<OtherCur> that)
@@ -634,7 +670,7 @@ namespace ranges
         constexpr auto operator++(int)
         {
             return this->post_increment_(meta::bool_ < detail::input_cursor<Cur> &&
-                                             !detail::forward_cursor<Cur> > {},
+                                             !detail::forward_cursor<Cur>> {},
                                          0);
         }
 

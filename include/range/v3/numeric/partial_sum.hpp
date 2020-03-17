@@ -57,7 +57,7 @@ namespace ranges
     // axiom: BOp is associative over values of I.
     // clang-format off
     template<typename I, typename BOp>
-    CPP_concept_fragment(indirect_semigroup_, (I, BOp),
+    CPP_concept_fragment(indirect_semigroup_, requires()(0) &&
         copyable<iter_value_t<I>> &&
         indirectly_regular_binary_invocable_<
             composed<coerce<iter_value_t<I>>, BOp>,
@@ -69,7 +69,7 @@ namespace ranges
         CPP_fragment(ranges::indirect_semigroup_, I, BOp);
 
     template<typename I, typename O, typename BOp = plus, typename P = identity>
-    CPP_concept_fragment(partial_sum_constraints_, (I, O, BOp, P),
+    CPP_concept_fragment(partial_sum_constraints_, requires()(0) &&
         indirect_semigroup<
             projected<projected<I, detail::as_value_type_t<I>>, P>,
             BOp> &&

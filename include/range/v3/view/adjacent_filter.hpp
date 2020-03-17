@@ -38,7 +38,7 @@ namespace ranges
     {
         // clang-format off
         template<typename Rng, typename Pred>
-        CPP_concept_fragment(adjacent_filter_constraints_, (Rng, Pred),
+        CPP_concept_fragment(adjacent_filter_constraints_, requires()(0) &&
             indirect_binary_predicate_<Pred, iterator_t<Rng>, iterator_t<Rng>>
         );
         template<typename Rng, typename Pred>

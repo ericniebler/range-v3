@@ -19,6 +19,11 @@ environment:
       HEADER_CHECK: On
 
     - CXX: cl
+      CPP: 17
+      platform: x64_x86
+      configuration: Release
+
+    - CXX: cl
       CPP: latest
       platform: x64
       configuration: Release

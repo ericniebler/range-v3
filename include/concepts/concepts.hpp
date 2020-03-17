@@ -80,11 +80,8 @@
 
 #define CPP_PP_CAT_(X, ...)  X ## __VA_ARGS__
 #define CPP_PP_CAT(X, ...)   CPP_PP_CAT_(X, __VA_ARGS__)
-#define CPP_PP_CAT2_(X, ...) X ## __VA_ARGS__
-#define CPP_PP_CAT2(X, ...)  CPP_PP_CAT2_(X, __VA_ARGS__)
 
 #define CPP_PP_EVAL(X, ...) X(__VA_ARGS__)
-#define CPP_PP_EVAL2(X, ...) X(__VA_ARGS__)
 
 #define CPP_PP_EXPAND(...) __VA_ARGS__
 #define CPP_PP_EAT(...)
@@ -92,14 +89,18 @@
 #define CPP_PP_IS_PAREN(x) CPP_PP_CHECK(CPP_PP_IS_PAREN_PROBE x)
 #define CPP_PP_IS_PAREN_PROBE(...) CPP_PP_PROBE(~)
 
+// The final CPP_PP_EXPAND here is to avoid
+// https://stackoverflow.com/questions/5134523/msvc-doesnt-expand-va-args-correctly
 #define CPP_PP_COUNT(...)                                                       \
-    CPP_PP_COUNT_(__VA_ARGS__,                                                  \
-        50,49,48,47,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,            \
-        30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,            \
-        10,9,8,7,6,5,4,3,2,1,)                                                  \
-        /**/
+    CPP_PP_EXPAND(CPP_PP_COUNT_(__VA_ARGS__,                                    \
+        50, 49, 48, 47, 46, 45, 44, 43, 42, 41,                                 \
+        40, 39, 38, 37, 36, 35, 34, 33, 32, 31,                                 \
+        30, 29, 28, 27, 26, 25, 24, 23, 22, 21,                                 \
+        20, 19, 18, 17, 16, 15, 14, 13, 12, 11,                                 \
+        10, 9, 8, 7, 6, 5, 4, 3, 2, 1,))                                        \
+    /**/
 #define CPP_PP_COUNT_(                                                          \
-    _1, _2, _3, _4, _5, _6, _7, _8, _9, _10,                                    \
+    _01, _02, _03, _04, _05, _06, _07, _08, _09, _10,                           \
     _11, _12, _13, _14, _15, _16, _17, _18, _19, _20,                           \
     _21, _22, _23, _24, _25, _26, _27, _28, _29, _30,                           \
     _31, _32, _33, _34, _35, _36, _37, _38, _39, _40,                           \
@@ -215,8 +216,11 @@
     __VA_ARGS__
 #define CPP_literal(...) \
     __VA_ARGS__
-#define CPP_concept_fragment(NAME, ARGS, ...) \
-    META_CONCEPT NAME = __VA_ARGS__
+#define CPP_concept_fragment(NAME, ...) \
+    META_CONCEPT NAME = CPP_PP_CAT(CPP_concept_fragment_reqs_, __VA_ARGS__)
+#define CPP_concept_fragment_reqs_requires(...) \
+    requires(__VA_ARGS__) CPP_concept_fragment_reqs_
+#define CPP_concept_fragment_reqs_(...) { __VA_ARGS__ ; }
 #define CPP_fragment(NAME, ...) \
     NAME<__VA_ARGS__>
 #else
@@ -259,16 +263,29 @@
     /**/
 #define CPP_defer(CONCEPT, ...)\
     CPP_defer_(CONCEPT, CPP_PP_FOR_EACH(CPP_type_, __VA_ARGS__))
-#define CPP_concept_fragment(NAME, ARGS, ...) \
-    std::enable_if_t<__VA_ARGS__, ::concepts::detail::true_type> \
-    CPP_PP_CAT(NAME, CPP_concept_fragment_)( \
-        ::concepts::detail::tag<CPP_PP_EXPAND ARGS> *); \
-    ::concepts::detail::false_type \
-    CPP_PP_CAT(NAME, CPP_concept_fragment_)(void *) \
+#define CPP_concept_fragment(NAME, ...) \
+    auto NAME ## CPP_concept_fragment_impl_ \
+        CPP_concept_fragment_reqs_ ## __VA_ARGS__> {} \
+    template<typename... As>\
+    char NAME ## CPP_concept_fragment_(\
+        ::concepts::detail::tag<As...> *, \
+        decltype(&NAME ## CPP_concept_fragment_impl_<As...>)); \
+    char (&NAME ## CPP_concept_fragment_(...))[2] \
     /**/
+#if defined(_MSC_VER) && !defined(__clang__)
+#define CPP_concept_fragment_true(...) \
+    ::concepts::detail::true_<decltype(__VA_ARGS__, void())>()
+#else
+#define CPP_concept_fragment_true(...) \
+    !(decltype(__VA_ARGS__, void(), false){})
+#endif
+#define CPP_concept_fragment_reqs_requires(...) \
+    (__VA_ARGS__) -> std::enable_if_t<CPP_concept_fragment_reqs_2_
+#define CPP_concept_fragment_reqs_2_(...) \
+    CPP_concept_fragment_true(__VA_ARGS__)
 #define CPP_fragment(NAME, ...) \
-    decltype(CPP_PP_CAT(NAME, CPP_concept_fragment_)(\
-        (::concepts::detail::tag<__VA_ARGS__> *) nullptr))::value() \
+    (1u==sizeof(NAME ## CPP_concept_fragment_(\
+        static_cast<::concepts::detail::tag<__VA_ARGS__> *>(nullptr), nullptr))) \
     /**/
 #endif
 
@@ -647,6 +664,12 @@ namespace concepts
             static constexpr bool value() noexcept { return true; }
         };
 
+        template<class>
+        constexpr bool true_()
+        {
+            return true;
+        }
+
         template<typename...>
         struct tag;
 
@@ -886,14 +909,17 @@ namespace concepts
         CPP_DIAGNOSTIC_IGNORE_FLOAT_EQUAL
 
         template<typename T, typename U>
-        CPP_concept_bool weakly_equality_comparable_with_ =
-            CPP_requires ((detail::as_cref_t<T>) t, (detail::as_cref_t<U>) u) //
+        CPP_concept_fragment(weakly_equality_comparable_with_frag_,
+            requires(detail::as_cref_t<T> t, detail::as_cref_t<U> u) //
             (
                 (t == u) ? 1 : 0,
                 (t != u) ? 1 : 0,
                 (u == t) ? 1 : 0,
                 (u != t) ? 1 : 0
-            );
+            ));
+        template<typename T, typename U>
+        CPP_concept_bool weakly_equality_comparable_with_ =
+            CPP_fragment(detail::weakly_equality_comparable_with_frag_, T, U);
 
         CPP_DIAGNOSTIC_POP
     } // namespace detail
@@ -945,11 +971,15 @@ namespace concepts
             std::is_convertible<std::add_rvalue_reference_t<From>, To>::value;
 
         template<typename From, typename To>
-        CPP_concept_bool explicitly_convertible_to =
-            CPP_requires_ ((CPP_type(From)(*)()) from) //
+        CPP_concept_fragment(explicitly_convertible_to_,
+            requires(From(*from)()) //
             (
                 static_cast<To>(from())
-            );
+            )
+        );
+        template<typename From, typename To>
+        CPP_concept_bool explicitly_convertible_to =
+            CPP_fragment(concepts::explicitly_convertible_to_, From, To);
         /// \endcond
 
         template<typename From, typename To>
@@ -958,7 +988,7 @@ namespace concepts
             explicitly_convertible_to<From, To>;
 
         template<typename T, typename U>
-        CPP_concept_fragment(derived_from_, (T, U),
+        CPP_concept_fragment(derived_from_, requires()(0) &&
             convertible_to<T const volatile *, U const volatile *>
         );
         template<typename T, typename U>
@@ -967,7 +997,7 @@ namespace concepts
             CPP_fragment(concepts::derived_from_, T, U);
 
         template<typename T, typename U>
-        CPP_concept_fragment(common_reference_with_, (T, U),
+        CPP_concept_fragment(common_reference_with_, requires()(0) &&
             same_as<common_reference_t<T, U>,
                     common_reference_t<U, T>> &&
             convertible_to<T, common_reference_t<T, U>> &&
@@ -978,7 +1008,7 @@ namespace concepts
             CPP_fragment(concepts::common_reference_with_, T, U);
 
         template<typename T, typename U>
-        CPP_concept_fragment(common_with_, (T, U),
+        CPP_concept_fragment(common_with_, requires()(0) &&
             same_as<common_type_t<T, U>,
                     common_type_t<U, T>> &&
             convertible_to<T, common_type_t<T, U>> &&
@@ -1011,31 +1041,40 @@ namespace concepts
             !signed_integral<T>;
 
         template<typename T, typename U>
-        CPP_concept_bool assignable_from =
-            std::is_lvalue_reference<T>::value &&
-            CPP_requires ((T) t, (U &&) u) //
+        CPP_concept_fragment(assignable_from_,
+            requires(T t, U && u) //
             (
                 t = (U &&) u,
                 requires_<same_as<T, decltype(t = (U &&) u)>>
-            );
+            ));
+        template<typename T, typename U>
+        CPP_concept_bool assignable_from =
+            std::is_lvalue_reference<T>::value &&
+            CPP_fragment(defs::assignable_from_, T, U);
 
         template<typename T>
-        CPP_concept_bool swappable =
-            CPP_requires ((T &) t, (T &) u) //
+        CPP_concept_fragment(swappable_,
+            requires(T & t, T & u) //
             (
                 concepts::swap(t, u)
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool swappable =
+            CPP_fragment(defs::swappable_, T);
 
+        template<typename T, typename U>
+        CPP_concept_fragment(swappable_with_,
+            requires(T && t, U && u) //
+            (
+                concepts::swap((T &&) t, (T &&) t),
+                concepts::swap((U &&) u, (U &&) u),
+                concepts::swap((U &&) u, (T &&) t),
+                concepts::swap((T &&) t, (U &&) u)
+            ));
         template<typename T, typename U>
         CPP_concept_bool swappable_with =
             common_reference_with<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
-            CPP_requires ((T &&) t, (U &&) u) //
-            (
-                concepts::swap(CPP_fwd(t), CPP_fwd(t)),
-                concepts::swap(CPP_fwd(u), CPP_fwd(u)),
-                concepts::swap(CPP_fwd(u), CPP_fwd(t)),
-                concepts::swap(CPP_fwd(t), CPP_fwd(u))
-            );
+            CPP_fragment(defs::swappable_with_, T, U);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Comparison concepts
@@ -1046,7 +1085,7 @@ namespace concepts
             detail::weakly_equality_comparable_with_<T, T>;
 
         template<typename T, typename U>
-        CPP_concept_fragment(equality_comparable_with_, (T, U),
+        CPP_concept_fragment(equality_comparable_with_, requires()(0) &&
             equality_comparable<
                 common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
         );
@@ -1059,24 +1098,22 @@ namespace concepts
             CPP_fragment(concepts::equality_comparable_with_, T, U);
 
         template<typename T>
-        CPP_concept_bool totally_ordered =
-            equality_comparable<T> &&
-            CPP_requires ((detail::as_cref_t<T>) t, (detail::as_cref_t<T>) u) //
+        CPP_concept_fragment(totally_ordered_,
+            requires(detail::as_cref_t<T> t, detail::as_cref_t<T> u) //
             (
                 t < u ? 1 : 0,
                 t > u ? 1 : 0,
                 u <= t ? 1 : 0,
                 u >= t ? 1 : 0
-            );
+            ));
+        template<typename T>
+        CPP_concept_bool totally_ordered =
+            equality_comparable<T> &&
+            CPP_fragment(defs::totally_ordered_, T);
 
         template<typename T, typename U>
-        CPP_concept_fragment(totally_ordered_with_, (T, U),
-            totally_ordered<
-                common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
-        );
-        template<typename T, typename U>
-        CPP_concept_bool totally_ordered_with =
-            CPP_requires ((detail::as_cref_t<T>) t, (detail::as_cref_t<U>) u) //
+        CPP_concept_fragment(totally_ordered_with_,
+            requires(detail::as_cref_t<T> t, detail::as_cref_t<U> u) //
             (
                 t < u ? 1 : 0,
                 t > u ? 1 : 0,
@@ -1087,6 +1124,11 @@ namespace concepts
                 u <= t ? 1 : 0,
                 u >= t ? 1 : 0
             ) &&
+            totally_ordered<
+                common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
+        );
+        template<typename T, typename U>
+        CPP_concept_bool totally_ordered_with =
             totally_ordered<T> &&
             totally_ordered<U> &&
             equality_comparable_with<T, U> &&
@@ -1137,6 +1179,17 @@ namespace concepts
             copy_constructible<T> &&
             movable<T> &&
             assignable_from<T &, T const &>;
+
+#if !CPP_CXX_CONCEPTS
+        template<>
+        CPP_concept_bool copy_constructible<void> = false;
+
+        template<>
+        CPP_concept_bool movable<void> = false;
+
+        template<>
+        CPP_concept_bool copyable<void> = false;
+#endif
 
         template<typename T>
         CPP_concept_bool semiregular =

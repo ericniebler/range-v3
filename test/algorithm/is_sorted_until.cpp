@@ -27,11 +27,13 @@
 //   http://http://libcxx.llvm.org/
 
 #include <vector>
-#include <range/v3/core.hpp>
+
 #include <range/v3/algorithm/is_sorted_until.hpp>
+#include <range/v3/core.hpp>
+
 #include "../simple_test.hpp"
-#include "../test_utils.hpp"
 #include "../test_iterators.hpp"
+#include "../test_utils.hpp"
 
 /// Calls the iterator interface of the algorithm
 template<class Iter>
@@ -41,12 +43,12 @@ struct iter_call
     using sentinel_t = typename sentinel_type<Iter>::type;
 
     template<class B, class E, class... Args>
-    auto operator()(B &&It, E &&e, Args &&... args)
-     -> decltype(ranges::is_sorted_until(begin_t{It}, sentinel_t{e},
-                                         std::forward<Args>(args)...))
+    auto operator()(B && It, E && e, Args &&... args)
+        -> decltype(ranges::is_sorted_until(begin_t{It}, sentinel_t{e},
+                                            std::forward<Args>(args)...))
     {
-        return ranges::is_sorted_until(begin_t{It}, sentinel_t{e},
-                                       std::forward<Args>(args)...);
+        return ranges::is_sorted_until(
+            begin_t{It}, sentinel_t{e}, std::forward<Args>(args)...);
     }
 };
 
@@ -58,12 +60,39 @@ struct range_call
     using sentinel_t = typename sentinel_type<Iter>::type;
 
     template<class B, class E, class... Args>
-    auto operator()(B &&It, E &&e, Args &&... args)
-     -> decltype(ranges::is_sorted_until(::as_lvalue(ranges::make_subrange(begin_t{It}, sentinel_t{e})),
-                                         std::forward<Args>(args)...))
+    static auto _impl(B && It, E && e, Args &&... args)
+        -> decltype(ranges::is_sorted_until(
+            ::as_lvalue(ranges::make_subrange(begin_t{It}, sentinel_t{e})),
+            std::forward<Args>(args)...))
     {
-        return ranges::is_sorted_until(::as_lvalue(ranges::make_subrange(begin_t{It}, sentinel_t{e})),
-                                       std::forward<Args>(args)...);
+        return ranges::is_sorted_until(
+            ::as_lvalue(ranges::make_subrange(begin_t{It}, sentinel_t{e})),
+            std::forward<Args>(args)...);
+    }
+
+    template<class B, class E>
+    auto operator()(B && It, E && e) const -> decltype(ranges::is_sorted_until(
+        ::as_lvalue(ranges::make_subrange(begin_t{It}, sentinel_t{e}))))
+    {
+        return range_call::_impl(static_cast<B &&>(It), static_cast<E &&>(e));
+    }
+
+    template<class B, class E, class A0>
+    auto operator()(B && It, E && e, A0 && a0) const
+        -> decltype(ranges::is_sorted_until(::as_lvalue(
+            ranges::make_subrange(begin_t{It}, sentinel_t{e})), static_cast<A0 &&>(a0)))
+    {
+        return range_call::_impl(
+            static_cast<B &&>(It), static_cast<E &&>(e), static_cast<A0 &&>(a0));
+    }
+
+    template<class B, class E, class A0, class A1>
+    auto operator()(B && It, E && e, A0 && a0, A1 && a1) const
+        -> decltype(ranges::is_sorted_until(::as_lvalue(ranges::make_subrange(
+            begin_t{It}, sentinel_t{e})), static_cast<A0 &&>(a0), static_cast<A1 &&>(a1)))
+    {
+        return range_call::_impl(
+            static_cast<B &&>(It), static_cast<E &&>(e), static_cast<A0 &&>(a0), static_cast<A1 &&>(a1));
     }
 };
 
@@ -372,23 +401,26 @@ void test()
     }
 }
 
-struct A { int a; };
+struct A
+{
+    int a;
+};
 
 int main()
 {
-    test<ForwardIterator<const int*>, iter_call>();
-    test<BidirectionalIterator<const int*>, iter_call>();
-    test<RandomAccessIterator<const int*>, iter_call>();
-    test<const int*, iter_call>();
+    test<ForwardIterator<const int *>, iter_call>();
+    test<BidirectionalIterator<const int *>, iter_call>();
+    test<RandomAccessIterator<const int *>, iter_call>();
+    test<const int *, iter_call>();
 
-    test<ForwardIterator<const int*>, range_call>();
-    test<BidirectionalIterator<const int*>, range_call>();
-    test<RandomAccessIterator<const int*>, range_call>();
-    test<const int*, range_call>();
+    test<ForwardIterator<const int *>, range_call>();
+    test<BidirectionalIterator<const int *>, range_call>();
+    test<RandomAccessIterator<const int *>, range_call>();
+    test<const int *, range_call>();
 
     /// Initializer list test:
     {
-        std::initializer_list<int> r = {0,1,2,3,4,5,6,7,8,9,10};
+        std::initializer_list<int> r = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         CHECK(ranges::is_sorted_until(r) == ranges::end(r));
     }
 
@@ -396,19 +428,24 @@ int main()
     {
         A as[] = {{0}, {1}, {2}, {3}, {4}};
         CHECK(ranges::is_sorted_until(as, std::less<int>{}, &A::a) == ranges::end(as));
-        CHECK(ranges::is_sorted_until(as, std::greater<int>{}, &A::a) == ranges::next(ranges::begin(as),1));
+        CHECK(ranges::is_sorted_until(as, std::greater<int>{}, &A::a) ==
+              ranges::next(ranges::begin(as), 1));
     }
 
     /// Rvalue range test:
     {
         A as[] = {{0}, {1}, {2}, {3}, {4}};
 #ifndef RANGES_WORKAROUND_MSVC_573728
-        CHECK(::is_dangling(ranges::is_sorted_until(std::move(as), std::less<int>{}, &A::a)));
-        CHECK(::is_dangling(ranges::is_sorted_until(std::move(as), std::greater<int>{}, &A::a)));
+        CHECK(::is_dangling(
+            ranges::is_sorted_until(std::move(as), std::less<int>{}, &A::a)));
+        CHECK(::is_dangling(
+            ranges::is_sorted_until(std::move(as), std::greater<int>{}, &A::a)));
 #endif // RANGES_WORKAROUND_MSVC_573728
         std::vector<A> vec(ranges::begin(as), ranges::end(as));
-        CHECK(::is_dangling(ranges::is_sorted_until(std::move(vec), std::less<int>{}, &A::a)));
-        CHECK(::is_dangling(ranges::is_sorted_until(std::move(vec), std::greater<int>{}, &A::a)));
+        CHECK(::is_dangling(
+            ranges::is_sorted_until(std::move(vec), std::less<int>{}, &A::a)));
+        CHECK(::is_dangling(
+            ranges::is_sorted_until(std::move(vec), std::greater<int>{}, &A::a)));
     }
 
     return ::test_result();

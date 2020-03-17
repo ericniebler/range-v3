@@ -10,12 +10,14 @@
 #include <cctype>
 #include <string>
 #include <vector>
-#include <range/v3/core.hpp>
+
 #include <range/v3/action/split.hpp>
 #include <range/v3/action/split_when.hpp>
 #include <range/v3/algorithm/move.hpp>
+#include <range/v3/core.hpp>
 #include <range/v3/view/c_str.hpp>
 #include <range/v3/view/iota.hpp>
+
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -24,14 +26,15 @@ int main()
     using namespace ranges;
 
     {
-        auto v = views::ints(1,21) | to<std::vector>();
+        auto v = views::ints(1, 21) | to<std::vector>();
         std::vector<std::vector<int>> rgv = actions::split(v, 10);
         CHECK(rgv.size() == 2u);
         ::check_equal(rgv[0], {1,2,3,4,5,6,7,8,9});
         ::check_equal(rgv[1], {11,12,13,14,15,16,17,18,19,20});
 
         using I = std::vector<int>::iterator;
-        std::vector<std::vector<int>> rgv2 = actions::split_when(v, [](I b, I){return std::make_pair(0 == (*b)%2,next(b));});
+        std::vector<std::vector<int>> rgv2 = actions::split_when(
+            v, [](I b, I) { return std::make_pair(0 == (*b) % 2, next(b)); });
         CHECK(rgv2.size() == 10u);
         ::check_equal(rgv2[0], {1});
         ::check_equal(rgv2[1], {3});
@@ -119,7 +122,8 @@ int main()
 
     {
         std::string str("now  is \t the\ttime");
-        auto toks = std::move(str) | actions::split_when(+[](int i) { return std::isspace(i); });
+        auto toks =
+            std::move(str) | actions::split_when(+[](int i) { return std::isspace(i); });
         static_assert(std::is_same<decltype(toks), std::vector<std::string>>::value, "");
         CHECK(toks.size() == 4u);
         if(toks.size() == 4u)

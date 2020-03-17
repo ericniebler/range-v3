@@ -86,7 +86,7 @@ namespace ranges
         and_v<range<Views const>...>;
 
     template<typename IsConst, typename...Views>
-    CPP_concept_fragment(cartesian_produce_view_can_size_, (IsConst, Views...),
+    CPP_concept_fragment(cartesian_produce_view_can_size_, requires()(0) &&
         and_v<common_with<std::uintmax_t, range_size_t<meta::const_if<IsConst, Views>>>...>
     );
     template<typename IsConst, typename...Views>
@@ -95,7 +95,7 @@ namespace ranges
         CPP_fragment(ranges::cartesian_produce_view_can_size_, IsConst, Views...);
 
     template<typename IsConst, typename...Views>
-    CPP_concept_fragment(cartesian_produce_view_can_distance_, (IsConst, Views...),
+    CPP_concept_fragment(cartesian_produce_view_can_distance_, requires()(0) &&
         and_v<sized_sentinel_for<
             iterator_t<meta::const_if<IsConst, Views>>,
             iterator_t<meta::const_if<IsConst, Views>>>...>
@@ -106,7 +106,7 @@ namespace ranges
         CPP_fragment(ranges::cartesian_produce_view_can_distance_, IsConst, Views...);
 
     template<typename IsConst, typename...Views>
-    CPP_concept_fragment(cartesian_produce_view_can_random_, (IsConst, Views...),
+    CPP_concept_fragment(cartesian_produce_view_can_random_, requires()(0) &&
         and_v<random_access_iterator<iterator_t<meta::const_if<IsConst, Views>>>...>
     );
     template<typename IsConst, typename...Views>
@@ -115,7 +115,7 @@ namespace ranges
         CPP_fragment(ranges::cartesian_produce_view_can_random_, IsConst, Views...);
 
     template<typename IsConst, typename...Views>
-    CPP_concept_fragment(cartesian_produce_view_can_bidi_, (IsConst, Views...),
+    CPP_concept_fragment(cartesian_produce_view_can_bidi_, requires()(0) &&
         and_v<common_range<meta::const_if<IsConst, Views>>...,
             bidirectional_iterator<iterator_t<meta::const_if<IsConst, Views>>>...>
     );
@@ -426,6 +426,10 @@ namespace ranges
     {
         struct cartesian_product_fn
         {
+            constexpr empty_view<std::tuple<>> operator()() const noexcept
+            {
+                return {};
+            }
             template<typename... Rngs>
             constexpr auto operator()(Rngs &&... rngs) const
                 -> CPP_ret(cartesian_product_view<all_t<Rngs>...>)( //
@@ -435,11 +439,38 @@ namespace ranges
                 return cartesian_product_view<all_t<Rngs>...>{
                     all(static_cast<Rngs &&>(rngs))...};
             }
-
-            constexpr empty_view<std::tuple<>> operator()() const noexcept
+#if defined(_MSC_VER)
+            template<typename Rng0>
+            constexpr auto operator()(Rng0 && rng0) const
+                -> CPP_ret(cartesian_product_view<all_t<Rng0>>)( //
+                    requires forward_range<Rng0> && viewable_range<Rng0>)
             {
-                return {};
+                return cartesian_product_view<all_t<Rng0>>{
+                    all(static_cast<Rng0 &&>(rng0))};
             }
+            template<typename Rng0, typename Rng1>
+            constexpr auto operator()(Rng0 && rng0, Rng1 && rng1) const
+                -> CPP_ret(cartesian_product_view<all_t<Rng0>, all_t<Rng1>>)( //
+                    requires forward_range<Rng0> && viewable_range<Rng0> &&   //
+                             forward_range<Rng1> && viewable_range<Rng1>)
+            {
+                return cartesian_product_view<all_t<Rng0>, all_t<Rng1>>{
+                    all(static_cast<Rng0 &&>(rng0)), //
+                    all(static_cast<Rng1 &&>(rng1))};
+            }
+            template<typename Rng0, typename Rng1, typename Rng2>
+            constexpr auto operator()(Rng0 && rng0, Rng1 && rng1, Rng2 && rng2) const
+                -> CPP_ret(cartesian_product_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>>)( //
+                    requires forward_range<Rng0> && viewable_range<Rng0> &&            //
+                             forward_range<Rng1> && viewable_range<Rng1> &&
+                             forward_range<Rng2> && viewable_range<Rng2>)
+            {
+                return cartesian_product_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>>{
+                    all(static_cast<Rng0 &&>(rng0)), //
+                    all(static_cast<Rng1 &&>(rng1)), //
+                    all(static_cast<Rng2 &&>(rng2))};
+            }
+#endif
         };
 
         RANGES_INLINE_VARIABLE(cartesian_product_fn, cartesian_product)

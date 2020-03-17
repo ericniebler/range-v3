@@ -26,12 +26,22 @@ namespace ranges
     /// @{
 
     // clang-format off
+    // WORKAROUND mysterious msvc bug
+#if defined(_MSC_VER)
     template<typename Fun, typename... Args>
     CPP_concept_bool invocable =
-        CPP_requires ((Fun&&) fn) //
+        std::is_invocable_v<Fun, Args...>;
+#else
+    template<typename Fun, typename... Args>
+    CPP_concept_fragment(invocable_,
+        requires(Fun && fn) //
         (
-            invoke(CPP_fwd(fn), std::declval<Args>()...)
-        );
+            invoke((Fun &&) fn, std::declval<Args>()...)
+        ));
+    template<typename Fun, typename... Args>
+    CPP_concept_bool invocable =
+        CPP_fragment(ranges::invocable_, Fun, Args...);
+#endif
 
     template<typename Fun, typename... Args>
     CPP_concept_bool regular_invocable =
@@ -39,15 +49,18 @@ namespace ranges
         // Axiom: equality_preserving(invoke(f, args...))
 
     template<typename Fun, typename... Args>
-    CPP_concept_bool predicate =
-        regular_invocable<Fun, Args...> &&
-        CPP_requires ((Fun&&) fn) //
+    CPP_concept_fragment(predicate_,
+        requires(Fun && fn) //
         (
             concepts::requires_<
                 convertible_to<
-                    decltype(invoke(CPP_fwd(fn), std::declval<Args>()...)),
+                    decltype(invoke((Fun &&) fn, std::declval<Args>()...)),
                     bool>>
-        );
+        ));
+    template<typename Fun, typename... Args>
+    CPP_concept_bool predicate =
+        regular_invocable<Fun, Args...> &&
+        CPP_fragment(ranges::predicate_, Fun, Args...);
 
     template<typename R, typename T, typename U>
     CPP_concept_bool relation =

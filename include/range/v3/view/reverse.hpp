@@ -59,7 +59,17 @@ namespace ranges
                 detail::non_propagating_cache<iterator_t<Rng>, reverse_view<Rng>>;
             auto & end_ = static_cast<cache_t &>(*this);
             if(!end_)
-                end_ = ranges::next(ranges::begin(rng_), ranges::end(rng_));
+            {
+#if defined(_MSC_VER)
+                auto tmp = ranges::begin(rng_);
+                auto e = ranges::end(rng_);
+                while(tmp != e)
+                    ++tmp;
+#else
+                auto tmp = ranges::next(ranges::begin(rng_), ranges::end(rng_));
+#endif
+                end_ = std::move(tmp);
+            }
             return make_reverse_iterator(*end_);
         }
 

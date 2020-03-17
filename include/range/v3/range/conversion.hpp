@@ -200,7 +200,7 @@ namespace ranges
 
         // clang-format off
         template<typename Cont>
-        CPP_concept_fragment(has_allocator_type_, (Cont),
+        CPP_concept_fragment(has_allocator_type_, requires()(0) &&
             ranges::type<typename Cont::allocator_type>
         );
         template<typename Cont>
@@ -212,7 +212,7 @@ namespace ranges
             ranges::defer::range<Rng> && !ranges::defer::view_<Rng>;
 
         template<typename Rng, typename Cont>
-        CPP_concept_fragment(convertible_to_cont_impl_frag_, (Rng, Cont),
+        CPP_concept_fragment(convertible_to_cont_impl_frag_, requires()(0) &&
             constructible_from<range_value_t<Cont>, range_reference_t<Rng>> &&
             constructible_from<
                 Cont,
@@ -225,7 +225,7 @@ namespace ranges
             CPP_fragment(detail::convertible_to_cont_impl_frag_, Rng, Cont);
 
         template<typename Rng, typename Cont>
-        CPP_concept_fragment(convertible_to_cont_cont_impl_frag_, (Rng, Cont),
+        CPP_concept_fragment(convertible_to_cont_cont_impl_frag_, requires()(0) &&
                 range_and_not_view<range_value_t<Cont>> &&
                 // Test that each element of the input range can be ranges::to<>
                 // to the output container.
@@ -289,11 +289,6 @@ namespace ranges
         template<typename Rng, typename MetaFn>
         CPP_concept_bool convertible_to_cont_cont_or_cont =
             defer::convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>> ||
-            defer::convertible_to_cont<Rng, container_t<MetaFn, Rng>>;
-
-        template<typename MetaFn, typename Rng>
-        CPP_concept_bool convertible_to_cont_and_not_cont_cont =
-            !defer::convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>> && //
             defer::convertible_to_cont<Rng, container_t<MetaFn, Rng>>;
 
         namespace defer
@@ -364,7 +359,7 @@ namespace ranges
             template<typename Rng>
             auto operator()(Rng && rng) const -> CPP_ret(container_t<MetaFn, Rng>)( //
                 requires input_range<Rng> &&                                        //
-                    convertible_to_cont_and_not_cont_cont<MetaFn, Rng>)
+                    convertible_to_cont<Rng, container_t<MetaFn, Rng>>)
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Attempt to convert an infinite range to a container.");
@@ -375,7 +370,7 @@ namespace ranges
                 return impl<cont_t, iter_t>(static_cast<Rng &&>(rng), use_reserve_t{});
             }
             template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(container_t<MetaFn, Rng>)( //
+            auto operator()(Rng && rng) const volatile -> CPP_ret(container_t<MetaFn, Rng>)( //
                 requires input_range<Rng> &&                                        //
                     convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>>)
             {

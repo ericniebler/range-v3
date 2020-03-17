@@ -81,7 +81,16 @@ namespace ranges
             struct mixin : basic_mixin<cursor>
             {
                 mixin() = default;
+                #ifndef _MSC_VER
                 using basic_mixin<cursor>::basic_mixin;
+                #else
+                explicit constexpr mixin(cursor && cur)
+                  : basic_mixin<cursor>(static_cast<cursor &&>(cur))
+                {}
+                explicit constexpr mixin(cursor const & cur)
+                  : basic_mixin<cursor>(cur)
+                {}
+                #endif
                 iterator_t<Rng> base() const
                 {
                     return this->get().cur_;
@@ -96,8 +105,8 @@ namespace ranges
             {
                 cur_ = next_cur_;
                 next_cur_ = cur_ != last_
-                              ? find_if_not(ranges::next(cur_), last_, pred{cur_, fun_})
-                              : cur_;
+                                ? find_if_not(ranges::next(cur_), last_, pred{cur_, fun_})
+                                : cur_;
             }
 
             bool equal(default_sentinel_t) const

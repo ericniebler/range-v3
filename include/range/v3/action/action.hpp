@@ -57,7 +57,7 @@ namespace ranges
     /// \endcond
 
     template<typename ActionFn, typename Rng>
-    CPP_concept_fragment(invocable_action_closure_, (ActionFn, Rng),
+    CPP_concept_fragment(invocable_action_closure_, requires()(0) &&
         !derived_from<invoke_result_t<ActionFn, Rng>, detail::action_closure_base_>
     );
     template<typename ActionFn, typename Rng>

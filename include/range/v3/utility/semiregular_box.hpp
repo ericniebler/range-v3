@@ -259,10 +259,21 @@ namespace ranges
             requires constructible_from<ranges::reference_wrapper<T &>, Arg &>)
           : ranges::reference_wrapper<T &>(arg)
         {}
-        using ranges::reference_wrapper<T &>::reference_wrapper;
         using ranges::reference_wrapper<T &>::get;
         using ranges::reference_wrapper<T &>::operator T &;
         using ranges::reference_wrapper<T &>::operator();
+
+#if defined(_MSC_VER)
+        CPP_template(typename U)( //
+            requires(!defer::same_as<uncvref_t<U>, semiregular_box>) &&
+            defer::constructible_from<ranges::reference_wrapper<T &>, U>) //
+            constexpr semiregular_box(U && u) noexcept(
+                std::is_nothrow_constructible<ranges::reference_wrapper<T &>, U>::value)
+          : ranges::reference_wrapper<T &>{static_cast<U &&>(u)}
+        {}
+#else
+        using ranges::reference_wrapper<T &>::reference_wrapper;
+#endif
     };
 
     template<typename T>
@@ -277,10 +288,21 @@ namespace ranges
             requires constructible_from<ranges::reference_wrapper<T &&>, Arg>)
           : ranges::reference_wrapper<T &&>(static_cast<Arg &&>(arg))
         {}
-        using ranges::reference_wrapper<T &&>::reference_wrapper;
         using ranges::reference_wrapper<T &&>::get;
         using ranges::reference_wrapper<T &&>::operator T &&;
         using ranges::reference_wrapper<T &&>::operator();
+
+#if defined(_MSC_VER)
+        CPP_template(typename U)( //
+            requires(!defer::same_as<uncvref_t<U>, semiregular_box>) &&
+            defer::constructible_from<ranges::reference_wrapper<T &&>, U>) //
+            constexpr semiregular_box(U && u) noexcept(
+                std::is_nothrow_constructible<ranges::reference_wrapper<T &&>, U>::value)
+          : ranges::reference_wrapper<T &&>{static_cast<U &&>(u)}
+        {}
+#else
+        using ranges::reference_wrapper<T &&>::reference_wrapper;
+#endif
     };
 
     template<typename T>

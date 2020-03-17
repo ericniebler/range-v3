@@ -360,7 +360,17 @@ namespace ranges
             struct mixin : basic_mixin<cpp17_iterator_cursor>
             {
                 mixin() = default;
+                #ifndef _MSC_VER
                 using basic_mixin<cpp17_iterator_cursor>::basic_mixin;
+                #else
+                explicit constexpr mixin(cpp17_iterator_cursor && cur)
+                  : basic_mixin<cpp17_iterator_cursor>(
+                        static_cast<cpp17_iterator_cursor &&>(cur))
+                {}
+                explicit constexpr mixin(cpp17_iterator_cursor const & cur)
+                  : basic_mixin<cpp17_iterator_cursor>(cur)
+                {}
+                #endif
                 explicit mixin(I it)
                   : mixin{cpp17_iterator_cursor{std::move(it)}}
                 {}

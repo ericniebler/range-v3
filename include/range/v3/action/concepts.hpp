@@ -62,8 +62,8 @@ namespace ranges
 
     // std::vector is a container, std::array is not
     template<typename T>
-    CPP_concept_fragment(container_, (T),
-        constructible_from<
+    CPP_concept_fragment(container_,
+        requires()(0) && constructible_from<
             uncvref_t<T>,
             detail::movable_input_iterator<range_value_t<T>>,
             detail::movable_input_iterator<range_value_t<T>>>
@@ -75,9 +75,8 @@ namespace ranges
         CPP_fragment(ranges::container_, T);
 
     template<typename C>
-    CPP_concept_bool reservable =
-        container<C> && sized_range<C> &&
-        CPP_requires ((C &) c, (C const &) cc) //
+    CPP_concept_fragment(reservable_,
+        requires(C & c, C const & cc) //
         (
             c.reserve(ranges::size(c)),
             cc.capacity(),
@@ -86,15 +85,25 @@ namespace ranges
                                         decltype(ranges::size(c))>>,
             concepts::requires_<same_as<decltype(cc.max_size()),
                                         decltype(ranges::size(c))>>
-        );
+        )
+    );
+
+    template<typename C>
+    CPP_concept_bool reservable =
+        container<C> && sized_range<C> && CPP_fragment(ranges::reservable_, C);
 
     template<typename C, typename I>
-    CPP_concept_bool reservable_with_assign =
-        reservable<C> && input_iterator<I> &&
-        CPP_requires ((C &) c, (I) i) //
+    CPP_concept_fragment(reservable_with_assign_,
+        requires(C & c, I i) //
         (
             c.assign(i, i)
-        );
+        )
+    );
+    template<typename C, typename I>
+    CPP_concept_bool reservable_with_assign =
+        reservable<C> && //
+        input_iterator<I> && //
+        CPP_fragment(ranges::reservable_with_assign_, C, I);
 
     template<typename C>
     CPP_concept_bool random_access_reservable =
@@ -143,7 +152,7 @@ namespace ranges
 
     // clang-format off
     template<typename T>
-    CPP_concept_fragment(lvalue_container_like_, (T),
+    CPP_concept_fragment(lvalue_container_like_, requires()(0) &&
         implicitly_convertible_to<detail::is_lvalue_container_like_t<T>, std::true_type>
     );
     template<typename T>

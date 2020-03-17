@@ -45,7 +45,7 @@ namespace ranges
     {
         // clang-format off
         template<typename R>
-        CPP_concept_fragment(tiny_range_, (R),
+        CPP_concept_fragment(tiny_range_, requires()(0) &&
             ranges::type<std::integral_constant<
                 decltype(std::remove_reference_t<R>::size()),
                 std::remove_reference_t<R>::size()>> &&
