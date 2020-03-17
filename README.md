@@ -71,6 +71,19 @@ A notable exception is anything found within the `ranges::cpp20` namespace. Thos
 - on Travis-CI: [![Travis Build Status](https://travis-ci.org/ericniebler/range-v3.svg?branch=master)](https://travis-ci.org/ericniebler/range-v3)
 - on AppVeyor: [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/fwl9ymc2t6ukn9qj/branch/master?svg=true)](https://ci.appveyor.com/project/ericniebler/range-v3)
 
+Building range-v3 - Using vcpkg
+-------------------------------
+
+You can download and install range-v3 using the [vcpkg](https://github.com/Microsoft/vcpkg) dependency manager:
+
+    git clone https://github.com/Microsoft/vcpkg.git
+    cd vcpkg
+    ./bootstrap-vcpkg.sh
+    ./vcpkg integrate install
+    ./vcpkg install range-v3
+
+The range-v3 port in vcpkg is kept up to date by Microsoft team members and community contributors. If the version is out of date, please [create an issue or pull request](https://github.com/Microsoft/vcpkg) on the vcpkg repository.
+
 Say Thanks!
 -----------
 
