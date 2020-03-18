@@ -887,7 +887,7 @@ namespace concepts
 
         CPP_INLINE_VAR constexpr CPP_true_t CPP_true_{};
 
-        constexpr auto CPP_true(xNil) noexcept
+        constexpr auto CPP_true(xNil)
         {
             return true ? nullptr : detail::make_boolean([](auto){return std::true_type{};});
         }
@@ -895,7 +895,7 @@ namespace concepts
         using xNil = Nil;
 #endif
 
-        constexpr auto CPP_true(Nil) noexcept
+        constexpr auto CPP_true(Nil)
         {
             return true ? nullptr : detail::make_boolean([](auto){return std::true_type{};});
         }
