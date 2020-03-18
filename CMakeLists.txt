@@ -30,7 +30,7 @@ add_library(range-v3-concepts INTERFACE)
 add_library(range-v3::concepts ALIAS range-v3-concepts)
 target_include_directories(range-v3-concepts INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
 target_include_directories(range-v3-concepts SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
-target_compile_options(range-v3-concepts INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive- /experimental:preprocessor /wd5105>)
+target_compile_options(range-v3-concepts INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
 target_link_libraries(range-v3-concepts INTERFACE range-v3::meta)
 
 add_library(range-v3 INTERFACE)
