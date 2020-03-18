@@ -746,20 +746,14 @@ namespace concepts
             return true;
         }
 
-        struct boolean
-        {
-            friend bool operator&&(boolean, bool) = delete;
-            friend bool operator&&(bool, boolean) = delete;
-            friend bool operator||(boolean, bool) = delete;
-            friend bool operator||(bool, boolean) = delete;
-        };
         template<typename T, typename U>
         struct and_;
         template<typename T, typename U>
         struct or_;
         template<typename T>
-        struct not_ : boolean
+        struct not_
         {
+            using _cpp_boolean_t = not_;
             constexpr operator bool() const noexcept
             {
                 return !(bool) T{};
@@ -769,20 +763,21 @@ namespace concepts
                 return T{};
             }
             template<typename That>
-            constexpr and_<not_, That> operator&&(That) const noexcept
+            constexpr and_<not_, typename That::_cpp_boolean_t> operator&&(That) const noexcept
             {
                 return {};
             }
             template<typename That>
-            constexpr or_<not_, That> operator||(That) const noexcept
+            constexpr or_<not_, typename That::_cpp_boolean_t> operator||(That) const noexcept
             {
                 return {};
             }
         };
 
         template<typename T, typename U>
-        struct and_ : boolean
+        struct and_
         {
+            using _cpp_boolean_t = and_;
             static constexpr bool impl(std::false_type) noexcept
             {
                 return false;
@@ -800,28 +795,21 @@ namespace concepts
                 return not_<and_>{};
             }
             template<typename That>
-            constexpr and_<and_, That> operator&&(That) const noexcept
+            constexpr and_<and_, typename That::_cpp_boolean_t> operator&&(That) const noexcept
             {
-                static_assert(
-                    !META_IS_SAME(That, bool),
-                    "All expressions in a conjunction should be "
-                    "defer:: concepts");
                 return {};
             }
             template<typename That>
-            constexpr or_<and_, That> operator||(That) const noexcept
+            constexpr or_<and_, typename That::_cpp_boolean_t> operator||(That) const noexcept
             {
-                static_assert(
-                    !META_IS_SAME(That, bool),
-                    "All expressions in a disjunction should be "
-                    "defer:: concepts");
                 return {};
             }
         };
 
         template<typename T, typename U>
-        struct or_ : boolean
+        struct or_
         {
+            using _cpp_boolean_t = or_;
             static constexpr bool impl(std::true_type) noexcept
             {
                 return true;
@@ -839,28 +827,21 @@ namespace concepts
                 return {};
             }
             template<typename That>
-            constexpr and_<or_, That> operator&&(That) const noexcept
+            constexpr and_<or_, typename That::_cpp_boolean_t> operator&&(That) const noexcept
             {
-                static_assert(
-                    !META_IS_SAME(That, bool),
-                    "All expressions in a disjunction should be "
-                    "defer:: concepts");
                 return {};
             }
             template<typename That>
-            constexpr or_<or_, That> operator||(That) const noexcept
+            constexpr or_<or_, typename That::_cpp_boolean_t> operator||(That) const noexcept
             {
-                static_assert(
-                    !META_IS_SAME(That, bool),
-                    "All expressions in a disjunction should be "
-                    "defer:: concepts");
                 return {};
             }
         };
 
         template<class Fn>
-        struct boolean_ : boolean
+        struct boolean_
         {
+            using _cpp_boolean_t = boolean_;
             boolean_() = default;
             constexpr boolean_(decltype(nullptr)) noexcept {}
             template<bool = true>
@@ -873,21 +854,13 @@ namespace concepts
                 return {};
             }
             template<typename That>
-            constexpr and_<boolean_, That> operator&&(That) const noexcept
+            constexpr and_<boolean_, typename That::_cpp_boolean_t> operator&&(That) const noexcept
             {
-                static_assert(
-                    !META_IS_SAME(That, bool),
-                    "All expressions in a disjunction should be "
-                    "defer:: concepts");
                 return {};
             }
             template<typename That>
-            constexpr or_<boolean_, That> operator||(That) const noexcept
+            constexpr or_<boolean_, typename That::_cpp_boolean_t> operator||(That) const noexcept
             {
-                static_assert(
-                    !META_IS_SAME(That, bool),
-                    "All expressions in a disjunction should be "
-                    "defer:: concepts");
                 return {};
             }
         };
@@ -914,17 +887,17 @@ namespace concepts
 
         CPP_INLINE_VAR constexpr CPP_true_t CPP_true_{};
 
-        constexpr std::true_type CPP_true(xNil)
+        constexpr auto CPP_true(xNil) noexcept
         {
-            return {};
+            return true ? nullptr : detail::make_boolean([](auto){return std::true_type{};});
         }
 #else
         using xNil = Nil;
 #endif
 
-        constexpr std::true_type CPP_true(Nil)
+        constexpr auto CPP_true(Nil) noexcept
         {
-            return {};
+            return true ? nullptr : detail::make_boolean([](auto){return std::true_type{};});
         }
 
         template<typename T>
