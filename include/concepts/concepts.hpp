@@ -432,7 +432,7 @@
     /**/
 #else // ^^^ workaround / no workaround vvv
 #define CPP_broken_friend_member                                                \
-    template<std::true_type (&CPP_true)(::concepts::detail::xNil) =             \
+    template<::concepts::detail::boolean_true_t (&CPP_true)(::concepts::detail::xNil) = \
         ::concepts::detail::CPP_true>                                           \
     /**/
 #endif // CPP_WORKAROUND_MSVC_779763
@@ -870,16 +870,26 @@ namespace concepts
         struct Nil
         {};
 
+        struct _true_fn
+        {
+            std::true_type operator()(int) const noexcept
+            {
+                return {};
+            }
+        };
+
+        using boolean_true_t = boolean_<_true_fn>;
+
 #ifdef CPP_WORKAROUND_MSVC_779763
         enum class xNil {};
 
         struct CPP_true_t
         {
-            constexpr std::true_type operator()(Nil) const noexcept
+            constexpr boolean_true_t operator()(Nil) const noexcept
             {
                 return {};
             }
-            constexpr std::true_type operator()(xNil) const noexcept
+            constexpr boolean_true_t operator()(xNil) const noexcept
             {
                 return {};
             }
@@ -887,17 +897,17 @@ namespace concepts
 
         CPP_INLINE_VAR constexpr CPP_true_t CPP_true_{};
 
-        constexpr auto CPP_true(xNil)
+        constexpr boolean_true_t CPP_true(xNil)
         {
-            return true ? nullptr : detail::make_boolean([](auto){return std::true_type{};});
+            return {};
         }
 #else
         using xNil = Nil;
 #endif
 
-        constexpr auto CPP_true(Nil)
+        constexpr boolean_true_t CPP_true(Nil)
         {
-            return true ? nullptr : detail::make_boolean([](auto){return std::true_type{};});
+            return {};
         }
 
         template<typename T>
