@@ -58,8 +58,7 @@ The code is known to work on the following compilers:
 - GCC 6.5 (or later)
 - Clang/LLVM 6 (or later) on Windows (older versions may work - we haven't tested.)
 - Visual Studio 2019 (or later) on Windows, with some caveats due to range-v3's strict conformance requirements:
-  - range-v3 needs `/std:c++latest /permissive-`
-  - range-v3 needs a fully conforming preprocessor, so `/experimental:preprocessor` is necessary. Note that the conforming preprocessor diagnoses `C5105` "macro expansion producing 'defined' has undefined behavior" in some of the Windows SDK headers, so you'll probably want to suppress that warning with `/wd5105`.
+  - range-v3 needs `/permissive-` and either `/std:c++latest` or `/std:c++17`
 
 [ Note: We've "retired" support for Clang/C2 with the VS2015 toolset (i.e., the `v140_clang_c2` toolset) which Microsoft no longer supports for C++ use. We no longer have CI runs, but haven't gone out of our way to break anything, so it will likely continue to work. ]
 

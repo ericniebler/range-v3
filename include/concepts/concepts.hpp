@@ -63,10 +63,25 @@
 #endif
 #endif
 
-#define CPP_PP_CHECK(...) CPP_PP_CHECK_N(__VA_ARGS__, 0,)
+#define CPP_PP_CAT_(X, ...)  X ## __VA_ARGS__
+#define CPP_PP_CAT(X, ...)   CPP_PP_CAT_(X, __VA_ARGS__)
+
+#define CPP_PP_EVAL_(X, ARGS) X ARGS
+#define CPP_PP_EVAL(X, ...) CPP_PP_EVAL_(X, (__VA_ARGS__))
+
+#define CPP_PP_EVAL2_(X, ARGS) X ARGS
+#define CPP_PP_EVAL2(X, ...) CPP_PP_EVAL2_(X, (__VA_ARGS__))
+
+#define CPP_PP_EXPAND(...) __VA_ARGS__
+#define CPP_PP_EAT(...)
+
+#define CPP_PP_CHECK(...) CPP_PP_EXPAND(CPP_PP_CHECK_N(__VA_ARGS__, 0,))
 #define CPP_PP_CHECK_N(x, n, ...) n
 #define CPP_PP_PROBE(x) x, 1,
 #define CPP_PP_PROBE_N(x, n) x, n,
+
+#define CPP_PP_IS_PAREN(x) CPP_PP_CHECK(CPP_PP_IS_PAREN_PROBE x)
+#define CPP_PP_IS_PAREN_PROBE(...) CPP_PP_PROBE(~)
 
 // CPP_CXX_VA_OPT
 #ifndef CPP_CXX_VA_OPT
@@ -77,17 +92,6 @@
 #define CPP_CXX_VA_OPT 0
 #endif
 #endif // CPP_CXX_VA_OPT
-
-#define CPP_PP_CAT_(X, ...)  X ## __VA_ARGS__
-#define CPP_PP_CAT(X, ...)   CPP_PP_CAT_(X, __VA_ARGS__)
-
-#define CPP_PP_EVAL(X, ...) X(__VA_ARGS__)
-
-#define CPP_PP_EXPAND(...) __VA_ARGS__
-#define CPP_PP_EAT(...)
-
-#define CPP_PP_IS_PAREN(x) CPP_PP_CHECK(CPP_PP_IS_PAREN_PROBE x)
-#define CPP_PP_IS_PAREN_PROBE(...) CPP_PP_PROBE(~)
 
 // The final CPP_PP_EXPAND here is to avoid
 // https://stackoverflow.com/questions/5134523/msvc-doesnt-expand-va-args-correctly
@@ -152,8 +156,11 @@
 
 #define CPP_PP_PROBE_EMPTY()
 #define CPP_PP_IS_NOT_EMPTY(...)                                                \
-    CPP_PP_CHECK(CPP_PP_CAT(CPP_PP_PROBE_EMPTY_PROBE_,                          \
-        CPP_PP_PROBE_EMPTY __VA_ARGS__ ()))                                     \
+    CPP_PP_EVAL(                                                                \
+        CPP_PP_CHECK,                                                           \
+        CPP_PP_CAT(                                                             \
+            CPP_PP_PROBE_EMPTY_PROBE_,                                          \
+            CPP_PP_PROBE_EMPTY __VA_ARGS__ ()))                                 \
     /**/
 
 #define CPP_assert(...)                                                         \
@@ -362,8 +369,11 @@
     CPP_PP_CAT(CPP_CTOR_SFINAE_PROBE_NOEXCEPT_, FIRST)                          \
     /**/
 #define CPP_CTOR_SFINAE_REQUIRES(...)                                           \
-    CPP_PP_CAT(CPP_CTOR_SFINAE_REQUIRES_,                                       \
-    CPP_PP_CHECK(CPP_CTOR_SFINAE_MAKE_PROBE(__VA_ARGS__,)))(__VA_ARGS__)        \
+    CPP_PP_CAT(                                                                 \
+        CPP_CTOR_SFINAE_REQUIRES_,                                              \
+        CPP_PP_EVAL(                                                            \
+            CPP_PP_CHECK,                                                       \
+            CPP_CTOR_SFINAE_MAKE_PROBE(__VA_ARGS__,)))(__VA_ARGS__)             \
     /**/
 // No noexcept-clause:
 #define CPP_CTOR_SFINAE_REQUIRES_0(...)                                         \
@@ -376,11 +386,13 @@
     > = {})                                                                     \
     CPP_PP_IGNORE_CXX2A_COMPAT_END                                              \
     /**/
+
 // Yes noexcept-clause:
 #define CPP_CTOR_SFINAE_REQUIRES_1(...)                                         \
     std::enable_if_t<                                                           \
         CPP_FORCE_TO_BOOL(                                                      \
-            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_,                              \
+            CPP_PP_EVAL(CPP_PP_CAT, \
+                CPP_TEMPLATE_SFINAE_AUX_3_,                              \
                 CPP_PP_CAT(CPP_CTOR_SFINAE_EAT_NOEXCEPT_, __VA_ARGS__)          \
             ) && CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))             \
         ),                                                                      \
@@ -453,12 +465,15 @@
     /**/
 
 #define CPP_FUN_IMPL_REQUIRES(...)                                              \
-    CPP_FUN_IMPL_SELECT_CONST_(__VA_ARGS__,)(__VA_ARGS__)                       \
+    CPP_PP_EVAL2_(                                                              \
+        CPP_FUN_IMPL_SELECT_CONST_,                                             \
+        (__VA_ARGS__,)                                                          \
+    )(__VA_ARGS__)                                                              \
     /**/
 
 #define CPP_FUN_IMPL_SELECT_CONST_(MAYBE_CONST, ...)                            \
     CPP_PP_CAT(CPP_FUN_IMPL_SELECT_CONST_,                                      \
-        CPP_PP_CHECK(CPP_PP_CAT(                                                \
+        CPP_PP_EVAL(CPP_PP_CHECK, CPP_PP_CAT(                                   \
             CPP_PP_PROBE_CONST_PROBE_, MAYBE_CONST)))                           \
     /**/
 
@@ -473,7 +488,7 @@
 
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_(MAYBE_NOEXCEPT, ...)                \
     CPP_PP_CAT(CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_,                             \
-        CPP_PP_CHECK(CPP_PP_CAT(                                                \
+        CPP_PP_EVAL2(CPP_PP_CHECK, CPP_PP_CAT(                                                \
             CPP_PP_PROBE_NOEXCEPT_PROBE_, MAYBE_NOEXCEPT)))                     \
     /**/
 
@@ -482,7 +497,10 @@
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_0(...)                               \
     std::enable_if_t<                                                           \
         CPP_FORCE_TO_BOOL(                                                      \
-            CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__) &&              \
+            CPP_PP_EVAL(\
+                CPP_PP_CAT, \
+                CPP_FUN_IMPL_EAT_REQUIRES_, \
+                __VA_ARGS__) &&              \
             CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))                  \
         ),                                                                      \
         ::concepts::detail::Nil                                                 \
@@ -493,7 +511,8 @@
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_1(...)                               \
     std::enable_if_t<                                                           \
         CPP_FORCE_TO_BOOL(                                                      \
-            CPP_PP_CAT(                                                         \
+            CPP_PP_EVAL(\
+                CPP_PP_CAT,                                                         \
                 CPP_FUN_IMPL_EAT_REQUIRES_,                                     \
                 CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)             \
             ) && CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))             \
@@ -510,12 +529,15 @@
     /**/
 
 #define CPP_FUN_IMPL_SELECT_CONST_0(...)                                        \
-    CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_(__VA_ARGS__,)(__VA_ARGS__)           \
+    CPP_PP_EVAL_(                                                               \
+        CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_,                                 \
+        (__VA_ARGS__,)                                                          \
+    )(__VA_ARGS__)                                                              \
     /**/
 
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_(MAYBE_NOEXCEPT, ...)             \
     CPP_PP_CAT(CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_,                          \
-          CPP_PP_CHECK(CPP_PP_CAT(                                              \
+          CPP_PP_EVAL2(CPP_PP_CHECK, CPP_PP_CAT(                                \
             CPP_PP_PROBE_NOEXCEPT_PROBE_, MAYBE_NOEXCEPT)))                     \
     /**/
 
@@ -533,7 +555,8 @@
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_1(...)                            \
     std::enable_if_t<                                                           \
         CPP_FORCE_TO_BOOL(                                                      \
-            CPP_PP_CAT(                                                         \
+            CPP_PP_EVAL(                                                        \
+                CPP_PP_CAT,                                                     \
                 CPP_FUN_IMPL_EAT_REQUIRES_,                                     \
                 CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)             \
             ) &&                                                                \
@@ -571,11 +594,14 @@
 #define CPP_auto_fun(X) X CPP_AUTO_FUN_IMPL_
 #define CPP_AUTO_FUN_IMPL_(...) (__VA_ARGS__) CPP_AUTO_FUN_RETURNS_
 #define CPP_AUTO_FUN_RETURNS_(...)                                              \
-    CPP_AUTO_FUN_SELECT_RETURNS_(__VA_ARGS__,)(__VA_ARGS__)                     \
+    CPP_PP_EVAL2_(                                                              \
+        CPP_AUTO_FUN_SELECT_RETURNS_,                                           \
+        (__VA_ARGS__,)                                                          \
+    )(__VA_ARGS__)                                                              \
     /**/
 #define CPP_AUTO_FUN_SELECT_RETURNS_(MAYBE_CONST, ...)                          \
     CPP_PP_CAT(CPP_AUTO_FUN_RETURNS_CONST_,                                     \
-        CPP_PP_CHECK(CPP_PP_CAT(                                                \
+        CPP_PP_EVAL(CPP_PP_CHECK, CPP_PP_CAT(                                   \
             CPP_PP_PROBE_CONST_MUTABLE_PROBE_, MAYBE_CONST)))                   \
     /**/
 #define CPP_PP_PROBE_CONST_MUTABLE_PROBE_const CPP_PP_PROBE_N(~, 1)
