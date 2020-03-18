@@ -66,7 +66,7 @@ namespace ranges
             -> CPP_ret(ranges::contiguous_iterator_tag)( //
                 requires same_as<I, std::__wrap_iter<T *>>);
 #endif
-#if defined(_MSVC_STL_VERSION)
+#if defined(_MSVC_STL_VERSION) || defined(_IS_WRS)
         template<typename I>
         auto iter_concept_(I, priority_tag<3>)
             -> CPP_ret(ranges::contiguous_iterator_tag)( //
