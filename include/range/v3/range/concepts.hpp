@@ -34,33 +34,23 @@
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
 // Non-portable forward declarations of standard containers
 RANGES_BEGIN_NAMESPACE_STD
-    RANGES_BEGIN_NAMESPACE_CONTAINER
-        template<typename Key,
-                 typename Compare /*= less<Key>*/,
-                 typename Alloc /*= allocator<Key>*/>
-        class set;
+    RANGES_BEGIN_NAMESPACE_VERSION
+        template<typename ElementType, size_t Extent>
+        class span;
 
-        template<typename Key,
-                 typename Compare /*= less<Key>*/,
-                 typename Alloc /*= allocator<Key>*/>
-        class multiset;
-
-        template<typename Key,
-                 typename Hash /*= hash<Key>*/,
-                 typename Pred /*= equal_to<Key>*/,
-                 typename Alloc /*= allocator<Key>*/>
-        class unordered_set;
-
-        template<typename Key,
-                 typename Hash /*= hash<Key>*/,
-                 typename Pred /*= equal_to<Key>*/,
-                 typename Alloc /*= allocator<Key>*/>
-        class unordered_multiset;
-    RANGES_END_NAMESPACE_CONTAINER
+        template<typename CharT, typename Traits>
+        class basic_string_view;
+    RANGES_END_NAMESPACE_VERSION
 RANGES_END_NAMESPACE_STD
 #else
-#include <set>
-#include <unordered_set>
+#ifdef __has_include
+#if __has_include(<span>)
+#include <span>
+#endif
+#if __has_include(<string_view>)
+#include <string_view>
+#endif
+#endif
 #endif
 
 #include <range/v3/detail/disable_warnings.hpp>
@@ -188,88 +178,28 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        struct enable_view_helper_
-        {
-            bool result_;
-
-            template<typename T>
-            static constexpr auto test(T const *) -> CPP_ret(bool)( //
-                requires range<T> && range<T const>)
-            {
-                return RANGES_IS_SAME(iter_reference_t<iterator_t<T>>,
-                                      iter_reference_t<iterator_t<T const>>);
-            }
-            static constexpr auto test(void const *) -> bool
-            {
-                return true;
-            }
-            template<typename T>
-            constexpr enable_view_helper_(T const * p)
-              : result_(enable_view_helper_::test(p))
-            {}
-        };
-        constexpr bool enable_view_impl_(...)
-        {
-            return false;
-        }
-        constexpr bool enable_view_impl_(view_base const *)
-        {
-            return true;
-        }
-        constexpr bool enable_view_impl_(enable_view_helper_ ev)
-        {
-            return ev.result_;
-        }
         template<typename T>
-        constexpr bool enable_view_impl_(std::initializer_list<T> const *)
-        {
-            return false;
-        }
-        template<typename Key, typename Compare, typename Alloc>
-        constexpr bool enable_view_impl_(std::set<Key, Compare, Alloc> const *)
-        {
-            return false;
-        }
-        template<typename Key, typename Compare, typename Alloc>
-        constexpr bool enable_view_impl_(std::multiset<Key, Compare, Alloc> const *)
-        {
-            return false;
-        }
-        template<typename Key, typename Hash, typename Pred, typename Alloc>
-        constexpr bool enable_view_impl_(
-            std::unordered_set<Key, Hash, Pred, Alloc> const *)
-        {
-            return false;
-        }
-        template<typename Key, typename Hash, typename Pred, typename Alloc>
-        constexpr bool enable_view_impl_(
-            std::unordered_multiset<Key, Hash, Pred, Alloc> const *)
-        {
-            return false;
-        }
-        // BUGBUG TODO
-        // template<typename BidiIter, typename Alloc>
-        // constexpr bool enable_view_impl_(std::match_results<BidiIter, Alloc> const *)
-        // {
-        //     return false;
-        // }
-        template<typename T>
-        constexpr T const * nullptr_(int)
-        {
-            return nullptr;
-        }
-        template<typename T>
-        constexpr int nullptr_(long)
-        {
-            return 0;
-        }
+        struct enable_view_
+          : std::is_base_of<view_base, T>
+        {};
     } // namespace detail
     /// \endcond
 
     // Specialize this if the default is wrong.
     template<typename T>
     RANGES_INLINE_VAR constexpr bool enable_view =
-        detail::enable_view_impl_(detail::nullptr_<T>(0));
+        detail::enable_view_<T>::value;
+
+#if defined(__cpp_lib_string_view) && __cpp_lib_string_view > 0
+    template<typename Char, typename Traits>
+    RANGES_INLINE_VAR constexpr bool enable_view<std::basic_string_view<Char, Traits>> =
+        true;
+#endif
+
+#if defined(__cpp_lib_span) && __cpp_lib_span > 0
+    template<typename T, std::size_t N>
+    RANGES_INLINE_VAR constexpr bool enable_view<std::span<T, N>> = true;
+#endif
 
     ///
     /// View concepts below

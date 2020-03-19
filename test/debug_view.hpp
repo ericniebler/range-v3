@@ -19,7 +19,7 @@
 #include <range/v3/utility/swap.hpp>
 
 template<typename T, bool Sized = true>
-struct debug_input_view
+struct debug_input_view : ranges::view_base
 {
     static_assert(std::is_object<T>::value, "");
 

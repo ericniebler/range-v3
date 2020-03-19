@@ -1167,38 +1167,42 @@ namespace concepts
             convertible_to<T, T>;
 
         template<typename T>
-        CPP_concept_bool copy_constructible =
-            move_constructible<T> &&
+        CPP_concept_fragment(copy_constructible_,
+            requires()(0) &&
             constructible_from<T, T &> &&
             constructible_from<T, T const &> &&
             constructible_from<T, T const> &&
             convertible_to<T &, T> &&
             convertible_to<T const &, T> &&
-            convertible_to<T const, T>;
+            convertible_to<T const, T>
+        );
+        template<typename T>
+        CPP_concept_bool copy_constructible =
+            move_constructible<T> &&
+            CPP_fragment(concepts::copy_constructible_, T);
 
+        template<typename T>
+        CPP_concept_fragment(move_assignable_,
+            requires()(0) &&
+            assignable_from<T &, T>
+        );
         template<typename T>
         CPP_concept_bool movable =
             std::is_object<T>::value &&
             move_constructible<T> &&
-            assignable_from<T &, T> &&
+            CPP_fragment(concepts::move_assignable_, T) &&
             swappable<T>;
 
+        template<typename T>
+        CPP_concept_fragment(copy_assignable_,
+            requires()(0) &&
+            assignable_from<T &, T const &>
+        );
         template<typename T>
         CPP_concept_bool copyable =
             copy_constructible<T> &&
             movable<T> &&
-            assignable_from<T &, T const &>;
-
-#if !CPP_CXX_CONCEPTS
-        template<>
-        CPP_concept_bool copy_constructible<void> = false;
-
-        template<>
-        CPP_concept_bool movable<void> = false;
-
-        template<>
-        CPP_concept_bool copyable<void> = false;
-#endif
+            CPP_fragment(concepts::copy_assignable_, T);
 
         template<typename T>
         CPP_concept_bool semiregular =

@@ -90,7 +90,8 @@
         "__string": "cpp",
         "algorithm": "cpp",
         "codecvt": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "version": "cpp"
     },
     "C_Cpp.configurationWarnings": "Disabled"
 }

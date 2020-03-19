@@ -22,6 +22,9 @@
 #if __has_include(<string_view>)
 #include <string_view>
 #endif
+#if __has_include(<span>)
+#include <span>
+#endif
 #endif
 #include <utility>
 
@@ -40,6 +43,11 @@ namespace ranges
     template<class CharT, class Traits>
     RANGES_INLINE_VAR constexpr bool
         enable_safe_range<std::basic_string_view<CharT, Traits>> = true;
+#endif
+
+#if defined(__cpp_lib_span) && __cpp_lib_span > 0
+    template<class T, std::size_t N>
+    RANGES_INLINE_VAR constexpr bool enable_safe_range<std::span<T, N>> = true;
 #endif
 
     namespace detail

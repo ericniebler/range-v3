@@ -289,7 +289,7 @@ static_assert(ranges::view_<ranges::istream_view<int>>, "");
 static_assert(!ranges::common_range<ranges::istream_view<int>>, "");
 static_assert(!ranges::sized_range<ranges::istream_view<int>>, "");
 
-struct myview {
+struct myview : ranges::view_base {
     const char *begin();
     const char *end();
 };
