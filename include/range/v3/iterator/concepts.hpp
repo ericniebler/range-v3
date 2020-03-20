@@ -227,20 +227,21 @@ namespace ranges
         CPP_fragment(ranges::incrementable_, I);
 
     template<typename I>
+    CPP_concept_fragment(input_or_output_iterator_,
+        requires()(0) &&
+        detail::dereferenceable_<I&>
+    );
+
+    template<typename I>
     CPP_concept_bool input_or_output_iterator =
         weakly_incrementable<I> &&
-        detail::dereferenceable_<I&>;
+        CPP_fragment(ranges::input_or_output_iterator_, I);
 
     template<typename S, typename I>
     CPP_concept_bool sentinel_for =
         semiregular<S> &&
         input_or_output_iterator<I> &&
         detail::weakly_equality_comparable_with_<S, I>;
-
-#if !CPP_CXX_CONCEPTS
-    template<>
-    CPP_concept_bool input_or_output_iterator<void> = false;
-#endif
 
     namespace defer
     {
