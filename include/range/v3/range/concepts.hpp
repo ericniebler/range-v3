@@ -176,10 +176,10 @@ namespace ranges
     // clang-format on
 
     /// \cond
-    namespace detail
+    namespace ext
     {
         template<typename T>
-        struct enable_view_
+        struct enable_view
           : std::is_base_of<view_base, T>
         {};
     } // namespace detail
@@ -188,7 +188,7 @@ namespace ranges
     // Specialize this if the default is wrong.
     template<typename T>
     RANGES_INLINE_VAR constexpr bool enable_view =
-        detail::enable_view_<T>::value;
+        ext::enable_view<T>::value;
 
 #if defined(__cpp_lib_string_view) && __cpp_lib_string_view > 0
     template<typename Char, typename Traits>
@@ -198,7 +198,7 @@ namespace ranges
 
 #if defined(__cpp_lib_span) && __cpp_lib_span > 0
     template<typename T, std::size_t N>
-    RANGES_INLINE_VAR constexpr bool enable_view<std::span<T, N>> = true;
+    RANGES_INLINE_VAR constexpr bool enable_view<std::span<T, N>> = N + 1 < 2;
 #endif
 
     ///

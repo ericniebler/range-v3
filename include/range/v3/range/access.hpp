@@ -18,14 +18,6 @@
 #include <initializer_list>
 #include <iterator>
 #include <limits>
-#ifdef __has_include
-#if __has_include(<string_view>)
-#include <string_view>
-#endif
-#if __has_include(<span>)
-#include <span>
-#endif
-#endif
 #include <utility>
 
 #include <range/v3/range_fwd.hpp>
@@ -34,6 +26,28 @@
 #include <range/v3/iterator/reverse_iterator.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
+
+#ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
+// Non-portable forward declarations of standard library components
+RANGES_BEGIN_NAMESPACE_STD
+    RANGES_BEGIN_NAMESPACE_VERSION
+        template<typename ElementType, size_t Extent>
+        class span;
+
+        template<typename CharT, typename Traits>
+        class basic_string_view;
+    RANGES_END_NAMESPACE_VERSION
+RANGES_END_NAMESPACE_STD
+#else
+#ifdef __has_include
+#if __has_include(<span>)
+#include <span>
+#endif
+#if __has_include(<string_view>)
+#include <string_view>
+#endif
+#endif
+#endif
 
 #include <range/v3/detail/disable_warnings.hpp>
 
