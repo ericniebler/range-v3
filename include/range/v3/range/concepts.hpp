@@ -32,7 +32,7 @@
 #include <range/v3/range/traits.hpp>
 
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
-// Non-portable forward declarations of standard containers
+// Non-portable forward declarations of standard library components
 RANGES_BEGIN_NAMESPACE_STD
     RANGES_BEGIN_NAMESPACE_VERSION
         template<typename ElementType, size_t Extent>
