@@ -209,15 +209,6 @@ namespace ranges
     } // namespace detail
     /// \endcond
 
-    // all the set view algorithm adapters hold onto iterators to both ranges
-    // and three functions - so they're safe if all of the above is safe
-    template<typename Rng1, typename Rng2, typename C, typename P1, typename P2,
-        template<bool, typename...> class Cursor, cardinality Cardinality>
-    RANGES_INLINE_VAR constexpr bool
-    enable_safe_range<detail::set_algorithm_view<Rng1, Rng2, C, P1, P2, Cursor, Cardinality>> =
-        enable_safe_range<Rng1> && enable_safe_range<Rng2> &&
-        detail::is_safe_fun<C> && detail::is_safe_fun<P1> && detail::is_safe_fun<P2>;
-
     template<typename Rng1, typename Rng2, typename C, typename P1, typename P2>
     using set_difference_view =
         detail::set_algorithm_view<Rng1, Rng2, C, P1, P2, detail::set_difference_cursor,

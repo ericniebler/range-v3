@@ -153,10 +153,6 @@ namespace ranges
         }
     };
 
-    template<typename Rng, typename Fun>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<group_by_view<Rng, Fun>> =
-        enable_safe_range<Rng> && detail::is_safe_fun<Fun>;
-
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Rng, typename Fun)( //
         requires copy_constructible<Fun>)     //
