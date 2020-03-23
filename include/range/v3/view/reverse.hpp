@@ -135,6 +135,9 @@ namespace ranges
         }
     };
 
+    template<typename Rng>
+    RANGES_INLINE_VAR constexpr bool enable_safe_range<reverse_view<Rng>> = enable_safe_range<Rng>;
+
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
     reverse_view(Rng &&)->reverse_view<views::all_t<Rng>>;

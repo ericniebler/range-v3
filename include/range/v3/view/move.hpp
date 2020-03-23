@@ -95,6 +95,9 @@ namespace ranges
         }
     };
 
+    template<typename Rng>
+    RANGES_INLINE_VAR constexpr bool enable_safe_range<move_view<Rng>> = enable_safe_range<Rng>;
+
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
     move_view(Rng &&)->move_view<views::all_t<Rng>>;

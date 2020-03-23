@@ -351,6 +351,9 @@ namespace ranges
         using sliding_view::sv_base::sv_base;
     };
 
+    template<typename Rng>
+    RANGES_INLINE_VAR constexpr bool enable_safe_range<sliding_view<Rng>> = enable_safe_range<Rng>;
+
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
     sliding_view(Rng &&, range_difference_t<Rng>)->sliding_view<views::all_t<Rng>>;

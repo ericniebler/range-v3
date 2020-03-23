@@ -17,6 +17,7 @@
 #include <range/v3/view/map.hpp>
 #include <range/v3/view/zip.hpp>
 #include <range/v3/utility/copy.hpp>
+#include <range/v3/algorithm/find.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -65,6 +66,13 @@ int main()
         check_equal(key_range, {0,1,2});
         auto value_range = debug_input_view<std::pair<int, int> const>{rgp} | views::values;
         check_equal(value_range, {2,1,0});
+    }
+
+    {
+        auto it = find(m | views::keys, "other");
+        CHECK(it.base()->second == 2);
+        auto it2 = find(m | views::values, 1);
+        CHECK(it2.base()->first == "that");
     }
 
     return test_result();

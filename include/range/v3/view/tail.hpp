@@ -104,6 +104,9 @@ namespace ranges
         }
     };
 
+    template<typename Rng>
+    RANGES_INLINE_VAR constexpr bool enable_safe_range<tail_view<Rng>> = enable_safe_range<Rng>;
+
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Rng)(       //
         requires viewable_range<Rng>) //

@@ -17,8 +17,10 @@
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/delimit.hpp>
+#include <range/v3/view/filter.hpp>
 #include <range/v3/view/c_str.hpp>
 #include <range/v3/utility/copy.hpp>
+#include <range/v3/algorithm/find.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -138,6 +140,17 @@ int main()
     CPP_assert(!range<decltype(crng6)>);
     ::check_equal(rng6, {9,8,7,6,5,4,3,2,1,0});
     ::check_equal(rng6 | views::reverse, {0,1,2,3,4,5,6,7,8,9});
+
+    {
+        std::vector<int> v = {1, 2, 3, 4, 5};
+        auto b = find(v, 2);
+        auto e = find(v | views::reverse, 4).base();
+        ::check_equal(make_subrange(b, e), {2, 3, 4});
+
+        auto e2 = find(v | views::filter([](int i){ return i%2 == 0;})
+                         | views::reverse, 4);
+        CHECK(::is_dangling(e2));
+    }
 
     return test_result();
 }

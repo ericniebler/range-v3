@@ -124,6 +124,13 @@ namespace ranges
         RANGES_INLINE_VARIABLE(view_closure<values_fn>, values)
     } // namespace views
 
+    template<typename Rng>
+    RANGES_INLINE_VAR constexpr bool enable_safe_range<keys_range_view<Rng>> =
+        enable_safe_range<Rng>;
+    template<typename Rng>
+    RANGES_INLINE_VAR constexpr bool enable_safe_range<values_view<Rng>> =
+        enable_safe_range<Rng>;
+
     namespace cpp20
     {
         namespace views

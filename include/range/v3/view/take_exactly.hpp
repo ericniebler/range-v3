@@ -140,6 +140,9 @@ namespace ranges
     template<typename Rng>
     using take_exactly_view = detail::take_exactly_view_<Rng>;
 
+    template<typename Rng, bool B>
+    RANGES_INLINE_VAR constexpr bool enable_safe_range<detail::take_exactly_view_<Rng, B>> = enable_safe_range<Rng>;
+
     namespace views
     {
         struct take_exactly_base_fn

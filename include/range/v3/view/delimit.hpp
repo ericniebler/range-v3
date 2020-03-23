@@ -70,6 +70,11 @@ namespace ranges
         {}
     };
 
+    // the begin iterator will be an iterator into the underlying view (conditionally safe)
+    // and the end iterator owns the value to be compared against (safe)
+    template<typename Rng, typename Val>
+    RANGES_INLINE_VAR constexpr bool enable_safe_range<delimit_view<Rng, Val>> = enable_safe_range<Rng>;
+
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Rng, typename Val)(requires copy_constructible<Val>)
         delimit_view(Rng &&, Val)
