@@ -130,25 +130,25 @@
     CPP_PP_IIF(X)(CPP_PP_EMPTY, CPP_PP_COMMA)()                                 \
     /**/
 
-#define CPP_PP_FOR_EACH(M, ...) \
+#define CPP_PP_FOR_EACH(M, ...)                                                 \
     CPP_PP_FOR_EACH_N(CPP_PP_COUNT(__VA_ARGS__), M, __VA_ARGS__)
-#define CPP_PP_FOR_EACH_N(N, M, ...) \
+#define CPP_PP_FOR_EACH_N(N, M, ...)                                            \
     CPP_PP_CAT(CPP_PP_FOR_EACH_, N)(M, __VA_ARGS__)
-#define CPP_PP_FOR_EACH_1(M, _1) \
+#define CPP_PP_FOR_EACH_1(M, _1)                                                \
     M(_1)
-#define CPP_PP_FOR_EACH_2(M, _1, _2) \
+#define CPP_PP_FOR_EACH_2(M, _1, _2)                                            \
     M(_1), M(_2)
-#define CPP_PP_FOR_EACH_3(M, _1, _2, _3) \
+#define CPP_PP_FOR_EACH_3(M, _1, _2, _3)                                        \
     M(_1), M(_2), M(_3)
-#define CPP_PP_FOR_EACH_4(M, _1, _2, _3, _4) \
+#define CPP_PP_FOR_EACH_4(M, _1, _2, _3, _4)                                    \
     M(_1), M(_2), M(_3), M(_4)
-#define CPP_PP_FOR_EACH_5(M, _1, _2, _3, _4, _5) \
+#define CPP_PP_FOR_EACH_5(M, _1, _2, _3, _4, _5)                                \
     M(_1), M(_2), M(_3), M(_4), M(_5)
-#define CPP_PP_FOR_EACH_6(M, _1, _2, _3, _4, _5, _6) \
+#define CPP_PP_FOR_EACH_6(M, _1, _2, _3, _4, _5, _6)                            \
     M(_1), M(_2), M(_3), M(_4), M(_5), M(_6)
-#define CPP_PP_FOR_EACH_7(M, _1, _2, _3, _4, _5, _6, _7) \
+#define CPP_PP_FOR_EACH_7(M, _1, _2, _3, _4, _5, _6, _7)                        \
     M(_1), M(_2), M(_3), M(_4), M(_5), M(_6), M(_7)
-#define CPP_PP_FOR_EACH_8(M, _1, _2, _3, _4, _5, _6, _7, _8) \
+#define CPP_PP_FOR_EACH_8(M, _1, _2, _3, _4, _5, _6, _7, _8)                    \
     M(_1), M(_2), M(_3), M(_4), M(_5), M(_6), M(_7), M(_8)
 
 #define CPP_PP_PROBE_EMPTY_PROBE_CPP_PP_PROBE_EMPTY                             \
@@ -181,23 +181,20 @@
 #define CPP_INSTANCE(...) __VA_ARGS__
 #endif
 
-#define CPP_fwd(ARG) \
-    ((decltype(ARG)&&) ARG)
+#define CPP_fwd(ARG) ((decltype(ARG)&&) ARG)
 
-#define CPP_type_of(...) \
-    CPP_PP_EXPAND(CPP_type_of_2 __VA_ARGS__))
-#define CPP_type_of_2(...) \
-    __VA_ARGS__ CPP_PP_EAT CPP_PP_LPAREN
-#define CPP_name_of(...) \
-    CPP_PP_EAT __VA_ARGS__
-#define CPP_param(...) \
-    auto&& CPP_name_of(__VA_ARGS__)
+#define CPP_type_of(...) CPP_PP_EXPAND(CPP_type_of_2 __VA_ARGS__))
+#define CPP_type_of_2(...) __VA_ARGS__ CPP_PP_EAT CPP_PP_LPAREN
+#define CPP_name_of(...) CPP_PP_EAT __VA_ARGS__
+#define CPP_param(...) auto&& CPP_name_of(__VA_ARGS__)
 
-#define CPP_requires(...) \
-    CPP_requires_n(CPP_PP_COUNT(__VA_ARGS__), __VA_ARGS__)
+#define CPP_requires(...)                                                       \
+    CPP_requires_n(CPP_PP_COUNT(__VA_ARGS__), __VA_ARGS__)                      \
+    /**/
 
-#define CPP_requires_(...) \
-    CPP_requires_n_(CPP_PP_COUNT(__VA_ARGS__), __VA_ARGS__)
+#define CPP_requires_(...)                                                      \
+    CPP_requires_n_(CPP_PP_COUNT(__VA_ARGS__), __VA_ARGS__)                     \
+    /**/
 
 #if CPP_CXX_CONCEPTS || defined(CPP_DOXYGEN_INVOKED)
 #define CPP_concept META_CONCEPT
@@ -207,92 +204,108 @@
 #define CPP_valid_expressions
 #else
 #define CPP_arg_2(...) ::concepts::detail::id_t<__VA_ARGS__>
-#define CPP_valid_expressions(...) \
-    {__VA_ARGS__;}
+#define CPP_valid_expressions(...)                                              \
+    {__VA_ARGS__;}                                                              \
+    /**/
 #endif
 #define CPP_arg(ARG) CPP_arg_2 ARG
-#define CPP_requires_n(N, ...) \
-    requires(CPP_PP_FOR_EACH_N(N, CPP_arg, __VA_ARGS__)) \
-        CPP_valid_expressions
+#define CPP_requires_n(N, ...)                                                  \
+    requires(CPP_PP_FOR_EACH_N(N, CPP_arg, __VA_ARGS__))                        \
+        CPP_valid_expressions                                                   \
+        /**/
 #define CPP_requires_n_ CPP_requires_n
-#define CPP_defer_(CONCEPT, ...) \
-    CONCEPT<__VA_ARGS__>
-#define CPP_defer(CONCEPT, ...) \
-    CONCEPT<__VA_ARGS__>
-#define CPP_type(...) \
-    __VA_ARGS__
-#define CPP_literal(...) \
-    __VA_ARGS__
-#define CPP_concept_fragment(NAME, ...) \
-    META_CONCEPT NAME = CPP_PP_CAT(CPP_concept_fragment_reqs_, __VA_ARGS__)
-#define CPP_concept_fragment_reqs_requires(...) \
-    requires(__VA_ARGS__) CPP_concept_fragment_reqs_
+#define CPP_defer_(CONCEPT, ...)                                                \
+    CONCEPT<__VA_ARGS__>                                                        \
+    /**/
+#define CPP_defer(CONCEPT, ...)                                                 \
+    CONCEPT<__VA_ARGS__>                                                        \
+    /**/
+#define CPP_type(...) __VA_ARGS__
+#define CPP_literal(...) __VA_ARGS__
+#define CPP_concept_fragment(NAME, ...)                                         \
+    META_CONCEPT NAME = CPP_PP_CAT(CPP_concept_fragment_reqs_, __VA_ARGS__)     \
+    /**/
+#define CPP_concept_fragment_reqs_requires(...)                                 \
+    requires(__VA_ARGS__) CPP_concept_fragment_reqs_                            \
+    /**/
 #define CPP_concept_fragment_reqs_(...) { __VA_ARGS__ ; }
-#define CPP_fragment(NAME, ...) \
-    NAME<__VA_ARGS__>
+#define CPP_fragment(NAME, ...)                                                 \
+    NAME<__VA_ARGS__>                                                           \
+    /**/
 #else
 // Use CPP_concept_bool instead of CPP_concept on gcc-8 and earlier to avoid:
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=87512
 #define CPP_concept_bool CPP_INLINE_VAR constexpr bool
 #define CPP_concept CPP_INLINE_VAR constexpr auto
-#define CPP_requires_n_(N, ...) \
-    (true ? nullptr : ::concepts::detail::test_concept_( \
-        [](auto const CPP_arg) -> \
-            ::concepts::detail::invoke_result_t<\
-                decltype(CPP_arg), int, \
-                CPP_PP_FOR_EACH_N(N, CPP_type_of, __VA_ARGS__)> {\
-                    return {}; \
-                }, \
-        [](auto CPP_arg, CPP_PP_FOR_EACH_N(N, CPP_param, __VA_ARGS__)) \
-        CPP_valid_expressions
+#define CPP_requires_n_(N, ...)                                                 \
+    (true ? nullptr : ::concepts::detail::test_concept_(                        \
+        [](auto const CPP_arg) ->                                               \
+            ::concepts::detail::callable_result_t<                              \
+                decltype(CPP_arg), int,                                         \
+                CPP_PP_FOR_EACH_N(N, CPP_type_of, __VA_ARGS__)> {               \
+                    return {};                                                  \
+                },                                                              \
+        [](auto CPP_arg, CPP_PP_FOR_EACH_N(N, CPP_param, __VA_ARGS__))          \
+        CPP_valid_expressions                                                   \
+        /**/
 #define CPP_requires_n(N, ...) \
-    (true ? nullptr : ::concepts::detail::test_concept( \
-        (::concepts::detail::tag< \
-            CPP_PP_FOR_EACH_N(N, CPP_type_of, __VA_ARGS__) > *) nullptr, \
-        [](auto CPP_arg, CPP_PP_FOR_EACH_N(N, CPP_param, __VA_ARGS__)) \
-        CPP_valid_expressions
-#define CPP_valid_expressions(...) \
-    -> decltype(__VA_ARGS__, void(), ::concepts::detail::true_type{}) \
-    { (void)CPP_arg; return {}; })).value()
-#define CPP_type(...) \
-    ::concepts::detail::first_t<__VA_ARGS__, decltype(CPP_arg)>
-#define CPP_literal(...) \
-    (CPP_arg, void(), __VA_ARGS__)
-#define CPP_type_(ARG) \
-    CPP_type(CPP_PP_IIF(CPP_PP_NOT(CPP_PP_IS_PAREN(ARG)))(, CPP_PP_EXPAND) ARG)
-#define CPP_defer_(CONCEPT, ...)\
-    true? nullptr \
-        : ::concepts::detail::make_boolean(\
-            [](auto CPP_arg) { \
-                (void) CPP_arg; \
-                return std::integral_constant<bool, (CONCEPT<__VA_ARGS__>)>{};\
-            })\
+    (true ? nullptr : ::concepts::detail::test_concept(                         \
+        (::concepts::detail::tag<                                               \
+            CPP_PP_FOR_EACH_N(N, CPP_type_of, __VA_ARGS__) > *) nullptr,        \
+        [](auto CPP_arg, CPP_PP_FOR_EACH_N(N, CPP_param, __VA_ARGS__))          \
+        CPP_valid_expressions                                                   \
+        /**/
+#define CPP_valid_expressions(...)                                              \
+    -> decltype(__VA_ARGS__, void(), ::concepts::detail::true_type{})           \
+    { (void)CPP_arg; return {}; })).value()                                     \
     /**/
-#define CPP_defer(CONCEPT, ...)\
-    CPP_defer_(CONCEPT, CPP_PP_FOR_EACH(CPP_type_, __VA_ARGS__))
-#define CPP_concept_fragment(NAME, ...) \
-    auto NAME ## CPP_concept_fragment_impl_ \
-        CPP_concept_fragment_reqs_ ## __VA_ARGS__> {} \
-    template<typename... As>\
-    char NAME ## CPP_concept_fragment_(\
-        ::concepts::detail::tag<As...> *, \
-        decltype(&NAME ## CPP_concept_fragment_impl_<As...>)); \
-    char (&NAME ## CPP_concept_fragment_(...))[2] \
+#define CPP_type(...)                                                           \
+    ::concepts::detail::first_t<__VA_ARGS__, decltype(CPP_arg)>                 \
+    /**/
+#define CPP_literal(...)                                                        \
+    (CPP_arg, void(), __VA_ARGS__)                                              \
+    /**/
+#define CPP_type_(ARG)                                                          \
+    CPP_type(CPP_PP_IIF(CPP_PP_NOT(CPP_PP_IS_PAREN(ARG)))(, CPP_PP_EXPAND) ARG) \
+    /**/
+#define CPP_defer_(CONCEPT, ...)                                                \
+    true? nullptr                                                               \
+        : ::concepts::detail::make_boolean(                                     \
+            [](auto CPP_arg) {                                                  \
+                (void) CPP_arg;                                                 \
+                return std::integral_constant<bool, (CONCEPT<__VA_ARGS__>)>{};  \
+            })                                                                  \
+    /**/
+#define CPP_defer(CONCEPT, ...)                                                 \
+    CPP_defer_(CONCEPT, CPP_PP_FOR_EACH(CPP_type_, __VA_ARGS__))                \
+    /**/
+#define CPP_concept_fragment(NAME, ...)                                         \
+    auto NAME ## CPP_concept_fragment_impl_                                     \
+        CPP_concept_fragment_reqs_ ## __VA_ARGS__> {}                           \
+    template<typename... As>                                                    \
+    char NAME ## CPP_concept_fragment_(                                         \
+        ::concepts::detail::tag<As...> *,                                       \
+        decltype(&NAME ## CPP_concept_fragment_impl_<As...>));                  \
+    char (&NAME ## CPP_concept_fragment_(...))[2]                               \
     /**/
 #if defined(_MSC_VER) && !defined(__clang__)
-#define CPP_concept_fragment_true(...) \
-    ::concepts::detail::true_<decltype(__VA_ARGS__, void())>()
+#define CPP_concept_fragment_true(...)                                          \
+    ::concepts::detail::true_<decltype(__VA_ARGS__, void())>()                  \
+    /**/
 #else
-#define CPP_concept_fragment_true(...) \
-    !(decltype(__VA_ARGS__, void(), false){})
+#define CPP_concept_fragment_true(...)                                          \
+    !(decltype(__VA_ARGS__, void(), false){})                                   \
+    /**/
 #endif
-#define CPP_concept_fragment_reqs_requires(...) \
-    (__VA_ARGS__) -> std::enable_if_t<CPP_concept_fragment_reqs_2_
-#define CPP_concept_fragment_reqs_2_(...) \
-    CPP_concept_fragment_true(__VA_ARGS__)
-#define CPP_fragment(NAME, ...) \
-    (1u==sizeof(NAME ## CPP_concept_fragment_(\
-        static_cast<::concepts::detail::tag<__VA_ARGS__> *>(nullptr), nullptr))) \
+#define CPP_concept_fragment_reqs_requires(...)                                 \
+    (__VA_ARGS__) -> std::enable_if_t<CPP_concept_fragment_reqs_2_              \
+    /**/
+#define CPP_concept_fragment_reqs_2_(...)                                       \
+    CPP_concept_fragment_true(__VA_ARGS__)                                      \
+    /**/
+#define CPP_fragment(NAME, ...)                                                 \
+    (1u==sizeof(NAME ## CPP_concept_fragment_(                                  \
+        static_cast<::concepts::detail::tag<__VA_ARGS__> *>(nullptr), nullptr)))\
     /**/
 #endif
 
@@ -391,8 +404,8 @@
 #define CPP_CTOR_SFINAE_REQUIRES_1(...)                                         \
     std::enable_if_t<                                                           \
         CPP_FORCE_TO_BOOL(                                                      \
-            CPP_PP_EVAL(CPP_PP_CAT, \
-                CPP_TEMPLATE_SFINAE_AUX_3_,                              \
+            CPP_PP_EVAL(CPP_PP_CAT,                                             \
+                CPP_TEMPLATE_SFINAE_AUX_3_,                                     \
                 CPP_PP_CAT(CPP_CTOR_SFINAE_EAT_NOEXCEPT_, __VA_ARGS__)          \
             ) && CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))             \
         ),                                                                      \
@@ -488,7 +501,7 @@
 
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_(MAYBE_NOEXCEPT, ...)                \
     CPP_PP_CAT(CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_,                             \
-        CPP_PP_EVAL2(CPP_PP_CHECK, CPP_PP_CAT(                                                \
+        CPP_PP_EVAL2(CPP_PP_CHECK, CPP_PP_CAT(                                  \
             CPP_PP_PROBE_NOEXCEPT_PROBE_, MAYBE_NOEXCEPT)))                     \
     /**/
 
@@ -497,10 +510,10 @@
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_0(...)                               \
     std::enable_if_t<                                                           \
         CPP_FORCE_TO_BOOL(                                                      \
-            CPP_PP_EVAL(\
-                CPP_PP_CAT, \
-                CPP_FUN_IMPL_EAT_REQUIRES_, \
-                __VA_ARGS__) &&              \
+            CPP_PP_EVAL(                                                        \
+                CPP_PP_CAT,                                                     \
+                CPP_FUN_IMPL_EAT_REQUIRES_,                                     \
+                __VA_ARGS__) &&                                                 \
             CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))                  \
         ),                                                                      \
         ::concepts::detail::Nil                                                 \
@@ -511,8 +524,8 @@
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_1(...)                               \
     std::enable_if_t<                                                           \
         CPP_FORCE_TO_BOOL(                                                      \
-            CPP_PP_EVAL(\
-                CPP_PP_CAT,                                                         \
+            CPP_PP_EVAL(                                                        \
+                CPP_PP_CAT,                                                     \
                 CPP_FUN_IMPL_EAT_REQUIRES_,                                     \
                 CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)             \
             ) && CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))             \
@@ -710,12 +723,12 @@ namespace concepts
         using first_t = meta::invoke<first_impl<sizeof(U) ^ sizeof(U)>, T>;
 
         template<typename Fun, typename... Args>
-        using invoke_result_t =
+        using callable_result_t =
             decltype(((Fun &&(*)()) nullptr)()(((Args &&(*)()) nullptr)()...));
 
         template<typename ...Args, typename ExprsFn>
         auto test_concept(tag<Args...> *, ExprsFn) ->
-            first_t<true_type, invoke_result_t<ExprsFn, int, Args...>>
+            first_t<true_type, callable_result_t<ExprsFn, int, Args...>>
         {
             return {};
         }
@@ -746,136 +759,78 @@ namespace concepts
             return true;
         }
 
-        template<typename T, typename U>
-        struct and_;
-        template<typename T, typename U>
-        struct or_;
+        struct not_fn
+        {
+            template<bool B>
+            bool_<!B> operator()(bool_<B>);
+        };
+        template<bool B>
+        struct and_or_fn
+        {
+            bool_<B> operator()(bool_<B>, void*);
+            template<typename U>
+            auto operator()(bool_<!B>, U*) { return bool_<(bool) U{}>{}; }
+        };
+        using or_fn = and_or_fn<true>;
+        using and_fn = and_or_fn<false>;
+
+        template<typename, typename, typename...>
+        struct _boolean_
+        {
+            struct type;
+        };
+        template<typename Fn, typename T = std::true_type, typename... Us>
+        using boolean_ = typename _boolean_<Fn, T, Us...>::type;
+
         template<typename T>
-        struct not_
-        {
-            using _cpp_boolean_t = not_;
-            constexpr operator bool() const noexcept
-            {
-                return !(bool) T{};
-            }
-            constexpr T operator!() const noexcept
-            {
-                return T{};
-            }
-            template<typename That>
-            constexpr and_<not_, typename That::_cpp_boolean_t> operator&&(That) const noexcept
-            {
-                return {};
-            }
-            template<typename That>
-            constexpr or_<not_, typename That::_cpp_boolean_t> operator||(That) const noexcept
-            {
-                return {};
-            }
-        };
-
+        using not_ = boolean_<not_fn, T>;
         template<typename T, typename U>
-        struct and_
-        {
-            using _cpp_boolean_t = and_;
-            static constexpr bool impl(std::false_type) noexcept
-            {
-                return false;
-            }
-            static constexpr bool impl(std::true_type) noexcept
-            {
-                return (bool) U{};
-            }
-            constexpr operator bool() const noexcept
-            {
-                return and_::impl(bool_<(bool) T{}>{});
-            }
-            constexpr not_<and_> operator!() const noexcept
-            {
-                return not_<and_>{};
-            }
-            template<typename That>
-            constexpr and_<and_, typename That::_cpp_boolean_t> operator&&(That) const noexcept
-            {
-                return {};
-            }
-            template<typename That>
-            constexpr or_<and_, typename That::_cpp_boolean_t> operator||(That) const noexcept
-            {
-                return {};
-            }
-        };
-
+        using or_ = boolean_<or_fn, T, U>;
         template<typename T, typename U>
-        struct or_
+        using and_ = boolean_<and_fn, T, U>;
+
+        template<typename Fn, typename T, typename... Us>
+        struct _boolean_<Fn, T, Us...>::type
         {
-            using _cpp_boolean_t = or_;
-            static constexpr bool impl(std::true_type) noexcept
-            {
-                return true;
-            }
-            static constexpr bool impl(std::false_type) noexcept
-            {
-                return (bool) U{};
-            }
+            using _cpp_boolean_t = type;
+            type() = default;
+            constexpr type(decltype(nullptr)) noexcept {}
             constexpr operator bool() const noexcept
             {
-                return or_::impl(bool_<(bool) T{}>{});
+                return decltype(static_cast<Fn(*)()>(nullptr)()(
+                    bool_<(bool) T{}>{},
+                    static_cast<Us *>(nullptr)...))::value;
             }
-            constexpr not_<or_> operator!() const noexcept
+            constexpr not_<type> operator!() const noexcept
             {
                 return {};
             }
             template<typename That>
-            constexpr and_<or_, typename That::_cpp_boolean_t> operator&&(That) const noexcept
+            constexpr and_<type, typename That::_cpp_boolean_t> operator&&(That) const
+                noexcept
             {
                 return {};
             }
             template<typename That>
-            constexpr or_<or_, typename That::_cpp_boolean_t> operator||(That) const noexcept
+            constexpr or_<type, typename That::_cpp_boolean_t> operator||(That) const
+                noexcept
             {
                 return {};
             }
         };
 
         template<class Fn>
-        struct boolean_
+        constexpr boolean_<Fn> make_boolean(Fn) noexcept
         {
-            using _cpp_boolean_t = boolean_;
-            boolean_() = default;
-            constexpr boolean_(decltype(nullptr)) noexcept {}
-            template<bool = true>
-            constexpr operator bool() const noexcept
-            {
-                return decltype(std::declval<Fn>()(std::true_type{}))::value;
-            }
-            constexpr not_<boolean_> operator!() const noexcept
-            {
-                return {};
-            }
-            template<typename That>
-            constexpr and_<boolean_, typename That::_cpp_boolean_t> operator&&(That) const noexcept
-            {
-                return {};
-            }
-            template<typename That>
-            constexpr or_<boolean_, typename That::_cpp_boolean_t> operator||(That) const noexcept
-            {
-                return {};
-            }
-        };
-        template<class Fn>
-        constexpr boolean_<Fn> make_boolean(Fn) noexcept { return nullptr; }
+            return nullptr;
+        }
 
         struct Nil
         {};
 
         struct _true_fn
         {
-            std::true_type operator()(int) const noexcept
-            {
-                return {};
-            }
+            std::true_type operator()(std::true_type) const;
         };
 
         using boolean_true_t = boolean_<_true_fn>;
