@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_UTILITY_COMMON_TYPE_HPP
 #define RANGES_V3_UTILITY_COMMON_TYPE_HPP
 
+#include <tuple>
 #include <utility>
 
 #include <meta/meta.hpp>
@@ -22,26 +23,14 @@
 
 #include <range/v3/range_fwd.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 // Sadly, this is necessary because of:
 //  - std::common_type is !SFINAE-friendly, and
 //  - The specification of std::common_type makes it impossibly
 //    difficult to specialize on user-defined types without spamming
 //    out a bajillion copies to handle all combinations of cv and ref
 //    qualifiers.
-
-#ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
-// Non-portable forward declarations of standard containers
-RANGES_BEGIN_NAMESPACE_STD
-    RANGES_BEGIN_NAMESPACE_VERSION
-        template<typename... Ts>
-        class tuple;
-    RANGES_END_NAMESPACE_VERSION
-RANGES_END_NAMESPACE_STD
-#else
-#include <tuple>
-#endif
-
-#include <range/v3/detail/disable_warnings.hpp>
 
 namespace ranges
 {
