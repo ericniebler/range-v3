@@ -18,6 +18,15 @@
 #include <type_traits>
 #include <utility>
 
+#ifdef __has_include
+#if __has_include(<span>)
+#include <span>
+#endif
+#if __has_include(<string_view>)
+#include <string_view>
+#endif
+#endif
+
 #include <meta/meta.hpp>
 
 #include <concepts/concepts.hpp>
@@ -30,28 +39,6 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
-
-#ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
-// Non-portable forward declarations of standard library components
-RANGES_BEGIN_NAMESPACE_STD
-    RANGES_BEGIN_NAMESPACE_VERSION
-        template<typename ElementType, size_t Extent>
-        class span;
-
-        template<typename CharT, typename Traits>
-        class basic_string_view;
-    RANGES_END_NAMESPACE_VERSION
-RANGES_END_NAMESPACE_STD
-#else
-#ifdef __has_include
-#if __has_include(<span>)
-#include <span>
-#endif
-#if __has_include(<string_view>)
-#include <string_view>
-#endif
-#endif
-#endif
 
 #include <range/v3/detail/disable_warnings.hpp>
 

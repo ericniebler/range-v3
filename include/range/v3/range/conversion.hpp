@@ -14,6 +14,8 @@
 #ifndef RANGES_V3_RANGE_CONVERSION_HPP
 #define RANGES_V3_RANGE_CONVERSION_HPP
 
+#include <vector>
+
 #include <meta/meta.hpp>
 
 #include <range/v3/range_fwd.hpp>
@@ -24,18 +26,6 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
-
-#ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
-// Non-portable forward declarations of standard containers
-RANGES_BEGIN_NAMESPACE_STD
-    RANGES_BEGIN_NAMESPACE_CONTAINER
-        template<typename Value, typename Alloc /*= allocator<Value>*/>
-        class vector;
-    RANGES_END_NAMESPACE_CONTAINER
-RANGES_END_NAMESPACE_STD
-#else
-#include <vector>
-#endif
 
 #include <range/v3/detail/disable_warnings.hpp>
 
