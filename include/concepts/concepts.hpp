@@ -44,8 +44,7 @@
 
 #if defined(_MSC_VER) && !defined(__clang__)
 #define CPP_WORKAROUND_MSVC_779763 // FATAL_UNREACHABLE calling constexpr function via template parameter
-#define CPP_WORKAROUND_MSVC_780775 // Incorrect substitution in function template return type
-#define CPP_WORKAROUND_MSVC_654601 // Failure to invoke *implicit* bool conversion in a constant expression
+#define CPP_WORKAROUND_MSVC_784772 // Failure to invoke *explicit* bool conversion in a constant expression
 #endif
 
 #if !defined(CPP_CXX_CONCEPTS)
@@ -169,7 +168,7 @@
     /**/
 #define CPP_assert_msg static_assert
 
-#ifdef CPP_WORKAROUND_MSVC_654601
+#ifdef CPP_WORKAROUND_MSVC_784772
 #define CPP_FORCE_TO_BOOL static_cast<bool>
 #else
 #define CPP_FORCE_TO_BOOL

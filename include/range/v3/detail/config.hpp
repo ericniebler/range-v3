@@ -222,7 +222,16 @@ namespace ranges
 #error range-v3 requires Visual Studio 2019 with the /std:c++17 (or /std:c++latest) and /permissive- options.
 #endif
 
+#if _MSC_VER < 1926
+#define RANGES_WORKAROUND_MSVC_895622 // Error when phase 1 name binding finds only
+                                      // deleted function
+
+#if _MSC_VER < 1925
+#define RANGES_WORKAROUND_MSVC_779708 // ADL for operands of function type [No workaround]
+
 #if _MSC_VER < 1923
+#define RANGES_WORKAROUND_MSVC_573728 // rvalues of array types bind to lvalue references
+                                      // [no workaround]
 #define RANGES_WORKAROUND_MSVC_934330 // Deduction guide not correctly preferred to copy
                                       // deduction candidate [No workaround]
 
@@ -243,6 +252,8 @@ namespace ranges
 #endif                                // _MSC_VER < 1921
 #endif                                // _MSC_VER < 1922
 #endif                                // _MSC_VER < 1923
+#endif                                // _MSC_VER < 1925
+#endif                                // _MSC_VER < 1926
 
 #if 1 // Fixed in 1920, but more bugs hiding behind workaround
 #define RANGES_WORKAROUND_MSVC_701385 // Yet another alias expansion error
@@ -250,22 +261,17 @@ namespace ranges
 
 #define RANGES_WORKAROUND_MSVC_249830 // constexpr and arguments that aren't subject to
                                       // lvalue-to-rvalue conversion
-#define RANGES_WORKAROUND_MSVC_573728 // rvalues of array types bind to lvalue references
-                                      // [no workaround]
 #define RANGES_WORKAROUND_MSVC_677925 // Bogus C2676 "binary '++': '_Ty' does not define
                                       // this operator"
 #define RANGES_WORKAROUND_MSVC_683388 // decltype(*i) is incorrectly an rvalue reference
                                       // for pointer-to-array i
 #define RANGES_WORKAROUND_MSVC_688606 // SFINAE failing to account for access control
                                       // during specialization matching
-#define RANGES_WORKAROUND_MSVC_779708 // ADL for operands of function type [No workaround]
 #define RANGES_WORKAROUND_MSVC_786312 // Yet another mixed-pack-expansion failure
 #define RANGES_WORKAROUND_MSVC_792338 // Failure to match specialization enabled via call
                                       // to constexpr function
 #define RANGES_WORKAROUND_MSVC_835948 // Silent bad codegen destroying sized_generator [No
                                       // workaround]
-#define RANGES_WORKAROUND_MSVC_895622 // Error when phase 1 name binding finds only
-                                      // deleted function
 #define RANGES_WORKAROUND_MSVC_934264 // Explicitly-defaulted inherited default
                                       // constructor is not correctly implicitly constexpr
 #if _MSVC_LANG <= 201703L
