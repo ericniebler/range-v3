@@ -26,7 +26,9 @@ if (RANGES_CXX_COMPILER_CLANGCL OR RANGES_CXX_COMPILER_MSVC)
   ranges_append_flag(RANGES_HAS_CXXSTDCOLON "/std:c++${RANGES_CXX_STD}")
   set(RANGES_STD_FLAG "/std:c++${RANGES_CXX_STD}")
   if (RANGES_CXX_COMPILER_CLANGCL)
-    ranges_append_flag(RANGES_HAS_FNO_MS_COMPATIBIILITY "-fno-ms-compatibility")
+    # The MSVC STL before VS 2019v16.6 with Clang 10 requires -fms-compatibility in C++17 mode, and
+    # doesn't support C++20 mode at all. Let's drop this flag until AppVeyor updates to VS2016v16.6.
+    # ranges_append_flag(RANGES_HAS_FNO_MS_COMPATIBIILITY "-fno-ms-compatibility")
     ranges_append_flag(RANGES_HAS_FNO_DELAYED_TEMPLATE_PARSING "-fno-delayed-template-parsing")
   endif()
   # Enable "normal" warnings and make them errors:

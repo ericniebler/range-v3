@@ -41,8 +41,10 @@
 #endif  // CPP_CXX_INLINE_VARIABLES
 
 #if defined(_MSC_VER) && !defined(__clang__)
+#if _MSC_VER < 1926
 #define CPP_WORKAROUND_MSVC_895622 // Error when phase 1 name binding finds only deleted function
-#endif
+#endif // _MSC_VER < 1926
+#endif // MSVC
 
 #if CPP_CXX_INLINE_VARIABLES < 201606L
 #define CPP_INLINE_VAR
