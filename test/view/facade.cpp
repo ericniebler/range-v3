@@ -79,6 +79,13 @@ int main()
         CPP_assert(common_range<decltype(r)>);
         CPP_assert(sized_range<decltype(r)>);
         CPP_assert(random_access_range<decltype(r)>);
+        using it = iterator_t<decltype(r)>;
+        using cur = decltype(range_access::begin_cursor(r));
+        cur c{};
+        CPP_assert(std::is_lvalue_reference< decltype(range_access::read(c))>::value);
+        CPP_assert(detail::contiguous_cursor_<cur>);
+        CPP_assert(detail::contiguous_cursor<cur>);
+        CPP_assert(contiguous_iterator<it>);
         CPP_assert(contiguous_range<decltype(r)>);
         ::check_equal(r, {1, 2, 3, 4, 5, 6, 7});
 

@@ -338,17 +338,14 @@ namespace ranges
             sized_sentinel_for_cursor<T, T> && //
             CPP_fragment(detail::random_access_cursor_, T);
         template<typename T>
-        CPP_concept_fragment(contiguous_cursor_,
-            requires(T & t) //
-            (
-                concepts::requires_<std::is_lvalue_reference<
-                    decltype(range_access::read(t))>::value>
-            ));
+        CPP_concept_bool contiguous_cursor_ = 
+        std::is_lvalue_reference<
+                    decltype(range_access::read(std::declval<T&>()))>::value;
         template<typename T>
         CPP_concept_bool contiguous_cursor =
             random_access_cursor<T> && //
             range_access::contiguous_t<uncvref_t<T>>::value && //
-            CPP_fragment(detail::contiguous_cursor_, T);
+            detail::contiguous_cursor_<T>;
         // clang-format on
 
         template<typename Cur, bool IsReadable>
