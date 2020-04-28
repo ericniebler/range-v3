@@ -289,6 +289,22 @@ namespace ranges
         {
             return derived().begin()[n];
         }
+        /// Simple indexing:
+        template<bool True = true>
+        constexpr auto data()
+            -> CPP_ret(std::add_pointer_t<range_reference_t<D<True>>>)( //
+                requires True && contiguous_iterator<iterator_t<D<True>>>)
+        {
+            return std::addressof(*ranges::begin(derived()));
+        }
+        /// \overload
+        template<bool True = true>
+        constexpr auto data() const
+            -> CPP_ret(std::add_pointer_t<range_reference_t<D<True> const>>)( //
+                requires True && contiguous_iterator<iterator_t<D<True> const>>)
+        {
+            return std::addressof(*ranges::begin(derived()));
+        }
         /// Returns a reference to the element at specified location pos, with bounds
         /// checking.
         template<bool True = true>

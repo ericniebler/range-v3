@@ -232,6 +232,7 @@ $RECYCLE.BIN/
 *.VC.opendb
 .vscode/
 .vs/
+.history/
 
 \#*#
 .#*
