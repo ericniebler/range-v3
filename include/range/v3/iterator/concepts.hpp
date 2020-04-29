@@ -36,18 +36,6 @@
 
 #include <range/v3/detail/disable_warnings.hpp>
 
-#if __has_include(<version>)
-#  include <version>
-#  if __cpp_lib_ranges >= 201911
-#    define RANGE_V3_STD_COMPAT 1
-     namespace std {
-         template <typename S, typename I>
-         extern const bool disable_sized_sentinel_for;
-     }
-#  endif
-#endif
-
-
 namespace ranges
 {
     /// \addtogroup group-iterator-concepts
@@ -834,14 +822,6 @@ namespace ranges
         disable_sized_sentinel<std::reverse_iterator<S>, std::reverse_iterator<I>> =
             !static_cast<bool>(sized_sentinel_for<I, S>);
 } // namespace ranges
-
-#ifdef RANGE_V3_STD_COMPAT
-namespace std {
-    template <typename S, typename I>
-        requires ::ranges::disable_sized_sentinel<S, I>
-    constexpr bool disable_sized_sentinel_for<S, I> = true;
-}
-#endif
 
 #endif // defined(__GLIBCXX__) || (defined(_LIBCPP_VERSION) && _LIBCPP_VERSION <= 3900)
 

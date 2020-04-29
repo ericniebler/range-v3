@@ -25,6 +25,29 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/version.hpp>
 
+// if the standard library ships <ranges>, play nice with it
+#if __has_include(<version>)
+#  include <version>
+#  if __cpp_lib_ranges >= 201911
+#    define RANGE_V3_STD_COMPAT 1
+     namespace std {
+         template <typename S, typename I>
+         extern const bool disable_sized_sentinel_for;
+     }
+     namespace std::ranges {
+         template <typename T>
+         extern const bool enable_view;
+
+         template <typename T>
+         extern const bool enable_borrowed_range;
+
+         template <typename T>
+         extern const bool disable_sized_range;
+     }
+#  endif
+#endif
+
+
 /// \defgroup group-iterator Iterator
 /// Iterator functionality
 
@@ -820,6 +843,19 @@ namespace ranges
     }
 } // namespace ranges
 /// \endcond
+
+#ifdef RANGE_V3_STD_COMPAT
+namespace std {
+    template <typename S, typename I>
+        requires ::ranges::disable_sized_sentinel<S, I>
+    constexpr bool disable_sized_sentinel_for<S, I> = true;
+}
+namespace std::ranges {
+    template <typename T>
+        requires ::ranges::enable_safe_range<T>
+    constexpr bool enable_borrowed_range<T> = true;
+}
+#endif
 
 RANGES_DIAGNOSTIC_POP
 

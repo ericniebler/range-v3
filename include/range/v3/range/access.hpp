@@ -54,7 +54,11 @@ namespace ranges
     namespace detail
     {
         template<typename T>
-        RANGES_INLINE_VAR constexpr bool _safe_range = enable_safe_range<uncvref_t<T>>;
+        RANGES_INLINE_VAR constexpr bool _safe_range =
+#ifdef RANGE_V3_STD_COMPAT
+            ::std::ranges::enable_borrowed_range<uncvref_t<T>> ||
+#endif
+            enable_safe_range<uncvref_t<T>>;
 
         template<typename T>
         RANGES_INLINE_VAR constexpr bool _safe_range<T &> = true;
