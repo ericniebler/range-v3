@@ -28,7 +28,7 @@
 // if the standard library ships <ranges>, play nice with it
 #if __has_include(<version>)
 #  include <version>
-#  if __cpp_lib_ranges >= 201911
+#  if defined(__cpp_lib_ranges) && __cpp_lib_ranges >= 201911
 #    define RANGE_V3_STD_COMPAT 1
      namespace std {
          template <typename S, typename I>
