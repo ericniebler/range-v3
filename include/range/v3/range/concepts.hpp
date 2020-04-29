@@ -42,16 +42,6 @@
 
 #include <range/v3/detail/disable_warnings.hpp>
 
-#ifdef RANGE_V3_STD_COMPAT
-namespace std::ranges {
-    template <typename T>
-    extern const bool enable_view;
-
-    template <typename T>
-    extern const bool disable_sized_range;
-}
-#endif
-
 namespace ranges
 {
     /// \addtogroup group-range
