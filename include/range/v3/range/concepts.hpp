@@ -42,6 +42,16 @@
 
 #include <range/v3/detail/disable_warnings.hpp>
 
+#ifdef RANGE_V3_STD_COMPAT
+namespace std::ranges {
+    template <typename T>
+    extern const bool enable_view;
+
+    template <typename T>
+    extern const bool disable_sized_range;
+}
+#endif
+
 namespace ranges
 {
     /// \addtogroup group-range
@@ -158,6 +168,9 @@ namespace ranges
     template<typename T>
     CPP_concept_bool sized_range =
         range<T> &&
+ #ifdef RANGE_V3_STD_COMPAT
+        !::std::ranges::disable_sized_range<uncvref_t<T>> &&
+ #endif
         !disable_sized_range<uncvref_t<T>> &&
         CPP_fragment(ranges::sized_range_, T);
     // clang-format on
@@ -197,7 +210,11 @@ namespace ranges
     CPP_concept_bool view_ =
         range<T> &&
         semiregular<T> &&
+ #ifdef RANGE_V3_STD_COMPAT
+        (enable_view<T> || ::std::ranges::enable_view<T>);
+ #else
         enable_view<T>;
+#endif
 
     template<typename T>
     CPP_concept_bool viewable_range =
@@ -331,6 +348,18 @@ namespace ranges
     } // namespace cpp20
     /// @}
 } // namespace ranges
+
+#ifdef RANGE_V3_STD_COMPAT
+namespace std::ranges {
+    template <typename T>
+        requires ::ranges::enable_view<T>
+    constexpr bool enable_view<T> = true;
+
+    template <typename T>
+        requires ::ranges::disable_sized_range<T>
+    constexpr bool disable_sized_range<T> = true;
+}
+#endif
 
 #include <range/v3/detail/reenable_warnings.hpp>
 

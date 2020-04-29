@@ -26,6 +26,10 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+#ifdef RANGE_V3_STD_COMPAT
+#include <ranges>
+#endif
+
 struct is_odd
 {
     bool operator()(int i) const
@@ -221,6 +225,18 @@ int main()
 #endif // clang bug workaround
 #endif // use deduction guides
     }
+
+#ifdef RANGE_V3_STD_COMPAT
+    {
+        std::vector<int> vi = {1, 2, 3};
+        auto plus_one = [](int i){ return i + 1; };
+
+        auto result = vi | ranges::views::transform(plus_one)
+                         | std::views::transform(plus_one)
+                         | ranges::views::transform(plus_one);
+        ::check_equal(result, {4, 5, 6});
+    }
+#endif
 
     return test_result();
 }
