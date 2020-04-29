@@ -8,9 +8,6 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 // Project home: https://github.com/ericniebler/range-v3
-#ifdef RANGE_V3_STD_COMPAT
-#include <ranges>
-#endif
 
 #include <string>
 #include <vector>
@@ -29,6 +26,9 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+#ifdef RANGE_V3_STD_COMPAT
+#include <ranges>
+#endif
 
 struct is_odd
 {
