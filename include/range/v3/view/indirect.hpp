@@ -67,7 +67,7 @@ namespace ranges
 
         CPP_member
         constexpr auto begin_adaptor() noexcept -> CPP_ret(adaptor<false>)( //
-            requires(!simple_view<Rng>()))
+            requires (!simple_view<Rng>()))
         {
             return {};
         }
@@ -80,7 +80,7 @@ namespace ranges
 
         CPP_member
         constexpr auto end_adaptor() noexcept -> CPP_ret(adaptor<false>)( //
-            requires(!simple_view<Rng>()))
+            requires (!simple_view<Rng>()))
         {
             return {};
         }

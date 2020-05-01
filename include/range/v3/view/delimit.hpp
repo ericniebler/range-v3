@@ -85,21 +85,21 @@ namespace ranges
     {
         struct delimit_base_fn
         {
-            template<typename I_, typename Val, typename I = detail::decay_t<I_>>
+            CPP_template(typename I_, typename Val, typename I = detail::decay_t<I_>)( //
+                requires (!range<I_> && convertible_to<I_, I> && input_iterator<I>  && //
+                         semiregular<Val>  && //
+                         equality_comparable_with<Val, iter_reference_t<I>>)) //
             constexpr auto operator()(I_ && begin_, Val value) const
-                -> CPP_ret(delimit_view<subrange<I, unreachable_sentinel_t>, Val>)( //
-                    requires(!range<I_> && convertible_to<I_, I> && input_iterator<I> &&
-                             semiregular<Val> &&
-                             equality_comparable_with<Val, iter_reference_t<I>>))
+                -> delimit_view<subrange<I, unreachable_sentinel_t>, Val>
             {
                 return {{static_cast<I_ &&>(begin_), {}}, std::move(value)};
             }
 
-            template<typename Rng, typename Val>
+            CPP_template(typename Rng, typename Val)( //
+                requires viewable_range<Rng> && input_range<Rng> && semiregular<
+                        Val> && equality_comparable_with<Val, range_reference_t<Rng>>) //
             constexpr auto operator()(Rng && rng, Val value) const //
-                -> CPP_ret(delimit_view<all_t<Rng>, Val>)(         //
-                    requires viewable_range<Rng> && input_range<Rng> && semiregular<
-                        Val> && equality_comparable_with<Val, range_reference_t<Rng>>)
+                -> delimit_view<all_t<Rng>, Val>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(value)};
             }

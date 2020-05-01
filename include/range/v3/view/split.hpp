@@ -368,7 +368,7 @@ namespace ranges
 
             CPP_member
             constexpr explicit CPP_ctor(split_outer_iterator)(Parent & parent)( //
-                requires(!forward_range<Base>))
+                requires (!forward_range<Base>))
               : parent_(&parent)
             {}
 
@@ -608,24 +608,24 @@ namespace ranges
     {
         struct split_base_fn
         {
-            template<typename Rng>
-            constexpr auto operator()(Rng && rng, range_value_t<Rng> val) const
-                -> CPP_ret(split_view<all_t<Rng>, single_view<range_value_t<Rng>>>)( //
-                    requires viewable_range<Rng> && input_range<Rng> &&
+            CPP_template(typename Rng)( //
+                requires viewable_range<Rng> && input_range<Rng> &&
                         indirectly_comparable<iterator_t<Rng>, range_value_t<Rng> const *,
-                                              ranges::equal_to>)
+                                              ranges::equal_to>) //
+            constexpr auto operator()(Rng && rng, range_value_t<Rng> val) const
+                -> split_view<all_t<Rng>, single_view<range_value_t<Rng>>>
             {
                 return {all(static_cast<Rng &&>(rng)), single(std::move(val))};
             }
 
-            template<typename Rng, typename Pattern>
-            constexpr auto operator()(Rng && rng, Pattern && pattern) const
-                -> CPP_ret(split_view<all_t<Rng>, all_t<Pattern>>)( //
-                    requires viewable_range<Rng> && input_range<Rng> &&
+            CPP_template(typename Rng, typename Pattern)( //
+                requires viewable_range<Rng> && input_range<Rng> &&
                         viewable_range<Pattern> && forward_range<Pattern> &&
                             indirectly_comparable<iterator_t<Rng>, iterator_t<Pattern>,
                                                   ranges::equal_to> &&
-                    (forward_range<Rng> || detail::tiny_range<Pattern>))
+                    (forward_range<Rng> || detail::tiny_range<Pattern>)) //
+            constexpr auto operator()(Rng && rng, Pattern && pattern) const
+                -> split_view<all_t<Rng>, all_t<Pattern>>
             {
                 return {all((Rng &&) rng), all((Pattern &&) pattern)};
             }

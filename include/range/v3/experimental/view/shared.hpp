@@ -83,7 +83,7 @@ namespace ranges
             template<typename SharedFn, typename Pipeable>
             friend constexpr auto operator|(shared_closure<SharedFn> sh, Pipeable pipe)
                 -> CPP_broken_friend_ret(shared_closure<composed<Pipeable, SharedFn>>)(
-                    requires(is_pipeable_v<Pipeable>))
+                    requires (is_pipeable_v<Pipeable>))
             {
                 return shared_closure<composed<Pipeable, SharedFn>>{compose(
                     static_cast<Pipeable &&>(pipe), static_cast<SharedFn &&>(sh))};
@@ -105,11 +105,11 @@ namespace ranges
         {
             struct shared_fn
             {
-                template<typename Rng>
+                CPP_template(typename Rng)( //
+                    requires range<Rng> && (!viewable_range<Rng>)&& //
+                        constructible_from<detail::decay_t<Rng>, Rng>) //
                 auto operator()(Rng && rng) const                       //
-                    -> CPP_ret(shared_view<detail::decay_t<Rng>>)(      //
-                        requires range<Rng> && (!viewable_range<Rng>)&& //
-                        constructible_from<detail::decay_t<Rng>, Rng>)
+                    -> shared_view<detail::decay_t<Rng>>
                 {
                     return shared_view<detail::decay_t<Rng>>{static_cast<Rng &&>(rng)};
                 }

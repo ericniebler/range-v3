@@ -293,11 +293,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(stable_partition)
 
         /// \brief function template \c stable_partition
-        template<typename I, typename S, typename C, typename P = identity>
+        CPP_template(typename I, typename S, typename C, typename P = identity)( //
+            requires bidirectional_iterator<I> && sentinel_for<S, I>  && //
+            indirect_unary_predicate<C, projected<I, P>> && permutable<I>) //
         auto RANGES_FUNC(stable_partition)(I first, S last, C pred, P proj = P{}) //
-            ->CPP_ret(I)(                                                         //
-                requires bidirectional_iterator<I> && sentinel_for<S, I> &&
-                indirect_unary_predicate<C, projected<I, P>> && permutable<I>)
+            -> I
         {
             return detail::stable_partition_impl(std::move(first),
                                                  std::move(last),
@@ -308,12 +308,12 @@ namespace ranges
 
         // BUGBUG Can this be optimized if Rng has O1 size?
         /// \overload
-        template<typename Rng, typename C, typename P = identity>
+        CPP_template(typename Rng, typename C, typename P = identity)( //
+            requires bidirectional_range<Rng>  && //
+            indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>  && //
+            permutable<iterator_t<Rng>>) //
         auto RANGES_FUNC(stable_partition)(Rng && rng, C pred, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                 //
-                requires bidirectional_range<Rng> &&
-                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> &&
-                permutable<iterator_t<Rng>>)
+            -> safe_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

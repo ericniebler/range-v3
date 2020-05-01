@@ -65,9 +65,9 @@ namespace ranges
         {
             return next(ranges::begin(rng_), 1, ranges::end(rng_));
         }
-        template<bool Const = true>
-        auto begin() const -> CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)( //
-            requires Const && range<meta::const_if_c<Const, Rng>>)
+        CPP_template(bool Const = true)( //
+            requires Const && range<meta::const_if_c<Const, Rng>>) //
+        auto begin() const -> iterator_t<meta::const_if_c<Const, Rng>>
         {
             return next(ranges::begin(rng_), 1, ranges::end(rng_));
         }
@@ -75,9 +75,9 @@ namespace ranges
         {
             return ranges::end(rng_);
         }
-        template<bool Const = true>
-        auto end() const -> CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)( //
-            requires Const && range<meta::const_if_c<Const, Rng>>)
+        CPP_template(bool Const = true)( //
+            requires Const && range<meta::const_if_c<Const, Rng>>) //
+        auto end() const -> sentinel_t<meta::const_if_c<Const, Rng>>
         {
             return ranges::end(rng_);
         }
@@ -118,11 +118,11 @@ namespace ranges
     {
         struct tail_fn
         {
-            template<typename Rng>
+            CPP_template(typename Rng)( //
+                requires viewable_range<Rng> && input_range<Rng>) //
             auto operator()(Rng && rng) const
-                -> CPP_ret(meta::if_c<range_cardinality<Rng>::value == 0, all_t<Rng>,
-                                      tail_view<all_t<Rng>>>)( //
-                    requires viewable_range<Rng> && input_range<Rng>)
+                -> meta::if_c<range_cardinality<Rng>::value == 0, all_t<Rng>,
+                                      tail_view<all_t<Rng>>>
             {
                 return all(static_cast<Rng &&>(rng));
             }

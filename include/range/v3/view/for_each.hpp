@@ -69,9 +69,9 @@ namespace ranges
 
     struct yield_fn
     {
-        template<typename V>
-        auto operator()(V v) const -> CPP_ret(single_view<V>)( //
-            requires copy_constructible<V>)
+        CPP_template(typename V)( //
+            requires copy_constructible<V>) //
+        auto operator()(V v) const -> single_view<V>
         {
             return views::single(std::move(v));
         }
@@ -83,9 +83,9 @@ namespace ranges
 
     struct yield_from_fn
     {
-        template<typename Rng>
-        auto operator()(Rng rng) const -> CPP_ret(Rng)( //
-            requires view_<Rng>)
+        CPP_template(typename Rng)( //
+            requires view_<Rng>) //
+        auto operator()(Rng rng) const -> Rng
         {
             return rng;
         }
@@ -110,9 +110,9 @@ namespace ranges
 
     struct lazy_yield_if_fn
     {
-        template<typename F>
-        auto operator()(bool b, F f) const -> CPP_ret(generate_n_view<F>)( //
-            requires invocable<F &>)
+        CPP_template(typename F)( //
+            requires invocable<F &>) //
+        auto operator()(bool b, F f) const -> generate_n_view<F>
         {
             return views::generate_n(std::move(f), b ? 1 : 0);
         }

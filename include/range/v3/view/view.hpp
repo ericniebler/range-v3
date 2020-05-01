@@ -141,7 +141,7 @@ namespace ranges
             template<typename ViewFn, typename Pipeable>
             friend constexpr auto operator|(view_closure<ViewFn> vw, Pipeable pipe)
                 -> CPP_broken_friend_ret(view_closure<composed<Pipeable, ViewFn>>)(
-                    requires(is_pipeable_v<Pipeable>))
+                    requires (is_pipeable_v<Pipeable>))
             {
                 return make_view_closure(
                     compose(static_cast<Pipeable &&>(pipe), static_cast<ViewFn &&>(vw)));
@@ -157,7 +157,7 @@ namespace ranges
             constexpr auto                                  // **************************
             operator|(Rng &&, view_closure<ViewFn> const &) // ******* READ THIS ********
                                                             // **** IF YOUR COMPILE *****
-                ->CPP_ret(Rng)(                             // ****** BREAKS HERE *******
+                -> CPP_ret(Rng)(                             // ****** BREAKS HERE *******
                     requires range<Rng> &&                  // **************************
                     (!viewable_range<Rng>)) = delete;       // **************************
             // **************************************************************************
@@ -252,10 +252,10 @@ namespace ranges
             {}
 
             // Calling directly requires a viewable_range.
-            template<typename Rng, typename... Rest>
-            constexpr auto operator()(Rng && rng, Rest &&... rest) const -> CPP_ret(
-                invoke_result_t<ViewFn const &, Rng, Rest...>)( //
-                requires viewable_range<Rng> && invocable<ViewFn const &, Rng, Rest...>)
+            CPP_template(typename Rng, typename... Rest)( //
+                requires viewable_range<Rng> && invocable<ViewFn const &, Rng, Rest...>) //
+            constexpr auto operator()(Rng && rng, Rest &&... rest) const
+                -> invoke_result_t<ViewFn const &, Rng, Rest...>
             {
                 return vw_(static_cast<Rng &&>(rng), static_cast<Rest &&>(rest)...);
             }

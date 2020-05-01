@@ -36,16 +36,16 @@ namespace ranges
         {
             template<typename Fun>
             constexpr auto CPP_fun(operator())(Fun fun)(const //
-                                                        requires(!range<Fun>))
+                                                        requires (!range<Fun>))
             {
                 return make_action_closure(bind_back(take_while_fn{}, std::move(fun)));
             }
 
-            template<typename Rng, typename Fun>
-            auto operator()(Rng && rng, Fun fun) const -> CPP_ret(Rng)( //
+            CPP_template(typename Rng, typename Fun)( //
                 requires forward_range<Rng> &&
                     erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                        indirect_unary_predicate<Fun, iterator_t<Rng>>)
+                        indirect_unary_predicate<Fun, iterator_t<Rng>>) //
+            auto operator()(Rng && rng, Fun fun) const -> Rng
             {
                 ranges::actions::erase(
                     rng, find_if_not(begin(rng), end(rng), std::move(fun)), end(rng));

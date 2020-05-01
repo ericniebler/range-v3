@@ -149,7 +149,7 @@ namespace ranges
         // Not to spec
         CPP_member
         static constexpr auto size() -> CPP_ret(std::size_t)( //
-            requires(detail::join_cardinality<Rng>() >= 0))
+            requires (detail::join_cardinality<Rng>() >= 0))
         {
             return static_cast<std::size_t>(detail::join_cardinality<Rng>());
         }
@@ -304,10 +304,10 @@ namespace ranges
             return {this, ranges::begin};
         }
 
-        template<bool Const = true>
-        constexpr auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
+        CPP_template(bool Const = true)( //
             requires Const && input_range<meta::const_if_c<Const, Rng>> &&
-                std::is_reference<range_reference_t<meta::const_if_c<Const, Rng>>>::value)
+                std::is_reference<range_reference_t<meta::const_if_c<Const, Rng>>>::value) //
+        constexpr auto begin_cursor() const -> cursor<Const>
         {
             return {this, ranges::begin};
         }
@@ -357,7 +357,7 @@ namespace ranges
         {}
         CPP_member
         static constexpr auto size() -> CPP_ret(std::size_t)( //
-            requires(detail::join_cardinality<Rng, ValRng>() >= 0))
+            requires (detail::join_cardinality<Rng, ValRng>() >= 0))
         {
             return static_cast<std::size_t>(detail::join_cardinality<Rng, ValRng>());
         }
@@ -522,9 +522,9 @@ namespace ranges
 
         struct cpp20_join_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(join_view<all_t<Rng>>)( //
-                requires joinable_range<Rng>)
+            CPP_template(typename Rng)( //
+                requires joinable_range<Rng>) //
+            auto operator()(Rng && rng) const -> join_view<all_t<Rng>>
             {
                 return join_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -538,19 +538,19 @@ namespace ranges
         public:
             using cpp20_join_fn::operator();
 
-            template<typename Rng>
+            CPP_template(typename Rng)( //
+                requires joinable_with_range<Rng, single_view<inner_value_t<Rng>>>) //
             auto operator()(Rng && rng, inner_value_t<Rng> v) const
-                -> CPP_ret(join_with_view<all_t<Rng>,
-                                          single_view<inner_value_t<Rng>>>)( //
-                    requires joinable_with_range<Rng, single_view<inner_value_t<Rng>>>)
+                -> join_with_view<all_t<Rng>,
+                                          single_view<inner_value_t<Rng>>>
             {
                 return {all(static_cast<Rng &&>(rng)), single(std::move(v))};
             }
 
-            template<typename Rng, typename ValRng>
+            CPP_template(typename Rng, typename ValRng)( //
+                requires joinable_with_range<Rng, ValRng>) //
             auto operator()(Rng && rng, ValRng && val) const
-                -> CPP_ret(join_with_view<all_t<Rng>, all_t<ValRng>>)( //
-                    requires joinable_with_range<Rng, ValRng>)
+                -> join_with_view<all_t<Rng>, all_t<ValRng>>
             {
                 return {all(static_cast<Rng &&>(rng)), all(static_cast<ValRng &&>(val))};
             }
@@ -569,13 +569,13 @@ namespace ranges
         {
             template<typename T>
             constexpr auto CPP_fun(operator())(T && t)(const //
-                                                       requires(!joinable_range<T>)) // TODO: underconstrained
+                                                       requires (!joinable_range<T>)) // TODO: underconstrained
             {
                 return make_view_closure(bind_back(join_base_fn{}, static_cast<T &&>(t)));
             }
             template<typename T>
             constexpr auto CPP_fun(operator())(T & t)(const //
-                requires(!joinable_range<T &>) && range<T &>)
+                requires (!joinable_range<T &>) && range<T &>)
             {
                 return make_view_closure(bind_back(join_base_fn{}, detail::reference_wrapper_<T>(t)));
             }

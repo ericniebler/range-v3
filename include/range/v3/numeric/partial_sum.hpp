@@ -89,12 +89,12 @@ namespace ranges
 
     struct partial_sum_fn
     {
-        template<typename I, typename S1, typename O, typename S2, typename BOp = plus,
-                 typename P = identity>
-        auto operator()(I first, S1 last, O result, S2 end_result, BOp bop = BOp{},
-                        P proj = P{}) const -> CPP_ret(partial_sum_result<I, O>)( //
+        CPP_template(typename I, typename S1, typename O, typename S2, typename BOp = plus,
+                 typename P = identity)( //
             requires sentinel_for<S1, I> && sentinel_for<S2, O> &&
-                partial_sum_constraints<I, O, BOp, P>)
+                partial_sum_constraints<I, O, BOp, P>) //
+        auto operator()(I first, S1 last, O result, S2 end_result, BOp bop = BOp{},
+                        P proj = P{}) const -> partial_sum_result<I, O>
         {
             using X = projected<projected<I, detail::as_value_type_t<I>>, P>;
             coerce<iter_value_t<I>> val_i;
@@ -115,11 +115,11 @@ namespace ranges
             return {first, result};
         }
 
-        template<typename I, typename S, typename O, typename BOp = plus,
-                 typename P = identity>
+        CPP_template(typename I, typename S, typename O, typename BOp = plus,
+                 typename P = identity)( //
+            requires sentinel_for<S, I> && partial_sum_constraints<I, O, BOp, P>) //
         auto operator()(I first, S last, O result, BOp bop = BOp{}, P proj = P{}) const
-            -> CPP_ret(partial_sum_result<I, O>)( //
-                requires sentinel_for<S, I> && partial_sum_constraints<I, O, BOp, P>)
+            -> partial_sum_result<I, O>
         {
             return (*this)(std::move(first),
                            std::move(last),

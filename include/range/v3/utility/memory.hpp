@@ -88,9 +88,9 @@ namespace ranges
             }
         };
 
-        template<typename T, typename... Args>
-        auto make_unique(Args &&... args) -> CPP_ret(std::unique_ptr<T>)( //
-            requires(!std::is_array<T>::value))
+        CPP_template(typename T, typename... Args)( //
+            requires (!std::is_array<T>::value)) //
+        auto make_unique(Args &&... args) -> std::unique_ptr<T>
         {
             return std::unique_ptr<T>{new T(static_cast<Args &&>(args)...)};
         }
@@ -138,7 +138,7 @@ namespace ranges
         }
         CPP_member
         auto operator++(int) -> CPP_ret(void)( //
-            requires(!forward_iterator<O>))
+            requires (!forward_iterator<O>))
         {
             ++out_;
         }
@@ -202,9 +202,9 @@ namespace ranges
         }
     };
 
-    template<typename I>
-    auto iter_ref(I & i) -> CPP_ret(iterator_wrapper<I>)( //
-        requires input_or_output_iterator<I>)
+    CPP_template(typename I)( //
+        requires input_or_output_iterator<I>) //
+    auto iter_ref(I & i) -> iterator_wrapper<I>
     {
         return i;
     }

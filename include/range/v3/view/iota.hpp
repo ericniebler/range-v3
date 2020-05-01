@@ -118,17 +118,17 @@ namespace ranges
             CPP_fragment(detail::_advanceable_, I);
         // clang-format on
 
-        template<typename I>
-        auto iota_advance_(I & i, iota_difference_t<I> n) -> CPP_ret(void)( //
-            requires(!unsigned_integral<I>))
+        CPP_template(typename I)( //
+            requires (!unsigned_integral<I>)) //
+        auto iota_advance_(I & i, iota_difference_t<I> n) -> void
         {
             // TODO: bounds-check this
             i += n;
         }
 
-        template<typename Int>
-        auto iota_advance_(Int & i, iota_difference_t<Int> n) -> CPP_ret(void)( //
-            requires unsigned_integral<Int>)
+        CPP_template(typename Int)( //
+            requires unsigned_integral<Int>) //
+        auto iota_advance_(Int & i, iota_difference_t<Int> n) -> void
         {
             // TODO: bounds-check this
             if(n >= 0)
@@ -137,16 +137,16 @@ namespace ranges
                 i -= static_cast<Int>(-n);
         }
 
-        template<typename I>
-        auto iota_distance_(I const & i, I const & s) -> CPP_ret(iota_difference_t<I>)( //
-            requires advanceable_<I> && (!integral<I>))
+        CPP_template(typename I)( //
+            requires advanceable_<I> && (!integral<I>)) //
+        auto iota_distance_(I const & i, I const & s) -> iota_difference_t<I>
         {
             return static_cast<iota_difference_t<I>>(s - i);
         }
 
-        template<typename Int>
-        auto iota_distance_(Int i0, Int i1) -> CPP_ret(iota_difference_t<Int>)( //
-            requires signed_integral<Int>)
+        CPP_template(typename Int)( //
+            requires signed_integral<Int>) //
+        auto iota_distance_(Int i0, Int i1) -> iota_difference_t<Int>
         {
             // TODO: bounds-check this
             return static_cast<iota_difference_t<Int>>(
@@ -154,9 +154,9 @@ namespace ranges
                 static_cast<iota_difference_t<Int>>(i0));
         }
 
-        template<typename Int>
-        auto iota_distance_(Int i0, Int i1) -> CPP_ret(iota_difference_t<Int>)( //
-            requires unsigned_integral<Int>)
+        CPP_template(typename Int)( //
+            requires unsigned_integral<Int>) //
+        auto iota_distance_(Int i0, Int i1) -> iota_difference_t<Int>
         {
             // TODO: bounds-check this
             return (i0 > i1) ? static_cast<iota_difference_t<Int>>(
@@ -272,7 +272,7 @@ namespace ranges
         }
         CPP_member
         auto end_cursor() const -> CPP_ret(default_sentinel_t)( //
-            requires(!same_as<From, To>))
+            requires (!same_as<From, To>))
         {
             return {};
         }
@@ -448,18 +448,18 @@ namespace ranges
     {
         struct iota_fn
         {
-            template<typename From>
-            auto operator()(From value) const -> CPP_ret(iota_view<From>)( //
-                requires weakly_incrementable<From>)
+            CPP_template(typename From)( //
+                requires weakly_incrementable<From>) //
+            auto operator()(From value) const -> iota_view<From>
             {
                 return iota_view<From>{std::move(value)};
             }
-            template<typename From, typename To>
-            auto operator()(From from, To to) const -> CPP_ret(iota_view<From, To>)( //
+            CPP_template(typename From, typename To)( //
                 requires weakly_incrementable<From> && semiregular<To> &&
                     detail::weakly_equality_comparable_with_<From, To> &&
                 (!integral<From> || !integral<To> ||
-                 std::is_signed<From>::value == std::is_signed<To>::value))
+                 std::is_signed<From>::value == std::is_signed<To>::value)) //
+            auto operator()(From from, To to) const -> iota_view<From, To>
             {
                 return {std::move(from), std::move(to)};
             }
@@ -467,13 +467,13 @@ namespace ranges
 
         struct closed_iota_fn
         {
-            template<typename From, typename To>
-            auto operator()(From from, To to) const
-                -> CPP_ret(closed_iota_view<From, To>)( //
-                    requires weakly_incrementable<From> && semiregular<To> &&
+            CPP_template(typename From, typename To)( //
+                requires weakly_incrementable<From> && semiregular<To> &&
                         detail::weakly_equality_comparable_with_<From, To> &&
                     (!integral<From> || !integral<To> ||
-                     std::is_signed<From>::value == std::is_signed<To>::value))
+                     std::is_signed<From>::value == std::is_signed<To>::value)) //
+            auto operator()(From from, To to) const
+                -> closed_iota_view<From, To>
             {
                 return {std::move(from), std::move(to)};
             }
@@ -502,17 +502,17 @@ namespace ranges
             {
                 return iota_view<Val>{value};
             }
-            template<typename Val>
+            CPP_template(typename Val)( //
+                requires integral<Val>) //
             constexpr auto operator()(Val value, unreachable_sentinel_t) const
-                -> CPP_ret(iota_view<Val>)( //
-                    requires integral<Val>)
+                -> iota_view<Val>
             {
                 return iota_view<Val>{value};
             }
-            template<typename Val>
+            CPP_template(typename Val)( //
+                requires integral<Val>) //
             constexpr auto operator()(Val from, Val to) const
-                -> CPP_ret(iota_view<Val, Val>)( //
-                    requires integral<Val>)
+                -> iota_view<Val, Val>
             {
                 return {from, to};
             }

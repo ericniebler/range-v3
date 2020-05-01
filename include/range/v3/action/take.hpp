@@ -41,11 +41,11 @@ namespace ranges
                 return make_action_closure(bind_back(take_fn{}, n));
             }
 
-            template<typename Rng>
+            CPP_template(typename Rng)( //
+                requires forward_range<Rng>  && //
+                    erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>>) //
             auto operator()(Rng && rng, range_difference_t<Rng> n) const
-                -> CPP_ret(Rng)( //
-                    requires forward_range<Rng> &&
-                        erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>>)
+                -> Rng
             {
                 RANGES_EXPECT(n >= 0);
                 ranges::actions::erase(

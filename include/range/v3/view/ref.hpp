@@ -89,10 +89,10 @@ namespace ranges
     {
         struct ref_fn
         {
-            template<typename Rng>
+            CPP_template(typename Rng)( //
+                requires range<Rng>) //
             constexpr auto operator()(Rng & rng) const noexcept
-                -> CPP_ret(ref_view<Rng>)( //
-                    requires range<Rng>)
+                -> ref_view<Rng>
             {
                 return ref_view<Rng>(rng);
             }

@@ -137,7 +137,7 @@ namespace ranges
         template<typename U>
         explicit(!convertible_to<U, T>) constexpr CPP_ctor(semiregular_box)(U && u)( //
             noexcept(std::is_nothrow_constructible<T, U>::value)                     //
-            requires(!defer::same_as<uncvref_t<U>, semiregular_box>) &&
+            requires (!defer::same_as<uncvref_t<U>, semiregular_box>) &&
             defer::constructible_from<T, U>)
           : semiregular_box(in_place, static_cast<U &&>(u))
         {}
@@ -145,14 +145,14 @@ namespace ranges
         template<typename U>
         explicit constexpr CPP_ctor(semiregular_box)(U && u)(    //
             noexcept(std::is_nothrow_constructible<T, U>::value) //
-            requires(!defer::same_as<uncvref_t<U>, semiregular_box>) &&
+            requires (!defer::same_as<uncvref_t<U>, semiregular_box>) &&
             defer::constructible_from<T, U> && (!defer::convertible_to<U, T>))
           : semiregular_box(in_place, static_cast<U &&>(u))
         {}
         template<typename U>
         constexpr CPP_ctor(semiregular_box)(U && u)(             //
             noexcept(std::is_nothrow_constructible<T, U>::value) //
-            requires(!defer::same_as<uncvref_t<U>, semiregular_box>) &&
+            requires (!defer::same_as<uncvref_t<U>, semiregular_box>) &&
             defer::constructible_from<T, U> && defer::convertible_to<U, T>)
           : semiregular_box(in_place, static_cast<U &&>(u))
         {}
@@ -265,7 +265,7 @@ namespace ranges
 
 #if defined(_MSC_VER)
         CPP_template(typename U)( //
-            requires(!defer::same_as<uncvref_t<U>, semiregular_box>) &&
+            requires (!defer::same_as<uncvref_t<U>, semiregular_box>) &&
             defer::constructible_from<ranges::reference_wrapper<T &>, U>) //
             constexpr semiregular_box(U && u) noexcept(
                 std::is_nothrow_constructible<ranges::reference_wrapper<T &>, U>::value)
@@ -294,7 +294,7 @@ namespace ranges
 
 #if defined(_MSC_VER)
         CPP_template(typename U)( //
-            requires(!defer::same_as<uncvref_t<U>, semiregular_box>) &&
+            requires (!defer::same_as<uncvref_t<U>, semiregular_box>) &&
             defer::constructible_from<ranges::reference_wrapper<T &&>, U>) //
             constexpr semiregular_box(U && u) noexcept(
                 std::is_nothrow_constructible<ranges::reference_wrapper<T &&>, U>::value)

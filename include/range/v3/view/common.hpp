@@ -71,17 +71,17 @@ namespace ranges
         {
             return ranges::begin(rng_) + ranges::distance(rng_);
         }
-        template<bool Const = true>
+        CPP_template(bool Const = true)( //
+            requires Const && range<meta::const_if_c<Const, Rng>>) //
         auto end_(std::false_type) const
-            -> CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)( //
-                requires Const && range<meta::const_if_c<Const, Rng>>)
+            -> sentinel_t<meta::const_if_c<Const, Rng>>
         {
             return ranges::end(rng_);
         }
-        template<bool Const = true>
+        CPP_template(bool Const = true)( //
+            requires Const && range<meta::const_if_c<Const, Rng>>) //
         auto end_(std::true_type) const
-            -> CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)( //
-                requires Const && range<meta::const_if_c<Const, Rng>>)
+            -> iterator_t<meta::const_if_c<Const, Rng>>
         {
             return ranges::begin(rng_) + ranges::distance(rng_);
         }
@@ -111,18 +111,18 @@ namespace ranges
             return ranges::size(rng_);
         }
 
-        template<bool Const = true>
+        CPP_template(bool Const = true)( //
+            requires range<meta::const_if_c<Const, Rng>>) //
         auto begin() const
-            -> CPP_ret(detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>)( //
-                requires range<meta::const_if_c<Const, Rng>>)
+            -> detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>
         {
             return detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>{
                 ranges::begin(rng_)};
         }
-        template<bool Const = true>
+        CPP_template(bool Const = true)( //
+            requires range<meta::const_if_c<Const, Rng>>) //
         auto end() const
-            -> CPP_ret(detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>)( //
-                requires range<meta::const_if_c<Const, Rng>>)
+            -> detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>
         {
             return detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>{
                 end_(meta::bool_<detail::random_access_and_sized_range<
@@ -140,7 +140,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Rng)(       //
-        requires(!common_range<Rng>)) //
+        requires (!common_range<Rng>)) //
         common_view(Rng &&)
             ->common_view<views::all_t<Rng>>;
 #endif
@@ -156,16 +156,16 @@ namespace ranges
     {
         struct cpp20_common_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(all_t<Rng>)( //
-                requires viewable_range<Rng> && common_range<Rng>)
+            CPP_template(typename Rng)( //
+                requires viewable_range<Rng> && common_range<Rng>) //
+            auto operator()(Rng && rng) const -> all_t<Rng>
             {
                 return all(static_cast<Rng &&>(rng));
             }
 
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(common_view<all_t<Rng>>)( //
-                requires viewable_range<Rng> && (!common_range<Rng>))
+            CPP_template(typename Rng)( //
+                requires viewable_range<Rng> && (!common_range<Rng>)) //
+            auto operator()(Rng && rng) const -> common_view<all_t<Rng>>
             {
                 return common_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -173,9 +173,9 @@ namespace ranges
 
         struct common_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(common_view<all_t<Rng>>)( //
-                requires viewable_range<Rng>)
+            CPP_template(typename Rng)( //
+                requires viewable_range<Rng>) //
+            auto operator()(Rng && rng) const -> common_view<all_t<Rng>>
             {
                 return common_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

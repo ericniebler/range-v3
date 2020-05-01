@@ -39,11 +39,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(generate)
 
         /// \brief function template \c generate_n
-        template<typename O, typename S, typename F>
+        CPP_template(typename O, typename S, typename F)( //
+            requires invocable<F &> && output_iterator<O, invoke_result_t<F &>>  && //
+            sentinel_for<S, O>) //
         auto RANGES_FUNC(generate)(O first, S last, F fun) //
-            ->CPP_ret(generate_result<O, F>)(              //
-                requires invocable<F &> && output_iterator<O, invoke_result_t<F &>> &&
-                sentinel_for<S, O>)
+            -> generate_result<O, F>
         {
             for(; first != last; ++first)
                 *first = invoke(fun);
@@ -51,10 +51,10 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename F>
+        CPP_template(typename Rng, typename F)( //
+            requires invocable<F &> && output_range<Rng, invoke_result_t<F &>>) //
         auto RANGES_FUNC(generate)(Rng && rng, F fun)
-            ->CPP_ret(generate_result<safe_iterator_t<Rng>, F>)( //
-                requires invocable<F &> && output_range<Rng, invoke_result_t<F &>>)
+            -> generate_result<safe_iterator_t<Rng>, F>
         {
             return {(*this)(begin(rng), end(rng), ref(fun)).out, detail::move(fun)};
         }

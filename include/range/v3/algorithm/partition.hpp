@@ -98,11 +98,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(partition)
 
         /// \brief function template \c partition
-        template<typename I, typename S, typename C, typename P = identity>
+        CPP_template(typename I, typename S, typename C, typename P = identity)( //
+            requires permutable<I> && sentinel_for<S, I>  && //
+            indirect_unary_predicate<C, projected<I, P>>) //
         auto RANGES_FUNC(partition)(I first, S last, C pred, P proj = P{}) //
-            ->CPP_ret(I)(                                                  //
-                requires permutable<I> && sentinel_for<S, I> &&
-                indirect_unary_predicate<C, projected<I, P>>)
+            -> I
         {
             return detail::partition_impl(std::move(first),
                                           std::move(last),
@@ -112,11 +112,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C, typename P = identity>
+        CPP_template(typename Rng, typename C, typename P = identity)( //
+            requires forward_range<Rng> && permutable<iterator_t<Rng>>  && //
+            indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(partition)(Rng && rng, C pred, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                          //
-                requires forward_range<Rng> && permutable<iterator_t<Rng>> &&
-                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
+            -> safe_iterator_t<Rng>
         {
             return detail::partition_impl(begin(rng),
                                           end(rng),

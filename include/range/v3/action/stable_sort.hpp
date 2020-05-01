@@ -37,16 +37,16 @@ namespace ranges
         {
             template<typename C, typename P = identity>
             constexpr auto CPP_fun(operator())(C pred, P proj = P{})(const //
-                                                                     requires(!range<C>))
+                                                                     requires (!range<C>))
             {
                 return make_action_closure(
                     bind_back(stable_sort_fn{}, std::move(pred), std::move(proj)));
             }
 
-            template<typename Rng, typename C = less, typename P = identity>
+            CPP_template(typename Rng, typename C = less, typename P = identity)( //
+                requires forward_range<Rng> && sortable<iterator_t<Rng>, C, P>) //
             auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
-                -> CPP_ret(Rng)( //
-                    requires forward_range<Rng> && sortable<iterator_t<Rng>, C, P>)
+                -> Rng
             {
                 ranges::stable_sort(rng, std::move(pred), std::move(proj));
                 return static_cast<Rng &&>(rng);

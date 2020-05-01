@@ -40,14 +40,14 @@ namespace ranges
     RANGES_FUNC_BEGIN(remove_copy)
 
         /// \brief function template \c remove_copy
-        template<typename I, typename S, typename O, typename T, typename P = identity>
-        auto RANGES_FUNC(remove_copy)(
-            I first, S last, O out, T const & val, P proj = P{}) //
-            ->CPP_ret(remove_copy_result<I, O>)(                 //
-                requires input_iterator<I> && sentinel_for<S, I> &&
+        CPP_template(typename I, typename S, typename O, typename T, typename P = identity)( //
+            requires input_iterator<I> && sentinel_for<S, I> &&
                 weakly_incrementable<O> &&
                 indirect_relation<equal_to, projected<I, P>, T const *> &&
-                indirectly_copyable<I, O>)
+                indirectly_copyable<I, O>) //
+        auto RANGES_FUNC(remove_copy)(
+            I first, S last, O out, T const & val, P proj = P{}) //
+            -> remove_copy_result<I, O>
         {
             for(; first != last; ++first)
             {
@@ -62,12 +62,12 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename O, typename T, typename P = identity>
+        CPP_template(typename Rng, typename O, typename T, typename P = identity)( //
+            requires input_range<Rng> && weakly_incrementable<O>  && //
+            indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *>  && //
+            indirectly_copyable<iterator_t<Rng>, O>) //
         auto RANGES_FUNC(remove_copy)(Rng && rng, O out, T const & val, P proj = P{}) //
-            ->CPP_ret(remove_copy_result<safe_iterator_t<Rng>, O>)(                   //
-                requires input_range<Rng> && weakly_incrementable<O> &&
-                indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *> &&
-                indirectly_copyable<iterator_t<Rng>, O>)
+            -> remove_copy_result<safe_iterator_t<Rng>, O>
         {
             return (*this)(begin(rng), end(rng), std::move(out), val, std::move(proj));
         }

@@ -87,14 +87,14 @@ namespace ranges
         template<typename U>
         constexpr CPP_ctor(reference_wrapper)(U && u)(               //
             noexcept(std::is_nothrow_constructible<base_, U>::value) //
-            requires(!defer::same_as<uncvref_t<U>, reference_wrapper>) &&
+            requires (!defer::same_as<uncvref_t<U>, reference_wrapper>) &&
             defer::constructible_from<base_, U>)
           : detail::reference_wrapper_<T>{static_cast<U &&>(u)}
         {}
 #else
         // BUGBUG clang-3.7 prefers a CPP_template here instead of a CPP_ctor
         CPP_template(typename U)( //
-            requires(!defer::same_as<uncvref_t<U>, reference_wrapper>) &&
+            requires (!defer::same_as<uncvref_t<U>, reference_wrapper>) &&
             defer::constructible_from<base_, U>) //
             constexpr reference_wrapper(U && u) noexcept(
                 std::is_nothrow_constructible<base_, U>::value)
@@ -110,7 +110,7 @@ namespace ranges
             return get();
         }
         CPP_template(typename...)(                         //
-            requires(!std::is_rvalue_reference<T>::value)) //
+            requires (!std::is_rvalue_reference<T>::value)) //
         operator std::reference_wrapper<type>() const noexcept
         {
             return {get()};
@@ -126,9 +126,9 @@ namespace ranges
 
     struct ref_fn
     {
-        template<typename T>
-        auto operator()(T & t) const -> CPP_ret(reference_wrapper<T>)( //
-            requires(!is_reference_wrapper_v<T>))
+        CPP_template(typename T)( //
+            requires (!is_reference_wrapper_v<T>)) //
+        auto operator()(T & t) const -> reference_wrapper<T>
         {
             return {t};
         }

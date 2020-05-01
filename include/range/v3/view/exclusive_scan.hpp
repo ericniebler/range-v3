@@ -156,10 +156,10 @@ namespace ranges
     {
         struct exclusive_scan_base_fn
         {
-            template<typename Rng, typename T, typename Fun = plus>
+            CPP_template(typename Rng, typename T, typename Fun = plus)( //
+                requires exclusive_scan_constraints<Rng, T, Fun>) //
             constexpr auto operator()(Rng && rng, T init, Fun fun = Fun{}) const
-                -> CPP_ret(exclusive_scan_view<all_t<Rng>, T, Fun>)( //
-                    requires exclusive_scan_constraints<Rng, T, Fun>)
+                -> exclusive_scan_view<all_t<Rng>, T, Fun>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(init), std::move(fun)};
             }

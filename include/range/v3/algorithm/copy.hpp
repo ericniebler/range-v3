@@ -41,11 +41,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(copy)
 
         /// \brief function template \c copy
-        template<typename I, typename S, typename O>
+        CPP_template(typename I, typename S, typename O)( //
+            requires input_iterator<I> && sentinel_for<S, I>  && //
+            weakly_incrementable<O> && indirectly_copyable<I, O>) //
         constexpr auto RANGES_FUNC(copy)(I first, S last, O out) //
-            ->CPP_ret(copy_result<I, O>)(                        //
-                requires input_iterator<I> && sentinel_for<S, I> &&
-                weakly_incrementable<O> && indirectly_copyable<I, O>)
+            -> copy_result<I, O>
         {
             for(; first != last; ++first, ++out)
                 *out = *first;
@@ -53,11 +53,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename O>
+        CPP_template(typename Rng, typename O)( //
+            requires input_range<Rng> && weakly_incrementable<O>  && //
+            indirectly_copyable<iterator_t<Rng>, O>) //
         constexpr auto RANGES_FUNC(copy)(Rng && rng, O out)  //
-            ->CPP_ret(copy_result<safe_iterator_t<Rng>, O>)( //
-                requires input_range<Rng> && weakly_incrementable<O> &&
-                indirectly_copyable<iterator_t<Rng>, O>)
+            -> copy_result<safe_iterator_t<Rng>, O>
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }

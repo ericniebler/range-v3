@@ -336,14 +336,16 @@
 #define CPP_ctor CPP_ctor_sfinae
 #endif
 
+#define CPP_TRUE_ CPP_PP_CAT(CPP_true_, __LINE__)
+
 #define CPP_template_sfinae(...)                                                \
     template<__VA_ARGS__ CPP_TEMPLATE_SFINAE_AUX_                               \
     /**/
 #define CPP_TEMPLATE_SFINAE_AUX_(...) ,                                         \
-    typename CPP_true_ = std::true_type,                                        \
+    typename CPP_TRUE_ = std::true_type,                                        \
     std::enable_if_t<                                                           \
         CPP_FORCE_TO_BOOL(                                                      \
-            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) && CPP_true_{}  \
+            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) && CPP_TRUE_{}  \
         ),                                                                      \
         int                                                                     \
     > = 0>                                                                      \
@@ -352,10 +354,10 @@
     template<__VA_ARGS__ CPP_TEMPLATE_DEF_SFINAE_AUX_                           \
     /**/
 #define CPP_TEMPLATE_DEF_SFINAE_AUX_(...) ,                                     \
-    typename CPP_true_,                                                         \
+    typename CPP_TRUE_,                                                         \
     std::enable_if_t<                                                           \
         CPP_FORCE_TO_BOOL(                                                      \
-            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) && CPP_true_{}  \
+            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) && CPP_TRUE_{}  \
         ),                                                                      \
         int                                                                     \
     >>                                                                          \

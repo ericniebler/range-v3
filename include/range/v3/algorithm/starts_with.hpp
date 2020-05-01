@@ -42,13 +42,16 @@ namespace ranges
     RANGES_FUNC_BEGIN(starts_with)
 
         /// \brief function template \c starts_with
-        template<typename I1,
+        CPP_template(typename I1,
                  typename S1,
                  typename I2,
                  typename S2,
                  typename Comp = equal_to,
                  typename Proj1 = identity,
-                 typename Proj2 = identity>
+                 typename Proj2 = identity)( //
+            requires input_iterator<I1> && sentinel_for<S1, I1> &&
+                input_iterator<I2> && sentinel_for<S2, I2> &&
+                indirectly_comparable<I1, I2, Comp, Proj1, Proj2>) //
         constexpr auto RANGES_FUNC(starts_with)(I1 first1,
                                                 S1 last1,
                                                 I2 first2,
@@ -56,10 +59,7 @@ namespace ranges
                                                 Comp comp = {},
                                                 Proj1 proj1 = {},
                                                 Proj2 proj2 = {}) //
-            ->CPP_ret(bool)(                                      //
-                requires input_iterator<I1> && sentinel_for<S1, I1> &&
-                input_iterator<I2> && sentinel_for<S2, I2> &&
-                indirectly_comparable<I1, I2, Comp, Proj1, Proj2>)
+            -> bool
         {
             return mismatch(std::move(first1),
                             std::move(last1),
@@ -72,16 +72,16 @@ namespace ranges
         }
 
         /// \overload
-        template<typename R1,
+        CPP_template(typename R1,
                  typename R2,
                  typename Comp = equal_to,
                  typename Proj1 = identity,
-                 typename Proj2 = identity>
+                 typename Proj2 = identity)( //
+            requires input_range<R1> && input_range<R2> &&
+                indirectly_comparable<iterator_t<R1>, iterator_t<R2>, Comp, Proj1, Proj2>) //
         constexpr auto RANGES_FUNC(starts_with)(
             R1 && r1, R2 && r2, Comp comp = {}, Proj1 proj1 = {}, Proj2 proj2 = {}) //
-            ->CPP_ret(bool)(                                                        //
-                requires input_range<R1> && input_range<R2> &&
-                indirectly_comparable<iterator_t<R1>, iterator_t<R2>, Comp, Proj1, Proj2>)
+            -> bool
         {
             return (*this)( //
                 begin(r1),

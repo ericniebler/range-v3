@@ -28,21 +28,21 @@ namespace ranges
     /// \cond
     namespace adl_erase_detail
     {
-        template<typename Cont, typename I, typename S>
+        CPP_template(typename Cont, typename I, typename S)( //
+            requires lvalue_container_like<Cont> && forward_iterator<I>  && //
+                sentinel_for<S, I>) //
         auto erase(Cont && cont, I first, S last)                            //
-            -> CPP_ret(decltype(unwrap_reference(cont).erase(first, last)))( //
-                requires lvalue_container_like<Cont> && forward_iterator<I> &&
-                    sentinel_for<S, I>)
+            -> decltype(unwrap_reference(cont).erase(first, last))
         {
             return unwrap_reference(cont).erase(first, last);
         }
 
         struct erase_fn
         {
-            template<typename Rng, typename I, typename S>
+            CPP_template(typename Rng, typename I, typename S)( //
+                requires range<Rng> && forward_iterator<I> && sentinel_for<S, I>) //
             auto operator()(Rng && rng, I first, S last) const
-                -> CPP_ret(decltype(erase((Rng &&) rng, first, last)))( //
-                    requires range<Rng> && forward_iterator<I> && sentinel_for<S, I>)
+                -> decltype(erase((Rng &&) rng, first, last))
             {
                 return erase(static_cast<Rng &&>(rng), first, last);
             }

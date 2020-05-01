@@ -43,10 +43,10 @@ namespace ranges
 
         struct join_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(join_action_value_t_<Rng>)( //
+            CPP_template(typename Rng)( //
                 requires input_range<Rng> && input_range<range_value_t<Rng>> &&
-                    semiregular<join_action_value_t_<Rng>>)
+                    semiregular<join_action_value_t_<Rng>>) //
+            auto operator()(Rng && rng) const -> join_action_value_t_<Rng>
             {
                 join_action_value_t_<Rng> ret;
                 auto last = ranges::end(rng);

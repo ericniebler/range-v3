@@ -39,11 +39,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(move_backward)
 
         /// \brief function template \c move_backward
-        template<typename I, typename S, typename O>
+        CPP_template(typename I, typename S, typename O)( //
+            requires bidirectional_iterator<I> && sentinel_for<S, I>  && //
+            bidirectional_iterator<O> && indirectly_movable<I, O>) //
         auto RANGES_FUNC(move_backward)(I first, S end_, O out) //
-            ->CPP_ret(move_backward_result<I, O>)(              //
-                requires bidirectional_iterator<I> && sentinel_for<S, I> &&
-                bidirectional_iterator<O> && indirectly_movable<I, O>)
+            -> move_backward_result<I, O>
         {
             I i = ranges::next(first, end_), last = i;
             while(first != i)
@@ -52,11 +52,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename O>
+        CPP_template(typename Rng, typename O)( //
+            requires bidirectional_range<Rng> && bidirectional_iterator<O>  && //
+            indirectly_movable<iterator_t<Rng>, O>) //
         auto RANGES_FUNC(move_backward)(Rng && rng, O out)            //
-            ->CPP_ret(move_backward_result<safe_iterator_t<Rng>, O>)( //
-                requires bidirectional_range<Rng> && bidirectional_iterator<O> &&
-                indirectly_movable<iterator_t<Rng>, O>)
+            -> move_backward_result<safe_iterator_t<Rng>, O>
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }

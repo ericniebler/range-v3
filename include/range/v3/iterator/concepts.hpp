@@ -49,57 +49,57 @@ namespace ranges
                                         std::iterator_traits<I>, I>;
 
 #if defined(_GLIBCXX_DEBUG)
-        template<typename I, typename T, typename Seq>
+        CPP_template(typename I, typename T, typename Seq)( //
+            requires same_as<I, __gnu_debug::_Safe_iterator<T *, Seq>>) //
         auto iter_concept_(__gnu_debug::_Safe_iterator<T *, Seq>, priority_tag<3>)
-            -> CPP_ret(ranges::contiguous_iterator_tag)( //
-                requires same_as<I, __gnu_debug::_Safe_iterator<T *, Seq>>);
+            -> ranges::contiguous_iterator_tag
 #endif
 #if defined(__GLIBCXX__)
-        template<typename I, typename T, typename Seq>
+        CPP_template(typename I, typename T, typename Seq)( //
+            requires same_as<I, __gnu_cxx::__normal_iterator<T *, Seq>>) //
         auto iter_concept_(__gnu_cxx::__normal_iterator<T *, Seq>, priority_tag<3>)
-            -> CPP_ret(ranges::contiguous_iterator_tag)( //
-                requires same_as<I, __gnu_cxx::__normal_iterator<T *, Seq>>);
+            -> ranges::contiguous_iterator_tag;
 #endif
 #if defined(_LIBCPP_VERSION)
-        template<typename I, typename T>
+        CPP_template(typename I, typename T)( //
+            requires same_as<I, std::__wrap_iter<T *>>) //
         auto iter_concept_(std::__wrap_iter<T *>, priority_tag<3>)
-            -> CPP_ret(ranges::contiguous_iterator_tag)( //
-                requires same_as<I, std::__wrap_iter<T *>>);
+            -> ranges::contiguous_iterator_tag;
 #endif
 #if defined(_MSVC_STL_VERSION) || defined(_IS_WRS)
-        template<typename I>
+        CPP_template(typename I)( //
+            requires same_as<I, class I::_Array_iterator>) //
         auto iter_concept_(I, priority_tag<3>)
-            -> CPP_ret(ranges::contiguous_iterator_tag)( //
-                requires same_as<I, class I::_Array_iterator>);
-        template<typename I>
+            -> ranges::contiguous_iterator_tag;
+        CPP_template(typename I)( //
+            requires same_as<I, class I::_Array_const_iterator>) //
         auto iter_concept_(I, priority_tag<3>)
-            -> CPP_ret(ranges::contiguous_iterator_tag)( //
-                requires same_as<I, class I::_Array_const_iterator>);
-        template<typename I>
+            -> ranges::contiguous_iterator_tag;
+        CPP_template(typename I)( //
+            requires same_as<I, class I::_Vector_iterator>) //
         auto iter_concept_(I, priority_tag<3>)
-            -> CPP_ret(ranges::contiguous_iterator_tag)( //
-                requires same_as<I, class I::_Vector_iterator>);
-        template<typename I>
+            -> ranges::contiguous_iterator_tag;
+        CPP_template(typename I)( //
+            requires same_as<I, class I::_Vector_const_iterator>) //
         auto iter_concept_(I, priority_tag<3>)
-            -> CPP_ret(ranges::contiguous_iterator_tag)( //
-                requires same_as<I, class I::_Vector_const_iterator>);
-        template<typename I>
+            -> ranges::contiguous_iterator_tag;
+        CPP_template(typename I)( //
+            requires same_as<I, class I::_String_iterator>) //
         auto iter_concept_(I, priority_tag<3>)
-            -> CPP_ret(ranges::contiguous_iterator_tag)( //
-                requires same_as<I, class I::_String_iterator>);
-        template<typename I>
+            -> ranges::contiguous_iterator_tag;
+        CPP_template(typename I)( //
+            requires same_as<I, class I::_String_const_iterator>) //
         auto iter_concept_(I, priority_tag<3>)
-            -> CPP_ret(ranges::contiguous_iterator_tag)( //
-                requires same_as<I, class I::_String_const_iterator>);
-        template<typename I>
+            -> ranges::contiguous_iterator_tag;
+        CPP_template(typename I)( //
+            requires same_as<I, class I::_String_view_iterator>) //
         auto iter_concept_(I, priority_tag<3>)
-            -> CPP_ret(ranges::contiguous_iterator_tag)( //
-                requires same_as<I, class I::_String_view_iterator>);
+            -> ranges::contiguous_iterator_tag;
 #endif
-        template<typename I, typename T>
+        CPP_template(typename I, typename T)( //
+            requires same_as<I, T *>) //
         auto iter_concept_(T *, priority_tag<3>)
-            -> CPP_ret(ranges::contiguous_iterator_tag)( //
-                requires same_as<I, T *>);
+            -> ranges::contiguous_iterator_tag;
         template<typename I>
         auto iter_concept_(I, priority_tag<2>) ->
             typename iter_traits_t<I>::iterator_concept;
@@ -802,7 +802,7 @@ namespace __gnu_debug
     template<typename I1, typename Seq>
     auto operator-(_Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &)
         -> CPP_ret(void)( //
-            requires(!::ranges::sized_sentinel_for<I1, I1>)) = delete;
+            requires (!::ranges::sized_sentinel_for<I1, I1>)) = delete;
 } // namespace __gnu_debug
 #endif
 

@@ -196,11 +196,11 @@ namespace ranges
                 }
                 ranges::advance(it, delta);
             }
-            template<typename Other>
+            CPP_template(typename Other)( //
+                requires sized_sentinel_for<Other, iterator_t<CRng>>) //
             constexpr auto distance_to(iterator_t<CRng> const & here,
                                        Other const & there) const
-                -> CPP_ret(range_difference_t<Rng>)( //
-                    requires sized_sentinel_for<Other, iterator_t<CRng>>)
+                -> range_difference_t<Rng>
             {
                 range_difference_t<Rng> delta = there - here;
                 if(delta < 0)
@@ -264,7 +264,7 @@ namespace ranges
         CPP_member
         constexpr auto end_adaptor() const noexcept
             -> CPP_ret(meta::if_c<can_bound<true>(), adaptor<true>, adaptor_base>)( //
-                requires(const_iterable()))
+                requires (const_iterable()))
         {
             return {this};
         }
@@ -301,10 +301,10 @@ namespace ranges
     {
         struct stride_base_fn
         {
-            template<typename Rng>
+            CPP_template(typename Rng)( //
+                requires viewable_range<Rng> && input_range<Rng>) //
             constexpr auto operator()(Rng && rng, range_difference_t<Rng> step) const
-                -> CPP_ret(stride_view<all_t<Rng>>)( //
-                    requires viewable_range<Rng> && input_range<Rng>)
+                -> stride_view<all_t<Rng>>
             {
                 return stride_view<all_t<Rng>>{all(static_cast<Rng &&>(rng)), step};
             }

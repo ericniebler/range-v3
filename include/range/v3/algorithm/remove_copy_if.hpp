@@ -40,12 +40,12 @@ namespace ranges
     RANGES_FUNC_BEGIN(remove_copy_if)
 
         /// \brief function template \c remove_copy_if
-        template<typename I, typename S, typename O, typename C, typename P = identity>
+        CPP_template(typename I, typename S, typename O, typename C, typename P = identity)( //
+            requires input_iterator<I> && sentinel_for<S, I>  && //
+            weakly_incrementable<O> && indirect_unary_predicate<C, projected<I, P>>  && //
+            indirectly_copyable<I, O>) //
         auto RANGES_FUNC(remove_copy_if)(I first, S last, O out, C pred, P proj = P{}) //
-            ->CPP_ret(remove_copy_if_result<I, O>)(                                    //
-                requires input_iterator<I> && sentinel_for<S, I> &&
-                weakly_incrementable<O> && indirect_unary_predicate<C, projected<I, P>> &&
-                indirectly_copyable<I, O>)
+            -> remove_copy_if_result<I, O>
         {
             for(; first != last; ++first)
             {
@@ -60,12 +60,12 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename O, typename C, typename P = identity>
+        CPP_template(typename Rng, typename O, typename C, typename P = identity)( //
+            requires input_range<Rng> && weakly_incrementable<O>  && //
+            indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>  && //
+            indirectly_copyable<iterator_t<Rng>, O>) //
         auto RANGES_FUNC(remove_copy_if)(Rng && rng, O out, C pred, P proj = P{}) //
-            ->CPP_ret(remove_copy_if_result<safe_iterator_t<Rng>, O>)(            //
-                requires input_range<Rng> && weakly_incrementable<O> &&
-                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> &&
-                indirectly_copyable<iterator_t<Rng>, O>)
+            -> remove_copy_if_result<safe_iterator_t<Rng>, O>
         {
             return (*this)(
                 begin(rng), end(rng), std::move(out), std::move(pred), std::move(proj));

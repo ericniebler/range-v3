@@ -38,18 +38,18 @@ namespace ranges
         {
             template<typename C, typename P = identity>
             constexpr auto CPP_fun(operator())(C pred, P proj = P{})(const //
-                                                                     requires(!range<C>))
+                                                                     requires (!range<C>))
             {
                 return make_action_closure(
                     bind_back(unique_fn{}, std::move(pred), std::move(proj)));
             }
 
-            template<typename Rng, typename C = equal_to, typename P = identity>
+            CPP_template(typename Rng, typename C = equal_to, typename P = identity)( //
+                requires forward_range<Rng>  && //
+                    erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>>  && //
+                        sortable<iterator_t<Rng>, C, P>) //
             auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
-                -> CPP_ret(Rng)( //
-                    requires forward_range<Rng> &&
-                        erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                            sortable<iterator_t<Rng>, C, P>)
+                -> Rng
             {
                 auto it = ranges::unique(rng, std::move(pred), std::move(proj));
                 ranges::erase(rng, it, end(rng));

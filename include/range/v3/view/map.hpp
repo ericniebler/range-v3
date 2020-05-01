@@ -42,10 +42,10 @@ namespace ranges
             return t;
         }
 
-        template<typename T>
+        CPP_template(typename T)( //
+            requires move_constructible<T>) //
         constexpr auto get_first_second_helper(T & t, std::false_type) noexcept(
-            std::is_nothrow_move_constructible<T>::value) -> CPP_ret(T)( //
-            requires move_constructible<T>)
+            std::is_nothrow_move_constructible<T>::value) -> T
         {
             return std::move(t);
         }
@@ -95,10 +95,10 @@ namespace ranges
     {
         struct keys_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(keys_range_view<all_t<Rng>>)( //
+            CPP_template(typename Rng)( //
                 requires viewable_range<Rng> && input_range<Rng> &&
-                    detail::kv_pair_like_<range_reference_t<Rng>>)
+                    detail::kv_pair_like_<range_reference_t<Rng>>) //
+            auto operator()(Rng && rng) const -> keys_range_view<all_t<Rng>>
             {
                 return {all(static_cast<Rng &&>(rng)), detail::get_first{}};
             }
@@ -106,10 +106,10 @@ namespace ranges
 
         struct values_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(values_view<all_t<Rng>>)( //
+            CPP_template(typename Rng)( //
                 requires viewable_range<Rng> && input_range<Rng> &&
-                    detail::kv_pair_like_<range_reference_t<Rng>>)
+                    detail::kv_pair_like_<range_reference_t<Rng>>) //
+            auto operator()(Rng && rng) const -> values_view<all_t<Rng>>
             {
                 return {all(static_cast<Rng &&>(rng)), detail::get_second{}};
             }

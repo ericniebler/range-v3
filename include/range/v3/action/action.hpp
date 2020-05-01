@@ -79,7 +79,7 @@ namespace ranges
         {
             // Piping requires things are passed by value.
             CPP_template(typename Rng, typename ActionFn)(                             //
-                requires(!defer::is_true<std::is_lvalue_reference<Rng>::value>) &&     //
+                requires (!defer::is_true<std::is_lvalue_reference<Rng>::value>) &&     //
                 defer::range<Rng> && defer::invocable_action_closure<ActionFn, Rng &>) //
                 friend constexpr auto
                 operator|(Rng && rng, action_closure<ActionFn> act)
@@ -102,7 +102,7 @@ namespace ranges
             template<typename ActionFn, typename Pipeable>
             friend constexpr auto operator|(action_closure<ActionFn> act, Pipeable pipe)
                 -> CPP_broken_friend_ret(action_closure<composed<Pipeable, ActionFn>>)(
-                    requires(is_pipeable_v<Pipeable>))
+                    requires (is_pipeable_v<Pipeable>))
             {
                 return make_action_closure(compose(static_cast<Pipeable &&>(pipe),
                                                    static_cast<ActionFn &&>(act)));
@@ -121,15 +121,15 @@ namespace ranges
 #ifdef RANGES_WORKAROUND_CLANG_43400
         namespace RANGES_ADL_BARRIER_FOR(action_closure_base)
         {
-            template<typename Rng, typename ActionFn>   // ******************************
-            constexpr auto                              // ******************************
-            operator|(Rng &,                            // ********* READ THIS **********
-                      action_closure<ActionFn> const &) // ****** IF YOUR COMPILE *******
-                ->CPP_ret(Rng)(                         // ******** BREAKS HERE *********
-                    requires range<Rng>) = delete;      // ******************************
-            // **************************************************************************
-            // *    When piping a range into an action, the range must be moved in.     *
-            // **************************************************************************
+            CPP_template(typename Rng, typename ActionFn) // *****************************
+                (requires range<Rng>)                     // *****************************
+            constexpr auto                                // ********* READ THIS *********
+            operator|(Rng &,                              // ****** IF YOUR COMPILE ******
+                      action_closure<ActionFn> const &)   // ******** BREAKS HERE ********
+                -> Rng = delete;                          // *****************************
+            // ***************************************************************************
+            // *    When piping a range into an action, the range must be moved in.      *
+            // ***************************************************************************
         } // namespace )
 #endif    // RANGES_WORKAROUND_CLANG_43400
 
@@ -207,10 +207,10 @@ namespace ranges
             {}
 
             // Calling directly requires things are passed by reference.
-            template<typename Rng, typename... Rest>
+            CPP_template(typename Rng, typename... Rest)( //
+                requires range<Rng> && invocable<Action const &, Rng &, Rest...>) //
             auto operator()(Rng & rng, Rest &&... rest) const
-                -> CPP_ret(invoke_result_t<Action const &, Rng &, Rest...>)( //
-                    requires range<Rng> && invocable<Action const &, Rng &, Rest...>)
+                -> invoke_result_t<Action const &, Rng &, Rest...>
             {
                 return invoke(act_, rng, static_cast<Rest &&>(rest)...);
             }
@@ -218,7 +218,7 @@ namespace ranges
             // Currying overload.
             // clang-format off
             CPP_template(typename... Rest, typename A = Action)(
-                requires(sizeof...(Rest) != 0))
+                requires (sizeof...(Rest) != 0))
             auto CPP_auto_fun(operator())(Rest &&... rest)(const)
             (
                 return make_action_fn_{}(

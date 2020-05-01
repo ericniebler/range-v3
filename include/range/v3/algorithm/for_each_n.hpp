@@ -37,12 +37,12 @@ namespace ranges
     RANGES_FUNC_BEGIN(for_each_n)
 
         /// \brief function template \c for_each_n
-        template<typename I, typename F, typename P = identity>
+        CPP_template(typename I, typename F, typename P = identity)( //
+            requires input_iterator<I> &&
+                indirectly_unary_invocable<F, projected<I, P>>) //
         auto RANGES_FUNC(for_each_n)(
             I first, iter_difference_t<I> n, F fun, P proj = P{}) //
-            ->CPP_ret(I)(                                         //
-                requires input_iterator<I> &&
-                indirectly_unary_invocable<F, projected<I, P>>)
+            -> I
         {
             RANGES_EXPECT(0 <= n);
             auto norig = n;
@@ -53,12 +53,12 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename F, typename P = identity>
+        CPP_template(typename Rng, typename F, typename P = identity)( //
+            requires input_range<Rng> &&
+                indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(for_each_n)(
             Rng && rng, range_difference_t<Rng> n, F fun, P proj = P{})
-            ->CPP_ret(safe_iterator_t<Rng>)( //
-                requires input_range<Rng> &&
-                indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
+            -> safe_iterator_t<Rng>
         {
             if(sized_range<Rng>)
                 RANGES_EXPECT(n <= distance(rng));

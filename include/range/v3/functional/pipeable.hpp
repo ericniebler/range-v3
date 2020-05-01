@@ -79,7 +79,7 @@ namespace ranges
 
         // Evaluate the pipe with an argument
         CPP_template(typename Arg, typename Pipe)( //
-            requires(!is_pipeable_v<Arg>) && is_pipeable_v<Pipe> &&
+            requires (!is_pipeable_v<Arg>) && is_pipeable_v<Pipe> &&
             invocable<Pipe, Arg>) // clang-format off
         friend constexpr auto operator|(Arg &&arg, Pipe pipe) // clang-format off
         {
@@ -97,7 +97,7 @@ namespace ranges
         template<typename Arg, typename Pipe>
         friend auto operator|=(Arg & arg, Pipe pipe) //
             -> CPP_broken_friend_ret(Arg &)(         //
-                requires(is_pipeable_v<Pipe>) &&
+                requires (is_pipeable_v<Pipe>) &&
                 (!is_pipeable_v<Arg>)&&invocable<Pipe, Arg &>)
         {
             static_cast<Pipe &&>(pipe)(arg);

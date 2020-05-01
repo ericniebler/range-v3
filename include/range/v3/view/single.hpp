@@ -107,9 +107,9 @@ namespace ranges
     {
         struct single_fn
         {
-            template<typename Val>
-            auto operator()(Val value) const -> CPP_ret(single_view<Val>)( //
-                requires copy_constructible<Val>)
+            CPP_template(typename Val)( //
+                requires copy_constructible<Val>) //
+            auto operator()(Val value) const -> single_view<Val>
             {
                 return single_view<Val>{std::move(value)};
             }

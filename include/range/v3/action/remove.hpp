@@ -37,7 +37,7 @@ namespace ranges
         {
             template<typename V, typename P>
             constexpr auto CPP_fun(operator())(V && value, P proj)(const //
-                                                                   requires(!range<V>))
+                                                                   requires (!range<V>))
             {
                 return make_action_closure(
                     bind_back(remove_fn{}, static_cast<V &&>(value), std::move(proj)));
@@ -50,13 +50,13 @@ namespace ranges
                     bind_back(remove_fn{}, static_cast<V &&>(value), identity{}));
             }
 
-            template<typename Rng, typename V, typename P = identity>
-            auto operator()(Rng && rng, V const & value, P proj = {}) const
-                -> CPP_ret(Rng)( //
-                    requires forward_range<Rng> && permutable<iterator_t<Rng>> &&
+            CPP_template(typename Rng, typename V, typename P = identity)( //
+                requires forward_range<Rng> && permutable<iterator_t<Rng>> &&
                         erasable_range<Rng, iterator_t<Rng>, sentinel_t<Rng>> &&
                             indirect_relation<equal_to, projected<iterator_t<Rng>, P>,
-                                              V const *>)
+                                              V const *>) //
+            auto operator()(Rng && rng, V const & value, P proj = {}) const
+                -> Rng
             {
                 auto it = ranges::remove(rng, value, std::move(proj));
                 ranges::erase(rng, it, ranges::end(rng));

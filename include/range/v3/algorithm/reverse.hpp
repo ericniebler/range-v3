@@ -60,10 +60,10 @@ namespace ranges
     RANGES_FUNC_BEGIN(reverse)
 
         /// \brief function template \c reverse
-        template<typename I, typename S>
+        CPP_template(typename I, typename S)( //
+            requires bidirectional_iterator<I> && sentinel_for<S, I> && permutable<I>) //
         auto RANGES_FUNC(reverse)(I first, S end_) //
-            ->CPP_ret(I)(                          //
-                requires bidirectional_iterator<I> && sentinel_for<S, I> && permutable<I>)
+            -> I
         {
             I last = ranges::next(first, end_);
             detail::reverse_impl(first, last, iterator_tag_of<I>{});
@@ -71,10 +71,10 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename I = iterator_t<Rng>>
+        CPP_template(typename Rng, typename I = iterator_t<Rng>)( //
+            requires bidirectional_range<Rng> && permutable<I>) //
         auto RANGES_FUNC(reverse)(Rng && rng) //
-            ->CPP_ret(safe_iterator_t<Rng>)(  //
-                requires bidirectional_range<Rng> && permutable<I>)
+            -> safe_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng));
         }

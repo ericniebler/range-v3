@@ -115,9 +115,9 @@ namespace ranges
                 return seeds;
             }
 
-            template<typename I>
-            constexpr auto fast_exp(I x, I power, I result = I{1}) -> CPP_ret(I)( //
-                requires unsigned_integral<I>)
+            CPP_template(typename I)( //
+                requires unsigned_integral<I>) //
+            constexpr auto fast_exp(I x, I power, I result = I{1}) -> I
             {
                 return power == I{0}
                            ? result
@@ -215,10 +215,10 @@ namespace ranges
 
                 std::array<IntRep, count> mixer_;
 
-                template<typename I, typename S>
-                auto mix_entropy(I first, S last) -> CPP_ret(void)( //
+                CPP_template(typename I, typename S)( //
                     requires input_iterator<I> && sentinel_for<S, I> &&
-                        convertible_to<iter_reference_t<I>, IntRep>)
+                        convertible_to<iter_reference_t<I>, IntRep>) //
+                auto mix_entropy(I first, S last) -> void
                 {
                     auto hash_const = INIT_A;
                     auto hash = [&](IntRep value) RANGES_INTENDED_MODULAR_ARITHMETIC {
@@ -301,11 +301,11 @@ namespace ranges
                     return count;
                 }
 
-                template<typename O>
+                CPP_template(typename O)( //
+                    requires weakly_incrementable<O>  && //
+                        indirectly_copyable<decltype(mixer_.begin()), O>) //
                 RANGES_INTENDED_MODULAR_ARITHMETIC auto param(O dest) const
-                    -> CPP_ret(void)( //
-                        requires weakly_incrementable<O> &&
-                            indirectly_copyable<decltype(mixer_.begin()), O>)
+                    -> void
                 {
                     constexpr IntRep INV_A = randutils::fast_exp(MULT_A, IntRep(-1));
                     constexpr IntRep MIX_INV_L =
@@ -351,10 +351,10 @@ namespace ranges
                     ranges::copy(mixer_copy, dest);
                 }
 
-                template<typename I, typename S>
-                auto seed(I first, S last) -> CPP_ret(void)( //
+                CPP_template(typename I, typename S)( //
                     requires input_iterator<I> && sentinel_for<S, I> &&
-                        convertible_to<iter_reference_t<I>, IntRep>)
+                        convertible_to<iter_reference_t<I>, IntRep>) //
+                auto seed(I first, S last) -> void
                 {
                     mix_entropy(first, last);
                     // For very small sizes, we do some additional mixing.  For normal

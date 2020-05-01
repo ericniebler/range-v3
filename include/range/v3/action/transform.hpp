@@ -36,17 +36,17 @@ namespace ranges
         {
             template<typename F, typename P = identity>
             constexpr auto CPP_fun(operator())(F fun, P proj = P{})(const //
-                                                                    requires(!range<F>))
+                                                                    requires (!range<F>))
             {
                 return make_action_closure(
                     bind_back(transform_fn{}, std::move(fun), std::move(proj)));
             }
 
-            template<typename Rng, typename F, typename P = identity>
-            auto operator()(Rng && rng, F fun, P proj = P{}) const -> CPP_ret(Rng)( //
+            CPP_template(typename Rng, typename F, typename P = identity)( //
                 requires input_range<Rng> && copy_constructible<F> &&
                     writable<iterator_t<Rng>,
-                             indirect_result_t<F &, projected<iterator_t<Rng>, P>>>)
+                             indirect_result_t<F &, projected<iterator_t<Rng>, P>>>) //
+            auto operator()(Rng && rng, F fun, P proj = P{}) const -> Rng
             {
                 ranges::transform(rng, begin(rng), std::move(fun), std::move(proj));
                 return static_cast<Rng &&>(rng);

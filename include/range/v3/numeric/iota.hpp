@@ -28,19 +28,19 @@ namespace ranges
     /// @{
     struct iota_fn
     {
-        template<typename O, typename S, typename T>
-        auto operator()(O first, S last, T val) const -> CPP_ret(O)( //
+        CPP_template(typename O, typename S, typename T)( //
             requires output_iterator<O, T const &> && sentinel_for<S, O> &&
-                weakly_incrementable<T>)
+                weakly_incrementable<T>) //
+        auto operator()(O first, S last, T val) const -> O
         {
             for(; first != last; ++first, ++val)
                 *first = detail::as_const(val);
             return first;
         }
 
-        template<typename Rng, typename T>
-        auto operator()(Rng && rng, T val) const -> CPP_ret(safe_iterator_t<Rng>)( //
-            requires output_range<Rng, T const &> && weakly_incrementable<T>)
+        CPP_template(typename Rng, typename T)( //
+            requires output_range<Rng, T const &> && weakly_incrementable<T>) //
+        auto operator()(Rng && rng, T val) const -> safe_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), detail::move(val));
         }

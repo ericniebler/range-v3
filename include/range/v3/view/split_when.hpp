@@ -135,11 +135,11 @@ namespace ranges
         {
             return {fun_, ranges::begin(rng_), ranges::end(rng_)};
         }
-        template<bool Const = true>
-        auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
+        CPP_template(bool Const = true)( //
             requires Const && range<meta::const_if_c<Const, Rng>> &&
                 invocable<Fun const &, iterator_t<meta::const_if_c<Const, Rng>>,
-                          sentinel_t<meta::const_if_c<Const, Rng>>>)
+                          sentinel_t<meta::const_if_c<Const, Rng>>>) //
+        auto begin_cursor() const -> cursor<Const>
         {
             return {fun_, ranges::begin(rng_), ranges::end(rng_)};
         }
@@ -168,9 +168,9 @@ namespace ranges
             {
                 semiregular_box_t<Pred> pred_;
 
-                template<typename I, typename S>
-                auto operator()(I cur, S last) const -> CPP_ret(std::pair<bool, I>)( //
-                    requires sentinel_for<S, I>)
+                CPP_template(typename I, typename S)( //
+                    requires sentinel_for<S, I>) //
+                auto operator()(I cur, S last) const -> std::pair<bool, I>
                 {
                     auto where = ranges::find_if_not(cur, last, std::ref(pred_));
                     return {cur != where, where};
@@ -178,23 +178,23 @@ namespace ranges
             };
 
         public:
-            template<typename Rng, typename Fun>
-            auto operator()(Rng && rng, Fun fun) const        //
-                -> CPP_ret(split_when_view<all_t<Rng>, Fun>)( //
-                    requires viewable_range<Rng> && forward_range<Rng> &&
+            CPP_template(typename Rng, typename Fun)( //
+                requires viewable_range<Rng> && forward_range<Rng> &&
                         invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> && invocable<
                             Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
                             copy_constructible<Fun> && convertible_to<
                                 invoke_result_t<Fun &, iterator_t<Rng>, sentinel_t<Rng>>,
-                                std::pair<bool, iterator_t<Rng>>>)
+                                std::pair<bool, iterator_t<Rng>>>) //
+            auto operator()(Rng && rng, Fun fun) const        //
+                -> split_when_view<all_t<Rng>, Fun>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
-            template<typename Rng, typename Fun>
+            CPP_template(typename Rng, typename Fun)( //
+                requires viewable_range<Rng> && forward_range<Rng> && predicate<
+                        Fun const &, range_reference_t<Rng>> && copy_constructible<Fun>) //
             auto operator()(Rng && rng, Fun fun) const
-                -> CPP_ret(split_when_view<all_t<Rng>, predicate_pred_<Fun>>)( //
-                    requires viewable_range<Rng> && forward_range<Rng> && predicate<
-                        Fun const &, range_reference_t<Rng>> && copy_constructible<Fun>)
+                -> split_when_view<all_t<Rng>, predicate_pred_<Fun>>
             {
                 return {all(static_cast<Rng &&>(rng)),
                         predicate_pred_<Fun>{std::move(fun)}};

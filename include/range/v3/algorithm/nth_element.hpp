@@ -50,9 +50,9 @@ namespace ranges
     {
         // stable, 2-3 compares, 0-2 swaps
 
-        template<typename I, typename C, typename P>
-        auto sort3(I x, I y, I z, C & pred, P & proj) -> CPP_ret(unsigned)( //
-            requires forward_iterator<I> && indirect_relation<C, projected<I, P>>)
+        CPP_template(typename I, typename C, typename P)( //
+            requires forward_iterator<I> && indirect_relation<C, projected<I, P>>) //
+        auto sort3(I x, I y, I z, C & pred, P & proj) -> unsigned
         {
             unsigned r = 0;
             if(!invoke(pred, invoke(proj, *y), invoke(proj, *x))) // if x <= y
@@ -85,9 +85,9 @@ namespace ranges
             return r;
         } // x <= y && y <= z
 
-        template<typename I, typename C, typename P>
-        auto selection_sort(I first, I last, C & pred, P & proj) -> CPP_ret(void)( //
-            requires bidirectional_iterator<I> && indirect_relation<C, projected<I, P>>)
+        CPP_template(typename I, typename C, typename P)( //
+            requires bidirectional_iterator<I> && indirect_relation<C, projected<I, P>>) //
+        auto selection_sort(I first, I last, C & pred, P & proj) -> void
         {
             RANGES_EXPECT(first != last);
             for(I lm1 = ranges::prev(last); first != lm1; ++first)
@@ -105,11 +105,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(nth_element)
 
         /// \brief function template \c nth_element
-        template<typename I, typename S, typename C = less, typename P = identity>
+        CPP_template(typename I, typename S, typename C = less, typename P = identity)( //
+            requires random_access_iterator<I> && sortable<I, C, P>) //
         auto RANGES_FUNC(nth_element)(
             I first, I nth, S end_, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(I)(                                       //
-                requires random_access_iterator<I> && sortable<I, C, P>)
+            -> I
         {
             I last = ranges::next(nth, end_), end_orig = last;
             // C is known to be a reference type
@@ -309,11 +309,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C = less, typename P = identity>
+        CPP_template(typename Rng, typename C = less, typename P = identity)( //
+            requires random_access_range<Rng> && sortable<iterator_t<Rng>, C, P>) //
         auto RANGES_FUNC(nth_element)(
             Rng && rng, iterator_t<Rng> nth, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                             //
-                requires random_access_range<Rng> && sortable<iterator_t<Rng>, C, P>)
+            -> safe_iterator_t<Rng>
         {
             return (*this)(
                 begin(rng), std::move(nth), end(rng), std::move(pred), std::move(proj));

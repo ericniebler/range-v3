@@ -35,11 +35,11 @@ namespace ranges
     struct at_fn
     {
         /// \return `begin(rng)[n]`
-        template<typename Rng>
+        CPP_template(typename Rng)( //
+            requires random_access_range<Rng> && sized_range<Rng>  && //
+                safe_range<Rng>) //
         constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
-            -> CPP_ret(range_reference_t<Rng>)( //
-                requires random_access_range<Rng> && sized_range<Rng> &&
-                    safe_range<Rng>)
+            -> range_reference_t<Rng>
         {
             // Workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67371 in GCC 5
             check_throw(rng, n);
@@ -67,10 +67,10 @@ namespace ranges
     struct index_fn
     {
         /// \return `begin(rng)[n]`
-        template<typename Rng, typename Int>
+        CPP_template(typename Rng, typename Int)( //
+            requires random_access_range<Rng> && integral<Int> && safe_range<Rng>) //
         constexpr auto operator()(Rng && rng,
-                                  Int n) const -> CPP_ret(range_reference_t<Rng>)( //
-            requires random_access_range<Rng> && integral<Int> && safe_range<Rng>)
+                                  Int n) const -> range_reference_t<Rng>
         {
             using D = range_difference_t<Rng>;
             RANGES_EXPECT(0 <= static_cast<D>(n));
@@ -90,9 +90,9 @@ namespace ranges
     struct back_fn
     {
         /// \return `*prev(end(rng))`
-        template<typename Rng>
-        constexpr auto operator()(Rng && rng) const -> CPP_ret(range_reference_t<Rng>)( //
-            requires common_range<Rng> && bidirectional_range<Rng> && safe_range<Rng>)
+        CPP_template(typename Rng)( //
+            requires common_range<Rng> && bidirectional_range<Rng> && safe_range<Rng>) //
+        constexpr auto operator()(Rng && rng) const -> range_reference_t<Rng>
         {
             return *prev(end(rng));
         }
@@ -106,9 +106,9 @@ namespace ranges
     struct front_fn
     {
         /// \return `*begin(rng)`
-        template<typename Rng>
-        constexpr auto operator()(Rng && rng) const -> CPP_ret(range_reference_t<Rng>)( //
-            requires forward_range<Rng> && safe_range<Rng>)
+        CPP_template(typename Rng)( //
+            requires forward_range<Rng> && safe_range<Rng>) //
+        constexpr auto operator()(Rng && rng) const -> range_reference_t<Rng>
         {
             return *begin(rng);
         }

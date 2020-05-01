@@ -53,11 +53,11 @@ namespace ranges
                     bind_back(shuffle_fn{}, static_cast<Gen &&>(gen)));
             }
 
-            template<typename Rng, typename Gen>
-            auto operator()(Rng && rng, Gen && gen) const -> CPP_ret(Rng)( //
+            CPP_template(typename Rng, typename Gen)( //
                 requires random_access_range<Rng> && permutable<iterator_t<Rng>> &&
                     uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
-                        convertible_to<invoke_result_t<Gen &>, range_difference_t<Rng>>)
+                        convertible_to<invoke_result_t<Gen &>, range_difference_t<Rng>>) //
+            auto operator()(Rng && rng, Gen && gen) const -> Rng
             {
                 ranges::shuffle(rng, static_cast<Gen &&>(gen));
                 return static_cast<Rng &&>(rng);

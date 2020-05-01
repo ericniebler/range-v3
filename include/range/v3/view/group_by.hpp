@@ -162,11 +162,11 @@ namespace ranges
     {
         struct group_by_base_fn
         {
-            template<typename Rng, typename Fun>
+            CPP_template(typename Rng, typename Fun)( //
+                requires viewable_range<Rng> && forward_range<Rng>  && //
+                    indirect_relation<Fun, iterator_t<Rng>>) //
             constexpr auto operator()(Rng && rng, Fun fun) const
-                -> CPP_ret(group_by_view<all_t<Rng>, Fun>)( //
-                    requires viewable_range<Rng> && forward_range<Rng> &&
-                        indirect_relation<Fun, iterator_t<Rng>>)
+                -> group_by_view<all_t<Rng>, Fun>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }

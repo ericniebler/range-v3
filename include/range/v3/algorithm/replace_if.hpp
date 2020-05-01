@@ -36,12 +36,12 @@ namespace ranges
     RANGES_FUNC_BEGIN(replace_if)
 
         /// \brief function template \c replace_if
-        template<typename I, typename S, typename C, typename T, typename P = identity>
+        CPP_template(typename I, typename S, typename C, typename T, typename P = identity)( //
+            requires input_iterator<I> && sentinel_for<S, I> &&
+                indirect_unary_predicate<C, projected<I, P>> && writable<I, T const &>) //
         auto RANGES_FUNC(replace_if)(
             I first, S last, C pred, T const & new_value, P proj = P{}) //
-            ->CPP_ret(I)(                                               //
-                requires input_iterator<I> && sentinel_for<S, I> &&
-                indirect_unary_predicate<C, projected<I, P>> && writable<I, T const &>)
+            -> I
         {
             for(; first != last; ++first)
                 if(invoke(pred, invoke(proj, *first)))
@@ -50,13 +50,13 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C, typename T, typename P = identity>
+        CPP_template(typename Rng, typename C, typename T, typename P = identity)( //
+            requires input_range<Rng> &&
+                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> &&
+                writable<iterator_t<Rng>, T const &>) //
         auto RANGES_FUNC(replace_if)(
             Rng && rng, C pred, T const & new_value, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                       //
-                requires input_range<Rng> &&
-                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> &&
-                writable<iterator_t<Rng>, T const &>)
+            -> safe_iterator_t<Rng>
         {
             return (*this)(
                 begin(rng), end(rng), std::move(pred), new_value, std::move(proj));

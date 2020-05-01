@@ -137,9 +137,9 @@ namespace ranges
             ptr_.reset(that.ptr_ ? that.ptr_->clone() : nullptr);
             return *this;
         }
-        template<typename TRef, typename T = detail::decay_t<TRef>>
-        auto operator=(TRef && t) -> CPP_ret(any &)( //
-            requires copyable<T> && (!same_as<T, any>))
+        CPP_template(typename TRef, typename T = detail::decay_t<TRef>)( //
+            requires copyable<T> && (!same_as<T, any>)) //
+        auto operator=(TRef && t) -> any &
         {
             any{static_cast<TRef &&>(t)}.swap(*this);
             return *this;

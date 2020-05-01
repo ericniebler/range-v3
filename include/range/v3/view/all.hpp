@@ -65,7 +65,8 @@ namespace ranges
             }
 
         public:
-            template<typename T>
+            CPP_template(typename T)( //
+                requires range<T &>) //
             constexpr auto CPP_fun(operator())(T && t)(const requires viewable_range<T>)
             {
                 return all_fn::from_range_(static_cast<T &&>(t),
@@ -77,8 +78,7 @@ namespace ranges
             template<typename T>
             RANGES_DEPRECATED("Passing a reference_wrapper to views::all is deprecated.")
             constexpr auto operator()(std::reference_wrapper<T> r) const
-                -> CPP_ret(ref_view<T>)( //
-                    requires range<T &>)
+                -> ref_view<T>
             {
                 return ranges::views::ref(r.get());
             }

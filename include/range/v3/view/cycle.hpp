@@ -171,7 +171,7 @@ namespace ranges
 
         CPP_member
         auto begin_cursor() -> CPP_ret(cursor<false>)( //
-            requires(!simple_view<Rng>() || !common_range<Rng const>))
+            requires (!simple_view<Rng>() || !common_range<Rng const>))
         {
             return {this};
         }
@@ -215,9 +215,9 @@ namespace ranges
         struct cycle_fn
         {
             /// \pre <tt>!empty(rng)</tt>
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(cycled_view<all_t<Rng>>)( //
-                requires viewable_range<Rng> && forward_range<Rng>)
+            CPP_template(typename Rng)( //
+                requires viewable_range<Rng> && forward_range<Rng>) //
+            auto operator()(Rng && rng) const -> cycled_view<all_t<Rng>>
             {
                 return cycled_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

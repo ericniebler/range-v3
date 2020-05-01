@@ -38,12 +38,12 @@ namespace ranges
     RANGES_FUNC_BEGIN(partial_sort)
 
         /// \brief function template \c partial_sort
-        template<typename I, typename S, typename C = less, typename P = identity>
+        CPP_template(typename I, typename S, typename C = less, typename P = identity)( //
+            requires sortable<I, C, P> && random_access_iterator<I> &&
+                sentinel_for<S, I>) //
         auto RANGES_FUNC(partial_sort)(
             I first, I middle, S last, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(I)(                                          //
-                requires sortable<I, C, P> && random_access_iterator<I> &&
-                sentinel_for<S, I>)
+            -> I
         {
             make_heap(first, middle, std::ref(pred), std::ref(proj));
             auto const len = middle - first;
@@ -62,11 +62,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C = less, typename P = identity>
+        CPP_template(typename Rng, typename C = less, typename P = identity)( //
+            requires sortable<iterator_t<Rng>, C, P> && random_access_range<Rng>) //
         auto RANGES_FUNC(partial_sort)(
             Rng && rng, iterator_t<Rng> middle, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                //
-                requires sortable<iterator_t<Rng>, C, P> && random_access_range<Rng>)
+            -> safe_iterator_t<Rng>
         {
             return (*this)(begin(rng),
                            std::move(middle),

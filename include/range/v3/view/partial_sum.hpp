@@ -143,9 +143,9 @@ namespace ranges
         {
             return cursor<false>{this};
         }
-        template<typename CRng = Rng const>
-        constexpr auto begin_cursor() const -> CPP_ret(cursor<true>)( //
-            requires detail::partial_sum_view_constraints<CRng, Fun const>)
+        CPP_template(typename CRng = Rng const)( //
+            requires detail::partial_sum_view_constraints<CRng, Fun const>) //
+        constexpr auto begin_cursor() const -> cursor<true>
         {
             return cursor<true>{this};
         }
@@ -180,10 +180,10 @@ namespace ranges
     {
         struct partial_sum_base_fn
         {
-            template<typename Rng, typename Fun = plus>
+            CPP_template(typename Rng, typename Fun = plus)( //
+                requires detail::partial_sum_view_constraints<all_t<Rng>, Fun>) //
             constexpr auto operator()(Rng && rng, Fun fun = {}) const
-                -> CPP_ret(partial_sum_view<all_t<Rng>, Fun>)( //
-                    requires detail::partial_sum_view_constraints<all_t<Rng>, Fun>)
+                -> partial_sum_view<all_t<Rng>, Fun>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
@@ -195,7 +195,7 @@ namespace ranges
 
             template<typename Fun>
             constexpr auto CPP_fun(operator())(Fun && fun)(const //
-                                                           requires(!range<Fun>))
+                                                           requires (!range<Fun>))
             {
                 return make_view_closure(
                     bind_back(partial_sum_base_fn{}, static_cast<Fun &&>(fun)));

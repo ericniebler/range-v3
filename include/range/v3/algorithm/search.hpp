@@ -146,13 +146,16 @@ namespace ranges
     RANGES_FUNC_BEGIN(search)
 
         /// \brief function template \c search
-        template<typename I1,
+        CPP_template(typename I1,
                  typename S1,
                  typename I2,
                  typename S2,
                  typename C = equal_to,
                  typename P1 = identity,
-                 typename P2 = identity>
+                 typename P2 = identity)( //
+            requires forward_iterator<I1> && sentinel_for<S1, I1> &&
+                forward_iterator<I2> && sentinel_for<S2, I2> &&
+                indirectly_comparable<I1, I2, C, P1, P2>) //
         auto RANGES_FUNC(search)(I1 begin1,
                                  S1 end1,
                                  I2 begin2,
@@ -160,10 +163,7 @@ namespace ranges
                                  C pred = C{},
                                  P1 proj1 = P1{},
                                  P2 proj2 = P2{}) //
-            ->CPP_ret(subrange<I1>)(              //
-                requires forward_iterator<I1> && sentinel_for<S1, I1> &&
-                forward_iterator<I2> && sentinel_for<S2, I2> &&
-                indirectly_comparable<I1, I2, C, P1, P2>)
+            -> subrange<I1>
         {
             if(begin2 == end2)
                 return {begin1, begin1};
@@ -189,16 +189,16 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng1,
+        CPP_template(typename Rng1,
                  typename Rng2,
                  typename C = equal_to,
                  typename P1 = identity,
-                 typename P2 = identity>
+                 typename P2 = identity)( //
+            requires forward_range<Rng1> && forward_range<Rng2> &&
+                indirectly_comparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>) //
         auto RANGES_FUNC(search)(
             Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) //
-            ->CPP_ret(safe_subrange_t<Rng1>)(                                           //
-                requires forward_range<Rng1> && forward_range<Rng2> &&
-                indirectly_comparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
+            -> safe_subrange_t<Rng1>
         {
             if(empty(rng2))
                 return subrange<iterator_t<Rng1>>{begin(rng1), begin(rng1)};

@@ -171,24 +171,24 @@ namespace ranges
         }
         CPP_member
         constexpr auto end_adaptor() noexcept -> CPP_ret(sentinel_adaptor<false>)( //
-            requires(!common_range<Rng>) || single_pass_iterator_<iterator_t<Rng>>)
+            requires (!common_range<Rng>) || single_pass_iterator_<iterator_t<Rng>>)
         {
             return {};
         }
-        template<bool Const = true>
-        constexpr auto end_adaptor() const -> CPP_ret(cursor_adaptor<Const>)( //
+        CPP_template(bool Const = true)( //
             requires Const && range<meta::const_if_c<Const, Rng>> &&
                 common_range<meta::const_if_c<Const, Rng>> &&
-            (!single_pass_iterator_<iterator_t<meta::const_if_c<Const, Rng>>>))
+            (!single_pass_iterator_<iterator_t<meta::const_if_c<Const, Rng>>>)) //
+        constexpr auto end_adaptor() const -> cursor_adaptor<Const>
         {
             return cursor_adaptor<true>{val_};
         }
-        template<bool Const = true>
-        constexpr auto end_adaptor() const noexcept
-            -> CPP_ret(sentinel_adaptor<Const>)( //
-                requires Const && range<meta::const_if_c<Const, Rng>> &&
+        CPP_template(bool Const = true)( //
+            requires Const && range<meta::const_if_c<Const, Rng>> &&
                 (!common_range<meta::const_if_c<Const, Rng>> ||
-                 single_pass_iterator_<iterator_t<meta::const_if_c<Const, Rng>>>))
+                 single_pass_iterator_<iterator_t<meta::const_if_c<Const, Rng>>>)) //
+        constexpr auto end_adaptor() const noexcept
+            -> sentinel_adaptor<Const>
         {
             return {};
         }
@@ -208,12 +208,12 @@ namespace ranges
     {
         struct intersperse_base_fn
         {
-            template<typename Rng>
+            CPP_template(typename Rng)( //
+                requires viewable_range<Rng> && input_range<Rng>  && //
+                    convertible_to<range_reference_t<Rng>, range_value_t<Rng>>  && //
+                        semiregular<range_value_t<Rng>>) //
             constexpr auto operator()(Rng && rng, range_value_t<Rng> val) const
-                -> CPP_ret(intersperse_view<all_t<Rng>>)( //
-                    requires viewable_range<Rng> && input_range<Rng> &&
-                        convertible_to<range_reference_t<Rng>, range_value_t<Rng>> &&
-                            semiregular<range_value_t<Rng>>)
+                -> intersperse_view<all_t<Rng>>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(val)};
             }

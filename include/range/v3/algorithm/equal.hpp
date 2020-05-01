@@ -69,7 +69,7 @@ namespace ranges
                                           C pred = C{},
                                           P0 proj0 = P0{},
                                           P1 proj1 = P1{}) //
-            ->CPP_ret(bool)(                               //
+            -> CPP_ret(bool)(                               //
                 requires input_iterator<I0> && sentinel_for<S0, I0> &&
                 input_iterator<I1> && indirectly_comparable<I0, I1, C, P0, P1>)
         {
@@ -80,13 +80,16 @@ namespace ranges
         }
 
         /// \overload
-        template<typename I0,
+        CPP_template(typename I0,
                  typename S0,
                  typename I1,
                  typename S1,
                  typename C = equal_to,
                  typename P0 = identity,
-                 typename P1 = identity>
+                 typename P1 = identity)( //
+            requires input_iterator<I0> && sentinel_for<S0, I0> &&
+                input_iterator<I1> && sentinel_for<S1, I1> &&
+                indirectly_comparable<I0, I1, C, P0, P1>) //
         constexpr auto RANGES_FUNC(equal)(I0 begin0,
                                           S0 end0,
                                           I1 begin1,
@@ -94,10 +97,7 @@ namespace ranges
                                           C pred = C{},
                                           P0 proj0 = P0{},
                                           P1 proj1 = P1{}) //
-            ->CPP_ret(bool)(                               //
-                requires input_iterator<I0> && sentinel_for<S0, I0> &&
-                input_iterator<I1> && sentinel_for<S1, I1> &&
-                indirectly_comparable<I0, I1, C, P0, P1>)
+            -> bool
         {
             if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S0, I0> &&
                                    sized_sentinel_for<S1, I1>))
@@ -126,7 +126,7 @@ namespace ranges
                                           C pred = C{},
                                           P0 proj0 = P0{},
                                           P1 proj1 = P1{}) //
-            ->CPP_ret(bool)(                               //
+            -> CPP_ret(bool)(                               //
                 requires input_range<Rng0> && input_iterator<uncvref_t<I1Ref>> &&
                 indirectly_comparable<iterator_t<Rng0>, uncvref_t<I1Ref>, C, P0, P1>)
         {
@@ -142,16 +142,16 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng0,
+        CPP_template(typename Rng0,
                  typename Rng1,
                  typename C = equal_to,
                  typename P0 = identity,
-                 typename P1 = identity>
+                 typename P1 = identity)( //
+            requires input_range<Rng0> && input_range<Rng1> &&
+                indirectly_comparable<iterator_t<Rng0>, iterator_t<Rng1>, C, P0, P1>) //
         constexpr auto RANGES_FUNC(equal)(
             Rng0 && rng0, Rng1 && rng1, C pred = C{}, P0 proj0 = P0{}, P1 proj1 = P1{}) //
-            ->CPP_ret(bool)(                                                            //
-                requires input_range<Rng0> && input_range<Rng1> &&
-                indirectly_comparable<iterator_t<Rng0>, iterator_t<Rng1>, C, P0, P1>)
+            -> bool
         {
             if(RANGES_CONSTEXPR_IF(sized_range<Rng0> && sized_range<Rng1>))
                 if(distance(rng0) != distance(rng1))

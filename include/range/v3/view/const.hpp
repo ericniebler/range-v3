@@ -114,9 +114,9 @@ namespace ranges
     {
         struct const_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(const_view<all_t<Rng>>)( //
-                requires viewable_range<Rng> && input_range<Rng>)
+            CPP_template(typename Rng)( //
+                requires viewable_range<Rng> && input_range<Rng>) //
+            auto operator()(Rng && rng) const -> const_view<all_t<Rng>>
             {
                 return const_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

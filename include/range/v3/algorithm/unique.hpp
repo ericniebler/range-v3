@@ -47,10 +47,10 @@ namespace ranges
         /// \pre `S` is a model of the `sentinel_for` concept
         /// \pre `C` is a model of the `relation` concept
         ///
-        template<typename I, typename S, typename C = equal_to, typename P = identity>
+        CPP_template(typename I, typename S, typename C = equal_to, typename P = identity)( //
+            requires sortable<I, C, P> && sentinel_for<S, I>) //
         auto RANGES_FUNC(unique)(I first, S last, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(I)(                                                     //
-                requires sortable<I, C, P> && sentinel_for<S, I>)
+            -> I
         {
             first = adjacent_find(std::move(first), last, std::ref(pred), std::ref(proj));
 
@@ -65,10 +65,10 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C = equal_to, typename P = identity>
+        CPP_template(typename Rng, typename C = equal_to, typename P = identity)( //
+            requires sortable<iterator_t<Rng>, C, P> && range<Rng>) //
         auto RANGES_FUNC(unique)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                             //
-                requires sortable<iterator_t<Rng>, C, P> && range<Rng>)
+            -> safe_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

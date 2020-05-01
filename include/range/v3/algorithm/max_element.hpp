@@ -36,11 +36,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(max_element)
 
         /// \brief function template \c max_element
-        template<typename I, typename S, typename C = less, typename P = identity>
+        CPP_template(typename I, typename S, typename C = less, typename P = identity)( //
+            requires forward_iterator<I> && sentinel_for<S, I>  && //
+            indirect_strict_weak_order<C, projected<I, P>>) //
         auto RANGES_FUNC(max_element)(I first, S last, C pred = C{}, P proj = P{})
-            ->CPP_ret(I)( //
-                requires forward_iterator<I> && sentinel_for<S, I> &&
-                indirect_strict_weak_order<C, projected<I, P>>)
+            -> I
         {
             if(first != last)
                 for(auto tmp = next(first); tmp != last; ++tmp)
@@ -50,11 +50,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C = less, typename P = identity>
+        CPP_template(typename Rng, typename C = less, typename P = identity)( //
+            requires forward_range<Rng>  && //
+            indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(max_element)(Rng && rng, C pred = C{}, P proj = P{})
-            ->CPP_ret(safe_iterator_t<Rng>)( //
-                requires forward_range<Rng> &&
-                indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>)
+            -> safe_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

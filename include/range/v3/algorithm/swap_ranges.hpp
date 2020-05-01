@@ -36,11 +36,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(swap_ranges)
 
         /// \brief function template \c swap_ranges
-        template<typename I1, typename S1, typename I2>
+        CPP_template(typename I1, typename S1, typename I2)( //
+            requires input_iterator<I1> && sentinel_for<S1, I1>  && //
+            input_iterator<I2> && indirectly_swappable<I1, I2>) //
         auto RANGES_FUNC(swap_ranges)(I1 begin1, S1 end1, I2 begin2) //
-            ->CPP_ret(swap_ranges_result<I1, I2>)(                   //
-                requires input_iterator<I1> && sentinel_for<S1, I1> &&
-                input_iterator<I2> && indirectly_swappable<I1, I2>)
+            -> swap_ranges_result<I1, I2>
         {
             for(; begin1 != end1; ++begin1, ++begin2)
                 ranges::iter_swap(begin1, begin2);
@@ -48,36 +48,36 @@ namespace ranges
         }
 
         /// \overload
-        template<typename I1, typename S1, typename I2, typename S2>
+        CPP_template(typename I1, typename S1, typename I2, typename S2)( //
+            requires input_iterator<I1> && sentinel_for<S1, I1> &&
+                input_iterator<I2> && sentinel_for<S2, I2> &&
+                indirectly_swappable<I1, I2>) //
         auto RANGES_FUNC(swap_ranges)(I1 begin1,
                                       S1 end1,
                                       I2 begin2,
                                       S2 end2)     //
-            ->CPP_ret(swap_ranges_result<I1, I2>)( //
-                requires input_iterator<I1> && sentinel_for<S1, I1> &&
-                input_iterator<I2> && sentinel_for<S2, I2> &&
-                indirectly_swappable<I1, I2>)
+            -> swap_ranges_result<I1, I2>
         {
             for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
                 ranges::iter_swap(begin1, begin2);
             return {begin1, begin2};
         }
 
-        template<typename Rng1, typename I2_>
+        CPP_template(typename Rng1, typename I2_)( //
+            requires input_range<Rng1> && input_iterator<uncvref_t<I2_>>  && //
+            indirectly_swappable<iterator_t<Rng1>, uncvref_t<I2_>>) //
         auto RANGES_FUNC(swap_ranges)(Rng1 && rng1, I2_ && begin2)           //
-            ->CPP_ret(swap_ranges_result<iterator_t<Rng1>, uncvref_t<I2_>>)( //
-                requires input_range<Rng1> && input_iterator<uncvref_t<I2_>> &&
-                indirectly_swappable<iterator_t<Rng1>, uncvref_t<I2_>>)
+            -> swap_ranges_result<iterator_t<Rng1>, uncvref_t<I2_>>
         {
             return (*this)(begin(rng1), end(rng1), (I2_ &&) begin2);
         }
 
-        template<typename Rng1, typename Rng2>
+        CPP_template(typename Rng1, typename Rng2)( //
+            requires input_range<Rng1> && input_range<Rng2> &&
+                indirectly_swappable<iterator_t<Rng1>, iterator_t<Rng2>>) //
         auto RANGES_FUNC(swap_ranges)(Rng1 && rng1, Rng2 && rng2) //
-            ->CPP_ret(
-                swap_ranges_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>>)( //
-                requires input_range<Rng1> && input_range<Rng2> &&
-                indirectly_swappable<iterator_t<Rng1>, iterator_t<Rng2>>)
+            ->
+                swap_ranges_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>>
         {
             return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2));
         }

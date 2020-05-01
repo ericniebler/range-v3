@@ -52,10 +52,10 @@ namespace ranges
         difference_type_ n_;
 
         // random_access_range == true
-        template<bool Const = true>
+        CPP_template(bool Const = true)( //
+            requires Const && random_access_range<meta::const_if_c<Const, Rng>>) //
         auto get_begin_(std::true_type) const
-            -> CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)( //
-                requires Const && random_access_range<meta::const_if_c<Const, Rng>>)
+            -> iterator_t<meta::const_if_c<Const, Rng>>
         {
             return next(ranges::begin(rng_), n_);
         }
@@ -90,15 +90,15 @@ namespace ranges
         {
             return ranges::end(rng_);
         }
-        template<bool Const = true>
-        auto begin() const -> CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)( //
-            requires Const && random_access_range<meta::const_if_c<Const, Rng>>)
+        CPP_template(bool Const = true)( //
+            requires Const && random_access_range<meta::const_if_c<Const, Rng>>) //
+        auto begin() const -> iterator_t<meta::const_if_c<Const, Rng>>
         {
             return this->get_begin_(std::true_type{});
         }
-        template<bool Const = true>
-        auto end() const -> CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)( //
-            requires Const && random_access_range<meta::const_if_c<Const, Rng>>)
+        CPP_template(bool Const = true)( //
+            requires Const && random_access_range<meta::const_if_c<Const, Rng>>) //
+        auto end() const -> sentinel_t<meta::const_if_c<Const, Rng>>
         {
             return ranges::end(rng_);
         }
@@ -138,11 +138,11 @@ namespace ranges
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
-            template<typename Rng>
+            CPP_template(typename Rng)( //
+                requires safe_range<Rng>) //
             static auto impl_(Rng && rng, range_difference_t<Rng> n,
                               random_access_range_tag)
-                -> CPP_ret(subrange<iterator_t<Rng>, sentinel_t<Rng>>)( //
-                    requires safe_range<Rng>)
+                -> subrange<iterator_t<Rng>, sentinel_t<Rng>>
             {
                 return {begin(rng) + n, end(rng)};
             }

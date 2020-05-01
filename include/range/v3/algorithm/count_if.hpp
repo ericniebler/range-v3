@@ -35,11 +35,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(count_if)
 
         /// \brief function template \c count_if
-        template<typename I, typename S, typename R, typename P = identity>
+        CPP_template(typename I, typename S, typename R, typename P = identity)( //
+            requires input_iterator<I> && sentinel_for<S, I>  && //
+            indirect_unary_predicate<R, projected<I, P>>) //
         auto RANGES_FUNC(count_if)(I first, S last, R pred, P proj = P{})
-            ->CPP_ret(iter_difference_t<I>)( //
-                requires input_iterator<I> && sentinel_for<S, I> &&
-                indirect_unary_predicate<R, projected<I, P>>)
+            -> iter_difference_t<I>
         {
             iter_difference_t<I> n = 0;
             for(; first != last; ++first)
@@ -49,11 +49,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename R, typename P = identity>
+        CPP_template(typename Rng, typename R, typename P = identity)( //
+            requires input_range<Rng>  && //
+            indirect_unary_predicate<R, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(count_if)(Rng && rng, R pred, P proj = P{})
-            ->CPP_ret(iter_difference_t<iterator_t<Rng>>)( //
-                requires input_range<Rng> &&
-                indirect_unary_predicate<R, projected<iterator_t<Rng>, P>>)
+            -> iter_difference_t<iterator_t<Rng>>
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

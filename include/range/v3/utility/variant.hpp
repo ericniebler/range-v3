@@ -98,9 +98,9 @@ namespace ranges
                 return *this;
             }
             // \pre Requires ranges::distance(r) <= N
-            template<typename R>
-            auto operator=(R && r) -> CPP_ret(indexed_datum &)( //
-                requires input_range<R> && assignable_from<T &, range_reference_t<R>>)
+            CPP_template(typename R)( //
+                requires input_range<R> && assignable_from<T &, range_reference_t<R>>) //
+            auto operator=(R && r) -> indexed_datum &
             {
                 ranges::copy(r, data_);
                 return *this;

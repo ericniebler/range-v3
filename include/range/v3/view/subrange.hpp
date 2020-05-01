@@ -101,7 +101,7 @@ namespace ranges
 
         template<typename T>
         CPP_concept_fragment(_get_first_and_second_,
-            requires(T & t) //
+            requires (T & t) //
             (
                 get<0>(t),
                 get<1>(t)
@@ -177,9 +177,9 @@ namespace ranges
         }
         // clang-format on
 
-        template<typename S, typename I>
-        constexpr auto is_sized_sentinel_() noexcept -> CPP_ret(bool)( //
-            requires sentinel_for<S, I>)
+        CPP_template(typename S, typename I)( //
+            requires sentinel_for<S, I>) //
+        constexpr auto is_sized_sentinel_() noexcept -> bool
         {
             return (bool)sized_sentinel_for<S, I>;
         }
@@ -206,15 +206,15 @@ namespace ranges
         struct adl_hook
         {};
 
-        template<std::size_t N, typename I, typename S, subrange_kind K>
-        constexpr auto get(subrange<I, S, K> const & r) -> CPP_ret(I)( //
-            requires(N == 0))
+        CPP_template(std::size_t N, typename I, typename S, subrange_kind K)( //
+            requires (N == 0)) //
+        constexpr auto get(subrange<I, S, K> const & r) -> I
         {
             return r.begin();
         }
-        template<std::size_t N, typename I, typename S, subrange_kind K>
-        constexpr auto get(subrange<I, S, K> const & r) -> CPP_ret(S)( //
-            requires(N == 1))
+        CPP_template(std::size_t N, typename I, typename S, subrange_kind K)( //
+            requires (N == 1)) //
+        constexpr auto get(subrange<I, S, K> const & r) -> S
         {
             return r.end();
         }
@@ -322,7 +322,7 @@ namespace ranges
 
         CPP_member
         constexpr auto size() const -> CPP_ret(size_type)( //
-            requires(K == subrange_kind::sized))
+            requires (K == subrange_kind::sized))
         {
             return get_size_();
         }
@@ -381,7 +381,7 @@ namespace ranges
         }
         CPP_member
         constexpr auto get_size_() const noexcept -> CPP_ret(size_type)( //
-            requires(detail::store_size_<K, S, I>()))
+            requires (detail::store_size_<K, S, I>()))
         {
             return std::get<2>(data_);
         }
@@ -389,7 +389,7 @@ namespace ranges
         {}
         CPP_member
         constexpr auto set_size_(size_type n) noexcept -> CPP_ret(void)( //
-            requires(detail::store_size_<K, S, I>()))
+            requires (detail::store_size_<K, S, I>()))
         {
             std::get<2>(data_) = n;
         }
@@ -427,27 +427,27 @@ namespace ranges
         {
             return {i, s};
         }
-        template<typename I, typename S>
+        CPP_template(typename I, typename S)( //
+            requires input_or_output_iterator<I> && sentinel_for<S, I>) //
         constexpr auto operator()(I i, S s, detail::iter_size_t<I> n) const
-            -> CPP_ret(subrange<I, S, subrange_kind::sized>)( //
-                requires input_or_output_iterator<I> && sentinel_for<S, I>)
+            -> subrange<I, S, subrange_kind::sized>
         {
             return {i, s, n};
         }
-        template<typename R>
-        constexpr auto operator()(R && r) const -> CPP_ret(
-            subrange<iterator_t<R>, sentinel_t<R>,
+        CPP_template(typename R)( //
+            requires safe_range<R>) //
+        constexpr auto operator()(R && r) const
+            -> subrange<iterator_t<R>, sentinel_t<R>,
                      (sized_range<R> || sized_sentinel_for<sentinel_t<R>, iterator_t<R>>)
                          ? subrange_kind::sized
-                         : subrange_kind::unsized>)( //
-            requires safe_range<R>)
+                         : subrange_kind::unsized>
         {
             return {(R &&) r};
         }
-        template<typename R>
+        CPP_template(typename R)( //
+            requires safe_range<R>) //
         constexpr auto operator()(R && r, detail::iter_size_t<iterator_t<R>> n) const
-            -> CPP_ret(subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>)( //
-                requires safe_range<R>)
+            -> subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>
         {
             return {(R &&) r, n};
         }

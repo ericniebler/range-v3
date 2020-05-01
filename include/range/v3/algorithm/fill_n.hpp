@@ -33,10 +33,10 @@ namespace ranges
     RANGES_FUNC_BEGIN(fill_n)
 
         /// \brief function template \c equal
-        template<typename O, typename V>
+        CPP_template(typename O, typename V)( //
+            requires output_iterator<O, V const &>) //
         auto RANGES_FUNC(fill_n)(O first, iter_difference_t<O> n, V const & val)
-            ->CPP_ret(O)( //
-                requires output_iterator<O, V const &>)
+            -> O
         {
             RANGES_EXPECT(n >= 0);
             auto norig = n;

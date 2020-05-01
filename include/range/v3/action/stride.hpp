@@ -41,12 +41,12 @@ namespace ranges
                 return make_action_closure(bind_back(stride_fn{}, step));
             }
 
-            template<typename Rng, typename D = range_difference_t<Rng>>
+            CPP_template(typename Rng, typename D = range_difference_t<Rng>)( //
+                requires forward_range<Rng>  && //
+                    erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>>  && //
+                        permutable<iterator_t<Rng>>) //
             auto operator()(Rng && rng, range_difference_t<Rng> const step) const
-                -> CPP_ret(Rng)( //
-                    requires forward_range<Rng> &&
-                        erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                            permutable<iterator_t<Rng>>)
+                -> Rng
             {
                 using I = iterator_t<Rng>;
                 using S = sentinel_t<Rng>;

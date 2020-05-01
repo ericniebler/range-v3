@@ -210,12 +210,12 @@ namespace ranges
                 except_ = std::current_exception();
                 RANGES_EXPECT(except_);
             }
-            template<typename Arg>
+            CPP_template(typename Arg)( //
+                requires convertible_to<Arg, Reference> &&
+                        std::is_assignable<semiregular_box_t<Reference> &, Arg>::value) //
             auto yield_value(Arg && arg) noexcept(
                 std::is_nothrow_assignable<semiregular_box_t<Reference> &, Arg>::value)
-                -> CPP_ret(RANGES_COROUTINES_NS::suspend_always)( //
-                    requires convertible_to<Arg, Reference> &&
-                        std::is_assignable<semiregular_box_t<Reference> &, Arg>::value)
+                -> RANGES_COROUTINES_NS::suspend_always
             {
                 ref_ = std::forward<Arg>(arg);
                 return {};

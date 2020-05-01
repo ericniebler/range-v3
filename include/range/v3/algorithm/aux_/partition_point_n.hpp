@@ -29,12 +29,12 @@ namespace ranges
     {
         struct partition_point_n_fn
         {
-            template<typename I, typename C, typename P = identity>
+            CPP_template(typename I, typename C, typename P = identity)( //
+                requires forward_iterator<I> &&
+                        indirect_unary_predicate<C, projected<I, P>>) //
             auto operator()(I first, iter_difference_t<I> d, C pred,
                             P proj = P{}) const //
-                -> CPP_ret(I)(                  //
-                    requires forward_iterator<I> &&
-                        indirect_unary_predicate<C, projected<I, P>>)
+                -> I
             {
                 if(0 < d)
                 {

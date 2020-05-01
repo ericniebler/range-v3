@@ -146,10 +146,10 @@ namespace ranges
     {
         struct adjacent_filter_base_fn
         {
-            template<typename Rng, typename Pred>
+            CPP_template(typename Rng, typename Pred)( //
+                requires detail::adjacent_filter_constraints<Rng, Pred>) //
             constexpr auto operator()(Rng && rng, Pred pred) const
-                -> CPP_ret(adjacent_filter_view<all_t<Rng>, Pred>)( //
-                    requires detail::adjacent_filter_constraints<Rng, Pred>)
+                -> adjacent_filter_view<all_t<Rng>, Pred>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }

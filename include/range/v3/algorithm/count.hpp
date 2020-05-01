@@ -35,11 +35,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(count)
 
         /// \brief function template \c count
-        template<typename I, typename S, typename V, typename P = identity>
+        CPP_template(typename I, typename S, typename V, typename P = identity)( //
+            requires input_iterator<I> && sentinel_for<S, I>  && //
+            indirect_relation<equal_to, projected<I, P>, V const *>) //
         auto RANGES_FUNC(count)(I first, S last, V const & val, P proj = P{})
-            ->CPP_ret(iter_difference_t<I>)( //
-                requires input_iterator<I> && sentinel_for<S, I> &&
-                indirect_relation<equal_to, projected<I, P>, V const *>)
+            -> iter_difference_t<I>
         {
             iter_difference_t<I> n = 0;
             for(; first != last; ++first)
@@ -49,11 +49,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename V, typename P = identity>
+        CPP_template(typename Rng, typename V, typename P = identity)( //
+            requires input_range<Rng>  && //
+            indirect_relation<equal_to, projected<iterator_t<Rng>, P>, V const *>) //
         auto RANGES_FUNC(count)(Rng && rng, V const & val, P proj = P{})
-            ->CPP_ret(iter_difference_t<iterator_t<Rng>>)( //
-                requires input_range<Rng> &&
-                indirect_relation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
+            -> iter_difference_t<iterator_t<Rng>>
         {
             return (*this)(begin(rng), end(rng), val, std::move(proj));
         }

@@ -157,7 +157,7 @@ namespace ranges
                                        iterator_t<CRng> const & there,
                                        adaptor const & that) const
                 -> CPP_ret(range_difference_t<Rng>)( //
-                    requires(detail::can_sized_sentinel_<Rng, Const>()))
+                    requires (detail::can_sized_sentinel_<Rng, Const>()))
             {
                 auto const delta = (there - here) + (that.offset() - offset());
                 // This can fail for cyclic base ranges when the chunk size does not
@@ -420,10 +420,10 @@ namespace ranges
         //                       The last range may have fewer.
         struct chunk_base_fn
         {
-            template<typename Rng>
+            CPP_template(typename Rng)( //
+                requires viewable_range<Rng> && input_range<Rng>) //
             constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
-                -> CPP_ret(chunk_view<all_t<Rng>>)( //
-                    requires viewable_range<Rng> && input_range<Rng>)
+                -> chunk_view<all_t<Rng>>
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }

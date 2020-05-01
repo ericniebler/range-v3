@@ -114,7 +114,7 @@ namespace ranges
                                          C pred = C{},
                                          P1 proj1 = P1{},
                                          P2 proj2 = P2{}) //
-            ->CPP_ret(bool)(                              //
+            -> CPP_ret(bool)(                              //
                 requires forward_iterator<I1> && sentinel_for<S1, I1> &&
                 forward_iterator<I2> && indirectly_comparable<I1, I2, C, P1, P2>)
         {
@@ -159,13 +159,16 @@ namespace ranges
         }
 
         /// \overload
-        template<typename I1,
+        CPP_template(typename I1,
                  typename S1,
                  typename I2,
                  typename S2,
                  typename C = equal_to,
                  typename P1 = identity,
-                 typename P2 = identity>
+                 typename P2 = identity)( //
+            requires forward_iterator<I1> && sentinel_for<S1, I1> &&
+                forward_iterator<I2> && sentinel_for<S2, I2> &&
+                indirectly_comparable<I1, I2, C, P1, P2>) //
         auto RANGES_FUNC(is_permutation)(I1 begin1,
                                          S1 end1,
                                          I2 begin2,
@@ -173,10 +176,7 @@ namespace ranges
                                          C pred = C{},
                                          P1 proj1 = P1{},
                                          P2 proj2 = P2{}) //
-            ->CPP_ret(bool)(                              //
-                requires forward_iterator<I1> && sentinel_for<S1, I1> &&
-                forward_iterator<I2> && sentinel_for<S2, I2> &&
-                indirectly_comparable<I1, I2, C, P1, P2>)
+            -> bool
         {
             if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S1, I1> &&
                                    sized_sentinel_for<S2, I2>))
@@ -215,7 +215,7 @@ namespace ranges
                                          C pred = C{},
                                          P1 proj1 = P1{},
                                          P2 proj2 = P2{}) //
-            ->CPP_ret(bool)(                              //
+            -> CPP_ret(bool)(                              //
                 requires forward_range<Rng1> && forward_iterator<uncvref_t<I2Ref>> &&
                 indirectly_comparable<iterator_t<Rng1>, uncvref_t<I2Ref>, C, P1, P2>)
         {
@@ -231,16 +231,16 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng1,
+        CPP_template(typename Rng1,
                  typename Rng2,
                  typename C = equal_to,
                  typename P1 = identity,
-                 typename P2 = identity>
+                 typename P2 = identity)( //
+            requires forward_range<Rng1> && forward_range<Rng2> &&
+                indirectly_comparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>) //
         auto RANGES_FUNC(is_permutation)(
             Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) //
-            ->CPP_ret(bool)(                                                            //
-                requires forward_range<Rng1> && forward_range<Rng2> &&
-                indirectly_comparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
+            -> bool
         {
             if(RANGES_CONSTEXPR_IF(sized_range<Rng1> && sized_range<Rng2>))
             {
@@ -268,11 +268,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(next_permutation)
 
         /// \brief function template \c next_permutation
-        template<typename I, typename S, typename C = less, typename P = identity>
+        CPP_template(typename I, typename S, typename C = less, typename P = identity)( //
+            requires bidirectional_iterator<I> && sentinel_for<S, I>  && //
+            sortable<I, C, P>) //
         auto RANGES_FUNC(next_permutation)(I first, S end_, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(bool)(                                                            //
-                requires bidirectional_iterator<I> && sentinel_for<S, I> &&
-                sortable<I, C, P>)
+            -> bool
         {
             if(first == end_)
                 return false;
@@ -300,10 +300,10 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C = less, typename P = identity>
+        CPP_template(typename Rng, typename C = less, typename P = identity)( //
+            requires bidirectional_range<Rng> && sortable<iterator_t<Rng>, C, P>) //
         auto RANGES_FUNC(next_permutation)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(bool)(                                                       //
-                requires bidirectional_range<Rng> && sortable<iterator_t<Rng>, C, P>)
+            -> bool
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
@@ -313,11 +313,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(prev_permutation)
 
         /// \brief function template \c prev_permutation
-        template<typename I, typename S, typename C = less, typename P = identity>
+        CPP_template(typename I, typename S, typename C = less, typename P = identity)( //
+            requires bidirectional_iterator<I> && sentinel_for<S, I>  && //
+            sortable<I, C, P>) //
         auto RANGES_FUNC(prev_permutation)(I first, S end_, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(bool)(                                                            //
-                requires bidirectional_iterator<I> && sentinel_for<S, I> &&
-                sortable<I, C, P>)
+            -> bool
         {
             if(first == end_)
                 return false;
@@ -345,10 +345,10 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C = less, typename P = identity>
+        CPP_template(typename Rng, typename C = less, typename P = identity)( //
+            requires bidirectional_range<Rng> && sortable<iterator_t<Rng>, C, P>) //
         auto RANGES_FUNC(prev_permutation)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(bool)(                                                       //
-                requires bidirectional_range<Rng> && sortable<iterator_t<Rng>, C, P>)
+            -> bool
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

@@ -44,28 +44,28 @@ namespace ranges
         {}
         template<typename T>
         explicit constexpr CPP_ctor(logical_negate)(T && pred)( //
-            requires(!defer::same_as<detail::decay_t<T>, logical_negate>) &&
+            requires (!defer::same_as<detail::decay_t<T>, logical_negate>) &&
             defer::constructible_from<FD, T>)
           : pred_(static_cast<T &&>(pred))
         {}
 
-        template<typename... Args>
-        constexpr auto operator()(Args &&... args) & -> CPP_ret(bool)( //
-            requires predicate<FD &, Args...>)
+        CPP_template(typename... Args)( //
+            requires predicate<FD &, Args...>) //
+        constexpr auto operator()(Args &&... args) & -> bool
         {
             return !invoke(pred_, static_cast<Args &&>(args)...);
         }
         /// \overload
-        template<typename... Args>
-        constexpr auto operator()(Args &&... args) const & -> CPP_ret(bool)( //
-            requires predicate<FD const &, Args...>)
+        CPP_template(typename... Args)( //
+            requires predicate<FD const &, Args...>) //
+        constexpr auto operator()(Args &&... args) const & -> bool
         {
             return !invoke(pred_, static_cast<Args &&>(args)...);
         }
         /// \overload
-        template<typename... Args>
-        constexpr auto operator()(Args &&... args) && -> CPP_ret(bool)( //
-            requires predicate<FD, Args...>)
+        CPP_template(typename... Args)( //
+            requires predicate<FD, Args...>) //
+        constexpr auto operator()(Args &&... args) && -> bool
         {
             return !invoke(static_cast<FD &&>(pred_), static_cast<Args &&>(args)...);
         }
@@ -73,11 +73,11 @@ namespace ranges
 
     struct not_fn_fn
     {
-        template<typename Pred>
+        CPP_template(typename Pred)( //
+            requires move_constructible<detail::decay_t<Pred>>  && //
+                constructible_from<detail::decay_t<Pred>, Pred>) //
         constexpr auto operator()(Pred && pred) const
-            -> CPP_ret(logical_negate<detail::decay_t<Pred>>)( //
-                requires move_constructible<detail::decay_t<Pred>> &&
-                    constructible_from<detail::decay_t<Pred>, Pred>)
+            -> logical_negate<detail::decay_t<Pred>>
         {
             return logical_negate<detail::decay_t<Pred>>{(Pred &&) pred};
         }

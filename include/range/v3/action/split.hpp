@@ -60,23 +60,23 @@ namespace ranges
 
             // BUGBUG something is not right with the actions. It should be possible
             // to move a container into a split and have elements moved into the result.
-            template<typename Rng>
+            CPP_template(typename Rng)( //
+                requires input_range<Rng> && indirectly_comparable<
+                        iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>) //
             auto operator()(Rng && rng, range_value_t<Rng> val) const
-                -> CPP_ret(std::vector<split_value_t<Rng>>)( //
-                    requires input_range<Rng> && indirectly_comparable<
-                        iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>)
+                -> std::vector<split_value_t<Rng>>
             {
                 return views::split(rng, std::move(val)) |
                        to<std::vector<split_value_t<Rng>>>();
             }
 
-            template<typename Rng, typename Pattern>
-            auto operator()(Rng && rng, Pattern && pattern) const
-                -> CPP_ret(std::vector<split_value_t<Rng>>)( //
-                    requires input_range<Rng> && viewable_range<Pattern> &&
+            CPP_template(typename Rng, typename Pattern)( //
+                requires input_range<Rng> && viewable_range<Pattern> &&
                         forward_range<Pattern> && indirectly_comparable<
                             iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
-                    (forward_range<Rng> || detail::tiny_range<Pattern>))
+                    (forward_range<Rng> || detail::tiny_range<Pattern>)) //
+            auto operator()(Rng && rng, Pattern && pattern) const
+                -> std::vector<split_value_t<Rng>>
             {
                 return views::split(rng, static_cast<Pattern &&>(pattern)) |
                        to<std::vector<split_value_t<Rng>>>();

@@ -43,9 +43,9 @@ namespace ranges
             struct pred_
             {
                 Value value_;
-                template<typename T>
-                auto operator()(T && other) const -> CPP_ret(bool)( //
-                    requires equality_comparable_with<T, Value const &>)
+                CPP_template(typename T)( //
+                    requires equality_comparable_with<T, Value const &>) //
+                auto operator()(T && other) const -> bool
                 {
                     return static_cast<T &&>(other) == value_;
                 }
@@ -84,7 +84,7 @@ namespace ranges
             template<typename Value, typename Proj>
             constexpr auto CPP_fun(operator())(Value && value,
                                                Proj proj)(const //
-                                                          requires(!range<Value>)) // TODO: underconstrained
+                                                          requires (!range<Value>)) // TODO: underconstrained
             {
                 return make_view_closure(bind_back(
                     remove_base_fn{}, static_cast<Value &&>(value), std::move(proj)));

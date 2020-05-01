@@ -89,7 +89,7 @@ namespace ranges
         }
         CPP_member
         constexpr auto end_adaptor() const noexcept -> CPP_ret(adaptor_base)( //
-            requires(!common_range<Rng>))
+            requires (!common_range<Rng>))
         {
             return {};
         }
@@ -146,20 +146,20 @@ namespace ranges
         /// present a view of the elements that do not satisfy the predicate.
         struct remove_if_base_fn
         {
-            template<typename Rng, typename Pred>
+            CPP_template(typename Rng, typename Pred)( //
+                requires viewable_range<Rng> && input_range<Rng>  && //
+                    indirect_unary_predicate<Pred, iterator_t<Rng>>) //
             constexpr auto operator()(Rng && rng, Pred pred) const
-                -> CPP_ret(remove_if_view<all_t<Rng>, Pred>)( //
-                    requires viewable_range<Rng> && input_range<Rng> &&
-                        indirect_unary_predicate<Pred, iterator_t<Rng>>)
+                -> remove_if_view<all_t<Rng>, Pred>
             {
                 return remove_if_view<all_t<Rng>, Pred>{all(static_cast<Rng &&>(rng)),
                                                         std::move(pred)};
             }
-            template<typename Rng, typename Pred, typename Proj>
+            CPP_template(typename Rng, typename Pred, typename Proj)( //
+                requires viewable_range<Rng> && input_range<Rng>  && //
+                    indirect_unary_predicate<Pred, projected<iterator_t<Rng>, Proj>>) //
             constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
-                -> CPP_ret(remove_if_view<all_t<Rng>, composed<Pred, Proj>>)( //
-                    requires viewable_range<Rng> && input_range<Rng> &&
-                        indirect_unary_predicate<Pred, projected<iterator_t<Rng>, Proj>>)
+                -> remove_if_view<all_t<Rng>, composed<Pred, Proj>>
             {
                 return remove_if_view<all_t<Rng>, composed<Pred, Proj>>{
                     all(static_cast<Rng &&>(rng)),
@@ -177,7 +177,7 @@ namespace ranges
             template<typename Pred, typename Proj>
             constexpr auto CPP_fun(operator())(Pred && pred,
                                                Proj proj)(const //
-                                                          requires(!range<Pred>)) // TODO: underconstrained
+                                                          requires (!range<Pred>)) // TODO: underconstrained
             {
                 return make_view_closure(bind_back(
                     remove_if_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));

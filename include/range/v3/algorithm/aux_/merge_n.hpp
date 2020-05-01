@@ -55,12 +55,12 @@ namespace ranges
 
         struct merge_n_fn
         {
-            template<typename I0, typename I1, typename O, typename C = less,
-                     typename P0 = identity, typename P1 = identity>
+            CPP_template(typename I0, typename I1, typename O, typename C = less,
+                     typename P0 = identity, typename P1 = identity)( //
+                requires mergeable<I0, I1, O, C, P0, P1>) //
             auto operator()(I0 begin0, iter_difference_t<I0> n0, I1 begin1,
                             iter_difference_t<I1> n1, O out, C r = C{}, P0 p0 = P0{},
-                            P1 p1 = P1{}) const -> CPP_ret(merge_n_result<I0, I1, O>)( //
-                requires mergeable<I0, I1, O, C, P0, P1>)
+                            P1 p1 = P1{}) const -> merge_n_result<I0, I1, O>
             {
                 using T = merge_n_result<I0, I1, O>;
                 auto n0orig = n0;

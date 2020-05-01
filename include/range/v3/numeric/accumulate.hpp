@@ -33,26 +33,26 @@ namespace ranges
     /// @{
     struct accumulate_fn
     {
-        template<typename I, typename S, typename T, typename Op = plus,
-                 typename P = identity>
-        auto operator()(I first, S last, T init, Op op = Op{},
-                        P proj = P{}) const -> CPP_ret(T)( //
+        CPP_template(typename I, typename S, typename T, typename Op = plus,
+                 typename P = identity)( //
             requires sentinel_for<S, I> && input_iterator<I> &&
                 indirectly_binary_invocable_<Op, T *, projected<I, P>> &&
-                    assignable_from<T &, indirect_result_t<Op &, T *, projected<I, P>>>)
+                    assignable_from<T &, indirect_result_t<Op &, T *, projected<I, P>>>) //
+        auto operator()(I first, S last, T init, Op op = Op{},
+                        P proj = P{}) const -> T
         {
             for(; first != last; ++first)
                 init = invoke(op, init, invoke(proj, *first));
             return init;
         }
 
-        template<typename Rng, typename T, typename Op = plus, typename P = identity>
-        auto operator()(Rng && rng, T init, Op op = Op{},
-                        P proj = P{}) const -> CPP_ret(T)( //
+        CPP_template(typename Rng, typename T, typename Op = plus, typename P = identity)( //
             requires input_range<Rng> &&
                 indirectly_binary_invocable_<Op, T *, projected<iterator_t<Rng>, P>> &&
                     assignable_from<
-                        T &, indirect_result_t<Op &, T *, projected<iterator_t<Rng>, P>>>)
+                        T &, indirect_result_t<Op &, T *, projected<iterator_t<Rng>, P>>>) //
+        auto operator()(Rng && rng, T init, Op op = Op{},
+                        P proj = P{}) const -> T
         {
             return (*this)(
                 begin(rng), end(rng), std::move(init), std::move(op), std::move(proj));

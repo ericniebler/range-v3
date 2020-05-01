@@ -34,15 +34,15 @@ namespace ranges
         {
             indices_fn() = default;
 
-            template<typename Val>
-            auto operator()(Val to) const -> CPP_ret(iota_view<Val, Val>)( //
-                requires integral<Val>)
+            CPP_template(typename Val)( //
+                requires integral<Val>) //
+            auto operator()(Val to) const -> iota_view<Val, Val>
             {
                 return {Val(), to};
             }
-            template<typename Val>
-            auto operator()(Val from, Val to) const -> CPP_ret(iota_view<Val, Val>)( //
-                requires integral<Val>)
+            CPP_template(typename Val)( //
+                requires integral<Val>) //
+            auto operator()(Val from, Val to) const -> iota_view<Val, Val>
             {
                 return {from, to};
             }
@@ -51,15 +51,15 @@ namespace ranges
         /// Inclusive range of indices: [from, to].
         struct closed_indices_fn
         {
-            template<typename Val>
-            auto operator()(Val to) const -> CPP_ret(closed_iota_view<Val>)( //
-                requires integral<Val>)
+            CPP_template(typename Val)( //
+                requires integral<Val>) //
+            auto operator()(Val to) const -> closed_iota_view<Val>
             {
                 return {Val(), to};
             }
-            template<typename Val>
-            auto operator()(Val from, Val to) const -> CPP_ret(closed_iota_view<Val>)( //
-                requires integral<Val>)
+            CPP_template(typename Val)( //
+                requires integral<Val>) //
+            auto operator()(Val from, Val to) const -> closed_iota_view<Val>
             {
                 return {from, to};
             }

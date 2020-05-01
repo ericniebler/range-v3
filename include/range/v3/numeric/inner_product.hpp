@@ -71,14 +71,14 @@ namespace ranges
 
     struct inner_product_fn
     {
-        template<typename I1, typename S1, typename I2, typename S2, typename T,
+        CPP_template(typename I1, typename S1, typename I2, typename S2, typename T,
                  typename BOp1 = plus, typename BOp2 = multiplies, typename P1 = identity,
-                 typename P2 = identity>
+                 typename P2 = identity)( //
+            requires sentinel_for<S1, I1> && sentinel_for<S2, I2> &&
+                inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>) //
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, T init,
                         BOp1 bop1 = BOp1{}, BOp2 bop2 = BOp2{}, P1 proj1 = P1{},
-                        P2 proj2 = P2{}) const -> CPP_ret(T)( //
-            requires sentinel_for<S1, I1> && sentinel_for<S2, I2> &&
-                inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
+                        P2 proj2 = P2{}) const -> T
         {
             for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
                 init =
@@ -88,14 +88,14 @@ namespace ranges
             return init;
         }
 
-        template<typename I1, typename S1, typename I2, typename T, typename BOp1 = plus,
+        CPP_template(typename I1, typename S1, typename I2, typename T, typename BOp1 = plus,
                  typename BOp2 = multiplies, typename P1 = identity,
-                 typename P2 = identity>
+                 typename P2 = identity)( //
+            requires sentinel_for<S1, I1> &&
+                    inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>) //
         auto operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
                         BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
-            -> CPP_ret(T)( //
-                requires sentinel_for<S1, I1> &&
-                    inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
+            -> T
         {
             return (*this)(std::move(begin1),
                            std::move(end1),

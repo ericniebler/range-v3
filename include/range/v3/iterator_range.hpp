@@ -164,9 +164,9 @@ namespace ranges
             requires constructible_from<I, X> && constructible_from<S, Y>)
           : compressed_pair<I, S>{detail::move(rng.first), detail::move(rng.second)}
         {}
-        template<typename X, typename Y>
-        auto operator=(iterator_range<X, Y> rng) -> CPP_ret(iterator_range &)( //
-            requires assignable_from<I &, X> && assignable_from<S &, Y>)
+        CPP_template(typename X, typename Y)( //
+            requires assignable_from<I &, X> && assignable_from<S &, Y>) //
+        auto operator=(iterator_range<X, Y> rng) -> iterator_range &
         {
             base().first() = std::move(rng.base()).first();
             base().second() = std::move(rng.base()).second();
@@ -242,10 +242,10 @@ namespace ranges
                                  detail::move(rng).rng_.second,
                                  rng.size_}
         {}
-        template<typename X, typename Y>
+        CPP_template(typename X, typename Y)( //
+            requires assignable_from<I &, X> && assignable_from<S &, Y>) //
         auto operator=(sized_iterator_range<X, Y> rng)
-            -> CPP_ret(sized_iterator_range &)( //
-                requires assignable_from<I &, X> && assignable_from<S &, Y>)
+            -> sized_iterator_range &
         {
             rng_ = detail::move(rng).rng_;
             size_ = rng.size_;
@@ -290,12 +290,12 @@ namespace ranges
             // return ranges::get<N>(p.rng_)
             return ranges::get<N>(p.*&sized_iterator_range::rng_) // makes clang happy
         )
-            // clang-format on
-            /// \overload
-            template<std::size_t N>
-            friend constexpr auto get(sized_iterator_range const & p) noexcept
-            -> CPP_ret(size_type)( //
-                requires(N == 2))
+        // clang-format on
+        /// \overload
+        CPP_template(std::size_t N)( //
+            requires (N == 2)) //
+        friend constexpr auto get(sized_iterator_range const & p) noexcept
+            -> size_type
         {
             return p.size();
         }
@@ -304,19 +304,19 @@ namespace ranges
     struct make_iterator_range_fn
     {
         /// \return `{first, last}`
-        template<typename I, typename S>
+        CPP_template(typename I, typename S)( //
+            requires sentinel_for<S, I>) //
         constexpr auto operator()(I first, S last) const
-            -> CPP_ret(iterator_range<I, S>)( //
-                requires sentinel_for<S, I>)
+            -> iterator_range<I, S>
         {
             return {detail::move(first), detail::move(last)};
         }
 
         /// \return `{first, last, size}`
-        template<typename I, typename S>
+        CPP_template(typename I, typename S)( //
+            requires sentinel_for<S, I>) //
         constexpr auto operator()(I first, S last, detail::iter_size_t<I> sz) const
-            -> CPP_ret(sized_iterator_range<I, S>)( //
-                requires sentinel_for<S, I>)
+            -> sized_iterator_range<I, S>
         {
             return {detail::move(first), detail::move(last), sz};
         }

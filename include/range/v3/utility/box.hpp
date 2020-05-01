@@ -173,14 +173,14 @@ namespace ranges
         template<typename E>
         constexpr CPP_ctor(box)(E && e)(                               //
             noexcept(std::is_nothrow_constructible<Element, E>::value) //
-            requires(!defer::same_as<box, detail::decay_t<E>>) &&
+            requires (!defer::same_as<box, detail::decay_t<E>>) &&
             defer::constructible_from<Element, E> && defer::convertible_to<E, Element>)
           : value(static_cast<E &&>(e))
         {}
         template<typename E>
         constexpr explicit CPP_ctor(box)(E && e)(                      //
             noexcept(std::is_nothrow_constructible<Element, E>::value) //
-            requires(!defer::same_as<box, detail::decay_t<E>>) &&
+            requires (!defer::same_as<box, detail::decay_t<E>>) &&
             defer::constructible_from<Element, E> && (!defer::convertible_to<E, Element>))
           : value(static_cast<E &&>(e))
         {}
@@ -216,14 +216,14 @@ namespace ranges
         template<typename E>
         constexpr CPP_ctor(box)(E && e)(                               //
             noexcept(std::is_nothrow_constructible<Element, E>::value) //
-            requires(!defer::same_as<box, detail::decay_t<E>>) &&
+            requires (!defer::same_as<box, detail::decay_t<E>>) &&
             defer::constructible_from<Element, E> && defer::convertible_to<E, Element>)
           : Element(static_cast<E &&>(e))
         {}
         template<typename E>
         constexpr explicit CPP_ctor(box)(E && e)(                      //
             noexcept(std::is_nothrow_constructible<Element, E>::value) //
-            requires(!defer::same_as<box, detail::decay_t<E>>) &&
+            requires (!defer::same_as<box, detail::decay_t<E>>) &&
             defer::constructible_from<Element, E> && (!defer::convertible_to<E, Element>))
           : Element(static_cast<E &&>(e))
         {}
@@ -256,13 +256,13 @@ namespace ranges
         template<typename E>
         constexpr CPP_ctor(box)(E &&)( //
             noexcept(true)             //
-            requires(!defer::same_as<box, detail::decay_t<E>>) &&
+            requires (!defer::same_as<box, detail::decay_t<E>>) &&
             defer::constructible_from<Element, E> && defer::convertible_to<E, Element>)
         {}
         template<typename E>
         constexpr explicit CPP_ctor(box)(E &&)( //
             noexcept(true)                      //
-            requires(!defer::same_as<box, detail::decay_t<E>>) &&
+            requires (!defer::same_as<box, detail::decay_t<E>>) &&
             defer::constructible_from<Element, E> && (!defer::convertible_to<E, Element>))
         {}
 

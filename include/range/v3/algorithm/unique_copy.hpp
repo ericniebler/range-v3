@@ -122,19 +122,19 @@ namespace ranges
         /// \pre `Rng` is a model of the `input_range` concept
         /// \pre `O` is a model of the `weakly_incrementable` concept
         /// \pre `C` is a model of the `relation` concept
-        template<typename I,
+        CPP_template(typename I,
                  typename S,
                  typename O,
                  typename C = equal_to,
-                 typename P = identity>
-        auto RANGES_FUNC(unique_copy)(
-            I first, S last, O out, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(unique_copy_result<I, O>)(                //
-                requires input_iterator<I> && sentinel_for<S, I> &&
+                 typename P = identity)( //
+            requires input_iterator<I> && sentinel_for<S, I> &&
                 indirect_relation<C, projected<I, P>> && weakly_incrementable<O> &&
                 indirectly_copyable<I, O> &&
                 (forward_iterator<I> || forward_iterator<O> ||
-                 indirectly_copyable_storable<I, O>))
+                 indirectly_copyable_storable<I, O>)) //
+        auto RANGES_FUNC(unique_copy)(
+            I first, S last, O out, C pred = C{}, P proj = P{}) //
+            -> unique_copy_result<I, O>
         {
             return detail::unique_copy_impl(std::move(first),
                                             std::move(last),
@@ -146,14 +146,14 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename O, typename C = equal_to, typename P = identity>
-        auto RANGES_FUNC(unique_copy)(Rng && rng, O out, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(unique_copy_result<safe_iterator_t<Rng>, O>)(                  //
-                requires input_range<Rng> &&
+        CPP_template(typename Rng, typename O, typename C = equal_to, typename P = identity)( //
+            requires input_range<Rng> &&
                 indirect_relation<C, projected<iterator_t<Rng>, P>> &&
                 weakly_incrementable<O> && indirectly_copyable<iterator_t<Rng>, O> &&
                 (forward_iterator<iterator_t<Rng>> || forward_iterator<O> ||
-                 indirectly_copyable_storable<iterator_t<Rng>, O>))
+                 indirectly_copyable_storable<iterator_t<Rng>, O>)) //
+        auto RANGES_FUNC(unique_copy)(Rng && rng, O out, C pred = C{}, P proj = P{}) //
+            -> unique_copy_result<safe_iterator_t<Rng>, O>
         {
             return detail::unique_copy_impl(begin(rng),
                                             end(rng),

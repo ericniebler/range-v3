@@ -107,9 +107,9 @@ namespace ranges
     {
         struct move_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(move_view<all_t<Rng>>)( //
-                requires viewable_range<Rng> && input_range<Rng>)
+            CPP_template(typename Rng)( //
+                requires viewable_range<Rng> && input_range<Rng>) //
+            auto operator()(Rng && rng) const -> move_view<all_t<Rng>>
             {
                 return move_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

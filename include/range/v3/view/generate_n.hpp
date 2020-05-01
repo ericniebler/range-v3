@@ -100,14 +100,14 @@ namespace ranges
     {
         struct generate_n_fn
         {
-            template<typename G>
-            auto operator()(G g, std::size_t n) const -> CPP_ret(generate_n_view<G>)( //
+            CPP_template(typename G)( //
                 requires invocable<G &> && copy_constructible<G> &&
                     std::is_object<detail::decay_t<invoke_result_t<G &>>>::value &&
                         constructible_from<detail::decay_t<invoke_result_t<G &>>,
                                            invoke_result_t<G &>> &&
                             assignable_from<detail::decay_t<invoke_result_t<G &>> &,
-                                            invoke_result_t<G &>>)
+                                            invoke_result_t<G &>>) //
+            auto operator()(G g, std::size_t n) const -> generate_n_view<G>
             {
                 return generate_n_view<G>{std::move(g), n};
             }

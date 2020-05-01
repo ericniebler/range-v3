@@ -59,13 +59,13 @@ namespace ranges
 
     struct adjacent_difference_fn
     {
-        template<typename I, typename S, typename O, typename S2, typename BOp = minus,
-                 typename P = identity>
+        CPP_template(typename I, typename S, typename O, typename S2, typename BOp = minus,
+                 typename P = identity)( //
+            requires sentinel_for<S, I> && sentinel_for<S2, O> &&
+                    differenceable<I, O, BOp, P>) //
         auto operator()(I first, S last, O result, S2 end_result, BOp bop = BOp{},
                         P proj = P{}) const
-            -> CPP_ret(adjacent_difference_result<I, O>)( //
-                requires sentinel_for<S, I> && sentinel_for<S2, O> &&
-                    differenceable<I, O, BOp, P>)
+            -> adjacent_difference_result<I, O>
         {
             // BUGBUG think about the use of coerce here.
             using V = iter_value_t<I>;
@@ -88,11 +88,11 @@ namespace ranges
             return {first, result};
         }
 
-        template<typename I, typename S, typename O, typename BOp = minus,
-                 typename P = identity>
+        CPP_template(typename I, typename S, typename O, typename BOp = minus,
+                 typename P = identity)( //
+            requires sentinel_for<S, I> && differenceable<I, O, BOp, P>) //
         auto operator()(I first, S last, O result, BOp bop = BOp{}, P proj = P{}) const
-            -> CPP_ret(adjacent_difference_result<I, O>)( //
-                requires sentinel_for<S, I> && differenceable<I, O, BOp, P>)
+            -> adjacent_difference_result<I, O>
         {
             return (*this)(std::move(first),
                            std::move(last),

@@ -109,18 +109,18 @@ namespace ranges
         {
             return j;
         }
-        template<typename J, typename R = iter_reference_t<J>>
+        CPP_template(typename J, typename R = iter_reference_t<J>)( //
+            requires std::is_reference<R>::value) //
         static auto operator_arrow_(J const & j, long) noexcept
-            -> CPP_ret(meta::_t<std::add_pointer<R>>)( //
-                requires std::is_reference<R>::value)
+            -> meta::_t<std::add_pointer<R>>
         {
             auto && r = *j;
             return std::addressof(r);
         }
-        template<typename J, typename V = iter_value_t<J>>
+        CPP_template(typename J, typename V = iter_value_t<J>)( //
+            requires constructible_from<V, iter_reference_t<J>>) //
         static auto operator_arrow_(J const & j, ...) noexcept(noexcept(V(V(*j))))
-            -> CPP_ret(arrow_proxy_)( //
-                requires constructible_from<V, iter_reference_t<J>>)
+            -> arrow_proxy_
         {
             return arrow_proxy_(*j);
         }
@@ -142,10 +142,10 @@ namespace ranges
         {
             detail::cidata(that).visit_i(emplace_fn{&data_});
         }
-        template<typename I2, typename S2>
+        CPP_template(typename I2, typename S2)( //
+            requires convertible_to<I2, I> && convertible_to<S2, S>) //
         auto operator=(common_iterator<I2, S2> const & that)
-            -> CPP_ret(common_iterator &)( //
-                requires convertible_to<I2, I> && convertible_to<S2, S>)
+            -> common_iterator &
         {
             detail::cidata(that).visit_i(emplace_fn{&data_});
             return *this;
@@ -179,16 +179,16 @@ namespace ranges
             return *this;
         }
 #ifdef RANGES_WORKAROUND_MSVC_677925
-        template<typename I2 = I>
-        auto operator++(int) -> CPP_ret(decltype(std::declval<I2 &>()++))( //
-            requires(!forward_iterator<I2>))
+        CPP_template(typename I2 = I)( //
+            requires (!forward_iterator<I2>)) //
+        auto operator++(int) -> decltype(std::declval<I2 &>()++)
         {
             return ranges::get<0>(data_)++;
         }
 #else  // ^^^ workaround ^^^ / vvv no workaround vvv
         CPP_member
         auto operator++(int) -> CPP_ret(decltype(std::declval<I &>()++))( //
-            requires(!forward_iterator<I>))
+            requires (!forward_iterator<I>))
         {
             return ranges::get<0>(data_)++;
         }
@@ -249,11 +249,11 @@ namespace ranges
 #endif
     /// \endcond
 
-    template<typename I1, typename I2, typename S1, typename S2>
+    CPP_template(typename I1, typename I2, typename S1, typename S2)( //
+        requires sentinel_for<S1, I2> && sentinel_for<S2, I1>  && //
+        (!equality_comparable_with<I1, I2>)) //
     auto operator==(common_iterator<I1, S1> const & x, common_iterator<I2, S2> const & y)
-        -> CPP_ret(bool)( //
-            requires sentinel_for<S1, I2> && sentinel_for<S2, I1> &&
-            (!equality_comparable_with<I1, I2>))
+        -> bool
     {
         return detail::cidata(x).index() == 1u ? (detail::cidata(y).index() == 1u ||
                                                   ranges::get<0>(detail::cidata(y)) ==
@@ -263,11 +263,11 @@ namespace ranges
                                                       ranges::get<1>(detail::cidata(y)));
     }
 
-    template<typename I1, typename I2, typename S1, typename S2>
+    CPP_template(typename I1, typename I2, typename S1, typename S2)( //
+        requires sentinel_for<S1, I2> && sentinel_for<S2, I1>  && //
+            equality_comparable_with<I1, I2>) //
     auto operator==(common_iterator<I1, S1> const & x, common_iterator<I2, S2> const & y)
-        -> CPP_ret(bool)( //
-            requires sentinel_for<S1, I2> && sentinel_for<S2, I1> &&
-                equality_comparable_with<I1, I2>)
+        -> bool
     {
         return detail::cidata(x).index() == 1u
                    ? (detail::cidata(y).index() == 1u ||
@@ -280,10 +280,10 @@ namespace ranges
                                 ranges::get<0>(detail::cidata(y)));
     }
 
-    template<typename I1, typename I2, typename S1, typename S2>
+    CPP_template(typename I1, typename I2, typename S1, typename S2)( //
+        requires sentinel_for<S1, I2> && sentinel_for<S2, I1>) //
     auto operator!=(common_iterator<I1, S1> const & x, common_iterator<I2, S2> const & y)
-        -> CPP_ret(bool)( //
-            requires sentinel_for<S1, I2> && sentinel_for<S2, I1>)
+        -> bool
     {
         return !(x == y);
     }
@@ -320,14 +320,14 @@ namespace ranges
         template<typename I>
         auto demote_common_iter_cat(long)
             -> with_iterator_category<std::input_iterator_tag>;
-        template<typename I>
+        CPP_template(typename I)( //
+            requires derived_from<typename std::iterator_traits<I>::iterator_category,
+                                      std::forward_iterator_tag>)
         auto demote_common_iter_cat(int)
-            -> CPP_ret(with_iterator_category<std::forward_iterator_tag>)( //
-                requires derived_from<typename std::iterator_traits<I>::iterator_category,
-                                      std::forward_iterator_tag>);
+            -> with_iterator_category<std::forward_iterator_tag>;
 
         template<typename I, bool = (bool)input_iterator<I>>
-        struct common_iterator_std_traits : decltype(detail::demote_common_iter_cat<I>(0))
+        struct common_iterator_std_traits : decltype(detail::demote_common_iter_cat<I>(0)) //
         {
             using difference_type = iter_difference_t<I>;
             using value_type = iter_value_t<I>;

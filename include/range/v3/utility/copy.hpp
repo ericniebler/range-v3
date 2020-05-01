@@ -30,9 +30,9 @@ namespace ranges
     {
         struct copy_fn : copy_tag
         {
-            template<typename T>
-            constexpr auto operator()(T && t) const -> CPP_ret(detail::decay_t<T>)( //
-                requires constructible_from<detail::decay_t<T>, T>)
+            CPP_template(typename T)( //
+                requires constructible_from<detail::decay_t<T>, T>) //
+            constexpr auto operator()(T && t) const -> detail::decay_t<T>
             {
                 return static_cast<T &&>(t);
             }

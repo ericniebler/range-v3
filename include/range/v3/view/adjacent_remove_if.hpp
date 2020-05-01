@@ -94,7 +94,7 @@ namespace ranges
         }
         CPP_member
         constexpr auto end_adaptor() noexcept -> CPP_ret(adaptor_base)( //
-            requires(!common_range<Rng>))
+            requires (!common_range<Rng>))
         {
             return {};
         }
@@ -146,11 +146,11 @@ namespace ranges
     {
         struct adjacent_remove_if_base_fn
         {
-            template<typename Rng, typename Pred>
-            constexpr auto operator()(Rng && rng, Pred pred) const -> CPP_ret(
-                adjacent_remove_if_view<all_t<Rng>, Pred>)( //
+            CPP_template(typename Rng, typename Pred)( //
                 requires viewable_range<Rng> && forward_range<Rng> &&
-                    indirect_binary_predicate_<Pred, iterator_t<Rng>, iterator_t<Rng>>)
+                    indirect_binary_predicate_<Pred, iterator_t<Rng>, iterator_t<Rng>>) //
+            constexpr auto operator()(Rng && rng, Pred pred) const -> 
+                adjacent_remove_if_view<all_t<Rng>, Pred>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }

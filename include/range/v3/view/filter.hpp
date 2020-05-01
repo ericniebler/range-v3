@@ -53,11 +53,11 @@ namespace ranges
         /// present a view of the elements that satisfy the predicate.
         struct cpp20_filter_base_fn
         {
-            template<typename Rng, typename Pred>
+            CPP_template(typename Rng, typename Pred)( //
+                requires viewable_range<Rng> && input_range<Rng>  && //
+                    indirect_unary_predicate<Pred, iterator_t<Rng>>) //
             constexpr auto operator()(Rng && rng, Pred pred) const
-                -> CPP_ret(filter_view<all_t<Rng>, Pred>)( //
-                    requires viewable_range<Rng> && input_range<Rng> &&
-                        indirect_unary_predicate<Pred, iterator_t<Rng>>)
+                -> filter_view<all_t<Rng>, Pred>
             {
                 return filter_view<all_t<Rng>, Pred>{all(static_cast<Rng &&>(rng)),
                                                      std::move(pred)};
@@ -82,11 +82,11 @@ namespace ranges
         {
             using cpp20_filter_base_fn::operator();
 
-            template<typename Rng, typename Pred, typename Proj>
+            CPP_template(typename Rng, typename Pred, typename Proj)( //
+                requires viewable_range<Rng> && input_range<Rng>  && //
+                    indirect_unary_predicate<Pred, projected<iterator_t<Rng>, Proj>>) //
             constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
-                -> CPP_ret(filter_view<all_t<Rng>, composed<Pred, Proj>>)( //
-                    requires viewable_range<Rng> && input_range<Rng> &&
-                        indirect_unary_predicate<Pred, projected<iterator_t<Rng>, Proj>>)
+                -> filter_view<all_t<Rng>, composed<Pred, Proj>>
             {
                 return filter_view<all_t<Rng>, composed<Pred, Proj>>{
                     all(static_cast<Rng &&>(rng)),

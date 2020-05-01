@@ -44,11 +44,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(unstable_remove_if)
 
         /// \brief function template \c unstable_remove_if
-        template<typename I, typename C, typename P = identity>
+        CPP_template(typename I, typename C, typename P = identity)( //
+            requires bidirectional_iterator<I> && permutable<I>  && //
+            indirect_unary_predicate<C, projected<I, P>>) //
         auto RANGES_FUNC(unstable_remove_if)(I first, I last, C pred, P proj = {}) //
-            ->CPP_ret(I)(                                                          //
-                requires bidirectional_iterator<I> && permutable<I> &&
-                indirect_unary_predicate<C, projected<I, P>>)
+            -> I
         {
             while(true)
             {
@@ -68,12 +68,12 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C, typename P = identity>
+        CPP_template(typename Rng, typename C, typename P = identity)( //
+            requires bidirectional_range<Rng> && common_range<Rng>  && //
+            permutable<iterator_t<Rng>>  && //
+            indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(unstable_remove_if)(Rng && rng, C pred, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                   //
-                requires bidirectional_range<Rng> && common_range<Rng> &&
-                permutable<iterator_t<Rng>> &&
-                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
+            -> safe_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

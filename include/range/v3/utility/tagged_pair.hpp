@@ -87,13 +87,13 @@ namespace ranges
         template<typename Other>
         constexpr CPP_ctor(tagged)(tagged<Other, Tags...> && that)(     //
             noexcept(std::is_nothrow_constructible<Base, Other>::value) //
-            requires(can_convert<Other>::value))
+            requires (can_convert<Other>::value))
           : base_t(static_cast<Other &&>(that))
         {}
         template<typename Other>
         constexpr CPP_ctor(tagged)(tagged<Other, Tags...> const & that)(        //
             noexcept(std::is_nothrow_constructible<Base, Other const &>::value) //
-            requires(can_convert<Other>::value))
+            requires (can_convert<Other>::value))
           : base_t(static_cast<Other const &>(that))
         {}
 #else
@@ -113,37 +113,37 @@ namespace ranges
           : base_t(static_cast<Other const &>(that))
         {}
 #endif
-        template<typename Other>
+        CPP_template(typename Other)( //
+            requires can_convert<Other>::value) //
         constexpr auto operator=(tagged<Other, Tags...> && that) noexcept(
             noexcept(std::declval<Base &>() = static_cast<Other &&>(that)))
-            -> CPP_ret(tagged &)( //
-                requires can_convert<Other>::value)
+            -> tagged &
         {
             static_cast<Base &>(*this) = static_cast<Other &&>(that);
             return *this;
         }
-        template<typename Other>
+        CPP_template(typename Other)( //
+            requires can_convert<Other>::value) //
         constexpr auto operator=(tagged<Other, Tags...> const & that) noexcept(
             noexcept(std::declval<Base &>() = static_cast<Other const &>(that)))
-            -> CPP_ret(tagged &)( //
-                requires can_convert<Other>::value)
+            -> tagged &
         {
             static_cast<Base &>(*this) = static_cast<Other const &>(that);
             return *this;
         }
-        template<typename U>
+        CPP_template(typename U)( //
+            requires (!defer::same_as<tagged, detail::decay_t<U>>) &&
+            defer::satisfies<Base &, std::is_assignable, U>) //
         constexpr auto operator=(U && u) noexcept(noexcept(
-            std::declval<Base &>() = static_cast<U &&>(u))) -> CPP_ret(tagged &)( //
-            requires(!defer::same_as<tagged, detail::decay_t<U>>) &&
-            defer::satisfies<Base &, std::is_assignable, U>)
+            std::declval<Base &>() = static_cast<U &&>(u))) -> tagged &
         {
             static_cast<Base &>(*this) = static_cast<U &&>(u);
             return *this;
         }
-        template<typename B = Base>
+        CPP_template(typename B = Base)( //
+            requires is_swappable<B>::value) //
         constexpr auto swap(tagged & that) noexcept(is_nothrow_swappable<B>::value)
-            -> CPP_ret(void)( //
-                requires is_swappable<B>::value)
+            -> void
         {
             ranges::swap(static_cast<Base &>(*this), static_cast<Base &>(that));
         }
@@ -162,12 +162,12 @@ namespace ranges
 #if RANGES_BROKEN_CPO_LOOKUP
     namespace _tagged_
     {
-        template<typename Base, typename... Tags>
+        CPP_template(typename Base, typename... Tags)( //
+            requires is_swappable<Base>::value) //
         constexpr auto swap(
             tagged<Base, Tags...> & x,
             tagged<Base, Tags...> & y) noexcept(is_nothrow_swappable<Base>::value)
-            -> CPP_ret(void)( //
-                requires is_swappable<Base>::value)
+            -> void
         {
             x.swap(y);
         }

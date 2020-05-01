@@ -365,10 +365,10 @@ namespace ranges
         // Out: range<range<T>>, where each inner range has $n$ elements.
         struct sliding_base_fn
         {
-            template<typename Rng>
+            CPP_template(typename Rng)( //
+                requires viewable_range<Rng> && forward_range<Rng>) //
             constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
-                -> CPP_ret(sliding_view<all_t<Rng>>)( //
-                    requires viewable_range<Rng> && forward_range<Rng>)
+                -> sliding_view<all_t<Rng>>
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }

@@ -40,11 +40,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(rotate_copy)
 
         /// \brief function template \c rotate_copy
-        template<typename I, typename S, typename O, typename P = identity>
+        CPP_template(typename I, typename S, typename O, typename P = identity)( //
+            requires forward_iterator<I> && sentinel_for<S, I>  && //
+            weakly_incrementable<O> && indirectly_copyable<I, O>) //
         auto RANGES_FUNC(rotate_copy)(I first, I middle, S last, O out) //
-            ->CPP_ret(rotate_copy_result<I, O>)(                        //
-                requires forward_iterator<I> && sentinel_for<S, I> &&
-                weakly_incrementable<O> && indirectly_copyable<I, O>)
+            -> rotate_copy_result<I, O>
         {
             auto res = ranges::copy(middle, std::move(last), std::move(out));
             return {std::move(res.in),
@@ -52,11 +52,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename O, typename P = identity>
+        CPP_template(typename Rng, typename O, typename P = identity)( //
+            requires range<Rng> && weakly_incrementable<O>  && //
+            indirectly_copyable<iterator_t<Rng>, O>) //
         auto RANGES_FUNC(rotate_copy)(Rng && rng, iterator_t<Rng> middle, O out) //
-            ->CPP_ret(rotate_copy_result<safe_iterator_t<Rng>, O>)(              //
-                requires range<Rng> && weakly_incrementable<O> &&
-                indirectly_copyable<iterator_t<Rng>, O>)
+            -> rotate_copy_result<safe_iterator_t<Rng>, O>
         {
             return (*this)(begin(rng), std::move(middle), end(rng), std::move(out));
         }

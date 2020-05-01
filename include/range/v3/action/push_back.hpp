@@ -45,17 +45,17 @@ namespace ranges
             ranges::insert(std::declval<Cont &>(), std::declval<sentinel_t<Cont>>(),
                            std::declval<Rng>())));
 
-        template<typename Cont, typename T>
-        auto push_back(Cont && cont, T && t) -> CPP_ret(push_back_t<Cont, T>)( //
+        CPP_template(typename Cont, typename T)( //
             requires lvalue_container_like<Cont> &&
-            (!range<T>)&&constructible_from<range_value_t<Cont>, T>)
+            (!range<T>)&&constructible_from<range_value_t<Cont>, T>) //
+        auto push_back(Cont && cont, T && t) -> push_back_t<Cont, T>
         {
             unwrap_reference(cont).push_back(static_cast<T &&>(t));
         }
 
-        template<typename Cont, typename Rng>
-        auto push_back(Cont && cont, Rng && rng) -> CPP_ret(insert_t<Cont, Rng>)( //
-            requires lvalue_container_like<Cont> && range<Rng>)
+        CPP_template(typename Cont, typename Rng)( //
+            requires lvalue_container_like<Cont> && range<Rng>) //
+        auto push_back(Cont && cont, Rng && rng) -> insert_t<Cont, Rng>
         {
             ranges::insert(cont, end(cont), static_cast<Rng &&>(rng));
         }
@@ -98,22 +98,22 @@ namespace ranges
                 return make_action_closure(bind_back(push_back_fn{}, val));
             }
 
-            template<typename Rng, typename T>
+            CPP_template(typename Rng, typename T)( //
+                requires input_range<Rng> && can_push_back_<Rng, T>  && //
+                (range<T> || constructible_from<range_value_t<Rng>, T>)) //
             auto operator()(Rng && rng, T && t) const //
-                -> CPP_ret(Rng)(                      //
-                    requires input_range<Rng> && can_push_back_<Rng, T> &&
-                    (range<T> || constructible_from<range_value_t<Rng>, T>))
+                -> Rng
             {
                 push_back(rng, static_cast<T &&>(t));
                 return static_cast<Rng &&>(rng);
             }
 
-            template<typename Rng, typename T>
-            auto operator()(Rng && rng, std::initializer_list<T> t) const //
-                -> CPP_ret(Rng)(                                          //
-                    requires input_range<Rng> &&                          //
+            CPP_template(typename Rng, typename T)( //
+                requires input_range<Rng> &&                          //
                         can_push_back_<Rng, std::initializer_list<T>> &&  //
-                            constructible_from<range_value_t<Rng>, T const &>)
+                            constructible_from<range_value_t<Rng>, T const &>) //
+            auto operator()(Rng && rng, std::initializer_list<T> t) const //
+                -> Rng
             {
                 push_back(rng, t);
                 return static_cast<Rng &&>(rng);

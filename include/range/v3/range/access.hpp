@@ -138,13 +138,13 @@ namespace ranges
             constexpr auto CPP_fun(operator())(R && r)(
                 const                            //
                 noexcept(noexcept(impl_v<R>(r))) //
-                requires((detail::_safe_range<R>)&&(has_member_begin<R> ||
+                requires ((detail::_safe_range<R>)&&(has_member_begin<R> ||
                                                     has_non_member_begin<R>)))
 #else
             constexpr auto CPP_fun(operator())(R && r)(
                 const                            //
                 noexcept(noexcept(impl<R>{}(r))) //
-                requires((detail::_safe_range<R>)&&(has_member_begin<R> ||
+                requires ((detail::_safe_range<R>)&&(has_member_begin<R> ||
                                                     has_non_member_begin<R>)))
 #endif
             {
@@ -277,12 +277,12 @@ namespace ranges
 #ifdef RANGES_WORKAROUND_GCC_89953
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl_v<R>(r))) //
-                requires((detail::_safe_range<R>)&&(has_member_end<R> ||
+                requires ((detail::_safe_range<R>)&&(has_member_end<R> ||
                                                     has_non_member_end<R>)))
 #else
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl<R>{}(r))) //
-                requires((detail::_safe_range<R>)&&(has_member_end<R> ||
+                requires ((detail::_safe_range<R>)&&(has_member_end<R> ||
                                                     has_non_member_end<R>)))
 #endif
             {
@@ -311,10 +311,10 @@ namespace ranges
                 return Fn{}(ref.get());
             }
 
-            template<typename Int>
+            CPP_template(typename Int)( //
+                requires detail::integer_like_<Int>) //
             auto operator-(Int dist) const
-                -> CPP_ret(detail::from_end_<iter_diff_t<Int>>)( //
-                    requires detail::integer_like_<Int>)
+                -> detail::from_end_<iter_diff_t<Int>>
             {
                 using SInt = iter_diff_t<Int>;
                 RANGES_EXPECT(0 <= dist);
@@ -462,7 +462,7 @@ namespace ranges
             template<typename R>
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl<R>{}(r))) //
-                requires((detail::_safe_range<R>)&&(has_member_rbegin<R> ||
+                requires ((detail::_safe_range<R>)&&(has_member_rbegin<R> ||
                                                     has_non_member_rbegin<R> ||
                                                     can_reverse_end<R>)))
             {
@@ -597,7 +597,7 @@ namespace ranges
             template<typename R>
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl<R>{}(r))) //
-                requires((detail::_safe_range<R>)&&(has_member_rend<R> ||
+                requires ((detail::_safe_range<R>)&&(has_member_rend<R> ||
                                                     has_non_member_rend<R> ||
                                                     can_reverse_begin<R>)))
             {

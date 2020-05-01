@@ -65,7 +65,7 @@ namespace ranges
           , second_{static_cast<Rest &&>(rest)...}
         {}
         CPP_template(typename... Args)( //
-            requires(defer::invocable<First &, Args...> ||
+            requires (defer::invocable<First &, Args...> ||
                      defer::invocable<overloaded<Rest...> &, Args...>)) //
             constexpr decltype(auto)
             operator()(Args &&... args) &
@@ -81,7 +81,7 @@ namespace ranges
 #endif
         }
         CPP_template(typename... Args)( //
-            requires(defer::invocable<First const &, Args...> ||
+            requires (defer::invocable<First const &, Args...> ||
                      defer::invocable<overloaded<Rest...> const &, Args...>)) //
             constexpr decltype(auto)
             operator()(Args &&... args) const &
@@ -98,7 +98,7 @@ namespace ranges
 #endif
         }
         CPP_template(typename... Args)( //
-            requires(defer::invocable<First, Args...> ||
+            requires (defer::invocable<First, Args...> ||
                      defer::invocable<overloaded<Rest...>, Args...>)) //
             constexpr decltype(auto)
             operator()(Args &&... args) &&

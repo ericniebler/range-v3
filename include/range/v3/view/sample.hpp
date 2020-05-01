@@ -169,13 +169,13 @@ namespace ranges
         {
             return cursor<false>{this};
         }
-        template<bool Const = true>
-        auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
+        CPP_template(bool Const = true)( //
             requires Const &&
             (sized_range<meta::const_if_c<Const, Rng>> ||
              sized_sentinel_for<sentinel_t<meta::const_if_c<Const, Rng>>,
                                 iterator_t<meta::const_if_c<Const, Rng>>> ||
-             forward_range<meta::const_if_c<Const, Rng>>))
+             forward_range<meta::const_if_c<Const, Rng>>)) //
+        auto begin_cursor() const -> cursor<Const>
         {
             return cursor<true>{this};
         }
@@ -208,16 +208,16 @@ namespace ranges
         /// Returns a random sample of a range of length `size(range)`.
         struct sample_base_fn
         {
-            template<typename Rng, typename URNG = detail::default_random_engine>
-            auto operator()(Rng && rng, range_difference_t<Rng> sample_size,
-                            URNG & generator = detail::get_random_engine()) const
-                -> CPP_ret(sample_view<all_t<Rng>, URNG>)( //
-                    requires viewable_range<Rng> && input_range<Rng> &&
+            CPP_template(typename Rng, typename URNG = detail::default_random_engine)( //
+                requires viewable_range<Rng> && input_range<Rng> &&
                         uniform_random_bit_generator<URNG> && convertible_to<
                             invoke_result_t<URNG &>, range_difference_t<Rng>> &&
                     (sized_range<Rng> ||
                      sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>> ||
-                     forward_range<Rng>))
+                     forward_range<Rng>)) //
+            auto operator()(Rng && rng, range_difference_t<Rng> sample_size,
+                            URNG & generator = detail::get_random_engine()) const
+                -> sample_view<all_t<Rng>, URNG>
             {
                 return sample_view<all_t<Rng>, URNG>{
                     all(static_cast<Rng &&>(rng)), sample_size, generator};

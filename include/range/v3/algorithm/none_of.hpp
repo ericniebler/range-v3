@@ -36,11 +36,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(none_of)
 
         /// \brief function template \c none_of
-        template<typename I, typename S, typename F, typename P = identity>
+        CPP_template(typename I, typename S, typename F, typename P = identity)( //
+            requires input_iterator<I> && sentinel_for<S, I>  && //
+            indirect_unary_predicate<F, projected<I, P>>) //
         auto RANGES_FUNC(none_of)(I first, S last, F pred, P proj = P{}) //
-            ->CPP_ret(bool)(                                             //
-                requires input_iterator<I> && sentinel_for<S, I> &&
-                indirect_unary_predicate<F, projected<I, P>>)
+            -> bool
         {
             for(; first != last; ++first)
                 if(invoke(pred, invoke(proj, *first)))
@@ -49,11 +49,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename F, typename P = identity>
+        CPP_template(typename Rng, typename F, typename P = identity)( //
+            requires input_range<Rng>  && //
+            indirect_unary_predicate<F, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(none_of)(Rng && rng, F pred, P proj = P{}) //
-            ->CPP_ret(bool)(                                        //
-                requires input_range<Rng> &&
-                indirect_unary_predicate<F, projected<iterator_t<Rng>, P>>)
+            -> bool
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

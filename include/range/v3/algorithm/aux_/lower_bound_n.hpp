@@ -57,11 +57,11 @@ namespace ranges
     {
         struct lower_bound_n_fn
         {
-            template<typename I, typename V, typename C = less, typename P = identity>
-            auto operator()(I first, iter_difference_t<I> d, V const & val, C pred = C{},
-                            P proj = P{}) const -> CPP_ret(I)( //
+            CPP_template(typename I, typename V, typename C = less, typename P = identity)( //
                 requires forward_iterator<I> &&
-                    indirect_strict_weak_order<C, V const *, projected<I, P>>)
+                    indirect_strict_weak_order<C, V const *, projected<I, P>>) //
+            auto operator()(I first, iter_difference_t<I> d, V const & val, C pred = C{},
+                            P proj = P{}) const -> I
             {
                 return partition_point_n(std::move(first),
                                          d,

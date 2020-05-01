@@ -40,11 +40,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(move)
 
         /// \brief function template \c move
-        template<typename I, typename S, typename O>
+        CPP_template(typename I, typename S, typename O)( //
+            requires input_iterator<I> && sentinel_for<S, I>  && //
+            weakly_incrementable<O> && indirectly_movable<I, O>) //
         auto RANGES_FUNC(move)(I first, S last, O out) //
-            ->CPP_ret(move_result<I, O>)(              //
-                requires input_iterator<I> && sentinel_for<S, I> &&
-                weakly_incrementable<O> && indirectly_movable<I, O>)
+            -> move_result<I, O>
         {
             for(; first != last; ++first, ++out)
                 *out = iter_move(first);
@@ -52,11 +52,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename O>
+        CPP_template(typename Rng, typename O)( //
+            requires input_range<Rng> && weakly_incrementable<O>  && //
+            indirectly_movable<iterator_t<Rng>, O>) //
         auto RANGES_FUNC(move)(Rng && rng, O out)            //
-            ->CPP_ret(move_result<safe_iterator_t<Rng>, O>)( //
-                requires input_range<Rng> && weakly_incrementable<O> &&
-                indirectly_movable<iterator_t<Rng>, O>)
+            -> move_result<safe_iterator_t<Rng>, O>
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }

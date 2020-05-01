@@ -34,9 +34,9 @@ namespace ranges
         /// Reversed the source range in-place.
         struct reverse_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(Rng)( //
-                requires bidirectional_range<Rng> && permutable<iterator_t<Rng>>)
+            CPP_template(typename Rng)( //
+                requires bidirectional_range<Rng> && permutable<iterator_t<Rng>>) //
+            auto operator()(Rng && rng) const -> Rng
             {
                 ranges::reverse(rng);
                 return static_cast<Rng &&>(rng);

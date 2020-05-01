@@ -45,22 +45,22 @@ namespace ranges
         /// \pre `R` and `projected<I, P>` model the `indirect_strict_weak_order<R,
         /// projected<I, P>>` concept
         ///
-        template<typename I, typename S, typename R = less, typename P = identity>
+        CPP_template(typename I, typename S, typename R = less, typename P = identity)( //
+            requires forward_iterator<I> && sentinel_for<S, I>  && //
+            indirect_strict_weak_order<R, projected<I, P>>) //
         auto RANGES_FUNC(is_sorted)(I first, S last, R rel = R{}, P proj = P{})
-            ->CPP_ret(bool)( //
-                requires forward_iterator<I> && sentinel_for<S, I> &&
-                indirect_strict_weak_order<R, projected<I, P>>)
+            -> bool
         {
             return is_sorted_until(
                        std::move(first), last, std::move(rel), std::move(proj)) == last;
         }
 
         /// \overload
-        template<typename Rng, typename R = less, typename P = identity>
+        CPP_template(typename Rng, typename R = less, typename P = identity)( //
+            requires forward_range<Rng>  && //
+            indirect_strict_weak_order<R, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(is_sorted)(Rng && rng, R rel = R{}, P proj = P{}) //
-            ->CPP_ret(bool)(                                               //
-                requires forward_range<Rng> &&
-                indirect_strict_weak_order<R, projected<iterator_t<Rng>, P>>)
+            -> bool
         {
             return (*this)(begin(rng), end(rng), std::move(rel), std::move(proj));
         }

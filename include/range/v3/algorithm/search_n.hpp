@@ -135,11 +135,13 @@ namespace ranges
     RANGES_FUNC_BEGIN(search_n)
 
         /// \brief function template \c search_n
-        template<typename I,
+        CPP_template(typename I,
                  typename S,
                  typename V,
                  typename C = equal_to,
-                 typename P = identity>
+                 typename P = identity)( //
+            requires forward_iterator<I> && sentinel_for<S, I> &&
+                indirectly_comparable<I, V const *, C, P>) //
         auto RANGES_FUNC(search_n)(I first,
                                    S last,
                                    iter_difference_t<I>
@@ -147,9 +149,7 @@ namespace ranges
                                    V const & val,
                                    C pred = C{},
                                    P proj = P{}) //
-            ->CPP_ret(subrange<I>)(              //
-                requires forward_iterator<I> && sentinel_for<S, I> &&
-                indirectly_comparable<I, V const *, C, P>)
+            -> subrange<I>
         {
             if(cnt <= 0)
                 return {first, first};
@@ -167,16 +167,16 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename V, typename C = equal_to, typename P = identity>
+        CPP_template(typename Rng, typename V, typename C = equal_to, typename P = identity)( //
+            requires forward_range<Rng> &&
+                indirectly_comparable<iterator_t<Rng>, V const *, C, P>) //
         auto RANGES_FUNC(search_n)(Rng && rng,
                                    iter_difference_t<iterator_t<Rng>>
                                        cnt,
                                    V const & val,
                                    C pred = C{},
                                    P proj = P{}) //
-            ->CPP_ret(safe_subrange_t<Rng>)(     //
-                requires forward_range<Rng> &&
-                indirectly_comparable<iterator_t<Rng>, V const *, C, P>)
+            -> safe_subrange_t<Rng>
         {
             if(cnt <= 0)
                 return subrange<iterator_t<Rng>>{begin(rng), begin(rng)};

@@ -34,21 +34,21 @@ namespace ranges
     RANGES_FUNC_BEGIN(contains)
 
         /// \brief function template \c contains
-        template<typename I, typename S, typename T, typename P = identity>
+        CPP_template(typename I, typename S, typename T, typename P = identity)( //
+            requires input_iterator<I> && sentinel_for<S, I>  && //
+            indirect_relation<equal_to, projected<I, P>, const T *>) //
         constexpr auto RANGES_FUNC(contains)(I first, S last, const T & val, P proj = {})
-            ->CPP_ret(bool)( //
-                requires input_iterator<I> && sentinel_for<S, I> &&
-                indirect_relation<equal_to, projected<I, P>, const T *>)
+            -> bool
         {
             return find(std::move(first), last, val, std::move(proj)) != last;
         }
 
         /// \overload
-        template<typename Rng, typename T, typename P = identity>
+        CPP_template(typename Rng, typename T, typename P = identity)( //
+            requires input_range<Rng>  && //
+            indirect_relation<equal_to, projected<iterator_t<Rng>, P>, const T *>) //
         constexpr auto RANGES_FUNC(contains)(Rng && rng, const T & val, P proj = {})
-            ->CPP_ret(bool)( //
-                requires input_range<Rng> &&
-                indirect_relation<equal_to, projected<iterator_t<Rng>, P>, const T *>)
+            -> bool
         {
             return (*this)(begin(rng), end(rng), val, std::move(proj));
         }

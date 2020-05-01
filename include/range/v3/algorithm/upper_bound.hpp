@@ -35,16 +35,16 @@ namespace ranges
     RANGES_FUNC_BEGIN(upper_bound)
 
         /// \brief function template \c upper_bound
-        template<typename I,
+        CPP_template(typename I,
                  typename S,
                  typename V,
                  typename C = less,
-                 typename P = identity>
+                 typename P = identity)( //
+            requires forward_iterator<I> && sentinel_for<S, I> &&
+                indirect_strict_weak_order<C, V const *, projected<I, P>>) //
         auto RANGES_FUNC(upper_bound)(
             I first, S last, V const & val, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(I)(                                               //
-                requires forward_iterator<I> && sentinel_for<S, I> &&
-                indirect_strict_weak_order<C, V const *, projected<I, P>>)
+            -> I
         {
             return partition_point(std::move(first),
                                    std::move(last),
@@ -53,12 +53,12 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename V, typename C = less, typename P = identity>
+        CPP_template(typename Rng, typename V, typename C = less, typename P = identity)( //
+            requires forward_range<Rng> &&
+                indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(upper_bound)(
             Rng && rng, V const & val, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                       //
-                requires forward_range<Rng> &&
-                indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
+            -> safe_iterator_t<Rng>
         {
             return partition_point(
                 rng, detail::make_upper_bound_predicate(pred, val), std::move(proj));

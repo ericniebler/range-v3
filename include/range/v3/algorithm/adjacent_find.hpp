@@ -38,11 +38,11 @@ namespace ranges
         ///
         /// \pre `Rng` is a model of the `range` concept
         /// \pre `C` is a model of the `BinaryPredicate` concept
-        template<typename I, typename S, typename C = equal_to, typename P = identity>
+        CPP_template(typename I, typename S, typename C = equal_to, typename P = identity)( //
+            requires forward_iterator<I> && sentinel_for<S, I>  && //
+            indirect_relation<C, projected<I, P>>) //
         auto RANGES_FUNC(adjacent_find)(I first, S last, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(I)(                                                            //
-                requires forward_iterator<I> && sentinel_for<S, I> &&
-                indirect_relation<C, projected<I, P>>)
+            -> I
         {
             if(first == last)
                 return first;
@@ -54,11 +54,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C = equal_to, typename P = identity>
+        CPP_template(typename Rng, typename C = equal_to, typename P = identity)( //
+            requires forward_range<Rng>  && //
+            indirect_relation<C, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(adjacent_find)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                    //
-                requires forward_range<Rng> &&
-                indirect_relation<C, projected<iterator_t<Rng>, P>>)
+            -> safe_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

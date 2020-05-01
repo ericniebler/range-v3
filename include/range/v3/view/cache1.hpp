@@ -54,7 +54,7 @@ namespace ranges
         }
         CPP_member
         auto update_(range_reference_t<Rng> && val) -> CPP_ret(void)(
-            requires(!assignable_from<range_value_t<Rng> &, range_reference_t<Rng>>))
+            requires (!assignable_from<range_value_t<Rng> &, range_reference_t<Rng>>))
         {
             cache_.emplace(static_cast<range_reference_t<Rng> &&>(val));
         }
@@ -172,11 +172,11 @@ namespace ranges
             /// recomputation. This can be useful in adaptor pipelines that include
             /// combinations of \c view::filter and \c view::transform, for instance.
             /// \note \c views::cache1 is always single-pass.
-            template<typename Rng>
+            CPP_template(typename Rng)( //
+                requires viewable_range<Rng> && input_range<Rng>  && //
+                    constructible_from<range_value_t<Rng>, range_reference_t<Rng>>) //
             constexpr auto operator()(Rng && rng) const //
-                -> CPP_ret(cache1_view<all_t<Rng>>)(    //
-                    requires viewable_range<Rng> && input_range<Rng> &&
-                        constructible_from<range_value_t<Rng>, range_reference_t<Rng>>)
+                -> cache1_view<all_t<Rng>>
             {
                 return cache1_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

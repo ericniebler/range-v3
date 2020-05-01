@@ -77,9 +77,9 @@ namespace ranges
 
         struct _advance_
         {
-            template<typename I, typename Diff>
-            auto operator()(I & i, Diff n) const -> CPP_ret(void)( //
-                requires input_or_output_iterator<I> && integer_like_<Diff>)
+            CPP_template(typename I, typename Diff)( //
+                requires input_or_output_iterator<I> && integer_like_<Diff>) //
+            auto operator()(I & i, Diff n) const -> void
             {
                 advance(i, static_cast<iter_difference_t<I>>(n));
             }
@@ -312,17 +312,17 @@ namespace ranges
         {
             return {fun_, tuple_transform(rngs_, ranges::end)};
         }
-        template<bool Const = true>
-        auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
+        CPP_template(bool Const = true)( //
             requires Const && and_v<range<Rngs const>...> &&
-                views::zippable_with<Fun, meta::if_c<Const, Rngs const>...>)
+                views::zippable_with<Fun, meta::if_c<Const, Rngs const>...>) //
+        auto begin_cursor() const -> cursor<Const>
         {
             return {fun_, tuple_transform(rngs_, ranges::begin)};
         }
-        template<bool Const = true>
-        auto end_cursor() const -> CPP_ret(end_cursor_t<Const>)( //
+        CPP_template(bool Const = true)( //
             requires Const && and_v<range<Rngs const>...> &&
-                views::zippable_with<Fun, meta::if_c<Const, Rngs const>...>)
+                views::zippable_with<Fun, meta::if_c<Const, Rngs const>...>) //
+        auto end_cursor() const -> end_cursor_t<Const>
         {
             return {fun_, tuple_transform(rngs_, ranges::end)};
         }
@@ -378,20 +378,20 @@ namespace ranges
     {
         struct iter_zip_with_fn
         {
-            template<typename... Rngs, typename Fun>
-            auto operator()(Fun fun, Rngs &&... rngs) const -> CPP_ret(
-                iter_zip_with_view<Fun, all_t<Rngs>...>)( //
+            CPP_template(typename... Rngs, typename Fun)( //
                 requires and_v<viewable_range<Rngs>...> && zippable_with<Fun, Rngs...> &&
-                (sizeof...(Rngs) != 0))
+                (sizeof...(Rngs) != 0)) //
+            auto operator()(Fun fun, Rngs &&... rngs) const ->
+                iter_zip_with_view<Fun, all_t<Rngs>...>
             {
                 return iter_zip_with_view<Fun, all_t<Rngs>...>{
                     std::move(fun), all(static_cast<Rngs &&>(rngs))...};
             }
 
-            template<typename Fun>
+            CPP_template(typename Fun)( //
+                requires zippable_with<Fun>) //
             constexpr auto operator()(Fun) const noexcept
-                -> CPP_ret(empty_view<std::tuple<>>)( //
-                    requires zippable_with<Fun>)
+                -> empty_view<std::tuple<>>
             {
                 return {};
             }
@@ -403,22 +403,22 @@ namespace ranges
 
         struct zip_with_fn
         {
-            template<typename... Rngs, typename Fun>
-            auto operator()(Fun fun, Rngs &&... rngs) const
-                -> CPP_ret(zip_with_view<Fun, all_t<Rngs>...>)( //
-                    requires and_v<viewable_range<Rngs>...> &&
+            CPP_template(typename... Rngs, typename Fun)( //
+                requires and_v<viewable_range<Rngs>...> &&
                         and_v<input_range<Rngs>...> && copy_constructible<Fun> &&
                             invocable<Fun &, range_reference_t<Rngs>...> &&
-                    (sizeof...(Rngs) != 0))
+                    (sizeof...(Rngs) != 0)) //
+            auto operator()(Fun fun, Rngs &&... rngs) const
+                -> zip_with_view<Fun, all_t<Rngs>...>
             {
                 return zip_with_view<Fun, all_t<Rngs>...>{
                     std::move(fun), all(static_cast<Rngs &&>(rngs))...};
             }
 
-            template<typename Fun>
+            CPP_template(typename Fun)( //
+                requires copy_constructible<Fun> && invocable<Fun &>) //
             constexpr auto operator()(Fun) const noexcept
-                -> CPP_ret(empty_view<std::tuple<>>)( //
-                    requires copy_constructible<Fun> && invocable<Fun &>)
+                -> empty_view<std::tuple<>>
             {
                 return {};
             }

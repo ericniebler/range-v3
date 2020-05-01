@@ -48,9 +48,9 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        template<typename To, typename From>
-        constexpr auto narrow_cast(From from) noexcept -> CPP_ret(To)( //
-            requires integral<To> && integral<From>)
+        CPP_template(typename To, typename From)( //
+            requires integral<To> && integral<From>) //
+        constexpr auto narrow_cast(From from) noexcept -> To
         {
             using C = common_type_t<To, From>;
             return RANGES_EXPECT((from > 0) == (static_cast<To>(from) > 0)),
@@ -183,7 +183,7 @@ namespace ranges
         {}
 
         CPP_template(typename Rng)( //
-            requires(!defer::same_as<span, uncvref_t<Rng>>) &&
+            requires (!defer::same_as<span, uncvref_t<Rng>>) &&
             defer::span_compatible_range<Rng, T> &&
             defer::span_dynamic_conversion<Rng, N>) //
             constexpr span(Rng && rng) noexcept(noexcept(ranges::data(rng),
@@ -192,7 +192,7 @@ namespace ranges
         {}
 
         CPP_template(typename Rng)( //
-            requires(!defer::same_as<span, uncvref_t<Rng>>) &&
+            requires (!defer::same_as<span, uncvref_t<Rng>>) &&
             defer::span_compatible_range<Rng, T> &&
             defer::span_static_conversion<Rng, N>) //
             constexpr span(Rng && rng) noexcept(noexcept(ranges::data(rng)))
@@ -319,44 +319,44 @@ namespace ranges
             return reverse_iterator{begin()};
         }
 
-        template<typename U, index_type M>
-        auto operator==(span<U, M> const & that) const -> CPP_ret(bool)( //
-            requires equality_comparable_with<T, U>)
+        CPP_template(typename U, index_type M)( //
+            requires equality_comparable_with<T, U>) //
+        auto operator==(span<U, M> const & that) const -> bool
         {
             RANGES_EXPECT(!size() || data());
             RANGES_EXPECT(!that.size() || that.data());
             return ranges::equal(*this, that);
         }
-        template<typename U, index_type M>
-        auto operator!=(span<U, M> const & that) const -> CPP_ret(bool)( //
-            requires equality_comparable_with<T, U>)
+        CPP_template(typename U, index_type M)( //
+            requires equality_comparable_with<T, U>) //
+        auto operator!=(span<U, M> const & that) const -> bool
         {
             return !(*this == that);
         }
 
-        template<typename U, index_type M>
-        auto operator<(span<U, M> const & that) const -> CPP_ret(bool)( //
-            requires totally_ordered_with<T, U>)
+        CPP_template(typename U, index_type M)( //
+            requires totally_ordered_with<T, U>) //
+        auto operator<(span<U, M> const & that) const -> bool
         {
             RANGES_EXPECT(!size() || data());
             RANGES_EXPECT(!that.size() || that.data());
             return ranges::lexicographical_compare(*this, that);
         }
-        template<typename U, index_type M>
-        auto operator>(span<U, M> const & that) const -> CPP_ret(bool)( //
-            requires totally_ordered_with<T, U>)
+        CPP_template(typename U, index_type M)( //
+            requires totally_ordered_with<T, U>) //
+        auto operator>(span<U, M> const & that) const -> bool
         {
             return that < *this;
         }
-        template<typename U, index_type M>
-        auto operator<=(span<U, M> const & that) const -> CPP_ret(bool)( //
-            requires totally_ordered_with<T, U>)
+        CPP_template(typename U, index_type M)( //
+            requires totally_ordered_with<T, U>) //
+        auto operator<=(span<U, M> const & that) const -> bool
         {
             return !(that < *this);
         }
-        template<typename U, index_type M>
-        auto operator>=(span<U, M> const & that) const -> CPP_ret(bool)( //
-            requires totally_ordered_with<T, U>)
+        CPP_template(typename U, index_type M)( //
+            requires totally_ordered_with<T, U>) //
+        auto operator>=(span<U, M> const & that) const -> bool
         {
             return !(*this < that);
         }

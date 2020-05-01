@@ -43,19 +43,19 @@ namespace ranges
     RANGES_FUNC_BEGIN(partition_copy)
 
         /// \brief function template \c partition_copy
-        template<typename I,
+        CPP_template(typename I,
                  typename S,
                  typename O0,
                  typename O1,
                  typename C,
-                 typename P = identity>
-        auto RANGES_FUNC(partition_copy)(
-            I first, S last, O0 o0, O1 o1, C pred, P proj = P{})
-            ->CPP_ret(partition_copy_result<I, O0, O1>)( //
-                requires input_iterator<I> && sentinel_for<S, I> &&
+                 typename P = identity)( //
+            requires input_iterator<I> && sentinel_for<S, I> &&
                 weakly_incrementable<O0> && weakly_incrementable<O1> &&
                 indirectly_copyable<I, O0> && indirectly_copyable<I, O1> &&
-                indirect_unary_predicate<C, projected<I, P>>)
+                indirect_unary_predicate<C, projected<I, P>>) //
+        auto RANGES_FUNC(partition_copy)(
+            I first, S last, O0 o0, O1 o1, C pred, P proj = P{})
+            -> partition_copy_result<I, O0, O1>
         {
             for(; first != last; ++first)
             {
@@ -75,18 +75,18 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng,
+        CPP_template(typename Rng,
                  typename O0,
                  typename O1,
                  typename C,
-                 typename P = identity>
-        auto RANGES_FUNC(partition_copy)(
-            Rng && rng, O0 o0, O1 o1, C pred, P proj = P{})                 //
-            ->CPP_ret(partition_copy_result<safe_iterator_t<Rng>, O0, O1>)( //
-                requires input_range<Rng> && weakly_incrementable<O0> &&
+                 typename P = identity)( //
+            requires input_range<Rng> && weakly_incrementable<O0> &&
                 weakly_incrementable<O1> && indirectly_copyable<iterator_t<Rng>, O0> &&
                 indirectly_copyable<iterator_t<Rng>, O1> &&
-                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
+                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>) //
+        auto RANGES_FUNC(partition_copy)(
+            Rng && rng, O0 o0, O1 o1, C pred, P proj = P{})                 //
+            -> partition_copy_result<safe_iterator_t<Rng>, O0, O1>
         {
             return (*this)(begin(rng),
                            end(rng),

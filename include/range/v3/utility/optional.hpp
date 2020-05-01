@@ -214,10 +214,10 @@ namespace ranges
                 }
 
             protected:
-                template<typename... Args>
+                CPP_template(typename... Args)( //
+                    requires constructible_from<T, Args...>) //
                 auto construct_from(Args &&... args) noexcept(
-                    std::is_nothrow_constructible<T, Args...>::value) -> CPP_ret(T &)( //
-                    requires constructible_from<T, Args...>)
+                    std::is_nothrow_constructible<T, Args...>::value) -> T &
                 {
                     RANGES_EXPECT(!engaged_);
                     auto const address = static_cast<void *>(std::addressof(data_));
@@ -310,9 +310,9 @@ namespace ranges
                 }
 
             protected:
-                template<typename U>
-                constexpr auto construct_from(U && ref) noexcept -> CPP_ret(T &)( //
-                    requires convertible_to<U &, T &>)
+                CPP_template(typename U)( //
+                    requires convertible_to<U &, T &>) //
+                constexpr auto construct_from(U && ref) noexcept -> T &
                 {
                     RANGES_EXPECT(!ptr_);
                     ptr_ = detail::addressof(ref);
@@ -515,7 +515,7 @@ namespace ranges
 
         template<typename U = T>
         constexpr CPP_ctor(optional)(U && v)( //
-            requires(!defer::same_as<detail::decay_t<U>, in_place_t>) &&
+            requires (!defer::same_as<detail::decay_t<U>, in_place_t>) &&
             (!defer::same_as<detail::decay_t<U>,
                              optional>)&&defer::constructible_from<T, U> &&
             defer::convertible_to<U, T>)
@@ -523,7 +523,7 @@ namespace ranges
         {}
         template<typename U = T>
         explicit constexpr CPP_ctor(optional)(U && v)( //
-            requires(!defer::same_as<detail::decay_t<U>, in_place_t>) &&
+            requires (!defer::same_as<detail::decay_t<U>, in_place_t>) &&
             (!defer::same_as<detail::decay_t<U>,
                              optional>)&&defer::constructible_from<T, U> &&
             (!defer::convertible_to<U, T>))
@@ -573,14 +573,14 @@ namespace ranges
         optional & operator=(optional const &) = default;
         optional & operator=(optional &&) = default;
 
-        template<typename U = T>
-        constexpr auto operator=(U && u) noexcept(
-            std::is_nothrow_constructible<T, U>::value &&
-                std::is_nothrow_assignable<T &, U>::value) -> CPP_ret(optional &)( //
-            requires(!defer::same_as<optional, detail::decay_t<U>>) &&
+        CPP_template(typename U = T)( //
+            requires (!defer::same_as<optional, detail::decay_t<U>>) &&
             (!(defer::satisfies<T, std::is_scalar> &&
                defer::same_as<T, detail::decay_t<U>>)) &&
-            defer::constructible_from<T, U> && defer::assignable_from<T &, U>)
+            defer::constructible_from<T, U> && defer::assignable_from<T &, U>) //
+        constexpr auto operator=(U && u) noexcept(
+            std::is_nothrow_constructible<T, U>::value &&
+                std::is_nothrow_assignable<T &, U>::value) -> optional &
         {
             if(has_value())
                 **this = static_cast<U &&>(u);
@@ -589,37 +589,37 @@ namespace ranges
             return *this;
         }
 
-        template<typename U>
-        constexpr auto operator=(optional<U> const & that) -> CPP_ret(optional &)( //
+        CPP_template(typename U)( //
             requires optional_should_convert_assign<U, T> &&
-                constructible_from<T, const U &> && assignable_from<T &, const U &>)
+                constructible_from<T, const U &> && assignable_from<T &, const U &>) //
+        constexpr auto operator=(optional<U> const & that) -> optional &
         {
             base_t::assign_from(that);
             return *this;
         }
 
-        template<typename U>
-        constexpr auto operator=(optional<U> && that) -> CPP_ret(optional &)( //
+        CPP_template(typename U)( //
             requires optional_should_convert_assign<U, T> && constructible_from<T, U> &&
-                assignable_from<T &, U>)
+                assignable_from<T &, U>) //
+        constexpr auto operator=(optional<U> && that) -> optional &
         {
             base_t::assign_from(std::move(that));
             return *this;
         }
 
-        template<typename... Args>
+        CPP_template(typename... Args)( //
+            requires constructible_from<T, Args...>) //
         auto emplace(Args &&... args) noexcept(
-            std::is_nothrow_constructible<T, Args...>::value) -> CPP_ret(T &)( //
-            requires constructible_from<T, Args...>)
+            std::is_nothrow_constructible<T, Args...>::value) -> T &
         {
             reset();
             return base_t::construct_from(static_cast<Args &&>(args)...);
         }
-        template<typename E, typename... Args>
+        CPP_template(typename E, typename... Args)( //
+            requires constructible_from<T, std::initializer_list<E> &, Args &&...>) //
         auto emplace(std::initializer_list<E> il, Args &&... args) noexcept(
             std::is_nothrow_constructible<T, std::initializer_list<E> &, Args...>::value)
-            -> CPP_ret(T &)( //
-                requires constructible_from<T, std::initializer_list<E> &, Args &&...>)
+            -> T &
         {
             reset();
             return base_t::construct_from(il, static_cast<Args &&>(args)...);

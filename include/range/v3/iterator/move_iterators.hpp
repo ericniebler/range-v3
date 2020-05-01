@@ -51,9 +51,9 @@ namespace ranges
             requires convertible_to<O, I>)
           : current_(i.base())
         {}
-        template<typename O>
-        auto operator=(move_iterator<O> const & i) -> CPP_ret(move_iterator &)( //
-            requires convertible_to<O, I>)
+        CPP_template(typename O)( //
+            requires convertible_to<O, I>) //
+        auto operator=(move_iterator<O> const & i) -> move_iterator &
         {
             current_ = i.base();
             return *this;
@@ -76,7 +76,7 @@ namespace ranges
         }
         CPP_member
         auto operator++(int) -> CPP_ret(void)( //
-            requires(!forward_iterator<I>))
+            requires (!forward_iterator<I>))
         {
             ++current_;
         }
@@ -194,9 +194,9 @@ namespace ranges
 
     struct make_move_iterator_fn
     {
-        template<typename I>
-        constexpr auto operator()(I it) const -> CPP_ret(move_iterator<I>)( //
-            requires input_iterator<I>)
+        CPP_template(typename I)( //
+            requires input_iterator<I>) //
+        constexpr auto operator()(I it) const -> move_iterator<I>
         {
             return move_iterator<I>{detail::move(it)};
         }
@@ -222,9 +222,9 @@ namespace ranges
             requires convertible_to<OS, S>)
           : sent_(that.base())
         {}
-        template<typename OS>
-        auto operator=(move_sentinel<OS> const & that) -> CPP_ret(move_sentinel &)( //
-            requires convertible_to<OS, S>)
+        CPP_template(typename OS)( //
+            requires convertible_to<OS, S>) //
+        auto operator=(move_sentinel<OS> const & that) -> move_sentinel &
         {
             sent_ = that.base();
             return *this;
@@ -266,16 +266,16 @@ namespace ranges
 
     struct make_move_sentinel_fn
     {
-        template<typename I>
-        constexpr auto operator()(I i) const -> CPP_ret(move_iterator<I>)( //
-            requires input_iterator<I>)
+        CPP_template(typename I)( //
+            requires input_iterator<I>) //
+        constexpr auto operator()(I i) const -> move_iterator<I>
         {
             return move_iterator<I>{detail::move(i)};
         }
 
-        template<typename S>
-        constexpr auto operator()(S s) const -> CPP_ret(move_sentinel<S>)( //
-            requires semiregular<S> && (!input_iterator<S>))
+        CPP_template(typename S)( //
+            requires semiregular<S> && (!input_iterator<S>)) //
+        constexpr auto operator()(S s) const -> move_sentinel<S>
         {
             return move_sentinel<S>{detail::move(s)};
         }
@@ -336,17 +336,17 @@ namespace ranges
             {
                 ++it_;
             }
-            template<typename T>
+            CPP_template(typename T)( //
+                requires writable<I, aux::move_t<T>>) //
             auto write(T && t) noexcept(noexcept(*it_ = std::move(t)))
-                -> CPP_ret(void)( //
-                    requires writable<I, aux::move_t<T>>)
+                -> void
             {
                 *it_ = std::move(t);
             }
-            template<typename T>
+            CPP_template(typename T)( //
+                requires writable<I, aux::move_t<T>>) //
             auto write(T && t) const noexcept(noexcept(*it_ = std::move(t)))
-                -> CPP_ret(void)( //
-                    requires writable<I, aux::move_t<T>>)
+                -> void
             {
                 *it_ = std::move(t);
             }
@@ -382,10 +382,10 @@ namespace ranges
             {
                 return that.it_ - it_;
             }
-            template<typename II = I const>
+            CPP_template(typename II = I const)( //
+                requires same_as<I const, II> && readable<II>) //
             constexpr auto move() const noexcept(has_nothrow_iter_move_v<II>)
-                -> CPP_ret(iter_rvalue_reference_t<II>)( //
-                    requires same_as<I const, II> && readable<II>)
+                -> iter_rvalue_reference_t<II>
             {
                 return iter_move(it_);
             }

@@ -45,11 +45,11 @@ namespace ranges
         ///      value type of I.
         /// \pre `F` models `predicate<X>`, where `X` is the result type
         ///      of `invocable<P, V>`
-        template<typename I, typename S, typename F, typename P = identity>
+        CPP_template(typename I, typename S, typename F, typename P = identity)( //
+            requires input_iterator<I> && sentinel_for<S, I>  && //
+            indirect_unary_predicate<F, projected<I, P>>) //
         auto RANGES_FUNC(find_if_not)(I first, S last, F pred, P proj = P{}) //
-            ->CPP_ret(I)(                                                    //
-                requires input_iterator<I> && sentinel_for<S, I> &&
-                indirect_unary_predicate<F, projected<I, P>>)
+            -> I
         {
             for(; first != last; ++first)
                 if(!invoke(pred, invoke(proj, *first)))
@@ -58,11 +58,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename F, typename P = identity>
+        CPP_template(typename Rng, typename F, typename P = identity)( //
+            requires input_range<Rng>  && //
+            indirect_unary_predicate<F, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(find_if_not)(Rng && rng, F pred, P proj = P{})
-            ->CPP_ret(safe_iterator_t<Rng>)( //
-                requires input_range<Rng> &&
-                indirect_unary_predicate<F, projected<iterator_t<Rng>, P>>)
+            -> safe_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
