@@ -934,6 +934,59 @@ namespace concepts
     {};
 } // namespace concepts
 
+#if RANGES_CXX_VER > RANGES_CXX_STD_17
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
+RANGES_BEGIN_NAMESPACE_STD
+RANGES_BEGIN_NAMESPACE_VERSION
+    template<typename, typename, template <typename> class, template<typename> class>
+    struct basic_common_reference;
+
+    // common_reference specializations for basic_proxy_reference
+    template<typename Cur, typename U, template<typename> class TQual,
+             template<typename> class UQual>
+    struct basic_common_reference<::ranges::detail::basic_proxy_reference_<Cur, true>, U,
+                                  TQual, UQual>
+      : basic_common_reference<::ranges::detail::cursor_reference_t<Cur>, U, TQual, UQual>
+    {};
+    template<typename T, typename Cur, template<typename> class TQual,
+             template<typename> class UQual>
+    struct basic_common_reference<T, ::ranges::detail::basic_proxy_reference_<Cur, true>,
+                                  TQual, UQual>
+      : basic_common_reference<T, ::ranges::detail::cursor_reference_t<Cur>, TQual, UQual>
+    {};
+    template<typename Cur1, typename Cur2, template<typename> class TQual,
+             template<typename> class UQual>
+    struct basic_common_reference<::ranges::detail::basic_proxy_reference_<Cur1, true>,
+                                  ::ranges::detail::basic_proxy_reference_<Cur2, true>,
+                                  TQual, UQual>
+      : basic_common_reference<::ranges::detail::cursor_reference_t<Cur1>,
+                               ::ranges::detail::cursor_reference_t<Cur2>, TQual, UQual>
+    {};
+
+    template<typename...>
+    struct common_type;
+
+    // common_type specializations for basic_proxy_reference
+    template<typename Cur, typename U>
+    struct common_type<::ranges::detail::basic_proxy_reference_<Cur, true>, U>
+      : common_type<::ranges::range_access::cursor_value_t<Cur>, U>
+    {};
+    template<typename T, typename Cur>
+    struct common_type<T, ::ranges::detail::basic_proxy_reference_<Cur, true>>
+      : common_type<T, ::ranges::range_access::cursor_value_t<Cur>>
+    {};
+    template<typename Cur1, typename Cur2>
+    struct common_type<::ranges::detail::basic_proxy_reference_<Cur1, true>,
+                       ::ranges::detail::basic_proxy_reference_<Cur2, true>>
+      : common_type<::ranges::range_access::cursor_value_t<Cur1>,
+                    ::ranges::range_access::cursor_value_t<Cur2>>
+    {};
+RANGES_END_NAMESPACE_VERSION
+RANGES_END_NAMESPACE_STD
+RANGES_DIAGNOSTIC_POP
+#endif // RANGES_CXX_VER > RANGES_CXX_STD_17
+
 namespace ranges
 {
     /// \cond

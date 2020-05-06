@@ -9,6 +9,7 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <algorithm>
 #include <memory>
 #include <sstream>
 #include <string>
@@ -32,6 +33,21 @@
 #include <range/v3/view/zip_with.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
+
+#if defined(__cpp_lib_ranges) && __cpp_lib_ranges >= 201911
+// See https://github.com/ericniebler/range-v3/issues/1480
+void test_bug1480()
+{
+    std::vector<char> const first{};
+    std::vector<char> const second{};
+
+    auto zip_view = ::ranges::views::zip(first, second);
+    auto fn = [&] ([[maybe_unused]] auto && ch)
+    {
+    };
+    std::ranges::for_each(zip_view, fn);
+}
+#endif
 
 int main()
 {
