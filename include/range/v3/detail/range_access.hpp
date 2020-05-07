@@ -337,15 +337,20 @@ namespace ranges
             bidirectional_cursor<T> && //
             sized_sentinel_for_cursor<T, T> && //
             CPP_fragment(detail::random_access_cursor_, T);
+        template<class T>
+        auto is_lvalue_reference(T&&)
+            -> CPP_ret(void)(requires std::is_lvalue_reference<T>::value);
         template<typename T>
-        CPP_concept_bool contiguous_cursor_ = 
-        std::is_lvalue_reference<
-                    decltype(range_access::read(std::declval<T&>()))>::value;
+        CPP_concept_fragment(contiguous_cursor_,
+            requires(T & t) //
+            (
+                detail::is_lvalue_reference(range_access::read(t))
+            ));
         template<typename T>
         CPP_concept_bool contiguous_cursor =
             random_access_cursor<T> && //
             range_access::contiguous_t<uncvref_t<T>>::value && //
-            detail::contiguous_cursor_<T>;
+            CPP_fragment(detail::contiguous_cursor_, T);
         // clang-format on
 
         template<typename Cur, bool IsReadable>
