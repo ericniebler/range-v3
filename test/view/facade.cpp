@@ -26,6 +26,7 @@ private:
     private:
         std::vector<int>::const_iterator iter;
     public:
+        using contiguous = std::true_type;
         cursor() = default;
         cursor(std::vector<int>::const_iterator it)
           : iter(it)
@@ -72,18 +73,37 @@ public:
 int main()
 {
     using namespace ranges;
-    auto r = MyRange{};
-    CPP_assert(view_<decltype(r)>);
-    CPP_assert(common_range<decltype(r)>);
-    CPP_assert(sized_range<decltype(r)>);
-    CPP_assert(random_access_range<decltype(r)>);
-    ::check_equal(r, {1, 2, 3, 4, 5, 6, 7});
+    {
+        auto r = MyRange{};
+        CPP_assert(view_<decltype(r)>);
+        CPP_assert(common_range<decltype(r)>);
+        CPP_assert(sized_range<decltype(r)>);
+        CPP_assert(contiguous_range<decltype(r)>);
+        ::check_equal(r, {1, 2, 3, 4, 5, 6, 7});
 
-    CHECK(7u == r.size());
-    CHECK(1 == r.front());
-    CHECK(7 == r.back());
-    CHECK(r[1] == 2);
-    CHECK(r[5] == 6);
+        CHECK(7u == r.size());
+        CHECK(1 == r.front());
+        CHECK(7 == r.back());
+        CHECK(&*r.begin() == r.data());
+        CHECK(r[1] == 2);
+        CHECK(r[5] == 6);
+    }
+
+    {
+        const auto r = MyRange{};
+        CPP_assert(common_range<decltype(r)>);
+        CPP_assert(sized_range<decltype(r)>);
+        CPP_assert(random_access_range<decltype(r)>);
+        CPP_assert(contiguous_range<decltype(r)>);
+        ::check_equal(r, {1, 2, 3, 4, 5, 6, 7});
+
+        CHECK(7u == r.size());
+        CHECK(1 == r.front());
+        CHECK(7 == r.back());
+        CHECK(&*r.begin() == r.data());
+        CHECK(r[1] == 2);
+        CHECK(r[5] == 6);
+    }
 
     return test_result();
 }

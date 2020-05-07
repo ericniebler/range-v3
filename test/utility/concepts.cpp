@@ -238,6 +238,9 @@ static_assert(!ranges::bidirectional_iterator<int>, "");
 static_assert(ranges::random_access_iterator<int*>, "");
 static_assert(!ranges::random_access_iterator<int>, "");
 
+static_assert(ranges::contiguous_iterator<int*>, "");
+static_assert(!ranges::contiguous_iterator<int>, "");
+
 static_assert(ranges::view_<ranges::istream_view<int>>, "");
 static_assert(ranges::input_iterator<ranges::iterator_t<ranges::istream_view<int>>>, "");
 static_assert(!ranges::view_<int>, "");
