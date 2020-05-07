@@ -289,7 +289,8 @@ namespace ranges
         {
             return derived().begin()[n];
         }
-        /// Simple indexing:
+        /// Returns a pointer to the block of memory 
+        /// containing the elements of a contiguous range:
         template<bool True = true>
         constexpr auto data()
             -> CPP_ret(std::add_pointer_t<range_reference_t<D<True>>>)( //
