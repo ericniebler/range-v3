@@ -83,7 +83,6 @@ int main()
         using cur = decltype(range_access::begin_cursor(r));
         cur c{};
         CPP_assert(std::is_lvalue_reference< decltype(range_access::read(c))>::value);
-        CPP_assert(detail::contiguous_cursor_<cur>);
         CPP_assert(detail::contiguous_cursor<cur>);
         CPP_assert(contiguous_iterator<it>);
         CPP_assert(contiguous_range<decltype(r)>);
