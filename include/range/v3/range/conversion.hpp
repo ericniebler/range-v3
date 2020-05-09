@@ -189,20 +189,12 @@ namespace ranges
             enable_if_t<(bool)range<Rng>, to_container_iterator<Rng, Cont>>;
 
         // clang-format off
-        template<typename Cont>
-        CPP_concept_fragment(has_allocator_type_, requires()(0) &&
-            ranges::type<typename Cont::allocator_type>
-        );
-        template<typename Cont>
-        CPP_concept_bool has_allocator_type =
-            CPP_fragment(detail::has_allocator_type_, Cont);
-
         template<typename Rng>
         CPP_concept_bool range_and_not_view =
             ranges::defer::range<Rng> && !ranges::defer::view_<Rng>;
 
         template<typename Rng, typename Cont>
-        CPP_concept_fragment(convertible_to_cont_impl_frag_, requires()(0) &&
+        CPP_concept_fragment(convertible_to_cont_impl_, requires()(0) &&
             constructible_from<range_value_t<Cont>, range_reference_t<Rng>> &&
             constructible_from<
                 Cont,
@@ -210,52 +202,30 @@ namespace ranges
                 range_cpp17_iterator_t<Rng>>
         );
         template<typename Rng, typename Cont>
-        CPP_concept_bool convertible_to_cont_impl_ =
-            range_and_not_view<Cont> && move_constructible<Cont> &&
-            CPP_fragment(detail::convertible_to_cont_impl_frag_, Rng, Cont);
+        CPP_concept_bool convertible_to_cont = //
+            range_and_not_view<Cont> && //
+            move_constructible<Cont> && //
+            CPP_fragment(detail::convertible_to_cont_impl_, Rng, Cont);
 
         template<typename Rng, typename Cont>
-        CPP_concept_fragment(convertible_to_cont_cont_impl_frag_, requires()(0) &&
-                range_and_not_view<range_value_t<Cont>> &&
-                // Test that each element of the input range can be ranges::to<>
-                // to the output container.
-                invocable<
-                    to_container::fn<meta::id<range_value_t<Cont>>>,
-                    range_reference_t<Rng>> &&
-                constructible_from<
-                    Cont,
-                    to_container_iterator_t<Rng, Cont>,
-                    to_container_iterator_t<Rng, Cont>>
+        CPP_concept_fragment(convertible_to_cont_cont_impl_, requires()(0) &&
+            range_and_not_view<range_value_t<Cont>> &&
+            // Test that each element of the input range can be ranges::to<>
+            // to the output container.
+            invocable<
+                to_container::fn<meta::id<range_value_t<Cont>>>,
+                range_reference_t<Rng>> &&
+            constructible_from<
+                Cont,
+                to_container_iterator_t<Rng, Cont>,
+                to_container_iterator_t<Rng, Cont>>
         );
         template<typename Rng, typename Cont>
-        CPP_concept_bool convertible_to_cont_cont_impl_ =
-            range<Cont> && (!view_<Cont>) && move_constructible<Cont> &&
-            CPP_fragment(detail::convertible_to_cont_cont_impl_frag_, Rng, Cont);
-
-        namespace defer
-        {
-            template<typename Cont>
-            CPP_concept has_allocator_type =
-                CPP_defer(detail::has_allocator_type, Cont);
-
-            template<typename Rng, typename Cont>
-            CPP_concept convertible_to_cont_impl_ =
-                CPP_defer(detail::convertible_to_cont_impl_, Rng, Cont);
-
-            template<typename Rng, typename Cont>
-            CPP_concept convertible_to_cont_cont_impl_ =
-                CPP_defer(detail::convertible_to_cont_cont_impl_, Rng, Cont);
-        }
-
-        template<typename Rng, typename Cont>
-        CPP_concept_bool convertible_to_cont =
-            defer::has_allocator_type<Cont> && // HACKHACK
-            defer::convertible_to_cont_impl_<Rng, Cont>;
-
-        template<typename Rng, typename Cont>
-        CPP_concept_bool convertible_to_cont_cont =
-            defer::has_allocator_type<Cont> && // HACKHACK
-            defer::convertible_to_cont_cont_impl_<Rng, Cont>;
+        CPP_concept_bool convertible_to_cont_cont = //
+            range<Cont> && //
+            (!view_<Cont>) && //
+            move_constructible<Cont> && //
+            CPP_fragment(detail::convertible_to_cont_cont_impl_, Rng, Cont);
 
         namespace defer
         {
@@ -269,8 +239,8 @@ namespace ranges
         }
 
         template<typename C, typename I, typename R>
-        CPP_concept_bool to_container_reserve =
-            reservable_with_assign<C, I> &&
+        CPP_concept_bool to_container_reserve = //
+            reservable_with_assign<C, I> && //
             sized_range<R>;
 
         template<typename MetaFn, typename Rng>
@@ -360,9 +330,10 @@ namespace ranges
                 return impl<cont_t, iter_t>(static_cast<Rng &&>(rng), use_reserve_t{});
             }
             template<typename Rng>
-            auto operator()(Rng && rng) const volatile -> CPP_ret(container_t<MetaFn, Rng>)( //
-                requires input_range<Rng> &&                                        //
-                    convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>>)
+            auto operator()(Rng && rng) const volatile //
+                -> CPP_ret(container_t<MetaFn, Rng>)(  //
+                    requires input_range<Rng> &&       //
+                        convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>>)
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Attempt to convert an infinite range to a container.");

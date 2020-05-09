@@ -54,7 +54,7 @@ Supported Compilers
 
 The code is known to work on the following compilers:
 
-- clang 3.9 (or later)
+- clang 4.0 (or later)
 - GCC 6.5 (or later)
 - Clang/LLVM 6 (or later) on Windows (older versions may work - we haven't tested.)
 - Visual Studio 2019 (or later) on Windows, with some caveats due to range-v3's strict conformance requirements:
