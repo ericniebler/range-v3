@@ -37,22 +37,22 @@ matrix:
 
     # The ASAN build in install_libcxx.sh doesn't work for versions < 4
 
-    # clang 3.9 C++17/14 Release libc++
-    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=1z LIBCXX=On
+    # clang 4 C++17/14 Release libc++
+    - env: CLANG_VERSION=4.0 BUILD_TYPE=Release CPP=1z LIBCXX=On
       os: linux
-      addons: &clang39
+      addons: &clang4
         apt:
           packages:
             - util-linux
-            - clang-3.9
+            - clang-4
             - libstdc++-6-dev
             - valgrind
           sources:
             - ubuntu-toolchain-r-test
 
-    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=14 LIBCXX=On HEADERS=On
+    - env: CLANG_VERSION=4.0 BUILD_TYPE=Release CPP=14 LIBCXX=On HEADERS=On
       os: linux
-      addons: *clang39
+      addons: *clang4
 
     # clang 5 C++17/14/1z Debug/Release-ASAN libc++, 17 Debug libstdc++
     - env: CLANG_VERSION=5.0 BUILD_TYPE=Debug CPP=1z LIBCXX=On
