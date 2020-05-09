@@ -40,25 +40,24 @@ namespace ranges
         // MSVC laughs at your silly micro-optimizations and implements
         // conditional_t, enable_if_t, is_object_v, and is_integral_v in the
         // compiler.
-        template<bool B, typename T, typename U>
-        using if_then_t = std::conditional_t<B, T, U>;
+        using std::conditional_t;
         using std::enable_if;
         using std::enable_if_t;
 #else  // ^^^ MSVC / not MSVC vvv
         template<bool>
-        struct if_then
+        struct _cond
         {
             template<typename, typename U>
-            using apply = U;
+            using invoke = U;
         };
         template<>
-        struct if_then<true>
+        struct _cond<true>
         {
             template<typename T, typename>
-            using apply = T;
+            using invoke = T;
         };
         template<bool B, typename T, typename U>
-        using if_then_t = typename if_then<B>::template apply<T, U>;
+        using conditional_t = typename _cond<B>::template invoke<T, U>;
 
         template<bool>
         struct enable_if
@@ -67,10 +66,10 @@ namespace ranges
         struct enable_if<true>
         {
             template<typename T>
-            using apply = T;
+            using invoke = T;
         };
         template<bool B, typename T = void>
-        using enable_if_t = typename enable_if<B>::template apply<T>;
+        using enable_if_t = typename enable_if<B>::template invoke<T>;
 
 #ifndef __clang__
         // NB: insufficient for MSVC, which (non-conformingly) allows function
@@ -146,11 +145,11 @@ namespace ranges
         template<typename T>
         struct incrementable_traits_1_<T *>
 #ifdef __clang__
-          : if_then_t<__is_object(T), with_difference_type_<std::ptrdiff_t>, nil_>
+          : conditional_t<__is_object(T), with_difference_type_<std::ptrdiff_t>, nil_>
 #elif defined(_MSC_VER) && !defined(__EDG__)
-          : std::conditional_t<std::is_object_v<T>, with_difference_type_<std::ptrdiff_t>, nil_>
+          : conditional_t<std::is_object_v<T>, with_difference_type_<std::ptrdiff_t>, nil_>
 #else // ^^^ MSVC / not MSVC vvv
-          : if_then_t<is_object_<T>(0), with_difference_type_<std::ptrdiff_t>, nil_>
+          : conditional_t<is_object_<T>(0), with_difference_type_<std::ptrdiff_t>, nil_>
 #endif // detect MSVC
         {};
 

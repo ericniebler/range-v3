@@ -269,26 +269,27 @@ namespace ranges
             RANGES_EXPECT(static_cast<size_type>(last_() - first_()) == n);
         }
 
-        template<typename R>
-        constexpr CPP_ctor(subrange)(R && r)(
-            requires defer::not_same_as_<R, subrange> &&
-                detail::defer::range_convertible_to_<R, I, S> &&
-                    defer::is_true<!detail::store_size_<K, S, I>()>)
+        CPP_template(typename R)(
+            requires (!same_as<detail::decay_t<R>, subrange>) CPP_and //
+                detail::range_convertible_to_<R, I, S> CPP_and //
+                (!detail::store_size_<K, S, I>()))
+        constexpr subrange(R && r)
           : subrange{ranges::begin(r), ranges::end(r)}
         {}
 
-        template<typename R>
-        constexpr CPP_ctor(subrange)(R && r)(
-            requires defer::not_same_as_<R, subrange> &&
-                detail::defer::range_convertible_to_<R, I, S> && defer::is_true<
-                    detail::store_size_<K, S, I>()> && defer::sized_range<R>)
+        CPP_template(typename R)( //
+            requires (!same_as<detail::decay_t<R>, subrange>) CPP_and //
+                detail::range_convertible_to_<R, I, S> CPP_and //
+                (detail::store_size_<K, S, I>()) CPP_and //
+                sized_range<R>) //
+        constexpr subrange(R && r)
           : subrange{ranges::begin(r), ranges::end(r), ranges::size(r)}
         {}
 
         template<typename R>
         constexpr CPP_ctor(subrange)(R && r, size_type n)(
             requires detail::range_convertible_to_<R, I, S> &&
-            (K == subrange_kind::sized))
+                (K == subrange_kind::sized))
           : subrange{ranges::begin(r), ranges::end(r), n}
         {
             if(RANGES_CONSTEXPR_IF((bool)sized_range<R>))
@@ -298,11 +299,9 @@ namespace ranges
         }
 
         CPP_template(typename PairLike)( //
-            requires defer::not_same_as_<PairLike, subrange> &&
-                detail::defer::pair_like_convertible_from_<PairLike, const I &,
-                                                           const S &>) //
-            constexpr
-            operator PairLike() const
+            requires (!same_as<PairLike, subrange>) CPP_and //
+                detail::pair_like_convertible_from_<PairLike, I const &, S const &>) //
+        constexpr operator PairLike() const
         {
             return PairLike(first_(), last_());
         }
@@ -353,9 +352,12 @@ namespace ranges
         }
 
     private:
-        detail::if_then_t<detail::store_size_<K, S, I>(), std::tuple<I, S, size_type>,
-                          std::tuple<I, S>>
-            data_;
+        using data_t =
+            meta::conditional_t< //
+                detail::store_size_<K, S, I>(), //
+                std::tuple<I, S, size_type>, //
+                std::tuple<I, S>>;
+        data_t data_;
 
         constexpr I & first_() noexcept
         {

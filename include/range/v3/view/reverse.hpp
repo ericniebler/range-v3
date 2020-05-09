@@ -75,7 +75,7 @@ namespace ranges
 
     public:
         reverse_view() = default;
-        explicit constexpr reverse_view(Rng rng)
+        constexpr explicit reverse_view(Rng rng)
           : rng_(detail::move(rng))
         {}
         Rng base() const
@@ -125,7 +125,7 @@ namespace ranges
                     Rng>);
 
         reverse_view() = default;
-        explicit constexpr reverse_view(reverse_view<Rng> rng)
+        constexpr explicit reverse_view(reverse_view<Rng> rng)
           : Rng(rng.base())
         {}
 

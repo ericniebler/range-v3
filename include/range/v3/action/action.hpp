@@ -77,12 +77,13 @@ namespace ranges
         struct RANGES_STRUCT_WITH_ADL_BARRIER(action_closure_base)
           : detail::action_closure_base_
         {
+            // clang-format off
             // Piping requires things are passed by value.
-            CPP_template(typename Rng, typename ActionFn)(                             //
-                requires (!defer::is_true<std::is_lvalue_reference<Rng>::value>) &&     //
-                defer::range<Rng> && defer::invocable_action_closure<ActionFn, Rng &>) //
-                friend constexpr auto
-                operator|(Rng && rng, action_closure<ActionFn> act)
+            CPP_template(typename Rng, typename ActionFn)(                    //
+                requires (!std::is_lvalue_reference<Rng>::value) CPP_and      //
+                range<Rng> CPP_and invocable_action_closure<ActionFn, Rng &>) //
+            friend constexpr auto
+            operator|(Rng && rng, action_closure<ActionFn> act)
             {
                 return aux::move(static_cast<ActionFn &&>(act)(rng));
             }
@@ -116,9 +117,11 @@ namespace ranges
                 static_cast<ActionFn &&>(act)(rng);
                 return rng;
             }
+            // clang-format on
         };
 
 #ifdef RANGES_WORKAROUND_CLANG_43400
+        // clang-format off
         namespace RANGES_ADL_BARRIER_FOR(action_closure_base)
         {
             CPP_template(typename Rng, typename ActionFn) // *****************************
@@ -130,7 +133,8 @@ namespace ranges
             // ***************************************************************************
             // *    When piping a range into an action, the range must be moved in.      *
             // ***************************************************************************
-        } // namespace )
+        } // namespace RANGES_ADL_BARRIER_FOR(action_closure_base)
+        // clang-format on
 #endif    // RANGES_WORKAROUND_CLANG_43400
 
         template<typename ActionFn>

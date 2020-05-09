@@ -245,27 +245,26 @@ namespace ranges
 
         template<typename MetaFn, typename Rng>
         using container_t = meta::invoke<MetaFn, Rng>;
-
-        template<typename Rng, typename MetaFn>
-        CPP_concept_bool convertible_to_cont_cont_or_cont =
-            defer::convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>> ||
-            defer::convertible_to_cont<Rng, container_t<MetaFn, Rng>>;
-
-        namespace defer
-        {
-            template<typename Rng, typename MetaFn>
-            CPP_concept convertible_to_cont_cont_or_cont =
-                CPP_defer(detail::convertible_to_cont_cont_or_cont, Rng, MetaFn);
-        }
         // clang-format on
 
         struct RANGES_STRUCT_WITH_ADL_BARRIER(to_container_closure_base)
         {
-            CPP_template(typename Rng, typename MetaFn, typename Fn)(     //
-                requires ranges::defer::input_range<Rng> &&               //
-                    defer::convertible_to_cont_cont_or_cont<Rng, MetaFn>) //
-                friend constexpr auto
-                operator|(Rng && rng, to_container::closure<MetaFn, Fn> fn)
+            // clang-format off
+            CPP_template(typename Rng, typename MetaFn, typename Fn)(  //
+                requires input_range<Rng> CPP_and                      //
+                    convertible_to_cont<Rng, container_t<MetaFn, Rng>>) //
+            friend constexpr auto
+            operator|(Rng && rng, to_container::closure<MetaFn, Fn> fn)
+            {
+                return static_cast<Fn &&>(fn)(static_cast<Rng &&>(rng));
+            }
+
+            CPP_template(typename Rng, typename MetaFn, typename Fn)(             //
+                requires input_range<Rng> CPP_and                                 //
+                    (!convertible_to_cont<Rng, container_t<MetaFn, Rng>>) CPP_and //
+                    convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>>)               //
+            friend constexpr auto
+            operator|(Rng && rng, to_container::closure<MetaFn, Fn> fn)
             {
                 return static_cast<Fn &&>(fn)(static_cast<Rng &&>(rng));
             }
@@ -274,8 +273,8 @@ namespace ranges
             friend constexpr auto operator|(to_container::closure<MetaFn, Fn> sh,
                                             Pipeable pipe)
                 -> CPP_broken_friend_ret(
-                    to_container::closure<MetaFn, composed<Pipeable, Fn>>)(
-                    requires (is_pipeable_v<Pipeable>))
+                    to_container::closure<MetaFn, composed<Pipeable, Fn>>)( //
+                    requires is_pipeable_v<Pipeable>)
             {
                 return to_container::closure<MetaFn, composed<Pipeable, Fn>>{
                     compose(static_cast<Pipeable &&>(pipe), static_cast<Fn &&>(sh))};
@@ -317,7 +316,7 @@ namespace ranges
 
         public:
             CPP_template(typename Rng)( //
-                requires input_range<Rng> &&                                        //
+                requires input_range<Rng> CPP_and                                        //
                     convertible_to_cont<Rng, container_t<MetaFn, Rng>>) //
             auto operator()(Rng && rng) const -> container_t<MetaFn, Rng>
             {
@@ -329,10 +328,11 @@ namespace ranges
                     meta::bool_<(bool)to_container_reserve<cont_t, iter_t, Rng>>;
                 return impl<cont_t, iter_t>(static_cast<Rng &&>(rng), use_reserve_t{});
             }
-            CPP_template(typename Rng)( //
-                requires input_range<Rng> &&                                        //
-                    convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>>) //
-            auto operator()(Rng && rng) const volatile -> container_t<MetaFn, Rng>
+            CPP_template(typename Rng)(                                           //
+                requires input_range<Rng> CPP_and                                 //
+                    (!convertible_to_cont<Rng, container_t<MetaFn, Rng>>) CPP_and //
+                    convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>>)      //
+            auto operator()(Rng && rng) const -> container_t<MetaFn, Rng>
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Attempt to convert an infinite range to a container.");

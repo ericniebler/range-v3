@@ -225,19 +225,19 @@ namespace ranges
     using range_tag_of =                          //
         std::enable_if_t<                         //
             range<Rng>,                           //
-            detail::if_then_t<                    //
+            meta::conditional_t<                    //
                 contiguous_range<Rng>,            //
                 contiguous_range_tag,             //
-                detail::if_then_t<                //
+                meta::conditional_t<                //
                     random_access_range<Rng>,     //
                     random_access_range_tag,      //
-                    detail::if_then_t<            //
+                    meta::conditional_t<            //
                         bidirectional_range<Rng>, //
                         bidirectional_range_tag,  //
-                        detail::if_then_t<        //
+                        meta::conditional_t<        //
                             forward_range<Rng>,   //
                             forward_range_tag,    //
-                            detail::if_then_t<    //
+                            meta::conditional_t<    //
                                 input_range<Rng>, //
                                 input_range_tag,  //
                                 range_tag>>>>>>;
@@ -251,7 +251,7 @@ namespace ranges
     using common_range_tag_of = //
         std::enable_if_t<       //
             range<Rng>,         //
-            detail::if_then_t<common_range<Rng>, common_range_tag, range_tag>>;
+            meta::conditional_t<common_range<Rng>, common_range_tag, range_tag>>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // sized_range_concept
@@ -262,7 +262,7 @@ namespace ranges
     using sized_range_tag_of = //
         std::enable_if_t<      //
             range<Rng>,        //
-            detail::if_then_t<sized_range<Rng>, sized_range_tag, range_tag>>;
+            meta::conditional_t<sized_range<Rng>, sized_range_tag, range_tag>>;
 
     namespace defer
     {

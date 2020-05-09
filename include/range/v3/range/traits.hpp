@@ -43,7 +43,7 @@ namespace ranges
     /// \addtogroup group-range
     /// @{
     template<typename I, typename S>
-    using common_iterator_t = detail::if_then_t<std::is_same<I, S>::value, I,
+    using common_iterator_t = meta::conditional_t<std::is_same<I, S>::value, I,
                                                 detail::common_iterator_impl_t<I, S>>;
 
     /// \cond
@@ -51,7 +51,7 @@ namespace ranges
     {
         template<typename I, typename S>
         using cpp17_iterator_t =
-            if_then_t<std::is_integral<iter_difference_t<I>>::value,
+            meta::conditional_t<std::is_integral<iter_difference_t<I>>::value,
                       common_iterator_t<I, S>, cpp17_iterator<common_iterator_t<I, S>>>;
     }
     /// \endcond
@@ -121,7 +121,7 @@ namespace ranges
     // User customization point for specifying the cardinality of ranges:
     template<typename Rng, typename Void /*= void*/>
     struct range_cardinality
-      : detail::if_then_t<RANGES_IS_SAME(Rng, uncvref_t<Rng>),
+      : meta::conditional_t<RANGES_IS_SAME(Rng, uncvref_t<Rng>),
                           decltype(detail::test_cardinality(
                               static_cast<uncvref_t<Rng> *>(nullptr))),
                           range_cardinality<uncvref_t<Rng>>>

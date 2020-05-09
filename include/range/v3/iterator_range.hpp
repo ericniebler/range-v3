@@ -160,7 +160,7 @@ namespace ranges
           : compressed_pair<I, S>{detail::move(rng.begin()), detail::move(rng.end())}
         {}
         template<typename X, typename Y>
-        explicit constexpr CPP_ctor(iterator_range)(std::pair<X, Y> rng)( //
+        constexpr explicit CPP_ctor(iterator_range)(std::pair<X, Y> rng)( //
             requires constructible_from<I, X> && constructible_from<S, Y>)
           : compressed_pair<I, S>{detail::move(rng.first), detail::move(rng.second)}
         {}

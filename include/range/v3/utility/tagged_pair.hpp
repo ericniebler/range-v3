@@ -132,18 +132,17 @@ namespace ranges
             return *this;
         }
         CPP_template(typename U)( //
-            requires (!defer::same_as<tagged, detail::decay_t<U>>) &&
-            defer::satisfies<Base &, std::is_assignable, U>) //
-        constexpr auto operator=(U && u) noexcept(noexcept(
-            std::declval<Base &>() = static_cast<U &&>(u))) -> tagged &
+            requires (!same_as<tagged, detail::decay_t<U>>) CPP_and
+            satisfies<Base &, std::is_assignable, U>) //
+        constexpr tagged & operator=(U && u) noexcept(noexcept(
+            std::declval<Base &>() = static_cast<U &&>(u)))
         {
             static_cast<Base &>(*this) = static_cast<U &&>(u);
             return *this;
         }
         CPP_template(typename B = Base)( //
             requires is_swappable<B>::value) //
-        constexpr auto swap(tagged & that) noexcept(is_nothrow_swappable<B>::value)
-            -> void
+        constexpr void swap(tagged & that) noexcept(is_nothrow_swappable<B>::value)
         {
             ranges::swap(static_cast<Base &>(*this), static_cast<Base &>(that));
         }

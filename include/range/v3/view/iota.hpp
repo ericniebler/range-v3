@@ -71,7 +71,7 @@ namespace ranges
         };
 
         template<typename I>
-        using iota_difference_t = typename if_then_t<
+        using iota_difference_t = typename meta::conditional_t<
             std::is_integral<I>::value && sizeof(I) == sizeof(iter_difference_t<I>),
             promote_as_signed_<sizeof(iter_difference_t<I>) * CHAR_BIT>,
             with_difference_type_<iter_difference_t<I>>>::difference_type;
@@ -407,7 +407,7 @@ namespace ranges
         CPP_member
         auto CPP_fun(end_cursor)()(const requires(!same_as<To, unreachable_sentinel_t>))
         {
-            return detail::if_then_t<same_as<From, To>, cursor, sentinel>{to_};
+            return meta::conditional_t<same_as<From, To>, cursor, sentinel>{to_};
         }
         constexpr void check_bounds_(std::true_type)
         {

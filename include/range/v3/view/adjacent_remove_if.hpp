@@ -149,8 +149,8 @@ namespace ranges
             CPP_template(typename Rng, typename Pred)( //
                 requires viewable_range<Rng> && forward_range<Rng> &&
                     indirect_binary_predicate_<Pred, iterator_t<Rng>, iterator_t<Rng>>) //
-            constexpr auto operator()(Rng && rng, Pred pred) const -> 
-                adjacent_remove_if_view<all_t<Rng>, Pred>
+            constexpr auto operator()(Rng && rng, Pred pred) const
+                -> adjacent_remove_if_view<all_t<Rng>, Pred>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }

@@ -43,7 +43,7 @@ namespace ranges
     {
         template<typename I,
 #ifdef RANGES_WORKAROUND_MSVC_683388
-                 typename R = detail::if_then_t<
+                 typename R = meta::conditional_t<
                      std::is_pointer<uncvref_t<I>>::value &&
                          std::is_array<std::remove_pointer_t<uncvref_t<I>>>::value,
                      std::add_lvalue_reference_t<std::remove_pointer_t<uncvref_t<I>>>,
@@ -58,7 +58,7 @@ namespace ranges
     !defined(RANGES_DOXYGEN_INVOKED)
         template<typename T>
         using iter_value_t_ =
-            typename if_then_t<is_std_iterator_traits_specialized_v<T>,
+            typename meta::conditional_t<is_std_iterator_traits_specialized_v<T>,
                                std::iterator_traits<T>, readable_traits<T>>::value_type;
 #else
         template<typename T>

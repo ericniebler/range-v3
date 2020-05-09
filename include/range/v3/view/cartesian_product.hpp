@@ -393,7 +393,7 @@ namespace ranges
 
     public:
         cartesian_product_view() = default;
-        explicit constexpr cartesian_product_view(Views... views)
+        constexpr explicit cartesian_product_view(Views... views)
           : views_{detail::move(views)...}
         {}
         CPP_template(int = 42)(            //

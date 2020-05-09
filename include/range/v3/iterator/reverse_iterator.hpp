@@ -44,10 +44,10 @@ namespace ranges
                 #ifndef _MSC_VER
                 using basic_mixin<reverse_cursor>::basic_mixin;
                 #else
-                explicit constexpr mixin(reverse_cursor && cur)
+                constexpr explicit mixin(reverse_cursor && cur)
                   : basic_mixin<reverse_cursor>(static_cast<reverse_cursor &&>(cur))
                 {}
-                explicit constexpr mixin(reverse_cursor const & cur)
+                constexpr explicit mixin(reverse_cursor const & cur)
                   : basic_mixin<reverse_cursor>(cur)
                 {}
                 #endif

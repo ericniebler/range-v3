@@ -183,19 +183,19 @@ namespace ranges
         {}
 
         CPP_template(typename Rng)( //
-            requires (!defer::same_as<span, uncvref_t<Rng>>) &&
-            defer::span_compatible_range<Rng, T> &&
-            defer::span_dynamic_conversion<Rng, N>) //
-            constexpr span(Rng && rng) noexcept(noexcept(ranges::data(rng),
-                                                         ranges::size(rng)))
+            requires (!same_as<span, uncvref_t<Rng>>) CPP_and //
+                span_compatible_range<Rng, T> CPP_and //
+                span_dynamic_conversion<Rng, N>) //
+        constexpr span(Rng && rng) noexcept(noexcept(ranges::data(rng),
+                                                        ranges::size(rng)))
           : span{ranges::data(rng), detail::narrow_cast<index_type>(ranges::size(rng))}
         {}
 
         CPP_template(typename Rng)( //
-            requires (!defer::same_as<span, uncvref_t<Rng>>) &&
-            defer::span_compatible_range<Rng, T> &&
-            defer::span_static_conversion<Rng, N>) //
-            constexpr span(Rng && rng) noexcept(noexcept(ranges::data(rng)))
+            requires (!same_as<span, uncvref_t<Rng>>) CPP_and //
+                span_compatible_range<Rng, T> CPP_and //
+                span_static_conversion<Rng, N>) //
+        constexpr span(Rng && rng) noexcept(noexcept(ranges::data(rng)))
           : span{ranges::data(rng), N}
         {}
 

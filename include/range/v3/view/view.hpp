@@ -110,11 +110,10 @@ namespace ranges
         {
             // Piping requires viewable_ranges. Pipeing a value into a closure
             // should not yield another closure.
-            CPP_template(typename Rng, typename ViewFn)(        //
-                requires defer::viewable_range<Rng> &&          //
-                    defer::invocable_view_closure<ViewFn, Rng>) //
-                friend constexpr auto
-                operator|(Rng && rng, view_closure<ViewFn> vw)
+            CPP_template(typename Rng, typename ViewFn)( //
+                requires viewable_range<Rng> CPP_and     //
+                    invocable_view_closure<ViewFn, Rng>) //
+            friend constexpr auto operator|(Rng && rng, view_closure<ViewFn> vw)
             {
                 return static_cast<ViewFn &&>(vw)(static_cast<Rng &&>(rng));
             }

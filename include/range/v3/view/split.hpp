@@ -175,7 +175,7 @@ namespace ranges
         public:
             using iterator_concept = typename Outer::iterator_concept;
             using iterator_category =
-                if_then_t<derived_from<BaseIterCategory, std::forward_iterator_tag>,
+                meta::conditional_t<derived_from<BaseIterCategory, std::forward_iterator_tag>,
                           std::forward_iterator_tag, std::input_iterator_tag>;
             using value_type = range_value_t<Base>;
             using difference_type = range_difference_t<Base>;
@@ -337,7 +337,7 @@ namespace ranges
 
         public:
             using iterator_concept =
-                if_then_t<forward_range<Base>, std::forward_iterator_tag,
+                meta::conditional_t<forward_range<Base>, std::forward_iterator_tag,
                           std::input_iterator_tag>;
             using iterator_category = std::input_iterator_tag;
             struct value_type : view_interface<value_type>

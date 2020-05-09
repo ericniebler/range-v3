@@ -30,9 +30,9 @@ namespace ranges
     /// @{
 
     /// \cond
-    CPP_template(typename I)(                 //
-        requires input_or_output_iterator<I>) //
-        struct counted_iterator;
+    template<typename I>
+        // requires input_or_output_iterator<I>
+    struct counted_iterator;
     /// \endcond
 
     struct advance_fn
@@ -40,8 +40,7 @@ namespace ranges
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
         CPP_template(typename I)( //
             requires input_or_output_iterator<I>) //
-        constexpr auto operator()(I & i, iter_difference_t<I> n) const
-            -> void
+        constexpr void operator()(I & i, iter_difference_t<I> n) const
         // [[expects: n >= 0 || bidirectional_iterator<I>]]
         {
             if constexpr(random_access_iterator<I>)
@@ -61,7 +60,7 @@ namespace ranges
 
         CPP_template(typename I, typename S)( //
             requires sentinel_for<S, I>) //
-        constexpr auto operator()(I & i, S bound) const -> void
+        constexpr void operator()(I & i, S bound) const
         // [[expects axiom: reachable(i, bound)]]
         {
             if constexpr(assignable_from<I &, S>)
@@ -172,15 +171,14 @@ namespace ranges
         // Advance a certain number of steps:
         CPP_template(typename I)( //
             requires input_or_output_iterator<I>) //
-        constexpr auto operator()(I & i, iter_difference_t<I> n) const
-            -> void
+        constexpr void operator()(I & i, iter_difference_t<I> n) const
         {
             advance_fn::n_(i, n, iterator_tag_of<I>{});
         }
         // Advance to a certain position:
         CPP_template(typename I, typename S)( //
             requires sentinel_for<S, I>) //
-        constexpr auto operator()(I & i, S s) const -> void
+        constexpr void operator()(I & i, S s) const
         {
             advance_fn::to_(
                 i, static_cast<S &&>(s), meta::bool_<assignable_from<I &, S>>());
@@ -201,8 +199,7 @@ namespace ranges
 
         CPP_template(typename I)( //
             requires input_or_output_iterator<I>) //
-        constexpr auto operator()(counted_iterator<I> & i, iter_difference_t<I> n) const
-            -> void;
+        constexpr void operator()(counted_iterator<I> & i, iter_difference_t<I> n) const;
     };
 
     /// \sa `advance_fn`

@@ -93,7 +93,7 @@ namespace ranges
 
     public:
         indirect_view() = default;
-        explicit constexpr indirect_view(Rng rng)
+        constexpr explicit indirect_view(Rng rng)
           : indirect_view::view_adaptor{detail::move(rng)}
         {}
         CPP_member

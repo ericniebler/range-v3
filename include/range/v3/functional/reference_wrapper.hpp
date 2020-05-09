@@ -83,24 +83,13 @@ namespace ranges
         using reference = meta::if_<std::is_reference<T>, T, T &>;
 
         constexpr reference_wrapper() = default;
-#if !defined(__clang__) || __clang_major__ > 3
-        template<typename U>
-        constexpr CPP_ctor(reference_wrapper)(U && u)(               //
-            noexcept(std::is_nothrow_constructible<base_, U>::value) //
-            requires (!defer::same_as<uncvref_t<U>, reference_wrapper>) &&
-            defer::constructible_from<base_, U>)
-          : detail::reference_wrapper_<T>{static_cast<U &&>(u)}
-        {}
-#else
-        // BUGBUG clang-3.7 prefers a CPP_template here instead of a CPP_ctor
         CPP_template(typename U)( //
-            requires (!defer::same_as<uncvref_t<U>, reference_wrapper>) &&
-            defer::constructible_from<base_, U>) //
-            constexpr reference_wrapper(U && u) noexcept(
-                std::is_nothrow_constructible<base_, U>::value)
+            requires (!same_as<uncvref_t<U>, reference_wrapper>) CPP_and //
+                constructible_from<base_, U>) //
+        constexpr reference_wrapper(U && u) noexcept(
+            std::is_nothrow_constructible<base_, U>::value)
           : detail::reference_wrapper_<T>{static_cast<U &&>(u)}
         {}
-#endif
         constexpr reference get() const noexcept
         {
             return this->base_::get();

@@ -120,7 +120,7 @@ namespace ranges
             using base_t::promise;
 
             coroutine_owner() = default;
-            explicit constexpr coroutine_owner(base_t coro) noexcept
+            constexpr explicit coroutine_owner(base_t coro) noexcept
               : base_t(coro)
             {}
             coroutine_owner(coroutine_owner && that) noexcept

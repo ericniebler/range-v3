@@ -75,7 +75,7 @@ namespace ranges
 
         public:
             cursor_adaptor() = default;
-            explicit constexpr cursor_adaptor(range_value_t<Rng> const & val)
+            constexpr explicit cursor_adaptor(range_value_t<Rng> const & val)
               : val_{val}
             {}
             CPP_template(bool Other)( //

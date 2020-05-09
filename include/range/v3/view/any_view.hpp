@@ -420,11 +420,11 @@ namespace ranges
 
         public:
             any_cursor() = default;
-            template<typename Rng>
-            explicit CPP_ctor(any_cursor)(Rng && rng)( //
-                requires (!ranges::defer::same_as<detail::decay_t<Rng>, any_cursor>) &&
-                ranges::defer::forward_range<Rng> &&
-                defer::any_compatible_range<Rng, Ref>)
+            CPP_template(typename Rng)( //
+                requires (!same_as<detail::decay_t<Rng>, any_cursor>) CPP_and //
+                    forward_range<Rng> CPP_and //
+                    any_compatible_range<Rng, Ref>) //
+            explicit any_cursor(Rng && rng)
               : ptr_{detail::make_unique<impl_t<Rng>>(begin(rng))}
             {}
             any_cursor(any_cursor &&) = default;
@@ -552,10 +552,12 @@ namespace ranges
         CPP_assert((Cat & category::forward) == category::forward);
 
         any_view() = default;
-        template<typename Rng>
-        CPP_ctor(any_view)(Rng && rng)( //
-            requires (!defer::same_as<detail::decay_t<Rng>, any_view>) &&
-            defer::input_range<Rng> && detail::defer::any_compatible_range<Rng, Ref>)
+        CPP_template(typename Rng)( //
+            requires //
+                (!same_as<detail::decay_t<Rng>, any_view>) CPP_and //
+                input_range<Rng> CPP_and //
+                detail::any_compatible_range<Rng, Ref>) //
+        any_view(Rng && rng)
           : any_view(static_cast<Rng &&>(rng),
                      meta::bool_<(get_categories<Rng>() & Cat) == Cat>{})
         {}
@@ -613,10 +615,12 @@ namespace ranges
         friend range_access;
 
         any_view() = default;
-        template<typename Rng>
-        CPP_ctor(any_view)(Rng && rng)( //
-            requires (!defer::same_as<detail::decay_t<Rng>, any_view>) &&
-            defer::input_range<Rng> && detail::defer::any_compatible_range<Rng, Ref>)
+        CPP_template(typename Rng)( //
+            requires //
+                (!same_as<detail::decay_t<Rng>, any_view>) CPP_and //
+                input_range<Rng> CPP_and //
+                detail::any_compatible_range<Rng, Ref>) //
+        any_view(Rng && rng)
           : ptr_{std::make_shared<impl_t<Rng>>(views::all(static_cast<Rng &&>(rng)))}
         {}
 

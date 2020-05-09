@@ -52,7 +52,7 @@ namespace ranges
             if(mid == last)
                 return mid;
             using D1 = iter_difference_t<I>;
-            using D2 = detail::if_then_t<std::is_integral<D1>::value, D1, std::ptrdiff_t>;
+            using D2 = meta::conditional_t<std::is_integral<D1>::value, D1, std::ptrdiff_t>;
             std::uniform_int_distribution<D2> uid{};
             using param_t = typename decltype(uid)::param_type;
             while(++mid != last)

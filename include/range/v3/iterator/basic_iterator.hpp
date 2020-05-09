@@ -52,13 +52,13 @@ namespace ranges
           : box<T>{}
         {}
         CPP_member
-        explicit constexpr CPP_ctor(basic_mixin)(T && t)(          //
+        constexpr explicit CPP_ctor(basic_mixin)(T && t)(          //
             noexcept(std::is_nothrow_move_constructible<T>::value) //
             requires move_constructible<T>)
           : box<T>(detail::move(t))
         {}
         CPP_member
-        explicit constexpr CPP_ctor(basic_mixin)(T const & t)(     //
+        constexpr explicit CPP_ctor(basic_mixin)(T const & t)(     //
             noexcept(std::is_nothrow_copy_constructible<T>::value) //
             requires copy_constructible<T>)
           : box<T>(t)
@@ -329,16 +329,16 @@ namespace ranges
         using cpp20_iter_cat_of_t =                             //
             std::enable_if_t<                                   //
                 input_cursor<Cur>,                              //
-                detail::if_then_t<                              //
+                meta::conditional_t<                              //
                     contiguous_cursor<Cur>,                     //
                     ranges::contiguous_iterator_tag,            //
-                    detail::if_then_t<                          //
+                    meta::conditional_t<                          //
                         random_access_cursor<Cur>,              //
                         std::random_access_iterator_tag,        //
-                        detail::if_then_t<                      //
+                        meta::conditional_t<                      //
                             bidirectional_cursor<Cur>,          //
                             std::bidirectional_iterator_tag,    //
-                            detail::if_then_t<                  //
+                            meta::conditional_t<                  //
                                 forward_cursor<Cur>,            //
                                 std::forward_iterator_tag,      //
                                 std::input_iterator_tag>>>>>;
@@ -386,13 +386,13 @@ namespace ranges
         using cpp17_iter_cat_of_t =                      //
             std::enable_if_t<                            //
                 cpp17_input_cursor<Cur>,                 //
-                detail::if_then_t<                       //
+                meta::conditional_t<                       //
                     random_access_cursor<Cur>,           //
                     std::random_access_iterator_tag,     //
-                    detail::if_then_t<                   //
+                    meta::conditional_t<                   //
                         bidirectional_cursor<Cur>,       //
                         std::bidirectional_iterator_tag, //
-                        detail::if_then_t<               //
+                        meta::conditional_t<               //
                             cpp17_forward_cursor<Cur>,   //
                             std::forward_iterator_tag,   //
                             std::input_iterator_tag>>>>;
@@ -458,12 +458,12 @@ namespace ranges
             // BUGBUG
             // protected:
             using iter_reference_t =
-                if_then_t<is_writable_cursor<Cur const>::value,
+                meta::conditional_t<is_writable_cursor<Cur const>::value,
                           basic_proxy_reference<Cur const>,
-                          if_then_t<is_writable_cursor<Cur>::value,
+                          meta::conditional_t<is_writable_cursor<Cur>::value,
                                     basic_proxy_reference<Cur>, cursor_reference_t<Cur>>>;
             using const_reference_t =
-                if_then_t<is_writable_cursor<Cur const>::value,
+                meta::conditional_t<is_writable_cursor<Cur const>::value,
                           basic_proxy_reference<Cur const>, cursor_reference_t<Cur>>;
 
         public:
@@ -472,7 +472,7 @@ namespace ranges
             using reference = iter_reference_t;
             using iterator_concept = cpp20_iter_cat_of_t<Cur>;
             using pointer = meta::_t<
-                if_then_t<(bool)has_cursor_arrow<Cur>, meta::defer<cursor_arrow_t, Cur>,
+                meta::conditional_t<(bool)has_cursor_arrow<Cur>, meta::defer<cursor_arrow_t, Cur>,
                           std::add_pointer<reference>>>;
             using common_reference = common_reference_t<reference, value_type &>;
 

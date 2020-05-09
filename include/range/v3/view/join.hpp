@@ -109,7 +109,7 @@ namespace ranges
 
         template<typename Rng>
         using join_view_inner =
-            if_then_t<!std::is_reference<range_reference_t<Rng>>::value,
+            meta::conditional_t<!std::is_reference<range_reference_t<Rng>>::value,
                       store_inner_<range_reference_t<Rng>>, pass_thru_inner_>;
 
         // clang-format off
@@ -179,8 +179,8 @@ namespace ranges
         struct cursor
         {
         private:
-            using Parent = detail::if_then_t<Const, join_view const, join_view>;
-            using COuter = detail::if_then_t<Const, Rng const, Rng>;
+            using Parent = meta::conditional_t<Const, join_view const, join_view>;
+            using COuter = meta::conditional_t<Const, Rng const, Rng>;
             using CInner = range_reference_t<COuter>;
             using ref_is_glvalue = std::is_reference<CInner>;
 

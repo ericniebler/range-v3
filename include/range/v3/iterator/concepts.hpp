@@ -45,7 +45,7 @@ namespace ranges
     namespace detail
     {
         template<typename I>
-        using iter_traits_t = if_then_t<is_std_iterator_traits_specialized_v<I>,
+        using iter_traits_t = meta::conditional_t<is_std_iterator_traits_specialized_v<I>,
                                         std::iterator_traits<I>, I>;
 
 #if defined(_GLIBCXX_DEBUG)
@@ -360,16 +360,16 @@ namespace ranges
     using iterator_tag_of =                              //
         std::enable_if_t<                                //
             input_iterator<Rng>,                         //
-            detail::if_then_t<                           //
+            meta::conditional_t<                           //
                 contiguous_iterator<Rng>,                //
                 ranges::contiguous_iterator_tag,         //
-                detail::if_then_t<                       //
+                meta::conditional_t<                       //
                     random_access_iterator<Rng>,         //
                     std::random_access_iterator_tag,     //
-                    detail::if_then_t<                   //
+                    meta::conditional_t<                   //
                         bidirectional_iterator<Rng>,     //
                         std::bidirectional_iterator_tag, //
-                        detail::if_then_t<               //
+                        meta::conditional_t<               //
                             forward_iterator<Rng>,       //
                             std::forward_iterator_tag,   //
                             std::input_iterator_tag>>>>>;
@@ -713,7 +713,7 @@ namespace ranges
     using sentinel_tag_of =               //
         std::enable_if_t<                 //
             sentinel_for<S, I>,           //
-            detail::if_then_t<            //
+            meta::conditional_t<            //
                 sized_sentinel_for<S, I>, //
                 sized_sentinel_tag,       //
                 sentinel_tag>>;

@@ -254,10 +254,10 @@ namespace ranges
             #ifndef _MSC_VER
             using basic_mixin<adaptor_cursor>::basic_mixin;
             #else
-            explicit constexpr basic_adaptor_mixin(adaptor_cursor && cur)
+            constexpr explicit basic_adaptor_mixin(adaptor_cursor && cur)
               : basic_mixin<adaptor_cursor>(static_cast<adaptor_cursor &&>(cur))
             {}
-            explicit constexpr basic_adaptor_mixin(adaptor_cursor const & cur)
+            constexpr explicit basic_adaptor_mixin(adaptor_cursor const & cur)
               : basic_mixin<adaptor_cursor>(cur)
             {}
             #endif
@@ -448,12 +448,12 @@ namespace ranges
         adaptor_cursor(BaseIter iter, Adapt adapt)
           : base_t{{std::move(iter), std::move(adapt)}}
         {}
-        template<typename OtherIter, typename OtherAdapt>
-        CPP_ctor(adaptor_cursor)(adaptor_cursor<OtherIter, OtherAdapt> that)(
-            requires defer::not_same_as_<adaptor_cursor<OtherIter, OtherAdapt>,
-                                         adaptor_cursor> &&
-                defer::convertible_to<OtherIter, BaseIter> &&
-                    defer::convertible_to<OtherAdapt, Adapt>)
+        CPP_template(typename OtherIter, typename OtherAdapt)( //
+            requires //
+                (!same_as<adaptor_cursor<OtherIter, OtherAdapt>, adaptor_cursor>) CPP_and
+                convertible_to<OtherIter, BaseIter> CPP_and //
+                convertible_to<OtherAdapt, Adapt>)
+        adaptor_cursor(adaptor_cursor<OtherIter, OtherAdapt> that)
           : base_t{{std::move(that.data_.first()), std::move(that.data_.second())}}
         {}
     };
@@ -513,8 +513,7 @@ namespace ranges
             requires same_as<D, Derived> && range<base_range_t const>) //
         constexpr auto begin_cursor() const
             noexcept(noexcept(view_adaptor::begin_cursor_(std::declval<D const &>())))
-                -> 
-                    decltype(view_adaptor::begin_cursor_(std::declval<D const &>()))
+                -> decltype(view_adaptor::begin_cursor_(std::declval<D const &>()))
         {
             return view_adaptor::begin_cursor_(derived());
         }
@@ -554,7 +553,7 @@ namespace ranges
         view_adaptor(view_adaptor const &) = default;
         view_adaptor & operator=(view_adaptor &&) = default;
         view_adaptor & operator=(view_adaptor const &) = default;
-        explicit constexpr view_adaptor(BaseRng && rng)
+        constexpr explicit view_adaptor(BaseRng && rng)
           : rng_(views::all(static_cast<BaseRng &&>(rng)))
         {}
         constexpr base_range_t & base() noexcept

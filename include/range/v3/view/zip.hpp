@@ -39,8 +39,8 @@ namespace ranges
         {
             // tuple value
             CPP_template(typename... Its)( //
-                requires and_v<readable<Its>...> && (sizeof...(Its) != 2)) //
-            [[noreturn]] auto operator()(copy_tag, Its...) const
+                requires (sizeof...(Its) != 2) CPP_and and_v<readable<Its>...>) //
+            auto operator()(copy_tag, Its...) const
                 -> std::tuple<iter_value_t<Its>...>
             {
                 RANGES_EXPECT(false);
@@ -48,7 +48,7 @@ namespace ranges
 
             // tuple reference
             CPP_template(typename... Its)( //
-                requires and_v<readable<Its>...> && (sizeof...(Its) != 2)) //
+                requires (sizeof...(Its) != 2) CPP_and and_v<readable<Its>...>) //
             auto operator()(Its const &... its) const
                 noexcept(meta::and_c<noexcept(iter_reference_t<Its>(*its))...>::value)
                     -> common_tuple<iter_reference_t<Its>...>
@@ -58,7 +58,7 @@ namespace ranges
 
             // tuple rvalue reference
             CPP_template(typename... Its)( //
-                requires and_v<readable<Its>...> && (sizeof...(Its) != 2)) //
+                requires (sizeof...(Its) != 2) CPP_and and_v<readable<Its>...>) //
             auto operator()(move_tag, Its const &... its) const
                 noexcept(meta::and_c<noexcept(
                              iter_rvalue_reference_t<Its>(iter_move(its)))...>::value)
@@ -70,7 +70,7 @@ namespace ranges
             // pair value
             CPP_template(typename It1, typename It2)( //
                 requires readable<It1> && readable<It2>) //
-            [[noreturn]] auto operator()(copy_tag, It1, It2) const
+            auto operator()(copy_tag, It1, It2) const
                 -> std::pair<iter_value_t<It1>, iter_value_t<It2>>
             {
                 RANGES_EXPECT(false);

@@ -71,7 +71,7 @@ namespace ranges
     !defined(RANGES_DOXYGEN_INVOKED)
     template<typename T>
     using iter_difference_t =
-        typename detail::if_then_t<detail::is_std_iterator_traits_specialized_v<T>,
+        typename meta::conditional_t<detail::is_std_iterator_traits_specialized_v<T>,
                                    std::iterator_traits<uncvref_t<T>>,
                                    incrementable_traits<uncvref_t<T>>>::difference_type;
 #else
@@ -97,7 +97,7 @@ namespace ranges
     {
         template<typename I>
         using iter_size_t =
-            meta::_t<if_then_t<std::is_integral<iter_difference_t<I>>::value,
+            meta::_t<meta::conditional_t<std::is_integral<iter_difference_t<I>>::value,
                                std::make_unsigned<iter_difference_t<I>>,
                                meta::id<iter_difference_t<I>>>>;
 
@@ -106,7 +106,7 @@ namespace ranges
 
         template<typename I>
         using iter_pointer_t =
-            meta::_t<if_then_t<meta::is_trait<meta::defer<iter_arrow_t, I>>::value,
+            meta::_t<meta::conditional_t<meta::is_trait<meta::defer<iter_arrow_t, I>>::value,
                                meta::defer<iter_arrow_t, I>,
                                std::add_pointer<iter_reference_t<I>>>>;
 

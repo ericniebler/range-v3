@@ -311,10 +311,10 @@ namespace ranges
                 #ifndef _MSC_VER
                 using basic_mixin<move_into_cursor>::basic_mixin;
                 #else
-                explicit constexpr mixin(move_into_cursor && cur)
+                constexpr explicit mixin(move_into_cursor && cur)
                   : basic_mixin<move_into_cursor>(static_cast<move_into_cursor &&>(cur))
                 {}
-                explicit constexpr mixin(move_into_cursor const & cur)
+                constexpr explicit mixin(move_into_cursor const & cur)
                   : basic_mixin<move_into_cursor>(cur)
                 {}
                 #endif

@@ -289,7 +289,7 @@ namespace ranges
         {
             return derived().begin()[n];
         }
-        /// Returns a pointer to the block of memory 
+        /// Returns a pointer to the block of memory
         /// containing the elements of a contiguous range:
         template<bool True = true>
         constexpr auto data()

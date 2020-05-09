@@ -334,7 +334,7 @@ namespace ranges
             using reference = iter_reference_t<I>;
             using pointer = detail::iter_pointer_t<I>;
             using iterator_concept =
-                if_then_t<(bool)forward_iterator<I>, std::forward_iterator_tag,
+                meta::conditional_t<(bool)forward_iterator<I>, std::forward_iterator_tag,
                           std::input_iterator_tag>;
         };
 
@@ -363,11 +363,11 @@ namespace ranges
                 #ifndef _MSC_VER
                 using basic_mixin<cpp17_iterator_cursor>::basic_mixin;
                 #else
-                explicit constexpr mixin(cpp17_iterator_cursor && cur)
+                constexpr explicit mixin(cpp17_iterator_cursor && cur)
                   : basic_mixin<cpp17_iterator_cursor>(
                         static_cast<cpp17_iterator_cursor &&>(cur))
                 {}
-                explicit constexpr mixin(cpp17_iterator_cursor const & cur)
+                constexpr explicit mixin(cpp17_iterator_cursor const & cur)
                   : basic_mixin<cpp17_iterator_cursor>(cur)
                 {}
                 #endif

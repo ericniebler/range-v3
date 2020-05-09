@@ -315,12 +315,12 @@ namespace ranges
 
             CPP_template(typename T)( //
                 requires integral<T>) //
-                explicit constexpr
+                constexpr explicit
                 operator T() const noexcept
             {
                 return neg_ ? -static_cast<T>(val_) : static_cast<T>(val_);
             }
-            explicit constexpr operator bool() const noexcept
+            constexpr explicit operator bool() const noexcept
             {
                 return val_ != 0;
             }

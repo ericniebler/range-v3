@@ -43,7 +43,7 @@ namespace ranges
         struct sentinel
         {
         private:
-            using Base = detail::if_then_t<Const, Rng const, Rng>;
+            using Base = meta::conditional_t<Const, Rng const, Rng>;
             using CI = counted_iterator<iterator_t<Base>>;
             sentinel_t<Base> end_ = sentinel_t<Base>();
 

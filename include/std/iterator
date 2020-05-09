@@ -192,7 +192,7 @@ namespace ranges
             };
             struct no_traits
             {};
-            return if_then_t<is_integral_<D>(0), yes_traits, no_traits>{};
+            return conditional_t<is_integral_<D>(0), yes_traits, no_traits>{};
         }
 
         template<typename I>

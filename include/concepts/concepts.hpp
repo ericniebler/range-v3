@@ -116,6 +116,7 @@
 #define CPP_PP_IIF_1(TRUE, ...) TRUE
 
 #define CPP_PP_LPAREN (
+#define CPP_PP_RPAREN )
 
 #define CPP_PP_NOT(BIT) CPP_PP_CAT_(CPP_PP_NOT_, BIT)
 #define CPP_PP_NOT_0 1
@@ -220,7 +221,6 @@
     CONCEPT<__VA_ARGS__>                                                        \
     /**/
 #define CPP_type(...) __VA_ARGS__
-#define CPP_literal(...) __VA_ARGS__
 #define CPP_concept_fragment(NAME, ...)                                         \
     META_CONCEPT NAME = CPP_PP_CAT(CPP_concept_fragment_reqs_, __VA_ARGS__)     \
     /**/
@@ -230,6 +230,8 @@
 #define CPP_concept_fragment_reqs_(...) { __VA_ARGS__ ; }
 #define CPP_fragment(NAME, ...)                                                 \
     NAME<__VA_ARGS__>                                                           \
+    /**/
+#define CPP_and &&
     /**/
 #else
 // Use CPP_concept_bool instead of CPP_concept on gcc-8 and earlier to avoid:
@@ -260,9 +262,6 @@
     /**/
 #define CPP_type(...)                                                           \
     ::concepts::detail::first_t<__VA_ARGS__, decltype(CPP_arg)>                 \
-    /**/
-#define CPP_literal(...)                                                        \
-    (CPP_arg, void(), __VA_ARGS__)                                              \
     /**/
 #define CPP_type_(ARG)                                                          \
     CPP_type(CPP_PP_IIF(CPP_PP_NOT(CPP_PP_IS_PAREN(ARG)))(, CPP_PP_EXPAND) ARG) \
@@ -306,13 +305,15 @@
     (1u==sizeof(NAME ## CPP_concept_fragment_(                                  \
         static_cast<::concepts::detail::tag<__VA_ARGS__> *>(nullptr), nullptr)))\
     /**/
+#define CPP_and CPP_and_sfinae
+    /**/
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // CPP_template
 // Usage:
 //   CPP_template(typename A, typename B)
-//     (requires Concept1<A> && Concept2<B>)
+//     (requires Concept1<A> CPP_and Concept2<B>)
 //   void foo(A a, B b)
 //   {}
 #if CPP_CXX_CONCEPTS
@@ -336,31 +337,31 @@
 #define CPP_ctor CPP_ctor_sfinae
 #endif
 
-#define CPP_TRUE_ CPP_PP_CAT(CPP_true_, __LINE__)
-
 #define CPP_template_sfinae(...)                                                \
     template<__VA_ARGS__ CPP_TEMPLATE_SFINAE_AUX_                               \
     /**/
 #define CPP_TEMPLATE_SFINAE_AUX_(...) ,                                         \
-    typename CPP_TRUE_ = std::true_type,                                        \
+    typename CPP_true_ = std::true_type,                                        \
     std::enable_if_t<                                                           \
-        CPP_FORCE_TO_BOOL(                                                      \
-            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) && CPP_TRUE_{}  \
-        ),                                                                      \
+        CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) && CPP_true_{},     \
         int                                                                     \
     > = 0>                                                                      \
+    /**/
+#define CPP_and_sfinae                                                          \
+    && CPP_true_{}, int> = 0, std::enable_if_t<                                 \
     /**/
 #define CPP_template_def_sfinae(...)                                            \
     template<__VA_ARGS__ CPP_TEMPLATE_DEF_SFINAE_AUX_                           \
     /**/
 #define CPP_TEMPLATE_DEF_SFINAE_AUX_(...) ,                                     \
-    typename CPP_TRUE_,                                                         \
+    typename CPP_true_,                                                         \
     std::enable_if_t<                                                           \
-        CPP_FORCE_TO_BOOL(                                                      \
-            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) && CPP_TRUE_{}  \
-        ),                                                                      \
+        CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) && CPP_true_{},     \
         int                                                                     \
     >>                                                                          \
+    /**/
+#define CPP_and_sfinae_def                                                      \
+    && CPP_true_{}, int>, std::enable_if_t<                                     \
     /**/
 #define CPP_TEMPLATE_SFINAE_AUX_3_requires
 #define CPP_member_sfinae                                                       \
@@ -392,10 +393,8 @@
 // No noexcept-clause:
 #define CPP_CTOR_SFINAE_REQUIRES_0(...)                                         \
     std::enable_if_t<                                                           \
-        CPP_FORCE_TO_BOOL(                                                      \
-            CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) &&              \
-            CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))                  \
-        ),                                                                      \
+        CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) &&                  \
+        CPP_INSTANCE(CPP_true(::concepts::detail::xNil{})),                     \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
     CPP_PP_IGNORE_CXX2A_COMPAT_END                                              \
@@ -404,12 +403,10 @@
 // Yes noexcept-clause:
 #define CPP_CTOR_SFINAE_REQUIRES_1(...)                                         \
     std::enable_if_t<                                                           \
-        CPP_FORCE_TO_BOOL(                                                      \
-            CPP_PP_EVAL(CPP_PP_CAT,                                             \
-                CPP_TEMPLATE_SFINAE_AUX_3_,                                     \
-                CPP_PP_CAT(CPP_CTOR_SFINAE_EAT_NOEXCEPT_, __VA_ARGS__)          \
-            ) && CPP_INSTANCE(CPP_true(::concepts::detail::xNil{}))             \
-        ),                                                                      \
+        CPP_PP_EVAL(CPP_PP_CAT,                                                 \
+            CPP_TEMPLATE_SFINAE_AUX_3_,                                         \
+            CPP_PP_CAT(CPP_CTOR_SFINAE_EAT_NOEXCEPT_, __VA_ARGS__)              \
+        ) && CPP_INSTANCE(CPP_true(::concepts::detail::xNil{})),                \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
     CPP_PP_EXPAND(CPP_PP_CAT(CPP_CTOR_SFINAE_SHOW_NOEXCEPT_, __VA_ARGS__)))     \

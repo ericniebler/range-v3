@@ -252,7 +252,7 @@ namespace ranges
 
             template<typename Int>
             using iter_diff_t =
-                meta::_t<detail::if_then_t<std::is_integral<Int>::value,
+                meta::_t<meta::conditional_t<std::is_integral<Int>::value,
                                            std::make_signed<Int>, meta::id<Int>>>;
 
             template<typename R>

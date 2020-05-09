@@ -134,32 +134,32 @@ namespace ranges
                 this->construct_from(that.data_);
         }
 #if defined(__cpp_conditional_explicit) && 0 < __cpp_conditional_explicit
-        template<typename U>
-        explicit(!convertible_to<U, T>) constexpr CPP_ctor(semiregular_box)(U && u)( //
-            noexcept(std::is_nothrow_constructible<T, U>::value)                     //
-            requires (!defer::same_as<uncvref_t<U>, semiregular_box>) &&
-            defer::constructible_from<T, U>)
+        CPP_template(typename U)( //
+            requires (!same_as<uncvref_t<U>, semiregular_box>) CPP_and //
+                constructible_from<T, U>) //
+        explicit(!convertible_to<U, T>) constexpr semiregular_box(U && u)
+            noexcept(std::is_nothrow_constructible<T, U>::value)
           : semiregular_box(in_place, static_cast<U &&>(u))
         {}
 #else
-        template<typename U>
-        explicit constexpr CPP_ctor(semiregular_box)(U && u)(    //
-            noexcept(std::is_nothrow_constructible<T, U>::value) //
-            requires (!defer::same_as<uncvref_t<U>, semiregular_box>) &&
-            defer::constructible_from<T, U> && (!defer::convertible_to<U, T>))
+        CPP_template(typename U)( //
+            requires (!same_as<uncvref_t<U>, semiregular_box>) CPP_and //
+                constructible_from<T, U> CPP_and (!convertible_to<U, T>)) //
+        constexpr explicit semiregular_box(U && u)
+            noexcept(std::is_nothrow_constructible<T, U>::value)
           : semiregular_box(in_place, static_cast<U &&>(u))
         {}
-        template<typename U>
-        constexpr CPP_ctor(semiregular_box)(U && u)(             //
-            noexcept(std::is_nothrow_constructible<T, U>::value) //
-            requires (!defer::same_as<uncvref_t<U>, semiregular_box>) &&
-            defer::constructible_from<T, U> && defer::convertible_to<U, T>)
+        CPP_template(typename U)( //
+            requires (!same_as<uncvref_t<U>, semiregular_box>) CPP_and //
+                constructible_from<T, U> CPP_and convertible_to<U, T>) //
+        constexpr semiregular_box(U && u)
+            noexcept(std::is_nothrow_constructible<T, U>::value)
           : semiregular_box(in_place, static_cast<U &&>(u))
         {}
 #endif
         CPP_template(typename... Args)(                            //
             requires constructible_from<T, Args...>)               //
-            constexpr semiregular_box(in_place_t, Args &&... args) //
+        constexpr semiregular_box(in_place_t, Args &&... args) //
             noexcept(std::is_nothrow_constructible<T, Args...>::value)
           : data_(static_cast<Args &&>(args)...)
           , engaged_(true)
@@ -265,10 +265,10 @@ namespace ranges
 
 #if defined(_MSC_VER)
         CPP_template(typename U)( //
-            requires (!defer::same_as<uncvref_t<U>, semiregular_box>) &&
-            defer::constructible_from<ranges::reference_wrapper<T &>, U>) //
-            constexpr semiregular_box(U && u) noexcept(
-                std::is_nothrow_constructible<ranges::reference_wrapper<T &>, U>::value)
+            requires (!same_as<uncvref_t<U>, semiregular_box>) CPP_and
+            constructible_from<ranges::reference_wrapper<T &>, U>) //
+        constexpr semiregular_box(U && u) noexcept(
+            std::is_nothrow_constructible<ranges::reference_wrapper<T &>, U>::value)
           : ranges::reference_wrapper<T &>{static_cast<U &&>(u)}
         {}
 #else
@@ -294,10 +294,10 @@ namespace ranges
 
 #if defined(_MSC_VER)
         CPP_template(typename U)( //
-            requires (!defer::same_as<uncvref_t<U>, semiregular_box>) &&
-            defer::constructible_from<ranges::reference_wrapper<T &&>, U>) //
-            constexpr semiregular_box(U && u) noexcept(
-                std::is_nothrow_constructible<ranges::reference_wrapper<T &&>, U>::value)
+            requires (!same_as<uncvref_t<U>, semiregular_box>) CPP_and
+            constructible_from<ranges::reference_wrapper<T &&>, U>) //
+        constexpr semiregular_box(U && u) noexcept(
+            std::is_nothrow_constructible<ranges::reference_wrapper<T &&>, U>::value)
           : ranges::reference_wrapper<T &&>{static_cast<U &&>(u)}
         {}
 #else
