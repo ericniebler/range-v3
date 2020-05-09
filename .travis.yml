@@ -44,7 +44,7 @@ matrix:
         apt:
           packages:
             - util-linux
-            - clang-4
+            - clang-4.0
             - libstdc++-6-dev
             - valgrind
           sources:
