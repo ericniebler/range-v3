@@ -110,6 +110,14 @@ void has_type(Actual &&)
     static_assert(std::is_same<Expected, Actual>::value, "Not the same");
 }
 
+template<ranges::cardinality Expected, 
+         typename Rng, 
+         ranges::cardinality Actual = ranges::range_cardinality<Rng>::value>
+void has_cardinality(Rng &&)
+{
+    static_assert(Actual == Expected, "Unexpected cardinality");
+}
+
 template<typename T>
 T & as_lvalue(T && t)
 {

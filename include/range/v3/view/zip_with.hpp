@@ -120,15 +120,17 @@ namespace ranges
 
         template<typename State, typename Value>
         using zip_cardinality = std::integral_constant<
-            cardinality, State::value >= 0 || Value::value >= 0
-                             ? (State::value >= 0 && Value::value >= 0
-                                    ? min_(State::value, Value::value)
-                                    : finite)
-                             : State::value == finite || Value::value == finite
-                                   ? finite
-                                   : State::value == unknown || Value::value == unknown
-                                         ? unknown
-                                         : infinite>;
+            cardinality, State::value >= 0 && Value::value >= 0
+                            ? min_(State::value, Value::value)
+                            : State::value >=0 && Value::value == infinite 
+                                ? State::value
+                                : State::value == infinite && Value::value >= 0
+                                    ? Value::value
+                                    : State::value == finite || Value::value == finite
+                                        ? finite
+                                        : State::value == unknown || Value::value == unknown
+                                                ? unknown
+                                                : infinite>;
     } // namespace detail
     /// \endcond
 
@@ -155,7 +157,7 @@ namespace ranges
     struct iter_zip_with_view
       : view_facade<iter_zip_with_view<Fun, Rngs...>,
                     meta::fold<meta::list<range_cardinality<Rngs>...>,
-                               std::integral_constant<cardinality, infinite>,
+                               std::integral_constant<cardinality, cardinality::infinite>,
                                meta::quote<detail::zip_cardinality>>::value>
     {
     private:
