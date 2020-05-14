@@ -15,147 +15,232 @@ jobs:
       fail-fast: false
       matrix:
         config:
+        # GCC-7
+        - {
+            name: "Linux GCC 7 Debug (C++14)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-7", cxx: "g++-7",
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=14 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
+          }
+        - {
+            name: "Linux GCC 7 Release (C++14)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-7", cxx: "g++-7",
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=14 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
+          }
+        - {
+            name: "Linux GCC 7 Debug (C++17)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-7", cxx: "g++-7",
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
+          }
+        - {
+            name: "Linux GCC 7 Release (C++17)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-7", cxx: "g++-7",
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
+          }
+        - {
+            name: "Linux GCC 7 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-7", cxx: "g++-7",
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=ON"
+          }
+
+        # GCC-8
+        - {
+            name: "Linux GCC 8 Debug (C++14)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-8", cxx: "g++-8",
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=14 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
+          }
+        - {
+            name: "Linux GCC 8 Release (C++14)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-8", cxx: "g++-8",
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=14 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
+          }
+        - {
+            name: "Linux GCC 8 Debug (C++17)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-8", cxx: "g++-8",
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
+          }
+        - {
+            name: "Linux GCC 8 Release (C++17)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-8", cxx: "g++-8",
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
+          }
+        - {
+            name: "Linux GCC 8 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-8", cxx: "g++-8",
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=ON"
+          }
+
+        # GCC-9
         - {
             name: "Linux GCC 9 Debug (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: Debug,
             cc: "gcc-9", cxx: "g++-9",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17"
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
           }
         - {
-            name: "Linux GCC 9 Optimised (C++17)", artifact: "Linux.tar.xz",
+            name: "Linux GCC 9 Release (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: RelWithDebInfo,
             cc: "gcc-9", cxx: "g++-9",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17"
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
           }
         - {
             name: "Linux GCC 9 Debug (C++20)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: Debug,
             cc: "gcc-9", cxx: "g++-9",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20"
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
           }
         - {
-            name: "Linux GCC 9 Optimised (C++20)", artifact: "Linux.tar.xz",
+            name: "Linux GCC 9 Release (C++20)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: RelWithDebInfo,
             cc: "gcc-9", cxx: "g++-9",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20"
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
           }
         - {
-            name: "Linux Clang 9 Debug (C++17)", artifact: "Linux.tar.xz",
+            name: "Linux GCC 9 Release (C++20, Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-9", cxx: "g++-9",
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=ON"
+          }
+
+        # Clang-5.0
+        - {
+            name: "Linux Clang 5.0 Debug (C++14 / ASAN)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "clang-5.0", cxx: "clang++-5.0",
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=14 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF -D \"CMAKE_CXX_FLAGS:STRING=-fsanitize=address -fno-omit-frame-pointer\""
+          }
+        - {
+            name: "Linux Clang 5.0 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "clang-5.0", cxx: "clang++-5.0",
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF -D \"CMAKE_CXX_FLAGS:STRING=-fsanitize=address -fno-omit-frame-pointer\""
+          }
+        - {
+            name: "Linux Clang 5.0 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "clang-5.0", cxx: "clang++-5.0",
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF -D \"CMAKE_CXX_FLAGS:STRING=-fsanitize=address -fno-omit-frame-pointer\""
+          }
+
+        # Clang-9
+        - {
+            name: "Linux Clang 9 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: Debug,
             cc: "clang-9", cxx: "clang++-9",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D \"CMAKE_CXX_FLAGS:STRING=-fsanitize=address -fno-omit-frame-pointer\""
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF -D \"CMAKE_CXX_FLAGS:STRING=-fsanitize=address -fno-omit-frame-pointer\""
           }
         - {
-            name: "Linux Clang 9 Optimised (C++17)", artifact: "Linux.tar.xz",
+            name: "Linux Clang 9 Release (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: RelWithDebInfo,
             cc: "clang-9", cxx: "clang++-9",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17"
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
           }
         - {
-            name: "Linux Clang 9 Debug (C++20)", artifact: "Linux.tar.xz",
+            name: "Linux Clang 9 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: Debug,
             cc: "clang-9", cxx: "clang++-9",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20 -D \"CMAKE_CXX_FLAGS:STRING=-fsanitize=address -fno-omit-frame-pointer\""
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF -D \"CMAKE_CXX_FLAGS:STRING=-fsanitize=address -fno-omit-frame-pointer\""
           }
         - {
-            name: "Linux Clang 9 Optimised (C++20)", artifact: "Linux.tar.xz",
+            name: "Linux Clang 9 Release (C++20)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: RelWithDebInfo,
             cc: "clang-9", cxx: "clang++-9",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20"
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
           }
+
+        # Clang-10
         - {
-            name: "Linux Clang 10 Debug (C++20)", artifact: "Linux.tar.xz",
+            name: "Linux Clang 10 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: Debug,
             cc: "clang-10", cxx: "clang++-10",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20 -D \"CMAKE_CXX_FLAGS:STRING=-fsanitize=address -fno-omit-frame-pointer\""
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF -D \"CMAKE_CXX_FLAGS:STRING=-fsanitize=address -fno-omit-frame-pointer\""
           }
         - {
-            name: "Linux Clang 10 Optimised (C++20)", artifact: "Linux.tar.xz",
+            name: "Linux Clang 10 Release (C++20 / Concepts)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: RelWithDebInfo,
             cc: "clang-10", cxx: "clang++-10",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20"
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=ON"
           }
-        - {
-            name: "macOS GCC Debug (C++17)", artifact: "macOS.tar.xz",
-            os: macos-latest,
-            build_type: Debug,
-            cc: "gcc", cxx: "g++",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17"
-          }
-        - {
-            name: "macOS GCC Optimised (C++17)", artifact: "macOS.tar.xz",
-            os: macos-latest,
-            build_type: RelWithDebInfo,
-            cc: "gcc", cxx: "g++",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17"
-          }
-        - {
-            name: "macOS GCC Debug (C++20)", artifact: "macOS.tar.xz",
-            os: macos-latest,
-            build_type: Debug,
-            cc: "gcc", cxx: "g++",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20"
-          }
-        - {
-            name: "macOS GCC Optimised (C++20)", artifact: "macOS.tar.xz",
-            os: macos-latest,
-            build_type: RelWithDebInfo,
-            cc: "gcc", cxx: "g++",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20"
-          }
+
+        # AppleClang
         - {
             name: "macOS Clang Debug (C++17)", artifact: "macOS.tar.xz",
             os: macos-latest,
             build_type: Debug,
             cc: "clang", cxx: "clang++",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D \"CMAKE_CXX_FLAGS:STRING=-fsanitize=address -fno-omit-frame-pointer\""
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF -D \"CMAKE_CXX_FLAGS:STRING=-fsanitize=address -fno-omit-frame-pointer\""
           }
         - {
-            name: "macOS Clang Optimised (C++17)", artifact: "macOS.tar.xz",
+            name: "macOS Clang Release (C++17)", artifact: "macOS.tar.xz",
             os: macos-latest,
             build_type: RelWithDebInfo,
             cc: "clang", cxx: "clang++",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17"
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
           }
         - {
             name: "macOS Clang Debug (C++20)", artifact: "macOS.tar.xz",
             os: macos-latest,
             build_type: Debug,
             cc: "clang", cxx: "clang++",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20 -D \"CMAKE_CXX_FLAGS:STRING=-fsanitize=address -fno-omit-frame-pointer\""
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF -D \"CMAKE_CXX_FLAGS:STRING=-fsanitize=address -fno-omit-frame-pointer\""
           }
         - {
-            name: "macOS Clang Optimised (C++20)", artifact: "macOS.tar.xz",
+            name: "macOS Clang Release (C++20)", artifact: "macOS.tar.xz",
             os: macos-latest,
             build_type: RelWithDebInfo,
             cc: "clang", cxx: "clang++",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20"
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
           }
+
+        # MSVC 2019
         - {
             name: "Windows MSVC 2019 Debug (C++17)", artifact: "Windows-MSVC.tar.xz",
             os: windows-latest,
             build_type: Debug,
             cc: "cl", cxx: "cl",
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17"
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
           }
         - {
-            name: "Windows MSVC 2019 Optimised (C++17)", artifact: "Windows-MSVC.tar.xz",
+            name: "Windows MSVC 2019 Release (C++17)", artifact: "Windows-MSVC.tar.xz",
             os: windows-latest,
             build_type: RelWithDebInfo,
             cc: "cl", cxx: "cl",
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17"
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=17 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
           }
         - {
             name: "Windows MSVC 2019 Debug (C++20)", artifact: "Windows-MSVC.tar.xz",
@@ -163,15 +248,15 @@ jobs:
             build_type: Debug,
             cc: "cl", cxx: "cl",
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20"
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
           }
         - {
-            name: "Windows MSVC 2019 Optimised (C++20)", artifact: "Windows-MSVC.tar.xz",
+            name: "Windows MSVC 2019 Release (C++20)", artifact: "Windows-MSVC.tar.xz",
             os: windows-latest,
             build_type: RelWithDebInfo,
             cc: "cl", cxx: "cl",
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20"
+            cmake_args: "-D CMAKE_CXX_STANDARD:STRING=20 -D RANGES_PREFER_REAL_CONCEPTS:BOOL=OFF"
           }
 
     steps:
@@ -219,6 +304,17 @@ jobs:
           )
         endif()
 
+    - name: Install Clang 5
+      id: install_clang_5
+      if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'clang++-5.0' )
+      shell: bash
+      working-directory: ${{ env.HOME }}
+      run: |
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key 2>/dev/null | sudo apt-key add -
+        sudo add-apt-repository 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-5.0 main' -y
+        sudo apt-get update -q
+        sudo apt-get install -y clang-5.0
+
     - name: Install Clang 10
       id: install_clang_10
       if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'clang++-10' )
@@ -263,13 +359,13 @@ jobs:
             -G Ninja
             -D CMAKE_MAKE_PROGRAM=ninja
             -D CMAKE_VERBOSE_MAKEFILE=ON
+            -D RANGE_V3_HEADER_CHECKS=ON
             ${{ matrix.config.cmake_args }}
           RESULT_VARIABLE result
         )
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "Bad exit status")
         endif()
-
 
     - name: Build
       shell: cmake -P {0}
