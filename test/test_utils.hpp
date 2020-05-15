@@ -30,6 +30,19 @@
 #include "./simple_test.hpp"
 #include "./test_iterators.hpp"
 
+#if defined(__clang__) || defined(__GNUC__)
+#if defined(__has_builtin)
+#if __has_builtin(__builtin_FILE) && \
+    __has_builtin(__builtin_LINE) && \
+    __has_builtin(__builtin_FUNCTION)
+#define RANGES_CXX_HAS_SLOC_BUILTINS
+#endif
+#endif
+#else
+#define RANGES_CXX_HAS_SLOC_BUILTINS
+#endif
+
+#if defined(RANGES_CXX_HAS_SLOC_BUILTINS) && defined(__has_include)
 #if __has_include(<source_location>)
 #include <source_location>
 #if __cpp_lib_source_location
@@ -41,6 +54,7 @@ using source_location = std::source_location;
 #if __cpp_lib_experimental_source_location
 #define RANGES_HAS_SLOC 1
 using source_location = std::experimental::source_location;
+#endif
 #endif
 #endif
 
@@ -70,16 +84,20 @@ CPP_concept_bool both_ranges = ranges::input_range<T> && ranges::input_range<U>;
 
 struct check_equal_fn
 {
-    CPP_template(typename T, typename U)(requires(!both_ranges<T, U>)) void operator()(
+    CPP_template(typename T, typename U)( //
+        requires(!both_ranges<T, U>))     //
+    void operator()(
         T && actual, U && expected,
         source_location sloc = source_location::current()) const
     {
         CHECK_SLOC(sloc, (T &&) actual == (U &&) expected);
     }
 
-    CPP_template(typename Rng1, typename Rng2)(requires both_ranges<Rng1, Rng2>) void
-    operator()(Rng1 && actual, Rng2 && expected,
-               source_location sloc = source_location::current()) const
+    CPP_template(typename Rng1, typename Rng2)( //
+        requires both_ranges<Rng1, Rng2>)       //
+    void operator()(
+        Rng1 && actual, Rng2 && expected,
+        source_location sloc = source_location::current()) const
     {
         auto begin0 = ranges::begin(actual);
         auto end0 = ranges::end(actual);
@@ -91,9 +109,11 @@ struct check_equal_fn
         CHECK_SLOC(sloc, begin1 == end1);
     }
 
-    CPP_template(typename Rng, typename Val)(requires ranges::input_range<Rng>) void
-    operator()(Rng && actual, std::initializer_list<Val> && expected,
-               source_location sloc = source_location::current()) const
+    CPP_template(typename Rng, typename Val)( //
+        requires ranges::input_range<Rng>)    //
+    void operator()(
+        Rng && actual, std::initializer_list<Val> && expected,
+        source_location sloc = source_location::current()) const
     {
         (*this)(actual, expected, sloc);
     }
