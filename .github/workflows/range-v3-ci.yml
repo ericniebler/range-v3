@@ -206,6 +206,33 @@ jobs:
             cxx_asan: true,
           }
 
+        # Clang-6.0
+        - {
+            name: "Linux Clang 6.0 Debug (C++14 / libc++ / ASAN)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "clang-6.0", cxx: "clang++-6.0",
+            cxx_standard: 14,
+            cxx_asan: true,
+            libcxx: true
+          }
+        - {
+            name: "Linux Clang 6.0 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "clang-6.0", cxx: "clang++-6.0",
+            cxx_standard: 17,
+            cxx_asan: true,
+          }
+        - {
+            name: "Linux Clang 6.0 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "clang-6.0", cxx: "clang++-6.0",
+            cxx_standard: 20,
+            cxx_asan: true,
+          }
+
         # Clang-9
         - {
             name: "Linux Clang 9 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
@@ -385,7 +412,6 @@ jobs:
         sudo add-apt-repository 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-5.0 main' -y
         sudo apt-get update -q
         sudo apt-get install -y clang-5.0
-        CC=clang-5.0 CXX=clang++-5.0 $GITHUB_WORKSPACE/install_libcxx.sh
 
     - name: Install Clang 10
       id: install_clang_10
@@ -396,6 +422,17 @@ jobs:
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
         sudo ./llvm.sh 10
+
+    - name: Install libc++
+      id: install_libcxx
+      if: matrix.config.libcxx
+      shell: bash
+      working-directory: ${{ env.HOME }}
+      env:
+        CC: ${{ matrix.config.cc }}
+        CXX: ${{ matrix.config.cxx }}
+      run: |
+        $GITHUB_WORKSPACE/install_libcxx.sh
 
     - name: Configure
       shell: cmake -P {0}
