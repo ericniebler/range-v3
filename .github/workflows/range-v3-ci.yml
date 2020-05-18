@@ -15,6 +15,47 @@ jobs:
       fail-fast: false
       matrix:
         config:
+        # GCC-6
+        - {
+            name: "Linux GCC 6 Debug (C++14)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-6", cxx: "g++-6",
+            cxx_standard: 14,
+            cxx_concepts: false
+          }
+        - {
+            name: "Linux GCC 6 Release (C++14)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-6", cxx: "g++-6",
+            cxx_standard: 14,
+            cxx_concepts: false
+          }
+        - {
+            name: "Linux GCC 6 Debug (C++17)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-6", cxx: "g++-6",
+            cxx_standard: 17,
+            cxx_concepts: false
+          }
+        - {
+            name: "Linux GCC 6 Release (C++17)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-6", cxx: "g++-6",
+            cxx_standard: 17,
+            cxx_concepts: false
+          }
+        - {
+            name: "Linux GCC 6 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-6", cxx: "g++-6",
+            cxx_standard: 17,
+          }
+
         # GCC-7
         - {
             name: "Linux GCC 7 Debug (C++14)", artifact: "Linux.tar.xz",
@@ -325,6 +366,14 @@ jobs:
             COMMAND chmod +x ${cmake_dir}/cmake
           )
         endif()
+
+    - name: Install GCC 6
+      id: install_gcc_6
+      if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'g++-6' )
+      shell: bash
+      working-directory: ${{ env.HOME }}
+      run: |
+        sudo apt-get install -y gcc-6 g++-6
 
     - name: Install Clang 5
       id: install_clang_5
