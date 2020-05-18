@@ -365,18 +365,18 @@ jobs:
         endif()
         set(ENV{PATH} "$ENV{GITHUB_WORKSPACE}${path_separator}$ENV{PATH}")
 
-        if (${{ matrix.config.libcxx }})
+        if ("x${{ matrix.config.libcxx }}" STREQUAL "xtrue")
           set(cxx_flags "${cxx_flags} -stdlib=libc++ -nostdinc++ -cxx-isystem $ENV{HOME}/llvm/include/c++/v1/ -Wno-unused-command-line-argument")
           set(link_flags "${link_flags} -L $ENV{HOME}/llvm/lib -Wl,-rpath,$ENV{HOME}/llvm/lib -lc++abi")
         endif()
 
-        if (${{ matrix.config.cxx_asan }})
+        if ("x${{ matrix.config.cxx_asan }}" STREQUAL "xtrue")
           set(cxx_flags "${cxx_flags} -fsanitize=address -fno-omit-frame-pointer")
         endif()
 
         set(cxx_concepts OFF)
-        if (${{ matrix.config.cxx_asan }})
-          set(cxx_concepts OFF)
+        if ("x${{ matrix.config.cxx_concepts }}" STREQUAL "xtrue")
+          set(cxx_concepts ON)
         endif()
 
         execute_process(
