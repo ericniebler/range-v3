@@ -327,7 +327,7 @@ jobs:
         sudo add-apt-repository 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-5.0 main' -y
         sudo apt-get update -q
         sudo apt-get install -y clang-5.0
-        CC=clang-5.0 CXX=clang++-5.0 $ENV{GITHUB_WORKSPACE}/install_libcxx.sh
+        CC=clang-5.0 CXX=clang++-5.0 $GITHUB_WORKSPACE/install_libcxx.sh
 
     - name: Install Clang 10
       id: install_clang_10
@@ -350,7 +350,7 @@ jobs:
             COMMAND "${{ matrix.config.environment_script }}" && set
             OUTPUT_FILE environment_script_output.txt
           )
-          set(ENV{CXXFLAGS} "/permissive-")
+          set(ENV{CXXFLAGS} "/permissive- /EHsc")
           file(STRINGS environment_script_output.txt output_lines)
           foreach(line IN LISTS output_lines)
             if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
