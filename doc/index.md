@@ -70,7 +70,7 @@ file and the CREDITS file for the licensing and acknowledgements.
 --------------------------------------------------------------------------------
 The code is known to work on the following compilers:
 
-- clang 3.9
+- clang 5.0
 - GCC 6.5
 - Clang/LLVM 6 (or later) on Windows
 - MSVC VS2019, with `/permissive-` and either `/std:c++latest` or `/std:c++17`

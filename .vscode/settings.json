@@ -91,7 +91,9 @@
         "algorithm": "cpp",
         "codecvt": "cpp",
         "valarray": "cpp",
-        "version": "cpp"
+        "version": "cpp",
+        "source_location": "cpp"
     },
-    "C_Cpp.configurationWarnings": "Disabled"
+    "C_Cpp.configurationWarnings": "Disabled",
+    "cmake.configureOnOpen": true
 }

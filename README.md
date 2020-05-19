@@ -54,21 +54,18 @@ Supported Compilers
 
 The code is known to work on the following compilers:
 
-- clang 4.0 (or later)
+- clang 5.0 (or later)
 - GCC 6.5 (or later)
 - Clang/LLVM 6 (or later) on Windows (older versions may work - we haven't tested.)
 - Visual Studio 2019 (or later) on Windows, with some caveats due to range-v3's strict conformance requirements:
   - range-v3 needs `/permissive-` and either `/std:c++latest` or `/std:c++17`
-
-[ Note: We've "retired" support for Clang/C2 with the VS2015 toolset (i.e., the `v140_clang_c2` toolset) which Microsoft no longer supports for C++ use. We no longer have CI runs, but haven't gone out of our way to break anything, so it will likely continue to work. ]
 
 **Development Status:** This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. _In general_, no promise is made about support or long-term stability. This code *will* evolve without regard to backwards compatibility.
 
 A notable exception is anything found within the `ranges::cpp20` namespace. Those components will change rarely or (preferably) never at all.
 
 **Build status**
-- on Travis-CI: [![Travis Build Status](https://travis-ci.org/ericniebler/range-v3.svg?branch=master)](https://travis-ci.org/ericniebler/range-v3)
-- on AppVeyor: [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/fwl9ymc2t6ukn9qj/branch/master?svg=true)](https://ci.appveyor.com/project/ericniebler/range-v3)
+- on GitHub Actions: [![GitHub Actions Status](https://github.com/ericniebler/range-v3/workflows/range-v3%20CI/badge.svg?branch=master)](https://github.com/ericniebler/range-v3/actions)
 
 Building range-v3 - Using vcpkg
 -------------------------------
