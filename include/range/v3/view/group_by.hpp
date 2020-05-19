@@ -97,10 +97,18 @@ namespace ranges
                 }
             };
 
+            #ifdef _MSC_VER
+            template<typename I = iterator_t<Rng>>
+            auto read() const -> subrange<I>
+            {
+                return {cur_, next_cur_};
+            }
+            #else
             auto read() const -> subrange<iterator_t<Rng>>
             {
                 return {cur_, next_cur_};
             }
+            #endif
             void next()
             {
                 cur_ = next_cur_;
