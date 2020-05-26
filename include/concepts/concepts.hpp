@@ -1013,7 +1013,7 @@ namespace concepts
         template<typename T, typename U>
         CPP_concept_bool assignable_from =
             std::is_lvalue_reference<T>::value &&
-            common_reference_with<std::remove_reference_t<T> const &, std::remove_reference_t<U> const &> &&
+            common_reference_with<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
             CPP_fragment(defs::assignable_from_, T, U);
 
         template<typename T>
