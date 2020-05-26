@@ -182,7 +182,7 @@ namespace ranges
         auto operator=(std::tuple<Us...> & that) noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts &, Us &>::value...>::value)
             -> CPP_ret(common_tuple &)( //
-                requires assignable_from<detail::args<Ts...> &, detail::rargs<Us...>>)
+                requires std::is_assignable<detail::args<Ts...> &, detail::rargs<Us...>>::value)
         {
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
@@ -191,8 +191,8 @@ namespace ranges
         auto operator=(std::tuple<Us...> const & that) noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts &, Us const &>::value...>::value)
             -> CPP_ret(common_tuple &)( //
-                requires assignable_from<detail::args<Ts...> &,
-                                         detail::rargs<Us const...>>)
+                requires std::is_assignable<detail::args<Ts...> &,
+                                            detail::rargs<Us const...>>::value)
         {
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
@@ -201,7 +201,7 @@ namespace ranges
         auto operator=(std::tuple<Us...> && that) noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts &, Us>::value...>::value)
             -> CPP_ret(common_tuple &)( //
-                requires assignable_from<detail::args<Ts...> &, detail::args<Us...>>)
+                requires std::is_assignable<detail::args<Ts...> &, detail::args<Us...>>::value)
         {
             (void)tuple_transform(base(), std::move(that), element_assign_{});
             return *this;
@@ -211,8 +211,8 @@ namespace ranges
         auto operator=(std::tuple<Us...> & that) const noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts const &, Us &>::value...>::value)
             -> CPP_ret(common_tuple const &)( //
-                requires assignable_from<detail::args<Ts const...> &,
-                                         detail::rargs<Us...>>)
+                requires std::is_assignable<detail::args<Ts const...> &,
+                                            detail::rargs<Us...>>::value)
         {
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
@@ -222,8 +222,8 @@ namespace ranges
             noexcept(meta::and_c<
                      std::is_nothrow_assignable<Ts const &, Us const &>::value...>::value)
                 -> CPP_ret(common_tuple const &)( //
-                    requires assignable_from<detail::args<Ts const...> &,
-                                             detail::rargs<Us const...>>)
+                    requires std::is_assignable<detail::args<Ts const...> &,
+                                                detail::rargs<Us const...>>::value)
         {
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
@@ -232,8 +232,8 @@ namespace ranges
         auto operator=(std::tuple<Us...> && that) const noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts const &, Us &&>::value...>::value)
             -> CPP_ret(common_tuple const &)( //
-                requires assignable_from<detail::args<Ts const...> &,
-                                         detail::args<Us...>>)
+                requires std::is_assignable<detail::args<Ts const...> &,
+                                            detail::args<Us...>>::value)
         {
             (void)tuple_transform(base(), std::move(that), element_assign_{});
             return *this;
