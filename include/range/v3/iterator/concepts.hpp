@@ -575,9 +575,12 @@ namespace ranges
         template<typename I, typename Proj>
         struct projected_
         {
-            using reference = indirect_result_t<Proj &, I>;
-            using value_type = uncvref_t<reference>;
-            reference operator*() const;
+            struct type
+            {
+                using reference = indirect_result_t<Proj &, I>;
+                using value_type = uncvref_t<reference>;
+                reference operator*() const;
+            };
         };
         RANGES_DIAGNOSTIC_POP
 
@@ -586,8 +589,10 @@ namespace ranges
         {
             template<typename I>
             using apply =
-                detail::enable_if_t<(bool)indirectly_regular_unary_invocable<Proj, I>,
-                                    detail::projected_<I, Proj>>;
+                meta::_t<
+                    detail::enable_if_t<
+                        (bool)indirectly_regular_unary_invocable<Proj, I>,
+                        detail::projected_<I, Proj>>>;
         };
 
         template<>

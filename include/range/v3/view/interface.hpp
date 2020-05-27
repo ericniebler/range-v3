@@ -87,10 +87,8 @@ namespace ranges
             CPP_fragment(detail::_can_empty_, Rng);
         // clang-format on
 
-        constexpr bool has_fixed_size_(cardinality c) noexcept
-        {
-            return c >= 0 || c == infinite;
-        }
+        template<cardinality C>
+        RANGES_INLINE_VAR constexpr bool has_fixed_size_ = (C >= 0 || C == infinite);
 
         template<bool>
         struct dependent_
@@ -151,7 +149,7 @@ namespace ranges
         // A few ways of testing whether a range can be empty:
         CPP_member
         constexpr auto empty() const noexcept -> CPP_ret(bool)( //
-            requires (detail::has_fixed_size_(Cardinality)))
+            requires (detail::has_fixed_size_<Cardinality>))
         {
             return Cardinality == 0;
         }
@@ -176,7 +174,7 @@ namespace ranges
         }
         /// \overload
         CPP_template(bool True = true)( //
-            requires True && (!detail::has_fixed_size_(Cardinality)) &&
+            requires True && (!detail::has_fixed_size_<Cardinality>) &&
             forward_range<D<True>>) //
         constexpr auto empty() noexcept(
             noexcept(bool(ranges::begin(std::declval<D<True> &>()) ==
@@ -186,7 +184,7 @@ namespace ranges
         }
         /// \overload
         CPP_template(bool True = true)( //
-            requires True && (!detail::has_fixed_size_(Cardinality)) &&
+            requires True && (!detail::has_fixed_size_<Cardinality>) &&
                     forward_range<D<True> const>) //
         constexpr auto empty() const
             noexcept(noexcept(bool(ranges::begin(std::declval<D<True> const &>()) ==
