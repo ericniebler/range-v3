@@ -867,24 +867,6 @@ namespace concepts
         template<typename T>
         using remove_cvref_t =
             typename std::remove_cv<typename std::remove_reference<T>::type>::type;
-
-        CPP_DIAGNOSTIC_PUSH
-        CPP_DIAGNOSTIC_IGNORE_FLOAT_EQUAL
-
-        template<typename T, typename U>
-        CPP_concept_fragment(weakly_equality_comparable_with_frag_,
-            requires(detail::as_cref_t<T> t, detail::as_cref_t<U> u) //
-            (
-                (t == u) ? 1 : 0,
-                (t != u) ? 1 : 0,
-                (u == t) ? 1 : 0,
-                (u != t) ? 1 : 0
-            ));
-        template<typename T, typename U>
-        CPP_concept_bool weakly_equality_comparable_with_ =
-            CPP_fragment(detail::weakly_equality_comparable_with_frag_, T, U);
-
-        CPP_DIAGNOSTIC_POP
     } // namespace detail
 
 #if defined(__clang__) || defined(_MSC_VER)
@@ -1039,6 +1021,48 @@ namespace concepts
             common_reference_with<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
             CPP_fragment(defs::swappable_with_, T, U);
 
+    }  // inline namespace defs
+
+    namespace detail
+    {
+        template<typename T>
+        CPP_concept_bool boolean_testable_impl_ = convertible_to<T, bool>;
+
+        template<typename T>
+        CPP_concept_fragment(boolean_testable_frag_,
+            requires(T && t) //
+            (
+                !(T&&) t,
+                concepts::requires_<boolean_testable_impl_<decltype(!(T&&) t)>>
+            ) &&
+            boolean_testable_impl_<T>
+        );
+
+        template<typename T>
+        CPP_concept_bool boolean_testable_ =
+            CPP_fragment(boolean_testable_frag_, T);
+
+        CPP_DIAGNOSTIC_PUSH
+        CPP_DIAGNOSTIC_IGNORE_FLOAT_EQUAL
+
+        template<typename T, typename U>
+        CPP_concept_fragment(weakly_equality_comparable_with_frag_,
+            requires(detail::as_cref_t<T> t, detail::as_cref_t<U> u) //
+            (
+                concepts::requires_<boolean_testable_<decltype(t == u)>>,
+                concepts::requires_<boolean_testable_<decltype(t != u)>>,
+                concepts::requires_<boolean_testable_<decltype(u == t)>>,
+                concepts::requires_<boolean_testable_<decltype(u != t)>>
+            ));
+        template<typename T, typename U>
+        CPP_concept_bool weakly_equality_comparable_with_ =
+            CPP_fragment(weakly_equality_comparable_with_frag_, T, U);
+
+        CPP_DIAGNOSTIC_POP
+    } // namespace detail
+
+    inline namespace defs
+    {
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Comparison concepts
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -1064,10 +1088,10 @@ namespace concepts
         CPP_concept_fragment(totally_ordered_,
             requires(detail::as_cref_t<T> t, detail::as_cref_t<T> u) //
             (
-                t < u ? 1 : 0,
-                t > u ? 1 : 0,
-                u <= t ? 1 : 0,
-                u >= t ? 1 : 0
+                concepts::requires_<detail::boolean_testable_<decltype(t < u)>>,
+                concepts::requires_<detail::boolean_testable_<decltype(t > u)>>,
+                concepts::requires_<detail::boolean_testable_<decltype(u <= t)>>,
+                concepts::requires_<detail::boolean_testable_<decltype(u >= t)>>
             ));
         template<typename T>
         CPP_concept_bool totally_ordered =
@@ -1078,14 +1102,14 @@ namespace concepts
         CPP_concept_fragment(totally_ordered_with_,
             requires(detail::as_cref_t<T> t, detail::as_cref_t<U> u) //
             (
-                t < u ? 1 : 0,
-                t > u ? 1 : 0,
-                t <= u ? 1 : 0,
-                t >= u ? 1 : 0,
-                u < t ? 1 : 0,
-                u > t ? 1 : 0,
-                u <= t ? 1 : 0,
-                u >= t ? 1 : 0
+                concepts::requires_<detail::boolean_testable_<decltype(t < u)>>,
+                concepts::requires_<detail::boolean_testable_<decltype(t > u)>>,
+                concepts::requires_<detail::boolean_testable_<decltype(t <= u)>>,
+                concepts::requires_<detail::boolean_testable_<decltype(t >= u)>>,
+                concepts::requires_<detail::boolean_testable_<decltype(u < t)>>,
+                concepts::requires_<detail::boolean_testable_<decltype(u > t)>>,
+                concepts::requires_<detail::boolean_testable_<decltype(u <= t)>>,
+                concepts::requires_<detail::boolean_testable_<decltype(u >= t)>>
             ) &&
             totally_ordered<
                 common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
