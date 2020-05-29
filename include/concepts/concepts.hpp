@@ -3,6 +3,7 @@
 //
 //  Copyright Eric Niebler 2018-present
 //  Copyright (c) 2018-present, Facebook, Inc.
+//  Copyright (c) 2020-present, Google LLC.
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -1059,6 +1060,23 @@ namespace concepts
         CPP_concept_bool weakly_equality_comparable_with_ =
             CPP_fragment(weakly_equality_comparable_with_frag_, T, U);
 
+        template<typename T, typename U>
+        CPP_concept_fragment(partially_ordered_with_frag_,
+            requires(detail::as_cref_t<T>& t, detail::as_cref_t<U>& u) //
+            (
+                concepts::requires_<boolean_testable_<decltype(t < u)>>,
+                concepts::requires_<boolean_testable_<decltype(t > u)>>,
+                concepts::requires_<boolean_testable_<decltype(t <= u)>>,
+                concepts::requires_<boolean_testable_<decltype(t >= u)>>,
+                concepts::requires_<boolean_testable_<decltype(u < t)>>,
+                concepts::requires_<boolean_testable_<decltype(u > t)>>,
+                concepts::requires_<boolean_testable_<decltype(u <= t)>>,
+                concepts::requires_<boolean_testable_<decltype(u >= t)>>
+            ));
+        template<typename T, typename U>
+        CPP_concept_bool partially_ordered_with_ =
+            CPP_fragment(partially_ordered_with_frag_, T, U);
+
         CPP_DIAGNOSTIC_POP
     } // namespace detail
 
@@ -1086,41 +1104,20 @@ namespace concepts
             CPP_fragment(concepts::equality_comparable_with_, T, U);
 
         template<typename T>
-        CPP_concept_fragment(totally_ordered_,
-            requires(detail::as_cref_t<T> t, detail::as_cref_t<T> u) //
-            (
-                concepts::requires_<detail::boolean_testable_<decltype(t < u)>>,
-                concepts::requires_<detail::boolean_testable_<decltype(t > u)>>,
-                concepts::requires_<detail::boolean_testable_<decltype(u <= t)>>,
-                concepts::requires_<detail::boolean_testable_<decltype(u >= t)>>
-            ));
-        template<typename T>
         CPP_concept_bool totally_ordered =
             equality_comparable<T> &&
-            CPP_fragment(defs::totally_ordered_, T);
+            detail::partially_ordered_with_<T, T>;
 
         template<typename T, typename U>
-        CPP_concept_fragment(totally_ordered_with_,
-            requires(detail::as_cref_t<T> t, detail::as_cref_t<U> u) //
-            (
-                concepts::requires_<detail::boolean_testable_<decltype(t < u)>>,
-                concepts::requires_<detail::boolean_testable_<decltype(t > u)>>,
-                concepts::requires_<detail::boolean_testable_<decltype(t <= u)>>,
-                concepts::requires_<detail::boolean_testable_<decltype(t >= u)>>,
-                concepts::requires_<detail::boolean_testable_<decltype(u < t)>>,
-                concepts::requires_<detail::boolean_testable_<decltype(u > t)>>,
-                concepts::requires_<detail::boolean_testable_<decltype(u <= t)>>,
-                concepts::requires_<detail::boolean_testable_<decltype(u >= t)>>
-            ) &&
+        CPP_concept_fragment(totally_ordered_with_, requires()(0) &&
             totally_ordered<
-                common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
-        );
+                common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>> &&
+                detail::partially_ordered_with_<T, U>);
         template<typename T, typename U>
         CPP_concept_bool totally_ordered_with =
             totally_ordered<T> &&
             totally_ordered<U> &&
             equality_comparable_with<T, U> &&
-            common_reference_with<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
             CPP_fragment(concepts::totally_ordered_with_, T, U);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
