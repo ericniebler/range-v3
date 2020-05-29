@@ -20,6 +20,7 @@
 #include <meta/meta.hpp>
 
 #include <concepts/concepts.hpp>
+#include <concepts/compare.hpp>
 
 #include <range/v3/detail/config.hpp>
 #include <range/v3/utility/static_const.hpp>
