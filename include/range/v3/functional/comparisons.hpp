@@ -93,6 +93,20 @@ namespace ranges
     using ordered_less RANGES_DEPRECATED(
         "Repace uses of ranges::ordered_less with ranges::less") = less;
 
+#if __cplusplus > 201703L && defined(__cpp_impl_three_way_comparison)
+    struct compare_three_way
+    {
+        template<typename T, typename U>
+        constexpr auto operator()(T && t, U && u) const CPP_ret()( //
+            requires three_way_comparable_with<T, U>)
+        {
+            return (T &&) t <=> (U &&) u;
+        }
+
+        using is_transparent = void;
+    };
+#endif // __cplusplus
+
     namespace cpp20
     {
         using ranges::equal_to;

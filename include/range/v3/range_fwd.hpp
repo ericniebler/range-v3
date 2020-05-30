@@ -405,6 +405,9 @@ namespace ranges
     struct not_equal_to;
     struct equal_to;
     struct less;
+#if __cplusplus > 201703L && defined(__cpp_impl_three_way_comparison)
+    struct compare_three_way;
+#endif // __cplusplus
     struct identity;
     template<typename Pred>
     struct logical_negate;

@@ -17,11 +17,11 @@
 #ifndef CPP_COMPARE_HPP
 #define CPP_COMPARE_HPP
 
-#if __cplusplus > 201703L
-#include <version>
-#if defined(__cpp_impl_three_way_comparison)
+#if __cplusplus > 201703L && defined(__cpp_impl_three_way_comparison)
+
 #include <compare>
-#include "concepts/concepts.hpp"
+#include <concepts/concepts.hpp>
+#include <range/v3/compare.hpp>
 
 // clang-format off
 
@@ -32,7 +32,7 @@ namespace concepts
     namespace detail
     {
         template<typename T, typename Cat>
-        concept compares_as = same_as<std::common_comparison_category_t<T, Cat>, Cat>;
+        concept compares_as = same_as<ranges::common_comparison_category_t<T, Cat>, Cat>;
     } // namespace detail
 
     inline namespace defs
@@ -61,6 +61,5 @@ namespace concepts
 
 // clang-format on
 
-#endif // supports spaceship
 #endif // __cplusplus
 #endif // CPP_COMPARE_HPP
