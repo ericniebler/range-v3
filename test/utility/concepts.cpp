@@ -277,7 +277,7 @@ static_assert(ranges::equality_comparable_with<int, int>, "");
 static_assert(ranges::equality_comparable_with<int, IntComparable>, "");
 static_assert(ranges::equality_comparable_with<int &, IntComparable &>, "");
 
-#if __cplusplus > 201703L && defined(__cpp_impl_three_way_comparison)
+#if __cplusplus > 201703L && defined(__cpp_impl_three_way_comparison) && __has_include(<compare>)
 #include <compare>
 
 static_assert(ranges::three_way_comparable<int>);
