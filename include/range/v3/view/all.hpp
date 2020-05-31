@@ -111,10 +111,11 @@ namespace ranges
         namespace views
         {
             using ranges::views::all;
+            using ranges::views::all_t;
         }
         CPP_template(typename Rng)(       //
             requires viewable_range<Rng>) //
-            using all_view = ranges::views::all_t<Rng>;
+            using all_view RANGES_DEPRECATED("Please use ranges::cpp20::views::all_t instead.") = ranges::views::all_t<Rng>;
     } // namespace cpp20
     /// @}
 } // namespace ranges
