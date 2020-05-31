@@ -162,7 +162,7 @@ namespace ranges
         );
         template<typename R, typename I, typename S>
         CPP_concept_bool range_convertible_to_ =
-            safe_range<R> &&
+            borrowed_range<R> &&
             CPP_fragment(detail::range_convertible_to_frag_, R, I, S);
 
         namespace defer
@@ -198,7 +198,7 @@ namespace ranges
     struct subrange;
 
     template<typename I, typename S, subrange_kind K>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<subrange<I, S, K>> = true;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<subrange<I, S, K>> = true;
 
     /// \cond
     namespace _subrange_
@@ -405,7 +405,7 @@ namespace ranges
             ->subrange<I, S, subrange_kind::sized>;
 
     CPP_template(typename R)(   //
-        requires safe_range<R>) //
+        requires borrowed_range<R>) //
         subrange(R &&)
             ->subrange<iterator_t<R>, sentinel_t<R>,
                        (sized_range<R> ||
@@ -414,7 +414,7 @@ namespace ranges
                            : subrange_kind::unsized>;
 
     CPP_template(typename R)(   //
-        requires safe_range<R>) //
+        requires borrowed_range<R>) //
         subrange(R &&, detail::iter_size_t<iterator_t<R>>)
             ->subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>;
 #endif
@@ -440,14 +440,14 @@ namespace ranges
                      (sized_range<R> || sized_sentinel_for<sentinel_t<R>, iterator_t<R>>)
                          ? subrange_kind::sized
                          : subrange_kind::unsized>)( //
-            requires safe_range<R>)
+            requires borrowed_range<R>)
         {
             return {(R &&) r};
         }
         template<typename R>
         constexpr auto operator()(R && r, detail::iter_size_t<iterator_t<R>> n) const
             -> CPP_ret(subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>)( //
-                requires safe_range<R>)
+                requires borrowed_range<R>)
         {
             return {(R &&) r, n};
         }

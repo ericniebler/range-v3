@@ -32,7 +32,7 @@ namespace ranges
     struct ref_view;
 
     template<typename Rng>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<ref_view<Rng>> = true;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<ref_view<Rng>> = true;
 
     /// \addtogroup group-views
     /// @{

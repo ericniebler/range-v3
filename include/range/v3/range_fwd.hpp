@@ -522,7 +522,7 @@ namespace ranges
     RANGES_INLINE_VAR constexpr bool disable_sized_sentinel = false;
 
     template<typename R>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range = false;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range = false;
 
     template<typename Cur>
     struct basic_mixin;

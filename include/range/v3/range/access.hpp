@@ -43,21 +43,21 @@ namespace ranges
 #if defined(__cpp_lib_string_view) && __cpp_lib_string_view > 0
     template<class CharT, class Traits>
     RANGES_INLINE_VAR constexpr bool
-        enable_safe_range<std::basic_string_view<CharT, Traits>> = true;
+        enable_borrowed_range<std::basic_string_view<CharT, Traits>> = true;
 #endif
 
 #if defined(__cpp_lib_span) && __cpp_lib_span > 0
     template<class T, std::size_t N>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<std::span<T, N>> = true;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<std::span<T, N>> = true;
 #endif
 
     namespace detail
     {
         template<typename T>
-        RANGES_INLINE_VAR constexpr bool _safe_range = enable_safe_range<uncvref_t<T>>;
+        RANGES_INLINE_VAR constexpr bool _borrowed_range = enable_borrowed_range<uncvref_t<T>>;
 
         template<typename T>
-        RANGES_INLINE_VAR constexpr bool _safe_range<T &> = true;
+        RANGES_INLINE_VAR constexpr bool _borrowed_range<T &> = true;
     } // namespace detail
 
     /// \cond
@@ -138,14 +138,14 @@ namespace ranges
             constexpr auto CPP_fun(operator())(R && r)(
                 const                            //
                 noexcept(noexcept(impl_v<R>(r))) //
-                requires((detail::_safe_range<R>)&&(has_member_begin<R> ||
-                                                    has_non_member_begin<R>)))
+                requires((detail::_borrowed_range<R>)&&(has_member_begin<R> ||
+                                                        has_non_member_begin<R>)))
 #else
             constexpr auto CPP_fun(operator())(R && r)(
                 const                            //
                 noexcept(noexcept(impl<R>{}(r))) //
-                requires((detail::_safe_range<R>)&&(has_member_begin<R> ||
-                                                    has_non_member_begin<R>)))
+                requires((detail::_borrowed_range<R>)&&(has_member_begin<R> ||
+                                                        has_non_member_begin<R>)))
 #endif
             {
                 return impl<R>{}(r);
@@ -277,13 +277,13 @@ namespace ranges
 #ifdef RANGES_WORKAROUND_GCC_89953
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl_v<R>(r))) //
-                requires((detail::_safe_range<R>)&&(has_member_end<R> ||
-                                                    has_non_member_end<R>)))
+                requires((detail::_borrowed_range<R>)&&(has_member_end<R> ||
+                                                        has_non_member_end<R>)))
 #else
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl<R>{}(r))) //
-                requires((detail::_safe_range<R>)&&(has_member_end<R> ||
-                                                    has_non_member_end<R>)))
+                requires((detail::_borrowed_range<R>)&&(has_member_end<R> ||
+                                                        has_non_member_end<R>)))
 #endif
             {
                 return impl<R>{}(r);
@@ -462,9 +462,9 @@ namespace ranges
             template<typename R>
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl<R>{}(r))) //
-                requires((detail::_safe_range<R>)&&(has_member_rbegin<R> ||
-                                                    has_non_member_rbegin<R> ||
-                                                    can_reverse_end<R>)))
+                requires((detail::_borrowed_range<R>)&&(has_member_rbegin<R> ||
+                                                        has_non_member_rbegin<R> ||
+                                                        can_reverse_end<R>)))
             {
                 return impl<R>{}(r);
             }
@@ -597,9 +597,9 @@ namespace ranges
             template<typename R>
             constexpr auto CPP_fun(operator())(R && r)(
                 const noexcept(noexcept(impl<R>{}(r))) //
-                requires((detail::_safe_range<R>)&&(has_member_rend<R> ||
-                                                    has_non_member_rend<R> ||
-                                                    can_reverse_begin<R>)))
+                requires((detail::_borrowed_range<R>)&&(has_member_rend<R> ||
+                                                        has_non_member_rend<R> ||
+                                                        can_reverse_begin<R>)))
             {
                 return impl<R>{}(r);
             }
@@ -726,6 +726,8 @@ namespace ranges
 
         using ranges::iterator_t;
         using ranges::sentinel_t;
+
+        using ranges::enable_borrowed_range;
     } // namespace cpp20
 } // namespace ranges
 
