@@ -25,6 +25,7 @@
 
 #include <range/v3/functional/concepts.hpp>
 #include <range/v3/functional/invoke.hpp>
+#include <range/v3/functional/reference_wrapper.hpp>
 #include <range/v3/utility/get.hpp>
 #include <range/v3/utility/in_place.hpp>
 

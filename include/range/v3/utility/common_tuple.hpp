@@ -179,7 +179,7 @@ namespace ranges
 
         // Assignment
         CPP_template(typename... Us)( //
-            requires assignable_from<detail::args<Ts...> &, detail::rargs<Us...>>) //
+            requires std::is_assignable<detail::args<Ts...> &, detail::rargs<Us...>>::value) //
         auto operator=(std::tuple<Us...> & that) noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts &, Us &>::value...>::value)
             -> common_tuple &
@@ -188,8 +188,8 @@ namespace ranges
             return *this;
         }
         CPP_template(typename... Us)( //
-            requires assignable_from<detail::args<Ts...> &,
-                                         detail::rargs<Us const...>>) //
+            requires std::is_assignable<detail::args<Ts...> &,
+                                        detail::rargs<Us const...>>::value) //
         auto operator=(std::tuple<Us...> const & that) noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts &, Us const &>::value...>::value)
             -> common_tuple &
@@ -198,7 +198,7 @@ namespace ranges
             return *this;
         }
         CPP_template(typename... Us)( //
-            requires assignable_from<detail::args<Ts...> &, detail::args<Us...>>) //
+            requires std::is_assignable<detail::args<Ts...> &, detail::args<Us...>>::value) //
         auto operator=(std::tuple<Us...> && that) noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts &, Us>::value...>::value)
             -> common_tuple &
@@ -208,8 +208,8 @@ namespace ranges
         }
 
         CPP_template(typename... Us)( //
-            requires assignable_from<detail::args<Ts const...> &,
-                                         detail::rargs<Us...>>) //
+            requires std::is_assignable<detail::args<Ts const...> &,
+                                        detail::rargs<Us...>>::value)
         auto operator=(std::tuple<Us...> & that) const noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts const &, Us &>::value...>::value)
             -> common_tuple const &
@@ -218,8 +218,8 @@ namespace ranges
             return *this;
         }
         CPP_template(typename... Us)( //
-            requires assignable_from<detail::args<Ts const...> &,
-                                             detail::rargs<Us const...>>) //
+                requires std::is_assignable<detail::args<Ts const...> &,
+                                            detail::rargs<Us const...>>::value)
         auto operator=(std::tuple<Us...> const & that) const
             noexcept(meta::and_c<
                      std::is_nothrow_assignable<Ts const &, Us const &>::value...>::value)
@@ -229,8 +229,8 @@ namespace ranges
             return *this;
         }
         CPP_template(typename... Us)( //
-            requires assignable_from<detail::args<Ts const...> &,
-                                         detail::args<Us...>>) //
+            requires std::is_assignable<detail::args<Ts const...> &,
+                                        detail::args<Us...>>::value)
         auto operator=(std::tuple<Us...> && that) const noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts const &, Us &&>::value...>::value)
             -> common_tuple const &
