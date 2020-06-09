@@ -268,7 +268,7 @@ namespace ranges
             defer::sentinel_for<S, I>) &&
         #else
         (!disable_sized_sentinel<std::remove_cv_t<S>, std::remove_cv_t<I>>) &&
-        defer::sentinel_for<S, I> &&
+        sentinel_for<S, I> &&
         #endif
         CPP_fragment(ranges::sized_sentinel_for_, S, I);
 
