@@ -124,7 +124,7 @@ namespace ranges
         }
         template<typename T, typename = meta::if_<meta::strict_and<
                                  std::is_empty<T>,
-                                 meta::not_<detail::is_final<T>>
+                                 meta::bool_<!detail::is_final_v<T>>
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 6 && __GNUC_MINOR__ < 2
                                  // GCC 6.0 & 6.1 find empty lambdas' implicit conversion
                                  // to function pointer when doing overload resolution

@@ -154,7 +154,7 @@ namespace ranges
         subrange<I> rotate_(I first, I middle, I last, std::forward_iterator_tag)
         {
             using value_type = iter_value_t<I>;
-            if(detail::is_trivially_move_assignable<value_type>::value)
+            if(detail::is_trivially_move_assignable_v<value_type>)
             {
                 if(next(first) == middle)
                     return detail::rotate_left(first, last);
@@ -166,7 +166,7 @@ namespace ranges
         subrange<I> rotate_(I first, I middle, I last, std::bidirectional_iterator_tag)
         {
             using value_type = iter_value_t<I>;
-            if(detail::is_trivially_move_assignable<value_type>::value)
+            if(detail::is_trivially_move_assignable_v<value_type>)
             {
                 if(next(first) == middle)
                     return detail::rotate_left(first, last);
@@ -180,7 +180,7 @@ namespace ranges
         subrange<I> rotate_(I first, I middle, I last, std::random_access_iterator_tag)
         {
             using value_type = iter_value_t<I>;
-            if(detail::is_trivially_move_assignable<value_type>::value)
+            if(detail::is_trivially_move_assignable_v<value_type>)
             {
                 if(next(first) == middle)
                     return detail::rotate_left(first, last);
