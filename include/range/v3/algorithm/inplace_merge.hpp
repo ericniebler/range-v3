@@ -262,7 +262,7 @@ namespace ranges
             auto buf_size = ranges::min(len1, len2_and_end.first);
             std::pair<value_type *, std::ptrdiff_t> buf{nullptr, 0};
             std::unique_ptr<value_type, detail::return_temporary_buffer> h;
-            if(detail::is_trivially_copy_assignable<value_type>::value && 8 < buf_size)
+            if(detail::is_trivially_copy_assignable_v<value_type> && 8 < buf_size)
             {
                 buf = detail::get_temporary_buffer<value_type>(buf_size);
                 h.reset(buf.first);

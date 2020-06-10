@@ -94,8 +94,8 @@ namespace ranges
                 constexpr optional_storage() noexcept
                   : optional_storage(
                         tag{},
-                        meta::strict_and<detail::is_trivially_default_constructible<T>,
-                                         detail::is_trivially_copyable<T>>{})
+                        meta::bool_<detail::is_trivially_default_constructible_v<T> &&
+                                    detail::is_trivially_copyable_v<T>>{})
                 {}
                 CPP_template(typename... Args)(              //
                     requires constructible_from<T, Args...>) //
@@ -207,8 +207,8 @@ namespace ranges
                 {
                     constexpr bool can_swap_trivially =
                         !::concepts::adl_swap_detail::is_adl_swappable_v<T> &&
-                        detail::is_trivially_move_constructible<T>::value &&
-                        detail::is_trivially_move_assignable<T>::value;
+                        detail::is_trivially_move_constructible_v<T> &&
+                        detail::is_trivially_move_assignable_v<T>;
 
                     swap_(meta::bool_<can_swap_trivially>{}, that);
                 }
@@ -352,7 +352,7 @@ namespace ranges
             template<typename T>
             using copy_construct_layer =
                 meta::if_c<std::is_copy_constructible<T>::value &&
-                               !detail::is_trivially_copy_constructible<T>::value,
+                               !detail::is_trivially_copy_constructible_v<T>,
                            optional_copy<T>, optional_base<T>>;
 
             template<typename T>
@@ -375,7 +375,7 @@ namespace ranges
             template<typename T>
             using move_construct_layer =
                 meta::if_c<std::is_move_constructible<T>::value &&
-                               !detail::is_trivially_move_constructible<T>::value,
+                               !detail::is_trivially_move_constructible_v<T>,
                            optional_move<T>, copy_construct_layer<T>>;
 
             template<typename T>
@@ -412,8 +412,8 @@ namespace ranges
             using copy_assign_layer = meta::if_c<
                 std::is_copy_constructible<T>::value && std::is_copy_assignable<T>::value,
                 meta::if_c<std::is_reference<T>::value ||
-                               !(detail::is_trivially_copy_constructible<T>::value &&
-                                 detail::is_trivially_copy_assignable<T>::value),
+                               !(detail::is_trivially_copy_constructible_v<T> &&
+                                 detail::is_trivially_copy_assignable_v<T>),
                            optional_copy_assign<T>, move_construct_layer<T>>,
                 deleted_copy_assign<T>>;
 
@@ -451,8 +451,8 @@ namespace ranges
             using move_assign_layer = meta::if_c<
                 std::is_move_constructible<T>::value && std::is_move_assignable<T>::value,
                 meta::if_c<std::is_reference<T>::value ||
-                               !(detail::is_trivially_move_constructible<T>::value &&
-                                 detail::is_trivially_move_assignable<T>::value),
+                               !(detail::is_trivially_move_constructible_v<T> &&
+                                 detail::is_trivially_move_assignable_v<T>),
                            optional_move_assign<T>, copy_assign_layer<T>>,
                 deleted_move_assign<T>>;
         } // namespace optional_adl
