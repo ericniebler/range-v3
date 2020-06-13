@@ -333,6 +333,7 @@ namespace ranges
         using ranges::sized_range;
         using ranges::viewable_range;
         using ranges::view_detail_::view;
+        using ranges::view_base;
     } // namespace cpp20
     /// @}
 } // namespace ranges
