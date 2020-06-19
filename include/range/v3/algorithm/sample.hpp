@@ -232,12 +232,11 @@ namespace ranges
 
     RANGES_FUNC_END(sample)
 
-    // Not yet!
-    //  namespace cpp20
-    // {
-    //     using ranges::sample_result;
-    //     using ranges::sample;
-    // }
+    namespace cpp20
+    {
+        using ranges::sample_result;
+        using ranges::sample;
+    }
     /// @}
 } // namespace ranges
 
