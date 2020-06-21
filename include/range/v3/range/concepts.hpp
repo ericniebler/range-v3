@@ -67,6 +67,10 @@ namespace ranges
     CPP_concept_bool borrowed_range =
         range<T> && detail::_borrowed_range<T>;
 
+    template <typename R>
+    RANGES_DEPRECATED("Please use ranges::borrowed_range instead.")
+    RANGES_INLINE_VAR constexpr bool safe_range = borrowed_range<R>;
+
     template<typename T, typename V>
     CPP_concept_fragment(output_range_, requires()(0) &&
         output_iterator<iterator_t<T>, V>
