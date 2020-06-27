@@ -20,6 +20,7 @@
 #include <meta/meta.hpp>
 
 #include <concepts/concepts.hpp>
+#include <concepts/compare.hpp>
 
 #include <range/v3/detail/config.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -494,6 +495,9 @@ namespace ranges
     struct not_equal_to;
     struct equal_to;
     struct less;
+#if __cplusplus > 201703L && defined(__cpp_impl_three_way_comparison) && __has_include(<compare>)
+    struct compare_three_way;
+#endif // __cplusplus
     struct identity;
     template<typename Pred>
     struct logical_negate;
