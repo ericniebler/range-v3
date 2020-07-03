@@ -522,7 +522,16 @@ namespace ranges
     RANGES_INLINE_VAR constexpr bool disable_sized_sentinel = false;
 
     template<typename R>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range = false;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range = false;
+
+    namespace detail
+    {
+        template<typename R>
+        RANGES_DEPRECATED("Please use ranges::enable_borrowed_range instead.")
+        RANGES_INLINE_VAR constexpr bool enable_safe_range = enable_borrowed_range<R>;
+    } // namespace detail
+
+    using detail::enable_safe_range;
 
     template<typename Cur>
     struct basic_mixin;

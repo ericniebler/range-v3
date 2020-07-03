@@ -141,7 +141,7 @@ namespace ranges
     using take_exactly_view = detail::take_exactly_view_<Rng>;
 
     template<typename Rng, bool B>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<detail::take_exactly_view_<Rng, B>> = enable_safe_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<detail::take_exactly_view_<Rng, B>> = enable_borrowed_range<Rng>;
 
     namespace views
     {
@@ -158,7 +158,7 @@ namespace ranges
             static constexpr auto impl_(Rng && rng, range_difference_t<Rng> n,
                                         random_access_range_tag)
                 -> CPP_ret(subrange<iterator_t<Rng>>)( //
-                    requires safe_range<Rng>)
+                    requires borrowed_range<Rng>)
             {
                 return {begin(rng), next(begin(rng), n)};
             }
