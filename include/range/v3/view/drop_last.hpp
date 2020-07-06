@@ -325,7 +325,7 @@ namespace ranges
     };
 
     template<typename Rng, typename T>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<drop_last_view<Rng, T>> = enable_safe_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<drop_last_view<Rng, T>> = enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>

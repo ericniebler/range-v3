@@ -295,7 +295,7 @@ namespace ranges
     };
 
     template<typename From, typename To>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<closed_iota_view<From, To>> = true;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<closed_iota_view<From, To>> = true;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename From, typename To)( //
@@ -433,7 +433,7 @@ namespace ranges
     };
 
     template<typename From, typename To>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<iota_view<From, To>> = true;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<iota_view<From, To>> = true;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename From, typename To)( //

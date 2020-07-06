@@ -118,8 +118,8 @@ namespace ranges
     };
 
     template<typename... Rng>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<zip_view<Rng...>> =
-        and_v<enable_safe_range<Rng>...>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<zip_view<Rng...>> =
+        and_v<enable_borrowed_range<Rng>...>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename... Rng>

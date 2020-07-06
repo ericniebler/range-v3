@@ -46,7 +46,8 @@ namespace ranges
     {
         CPP_template(class R, class U)( //
             requires range<R>)          //
-            using maybe_dangling_ = meta::conditional_t<detail::_safe_range<R>, U, dangling>;
+            using maybe_dangling_ =     //
+                meta::conditional_t<detail::_borrowed_range<R>, U, dangling>;
     }
     /// \endcond
 

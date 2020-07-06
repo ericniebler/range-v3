@@ -169,6 +169,19 @@ namespace ranges
         constexpr bool _is_integer_like_ = std::is_integral<D>::value;
 #endif
 
+        // gcc10 uses for std::ranges::range_difference_t<
+        // std::ranges::iota_view<size_t, size_t>> == __int128
+#if __SIZEOF_INT128__
+        __extension__ typedef __int128 int128_t;
+#if RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
+        template<>
+        inline constexpr bool _is_integer_like_<int128_t> = true;
+#else
+        template<typename Enable>
+        constexpr bool _is_integer_like_<int128_t, Enable> = true;
+#endif
+#endif // __SIZEOF_INT128__
+
         // clang-format off
         template<typename D>
         CPP_concept_bool integer_like_ = _is_integer_like_<D>;

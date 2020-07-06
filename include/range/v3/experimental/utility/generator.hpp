@@ -171,7 +171,7 @@ namespace ranges
             }
 
         private:
-            std::atomic<bool> copied_{false};
+            mutable std::atomic<bool> copied_{false};
 
             base_t & base() noexcept
             {

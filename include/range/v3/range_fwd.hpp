@@ -20,6 +20,7 @@
 #include <meta/meta.hpp>
 
 #include <concepts/concepts.hpp>
+#include <concepts/compare.hpp>
 
 #include <range/v3/detail/config.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -494,6 +495,9 @@ namespace ranges
     struct not_equal_to;
     struct equal_to;
     struct less;
+#if __cplusplus > 201703L && defined(__cpp_impl_three_way_comparison) && __has_include(<compare>)
+    struct compare_three_way;
+#endif // __cplusplus
     struct identity;
     template<typename Pred>
     struct logical_negate;
@@ -518,7 +522,16 @@ namespace ranges
     RANGES_INLINE_VAR constexpr bool disable_sized_sentinel = false;
 
     template<typename R>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range = false;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range = false;
+
+    namespace detail
+    {
+        template<typename R>
+        RANGES_DEPRECATED("Please use ranges::enable_borrowed_range instead.")
+        RANGES_INLINE_VAR constexpr bool enable_safe_range = enable_borrowed_range<R>;
+    } // namespace detail
+
+    using detail::enable_safe_range;
 
     template<typename Cur>
     struct basic_mixin;

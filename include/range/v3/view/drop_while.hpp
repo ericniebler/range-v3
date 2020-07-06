@@ -78,8 +78,8 @@ namespace ranges
     // unlike take_while_view, drop_while_view is transparently safe because we only
     // need the predicate to find begin()
     template<typename Rng, typename Pred>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<drop_while_view<Rng, Pred>> =
-        enable_safe_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<drop_while_view<Rng, Pred>> =
+        enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Rng, typename Fun)(requires copy_constructible<Fun>)

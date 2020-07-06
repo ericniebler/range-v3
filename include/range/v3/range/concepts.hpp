@@ -64,8 +64,12 @@ namespace ranges
         CPP_fragment(ranges::_range_, T);
 
     template<typename T>
-    CPP_concept_bool safe_range =
-        range<T> && detail::_safe_range<T>;
+    CPP_concept_bool borrowed_range =
+        range<T> && detail::_borrowed_range<T>;
+
+    template <typename R>
+    RANGES_DEPRECATED("Please use ranges::borrowed_range instead.")
+    RANGES_INLINE_VAR constexpr bool safe_range = borrowed_range<R>;
 
     template<typename T, typename V>
     CPP_concept_fragment(output_range_, requires()(0) &&
@@ -202,7 +206,7 @@ namespace ranges
     template<typename T>
     CPP_concept_bool viewable_range =
         range<T> &&
-        (safe_range<T> || view_<uncvref_t<T>>);
+        (borrowed_range<T> || view_<uncvref_t<T>>);
     // clang-format on
 
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -270,7 +274,7 @@ namespace ranges
         CPP_concept range = CPP_defer(ranges::range, T);
 
         template<typename T>
-        CPP_concept safe_range = CPP_defer(ranges::safe_range, T);
+        CPP_concept borrowed_range = CPP_defer(ranges::borrowed_range, T);
 
         template<typename T, typename V>
         CPP_concept output_range = CPP_defer(ranges::output_range, T, V);
@@ -316,6 +320,7 @@ namespace ranges
 
     namespace cpp20
     {
+        using ranges::borrowed_range;
         using ranges::bidirectional_range;
         using ranges::common_range;
         using ranges::contiguous_range;
@@ -328,6 +333,7 @@ namespace ranges
         using ranges::sized_range;
         using ranges::viewable_range;
         using ranges::view_detail_::view;
+        using ranges::view_base;
     } // namespace cpp20
     /// @}
 } // namespace ranges

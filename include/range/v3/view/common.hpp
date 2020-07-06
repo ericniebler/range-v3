@@ -136,7 +136,7 @@ namespace ranges
     };
 
     template<typename Rng, bool B>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<common_view<Rng, B>> = enable_safe_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<common_view<Rng, B>> = enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     CPP_template(typename Rng)(       //

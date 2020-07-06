@@ -55,7 +55,7 @@ namespace ranges
                 return ranges::views::ref(t);
             }
 
-            /// Not a view and not an lvalue? If it's a safe_range, then
+            /// Not a view and not an lvalue? If it's a borrowed_range, then
             /// return a subrange holding the range's begin/end.
             template<typename T>
             static constexpr auto from_range_(T && t, std::false_type, std::false_type,
@@ -72,7 +72,7 @@ namespace ranges
                 return all_fn::from_range_(static_cast<T &&>(t),
                                            meta::bool_<view_<uncvref_t<T>>>{},
                                            std::is_lvalue_reference<T>{},
-                                           meta::bool_<safe_range<T>>{});
+                                           meta::bool_<borrowed_range<T>>{});
             }
 
             template<typename T>
@@ -111,10 +111,11 @@ namespace ranges
         namespace views
         {
             using ranges::views::all;
+            using ranges::views::all_t;
         }
         CPP_template(typename Rng)(       //
             requires viewable_range<Rng>) //
-            using all_view = ranges::views::all_t<Rng>;
+            using all_view RANGES_DEPRECATED("Please use ranges::cpp20::views::all_t instead.") = ranges::views::all_t<Rng>;
     } // namespace cpp20
     /// @}
 } // namespace ranges

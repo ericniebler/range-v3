@@ -126,7 +126,7 @@ namespace ranges
     };
 
     template<typename Rng>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<drop_view<Rng>> = enable_safe_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<drop_view<Rng>> = enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
@@ -145,7 +145,7 @@ namespace ranges
                 return {all(static_cast<Rng &&>(rng)), n};
             }
             CPP_template(typename Rng)( //
-                requires safe_range<Rng> && sized_range<Rng>) //
+                requires borrowed_range<Rng> && sized_range<Rng>) //
             static auto impl_(Rng && rng, range_difference_t<Rng> n,
                               random_access_range_tag)
                 -> subrange<iterator_t<Rng>, sentinel_t<Rng>>

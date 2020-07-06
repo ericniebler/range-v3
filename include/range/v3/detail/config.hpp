@@ -222,7 +222,7 @@ namespace ranges
 #error range-v3 requires Visual Studio 2019 with the /std:c++17 (or /std:c++latest) and /permissive- options.
 #endif
 
-#if _MSC_VER < 1926
+#if _MSC_VER < 1927
 #define RANGES_WORKAROUND_MSVC_895622 // Error when phase 1 name binding finds only
                                       // deleted function
 

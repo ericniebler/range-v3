@@ -88,7 +88,7 @@ namespace ranges
     };
 
     template<typename Rng, typename Pred>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<trim_view<Rng, Pred>> = enable_safe_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<trim_view<Rng, Pred>> = enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng, typename Pred>

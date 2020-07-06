@@ -68,11 +68,10 @@ namespace ranges
 
     RANGES_FUNC_END(for_each_n)
 
-    // Not yet!
-    //  namespace cpp20
-    // {
-    //     using ranges::for_each_n;
-    // }
+    namespace cpp20
+    {
+        using ranges::for_each_n;
+    }
     /// @}
 } // namespace ranges
 

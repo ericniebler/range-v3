@@ -37,7 +37,7 @@ namespace ranges
         /// \return `begin(rng)[n]`
         CPP_template(typename Rng)( //
             requires random_access_range<Rng> && sized_range<Rng>  && //
-                safe_range<Rng>) //
+                borrowed_range<Rng>) //
         constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
             -> range_reference_t<Rng>
         {
@@ -68,9 +68,9 @@ namespace ranges
     {
         /// \return `begin(rng)[n]`
         CPP_template(typename Rng, typename Int)( //
-            requires random_access_range<Rng> && integral<Int> && safe_range<Rng>) //
-        constexpr auto operator()(Rng && rng,
-                                  Int n) const -> range_reference_t<Rng>
+            requires random_access_range<Rng> && integral<Int> && borrowed_range<Rng>) //
+        constexpr auto operator()(Rng && rng, Int n) const //
+            -> range_reference_t<Rng>
         {
             using D = range_difference_t<Rng>;
             RANGES_EXPECT(0 <= static_cast<D>(n));
@@ -90,8 +90,9 @@ namespace ranges
     struct back_fn
     {
         /// \return `*prev(end(rng))`
-        CPP_template(typename Rng)( //
-            requires common_range<Rng> && bidirectional_range<Rng> && safe_range<Rng>) //
+        CPP_template(typename Rng)(                                   //
+            requires common_range<Rng> && bidirectional_range<Rng> && //
+                borrowed_range<Rng>)                                  //
         constexpr auto operator()(Rng && rng) const -> range_reference_t<Rng>
         {
             return *prev(end(rng));
@@ -107,7 +108,7 @@ namespace ranges
     {
         /// \return `*begin(rng)`
         CPP_template(typename Rng)( //
-            requires forward_range<Rng> && safe_range<Rng>) //
+            requires forward_range<Rng> && borrowed_range<Rng>) //
         constexpr auto operator()(Rng && rng) const -> range_reference_t<Rng>
         {
             return *begin(rng);
