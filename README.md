@@ -80,6 +80,40 @@ You can download and install range-v3 using the [vcpkg](https://github.com/Micro
 
 The range-v3 port in vcpkg is kept up to date by Microsoft team members and community contributors. If the version is out of date, please [create an issue or pull request](https://github.com/Microsoft/vcpkg) on the vcpkg repository.
 
+Building range-v3 - Using Conan
+-------------------------------
+
+You can download and install range-v3 using the [Conan](https://github.com/conan-io/conan) dependency manager.
+
+Setup your CMakeLists.txt (see [Conan documentation](https://docs.conan.io/en/latest/integrations/build_system.html) on how to use MSBuild, Meson and others):
+```
+project(myproject CXX)
+
+add_executable(${PROJECT_NAME} main.cpp)
+
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake) # Include Conan-generated file
+conan_basic_setup(TARGETS) # Introduce Conan-generated targets
+
+target_link_libraries(${PROJECT_NAME} CONAN_PKG::range-v3)
+```
+Create `conanfile.txt` in your source dir:
+```
+[requires]
+range-v3/0.10.0
+
+[generators]
+cmake
+```
+Install and run `conan`, then build your project as always:
+```
+pip install conan
+mkdir build
+cd build
+conan install ../ --build=missing
+cmake ../
+cmake --build .
+```
+
 Say Thanks!
 -----------
 
