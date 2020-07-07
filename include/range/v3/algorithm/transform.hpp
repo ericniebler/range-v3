@@ -131,13 +131,16 @@ namespace ranges
 
         // Double-range variant, 3-iterator version
         /// \overload
-        template<typename I0,
-                 typename S0,
-                 typename I1,
-                 typename O,
-                 typename F,
-                 typename P0 = identity,
-                 typename P1 = identity>
+        CPP_template(typename I0,
+                     typename S0,
+                     typename I1,
+                     typename O,
+                     typename F,
+                     typename P0 = identity,
+                     typename P1 = identity)( //
+            requires input_iterator<I0> && sentinel_for<S0, I0> &&
+                input_iterator<I1> && weakly_incrementable<O> && copy_constructible<F> &&
+                writable<O, indirect_result_t<F &, projected<I0, P0>, projected<I1, P1>>>)
         RANGES_DEPRECATED(
             "Use the variant of ranges::transform that takes an upper bound "
             "for both input ranges")
@@ -147,11 +150,8 @@ namespace ranges
                                     O out,
                                     F fun,
                                     P0 proj0 = P0{},
-                                    P1 proj1 = P1{})       //
-            -> CPP_ret(binary_transform_result<I0, I1, O>)( //
-                requires input_iterator<I0> && sentinel_for<S0, I0> &&
-                input_iterator<I1> && weakly_incrementable<O> && copy_constructible<F> &&
-                writable<O, indirect_result_t<F &, projected<I0, P0>, projected<I1, P1>>>)
+                                    P1 proj1 = P1{})
+            -> binary_transform_result<I0, I1, O>
         {
             return (*this)(std::move(begin0),
                            std::move(end0),
@@ -164,12 +164,18 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng0,
+        CPP_template(typename Rng0,
                  typename I1Ref,
                  typename O,
                  typename F,
                  typename P0 = identity,
-                 typename P1 = identity>
+                 typename P1 = identity)( //
+            requires input_range<Rng0> && input_iterator<uncvref_t<I1Ref>> &&
+                weakly_incrementable<O> && copy_constructible<F> &&
+                writable<O,
+                         indirect_result_t<F &,
+                                           projected<iterator_t<Rng0>, P0>,
+                                           projected<uncvref_t<I1Ref>, P1>>>)
         RANGES_DEPRECATED(
             "Use the variant of ranges::transform that takes an upper bound "
             "for both input ranges")
@@ -179,14 +185,7 @@ namespace ranges
                                     F fun,
                                     P0 proj0 = P0{},
                                     P1 proj1 = P1{}) //
-            -> CPP_ret(
-                binary_transform_result<safe_iterator_t<Rng0>, uncvref_t<I1Ref>, O>)( //
-                requires input_range<Rng0> && input_iterator<uncvref_t<I1Ref>> &&
-                weakly_incrementable<O> && copy_constructible<F> &&
-                writable<O,
-                         indirect_result_t<F &,
-                                           projected<iterator_t<Rng0>, P0>,
-                                           projected<uncvref_t<I1Ref>, P1>>>)
+            -> binary_transform_result<safe_iterator_t<Rng0>, uncvref_t<I1Ref>, O>
         {
             return (*this)(begin(rng0),
                            end(rng0),

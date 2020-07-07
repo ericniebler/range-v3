@@ -83,7 +83,7 @@ namespace ranges
     {
         CPP_template(typename T, typename U)( //
             requires totally_ordered_with<T, U>) //
-        constexpr auto operator()(T && t, U && u) const -> bool
+        constexpr bool operator()(T && t, U && u) const
         {
             return less{}((U &&) u, (T &&) t);
         }
@@ -96,9 +96,10 @@ namespace ranges
 #if __cplusplus > 201703L && defined(__cpp_impl_three_way_comparison) && __has_include(<compare>)
     struct compare_three_way
     {
-        template<typename T, typename U>
-        constexpr auto operator()(T && t, U && u) const CPP_ret()( //
+        CPP_template(typename T, typename U)( //
             requires three_way_comparable_with<T, U>)
+        constexpr auto operator()(T && t, U && u) const
+            -> decltype((T &&) t <=> (U &&) u)
         {
             return (T &&) t <=> (U &&) u;
         }

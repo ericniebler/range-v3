@@ -458,12 +458,12 @@ namespace ranges
             // BUGBUG
             // protected:
             using iter_reference_t =
-                meta::conditional_t<is_writable_cursor<Cur const>::value,
+                meta::conditional_t<is_writable_cursor_v<Cur const>,
                           basic_proxy_reference<Cur const>,
-                          meta::conditional_t<is_writable_cursor<Cur>::value,
+                          meta::conditional_t<is_writable_cursor_v<Cur>,
                                     basic_proxy_reference<Cur>, cursor_reference_t<Cur>>>;
             using const_reference_t =
-                meta::conditional_t<is_writable_cursor<Cur const>::value,
+                meta::conditional_t<is_writable_cursor_v<Cur const>,
                           basic_proxy_reference<Cur const>, cursor_reference_t<Cur>>;
 
         public:
@@ -579,7 +579,7 @@ namespace ranges
             noexcept(noexcept(range_access::read(std::declval<Cur const &>())))
                 -> CPP_ret(const_reference_t)( //
                     requires detail::readable_cursor<Cur> &&
-                    (!detail::is_writable_cursor<Cur>::value))
+                    (!detail::is_writable_cursor_v<Cur>))
         {
             return range_access::read(pos());
         }
@@ -587,7 +587,7 @@ namespace ranges
         constexpr auto operator*() noexcept(noexcept(iter_reference_t{
             std::declval<Cur &>()})) -> CPP_ret(iter_reference_t)( //
             requires detail::has_cursor_next<Cur> &&
-                detail::is_writable_cursor<Cur>::value)
+                detail::is_writable_cursor_v<Cur>)
         {
             return iter_reference_t{pos()};
         }
@@ -596,7 +596,7 @@ namespace ranges
             noexcept(noexcept(const_reference_t{std::declval<Cur const &>()}))
                 -> CPP_ret(const_reference_t)( //
                     requires detail::has_cursor_next<Cur> &&
-                        detail::is_writable_cursor<Cur const>::value)
+                        detail::is_writable_cursor_v<Cur const>)
         {
             return const_reference_t{pos()};
         }
@@ -608,24 +608,22 @@ namespace ranges
         }
 
         // Use cursor's arrow() member, if any.
-        template<typename C = Cur>
-        constexpr auto operator-> () const
+        CPP_template(typename C = Cur)( //
+            requires detail::has_cursor_arrow<C>)
+        constexpr detail::cursor_arrow_t<C> operator-> () const
             noexcept(noexcept(range_access::arrow(std::declval<C const &>())))
-                -> CPP_ret(detail::cursor_arrow_t<C>)( //
-                    requires detail::has_cursor_arrow<C>)
         {
             return range_access::arrow(pos());
         }
         // Otherwise, if iter_reference_t is an lvalue reference to cv-qualified
         // iter_value_t, return the address of **this.
-        template<typename C = Cur>
-        constexpr auto operator-> () const
-            noexcept(noexcept(*std::declval<basic_iterator const &>())) -> CPP_ret(
-                meta::_t<std::add_pointer<const_reference_t>>)( //
-                requires (!detail::has_cursor_arrow<C>) && detail::readable_cursor<C> &&
+        CPP_template(typename C = Cur)( //
+            requires (!detail::has_cursor_arrow<C>) && detail::readable_cursor<C> &&
                 std::is_lvalue_reference<const_reference_t>::value &&
                 same_as<typename detail::iterator_associated_types_base<C>::value_type,
                         uncvref_t<const_reference_t>>)
+        constexpr std::add_pointer_t<const_reference_t> operator-> () const
+            noexcept(noexcept(*std::declval<basic_iterator const &>()))
         {
             return detail::addressof(**this);
         }
@@ -790,20 +788,20 @@ namespace ranges
         right += n;
         return right;
     }
-    template<typename Cur>
+    CPP_template(typename Cur)( //
+        requires detail::random_access_cursor<Cur>)
     constexpr auto operator-(basic_iterator<Cur> left,
                              typename basic_iterator<Cur>::difference_type n)
-        -> CPP_ret(basic_iterator<Cur>)( //
-            requires detail::random_access_cursor<Cur>)
+        -> basic_iterator<Cur>
     {
         left -= n;
         return left;
     }
-    template<typename Cur2, typename Cur>
+    CPP_template(typename Cur2, typename Cur)( //
+        requires detail::sized_sentinel_for_cursor<Cur2, Cur>)
     constexpr auto operator-(basic_iterator<Cur2> const & left,
                              basic_iterator<Cur> const & right)
-        -> CPP_ret(typename basic_iterator<Cur>::difference_type)( //
-            requires detail::sized_sentinel_for_cursor<Cur2, Cur>)
+        -> typename basic_iterator<Cur>::difference_type
     {
         return range_access::distance_to(range_access::pos(right),
                                          range_access::pos(left));

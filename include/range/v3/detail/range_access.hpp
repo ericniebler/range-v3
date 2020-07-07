@@ -236,6 +236,7 @@ namespace ranges
             // Axiom: mixin_base_t<T> has a member get(), accessible to derived classes,
             //   which perfectly-returns the contained cursor object and does not throw
             //   exceptions.
+
         template<typename T>
         CPP_concept_fragment(has_cursor_next_,
             requires(T & t)
@@ -309,13 +310,16 @@ namespace ranges
         template<typename T, typename U>
         CPP_concept_bool output_cursor =
             writable_cursor<T, U> && cursor<T>;
+
         template<typename T>
         CPP_concept_bool input_cursor =
             readable_cursor<T> && cursor<T> && has_cursor_next<T>;
+
         template<typename T>
         CPP_concept_bool forward_cursor =
             input_cursor<T> && sentinel_for_cursor<T, T> &&
             !range_access::single_pass_t<uncvref_t<T>>::value;
+
         template<typename T>
         CPP_concept_fragment(bidirectional_cursor_,
             requires(T & t) //
@@ -326,6 +330,7 @@ namespace ranges
         CPP_concept_bool bidirectional_cursor =
             forward_cursor<T> &&
             CPP_fragment(detail::bidirectional_cursor_, T);
+
         template<typename T>
         CPP_concept_fragment(random_access_cursor_,
             requires(T & t) //
@@ -337,9 +342,11 @@ namespace ranges
             bidirectional_cursor<T> && //
             sized_sentinel_for_cursor<T, T> && //
             CPP_fragment(detail::random_access_cursor_, T);
-        template<class T>
-        auto is_lvalue_reference(T&&)
-            -> CPP_ret(void)(requires std::is_lvalue_reference<T>::value);
+
+        CPP_template(class T)( //
+            requires std::is_lvalue_reference<T>::value)
+        void is_lvalue_reference(T&&);
+
         template<typename T>
         CPP_concept_fragment(contiguous_cursor_,
             requires(T & t) //
@@ -354,18 +361,15 @@ namespace ranges
         // clang-format on
 
         template<typename Cur, bool IsReadable>
-        struct is_writable_cursor_ : std::true_type
-        {};
+        RANGES_INLINE_VAR constexpr bool is_writable_cursor_ = true;
 
         template<typename Cur>
-        struct is_writable_cursor_<Cur, true>
-          : meta::bool_<(bool)writable_cursor<Cur, range_access::cursor_value_t<Cur>>>
-        {};
+        RANGES_INLINE_VAR constexpr bool is_writable_cursor_<Cur, true> =
+            (bool) writable_cursor<Cur, range_access::cursor_value_t<Cur>>;
 
         template<typename Cur>
-        struct is_writable_cursor
-          : detail::is_writable_cursor_<Cur, (bool)readable_cursor<Cur>>
-        {};
+        RANGES_INLINE_VAR constexpr bool is_writable_cursor_v =
+            is_writable_cursor_<Cur, (bool)readable_cursor<Cur>>;
     } // namespace detail
     /// \endcond
 } // namespace ranges
