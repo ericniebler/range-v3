@@ -64,7 +64,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename O, typename T, typename P = identity>
         auto RANGES_FUNC(remove_copy)(Rng && rng, O out, T const & val, P proj = P{}) //
-            ->CPP_ret(remove_copy_result<safe_iterator_t<Rng>, O>)(                   //
+            ->CPP_ret(remove_copy_result<borrowed_iterator_t<Rng>, O>)(               //
                 requires input_range<Rng> && weakly_incrementable<O> &&
                 indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *> &&
                 indirectly_copyable<iterator_t<Rng>, O>)

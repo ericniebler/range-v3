@@ -54,7 +54,7 @@ namespace ranges
         template<typename Rng, typename T1, typename T2, typename P = identity>
         auto RANGES_FUNC(replace)(
             Rng && rng, T1 const & old_value, T2 const & new_value, P proj = {}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                     //
+            ->CPP_ret(borrowed_iterator_t<Rng>)(                                 //
                 requires input_range<Rng> && writable<iterator_t<Rng>, T2 const &> &&
                 indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>)
         {

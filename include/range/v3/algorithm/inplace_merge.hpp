@@ -283,7 +283,7 @@ namespace ranges
         template<typename Rng, typename C = less, typename P = identity>
         auto RANGES_FUNC(inplace_merge)(
             Rng && rng, iterator_t<Rng> middle, C pred = C{}, P proj = P{})
-            ->CPP_ret(safe_iterator_t<Rng>)( //
+            ->CPP_ret(borrowed_iterator_t<Rng>)( //
                 requires bidirectional_range<Rng> && sortable<iterator_t<Rng>, C, P>)
         {
             return (*this)(begin(rng),

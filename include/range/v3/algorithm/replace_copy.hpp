@@ -76,7 +76,7 @@ namespace ranges
                  typename P = identity>
         auto RANGES_FUNC(replace_copy)(
             Rng && rng, O out, T1 const & old_value, T2 const & new_value, P proj = {}) //
-            ->CPP_ret(replace_copy_result<safe_iterator_t<Rng>, O>)(                    //
+            ->CPP_ret(replace_copy_result<borrowed_iterator_t<Rng>, O>)(                //
                 requires input_range<Rng> && output_iterator<O, T2 const &> &&
                 indirectly_copyable<iterator_t<Rng>, O> &&
                 indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>)

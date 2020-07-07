@@ -51,7 +51,7 @@ namespace ranges
     /// \endcond
 
     template<typename Rng>
-    using safe_iterator_t = detail::maybe_dangling_<Rng, iterator_t<Rng>>;
+    using borrowed_iterator_t = detail::maybe_dangling_<Rng, iterator_t<Rng>>;
 
     /// \cond
     struct _sanitize_fn
@@ -76,7 +76,7 @@ namespace ranges
     namespace cpp20
     {
         using ranges::dangling;
-        using ranges::safe_iterator_t;
+        using ranges::borrowed_iterator_t;
     } // namespace cpp20
 } // namespace ranges
 

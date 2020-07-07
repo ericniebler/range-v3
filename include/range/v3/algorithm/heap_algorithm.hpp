@@ -113,7 +113,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
         auto RANGES_FUNC(is_heap_until)(Rng && rng, C pred = C{}, P proj = P{})
-            ->CPP_ret(safe_iterator_t<Rng>)( //
+            ->CPP_ret(borrowed_iterator_t<Rng>)( //
                 requires random_access_range<Rng> &&
                 indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>)
         {
@@ -276,7 +276,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
         auto RANGES_FUNC(push_heap)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                //
+            ->CPP_ret(borrowed_iterator_t<Rng>)(                            //
                 requires random_access_range<Rng> && sortable<iterator_t<Rng>, C, P>)
         {
             iterator_t<Rng> first = ranges::begin(rng);
@@ -335,7 +335,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
         auto RANGES_FUNC(pop_heap)(Rng && rng, C pred = C{}, P proj = P{})
-            ->CPP_ret(safe_iterator_t<Rng>)( //
+            ->CPP_ret(borrowed_iterator_t<Rng>)( //
                 requires random_access_range<Rng> && sortable<iterator_t<Rng>, C, P>)
         {
             iterator_t<Rng> first = ranges::begin(rng);
@@ -372,7 +372,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename C = less, typename P = identity>
         auto RANGES_FUNC(make_heap)(Rng && rng, C pred = C{}, P proj = P{})
-            ->CPP_ret(safe_iterator_t<Rng>)( //
+            ->CPP_ret(borrowed_iterator_t<Rng>)( //
                 requires random_access_range<Rng> && sortable<iterator_t<Rng>, C, P>)
         {
             iterator_t<Rng> first = ranges::begin(rng);
@@ -408,7 +408,7 @@ namespace ranges
 
         template<typename Rng, typename C = less, typename P = identity>
         auto RANGES_FUNC(sort_heap)(Rng && rng, C pred = C{}, P proj = P{})
-            ->CPP_ret(safe_iterator_t<Rng>)( //
+            ->CPP_ret(borrowed_iterator_t<Rng>)( //
                 requires random_access_range<Rng &> && sortable<iterator_t<Rng>, C, P>)
         {
             iterator_t<Rng> first = ranges::begin(rng);

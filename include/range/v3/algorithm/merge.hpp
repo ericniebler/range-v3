@@ -108,7 +108,7 @@ namespace ranges
                                 C pred = C{},
                                 P0 proj0 = P0{},
                                 P1 proj1 = P1{})
-            ->CPP_ret(merge_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>, O>)( //
+            ->CPP_ret(merge_result<borrowed_iterator_t<Rng0>, borrowed_iterator_t<Rng1>, O>)( //
                 requires range<Rng0> && range<Rng1> &&
                 mergeable<iterator_t<Rng0>, iterator_t<Rng1>, O, C, P0, P1>)
         {

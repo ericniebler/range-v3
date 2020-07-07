@@ -140,7 +140,7 @@ namespace ranges
                                  S last,
                                  ORng && out,
                                  Gen && gen = detail::get_random_engine()) //
-            ->CPP_ret(sample_result<I, safe_iterator_t<ORng>>)(            //
+            ->CPP_ret(sample_result<I, borrowed_iterator_t<ORng>>)(        //
                 requires input_iterator<I> && sentinel_for<S, I> &&
                 weakly_incrementable<iterator_t<ORng>> &&
                 indirectly_copyable<I, iterator_t<ORng>> &&
@@ -175,7 +175,7 @@ namespace ranges
                                  O out,
                                  iter_difference_t<O> const n,
                                  Gen && gen = detail::get_random_engine()) //
-            ->CPP_ret(sample_result<safe_iterator_t<Rng>, O>)(             //
+            ->CPP_ret(sample_result<borrowed_iterator_t<Rng>, O>)(         //
                 requires input_range<Rng> && weakly_incrementable<O> &&
                 indirectly_copyable<iterator_t<Rng>, O> &&
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
@@ -203,8 +203,8 @@ namespace ranges
                  typename Gen = detail::default_random_engine &>
         auto RANGES_FUNC(sample)(IRng && rng,
                                  ORng && out,
-                                 Gen && gen = detail::get_random_engine())          //
-            ->CPP_ret(sample_result<safe_iterator_t<IRng>, safe_iterator_t<ORng>>)( //
+                                 Gen && gen = detail::get_random_engine())                  //
+            ->CPP_ret(sample_result<borrowed_iterator_t<IRng>, borrowed_iterator_t<ORng>>)( //
                 requires input_range<IRng> && range<ORng> &&
                 indirectly_copyable<iterator_t<IRng>, iterator_t<ORng>> &&
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> &&

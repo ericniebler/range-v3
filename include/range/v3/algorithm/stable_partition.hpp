@@ -310,7 +310,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename C, typename P = identity>
         auto RANGES_FUNC(stable_partition)(Rng && rng, C pred, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                 //
+            ->CPP_ret(borrowed_iterator_t<Rng>)(                             //
                 requires bidirectional_range<Rng> &&
                 indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> &&
                 permutable<iterator_t<Rng>>)

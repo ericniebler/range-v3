@@ -69,7 +69,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename R = less, typename P = identity>
         auto RANGES_FUNC(is_sorted_until)(Rng && rng, R pred = R{}, P proj = P{})
-            ->CPP_ret(safe_iterator_t<Rng>)( //
+            ->CPP_ret(borrowed_iterator_t<Rng>)( //
                 requires forward_range<Rng> &&
                 indirect_strict_weak_order<R, projected<iterator_t<Rng>, P>>)
         {

@@ -76,7 +76,7 @@ namespace ranges
                  typename P1 = identity>
         constexpr auto RANGES_FUNC(find_first_of)(
             Rng0 && rng0, Rng1 && rng1, R pred = R{}, P0 proj0 = P0{}, P1 proj1 = P1{}) //
-            ->CPP_ret(safe_iterator_t<Rng0>)(                                           //
+            ->CPP_ret(borrowed_iterator_t<Rng0>)(                                       //
                 requires input_range<Rng0> && forward_range<Rng1> &&
                 indirect_relation<R,
                                   projected<iterator_t<Rng0>, P0>,
