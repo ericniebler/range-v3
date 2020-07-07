@@ -53,6 +53,10 @@ namespace ranges
     template<typename Rng>
     using borrowed_iterator_t = detail::maybe_dangling_<Rng, iterator_t<Rng>>;
 
+    template<typename Rng>
+    using safe_iterator_t RANGES_DEPRECATED(
+        "Please use ranges::borrowed_iterator_t instead.") = borrowed_iterator_t<Rng>;
+
     /// \cond
     struct _sanitize_fn
     {
@@ -77,6 +81,8 @@ namespace ranges
     {
         using ranges::dangling;
         using ranges::borrowed_iterator_t;
+
+        using ranges::safe_iterator_t; // this is deprecated use borrowed_iterator_t instead.
     } // namespace cpp20
 } // namespace ranges
 
