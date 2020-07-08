@@ -123,9 +123,15 @@ namespace ranges
             cnt_ = i.count();
         }
 
-        constexpr I base() const
+        constexpr auto base() const& -> CPP_ret(I)( //
+            requires copy_constructible<I>)
         {
             return current_;
+        }
+
+        constexpr auto base() &&
+        {
+            return std::move(current_);
         }
 
         constexpr iter_difference_t<I> count() const

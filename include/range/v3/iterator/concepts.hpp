@@ -224,7 +224,8 @@ namespace ranges
 
     template<typename I>
     CPP_concept_bool weakly_incrementable =
-        semiregular<I> &&
+        default_constructible<I> &&
+        movable<I> &&
         CPP_fragment(ranges::weakly_incrementable_, I);
 
     template<typename I>

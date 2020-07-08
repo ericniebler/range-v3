@@ -44,7 +44,7 @@ namespace ranges
 
         constexpr move_iterator() = default;
         explicit move_iterator(I i)
-          : current_(i)
+          : current_(std::move(i))
         {}
         template<typename O>
         CPP_ctor(move_iterator)(move_iterator<O> const & i)( //
@@ -58,9 +58,14 @@ namespace ranges
             current_ = i.base();
             return *this;
         }
-        I base() const
+        auto base() const& -> CPP_ret(I)( //
+            requires copy_constructible<I>)
         {
             return current_;
+        }
+        I base() &&
+        {
+            return std::move(current_);
         }
         // clang-format off
         auto CPP_auto_fun(operator*)()(const)
