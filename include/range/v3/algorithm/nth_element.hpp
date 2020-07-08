@@ -312,7 +312,7 @@ namespace ranges
         template<typename Rng, typename C = less, typename P = identity>
         auto RANGES_FUNC(nth_element)(
             Rng && rng, iterator_t<Rng> nth, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                             //
+            ->CPP_ret(borrowed_iterator_t<Rng>)(                         //
                 requires random_access_range<Rng> && sortable<iterator_t<Rng>, C, P>)
         {
             return (*this)(

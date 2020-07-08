@@ -39,7 +39,7 @@ namespace ranges
         }
 
         template<typename Rng, typename T>
-        auto operator()(Rng && rng, T val) const -> CPP_ret(safe_iterator_t<Rng>)( //
+        auto operator()(Rng && rng, T val) const -> CPP_ret(borrowed_iterator_t<Rng>)( //
             requires output_range<Rng, T const &> && weakly_incrementable<T>)
         {
             return (*this)(begin(rng), end(rng), detail::move(val));

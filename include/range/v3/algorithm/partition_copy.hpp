@@ -81,8 +81,8 @@ namespace ranges
                  typename C,
                  typename P = identity>
         auto RANGES_FUNC(partition_copy)(
-            Rng && rng, O0 o0, O1 o1, C pred, P proj = P{})                 //
-            ->CPP_ret(partition_copy_result<safe_iterator_t<Rng>, O0, O1>)( //
+            Rng && rng, O0 o0, O1 o1, C pred, P proj = P{})                     //
+            ->CPP_ret(partition_copy_result<borrowed_iterator_t<Rng>, O0, O1>)( //
                 requires input_range<Rng> && weakly_incrementable<O0> &&
                 weakly_incrementable<O1> && indirectly_copyable<iterator_t<Rng>, O0> &&
                 indirectly_copyable<iterator_t<Rng>, O1> &&

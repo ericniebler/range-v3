@@ -54,7 +54,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename O, typename P = identity>
         auto RANGES_FUNC(rotate_copy)(Rng && rng, iterator_t<Rng> middle, O out) //
-            ->CPP_ret(rotate_copy_result<safe_iterator_t<Rng>, O>)(              //
+            ->CPP_ret(rotate_copy_result<borrowed_iterator_t<Rng>, O>)(          //
                 requires range<Rng> && weakly_incrementable<O> &&
                 indirectly_copyable<iterator_t<Rng>, O>)
         {

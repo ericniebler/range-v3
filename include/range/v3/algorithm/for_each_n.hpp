@@ -56,7 +56,7 @@ namespace ranges
         template<typename Rng, typename F, typename P = identity>
         auto RANGES_FUNC(for_each_n)(
             Rng && rng, range_difference_t<Rng> n, F fun, P proj = P{})
-            ->CPP_ret(safe_iterator_t<Rng>)( //
+            ->CPP_ret(borrowed_iterator_t<Rng>)( //
                 requires input_range<Rng> &&
                 indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
         {

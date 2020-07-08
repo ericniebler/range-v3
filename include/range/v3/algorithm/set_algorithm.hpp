@@ -171,7 +171,7 @@ namespace ranges
                                     P1 proj1 = P1{},
                                     P2 proj2 = P2{}) //
             ->CPP_ret(
-                set_union_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>, O>)( //
+                set_union_result<borrowed_iterator_t<Rng1>, borrowed_iterator_t<Rng2>, O>)( //
                 requires range<Rng1> && range<Rng2> &&
                 mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         {
@@ -329,8 +329,8 @@ namespace ranges
                                          O out,
                                          C pred = C{},
                                          P1 proj1 = P1{},
-                                         P2 proj2 = P2{})               //
-            ->CPP_ret(set_difference_result<safe_iterator_t<Rng1>, O>)( //
+                                         P2 proj2 = P2{})                   //
+            ->CPP_ret(set_difference_result<borrowed_iterator_t<Rng1>, O>)( //
                 requires range<Rng1> && range<Rng2> &&
                 mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         {
@@ -420,8 +420,8 @@ namespace ranges
                                                    C pred = C{},
                                                    P1 proj1 = P1{},
                                                    P2 proj2 = P2{}) //
-            ->CPP_ret(set_symmetric_difference_result<safe_iterator_t<Rng1>,
-                                                      safe_iterator_t<Rng2>,
+            ->CPP_ret(set_symmetric_difference_result<borrowed_iterator_t<Rng1>,
+                                                      borrowed_iterator_t<Rng2>,
                                                       O>)( //
                 requires range<Rng1> && range<Rng2> &&
                 mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)

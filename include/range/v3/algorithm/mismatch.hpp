@@ -108,8 +108,8 @@ namespace ranges
                                    I2Ref && begin2,
                                    C pred = C{}, // see below [*]
                                    P1 proj1 = P1{},
-                                   P2 proj2 = P2{})                              //
-            ->CPP_ret(mismatch_result<safe_iterator_t<Rng1>, uncvref_t<I2Ref>>)( //
+                                   P2 proj2 = P2{})                                  //
+            ->CPP_ret(mismatch_result<borrowed_iterator_t<Rng1>, uncvref_t<I2Ref>>)( //
                 requires input_range<Rng1> && input_iterator<uncvref_t<I2Ref>> &&
                 indirect_relation<C,
                                   projected<iterator_t<Rng1>, P1>,
@@ -133,8 +133,8 @@ namespace ranges
                  typename P1 = identity,
                  typename P2 = identity>
         auto RANGES_FUNC(mismatch)(
-            Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) //
-            ->CPP_ret(mismatch_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>>)(   //
+            Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{})       //
+            ->CPP_ret(mismatch_result<borrowed_iterator_t<Rng1>, borrowed_iterator_t<Rng2>>)( //
                 requires input_range<Rng1> && input_range<Rng2> &&
                 indirect_relation<C,
                                   projected<iterator_t<Rng1>, P1>,

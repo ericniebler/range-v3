@@ -53,8 +53,8 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename O>
-        auto RANGES_FUNC(move)(Rng && rng, O out)            //
-            ->CPP_ret(move_result<safe_iterator_t<Rng>, O>)( //
+        auto RANGES_FUNC(move)(Rng && rng, O out)                //
+            ->CPP_ret(move_result<borrowed_iterator_t<Rng>, O>)( //
                 requires input_range<Rng> && weakly_incrementable<O> &&
                 indirectly_movable<iterator_t<Rng>, O>)
         {

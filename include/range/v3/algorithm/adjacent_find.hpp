@@ -56,7 +56,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename C = equal_to, typename P = identity>
         auto RANGES_FUNC(adjacent_find)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                    //
+            ->CPP_ret(borrowed_iterator_t<Rng>)(                                //
                 requires forward_range<Rng> &&
                 indirect_relation<C, projected<iterator_t<Rng>, P>>)
         {

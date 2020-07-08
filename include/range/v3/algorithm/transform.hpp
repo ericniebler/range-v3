@@ -62,7 +62,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename O, typename F, typename P = identity>
         auto RANGES_FUNC(transform)(Rng && rng, O out, F fun, P proj = P{}) //
-            ->CPP_ret(unary_transform_result<safe_iterator_t<Rng>, O>)(     //
+            ->CPP_ret(unary_transform_result<borrowed_iterator_t<Rng>, O>)( //
                 requires input_range<Rng> && weakly_incrementable<O> &&
                 copy_constructible<F> &&
                 indirectly_writable<O, indirect_result_t<F &, projected<iterator_t<Rng>, P>>>)
@@ -109,8 +109,8 @@ namespace ranges
                  typename P1 = identity>
         auto RANGES_FUNC(transform)(
             Rng0 && rng0, Rng1 && rng1, O out, F fun, P0 proj0 = P0{}, P1 proj1 = P1{}) //
-            ->CPP_ret(binary_transform_result<safe_iterator_t<Rng0>,
-                                              safe_iterator_t<Rng1>,
+            ->CPP_ret(binary_transform_result<borrowed_iterator_t<Rng0>,
+                                              borrowed_iterator_t<Rng1>,
                                               O>)( //
                 requires input_range<Rng0> && input_range<Rng1> &&
                 weakly_incrementable<O> && copy_constructible<F> &&
@@ -180,7 +180,7 @@ namespace ranges
                                     P0 proj0 = P0{},
                                     P1 proj1 = P1{}) //
             ->CPP_ret(
-                binary_transform_result<safe_iterator_t<Rng0>, uncvref_t<I1Ref>, O>)( //
+                binary_transform_result<borrowed_iterator_t<Rng0>, uncvref_t<I1Ref>, O>)( //
                 requires input_range<Rng0> && input_iterator<uncvref_t<I1Ref>> &&
                 weakly_incrementable<O> && copy_constructible<F> &&
                 indirectly_writable<O,

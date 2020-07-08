@@ -53,7 +53,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename F>
         auto RANGES_FUNC(generate)(Rng && rng, F fun)
-            ->CPP_ret(generate_result<safe_iterator_t<Rng>, F>)( //
+            ->CPP_ret(generate_result<borrowed_iterator_t<Rng>, F>)( //
                 requires invocable<F &> && output_range<Rng, invoke_result_t<F &>>)
         {
             return {(*this)(begin(rng), end(rng), ref(fun)).out, detail::move(fun)};

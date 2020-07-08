@@ -94,7 +94,7 @@ namespace ranges
                                             C pred = C{},
                                             PI in_proj = PI{},
                                             PO out_proj = PO{}) //
-            ->CPP_ret(safe_iterator_t<OutRng>)(                 //
+            ->CPP_ret(borrowed_iterator_t<OutRng>)(             //
                 requires input_range<InRng> && random_access_range<OutRng> &&
                 indirectly_copyable<iterator_t<InRng>, iterator_t<OutRng>> &&
                 sortable<iterator_t<OutRng>, C, PO> &&
