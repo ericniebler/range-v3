@@ -68,7 +68,7 @@ namespace ranges
         template<typename Rng, typename Gen = detail::default_random_engine &>
         auto RANGES_FUNC(shuffle)(Rng && rng,
                                   Gen && rand = detail::get_random_engine()) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                 //
+            ->CPP_ret(borrowed_iterator_t<Rng>)(                             //
                 requires random_access_range<Rng> && permutable<iterator_t<Rng>> &&
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
                 convertible_to<invoke_result_t<Gen &>,

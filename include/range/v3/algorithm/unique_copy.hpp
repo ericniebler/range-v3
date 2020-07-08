@@ -148,7 +148,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename O, typename C = equal_to, typename P = identity>
         auto RANGES_FUNC(unique_copy)(Rng && rng, O out, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(unique_copy_result<safe_iterator_t<Rng>, O>)(                  //
+            ->CPP_ret(unique_copy_result<borrowed_iterator_t<Rng>, O>)(              //
                 requires input_range<Rng> &&
                 indirect_relation<C, projected<iterator_t<Rng>, P>> &&
                 weakly_incrementable<O> && indirectly_copyable<iterator_t<Rng>, O> &&

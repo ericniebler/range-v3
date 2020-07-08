@@ -73,7 +73,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename Pred, typename Proj = identity>
         auto RANGES_FUNC(adjacent_remove_if)(Rng && rng, Pred pred, Proj proj = {}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                        //
+            ->CPP_ret(borrowed_iterator_t<Rng>)(                                    //
                 requires forward_range<Rng> &&
                 indirect_relation<Pred, projected<iterator_t<Rng>, Proj>> &&
                 permutable<iterator_t<Rng>>)

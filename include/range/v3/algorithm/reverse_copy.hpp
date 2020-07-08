@@ -53,8 +53,8 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename O>
-        auto RANGES_FUNC(reverse_copy)(Rng && rng, O out)            //
-            ->CPP_ret(reverse_copy_result<safe_iterator_t<Rng>, O>)( //
+        auto RANGES_FUNC(reverse_copy)(Rng && rng, O out)                //
+            ->CPP_ret(reverse_copy_result<borrowed_iterator_t<Rng>, O>)( //
                 requires bidirectional_range<Rng> && weakly_incrementable<O> &&
                 indirectly_copyable<iterator_t<Rng>, O>)
         {

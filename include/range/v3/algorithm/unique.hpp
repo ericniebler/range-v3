@@ -67,7 +67,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename C = equal_to, typename P = identity>
         auto RANGES_FUNC(unique)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                             //
+            ->CPP_ret(borrowed_iterator_t<Rng>)(                         //
                 requires sortable<iterator_t<Rng>, C, P> && range<Rng>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

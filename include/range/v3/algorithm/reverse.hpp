@@ -72,8 +72,8 @@ namespace ranges
 
         /// \overload
         template<typename Rng, typename I = iterator_t<Rng>>
-        auto RANGES_FUNC(reverse)(Rng && rng) //
-            ->CPP_ret(safe_iterator_t<Rng>)(  //
+        auto RANGES_FUNC(reverse)(Rng && rng)    //
+            ->CPP_ret(borrowed_iterator_t<Rng>)( //
                 requires bidirectional_range<Rng> && permutable<I>)
         {
             return (*this)(begin(rng), end(rng));

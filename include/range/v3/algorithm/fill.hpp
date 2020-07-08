@@ -44,7 +44,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename V>
         auto RANGES_FUNC(fill)(Rng && rng, V const & val)
-            ->CPP_ret(safe_iterator_t<Rng>)( //
+            ->CPP_ret(borrowed_iterator_t<Rng>)( //
                 requires output_range<Rng, V const &>)
         {
             return (*this)(begin(rng), end(rng), val);

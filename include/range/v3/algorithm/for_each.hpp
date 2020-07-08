@@ -56,7 +56,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename F, typename P = identity>
         auto RANGES_FUNC(for_each)(Rng && rng, F fun, P proj = P{})
-            ->CPP_ret(for_each_result<safe_iterator_t<Rng>, F>)( //
+            ->CPP_ret(for_each_result<borrowed_iterator_t<Rng>, F>)( //
                 requires input_range<Rng> &&
                 indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
         {

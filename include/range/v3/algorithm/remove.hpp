@@ -62,7 +62,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename T, typename P = identity>
         auto RANGES_FUNC(remove)(Rng && rng, T const & val, P proj = P{})
-            ->CPP_ret(safe_iterator_t<Rng>)( //
+            ->CPP_ret(borrowed_iterator_t<Rng>)( //
                 requires forward_range<Rng> && permutable<iterator_t<Rng>> &&
                 indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *>)
         {

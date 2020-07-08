@@ -56,7 +56,7 @@ namespace ranges
         template<typename Rng, typename V, typename C = less, typename P = identity>
         auto RANGES_FUNC(upper_bound)(
             Rng && rng, V const & val, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                       //
+        ->CPP_ret(borrowed_iterator_t<Rng>)(                       //
                 requires forward_range<Rng> &&
                 indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
         {
