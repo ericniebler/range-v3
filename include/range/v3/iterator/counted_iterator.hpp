@@ -143,7 +143,7 @@ namespace ranges
         constexpr auto operator*() const
             noexcept(noexcept(iter_reference_t<I>(*current_)))
                 -> CPP_ret(iter_reference_t<I2>)( //
-                    requires readable<I2 const>)
+                    requires indirectly_readable<I2 const>)
         {
             RANGES_EXPECT(cnt_ > 0);
             return *current_;
@@ -405,8 +405,8 @@ namespace ranges
     }
 
     template<typename I>
-    struct readable_traits<counted_iterator<I>>
-      : detail::if_then_t<(bool)readable<I>, readable_traits<I>, meta::nil_>
+    struct indirectly_readable_traits<counted_iterator<I>>
+      : detail::if_then_t<(bool)indirectly_readable<I>, indirectly_readable_traits<I>, meta::nil_>
     {};
 
     template<typename I>

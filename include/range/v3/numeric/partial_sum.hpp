@@ -65,7 +65,7 @@ namespace ranges
     );
     template<typename I, typename BOp>
     CPP_concept_bool indirect_semigroup =
-        readable<I> &&
+        indirectly_readable<I> &&
         CPP_fragment(ranges::indirect_semigroup_, I, BOp);
 
     template<typename I, typename O, typename BOp = plus, typename P = identity>

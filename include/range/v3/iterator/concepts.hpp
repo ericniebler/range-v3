@@ -141,8 +141,13 @@ namespace ranges
     );
 
     template<typename I>
-    CPP_concept_bool readable = //
+    CPP_concept_bool indirectly_readable = //
         CPP_fragment(ranges::readable_, uncvref_t<I>);
+
+    template<typename I>
+    RANGES_DEPRECATED("Please use ranges::indirectly_readable instead")
+    RANGES_INLINE_VAR constexpr bool readable = //
+        indirectly_readable<I>;
 
     template<typename O, typename T>
     CPP_concept_fragment(writable_,
@@ -154,8 +159,13 @@ namespace ranges
             const_cast<iter_reference_t<O> const &&>(*(O &&) o) = (T &&) t
         ));
     template<typename O, typename T>
-    CPP_concept_bool writable = //
+    CPP_concept_bool indirectly_writable = //
         CPP_fragment(ranges::writable_, O, T);
+
+    template<typename O, typename T>
+    RANGES_DEPRECATED("Please use ranges::indirectly_writable instead")
+    RANGES_INLINE_VAR constexpr bool writable = //
+        indirectly_writable<O, T>;
     // clang-format on
 
     /// \cond
@@ -294,7 +304,7 @@ namespace ranges
     template<typename Out, typename T>
     CPP_concept_bool output_iterator =
         input_or_output_iterator<Out> &&
-        writable<Out, T> &&
+        indirectly_writable<Out, T> &&
         CPP_fragment(ranges::output_iterator_, Out, T);
 
     template<typename I, typename Tag>
@@ -305,7 +315,7 @@ namespace ranges
     template<typename I>
     CPP_concept_bool input_iterator =
         input_or_output_iterator<I> &&
-        readable<I> &&
+        indirectly_readable<I> &&
         CPP_fragment(ranges::with_category_, I, std::input_iterator_tag);
 
     template<typename I>
@@ -418,7 +428,7 @@ namespace ranges
     // indirect_result_t
     template<typename Fun, typename... Is>
     using indirect_result_t =
-        detail::enable_if_t<(bool)and_v<(bool)readable<Is>...>,
+        detail::enable_if_t<(bool)and_v<(bool)indirectly_readable<Is>...>,
                             invoke_result_t<Fun, iter_reference_t<Is>...>>;
 
     /// \cond
@@ -448,7 +458,7 @@ namespace ranges
 
         template<typename F, typename I>
         CPP_concept_bool indirectly_unary_invocable_ =
-            readable<I> &&
+            indirectly_readable<I> &&
             CPP_fragment(detail::indirectly_unary_invocable_frag_, F, I);
         // clang-format on
     } // namespace detail
@@ -472,7 +482,7 @@ namespace ranges
 
     template<typename F, typename I>
     CPP_concept_bool indirectly_regular_unary_invocable =
-        readable<I> &&
+        indirectly_readable<I> &&
         copy_constructible<F> &&
         CPP_fragment(ranges::indirectly_regular_unary_invocable_, F, I);
 
@@ -494,7 +504,7 @@ namespace ranges
 
     template<typename F, typename I1, typename I2>
     CPP_concept_bool indirectly_binary_invocable_ =
-        readable<I1> && readable<I2> &&
+        indirectly_readable<I1> && indirectly_readable<I2> &&
         copy_constructible<F> &&
         CPP_fragment(ranges::indirectly_binary_invocable_frag_, F, I1, I2);
 
@@ -514,7 +524,7 @@ namespace ranges
 
     template<typename F, typename I1, typename I2>
     CPP_concept_bool indirectly_regular_binary_invocable_ =
-        readable<I1> && readable<I2> &&
+        indirectly_readable<I1> && indirectly_readable<I2> &&
         copy_constructible<F> &&
         CPP_fragment(ranges::indirectly_regular_binary_invocable_frag_, F, I1, I2);
     /// \endcond
@@ -528,7 +538,7 @@ namespace ranges
 
     template<typename F, typename I>
     CPP_concept_bool indirect_unary_predicate =
-        readable<I> &&
+        indirectly_readable<I> &&
         copy_constructible<F> &&
         CPP_fragment(ranges::indirect_unary_predicate_, F, I);
 
@@ -543,7 +553,7 @@ namespace ranges
 
     template<typename F, typename I1, typename I2>
     CPP_concept_bool indirect_binary_predicate_ =
-        readable<I1> && readable<I2> &&
+        indirectly_readable<I1> && indirectly_readable<I2> &&
         copy_constructible<F> &&
         CPP_fragment(ranges::indirect_binary_predicate_frag_, F, I1, I2);
 
@@ -558,7 +568,7 @@ namespace ranges
 
     template<typename F, typename I1, typename I2 = I1>
     CPP_concept_bool indirect_relation =
-        readable<I1> && readable<I2> &&
+        indirectly_readable<I1> && indirectly_readable<I2> &&
         copy_constructible<F> &&
         CPP_fragment(ranges::indirect_relation_, F, I1, I2);
 
@@ -573,7 +583,7 @@ namespace ranges
 
     template<typename F, typename I1, typename I2 = I1>
     CPP_concept_bool indirect_strict_weak_order =
-        readable<I1> && readable<I2> &&
+        indirectly_readable<I1> && indirectly_readable<I2> &&
         copy_constructible<F> &&
         CPP_fragment(ranges::indirect_strict_weak_order_, F, I1, I2);
     // clang-format on
@@ -607,7 +617,7 @@ namespace ranges
         struct select_projected_<identity>
         {
             template<typename I>
-            using apply = detail::enable_if_t<(bool)readable<I>, I>;
+            using apply = detail::enable_if_t<(bool)indirectly_readable<I>, I>;
         };
     } // namespace detail
     /// \endcond
@@ -622,16 +632,16 @@ namespace ranges
     // clang-format off
     template<typename I, typename O>
     CPP_concept_fragment(indirectly_movable_, requires()(0) &&
-        writable<O, iter_rvalue_reference_t<I>>
+        indirectly_writable<O, iter_rvalue_reference_t<I>>
     );
 
     template<typename I, typename O>
     CPP_concept_bool indirectly_movable =
-        readable<I> && CPP_fragment(ranges::indirectly_movable_, I, O);
+        indirectly_readable<I> && CPP_fragment(ranges::indirectly_movable_, I, O);
 
     template<typename I, typename O>
     CPP_concept_fragment(indirectly_movable_storable_, requires()(0) &&
-        writable<O, iter_value_t<I>> &&
+        indirectly_writable<O, iter_value_t<I>> &&
         movable<iter_value_t<I>> &&
         constructible_from<iter_value_t<I>, iter_rvalue_reference_t<I>> &&
         assignable_from<iter_value_t<I> &, iter_rvalue_reference_t<I>>
@@ -644,16 +654,16 @@ namespace ranges
 
     template<typename I, typename O>
     CPP_concept_fragment(indirectly_copyable_, requires()(0) &&
-        writable<O, iter_reference_t<I>>
+        indirectly_writable<O, iter_reference_t<I>>
     );
 
     template<typename I, typename O>
     CPP_concept_bool indirectly_copyable =
-        readable<I> && CPP_fragment(ranges::indirectly_copyable_, I, O);
+        indirectly_readable<I> && CPP_fragment(ranges::indirectly_copyable_, I, O);
 
     template<typename I, typename O>
     CPP_concept_fragment(indirectly_copyable_storable_, requires()(0) &&
-        writable<O, iter_value_t<I> const &> &&
+        indirectly_writable<O, iter_value_t<I> const &> &&
         copyable<iter_value_t<I>> &&
         constructible_from<iter_value_t<I>, iter_reference_t<I>> &&
         assignable_from<iter_value_t<I> &, iter_reference_t<I>>
@@ -675,7 +685,7 @@ namespace ranges
         ));
     template<typename I1, typename I2 = I1>
     CPP_concept_bool indirectly_swappable =
-        readable<I1> && readable<I2> &&
+        indirectly_readable<I1> && indirectly_readable<I2> &&
         CPP_fragment(ranges::indirectly_swappable_, I1, I2);
 
     template<typename C, typename I1, typename P1, typename I2, typename P2>
@@ -781,9 +791,11 @@ namespace ranges
         using ranges::indirectly_copyable_storable;
         using ranges::indirectly_movable;
         using ranges::indirectly_movable_storable;
+        using ranges::indirectly_readable;
         using ranges::indirectly_regular_unary_invocable;
         using ranges::indirectly_swappable;
         using ranges::indirectly_unary_invocable;
+        using ranges::indirectly_writable;
         using ranges::input_iterator;
         using ranges::input_or_output_iterator;
         using ranges::mergeable;
@@ -791,12 +803,10 @@ namespace ranges
         using ranges::permutable;
         using ranges::projected;
         using ranges::random_access_iterator;
-        using ranges::readable;
         using ranges::sentinel_for;
         using ranges::sized_sentinel_for;
         using ranges::sortable;
         using ranges::weakly_incrementable;
-        using ranges::writable;
     } // namespace cpp20
     /// @}
 } // namespace ranges

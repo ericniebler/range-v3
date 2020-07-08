@@ -34,7 +34,7 @@ namespace ranges
     struct incrementable_traits;
 
     template<typename I>
-    struct readable_traits;
+    struct indirectly_readable_traits;
 
     /// \cond
     namespace detail
@@ -118,8 +118,8 @@ namespace ranges
             int,
             I *pi = nullptr,
             void (*fn)(I const &) = nullptr,
-            typename readable_traits<I>::value_type *pv = nullptr,
-            typename readable_traits<I>::value_type const *pcv = nullptr,
+            typename indirectly_readable_traits<I>::value_type *pv = nullptr,
+            typename indirectly_readable_traits<I>::value_type const *pcv = nullptr,
             always_<
                 void,
                 decltype(I{}), // Default constructible
@@ -130,13 +130,13 @@ namespace ranges
 #ifdef RANGES_WORKAROUND_MSVC_793042
                 enable_if_t<RANGES_IS_SAME(decltype(**pi), decltype(*pv)) ||
                             RANGES_IS_SAME(decltype(**pi), decltype(*pcv)) ||
-                            RANGES_IS_SAME(decltype(**pi), typename readable_traits<I>::value_type &&) ||
-                            RANGES_IS_SAME(decltype(**pi), typename readable_traits<I>::value_type const &&)>
+                            RANGES_IS_SAME(decltype(**pi), typename indirectly_readable_traits<I>::value_type &&) ||
+                            RANGES_IS_SAME(decltype(**pi), typename indirectly_readable_traits<I>::value_type const &&)>
 #else // ^^^ workaround / no workaround vvv
                 int[RANGES_IS_SAME(decltype(**pi), decltype(*pv)) ||
                     RANGES_IS_SAME(decltype(**pi), decltype(*pcv)) ||
-                    RANGES_IS_SAME(decltype(**pi), typename readable_traits<I>::value_type &&) ||
-                    RANGES_IS_SAME(decltype(**pi), typename readable_traits<I>::value_type const &&)]
+                    RANGES_IS_SAME(decltype(**pi), typename indirectly_readable_traits<I>::value_type &&) ||
+                    RANGES_IS_SAME(decltype(**pi), typename indirectly_readable_traits<I>::value_type const &&)]
 #endif // RANGES_WORKAROUND_MSVC_793042
             > * = nullptr)
         {
@@ -171,7 +171,7 @@ namespace ranges
             int,
             I *pi = nullptr,
             typename incrementable_traits<I>::difference_type d = 0,
-            typename readable_traits<I>::value_type const *pcv = nullptr,
+            typename indirectly_readable_traits<I>::value_type const *pcv = nullptr,
             always_<
                 void,
                 int[decltype(d)(-1) < decltype(d)(0)], // signed difference type
@@ -185,7 +185,7 @@ namespace ranges
             struct yes_traits
             {
                 using difference_type = D;
-                using value_type = typename readable_traits<I>::value_type;
+                using value_type = typename indirectly_readable_traits<I>::value_type;
                 using reference = decltype(cpp17_reference_type_<I>(0));
                 using pointer = decltype(cpp17_pointer_type_<I>(0));
                 using iterator_category = decltype(cpp17_iterator_category_<I>(0));
