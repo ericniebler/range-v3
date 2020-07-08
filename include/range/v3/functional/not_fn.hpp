@@ -40,7 +40,7 @@ namespace ranges
         CPP_member
         constexpr CPP_ctor(logical_negate)()(                          //
             noexcept(std::is_nothrow_default_constructible<FD>::value) //
-            requires default_constructible<FD>)
+            requires default_initializable<FD>)
         {}
         template<typename T>
         explicit constexpr CPP_ctor(logical_negate)(T && pred)( //

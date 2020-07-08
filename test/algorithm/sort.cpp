@@ -223,7 +223,7 @@ namespace
             return a.i_ >= b.i_;
         }
     };
-    CPP_assert(ranges::default_constructible<Int>);
+    CPP_assert(ranges::default_initializable<Int>);
     CPP_assert(ranges::movable<Int>);
     CPP_assert(ranges::totally_ordered<Int>);
 }

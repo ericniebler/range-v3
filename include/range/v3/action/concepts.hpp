@@ -56,7 +56,7 @@ namespace ranges
     // clang-format off
     template<typename T>
     CPP_concept_bool semi_container =
-        forward_range<T> && default_constructible<uncvref_t<T>> &&
+        forward_range<T> && default_initializable<uncvref_t<T>> &&
         movable<uncvref_t<T>> &&
         !view_<T>;
 

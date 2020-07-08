@@ -48,7 +48,7 @@ namespace ranges
         CPP_member
         constexpr CPP_ctor(basic_mixin)()(                            //
             noexcept(std::is_nothrow_default_constructible<T>::value) //
-            requires default_constructible<T>)
+            requires default_initializable<T>)
           : box<T>{}
         {}
         CPP_member
