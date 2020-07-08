@@ -298,7 +298,7 @@ namespace ranges
         };
 
         template<typename I>
-        using move_into_cursor_types = move_into_cursor_types_<I, (bool)readable<I>>;
+        using move_into_cursor_types = move_into_cursor_types_<I, (bool)indirectly_readable<I>>;
 
         template<typename I>
         struct move_into_cursor : move_into_cursor_types<I>
@@ -339,21 +339,21 @@ namespace ranges
             template<typename T>
             auto write(T && t) noexcept(noexcept(*it_ = std::move(t)))
                 -> CPP_ret(void)( //
-                    requires writable<I, aux::move_t<T>>)
+                    requires indirectly_writable<I, aux::move_t<T>>)
             {
                 *it_ = std::move(t);
             }
             template<typename T>
             auto write(T && t) const noexcept(noexcept(*it_ = std::move(t)))
                 -> CPP_ret(void)( //
-                    requires writable<I, aux::move_t<T>>)
+                    requires indirectly_writable<I, aux::move_t<T>>)
             {
                 *it_ = std::move(t);
             }
             CPP_member
             auto read() const noexcept(noexcept(*std::declval<I const &>()))
                 -> CPP_ret(iter_reference_t<I>)( //
-                    requires readable<I>)
+                    requires indirectly_readable<I>)
             {
                 return *it_;
             }
@@ -385,7 +385,7 @@ namespace ranges
             template<typename II = I const>
             constexpr auto move() const noexcept(has_nothrow_iter_move_v<II>)
                 -> CPP_ret(iter_rvalue_reference_t<II>)( //
-                    requires same_as<I const, II> && readable<II>)
+                    requires same_as<I const, II> && indirectly_readable<II>)
             {
                 return iter_move(it_);
             }

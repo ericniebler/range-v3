@@ -59,10 +59,10 @@ namespace ranges
         template<typename T>
         using iter_value_t_ =
             typename if_then_t<is_std_iterator_traits_specialized_v<T>,
-                               std::iterator_traits<T>, readable_traits<T>>::value_type;
+                               std::iterator_traits<T>, indirectly_readable_traits<T>>::value_type;
 #else
         template<typename T>
-        using iter_value_t_ = typename readable_traits<T>::value_type;
+        using iter_value_t_ = typename indirectly_readable_traits<T>::value_type;
 #endif
     } // namespace detail
     /// \endcond

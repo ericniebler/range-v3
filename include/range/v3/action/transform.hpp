@@ -45,8 +45,8 @@ namespace ranges
             template<typename Rng, typename F, typename P = identity>
             auto operator()(Rng && rng, F fun, P proj = P{}) const -> CPP_ret(Rng)( //
                 requires input_range<Rng> && copy_constructible<F> &&
-                    writable<iterator_t<Rng>,
-                             indirect_result_t<F &, projected<iterator_t<Rng>, P>>>)
+                    indirectly_writable<iterator_t<Rng>,
+                                        indirect_result_t<F &, projected<iterator_t<Rng>, P>>>)
             {
                 ranges::transform(rng, begin(rng), std::move(fun), std::move(proj));
                 return static_cast<Rng &&>(rng);

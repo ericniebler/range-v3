@@ -169,7 +169,11 @@ namespace ranges
     struct iter_size_fn;
 
     template<typename T>
-    struct readable_traits;
+    struct indirectly_readable_traits;
+
+    template<typename T>
+    using readable_traits RANGES_DEPRECATED("Please use ranges::indirectly_readable_traits")
+     = indirectly_readable_traits<T>;
 
     template<typename T>
     struct incrementable_traits;
@@ -196,7 +200,7 @@ namespace ranges
     template<typename T>
     using value_type RANGES_DEPRECATED(
         "ranges::value_type<T>::type is deprecated. Use "
-        "ranges::readable_traits<T>::value_type instead.") = detail::value_type_<T>;
+        "ranges::indirectly_readable_traits<T>::value_type instead.") = detail::value_type_<T>;
 
     template<typename T>
     struct size_type;

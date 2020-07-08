@@ -233,11 +233,11 @@ namespace ranges
     // * For class types with both member value_type and element_type, value_type is
     //   preferred (see ericniebler/stl2#299).
     template<typename T>
-    struct readable_traits : detail::readable_traits_1_<T>
+    struct indirectly_readable_traits : detail::readable_traits_1_<T>
     {};
 
     template<typename T>
-    struct readable_traits<T const> : readable_traits<T>
+    struct indirectly_readable_traits<T const> : indirectly_readable_traits<T>
     {};
 
     /// \cond

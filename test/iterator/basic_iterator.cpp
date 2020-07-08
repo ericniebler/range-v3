@@ -68,7 +68,7 @@ namespace test_weak_input
 
     template<class I>
     using iterator = ranges::basic_iterator<cursor<I>>;
-    CPP_assert(ranges::readable<iterator<char *>>);
+    CPP_assert(ranges::indirectly_readable<iterator<char *>>);
     CPP_assert(ranges::input_iterator<iterator<char *>>);
 
     static_assert(!has_iter_cat<iterator<char *>>::value, "");

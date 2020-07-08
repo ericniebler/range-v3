@@ -167,7 +167,7 @@ namespace ranges
         template<typename T>
         using incrementable_traits = ranges::incrementable_traits<T>;
         template<typename T>
-        using readable_traits = ranges::readable_traits<T>;
+        using indirectly_readable_traits = ranges::indirectly_readable_traits<T>;
     } // namespace cpp20
     /// @}
 } // namespace ranges
