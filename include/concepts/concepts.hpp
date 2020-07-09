@@ -1134,7 +1134,7 @@ namespace concepts
             META_IS_CONSTRUCTIBLE(T, Args...);
 
         template<typename T>
-        CPP_concept_bool default_constructible =
+        CPP_concept_bool default_initializable =
             constructible_from<T>;
 
         template<typename T>
@@ -1183,7 +1183,7 @@ namespace concepts
         template<typename T>
         CPP_concept_bool semiregular =
             copyable<T> &&
-            default_constructible<T>;
+            default_initializable<T>;
             // Axiom: copies are independent. See Fundamentals of Generic Programming
             // http://www.stepanovpapers.com/DeSt98.pdf
 
@@ -1281,8 +1281,8 @@ namespace concepts
                 CPP_defer_(defs::constructible_from, CPP_type(T), Args...);
 
             template<typename T>
-            CPP_concept default_constructible =
-                CPP_defer(defs::default_constructible, T);
+            CPP_concept default_initializable =
+                CPP_defer(defs::default_initializable, T);
 
             template<typename T>
             CPP_concept move_constructible =

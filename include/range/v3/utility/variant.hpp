@@ -52,7 +52,7 @@ namespace ranges
         public:
             CPP_member
             constexpr CPP_ctor(indexed_datum)(meta::nil_ = {})(
-                requires default_constructible<T>)
+                requires default_initializable<T>)
               : data_{}
             {}
             CPP_member
@@ -67,17 +67,17 @@ namespace ranges
                 std::uninitialized_copy_n(that.data_, N, data_);
             }
             // \pre Requires distance(first, last) <= N
-            // \pre Requires default_constructible<T> || distance(first, last) == N
+            // \pre Requires default_initializable<T> || distance(first, last) == N
             template<typename I, typename S>
             CPP_ctor(indexed_datum)(I first, S last)( //
                 requires sentinel_for<S, I> && input_iterator<I> &&
                     constructible_from<T, iter_reference_t<I>>)
             {
                 T * p = detail::uninitialized_copy(first, last, data_);
-                this->fill_default_(p, meta::bool_<default_constructible<T>>{});
+                this->fill_default_(p, meta::bool_<default_initializable<T>>{});
             }
             // \pre Requires distance(r) <= N
-            // \pre Requires default_constructible<T> || distance(r) == N
+            // \pre Requires default_initializable<T> || distance(r) == N
             template<typename R>
             explicit CPP_ctor(indexed_datum)(R && r)( //
                 requires input_range<R> && constructible_from<T, range_reference_t<R>>)

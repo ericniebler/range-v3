@@ -31,7 +31,7 @@ void bug_1217()
         ranges::accumulate( positions_visited, 0 );
     }
 }
- 
+
 int main()
 {
     using namespace ranges;
@@ -95,7 +95,7 @@ int main()
         int i = 42;
         std::string s = "hello world";
         variant<int&, std::string&> v{emplaced_index<0>, i};
-        CPP_assert(!default_constructible<variant<int&, std::string&>>);
+        CPP_assert(!default_initializable<variant<int&, std::string&>>);
         CHECK(v.index() == 0u);
         CHECK(get<0>(v) == 42);
         CHECK(&get<0>(v) == &i);

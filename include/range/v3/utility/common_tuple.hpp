@@ -116,7 +116,7 @@ namespace ranges
         CPP_ctor(common_tuple)()( //
             noexcept(meta::and_c<
                      std::is_nothrow_default_constructible<Ts>::value...>::value) //
-            requires default_constructible<std::tuple<Ts...>>)
+            requires default_initializable<std::tuple<Ts...>>)
           : common_tuple::forward_tuple_interface{}
         {}
         CPP_template(typename... Us)(                                              //
@@ -328,7 +328,7 @@ namespace ranges
         CPP_ctor(common_pair)()( //
             noexcept(std::is_nothrow_default_constructible<F>::value &&
                          std::is_nothrow_default_constructible<S>::value) //
-            requires default_constructible<F> && default_constructible<S>)
+            requires default_initializable<F> && default_initializable<S>)
           : std::pair<F, S>{}
         {}
         template<typename F2, typename S2>
