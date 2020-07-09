@@ -71,7 +71,7 @@ namespace ranges
                 if(rng_->val_)
                     rng_->val_.reset();
                 else
-                    rng_->gen_();
+                    static_cast<void>(rng_->gen_());
                 --rng_->n_;
             }
         };
