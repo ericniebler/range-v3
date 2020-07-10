@@ -65,7 +65,7 @@ namespace ranges
     );
     template<typename I, typename BOp>
     CPP_concept_bool indirect_semigroup =
-        readable<I> &&
+        indirectly_readable<I> &&
         CPP_fragment(ranges::indirect_semigroup_, I, BOp);
 
     template<typename I, typename O, typename BOp = plus, typename P = identity>
@@ -132,7 +132,7 @@ namespace ranges
         template<typename Rng, typename ORef, typename BOp = plus, typename P = identity,
                  typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>>
         auto operator()(Rng && rng, ORef && result, BOp bop = BOp{}, P proj = P{}) const
-            -> CPP_ret(partial_sum_result<safe_iterator_t<Rng>, O>)( //
+            -> CPP_ret(partial_sum_result<borrowed_iterator_t<Rng>, O>)( //
                 requires range<Rng> && partial_sum_constraints<I, O, BOp, P>)
         {
             return (*this)(begin(rng),
@@ -146,7 +146,7 @@ namespace ranges
                  typename I = iterator_t<Rng>, typename O = iterator_t<ORng>>
         auto operator()(Rng && rng, ORng && result, BOp bop = BOp{}, P proj = P{}) const
             -> CPP_ret(
-                partial_sum_result<safe_iterator_t<Rng>, safe_iterator_t<ORng>>)( //
+                partial_sum_result<borrowed_iterator_t<Rng>, borrowed_iterator_t<ORng>>)( //
                 requires range<Rng> && range<ORng> &&
                     partial_sum_constraints<I, O, BOp, P>)
         {

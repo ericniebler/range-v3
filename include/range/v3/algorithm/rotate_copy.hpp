@@ -56,7 +56,7 @@ namespace ranges
             requires range<Rng> && weakly_incrementable<O>  && //
             indirectly_copyable<iterator_t<Rng>, O>) //
         auto RANGES_FUNC(rotate_copy)(Rng && rng, iterator_t<Rng> middle, O out) //
-            -> rotate_copy_result<safe_iterator_t<Rng>, O>
+            -> rotate_copy_result<borrowed_iterator_t<Rng>, O>
         {
             return (*this)(begin(rng), std::move(middle), end(rng), std::move(out));
         }

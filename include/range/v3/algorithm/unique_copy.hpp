@@ -153,7 +153,7 @@ namespace ranges
                 (forward_iterator<iterator_t<Rng>> || forward_iterator<O> ||
                  indirectly_copyable_storable<iterator_t<Rng>, O>)) //
         auto RANGES_FUNC(unique_copy)(Rng && rng, O out, C pred = C{}, P proj = P{}) //
-            -> unique_copy_result<safe_iterator_t<Rng>, O>
+            -> unique_copy_result<borrowed_iterator_t<Rng>, O>
         {
             return detail::unique_copy_impl(begin(rng),
                                             end(rng),

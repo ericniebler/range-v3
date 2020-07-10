@@ -54,7 +54,7 @@ namespace ranges
         CPP_template(typename Rng, typename F)( //
             requires invocable<F &> && output_range<Rng, invoke_result_t<F &>>) //
         auto RANGES_FUNC(generate)(Rng && rng, F fun)
-            -> generate_result<safe_iterator_t<Rng>, F>
+            -> generate_result<borrowed_iterator_t<Rng>, F>
         {
             return {(*this)(begin(rng), end(rng), ref(fun)).out, detail::move(fun)};
         }

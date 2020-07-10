@@ -58,11 +58,13 @@ namespace ranges
     !defined(RANGES_DOXYGEN_INVOKED)
         template<typename T>
         using iter_value_t_ =
-            typename meta::conditional_t<is_std_iterator_traits_specialized_v<T>,
-                               std::iterator_traits<T>, readable_traits<T>>::value_type;
+            typename meta::conditional_t<
+                is_std_iterator_traits_specialized_v<T>,
+                std::iterator_traits<T>,
+                indirectly_readable_traits<T>>::value_type;
 #else
         template<typename T>
-        using iter_value_t_ = typename readable_traits<T>::value_type;
+        using iter_value_t_ = typename indirectly_readable_traits<T>::value_type;
 #endif
     } // namespace detail
     /// \endcond

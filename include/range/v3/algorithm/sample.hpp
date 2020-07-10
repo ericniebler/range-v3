@@ -147,7 +147,7 @@ namespace ranges
                                  S last,
                                  ORng && out,
                                  Gen && gen = detail::get_random_engine()) //
-            -> sample_result<I, safe_iterator_t<ORng>>
+            -> sample_result<I, borrowed_iterator_t<ORng>>
         {
             if(RANGES_CONSTEXPR_IF(forward_iterator<I> || sized_sentinel_for<S, I>)) //
             {
@@ -179,7 +179,7 @@ namespace ranges
                                  O out,
                                  iter_difference_t<O> const n,
                                  Gen && gen = detail::get_random_engine()) //
-            -> sample_result<safe_iterator_t<Rng>, O>
+            -> sample_result<borrowed_iterator_t<Rng>, O>
         {
             if(RANGES_CONSTEXPR_IF(forward_range<Rng> || sized_range<Rng>)) //
             {
@@ -209,7 +209,7 @@ namespace ranges
         auto RANGES_FUNC(sample)(IRng && rng,
                                  ORng && out,
                                  Gen && gen = detail::get_random_engine())          //
-            -> sample_result<safe_iterator_t<IRng>, safe_iterator_t<ORng>>
+            -> sample_result<borrowed_iterator_t<IRng>, borrowed_iterator_t<ORng>>
         {
             if(RANGES_CONSTEXPR_IF(forward_range<IRng> || sized_range<IRng>)) //
             {

@@ -79,7 +79,7 @@ namespace ranges
                 indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>) //
         auto RANGES_FUNC(replace_copy)(
             Rng && rng, O out, T1 const & old_value, T2 const & new_value, P proj = {}) //
-            -> replace_copy_result<safe_iterator_t<Rng>, O>
+            -> replace_copy_result<borrowed_iterator_t<Rng>, O>
         {
             return (*this)(begin(rng),
                            end(rng),

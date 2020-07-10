@@ -64,7 +64,7 @@ namespace ranges
             requires forward_range<Rng> && permutable<iterator_t<Rng>>  && //
             indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *>) //
         auto RANGES_FUNC(remove)(Rng && rng, T const & val, P proj = P{})
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), val, std::move(proj));
         }

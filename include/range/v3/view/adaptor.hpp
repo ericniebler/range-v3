@@ -89,7 +89,7 @@ namespace ranges
         struct adaptor_value_type_<BaseIter, Adapt, 2>
         {
 #ifdef RANGES_WORKAROUND_MSVC_688606
-            using value_type = typename readable_traits<Adapt>::value_type;
+            using value_type = typename indirectly_readable_traits<Adapt>::value_type;
 #else  // ^^^ workaround ^^^ / vvv no workaround vvv
             using value_type = typename Adapt::value_type;
 #endif // RANGES_WORKAROUND_MSVC_688606

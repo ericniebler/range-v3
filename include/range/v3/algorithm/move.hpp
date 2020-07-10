@@ -56,7 +56,7 @@ namespace ranges
             requires input_range<Rng> && weakly_incrementable<O>  && //
             indirectly_movable<iterator_t<Rng>, O>) //
         auto RANGES_FUNC(move)(Rng && rng, O out)            //
-            -> move_result<safe_iterator_t<Rng>, O>
+            -> move_result<borrowed_iterator_t<Rng>, O>
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }

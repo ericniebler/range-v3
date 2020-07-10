@@ -159,7 +159,7 @@ namespace ranges
         auto operator*() const
             noexcept(noexcept(iter_reference_t<I>(*std::declval<I const &>())))
                 -> CPP_ret(iter_reference_t<I>)( //
-                    requires readable<I const>)
+                    requires indirectly_readable<I const>)
         {
             return *ranges::get<0>(data_);
         }
@@ -169,7 +169,7 @@ namespace ranges
                                                                42)))
                 -> CPP_ret(decltype(
                     common_iterator::operator_arrow_(std::declval<J const &>(), 42)))( //
-                    requires readable<J>)
+                    requires indirectly_readable<J>)
         {
             return common_iterator::operator_arrow_(ranges::get<0>(data_), 42);
         }
@@ -308,8 +308,8 @@ namespace ranges
     }
 
     template<typename I, typename S>
-    struct readable_traits<common_iterator<I, S>>
-      : meta::if_c<(bool)readable<I>, readable_traits<I>, meta::nil_>
+    struct indirectly_readable_traits<common_iterator<I, S>>
+      : meta::if_c<(bool)indirectly_readable<I>, indirectly_readable_traits<I>, meta::nil_>
     {};
 
     /// \cond

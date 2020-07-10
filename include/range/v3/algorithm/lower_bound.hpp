@@ -60,7 +60,7 @@ namespace ranges
                 indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(lower_bound)(
             Rng && rng, V const & val, C pred = C{}, P proj = P{})
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             return partition_point(
                 rng, detail::make_lower_bound_predicate(pred, val), std::move(proj));

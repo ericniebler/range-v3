@@ -50,7 +50,7 @@ namespace ranges
         CPP_template(typename I, typename S, typename O, typename F, typename P = identity)( //
             requires input_iterator<I> && sentinel_for<S, I>  && //
             weakly_incrementable<O> && copy_constructible<F>  && //
-            writable<O, indirect_result_t<F &, projected<I, P>>>) //
+            indirectly_writable<O, indirect_result_t<F &, projected<I, P>>>) //
         auto RANGES_FUNC(transform)(I first, S last, O out, F fun, P proj = P{}) //
             -> unary_transform_result<I, O>
         {
@@ -63,9 +63,9 @@ namespace ranges
         CPP_template(typename Rng, typename O, typename F, typename P = identity)( //
             requires input_range<Rng> && weakly_incrementable<O>  && //
             copy_constructible<F>  && //
-            writable<O, indirect_result_t<F &, projected<iterator_t<Rng>, P>>>) //
+            indirectly_writable<O, indirect_result_t<F &, projected<iterator_t<Rng>, P>>>)
         auto RANGES_FUNC(transform)(Rng && rng, O out, F fun, P proj = P{}) //
-            -> unary_transform_result<safe_iterator_t<Rng>, O>
+            -> unary_transform_result<borrowed_iterator_t<Rng>, O>
         {
             return (*this)(
                 begin(rng), end(rng), std::move(out), std::move(fun), std::move(proj));
@@ -84,7 +84,9 @@ namespace ranges
             requires input_iterator<I0> && sentinel_for<S0, I0> &&
                 input_iterator<I1> && sentinel_for<S1, I1> && weakly_incrementable<O> &&
                 copy_constructible<F> &&
-                writable<O, indirect_result_t<F &, projected<I0, P0>, projected<I1, P1>>>) //
+                indirectly_writable<
+                    O,
+                    indirect_result_t<F &, projected<I0, P0>, projected<I1, P1>>>) //
         auto RANGES_FUNC(transform)(I0 begin0,
                                     S0 end0,
                                     I1 begin1,
@@ -109,15 +111,16 @@ namespace ranges
                  typename P1 = identity)( //
             requires input_range<Rng0> && input_range<Rng1> &&
                 weakly_incrementable<O> && copy_constructible<F> &&
-                writable<O,
-                         indirect_result_t<F &,
-                                           projected<iterator_t<Rng0>, P0>,
-                                           projected<iterator_t<Rng1>, P1>>>) //
+                indirectly_writable<
+                    O,
+                    indirect_result_t<F &,
+                                      projected<iterator_t<Rng0>, P0>,
+                                      projected<iterator_t<Rng1>, P1>>>) //
         auto RANGES_FUNC(transform)(
             Rng0 && rng0, Rng1 && rng1, O out, F fun, P0 proj0 = P0{}, P1 proj1 = P1{}) //
-            -> binary_transform_result<safe_iterator_t<Rng0>,
-                                              safe_iterator_t<Rng1>,
-                                              O>
+            -> binary_transform_result<borrowed_iterator_t<Rng0>,
+                                       borrowed_iterator_t<Rng1>,
+                                       O>
         {
             return (*this)(begin(rng0),
                            end(rng0),
@@ -140,7 +143,9 @@ namespace ranges
                      typename P1 = identity)( //
             requires input_iterator<I0> && sentinel_for<S0, I0> &&
                 input_iterator<I1> && weakly_incrementable<O> && copy_constructible<F> &&
-                writable<O, indirect_result_t<F &, projected<I0, P0>, projected<I1, P1>>>)
+                indirectly_writable<
+                    O,
+                    indirect_result_t<F &, projected<I0, P0>, projected<I1, P1>>>)
         RANGES_DEPRECATED(
             "Use the variant of ranges::transform that takes an upper bound "
             "for both input ranges")
@@ -172,10 +177,11 @@ namespace ranges
                  typename P1 = identity)( //
             requires input_range<Rng0> && input_iterator<uncvref_t<I1Ref>> &&
                 weakly_incrementable<O> && copy_constructible<F> &&
-                writable<O,
-                         indirect_result_t<F &,
-                                           projected<iterator_t<Rng0>, P0>,
-                                           projected<uncvref_t<I1Ref>, P1>>>)
+                indirectly_writable<
+                    O,
+                    indirect_result_t<F &,
+                                      projected<iterator_t<Rng0>, P0>,
+                                      projected<uncvref_t<I1Ref>, P1>>>)
         RANGES_DEPRECATED(
             "Use the variant of ranges::transform that takes an upper bound "
             "for both input ranges")
@@ -185,7 +191,7 @@ namespace ranges
                                     F fun,
                                     P0 proj0 = P0{},
                                     P1 proj1 = P1{}) //
-            -> binary_transform_result<safe_iterator_t<Rng0>, uncvref_t<I1Ref>, O>
+            -> binary_transform_result<borrowed_iterator_t<Rng0>, uncvref_t<I1Ref>, O>
         {
             return (*this)(begin(rng0),
                            end(rng0),

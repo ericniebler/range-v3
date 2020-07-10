@@ -115,7 +115,7 @@ namespace ranges
             requires random_access_range<Rng>  && //
             indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(is_heap_until)(Rng && rng, C pred = C{}, P proj = P{})
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             return detail::is_heap_until_n(
                 begin(rng), distance(rng), std::move(pred), std::move(proj));
@@ -277,7 +277,7 @@ namespace ranges
         CPP_template(typename Rng, typename C = less, typename P = identity)( //
             requires random_access_range<Rng> && sortable<iterator_t<Rng>, C, P>) //
         auto RANGES_FUNC(push_heap)(Rng && rng, C pred = C{}, P proj = P{}) //
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             iterator_t<Rng> first = ranges::begin(rng);
             auto n = distance(rng);
@@ -336,7 +336,7 @@ namespace ranges
         CPP_template(typename Rng, typename C = less, typename P = identity)( //
             requires random_access_range<Rng> && sortable<iterator_t<Rng>, C, P>) //
         auto RANGES_FUNC(pop_heap)(Rng && rng, C pred = C{}, P proj = P{})
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             iterator_t<Rng> first = ranges::begin(rng);
             auto n = distance(rng);
@@ -373,7 +373,7 @@ namespace ranges
         CPP_template(typename Rng, typename C = less, typename P = identity)( //
             requires random_access_range<Rng> && sortable<iterator_t<Rng>, C, P>) //
         auto RANGES_FUNC(make_heap)(Rng && rng, C pred = C{}, P proj = P{})
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             iterator_t<Rng> first = ranges::begin(rng);
             auto const n = distance(rng);
@@ -409,7 +409,7 @@ namespace ranges
         CPP_template(typename Rng, typename C = less, typename P = identity)( //
             requires random_access_range<Rng &> && sortable<iterator_t<Rng>, C, P>) //
         auto RANGES_FUNC(sort_heap)(Rng && rng, C pred = C{}, P proj = P{})
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             iterator_t<Rng> first = ranges::begin(rng);
             auto const n = distance(rng);

@@ -218,7 +218,7 @@ namespace ranges
         CPP_template(typename Rng, typename C = less, typename P = identity)( //
             requires sortable<iterator_t<Rng>, C, P> && random_access_range<Rng>) //
         auto RANGES_FUNC(stable_sort)(Rng && rng, C pred = C{}, P proj = P{}) //
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

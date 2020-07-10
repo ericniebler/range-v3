@@ -39,7 +39,7 @@ namespace ranges
         {
             // tuple value
             CPP_template(typename... Its)( //
-                requires (sizeof...(Its) != 2) CPP_and and_v<readable<Its>...>) //
+                requires (sizeof...(Its) != 2) CPP_and and_v<indirectly_readable<Its>...>)
             auto operator()(copy_tag, Its...) const
                 -> std::tuple<iter_value_t<Its>...>
             {
@@ -48,28 +48,28 @@ namespace ranges
 
             // tuple reference
             CPP_template(typename... Its)( //
-                requires (sizeof...(Its) != 2) CPP_and and_v<readable<Its>...>) //
+                requires (sizeof...(Its) != 2) CPP_and and_v<indirectly_readable<Its>...>)
             auto operator()(Its const &... its) const
                 noexcept(meta::and_c<noexcept(iter_reference_t<Its>(*its))...>::value)
-                    -> common_tuple<iter_reference_t<Its>...>
+                -> common_tuple<iter_reference_t<Its>...>
             {
                 return common_tuple<iter_reference_t<Its>...>{*its...};
             }
 
             // tuple rvalue reference
             CPP_template(typename... Its)( //
-                requires (sizeof...(Its) != 2) CPP_and and_v<readable<Its>...>) //
+                requires (sizeof...(Its) != 2) CPP_and and_v<indirectly_readable<Its>...>)
             auto operator()(move_tag, Its const &... its) const
                 noexcept(meta::and_c<noexcept(
                              iter_rvalue_reference_t<Its>(iter_move(its)))...>::value)
-                    -> common_tuple<iter_rvalue_reference_t<Its>...>
+                -> common_tuple<iter_rvalue_reference_t<Its>...>
             {
                 return common_tuple<iter_rvalue_reference_t<Its>...>{iter_move(its)...};
             }
 
             // pair value
             CPP_template(typename It1, typename It2)( //
-                requires readable<It1> && readable<It2>) //
+                requires indirectly_readable<It1> && indirectly_readable<It2>) //
             auto operator()(copy_tag, It1, It2) const
                 -> std::pair<iter_value_t<It1>, iter_value_t<It2>>
             {
@@ -78,10 +78,11 @@ namespace ranges
 
             // pair reference
             CPP_template(typename It1, typename It2)( //
-                requires readable<It1> && readable<It2>) //
-            auto operator()(It1 const & it1, It2 const & it2) const noexcept(
-                noexcept(iter_reference_t<It1>(*it1)) &&
-                noexcept(iter_reference_t<It2>(*it2)))
+                requires indirectly_readable<It1> && indirectly_readable<It2>) //
+            auto operator()(It1 const & it1, It2 const & it2) const //
+                noexcept(
+                    noexcept(iter_reference_t<It1>(*it1)) && //
+                    noexcept(iter_reference_t<It2>(*it2)))
                 -> common_pair<iter_reference_t<It1>, iter_reference_t<It2>>
             {
                 return {*it1, *it2};
@@ -89,12 +90,12 @@ namespace ranges
 
             // pair rvalue reference
             CPP_template(typename It1, typename It2)( //
-                requires readable<It1> && readable<It2>) //
+                requires indirectly_readable<It1> && indirectly_readable<It2>) //
             auto operator()(move_tag, It1 const & it1, It2 const & it2) const
                 noexcept(noexcept(iter_rvalue_reference_t<It1>(iter_move(it1))) &&
                          noexcept(iter_rvalue_reference_t<It2>(iter_move(it2))))
-                    -> common_pair<iter_rvalue_reference_t<It1>,
-                                           iter_rvalue_reference_t<It2>>
+                -> common_pair<iter_rvalue_reference_t<It1>,
+                               iter_rvalue_reference_t<It2>>
             {
                 return {iter_move(it1), iter_move(it2)};
             }

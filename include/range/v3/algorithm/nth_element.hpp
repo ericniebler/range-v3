@@ -313,7 +313,7 @@ namespace ranges
             requires random_access_range<Rng> && sortable<iterator_t<Rng>, C, P>) //
         auto RANGES_FUNC(nth_element)(
             Rng && rng, iterator_t<Rng> nth, C pred = C{}, P proj = P{}) //
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             return (*this)(
                 begin(rng), std::move(nth), end(rng), std::move(pred), std::move(proj));

@@ -32,7 +32,7 @@ struct MoveOnlyReadable
     value_type operator*() const;
 };
 
-CPP_assert(readable<MoveOnlyReadable>);
+CPP_assert(indirectly_readable<MoveOnlyReadable>);
 
 void test_insert_iterator()
 {
@@ -97,7 +97,7 @@ struct value_type_tester_thingy {};
 namespace ranges
 {
     template<>
-    struct readable_traits<::value_type_tester_thingy>
+    struct indirectly_readable_traits<::value_type_tester_thingy>
     {
         using value_type = int;
     };
@@ -109,52 +109,52 @@ template<typename T>
 struct with_element_type { using element_type = T; };
 
 // arrays of known bound
-CPP_assert(same_as<int, ranges::readable_traits<int[4]>::value_type>);
-CPP_assert(same_as<int, ranges::readable_traits<const int[4]>::value_type>);
-CPP_assert(same_as<int*, ranges::readable_traits<int*[4]>::value_type>);
-CPP_assert(same_as<with_value_type<int>, ranges::readable_traits<with_value_type<int>[4]>::value_type>);
+CPP_assert(same_as<int, ranges::indirectly_readable_traits<int[4]>::value_type>);
+CPP_assert(same_as<int, ranges::indirectly_readable_traits<const int[4]>::value_type>);
+CPP_assert(same_as<int*, ranges::indirectly_readable_traits<int*[4]>::value_type>);
+CPP_assert(same_as<with_value_type<int>, ranges::indirectly_readable_traits<with_value_type<int>[4]>::value_type>);
 
 #if !defined(__GNUC__) || defined(__clang__)
 // arrays of unknown bound
-CPP_assert(same_as<int, ranges::readable_traits<int[]>::value_type>);
-CPP_assert(same_as<int, ranges::readable_traits<const int[]>::value_type>);
+CPP_assert(same_as<int, ranges::indirectly_readable_traits<int[]>::value_type>);
+CPP_assert(same_as<int, ranges::indirectly_readable_traits<const int[]>::value_type>);
 #endif
 
 template<typename T>
-using readable_traits_value_type_t = typename ranges::readable_traits<T>::value_type;
+using readable_traits_value_type_t = typename ranges::indirectly_readable_traits<T>::value_type;
 template<typename T>
 using readable_traits_value_type = meta::defer<readable_traits_value_type_t, T>;
 
 // object pointer types
-CPP_assert(same_as<int, ranges::readable_traits<int*>::value_type>);
-CPP_assert(same_as<int, ranges::readable_traits<int*const>::value_type>);
-CPP_assert(same_as<int, ranges::readable_traits<int const*>::value_type>);
-CPP_assert(same_as<int, ranges::readable_traits<int const*const>::value_type>);
-CPP_assert(same_as<int[4], ranges::readable_traits<int(*)[4]>::value_type>);
-CPP_assert(same_as<int[4], ranges::readable_traits<const int(*)[4]>::value_type>);
+CPP_assert(same_as<int, ranges::indirectly_readable_traits<int*>::value_type>);
+CPP_assert(same_as<int, ranges::indirectly_readable_traits<int*const>::value_type>);
+CPP_assert(same_as<int, ranges::indirectly_readable_traits<int const*>::value_type>);
+CPP_assert(same_as<int, ranges::indirectly_readable_traits<int const*const>::value_type>);
+CPP_assert(same_as<int[4], ranges::indirectly_readable_traits<int(*)[4]>::value_type>);
+CPP_assert(same_as<int[4], ranges::indirectly_readable_traits<const int(*)[4]>::value_type>);
 struct incomplete;
-CPP_assert(same_as<incomplete, ranges::readable_traits<incomplete*>::value_type>);
+CPP_assert(same_as<incomplete, ranges::indirectly_readable_traits<incomplete*>::value_type>);
 static_assert(!meta::is_trait<readable_traits_value_type<void*>>::value, "");
 static_assert(!meta::is_trait<readable_traits_value_type<void const*>>::value, "");
 
 // class types with member value_type
-CPP_assert(same_as<int, ranges::readable_traits<with_value_type<int>>::value_type>);
-CPP_assert(same_as<int, ranges::readable_traits<with_value_type<int> const>::value_type>);
-CPP_assert(same_as<int, ranges::readable_traits<value_type_tester_thingy>::value_type>);
-CPP_assert(same_as<int, ranges::readable_traits<value_type_tester_thingy const>::value_type>);
-CPP_assert(same_as<int[4], ranges::readable_traits<with_value_type<int[4]>>::value_type>);
-CPP_assert(same_as<int[4], ranges::readable_traits<with_value_type<int[4]> const>::value_type>);
+CPP_assert(same_as<int, ranges::indirectly_readable_traits<with_value_type<int>>::value_type>);
+CPP_assert(same_as<int, ranges::indirectly_readable_traits<with_value_type<int> const>::value_type>);
+CPP_assert(same_as<int, ranges::indirectly_readable_traits<value_type_tester_thingy>::value_type>);
+CPP_assert(same_as<int, ranges::indirectly_readable_traits<value_type_tester_thingy const>::value_type>);
+CPP_assert(same_as<int[4], ranges::indirectly_readable_traits<with_value_type<int[4]>>::value_type>);
+CPP_assert(same_as<int[4], ranges::indirectly_readable_traits<with_value_type<int[4]> const>::value_type>);
 static_assert(!meta::is_trait<readable_traits_value_type<with_value_type<void>>>::value, "");
 static_assert(!meta::is_trait<readable_traits_value_type<with_value_type<int(int)>>>::value, "");
 static_assert(!meta::is_trait<readable_traits_value_type<with_value_type<int&>>>::value, "");
 
 // class types with member element_type
-CPP_assert(same_as<int, ranges::readable_traits<with_element_type<int>>::value_type>);
-CPP_assert(same_as<int, ranges::readable_traits<with_element_type<int> const>::value_type>);
-CPP_assert(same_as<int, ranges::readable_traits<with_element_type<int const>>::value_type>);
-CPP_assert(same_as<int[4], ranges::readable_traits<with_element_type<int[4]>>::value_type>);
-CPP_assert(same_as<int[4], ranges::readable_traits<with_element_type<int[4]> const>::value_type>);
-CPP_assert(same_as<int[4], ranges::readable_traits<with_element_type<int const[4]>>::value_type>);
+CPP_assert(same_as<int, ranges::indirectly_readable_traits<with_element_type<int>>::value_type>);
+CPP_assert(same_as<int, ranges::indirectly_readable_traits<with_element_type<int> const>::value_type>);
+CPP_assert(same_as<int, ranges::indirectly_readable_traits<with_element_type<int const>>::value_type>);
+CPP_assert(same_as<int[4], ranges::indirectly_readable_traits<with_element_type<int[4]>>::value_type>);
+CPP_assert(same_as<int[4], ranges::indirectly_readable_traits<with_element_type<int[4]> const>::value_type>);
+CPP_assert(same_as<int[4], ranges::indirectly_readable_traits<with_element_type<int const[4]>>::value_type>);
 static_assert(!meta::is_trait<readable_traits_value_type<with_element_type<void>>>::value, "");
 static_assert(!meta::is_trait<readable_traits_value_type<with_element_type<void const>>>::value, "");
 static_assert(!meta::is_trait<readable_traits_value_type<with_element_type<void> const>>::value, "");
@@ -254,7 +254,7 @@ struct Z
 namespace ranges
 {
     template <>
-    struct readable_traits<::Z>
+    struct indirectly_readable_traits<::Z>
     {
         using value_type = int;
     };
@@ -379,7 +379,7 @@ void deep_integration_test()
     // libc++ has a broken std::iterator_traits primary template
     // https://bugs.llvm.org/show_bug.cgi?id=39619
 #ifndef _LIBCPP_VERSION
-    // iterator_traits uses specializations of ranges::readable_traits:
+    // iterator_traits uses specializations of ranges::indirectly_readable_traits:
     static_assert(!detail::is_std_iterator_traits_specialized_v<Z>, "");
     static_assert(is_same<iterator_traits<Z>::value_type, int>::value, "");
     static_assert(is_same<iter_value_t<Z>, int>::value, "");
@@ -438,7 +438,7 @@ int main()
 
     {
         struct S { using value_type = int; };
-        CPP_assert(same_as<int, ranges::readable_traits<S const>::value_type>);
+        CPP_assert(same_as<int, ranges::indirectly_readable_traits<S const>::value_type>);
     }
 
     return ::test_result();

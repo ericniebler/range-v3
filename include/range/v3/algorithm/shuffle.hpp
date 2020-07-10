@@ -72,7 +72,7 @@ namespace ranges
                                iter_difference_t<iterator_t<Rng>>>) //
         auto RANGES_FUNC(shuffle)(Rng && rng,
                                   Gen && rand = detail::get_random_engine()) //
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), static_cast<Gen &&>(rand));
         }

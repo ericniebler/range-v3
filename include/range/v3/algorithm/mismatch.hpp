@@ -112,7 +112,7 @@ namespace ranges
                                    C pred = C{}, // see below [*]
                                    P1 proj1 = P1{},
                                    P2 proj2 = P2{}) //
-            -> mismatch_result<safe_iterator_t<Rng1>, uncvref_t<I2Ref>>
+            -> mismatch_result<borrowed_iterator_t<Rng1>, uncvref_t<I2Ref>>
         {
             RANGES_DIAGNOSTIC_PUSH
             RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
@@ -137,7 +137,7 @@ namespace ranges
                                   projected<iterator_t<Rng2>, P2>>) //
         auto RANGES_FUNC(mismatch)(
             Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) //
-            -> mismatch_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>>
+            -> mismatch_result<borrowed_iterator_t<Rng1>, borrowed_iterator_t<Rng2>>
         {
             return (*this)(begin(rng1),
                            end(rng1),

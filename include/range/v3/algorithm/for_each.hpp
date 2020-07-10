@@ -58,7 +58,7 @@ namespace ranges
             requires input_range<Rng>  && //
             indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(for_each)(Rng && rng, F fun, P proj = P{})
-            -> for_each_result<safe_iterator_t<Rng>, F>
+            -> for_each_result<borrowed_iterator_t<Rng>, F>
         {
             return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in,
                     detail::move(fun)};

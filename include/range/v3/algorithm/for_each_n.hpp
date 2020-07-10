@@ -58,7 +58,7 @@ namespace ranges
                 indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(for_each_n)(
             Rng && rng, range_difference_t<Rng> n, F fun, P proj = P{})
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             if(sized_range<Rng>)
                 RANGES_EXPECT(n <= distance(rng));

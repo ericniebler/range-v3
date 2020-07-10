@@ -67,7 +67,7 @@ namespace ranges
             indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *>  && //
             indirectly_copyable<iterator_t<Rng>, O>) //
         auto RANGES_FUNC(remove_copy)(Rng && rng, O out, T const & val, P proj = P{}) //
-            -> remove_copy_result<safe_iterator_t<Rng>, O>
+            -> remove_copy_result<borrowed_iterator_t<Rng>, O>
         {
             return (*this)(begin(rng), end(rng), std::move(out), val, std::move(proj));
         }

@@ -56,7 +56,7 @@ namespace ranges
             requires bidirectional_range<Rng> && bidirectional_iterator<O>  && //
             indirectly_copyable<iterator_t<Rng>, O>) //
         auto RANGES_FUNC(copy_backward)(Rng && rng, O out)
-            -> copy_backward_result<safe_iterator_t<Rng>, O>
+            -> copy_backward_result<borrowed_iterator_t<Rng>, O>
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }

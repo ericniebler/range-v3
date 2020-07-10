@@ -284,7 +284,7 @@ namespace ranges
             requires bidirectional_range<Rng> && sortable<iterator_t<Rng>, C, P>) //
         auto RANGES_FUNC(inplace_merge)(
             Rng && rng, iterator_t<Rng> middle, C pred = C{}, P proj = P{})
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             return (*this)(begin(rng),
                            std::move(middle),

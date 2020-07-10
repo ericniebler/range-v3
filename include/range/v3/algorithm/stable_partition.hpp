@@ -313,7 +313,7 @@ namespace ranges
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>  && //
             permutable<iterator_t<Rng>>) //
         auto RANGES_FUNC(stable_partition)(Rng && rng, C pred, P proj = P{}) //
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

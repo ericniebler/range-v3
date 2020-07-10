@@ -86,7 +86,7 @@ namespace ranges
                 indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(partition_copy)(
             Rng && rng, O0 o0, O1 o1, C pred, P proj = P{})                 //
-            -> partition_copy_result<safe_iterator_t<Rng>, O0, O1>
+            -> partition_copy_result<borrowed_iterator_t<Rng>, O0, O1>
         {
             return (*this)(begin(rng),
                            end(rng),

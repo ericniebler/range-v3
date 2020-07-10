@@ -76,8 +76,7 @@ namespace ranges
             requires input_range<Rng1> && input_range<Rng2> &&
                 indirectly_swappable<iterator_t<Rng1>, iterator_t<Rng2>>) //
         auto RANGES_FUNC(swap_ranges)(Rng1 && rng1, Rng2 && rng2) //
-            ->
-                swap_ranges_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>>
+            -> swap_ranges_result<borrowed_iterator_t<Rng1>, borrowed_iterator_t<Rng2>>
         {
             return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2));
         }

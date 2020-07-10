@@ -100,7 +100,7 @@ namespace ranges
                                             C pred = C{},
                                             PI in_proj = PI{},
                                             PO out_proj = PO{}) //
-            -> safe_iterator_t<OutRng>
+            -> borrowed_iterator_t<OutRng>
         {
             return (*this)(begin(in_rng),
                            end(in_rng),

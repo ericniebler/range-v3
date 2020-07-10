@@ -210,8 +210,8 @@ namespace ranges
     }
 
     template<typename I>
-    struct readable_traits<iterator_wrapper<I>>
-      : meta::if_c<(bool)input_iterator<I>, readable_traits<I>, meta::nil_>
+    struct indirectly_readable_traits<iterator_wrapper<I>>
+      : meta::if_c<(bool)input_iterator<I>, indirectly_readable_traits<I>, meta::nil_>
     {};
 
     template<typename Val>

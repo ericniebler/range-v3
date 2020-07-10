@@ -125,8 +125,8 @@ namespace ranges
                 const requires viewable_range<Rng> && input_range<Rng> &&
                 // We shouldn't need to strip references to test if something
                 // is readable. https://github.com/ericniebler/stl2/issues/594
-                // readable<range_reference_t<Rng>>)
-                ((bool)readable<range_value_t<Rng>>)) // Cast to bool needed for GCC (???)
+                // indirectly_readable<range_reference_t<Rng>>)
+                ((bool)indirectly_readable<range_value_t<Rng>>)) // Cast to bool needed for GCC (???)
             {
                 return indirect_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

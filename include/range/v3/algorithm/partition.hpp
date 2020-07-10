@@ -116,7 +116,7 @@ namespace ranges
             requires forward_range<Rng> && permutable<iterator_t<Rng>>  && //
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(partition)(Rng && rng, C pred, P proj = P{}) //
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             return detail::partition_impl(begin(rng),
                                           end(rng),

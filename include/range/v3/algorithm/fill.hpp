@@ -45,7 +45,7 @@ namespace ranges
         CPP_template(typename Rng, typename V)( //
             requires output_range<Rng, V const &>) //
         auto RANGES_FUNC(fill)(Rng && rng, V const & val)
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), val);
         }

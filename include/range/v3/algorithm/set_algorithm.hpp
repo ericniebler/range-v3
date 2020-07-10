@@ -172,8 +172,7 @@ namespace ranges
                                     C pred = C{},
                                     P1 proj1 = P1{},
                                     P2 proj2 = P2{}) //
-            ->
-                set_union_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>, O>
+            -> set_union_result<borrowed_iterator_t<Rng1>, borrowed_iterator_t<Rng2>, O>
         {
             return (*this)(begin(rng1),
                            end(rng1),
@@ -332,7 +331,7 @@ namespace ranges
                                          C pred = C{},
                                          P1 proj1 = P1{},
                                          P2 proj2 = P2{})               //
-            -> set_difference_result<safe_iterator_t<Rng1>, O>
+            -> set_difference_result<borrowed_iterator_t<Rng1>, O>
         {
             return (*this)(begin(rng1),
                            end(rng1),
@@ -422,9 +421,9 @@ namespace ranges
                                                    C pred = C{},
                                                    P1 proj1 = P1{},
                                                    P2 proj2 = P2{}) //
-            -> set_symmetric_difference_result<safe_iterator_t<Rng1>,
-                                                      safe_iterator_t<Rng2>,
-                                                      O>
+            -> set_symmetric_difference_result<borrowed_iterator_t<Rng1>,
+                                               borrowed_iterator_t<Rng2>,
+                                               O>
         {
             return (*this)(begin(rng1),
                            end(rng1),

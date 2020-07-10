@@ -57,7 +57,7 @@ namespace ranges
             requires input_range<Rng> && weakly_incrementable<O>  && //
             indirectly_copyable<iterator_t<Rng>, O>) //
         constexpr auto RANGES_FUNC(copy)(Rng && rng, O out)  //
-            -> copy_result<safe_iterator_t<Rng>, O>
+            -> copy_result<borrowed_iterator_t<Rng>, O>
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }

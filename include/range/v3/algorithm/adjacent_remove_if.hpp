@@ -76,7 +76,7 @@ namespace ranges
             indirect_relation<Pred, projected<iterator_t<Rng>, Proj>>  && //
             permutable<iterator_t<Rng>>) //
         auto RANGES_FUNC(adjacent_remove_if)(Rng && rng, Pred pred, Proj proj = {}) //
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

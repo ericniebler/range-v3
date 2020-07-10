@@ -60,7 +60,7 @@ namespace ranges
             requires input_range<Rng>  && //
             indirect_relation<equal_to, projected<iterator_t<Rng>, P>, V const *>) //
         constexpr auto RANGES_FUNC(find)(Rng && rng, V const & val, P proj = P{})
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), val, std::move(proj));
         }

@@ -65,7 +65,7 @@ namespace ranges
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>  && //
             indirectly_copyable<iterator_t<Rng>, O>) //
         auto RANGES_FUNC(remove_copy_if)(Rng && rng, O out, C pred, P proj = P{}) //
-            -> remove_copy_if_result<safe_iterator_t<Rng>, O>
+            -> remove_copy_if_result<borrowed_iterator_t<Rng>, O>
         {
             return (*this)(
                 begin(rng), end(rng), std::move(out), std::move(pred), std::move(proj));

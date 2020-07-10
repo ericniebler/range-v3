@@ -71,7 +71,7 @@ namespace ranges
                 indirectly_copyable<iterator_t<Rng>, O>) //
         auto RANGES_FUNC(replace_copy_if)(
             Rng && rng, O out, C pred, T const & new_value, P proj = {}) //
-            -> replace_copy_if_result<safe_iterator_t<Rng>, O>
+            -> replace_copy_if_result<borrowed_iterator_t<Rng>, O>
         {
             return (*this)(begin(rng),
                            end(rng),

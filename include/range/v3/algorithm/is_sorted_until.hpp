@@ -71,7 +71,7 @@ namespace ranges
             requires forward_range<Rng>  && //
             indirect_strict_weak_order<R, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(is_sorted_until)(Rng && rng, R pred = R{}, P proj = P{})
-            -> safe_iterator_t<Rng>
+            -> borrowed_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

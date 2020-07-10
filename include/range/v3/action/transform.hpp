@@ -44,8 +44,9 @@ namespace ranges
 
             CPP_template(typename Rng, typename F, typename P = identity)( //
                 requires input_range<Rng> && copy_constructible<F> &&
-                    writable<iterator_t<Rng>,
-                             indirect_result_t<F &, projected<iterator_t<Rng>, P>>>) //
+                    indirectly_writable<
+                        iterator_t<Rng>,
+                        indirect_result_t<F &, projected<iterator_t<Rng>, P>>>) //
             auto operator()(Rng && rng, F fun, P proj = P{}) const -> Rng
             {
                 ranges::transform(rng, begin(rng), std::move(fun), std::move(proj));

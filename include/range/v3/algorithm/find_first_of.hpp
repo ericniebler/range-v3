@@ -70,17 +70,17 @@ namespace ranges
 
         /// \overload
         CPP_template(typename Rng0,
-                 typename Rng1,
-                 typename R = equal_to,
-                 typename P0 = identity,
-                 typename P1 = identity)( //
+                     typename Rng1,
+                     typename R = equal_to,
+                     typename P0 = identity,
+                     typename P1 = identity)( //
             requires input_range<Rng0> && forward_range<Rng1> &&
                 indirect_relation<R,
                                   projected<iterator_t<Rng0>, P0>,
                                   projected<iterator_t<Rng1>, P1>>) //
         constexpr auto RANGES_FUNC(find_first_of)(
             Rng0 && rng0, Rng1 && rng1, R pred = R{}, P0 proj0 = P0{}, P1 proj1 = P1{}) //
-            -> safe_iterator_t<Rng0>
+            -> borrowed_iterator_t<Rng0>
         {
             return (*this)(begin(rng0),
                            end(rng0),

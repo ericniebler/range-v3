@@ -173,7 +173,7 @@ int main()
         auto rng = views::zip(v, v);
         using Rng = decltype(rng);
         using I = iterator_t<Rng>;
-        CPP_assert(readable<I>);
+        CPP_assert(indirectly_readable<I>);
         CPP_assert(same_as<
             range_value_t<Rng>,
             std::pair<MoveOnlyString, MoveOnlyString>>);

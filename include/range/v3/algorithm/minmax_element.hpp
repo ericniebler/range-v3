@@ -92,7 +92,7 @@ namespace ranges
             requires forward_range<Rng>  && //
             indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(minmax_element)(Rng && rng, C pred = C{}, P proj = P{}) //
-            -> minmax_element_result<safe_iterator_t<Rng>>
+            -> minmax_element_result<borrowed_iterator_t<Rng>>
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

@@ -66,7 +66,7 @@ namespace ranges
                 if(view_->val_)
                     view_->val_.reset();
                 else
-                    view_->gen_();
+                    static_cast<void>(view_->gen_());
             }
         };
         cursor begin_cursor()

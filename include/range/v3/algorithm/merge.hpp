@@ -110,7 +110,7 @@ namespace ranges
                                 C pred = C{},
                                 P0 proj0 = P0{},
                                 P1 proj1 = P1{})
-            -> merge_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>, O>
+            -> merge_result<borrowed_iterator_t<Rng0>, borrowed_iterator_t<Rng1>, O>
         {
             return (*this)(begin(rng0),
                            end(rng0),
