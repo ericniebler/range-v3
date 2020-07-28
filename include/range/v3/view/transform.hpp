@@ -551,6 +551,37 @@ namespace ranges
             }
         };
 
+        /// # ranges::views::transform
+        /// The transform view takes in a function `T -> U` and converts an input
+        /// range of `T` into an output range of `U` by calling the function on every
+        /// element of the input range.
+        ///
+        /// ## Example
+        /// \snippet example/view/transform.cpp transform example
+        ///
+        /// ### Output
+        /// \include example/view/transform_golden.txt
+        ///
+        /// ## Syntax
+        /// ```cpp
+        /// auto output_range = input_range | ranges::views::transform(transform_func);
+        /// ```
+        ///
+        /// ## Parameters
+        /// <pre><b>transform_func</b></pre>
+        ///   - Maps an input value to an output value (`transform_func(T) -> U`)
+        ///
+        /// <pre><b>input_range</b></pre>
+        ///   - The range of elements to transform
+        ///   - Reference type: `T`
+        ///
+        /// <pre><b>output_range</b></pre>
+        ///   - The range of output values
+        ///   - Reference type: `U`
+        ///   - Value type: `decay_t<U>`
+        ///   - This range will have the same category as the input range (excluding
+        ///   contiguous ranges). Contiguous ranges are reduced to random access ranges.
+        ///
         struct transform_fn : transform_base_fn
         {
             using transform_base_fn::operator();
