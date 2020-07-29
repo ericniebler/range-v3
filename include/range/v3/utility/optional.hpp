@@ -461,7 +461,7 @@ namespace ranges
 
     // clang-format off
     template<typename U, typename T>
-    CPP_concept_bool optional_should_convert =
+    CPP_concept optional_should_convert =
         !(
             constructible_from<T, optional<U> &       > ||
             constructible_from<T, optional<U> &&      > ||
@@ -474,7 +474,7 @@ namespace ranges
         );
 
     template<typename U, typename T>
-    CPP_concept_bool optional_should_convert_assign =
+    CPP_concept optional_should_convert_assign =
         optional_should_convert<U, T> &&
         !(assignable_from<T &, optional<U> &> ||
         assignable_from<T &, optional<U> &&> ||

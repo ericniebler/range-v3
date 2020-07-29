@@ -76,9 +76,10 @@ namespace ranges
     RANGES_INLINE_VAR constexpr bool enable_borrowed_range<delimit_view<Rng, Val>> = enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Val)(requires copy_constructible<Val>)
-        delimit_view(Rng &&, Val)
-            ->delimit_view<views::all_t<Rng>, Val>;
+    CPP_template(typename Rng, typename Val)( //
+        requires copy_constructible<Val>)
+    delimit_view(Rng &&, Val)
+        -> delimit_view<views::all_t<Rng>, Val>;
 #endif
 
     namespace views

@@ -49,8 +49,7 @@ namespace ranges
         ///
         CPP_template(typename I, typename S, typename C = equal_to, typename P = identity)( //
             requires sortable<I, C, P> && sentinel_for<S, I>) //
-        auto RANGES_FUNC(unique)(I first, S last, C pred = C{}, P proj = P{}) //
-            -> I
+        I RANGES_FUNC(unique)(I first, S last, C pred = C{}, P proj = P{})
         {
             first = adjacent_find(std::move(first), last, std::ref(pred), std::ref(proj));
 

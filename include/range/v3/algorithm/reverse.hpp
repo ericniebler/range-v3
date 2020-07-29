@@ -62,8 +62,7 @@ namespace ranges
         /// \brief function template \c reverse
         CPP_template(typename I, typename S)( //
             requires bidirectional_iterator<I> && sentinel_for<S, I> && permutable<I>) //
-        auto RANGES_FUNC(reverse)(I first, S end_) //
-            -> I
+        I RANGES_FUNC(reverse)(I first, S end_)
         {
             I last = ranges::next(first, end_);
             detail::reverse_impl(first, last, iterator_tag_of<I>{});

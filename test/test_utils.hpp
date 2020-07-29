@@ -80,7 +80,7 @@ RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_THIS_CAPTURE
 
 template<typename T, typename U>
-CPP_concept_bool both_ranges = ranges::input_range<T> && ranges::input_range<U>;
+CPP_concept both_ranges = ranges::input_range<T> && ranges::input_range<U>;
 
 struct check_equal_fn
 {

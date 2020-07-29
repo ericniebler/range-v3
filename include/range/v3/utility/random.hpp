@@ -77,20 +77,23 @@ namespace ranges
     /// @{
     // clang-format off
     template<typename Gen>
-    CPP_concept_fragment(uniform_random_bit_generator_,
+    CPP_requires(uniform_random_bit_generator_,
         requires() //
         (
             Gen::min(),
             Gen::max()
-        ) &&
-        unsigned_integral<invoke_result_t<Gen &>> &&
-        same_as<invoke_result_t<Gen &>, decltype(Gen::min())> &&
-        same_as<invoke_result_t<Gen &>, decltype(Gen::max())>
-    );
+        ));
+    CPP_template(typename Gen)(
+    concept (uniform_random_bit_generator_)(Gen),
+        unsigned_integral<invoke_result_t<Gen &>> CPP_and
+        same_as<invoke_result_t<Gen &>, decltype(Gen::min())> CPP_and
+        same_as<invoke_result_t<Gen &>, decltype(Gen::max())>);
+
     template<typename Gen>
-    CPP_concept_bool uniform_random_bit_generator =
+    CPP_concept uniform_random_bit_generator =
         invocable<Gen &> &&
-        CPP_fragment(ranges::uniform_random_bit_generator_, Gen);
+        CPP_requires_ref(ranges::uniform_random_bit_generator_, Gen) &&
+        CPP_concept_ref(ranges::uniform_random_bit_generator_, Gen);
     // clang-format on
     /// @}
 

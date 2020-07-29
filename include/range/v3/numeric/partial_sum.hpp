@@ -56,32 +56,32 @@ namespace ranges
 
     // axiom: BOp is associative over values of I.
     // clang-format off
-    template<typename I, typename BOp>
-    CPP_concept_fragment(indirect_semigroup_, requires()(0) &&
-        copyable<iter_value_t<I>> &&
+    CPP_template(typename I, typename BOp)(
+    concept (indirect_semigroup_)(I, BOp),
+        copyable<iter_value_t<I>> CPP_and
         indirectly_regular_binary_invocable_<
             composed<coerce<iter_value_t<I>>, BOp>,
             iter_value_t<I>*, I>
     );
     template<typename I, typename BOp>
-    CPP_concept_bool indirect_semigroup =
+    CPP_concept indirect_semigroup =
         indirectly_readable<I> &&
-        CPP_fragment(ranges::indirect_semigroup_, I, BOp);
+        CPP_concept_ref(ranges::indirect_semigroup_, I, BOp);
 
-    template<typename I, typename O, typename BOp = plus, typename P = identity>
-    CPP_concept_fragment(partial_sum_constraints_, requires()(0) &&
+    CPP_template(typename I, typename O, typename BOp, typename P)(
+    concept (partial_sum_constraints_)(I, O, BOp, P),
         indirect_semigroup<
             projected<projected<I, detail::as_value_type_t<I>>, P>,
-            BOp> &&
+            BOp> CPP_and
         output_iterator<
             O,
             iter_value_t<
                 projected<projected<I, detail::as_value_type_t<I>>, P>> const &>
     );
     template<typename I, typename O, typename BOp = plus, typename P = identity>
-    CPP_concept_bool partial_sum_constraints =
+    CPP_concept partial_sum_constraints =
         input_iterator<I> &&
-        CPP_fragment(ranges::partial_sum_constraints_, I, O, BOp, P);
+        CPP_concept_ref(ranges::partial_sum_constraints_, I, O, BOp, P);
     // clang-format on
 
     template<typename I, typename O>

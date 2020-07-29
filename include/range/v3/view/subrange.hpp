@@ -46,12 +46,9 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        template<std::size_t N, typename T>
-        using tuple_element_fun_t = void (*)(meta::_t<std::tuple_element<N, T>> const &);
-
         // clang-format off
         template<typename From, typename To>
-        CPP_concept_bool convertible_to_not_slicing_ =
+        CPP_concept convertible_to_not_slicing_ =
             convertible_to<From, To> &&
             // A conversion is a slicing conversion if the source and the destination
             // are both pointers, and if the pointed-to types differ after removing
@@ -61,125 +58,72 @@ namespace ranges
                 not_same_as_<std::remove_pointer_t<decay_t<From>>,
                              std::remove_pointer_t<decay_t<To>>>));
 
+        template<std::size_t N, typename T>
+        using tuple_element_fun_t = void (*)(meta::_t<std::tuple_element<N, T>> const &);
+
         template<typename T>
-        CPP_concept_fragment(pair_like_gcc_bugs_3_,
-            requires(T t, tuple_element_fun_t<0, T> p0, tuple_element_fun_t<1, T> p1)
+        CPP_requires(pair_like_impl_, //
+            requires(T t, tuple_element_fun_t<0, T> p0, tuple_element_fun_t<1, T> p1) //
             (
                 p0( get<0>(t) ),
                 p1( get<1>(t) )
             ));
+        template<typename T>
+        CPP_concept pair_like_impl_ = CPP_requires_ref(detail::pair_like_impl_, T);
+
+        CPP_template(typename T)(
+        concept (is_complete_)(T),
+            0 != sizeof(T));
 
         template<typename T>
-        CPP_concept_bool pair_like_gcc_bugs_2_ =
-            derived_from<std::tuple_size<T>, meta::size_t<2>> &&
-            CPP_fragment(detail::pair_like_gcc_bugs_3_, T);
+        CPP_concept is_complete_ = //
+            CPP_concept_ref(is_complete_, T);
 
-        namespace defer
-        {
-            template<typename T>
-            CPP_concept pair_like_gcc_bugs_2_ =
-                CPP_defer(detail::pair_like_gcc_bugs_2_, T);
-        }
+        CPP_template(typename T)( //
+        concept (pair_like_)(T), //
+            is_complete_<std::tuple_size<T>> CPP_and //
+            derived_from<std::tuple_size<T>, meta::size_t<2>> CPP_and //
+            detail::pair_like_impl_<T>);
 
         template<typename T>
-        CPP_concept_fragment(pair_like_gcc_bugs_frag_,
-            requires()(sizeof(std::tuple_size<T>)) &&
-            ranges::defer::type<meta::_t<std::tuple_size<T>>> &&
-            defer::pair_like_gcc_bugs_2_<T>
-        );
-
-        template<typename T>
-        CPP_concept_bool pair_like_gcc_bugs_ =
-            CPP_fragment(detail::pair_like_gcc_bugs_frag_, T);
-
-        namespace defer
-        {
-            template<typename T>
-            CPP_concept pair_like_gcc_bugs_ =
-                CPP_defer(detail::pair_like_gcc_bugs_, T);
-        }
-
-        template<typename T>
-        CPP_concept_fragment(_get_first_and_second_,
-            requires (T & t) //
-            (
-                get<0>(t),
-                get<1>(t)
-            ));
-        template<typename T>
-        CPP_concept_bool get_first_and_second_ =
-            CPP_fragment(detail::_get_first_and_second_, T);
-
-        namespace defer
-        {
-            template<typename T>
-            CPP_concept get_first_and_second_ =
-                CPP_defer(detail::get_first_and_second_, T);
-        }
-
-        template<typename T>
-        CPP_concept_bool pair_like_ =
-            (!std::is_reference<T>::value) &&
-            bool(defer::get_first_and_second_<T> &&
-                 defer::pair_like_gcc_bugs_<T>);
-        // clang-format on
-
-        // Short-circuit the PairLike concept for things known to be pairs:
-        template<typename T>
-        RANGES_INLINE_VAR constexpr bool pair_like = pair_like_<T>;
-        template<typename F, typename S>
-        RANGES_INLINE_VAR constexpr bool pair_like<std::pair<F, S>> = true;
-        template<typename... Ts>
-        RANGES_INLINE_VAR constexpr bool pair_like<std::tuple<Ts...>> = (sizeof...(Ts) ==
-                                                                         2u);
+        CPP_concept pair_like = //
+            CPP_concept_ref(detail::pair_like_, T);
 
         // clang-format off
-        template<typename T, typename U, typename V>
-        CPP_concept_fragment(pair_like_convertible_from_gcc_bugs_frag_, requires()(0) &&
-            convertible_to_not_slicing_<U, meta::_t<std::tuple_element<0, T>>> &&
-            convertible_to<V, meta::_t<std::tuple_element<1, T>>>
-        );
-        template<typename T, typename U, typename V>
-        CPP_concept_bool pair_like_convertible_from_gcc_bugs_ =
-            CPP_fragment(detail::pair_like_convertible_from_gcc_bugs_frag_, T, U, V);
-        namespace defer
-        {
-            template<typename T, typename U, typename V>
-            CPP_concept pair_like_convertible_from_gcc_bugs_ =
-                CPP_defer(detail::pair_like_convertible_from_gcc_bugs_, T, U, V);
-        }
+        CPP_template(typename T, typename U, typename V)( //
+        concept (pair_like_convertible_from_helper_)(T, U, V), //
+            convertible_to_not_slicing_<U, meta::_t<std::tuple_element<0, T>>> CPP_and
+            convertible_to<V, meta::_t<std::tuple_element<1, T>>>);
 
         template<typename T, typename U, typename V>
-        CPP_concept_bool pair_like_convertible_from_ =
-            (!range<T>) && constructible_from<T, U, V> &&
-            bool(ranges::defer::is_true<pair_like<uncvref_t<T>>> &&
-                 defer::pair_like_convertible_from_gcc_bugs_<T, U, V>);
+        CPP_concept pair_like_convertible_from_helper_ = //
+            CPP_concept_ref(pair_like_convertible_from_helper_, T, U, V);
+
+        CPP_template(typename T, typename U, typename V)( //
+        concept (pair_like_convertible_from_impl_)(T, U, V),
+            (!range<T>) CPP_and
+            constructible_from<T, U, V> CPP_and
+            pair_like<uncvref_t<T>> CPP_and
+            pair_like_convertible_from_helper_<T, U, V>);
+
+        template<typename T, typename U, typename V>
+        CPP_concept pair_like_convertible_from_ =
+            CPP_concept_ref(detail::pair_like_convertible_from_impl_, T, U, V);
+
+        CPP_template(typename R, typename I, typename S)(
+        concept (range_convertible_to_impl_)(R, I, S),
+            convertible_to_not_slicing_<iterator_t<R>, I> CPP_and
+            convertible_to<sentinel_t<R>, S>);
 
         template<typename R, typename I, typename S>
-        CPP_concept_fragment(range_convertible_to_frag_, requires()(0) &&
-            convertible_to_not_slicing_<iterator_t<R>, I> &&
-            convertible_to<sentinel_t<R>, S>
-        );
-        template<typename R, typename I, typename S>
-        CPP_concept_bool range_convertible_to_ =
+        CPP_concept range_convertible_to_ =
             borrowed_range<R> &&
-            CPP_fragment(detail::range_convertible_to_frag_, R, I, S);
-
-        namespace defer
-        {
-            template<typename T, typename U, typename V>
-            CPP_concept pair_like_convertible_from_ =
-                CPP_defer(detail::pair_like_convertible_from_, T, U, V);
-
-            template<typename R, typename I, typename S>
-            CPP_concept range_convertible_to_ =
-                CPP_defer(detail::range_convertible_to_, R, I, S);
-        }
+            CPP_concept_ref(detail::range_convertible_to_impl_, R, I, S);
         // clang-format on
 
         CPP_template(typename S, typename I)( //
             requires sentinel_for<S, I>) //
-        constexpr auto is_sized_sentinel_() noexcept -> bool
+        constexpr bool is_sized_sentinel_() noexcept
         {
             return (bool)sized_sentinel_for<S, I>;
         }
@@ -192,9 +136,10 @@ namespace ranges
     } // namespace detail
     /// \endcond
 
-    template<typename I, typename S = I,
-             subrange_kind K =
-                 static_cast<subrange_kind>(detail::is_sized_sentinel_<S, I>())>
+    template< //
+        typename I, //
+        typename S = I, //
+        subrange_kind K = static_cast<subrange_kind>(detail::is_sized_sentinel_<S, I>())>
     struct subrange;
 
     template<typename I, typename S, subrange_kind K>
@@ -208,13 +153,13 @@ namespace ranges
 
         CPP_template(std::size_t N, typename I, typename S, subrange_kind K)( //
             requires (N == 0)) //
-        constexpr auto get(subrange<I, S, K> const & r) -> I
+        constexpr I get(subrange<I, S, K> const & r)
         {
             return r.begin();
         }
         CPP_template(std::size_t N, typename I, typename S, subrange_kind K)( //
             requires (N == 1)) //
-        constexpr auto get(subrange<I, S, K> const & r) -> S
+        constexpr S get(subrange<I, S, K> const & r)
         {
             return r.end();
         }

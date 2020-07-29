@@ -55,14 +55,14 @@ namespace ranges
 
         // clang-format off
         template<typename T>
-        CPP_concept_fragment(dereferenceable_part_,
+        CPP_requires(dereferenceable_part_,
             requires(T && t) //
             (
                 detail::can_reference_(*(T &&) t)
             ));
         template<typename T>
-        CPP_concept_bool dereferenceable_ = //
-            CPP_fragment(detail::dereferenceable_part_, T);
+        CPP_concept dereferenceable_ = //
+            CPP_requires_ref(detail::dereferenceable_part_, T);
         // clang-format on
 
         RANGES_DIAGNOSTIC_POP

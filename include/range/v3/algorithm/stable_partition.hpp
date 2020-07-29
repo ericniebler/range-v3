@@ -296,8 +296,7 @@ namespace ranges
         CPP_template(typename I, typename S, typename C, typename P = identity)( //
             requires bidirectional_iterator<I> && sentinel_for<S, I>  && //
             indirect_unary_predicate<C, projected<I, P>> && permutable<I>) //
-        auto RANGES_FUNC(stable_partition)(I first, S last, C pred, P proj = P{}) //
-            -> I
+        I RANGES_FUNC(stable_partition)(I first, S last, C pred, P proj = P{})
         {
             return detail::stable_partition_impl(std::move(first),
                                                  std::move(last),

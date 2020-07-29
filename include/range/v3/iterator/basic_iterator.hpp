@@ -344,8 +344,8 @@ namespace ranges
                                 std::input_iterator_tag>>>>>;
 
         // clang-format off
-        template<typename C>
-        CPP_concept_fragment(cpp17_input_cursor_, requires()(0) &&
+        CPP_template(typename C)(
+        concept (cpp17_input_cursor_)(C),
             // Either it is not single-pass, or else we can create a
             // proxy for postfix increment.
             !range_access::single_pass_t<uncvref_t<C>>::value ||
@@ -354,20 +354,20 @@ namespace ranges
         );
 
         template<typename C>
-        CPP_concept_bool cpp17_input_cursor =
+        CPP_concept cpp17_input_cursor =
             input_cursor<C> &&
             sentinel_for_cursor<C, C> &&
-            CPP_fragment(cpp17_input_cursor_, C);
+            CPP_concept_ref(cpp17_input_cursor_, C);
 
-        template<typename C>
-        CPP_concept_fragment(cpp17_forward_cursor_, requires()(0) &&
+        CPP_template(typename C)(
+        concept (cpp17_forward_cursor_)(C),
             std::is_reference<cursor_reference_t<C>>::value
         );
 
         template<typename C>
-        CPP_concept_bool cpp17_forward_cursor =
+        CPP_concept cpp17_forward_cursor =
             forward_cursor<C> &&
-            CPP_fragment(cpp17_forward_cursor_, C);
+            CPP_concept_ref(cpp17_forward_cursor_, C);
         // clang-format on
 
         template<typename Category, typename Base = void>

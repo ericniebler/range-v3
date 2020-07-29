@@ -40,7 +40,7 @@ namespace ranges
     {
         // clang-format off
         template<typename R>
-        CPP_concept_bool random_access_and_sized_range =
+        CPP_concept random_access_and_sized_range =
             random_access_range<R> && sized_range<R>;
         // clang-format on
 

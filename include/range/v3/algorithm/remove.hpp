@@ -41,8 +41,7 @@ namespace ranges
         CPP_template(typename I, typename S, typename T, typename P = identity)( //
             requires permutable<I> && sentinel_for<S, I>  && //
             indirect_relation<equal_to, projected<I, P>, T const *>) //
-        auto RANGES_FUNC(remove)(I first, S last, T const & val, P proj = P{}) //
-            -> I
+        I RANGES_FUNC(remove)(I first, S last, T const & val, P proj = P{})
         {
             first = find(std::move(first), last, val, std::ref(proj));
             if(first != last)

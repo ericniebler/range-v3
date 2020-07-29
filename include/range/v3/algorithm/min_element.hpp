@@ -39,8 +39,7 @@ namespace ranges
         CPP_template(typename I, typename S, typename C = less, typename P = identity)( //
             requires forward_iterator<I> && sentinel_for<S, I>  && //
             indirect_strict_weak_order<C, projected<I, P>>) //
-        auto RANGES_FUNC(min_element)(I first, S last, C pred = C{}, P proj = P{}) //
-            -> I
+        I RANGES_FUNC(min_element)(I first, S last, C pred = C{}, P proj = P{})
         {
             if(first != last)
                 for(auto tmp = next(first); tmp != last; ++tmp)

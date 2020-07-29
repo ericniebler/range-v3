@@ -197,8 +197,7 @@ namespace ranges
         CPP_template(typename I, typename S, typename C = less, typename P = identity)( //
             requires sortable<I, C, P> && random_access_iterator<I>  && //
             sentinel_for<S, I>) //
-        auto RANGES_FUNC(sort)(I first, S end_, C pred = C{}, P proj = P{}) //
-            -> I
+        I RANGES_FUNC(sort)(I first, S end_, C pred = C{}, P proj = P{})
         {
             I last = ranges::next(first, std::move(end_));
             if(first != last)

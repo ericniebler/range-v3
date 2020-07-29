@@ -55,27 +55,27 @@ namespace ranges
     // std::array is a semi_container, native arrays are not.
     // clang-format off
     template<typename T>
-    CPP_concept_bool semi_container =
+    CPP_concept semi_container =
         forward_range<T> && default_constructible<uncvref_t<T>> &&
         movable<uncvref_t<T>> &&
         !view_<T>;
 
     // std::vector is a container, std::array is not
-    template<typename T>
-    CPP_concept_fragment(container_,
-        requires()(0) && constructible_from<
+    CPP_template(typename T)(
+    concept (container_)(T),
+        constructible_from<
             uncvref_t<T>,
             detail::movable_input_iterator<range_value_t<T>>,
             detail::movable_input_iterator<range_value_t<T>>>
     );
 
     template<typename T>
-    CPP_concept_bool container =
+    CPP_concept container =
         semi_container<T> &&
-        CPP_fragment(ranges::container_, T);
+        CPP_concept_ref(ranges::container_, T);
 
     template<typename C>
-    CPP_concept_fragment(reservable_,
+    CPP_requires(reservable_,
         requires(C & c, C const & cc) //
         (
             c.reserve(ranges::size(c)),
@@ -85,28 +85,26 @@ namespace ranges
                                         decltype(ranges::size(c))>>,
             concepts::requires_<same_as<decltype(cc.max_size()),
                                         decltype(ranges::size(c))>>
-        )
-    );
+        ));
 
     template<typename C>
-    CPP_concept_bool reservable =
-        container<C> && sized_range<C> && CPP_fragment(ranges::reservable_, C);
+    CPP_concept reservable =
+        container<C> && sized_range<C> && CPP_requires_ref(ranges::reservable_, C);
 
     template<typename C, typename I>
-    CPP_concept_fragment(reservable_with_assign_,
+    CPP_requires(reservable_with_assign_,
         requires(C & c, I i) //
         (
             c.assign(i, i)
-        )
-    );
+        ));
     template<typename C, typename I>
-    CPP_concept_bool reservable_with_assign =
+    CPP_concept reservable_with_assign =
         reservable<C> && //
         input_iterator<I> && //
-        CPP_fragment(ranges::reservable_with_assign_, C, I);
+        CPP_requires_ref(ranges::reservable_with_assign_, C, I);
 
     template<typename C>
-    CPP_concept_bool random_access_reservable =
+    CPP_concept random_access_reservable =
         reservable<C> && random_access_range<C>;
     // clang-format on
 
@@ -151,14 +149,14 @@ namespace ranges
       /// \endcond
 
     // clang-format off
-    template<typename T>
-    CPP_concept_fragment(lvalue_container_like_, requires()(0) &&
+    CPP_template(typename T)(
+    concept (lvalue_container_like_)(T),
         implicitly_convertible_to<detail::is_lvalue_container_like_t<T>, std::true_type>
     );
     template<typename T>
-    CPP_concept_bool lvalue_container_like =
+    CPP_concept lvalue_container_like =
         forward_range<T> &&
-        CPP_fragment(ranges::lvalue_container_like_, T);
+        CPP_concept_ref(ranges::lvalue_container_like_, T);
     // clang-format on
     /// @}
 } // namespace ranges

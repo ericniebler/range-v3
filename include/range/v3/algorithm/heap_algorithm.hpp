@@ -265,8 +265,7 @@ namespace ranges
         CPP_template(typename I, typename S, typename C = less, typename P = identity)( //
             requires random_access_iterator<I> && sentinel_for<S, I>  && //
             sortable<I, C, P>) //
-        auto RANGES_FUNC(push_heap)(I first, S last, C pred = C{}, P proj = P{}) //
-            -> I
+        I RANGES_FUNC(push_heap)(I first, S last, C pred = C{}, P proj = P{})
         {
             auto n = distance(first, last);
             detail::sift_up_n(first, n, std::move(pred), std::move(proj));

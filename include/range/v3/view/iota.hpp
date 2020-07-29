@@ -78,7 +78,7 @@ namespace ranges
 
         // clang-format off
         template<typename I>
-        CPP_concept_fragment(_decrementable_,
+        CPP_requires(_decrementable_,
             requires(I i) //
             (
                 --i,
@@ -87,12 +87,12 @@ namespace ranges
                 concepts::requires_<same_as<I, decltype(i--)>>
             ));
         template<typename I>
-        CPP_concept_bool decrementable_ =
+        CPP_concept decrementable_ =
             incrementable<I> &&
-            CPP_fragment(detail::_decrementable_, I);
+            CPP_requires_ref(detail::_decrementable_, I);
 
         template<typename I>
-        CPP_concept_fragment(_advanceable_,
+        CPP_requires(_advanceable_,
             requires(I i, I const j, iota_difference_t<I> const n) //
             (
                 j - j,
@@ -113,9 +113,9 @@ namespace ranges
                 // concepts::requires_<convertible_to<decltype(n + i), I>>
             ));
         template<typename I>
-        CPP_concept_bool advanceable_ =
+        CPP_concept advanceable_ =
             decrementable_<I> && totally_ordered<I> &&
-            CPP_fragment(detail::_advanceable_, I);
+            CPP_requires_ref(detail::_advanceable_, I);
         // clang-format on
 
         CPP_template(typename I)( //

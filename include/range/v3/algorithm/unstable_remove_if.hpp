@@ -47,8 +47,7 @@ namespace ranges
         CPP_template(typename I, typename C, typename P = identity)( //
             requires bidirectional_iterator<I> && permutable<I>  && //
             indirect_unary_predicate<C, projected<I, P>>) //
-        auto RANGES_FUNC(unstable_remove_if)(I first, I last, C pred, P proj = {}) //
-            -> I
+        I RANGES_FUNC(unstable_remove_if)(I first, I last, C pred, P proj = {})
         {
             while(true)
             {

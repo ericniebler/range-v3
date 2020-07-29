@@ -82,7 +82,7 @@ namespace ranges
 
         // clang-format off
         template<typename T>
-        CPP_concept_bool kv_pair_like_ =
+        CPP_concept kv_pair_like_ =
             invocable<get_first const &, T> &&
             invocable<get_second const &, T>;
         // clang-format on

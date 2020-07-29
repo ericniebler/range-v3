@@ -55,43 +55,43 @@ namespace ranges
         }
 
         // clang-format off
-        template<typename Fun, typename Rng>
-        CPP_concept_fragment(iter_transform_1_readable_, requires()(0) &&
-            regular_invocable<Fun &, iterator_t<Rng>> &&
-            regular_invocable<Fun &, copy_tag, iterator_t<Rng>> &&
-            regular_invocable<Fun &, move_tag, iterator_t<Rng>> &&
+        CPP_template(typename Fun, typename Rng)(
+        concept (iter_transform_1_readable_)(Fun, Rng),
+            regular_invocable<Fun &, iterator_t<Rng>> CPP_and
+            regular_invocable<Fun &, copy_tag, iterator_t<Rng>> CPP_and
+            regular_invocable<Fun &, move_tag, iterator_t<Rng>> CPP_and
             common_reference_with<
                 invoke_result_t<Fun &, iterator_t<Rng>> &&,
-                invoke_result_t<Fun &, copy_tag, iterator_t<Rng>> &> &&
+                invoke_result_t<Fun &, copy_tag, iterator_t<Rng>> &> CPP_and
             common_reference_with<
                 invoke_result_t<Fun &, iterator_t<Rng>> &&,
-                invoke_result_t<Fun &, move_tag, iterator_t<Rng>> &&> &&
+                invoke_result_t<Fun &, move_tag, iterator_t<Rng>> &&> CPP_and
             common_reference_with<
                 invoke_result_t<Fun &, move_tag, iterator_t<Rng>> &&,
                 invoke_result_t<Fun &, copy_tag, iterator_t<Rng>> const &>
         );
         template<typename Fun, typename Rng>
-        CPP_concept_bool iter_transform_1_readable =
-            CPP_fragment(detail::iter_transform_1_readable_, Fun, Rng);
+        CPP_concept iter_transform_1_readable =
+            CPP_concept_ref(detail::iter_transform_1_readable_, Fun, Rng);
 
-        template<typename Fun, typename Rng1, typename Rng2>
-        CPP_concept_fragment(iter_transform_2_readable_, requires()(0) &&
-            regular_invocable<Fun &, iterator_t<Rng1>, iterator_t<Rng2>> &&
-            regular_invocable<Fun &, copy_tag, iterator_t<Rng1>, iterator_t<Rng2>> &&
-            regular_invocable<Fun &, move_tag, iterator_t<Rng1>, iterator_t<Rng2>> &&
+        CPP_template(typename Fun, typename Rng1, typename Rng2)(
+        concept (iter_transform_2_readable_)(Fun, Rng1, Rng2),
+            regular_invocable<Fun &, iterator_t<Rng1>, iterator_t<Rng2>> CPP_and
+            regular_invocable<Fun &, copy_tag, iterator_t<Rng1>, iterator_t<Rng2>> CPP_and
+            regular_invocable<Fun &, move_tag, iterator_t<Rng1>, iterator_t<Rng2>> CPP_and
             common_reference_with<
                 invoke_result_t<Fun &, iterator_t<Rng1>, iterator_t<Rng2>> &&,
-                invoke_result_t<Fun &, copy_tag, iterator_t<Rng1>, iterator_t<Rng2>> &> &&
+                invoke_result_t<Fun &, copy_tag, iterator_t<Rng1>, iterator_t<Rng2>> &> CPP_and
             common_reference_with<
                 invoke_result_t<Fun &, iterator_t<Rng1>, iterator_t<Rng2>> &&,
-                invoke_result_t<Fun &, move_tag, iterator_t<Rng1>, iterator_t<Rng2>> &&> &&
+                invoke_result_t<Fun &, move_tag, iterator_t<Rng1>, iterator_t<Rng2>> &&> CPP_and
             common_reference_with<
                 invoke_result_t<Fun &, move_tag, iterator_t<Rng1>, iterator_t<Rng2>> &&,
                 invoke_result_t<Fun &, copy_tag, iterator_t<Rng1>, iterator_t<Rng2>> const &>
         );
         template<typename Fun, typename Rng1, typename Rng2>
-        CPP_concept_bool iter_transform_2_readable =
-            CPP_fragment(detail::iter_transform_2_readable_, Fun, Rng1, Rng2);
+        CPP_concept iter_transform_2_readable =
+            CPP_concept_ref(detail::iter_transform_2_readable_, Fun, Rng1, Rng2);
         // clang-format on
     } // namespace detail
     /// \endcond
@@ -126,7 +126,8 @@ namespace ranges
               : fun_(std::move(fun))
             {}
             CPP_template(bool Other)( //
-                requires IsConst && (!Other)) adaptor(adaptor<Other> that)
+                requires IsConst && CPP_NOT(Other)) //
+            adaptor(adaptor<Other> that)
               : fun_(std::move(that.fun_))
             {}
 
@@ -197,9 +198,10 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)(requires copy_constructible<Fun>)
-        transform_view(Rng &&, Fun)
-            ->transform_view<views::all_t<Rng>, Fun>;
+    CPP_template(typename Rng, typename Fun)( //
+        requires copy_constructible<Fun>)
+    transform_view(Rng &&, Fun)
+        -> transform_view<views::all_t<Rng>, Fun>;
 #endif
 
     template<typename Rng1, typename Rng2, typename Fun>
@@ -471,29 +473,29 @@ namespace ranges
         // Don't forget to update views::for_each whenever this set
         // of concepts changes
         // clang-format off
-        template<typename Rng, typename Fun>
-        CPP_concept_fragment(transformable_range_, requires()(0) &&
-            regular_invocable<Fun &, range_reference_t<Rng>> &&
+        CPP_template(typename Rng, typename Fun)(
+        concept (transformable_range_)(Rng, Fun),
+            regular_invocable<Fun &, range_reference_t<Rng>> CPP_and
             (!std::is_void<indirect_result_t<Fun &, iterator_t<Rng>>>::value)
         );
         template<typename Rng, typename Fun>
-        CPP_concept_bool transformable_range =
+        CPP_concept transformable_range =
             viewable_range<Rng> && input_range<Rng> &&
             copy_constructible<Fun> &&
-            CPP_fragment(views::transformable_range_, Rng, Fun);
+            CPP_concept_ref(views::transformable_range_, Rng, Fun);
 
-        template<typename Rng1, typename Rng2, typename Fun>
-        CPP_concept_fragment(transformable_ranges_, requires()(0) &&
-            regular_invocable<Fun &, range_reference_t<Rng1>, range_reference_t<Rng2>> &&
+        CPP_template(typename Rng1, typename Rng2, typename Fun)(
+        concept (transformable_ranges_)(Rng1, Rng2, Fun),
+            regular_invocable<Fun &, range_reference_t<Rng1>, range_reference_t<Rng2>> CPP_and
             (!std::is_void<
                 indirect_result_t<Fun &, iterator_t<Rng1>, iterator_t<Rng2>>>::value)
         );
         template<typename Rng1, typename Rng2, typename Fun>
-        CPP_concept_bool transformable_ranges =
+        CPP_concept transformable_ranges =
             viewable_range<Rng1> && input_range<Rng1> &&
             viewable_range<Rng2> && input_range<Rng2> &&
             copy_constructible<Fun> &&
-            CPP_fragment(views::transformable_ranges_, Rng1, Rng2, Fun);
+            CPP_concept_ref(views::transformable_ranges_, Rng1, Rng2, Fun);
         // clang-format on
 
         struct transform_base_fn

@@ -44,16 +44,33 @@ namespace ranges
     namespace detail
     {
         // clang-format off
+#if defined(_MSC_VER) && !defined(__clang__) && \
+    RANGES_CXX_VER <= RANGES_CXX_STD_17
+        template<typename R, std::size_t Sz = static_cast<std::size_t>(R::size())>
+        constexpr bool _is_tiny_range_(R const *) noexcept
+        {
+            return R::size() <= 1u;
+        }
+        constexpr bool _is_tiny_range_(void const*) noexcept
+        {
+            return false;
+        }
         template<typename R>
-        CPP_concept_fragment(tiny_range_, requires()(0) &&
-            ranges::type<std::integral_constant<
-                decltype(std::remove_reference_t<R>::size()),
-                std::remove_reference_t<R>::size()>> &&
-            (std::remove_reference_t<R>::size() <= 1)
+        CPP_concept tiny_range =
+            sized_range<R> &&
+            detail::_is_tiny_range_(static_cast<std::add_pointer_t<R>>(nullptr));
+#else // ^^^^ workaround / no workaround vvvv
+        CPP_template(typename R)(
+        concept (tiny_range_)(R),
+            ranges::type<
+                std::integral_constant<decltype(R::size()), R::size()>> CPP_and
+            (R::size() <= 1)
         );
         template<typename R>
-        CPP_concept_bool tiny_range =
-            sized_range<R> && CPP_fragment(detail::tiny_range_, R);
+        CPP_concept tiny_range =
+            sized_range<R> &&
+            CPP_concept_ref(detail::tiny_range_, std::remove_reference_t<R>);
+#endif
         // clang-format on
     } // namespace detail
 
@@ -381,10 +398,10 @@ namespace ranges
             {}
 
             CPP_template(bool Other)( //
-                requires Const && (!Other) &&
+                requires Const && CPP_NOT(Other) &&
                 convertible_to<iterator_t<V>, iterator_t<Base>>) //
-                constexpr split_outer_iterator(
-                    split_outer_iterator<split_view<V, Pattern>, Other> i)
+            constexpr split_outer_iterator(
+                split_outer_iterator<split_view<V, Pattern>, Other> i)
               : Current{std::move(i.curr_)}
               , parent_(i.parent_)
             {}
@@ -621,7 +638,8 @@ namespace ranges
             CPP_template(typename Rng, typename Pattern)( //
                 requires viewable_range<Rng> && input_range<Rng> &&
                         viewable_range<Pattern> && forward_range<Pattern> &&
-                            indirectly_comparable<iterator_t<Rng>, iterator_t<Pattern>,
+                            indirectly_comparable<iterator_t<Rng>,
+                                                  iterator_t<Pattern>,
                                                   ranges::equal_to> &&
                     (forward_range<Rng> || detail::tiny_range<Pattern>)) //
             constexpr auto operator()(Rng && rng, Pattern && pattern) const
@@ -657,8 +675,8 @@ namespace ranges
             requires input_range<Rng> && forward_range<Pattern> && view_<Rng> &&
                 view_<Pattern> && indirectly_comparable<
                     iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
-            (forward_range<Rng> ||
-             ranges::detail::tiny_range<Pattern>)) using split_view =
+            (forward_range<Rng> || ranges::detail::tiny_range<Pattern>)) //
+        using split_view =
             ranges::split_view<Rng, Pattern>;
     } // namespace cpp20
 

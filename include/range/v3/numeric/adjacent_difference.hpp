@@ -39,19 +39,19 @@ namespace ranges
     /// \addtogroup group-numerics
     /// @{
     // clang-format off
-    template<typename I, typename O, typename BOp, typename P>
-    CPP_concept_fragment(differenceable_, requires()(0) &&
-        invocable<P&, iter_value_t<I>> &&
-        copy_constructible<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> &&
-        movable<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> &&
-        output_iterator<O, invoke_result_t<P&, iter_value_t<I>>> &&
-        invocable<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>> &&
-        output_iterator<O, invoke_result_t<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>>>
-    );
+    CPP_template(typename I, typename O, typename BOp, typename P)(
+    concept (differenceable_)(I, O, BOp, P),
+        invocable<P&, iter_value_t<I>> CPP_and
+        copy_constructible<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> CPP_and
+        movable<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> CPP_and
+        output_iterator<O, invoke_result_t<P&, iter_value_t<I>>> CPP_and
+        invocable<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>> CPP_and
+        output_iterator<O, invoke_result_t<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>>>);
+
     template<typename I, typename O, typename BOp = minus, typename P = identity>
-    CPP_concept_bool differenceable =
+    CPP_concept differenceable =
         input_iterator<I> &&
-        CPP_fragment(ranges::differenceable_, I, O, BOp, P);
+        CPP_concept_ref(ranges::differenceable_, I, O, BOp, P);
     // clang-format on
 
     template<typename I, typename O>

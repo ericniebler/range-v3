@@ -82,47 +82,47 @@ namespace ranges
 
     // clang-format off
     template<typename...Views>
-    CPP_concept_bool cartesian_produce_view_can_const =
+    CPP_concept cartesian_produce_view_can_const =
         and_v<range<Views const>...>;
 
-    template<typename IsConst, typename...Views>
-    CPP_concept_fragment(cartesian_produce_view_can_size_, requires()(0) &&
+    CPP_template(typename IsConst, typename... Views)(
+    concept (cartesian_produce_view_can_size_)(IsConst, Views...),
         and_v<common_with<std::uintmax_t, range_size_t<meta::const_if<IsConst, Views>>>...>
     );
     template<typename IsConst, typename...Views>
-    CPP_concept_bool cartesian_produce_view_can_size =
+    CPP_concept cartesian_produce_view_can_size =
         and_v<sized_range<meta::const_if<IsConst, Views>>...> &&
-        CPP_fragment(ranges::cartesian_produce_view_can_size_, IsConst, Views...);
+        CPP_concept_ref(ranges::cartesian_produce_view_can_size_, IsConst, Views...);
 
-    template<typename IsConst, typename...Views>
-    CPP_concept_fragment(cartesian_produce_view_can_distance_, requires()(0) &&
+    CPP_template(typename IsConst, typename... Views)(
+    concept (cartesian_produce_view_can_distance_)(IsConst, Views...),
         and_v<sized_sentinel_for<
             iterator_t<meta::const_if<IsConst, Views>>,
             iterator_t<meta::const_if<IsConst, Views>>>...>
     );
     template<typename IsConst, typename...Views>
-    CPP_concept_bool cartesian_produce_view_can_distance =
+    CPP_concept cartesian_produce_view_can_distance =
         cartesian_produce_view_can_size<IsConst, Views...> &&
-        CPP_fragment(ranges::cartesian_produce_view_can_distance_, IsConst, Views...);
+        CPP_concept_ref(ranges::cartesian_produce_view_can_distance_, IsConst, Views...);
 
-    template<typename IsConst, typename...Views>
-    CPP_concept_fragment(cartesian_produce_view_can_random_, requires()(0) &&
+    CPP_template(typename IsConst, typename... Views)(
+    concept (cartesian_produce_view_can_random_)(IsConst, Views...),
         and_v<random_access_iterator<iterator_t<meta::const_if<IsConst, Views>>>...>
     );
     template<typename IsConst, typename...Views>
-    CPP_concept_bool cartesian_produce_view_can_random =
+    CPP_concept cartesian_produce_view_can_random =
         cartesian_produce_view_can_distance<IsConst, Views...> &&
-        CPP_fragment(ranges::cartesian_produce_view_can_random_, IsConst, Views...);
+        CPP_concept_ref(ranges::cartesian_produce_view_can_random_, IsConst, Views...);
 
-    template<typename IsConst, typename...Views>
-    CPP_concept_fragment(cartesian_produce_view_can_bidi_, requires()(0) &&
+    CPP_template(typename IsConst, typename... Views)(
+    concept (cartesian_produce_view_can_bidi_)(IsConst, Views...),
         and_v<common_range<meta::const_if<IsConst, Views>>...,
             bidirectional_iterator<iterator_t<meta::const_if<IsConst, Views>>>...>
     );
     template<typename IsConst, typename...Views>
-    CPP_concept_bool cartesian_produce_view_can_bidi =
+    CPP_concept cartesian_produce_view_can_bidi =
         cartesian_produce_view_can_random<IsConst, Views...> ||
-        CPP_fragment(ranges::cartesian_produce_view_can_bidi_, IsConst, Views...);
+        CPP_concept_ref(ranges::cartesian_produce_view_can_bidi_, IsConst, Views...);
     // clang-format on
 
     template<typename... Views>

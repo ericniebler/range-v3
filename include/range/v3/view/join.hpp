@@ -114,16 +114,16 @@ namespace ranges
 
         // clang-format off
         template<typename I>
-        CPP_concept_fragment(has_member_arrow_,
+        CPP_requires(has_member_arrow_,
             requires(I i) //
             (
                 i.operator->()
             ));
 
         template<typename I>
-        CPP_concept_bool has_arrow_ =
+        CPP_concept has_arrow_ =
             input_iterator<I> &&
-            (std::is_pointer<I>::value || CPP_fragment(detail::has_member_arrow_, I));
+            (std::is_pointer<I>::value || CPP_requires_ref(detail::has_member_arrow_, I));
         // clang-format on
     } // namespace detail
     /// \endcond
@@ -214,11 +214,11 @@ namespace ranges
                 satisfy();
             }
             CPP_template(bool Other)( //
-                requires Const && (!Other) &&
+                requires Const && CPP_NOT(Other) &&
                 convertible_to<iterator_t<Rng>, iterator_t<COuter>> &&
                 convertible_to<iterator_t<range_reference_t<Rng>>,
                                iterator_t<CInner>>) //
-                constexpr cursor(cursor<Other> that)
+            constexpr cursor(cursor<Other> that)
               : rng_(that.rng_)
               , outer_it_(std::move(that.outer_it_))
               , inner_it_(std::move(that.inner_it_))
@@ -487,36 +487,38 @@ namespace ranges
         // Don't forget to update views::for_each whenever this set
         // of concepts changes
         // clang-format off
-        template<typename Rng>
-        CPP_concept_fragment(joinable_range_, requires()(0) &&
-            input_range<range_reference_t<Rng>> &&
+        CPP_template(typename Rng)(
+        concept (joinable_range_)(Rng),
+            input_range<range_reference_t<Rng>> CPP_and
             (std::is_reference<range_reference_t<Rng>>::value ||
                 view_<range_reference_t<Rng>>)
         );
         template<typename Rng>
-        CPP_concept_bool joinable_range =
+        CPP_concept joinable_range =
             viewable_range<Rng> && input_range<Rng> &&
-            CPP_fragment(views::joinable_range_, Rng);
+            CPP_concept_ref(views::joinable_range_, Rng);
 
-        template<typename Rng, typename ValRng>
-        CPP_concept_fragment(joinable_with_range_, requires()(0) &&
-            common_with<range_value_t<ValRng>, range_value_t<range_reference_t<Rng>>> &&
+        CPP_template(typename Rng, typename ValRng)(
+        concept (joinable_with_range_)(Rng, ValRng),
+            common_with<
+                range_value_t<ValRng>,
+                range_value_t<range_reference_t<Rng>>> CPP_and
             semiregular<
                 common_type_t<
                     range_value_t<ValRng>,
-                    range_value_t<range_reference_t<Rng>>>> &&
+                    range_value_t<range_reference_t<Rng>>>> CPP_and
             common_reference_with<
                 range_reference_t<ValRng>,
-                range_reference_t<range_reference_t<Rng>>> &&
+                range_reference_t<range_reference_t<Rng>>> CPP_and
             common_reference_with<
                 range_rvalue_reference_t<ValRng>,
                 range_rvalue_reference_t<range_reference_t<Rng>>>
         );
         template<typename Rng, typename ValRng>
-        CPP_concept_bool joinable_with_range =
+        CPP_concept joinable_with_range =
             joinable_range<Rng> &&
             viewable_range<ValRng> && forward_range<ValRng> &&
-            CPP_fragment(views::joinable_with_range_, Rng, ValRng);
+            CPP_concept_ref(views::joinable_with_range_, Rng, ValRng);
         // clang-format on
         /// \endcond
 

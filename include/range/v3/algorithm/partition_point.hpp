@@ -51,8 +51,7 @@ namespace ranges
         CPP_template(typename I, typename S, typename C, typename P = identity)( //
             requires forward_iterator<I> && sentinel_for<S, I>  && //
             indirect_unary_predicate<C, projected<I, P>>) //
-        auto RANGES_FUNC(partition_point)(I first, S last, C pred, P proj = P{}) //
-            -> I
+        I RANGES_FUNC(partition_point)(I first, S last, C pred, P proj = P{})
         {
             if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S, I>))
             {

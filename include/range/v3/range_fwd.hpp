@@ -921,10 +921,6 @@ namespace ranges
     namespace concepts = ::concepts;
     using namespace ::concepts::defs;
     using ::concepts::and_v;
-    namespace defer
-    {
-        using namespace ::concepts::defs::defer;
-    }
 } // namespace ranges
 /// \endcond
 

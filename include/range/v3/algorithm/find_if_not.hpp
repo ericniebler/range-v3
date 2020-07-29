@@ -48,8 +48,7 @@ namespace ranges
         CPP_template(typename I, typename S, typename F, typename P = identity)( //
             requires input_iterator<I> && sentinel_for<S, I>  && //
             indirect_unary_predicate<F, projected<I, P>>) //
-        auto RANGES_FUNC(find_if_not)(I first, S last, F pred, P proj = P{}) //
-            -> I
+        I RANGES_FUNC(find_if_not)(I first, S last, F pred, P proj = P{})
         {
             for(; first != last; ++first)
                 if(!invoke(pred, invoke(proj, *first)))

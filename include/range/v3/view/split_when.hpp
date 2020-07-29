@@ -127,7 +127,8 @@ namespace ranges
         public:
             cursor() = default;
             CPP_template(bool Other)( //
-                requires IsConst && (!Other)) cursor(cursor<Other> that)
+                requires IsConst && CPP_NOT(Other)) //
+            cursor(cursor<Other> that)
               : cursor{std::move(that.cur_), std::move(that.last_), std::move(that.fun_)}
             {}
         };
@@ -153,9 +154,10 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)(requires copy_constructible<Fun>)
-        split_when_view(Rng &&, Fun)
-            ->split_when_view<views::all_t<Rng>, Fun>;
+    CPP_template(typename Rng, typename Fun)( //
+        requires copy_constructible<Fun>)
+    split_when_view(Rng &&, Fun)
+        -> split_when_view<views::all_t<Rng>, Fun>;
 #endif
 
     namespace views

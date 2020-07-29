@@ -37,14 +37,14 @@ namespace ranges
     namespace detail
     {
         // clang-format off
-        template<typename Rng, typename Pred>
-        CPP_concept_fragment(adjacent_filter_constraints_, requires()(0) &&
+        CPP_template(typename Rng, typename Pred)(
+        concept (adjacent_filter_constraints_)(Rng, Pred),
             indirect_binary_predicate_<Pred, iterator_t<Rng>, iterator_t<Rng>>
         );
         template<typename Rng, typename Pred>
-        CPP_concept_bool adjacent_filter_constraints =
+        CPP_concept adjacent_filter_constraints =
             viewable_range<Rng> && forward_range<Rng> &&
-            CPP_fragment(detail::adjacent_filter_constraints_, Rng, Pred);
+            CPP_concept_ref(detail::adjacent_filter_constraints_, Rng, Pred);
         // clang-format on
     } // namespace detail
     /// \endcond

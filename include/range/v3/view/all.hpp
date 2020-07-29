@@ -66,8 +66,8 @@ namespace ranges
 
         public:
             CPP_template(typename T)( //
-                requires range<T &>) //
-            constexpr auto CPP_fun(operator())(T && t)(const requires viewable_range<T>)
+                requires range<T &> CPP_and viewable_range<T>) //
+            constexpr auto operator()(T && t) const
             {
                 return all_fn::from_range_(static_cast<T &&>(t),
                                            meta::bool_<view_<uncvref_t<T>>>{},

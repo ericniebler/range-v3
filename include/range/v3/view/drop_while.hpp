@@ -82,9 +82,10 @@ namespace ranges
         enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)(requires copy_constructible<Fun>)
-        drop_while_view(Rng &&, Fun)
-            ->drop_while_view<views::all_t<Rng>, Fun>;
+    CPP_template(typename Rng, typename Fun)( //
+        requires copy_constructible<Fun>)
+    drop_while_view(Rng &&, Fun)
+        -> drop_while_view<views::all_t<Rng>, Fun>;
 #endif
 
     template<typename Rng, typename Pred>

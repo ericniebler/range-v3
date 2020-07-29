@@ -61,7 +61,7 @@ namespace ranges
               : pred_(std::move(pred))
             {}
             CPP_template(bool Other)( //
-                requires IsConst && (!Other))
+                requires IsConst && CPP_NOT(Other)) //
                 sentinel_adaptor(sentinel_adaptor<Other> that)
               : pred_(std::move(that.pred_))
             {}
@@ -101,9 +101,10 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)(requires copy_constructible<Fun>)
-        take_while_view(Rng &&, Fun)
-            ->take_while_view<views::all_t<Rng>, Fun>;
+    CPP_template(typename Rng, typename Fun)( //
+        requires copy_constructible<Fun>)
+    take_while_view(Rng &&, Fun)
+        -> take_while_view<views::all_t<Rng>, Fun>;
 #endif
 
     namespace views
