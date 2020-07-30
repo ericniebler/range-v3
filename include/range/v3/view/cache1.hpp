@@ -25,7 +25,7 @@
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/all.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -172,8 +172,8 @@ namespace ranges
             /// recomputation. This can be useful in adaptor pipelines that include
             /// combinations of \c view::filter and \c view::transform, for instance.
             /// \note \c views::cache1 is always single-pass.
-            CPP_template(typename Rng)( //
-                requires viewable_range<Rng> && input_range<Rng>  && //
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND //
                     constructible_from<range_value_t<Rng>, range_reference_t<Rng>>) //
             constexpr auto operator()(Rng && rng) const //
                 -> cache1_view<all_t<Rng>>
@@ -190,7 +190,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::cache1_view)
 

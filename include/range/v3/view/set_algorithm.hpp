@@ -38,7 +38,7 @@
 #include <range/v3/view/facade.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -157,7 +157,7 @@ namespace ranges
             {
                 satisfy();
             }
-            CPP_template(bool Other)(         //
+            template(bool Other)(         //
                 requires IsConst && (!Other)) //
                 set_difference_cursor(
                     set_difference_cursor<Other, Rng1, Rng2, C, P1, P2> that)
@@ -220,7 +220,7 @@ namespace ranges
     {
         struct set_difference_base_fn
         {
-            CPP_template(typename Rng1, typename Rng2, typename C = less,
+            template(typename Rng1, typename Rng2, typename C = less,
                      typename P1 = identity, typename P2 = identity)( //
                 requires viewable_range<Rng1> && input_range<Rng1> &&
                         viewable_range<Rng2> && input_range<Rng2> &&
@@ -326,7 +326,7 @@ namespace ranges
             {
                 satisfy();
             }
-            CPP_template(bool Other)(         //
+            template(bool Other)(         //
                 requires IsConst && (!Other)) //
                 set_intersection_cursor(
                     set_intersection_cursor<Other, Rng1, Rng2, C, P1, P2> that)
@@ -390,7 +390,7 @@ namespace ranges
     {
         struct set_intersection_base_fn
         {
-            CPP_template(typename Rng1, typename Rng2, typename C = less,
+            template(typename Rng1, typename Rng2, typename C = less,
                      typename P1 = identity, typename P2 = identity)( //
                 requires viewable_range<Rng1> && input_range<Rng1> &&
                         viewable_range<Rng2> && input_range<Rng2> &&
@@ -518,8 +518,8 @@ namespace ranges
             {
                 satisfy();
             }
-            CPP_template(bool Other)( //
-                requires IsConst && (!Other))
+            template(bool Other)( //
+                requires IsConst AND (!Other))
                 set_union_cursor(set_union_cursor<Other, Rng1, Rng2, C, P1, P2> that)
               : pred_(std::move(that.pred_))
               , proj1_(std::move(that.proj1_))
@@ -587,7 +587,7 @@ namespace ranges
         struct set_union_base_fn
         {
         public:
-            CPP_template(typename Rng1, typename Rng2, typename C = less,
+            template(typename Rng1, typename Rng2, typename C = less,
                      typename P1 = identity, typename P2 = identity)( //
                 requires viewable_range<Rng1> && input_range<Rng1> &&
                         viewable_range<Rng2> && input_range<Rng2> && common_with<
@@ -731,7 +731,7 @@ namespace ranges
             {
                 satisfy();
             }
-            CPP_template(bool Other)(         //
+            template(bool Other)(         //
                 requires IsConst && (!Other)) //
                 set_symmetric_difference_cursor(
                     set_symmetric_difference_cursor<Other, Rng1, Rng2, C, P1, P2> that)
@@ -816,7 +816,7 @@ namespace ranges
     {
         struct set_symmetric_difference_base_fn
         {
-            CPP_template(typename Rng1, typename Rng2, typename C = less,
+            template(typename Rng1, typename Rng2, typename C = less,
                      typename P1 = identity, typename P2 = identity)( //
                 requires viewable_range<Rng1> && input_range<Rng1> &&
                         viewable_range<Rng2> && input_range<Rng2> && common_with<
@@ -867,6 +867,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

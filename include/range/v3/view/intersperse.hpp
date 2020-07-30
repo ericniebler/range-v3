@@ -31,7 +31,7 @@
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -78,8 +78,8 @@ namespace ranges
             constexpr explicit cursor_adaptor(range_value_t<Rng> const & val)
               : val_{val}
             {}
-            CPP_template(bool Other)( //
-                requires Const && (!Other)) cursor_adaptor(cursor_adaptor<Other> that)
+            template(bool Other)( //
+                requires Const AND (!Other)) cursor_adaptor(cursor_adaptor<Other> that)
               : toggle_(that.toggle_)
               , val_(std::move(that.val_))
             {}
@@ -143,8 +143,8 @@ namespace ranges
 
         public:
             sentinel_adaptor() = default;
-            CPP_template(bool Other)( //
-                requires Const && (!Other)) sentinel_adaptor(sentinel_adaptor<Other>)
+            template(bool Other)( //
+                requires Const AND (!Other)) sentinel_adaptor(sentinel_adaptor<Other>)
             {}
             static constexpr bool empty(iterator_t<CRng> const & it,
                                         cursor_adaptor<Const> const &,
@@ -175,16 +175,16 @@ namespace ranges
         {
             return {};
         }
-        CPP_template(bool Const = true)( //
-            requires Const && range<meta::const_if_c<Const, Rng>> &&
-                common_range<meta::const_if_c<Const, Rng>> &&
+        template(bool Const = true)( //
+            requires Const AND range<meta::const_if_c<Const, Rng>> AND
+                common_range<meta::const_if_c<Const, Rng>> AND
             (!single_pass_iterator_<iterator_t<meta::const_if_c<Const, Rng>>>)) //
         constexpr auto end_adaptor() const -> cursor_adaptor<Const>
         {
             return cursor_adaptor<true>{val_};
         }
-        CPP_template(bool Const = true)( //
-            requires Const && range<meta::const_if_c<Const, Rng>> &&
+        template(bool Const = true)( //
+            requires Const AND range<meta::const_if_c<Const, Rng>> AND
                 (!common_range<meta::const_if_c<Const, Rng>> ||
                  single_pass_iterator_<iterator_t<meta::const_if_c<Const, Rng>>>)) //
         constexpr auto end_adaptor() const noexcept
@@ -208,9 +208,9 @@ namespace ranges
     {
         struct intersperse_base_fn
         {
-            CPP_template(typename Rng)( //
-                requires viewable_range<Rng> && input_range<Rng>  && //
-                    convertible_to<range_reference_t<Rng>, range_value_t<Rng>>  && //
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND //
+                    convertible_to<range_reference_t<Rng>, range_value_t<Rng>> AND //
                         semiregular<range_value_t<Rng>>) //
             constexpr auto operator()(Rng && rng, range_value_t<Rng> val) const
                 -> intersperse_view<all_t<Rng>>
@@ -237,7 +237,7 @@ namespace ranges
     } // namespace views
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::intersperse_view)
 

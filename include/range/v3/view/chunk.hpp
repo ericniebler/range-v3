@@ -36,7 +36,7 @@
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -126,8 +126,8 @@ namespace ranges
               , n_((RANGES_EXPECT(0 < cv->n_), cv->n_))
               , end_(ranges::end(cv->base()))
             {}
-            CPP_template(bool Other)( //
-                requires Const && (!Other)) constexpr adaptor(adaptor<Other> that)
+            template(bool Other)( //
+                requires Const AND (!Other)) constexpr adaptor(adaptor<Other> that)
               : box<offset_t<Const>>(that.offset())
               , n_(that.n_)
               , end_(that.end_)
@@ -420,8 +420,8 @@ namespace ranges
         //                       The last range may have fewer.
         struct chunk_base_fn
         {
-            CPP_template(typename Rng)( //
-                requires viewable_range<Rng> && input_range<Rng>) //
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng>) //
             constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> chunk_view<all_t<Rng>>
             {
@@ -448,7 +448,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::chunk_view)
 

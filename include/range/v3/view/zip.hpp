@@ -28,7 +28,7 @@
 #include <range/v3/view/empty.hpp>
 #include <range/v3/view/zip_with.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -38,8 +38,8 @@ namespace ranges
         struct indirect_zip_fn_
         {
             // tuple value
-            CPP_template(typename... Its)( //
-                requires (sizeof...(Its) != 2) CPP_and and_v<indirectly_readable<Its>...>)
+            template(typename... Its)( //
+                requires (sizeof...(Its) != 2) AND and_v<indirectly_readable<Its>...>)
             auto operator()(copy_tag, Its...) const
                 -> std::tuple<iter_value_t<Its>...>
             {
@@ -47,8 +47,8 @@ namespace ranges
             }
 
             // tuple reference
-            CPP_template(typename... Its)( //
-                requires (sizeof...(Its) != 2) CPP_and and_v<indirectly_readable<Its>...>)
+            template(typename... Its)( //
+                requires (sizeof...(Its) != 2) AND and_v<indirectly_readable<Its>...>)
             auto operator()(Its const &... its) const
                 noexcept(meta::and_c<noexcept(iter_reference_t<Its>(*its))...>::value)
                 -> common_tuple<iter_reference_t<Its>...>
@@ -57,8 +57,8 @@ namespace ranges
             }
 
             // tuple rvalue reference
-            CPP_template(typename... Its)( //
-                requires (sizeof...(Its) != 2) CPP_and and_v<indirectly_readable<Its>...>)
+            template(typename... Its)( //
+                requires (sizeof...(Its) != 2) AND and_v<indirectly_readable<Its>...>)
             auto operator()(move_tag, Its const &... its) const
                 noexcept(meta::and_c<noexcept(
                              iter_rvalue_reference_t<Its>(iter_move(its)))...>::value)
@@ -68,8 +68,8 @@ namespace ranges
             }
 
             // pair value
-            CPP_template(typename It1, typename It2)( //
-                requires indirectly_readable<It1> && indirectly_readable<It2>) //
+            template(typename It1, typename It2)( //
+                requires indirectly_readable<It1> AND indirectly_readable<It2>) //
             auto operator()(copy_tag, It1, It2) const
                 -> std::pair<iter_value_t<It1>, iter_value_t<It2>>
             {
@@ -77,8 +77,8 @@ namespace ranges
             }
 
             // pair reference
-            CPP_template(typename It1, typename It2)( //
-                requires indirectly_readable<It1> && indirectly_readable<It2>) //
+            template(typename It1, typename It2)( //
+                requires indirectly_readable<It1> AND indirectly_readable<It2>) //
             auto operator()(It1 const & it1, It2 const & it2) const //
                 noexcept(
                     noexcept(iter_reference_t<It1>(*it1)) && //
@@ -89,8 +89,8 @@ namespace ranges
             }
 
             // pair rvalue reference
-            CPP_template(typename It1, typename It2)( //
-                requires indirectly_readable<It1> && indirectly_readable<It2>) //
+            template(typename It1, typename It2)( //
+                requires indirectly_readable<It1> AND indirectly_readable<It2>) //
             auto operator()(move_tag, It1 const & it1, It2 const & it2) const
                 noexcept(noexcept(iter_rvalue_reference_t<It1>(iter_move(it1))) &&
                          noexcept(iter_rvalue_reference_t<It2>(iter_move(it2))))
@@ -135,8 +135,8 @@ namespace ranges
             {
                 return {};
             }
-            CPP_template(typename... Rngs)( //
-                requires and_v<viewable_range<Rngs>...> && and_v<input_range<Rngs>...> &&
+            template(typename... Rngs)( //
+                requires and_v<viewable_range<Rngs>...> AND and_v<input_range<Rngs>...> AND
                 (sizeof...(Rngs) != 0)) //
             auto operator()(Rngs &&... rngs) const ->
                 zip_view<all_t<Rngs>...>
@@ -144,16 +144,16 @@ namespace ranges
                 return zip_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
             }
 #if defined(_MSC_VER)
-            CPP_template(typename Rng0)( //
-                requires input_range<Rng0> && viewable_range<Rng0>) //
+            template(typename Rng0)( //
+                requires input_range<Rng0> AND viewable_range<Rng0>) //
             constexpr auto operator()(Rng0 && rng0) const
                 -> zip_view<all_t<Rng0>>
             {
                 return zip_view<all_t<Rng0>>{all(static_cast<Rng0 &&>(rng0))};
             }
-            CPP_template(typename Rng0, typename Rng1)( //
-                requires input_range<Rng0> && viewable_range<Rng0> && //
-                             input_range<Rng1> && viewable_range<Rng1>) //
+            template(typename Rng0, typename Rng1)( //
+                requires input_range<Rng0> AND viewable_range<Rng0> AND //
+                             input_range<Rng1> AND viewable_range<Rng1>) //
             constexpr auto operator()(Rng0 && rng0, Rng1 && rng1) const
                 -> zip_view<all_t<Rng0>, all_t<Rng1>>
             {
@@ -161,9 +161,9 @@ namespace ranges
                     all(static_cast<Rng0 &&>(rng0)),       //
                     all(static_cast<Rng1 &&>(rng1))};
             }
-            CPP_template(typename Rng0, typename Rng1, typename Rng2)( //
-                requires input_range<Rng0> && viewable_range<Rng0> &&    //
-                             input_range<Rng1> && viewable_range<Rng1> &&    //
+            template(typename Rng0, typename Rng1, typename Rng2)( //
+                requires input_range<Rng0> AND viewable_range<Rng0> AND    //
+                             input_range<Rng1> AND viewable_range<Rng1> AND    //
                              input_range<Rng2> && viewable_range<Rng2>) //
             constexpr auto operator()(Rng0 && rng0, Rng1 && rng1, Rng2 && rng2) const
                 -> zip_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>>
@@ -186,6 +186,6 @@ namespace ranges
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::zip_view)
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

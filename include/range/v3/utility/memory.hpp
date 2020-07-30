@@ -33,7 +33,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/polymorphic_cast.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -88,7 +88,7 @@ namespace ranges
             }
         };
 
-        CPP_template(typename T, typename... Args)( //
+        template(typename T, typename... Args)( //
             requires (!std::is_array<T>::value)) //
         auto make_unique(Args &&... args) -> std::unique_ptr<T>
         {
@@ -202,7 +202,7 @@ namespace ranges
         }
     };
 
-    CPP_template(typename I)( //
+    template(typename I)( //
         requires input_or_output_iterator<I>) //
     auto iter_ref(I & i) -> iterator_wrapper<I>
     {
@@ -247,6 +247,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -24,7 +24,7 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -44,7 +44,7 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        CPP_template(class R, class U)( //
+        template(class R, class U)( //
             requires range<R>)          //
             using maybe_dangling_ =     //
                 meta::conditional_t<detail::_borrowed_range<R>, U, dangling>;
@@ -89,6 +89,6 @@ namespace ranges
     } // namespace cpp20
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -38,7 +38,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -55,17 +55,17 @@ namespace ranges
         }
 
         // clang-format off
-        CPP_template(typename Fun, typename Rng)(
+        template(typename Fun, typename Rng)(
         concept (iter_transform_1_readable_)(Fun, Rng),
-            regular_invocable<Fun &, iterator_t<Rng>> CPP_and
-            regular_invocable<Fun &, copy_tag, iterator_t<Rng>> CPP_and
-            regular_invocable<Fun &, move_tag, iterator_t<Rng>> CPP_and
+            regular_invocable<Fun &, iterator_t<Rng>> AND
+            regular_invocable<Fun &, copy_tag, iterator_t<Rng>> AND
+            regular_invocable<Fun &, move_tag, iterator_t<Rng>> AND
             common_reference_with<
                 invoke_result_t<Fun &, iterator_t<Rng>> &&,
-                invoke_result_t<Fun &, copy_tag, iterator_t<Rng>> &> CPP_and
+                invoke_result_t<Fun &, copy_tag, iterator_t<Rng>> &> AND
             common_reference_with<
                 invoke_result_t<Fun &, iterator_t<Rng>> &&,
-                invoke_result_t<Fun &, move_tag, iterator_t<Rng>> &&> CPP_and
+                invoke_result_t<Fun &, move_tag, iterator_t<Rng>> &&> AND
             common_reference_with<
                 invoke_result_t<Fun &, move_tag, iterator_t<Rng>> &&,
                 invoke_result_t<Fun &, copy_tag, iterator_t<Rng>> const &>
@@ -74,17 +74,17 @@ namespace ranges
         CPP_concept iter_transform_1_readable =
             CPP_concept_ref(detail::iter_transform_1_readable_, Fun, Rng);
 
-        CPP_template(typename Fun, typename Rng1, typename Rng2)(
+        template(typename Fun, typename Rng1, typename Rng2)(
         concept (iter_transform_2_readable_)(Fun, Rng1, Rng2),
-            regular_invocable<Fun &, iterator_t<Rng1>, iterator_t<Rng2>> CPP_and
-            regular_invocable<Fun &, copy_tag, iterator_t<Rng1>, iterator_t<Rng2>> CPP_and
-            regular_invocable<Fun &, move_tag, iterator_t<Rng1>, iterator_t<Rng2>> CPP_and
+            regular_invocable<Fun &, iterator_t<Rng1>, iterator_t<Rng2>> AND
+            regular_invocable<Fun &, copy_tag, iterator_t<Rng1>, iterator_t<Rng2>> AND
+            regular_invocable<Fun &, move_tag, iterator_t<Rng1>, iterator_t<Rng2>> AND
             common_reference_with<
                 invoke_result_t<Fun &, iterator_t<Rng1>, iterator_t<Rng2>> &&,
-                invoke_result_t<Fun &, copy_tag, iterator_t<Rng1>, iterator_t<Rng2>> &> CPP_and
+                invoke_result_t<Fun &, copy_tag, iterator_t<Rng1>, iterator_t<Rng2>> &> AND
             common_reference_with<
                 invoke_result_t<Fun &, iterator_t<Rng1>, iterator_t<Rng2>> &&,
-                invoke_result_t<Fun &, move_tag, iterator_t<Rng1>, iterator_t<Rng2>> &&> CPP_and
+                invoke_result_t<Fun &, move_tag, iterator_t<Rng1>, iterator_t<Rng2>> &&> AND
             common_reference_with<
                 invoke_result_t<Fun &, move_tag, iterator_t<Rng1>, iterator_t<Rng2>> &&,
                 invoke_result_t<Fun &, copy_tag, iterator_t<Rng1>, iterator_t<Rng2>> const &>
@@ -125,8 +125,8 @@ namespace ranges
             adaptor(fun_ref_ fun)
               : fun_(std::move(fun))
             {}
-            CPP_template(bool Other)( //
-                requires IsConst && CPP_NOT(Other)) //
+            template(bool Other)( //
+                requires IsConst AND CPP_NOT(Other)) //
             adaptor(adaptor<Other> that)
               : fun_(std::move(that.fun_))
             {}
@@ -147,8 +147,8 @@ namespace ranges
         {
             return {fun_};
         }
-        CPP_template(bool Const = true)( //
-            requires Const && range<meta::const_if_c<Const, Rng>> &&
+        template(bool Const = true)( //
+            requires Const AND range<meta::const_if_c<Const, Rng>> AND
                 detail::iter_transform_1_readable<Fun const,
                                                   meta::const_if_c<Const, Rng>>) //
         auto begin_adaptor() const -> adaptor<Const>
@@ -159,8 +159,8 @@ namespace ranges
         {
             return {fun_};
         }
-        CPP_template(bool Const = true)( //
-            requires Const && range<meta::const_if_c<Const, Rng>> &&
+        template(bool Const = true)( //
+            requires Const AND range<meta::const_if_c<Const, Rng>> AND
                     detail::iter_transform_1_readable<Fun const,
                                                       meta::const_if_c<Const, Rng>>) //
         auto end_adaptor() const
@@ -198,7 +198,7 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)( //
+    template(typename Rng, typename Fun)( //
         requires copy_constructible<Fun>)
     transform_view(Rng &&, Fun)
         -> transform_view<views::all_t<Rng>, Fun>;
@@ -239,8 +239,8 @@ namespace ranges
               : end1_(end(parent->rng1_))
               , end2_(end(parent->rng2_))
             {}
-            CPP_template(bool Other)( //
-                requires Const && (!Other)) sentinel(sentinel<Other> that)
+            template(bool Other)( //
+                requires Const AND (!Other)) sentinel(sentinel<Other> that)
               : end1_(std::move(that.end1_))
               , end2_(std::move(that.end2_))
             {}
@@ -273,8 +273,8 @@ namespace ranges
               , it1_(begin_end(parent->rng1_))
               , it2_(begin_end(parent->rng2_))
             {}
-            CPP_template(bool Other)( //
-                requires Const && (!Other)) cursor(cursor<Other> that)
+            template(bool Other)( //
+                requires Const AND (!Other)) cursor(cursor<Other> that)
               : fun_(std::move(that.fun_))
               , it1_(std::move(that.end1_))
               , it2_(std::move(that.end2_))
@@ -354,18 +354,18 @@ namespace ranges
         {
             return {this, ranges::end};
         }
-        CPP_template(bool Const = true)( //
-            requires Const && range<meta::const_if_c<Const, Rng1>> &&
-                range<meta::const_if_c<Const, Rng2>> && detail::iter_transform_2_readable<
+        template(bool Const = true)( //
+            requires Const AND range<meta::const_if_c<Const, Rng1>> AND
+                range<meta::const_if_c<Const, Rng2>> AND detail::iter_transform_2_readable<
                     Fun const, meta::const_if_c<Const, Rng1>,
                     meta::const_if_c<Const, Rng2>>) //
         auto begin_cursor() const -> cursor<true>
         {
             return {this, ranges::begin};
         }
-        CPP_template(bool Const = true)( //
-            requires Const && range<meta::const_if_c<Const, Rng1>> &&
-                range<meta::const_if_c<Const, Rng2>> && detail::iter_transform_2_readable<
+        template(bool Const = true)( //
+            requires Const AND range<meta::const_if_c<Const, Rng1>> AND
+                range<meta::const_if_c<Const, Rng2>> AND detail::iter_transform_2_readable<
                     Fun const, meta::const_if_c<Const, Rng1>,
                     meta::const_if_c<Const, Rng2>>) //
         auto end_cursor() const -> end_cursor_t<Const>
@@ -398,16 +398,16 @@ namespace ranges
         {
             return static_cast<std::size_t>(my_cardinality);
         }
-        CPP_template(bool True = true)( //
-            requires (my_cardinality < 0) && sized_range<Rng1 const> &&
-            sized_range<Rng2 const> &&
+        template(bool True = true)( //
+            requires (my_cardinality < 0) AND sized_range<Rng1 const> AND
+            sized_range<Rng2 const> AND
             common_with<range_size_t<R1<True>>, range_size_t<R2<True>>>) //
             constexpr auto size() const
         {
             return size_(*this);
         }
-        CPP_template(bool True = true)( //
-            requires (my_cardinality < 0) && sized_range<Rng1> && sized_range<Rng2> &&
+        template(bool True = true)( //
+            requires (my_cardinality < 0) AND sized_range<Rng1> AND sized_range<Rng2> AND
             common_with<range_size_t<R1<True>>, range_size_t<R2<True>>>) //
             constexpr auto size()
         {
@@ -430,9 +430,9 @@ namespace ranges
     {
         struct iter_transform_base_fn
         {
-            CPP_template(typename Rng, typename Fun)( //
-                requires viewable_range<Rng> && input_range<Rng>  && //
-                    copy_constructible<Fun>  && //
+            template(typename Rng, typename Fun)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND //
+                    copy_constructible<Fun> AND //
                         detail::iter_transform_1_readable<Fun, Rng>) //
             constexpr auto operator()(Rng && rng, Fun fun) const
                 -> iter_transform_view<all_t<Rng>, Fun>
@@ -440,9 +440,9 @@ namespace ranges
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
 
-            CPP_template(typename Rng1, typename Rng2, typename Fun)( //
-                requires viewable_range<Rng1> && input_range<Rng1> && viewable_range<
-                        Rng2> && input_range<Rng2> && copy_constructible<Fun> &&
+            template(typename Rng1, typename Rng2, typename Fun)( //
+                requires viewable_range<Rng1> AND input_range<Rng1> AND viewable_range<
+                        Rng2> AND input_range<Rng2> AND copy_constructible<Fun> AND
                         common_with<range_difference_t<Rng1>, range_difference_t<Rng1>> &&
                             detail::iter_transform_2_readable<Fun, Rng1, Rng2>) //
             constexpr auto operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
@@ -473,9 +473,9 @@ namespace ranges
         // Don't forget to update views::for_each whenever this set
         // of concepts changes
         // clang-format off
-        CPP_template(typename Rng, typename Fun)(
+        template(typename Rng, typename Fun)(
         concept (transformable_range_)(Rng, Fun),
-            regular_invocable<Fun &, range_reference_t<Rng>> CPP_and
+            regular_invocable<Fun &, range_reference_t<Rng>> AND
             (!std::is_void<indirect_result_t<Fun &, iterator_t<Rng>>>::value)
         );
         template<typename Rng, typename Fun>
@@ -484,9 +484,9 @@ namespace ranges
             copy_constructible<Fun> &&
             CPP_concept_ref(views::transformable_range_, Rng, Fun);
 
-        CPP_template(typename Rng1, typename Rng2, typename Fun)(
+        template(typename Rng1, typename Rng2, typename Fun)(
         concept (transformable_ranges_)(Rng1, Rng2, Fun),
-            regular_invocable<Fun &, range_reference_t<Rng1>, range_reference_t<Rng2>> CPP_and
+            regular_invocable<Fun &, range_reference_t<Rng1>, range_reference_t<Rng2>> AND
             (!std::is_void<
                 indirect_result_t<Fun &, iterator_t<Rng1>, iterator_t<Rng2>>>::value)
         );
@@ -500,7 +500,7 @@ namespace ranges
 
         struct transform_base_fn
         {
-            CPP_template(typename Rng, typename Fun)( //
+            template(typename Rng, typename Fun)( //
                 requires transformable_range<Rng, Fun>) //
             constexpr auto operator()(Rng && rng, Fun fun) const
                 -> transform_view<all_t<Rng>, Fun>
@@ -508,7 +508,7 @@ namespace ranges
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
 
-            CPP_template(typename Rng1, typename Rng2, typename Fun)( //
+            template(typename Rng1, typename Rng2, typename Fun)( //
                 requires transformable_ranges<Rng1, Rng2, Fun>) //
             constexpr auto operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
                 -> transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>
@@ -541,16 +541,16 @@ namespace ranges
         {
             using ranges::views::transform;
         }
-        CPP_template(typename Rng, typename F)( //
-            requires input_range<Rng> && copy_constructible<F> && view_<Rng> &&
-                std::is_object<F>::value &&
+        template(typename Rng, typename F)( //
+            requires input_range<Rng> AND copy_constructible<F> AND view_<Rng> AND
+                std::is_object<F>::value AND
                     regular_invocable<F &, iter_reference_t<iterator_t<Rng>>>) //
             using transform_view = ranges::transform_view<Rng, F>;
     } // namespace cpp20
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::iter_transform_view)

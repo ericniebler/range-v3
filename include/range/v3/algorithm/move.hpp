@@ -27,7 +27,7 @@
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -40,9 +40,9 @@ namespace ranges
     RANGES_FUNC_BEGIN(move)
 
         /// \brief function template \c move
-        CPP_template(typename I, typename S, typename O)( //
-            requires input_iterator<I> && sentinel_for<S, I>  && //
-            weakly_incrementable<O> && indirectly_movable<I, O>) //
+        template(typename I, typename S, typename O)( //
+            requires input_iterator<I> AND sentinel_for<S, I> AND //
+            weakly_incrementable<O> AND indirectly_movable<I, O>) //
         auto RANGES_FUNC(move)(I first, S last, O out) //
             -> move_result<I, O>
         {
@@ -52,8 +52,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename O)( //
-            requires input_range<Rng> && weakly_incrementable<O>  && //
+        template(typename Rng, typename O)( //
+            requires input_range<Rng> AND weakly_incrementable<O> AND //
             indirectly_movable<iterator_t<Rng>, O>) //
         auto RANGES_FUNC(move)(Rng && rng, O out)            //
             -> move_result<borrowed_iterator_t<Rng>, O>
@@ -84,6 +84,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

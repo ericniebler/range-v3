@@ -24,7 +24,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -36,9 +36,9 @@ namespace ranges
     RANGES_FUNC_BEGIN(swap_ranges)
 
         /// \brief function template \c swap_ranges
-        CPP_template(typename I1, typename S1, typename I2)( //
-            requires input_iterator<I1> && sentinel_for<S1, I1>  && //
-            input_iterator<I2> && indirectly_swappable<I1, I2>) //
+        template(typename I1, typename S1, typename I2)( //
+            requires input_iterator<I1> AND sentinel_for<S1, I1> AND //
+            input_iterator<I2> AND indirectly_swappable<I1, I2>) //
         auto RANGES_FUNC(swap_ranges)(I1 begin1, S1 end1, I2 begin2) //
             -> swap_ranges_result<I1, I2>
         {
@@ -48,9 +48,9 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename I1, typename S1, typename I2, typename S2)( //
-            requires input_iterator<I1> && sentinel_for<S1, I1> &&
-                input_iterator<I2> && sentinel_for<S2, I2> &&
+        template(typename I1, typename S1, typename I2, typename S2)( //
+            requires input_iterator<I1> AND sentinel_for<S1, I1> AND
+                input_iterator<I2> AND sentinel_for<S2, I2> AND
                 indirectly_swappable<I1, I2>) //
         auto RANGES_FUNC(swap_ranges)(I1 begin1,
                                       S1 end1,
@@ -63,8 +63,8 @@ namespace ranges
             return {begin1, begin2};
         }
 
-        CPP_template(typename Rng1, typename I2_)( //
-            requires input_range<Rng1> && input_iterator<uncvref_t<I2_>>  && //
+        template(typename Rng1, typename I2_)( //
+            requires input_range<Rng1> AND input_iterator<uncvref_t<I2_>> AND //
             indirectly_swappable<iterator_t<Rng1>, uncvref_t<I2_>>) //
         auto RANGES_FUNC(swap_ranges)(Rng1 && rng1, I2_ && begin2)           //
             -> swap_ranges_result<iterator_t<Rng1>, uncvref_t<I2_>>
@@ -72,8 +72,8 @@ namespace ranges
             return (*this)(begin(rng1), end(rng1), (I2_ &&) begin2);
         }
 
-        CPP_template(typename Rng1, typename Rng2)( //
-            requires input_range<Rng1> && input_range<Rng2> &&
+        template(typename Rng1, typename Rng2)( //
+            requires input_range<Rng1> AND input_range<Rng2> AND
                 indirectly_swappable<iterator_t<Rng1>, iterator_t<Rng2>>) //
         auto RANGES_FUNC(swap_ranges)(Rng1 && rng1, Rng2 && rng2) //
             -> swap_ranges_result<borrowed_iterator_t<Rng1>, borrowed_iterator_t<Rng2>>
@@ -91,6 +91,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

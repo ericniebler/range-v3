@@ -24,7 +24,7 @@
 
 #include <range/v3/iterator/concepts.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_UNSIGNED_MATH
@@ -313,7 +313,7 @@ namespace ranges
                 return tmp;
             }
 
-            CPP_template(typename T)( //
+            template(typename T)( //
                 requires integral<T>) //
                 constexpr explicit
                 operator T() const noexcept
@@ -465,6 +465,6 @@ namespace std
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

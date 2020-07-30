@@ -24,7 +24,7 @@
 #include <range/v3/utility/addressof.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -83,8 +83,8 @@ namespace ranges
         using reference = meta::if_<std::is_reference<T>, T, T &>;
 
         constexpr reference_wrapper() = default;
-        CPP_template(typename U)( //
-            requires (!same_as<uncvref_t<U>, reference_wrapper>) CPP_and //
+        template(typename U)( //
+            requires (!same_as<uncvref_t<U>, reference_wrapper>) AND //
                 constructible_from<base_, U>) //
         constexpr reference_wrapper(U && u) noexcept(
             std::is_nothrow_constructible<base_, U>::value)
@@ -98,7 +98,7 @@ namespace ranges
         {
             return get();
         }
-        CPP_template(typename...)(                          //
+        template(typename...)(                          //
             requires (!std::is_rvalue_reference<T>::value)) //
         operator std::reference_wrapper<type>() const noexcept
         {
@@ -115,7 +115,7 @@ namespace ranges
 
     struct ref_fn
     {
-        CPP_template(typename T)( //
+        template(typename T)( //
             requires (!is_reference_wrapper_v<T>)) //
         auto operator()(T & t) const -> reference_wrapper<T>
         {
@@ -179,6 +179,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

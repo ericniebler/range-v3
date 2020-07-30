@@ -59,7 +59,7 @@
 #include <range/v3/utility/memory.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -193,8 +193,8 @@ namespace ranges
     RANGES_FUNC_BEGIN(stable_sort)
 
         /// \brief function template \c stable_sort
-        CPP_template(typename I, typename S, typename C = less, typename P = identity)( //
-            requires sortable<I, C, P> && random_access_iterator<I>  && //
+        template(typename I, typename S, typename C = less, typename P = identity)( //
+            requires sortable<I, C, P> AND random_access_iterator<I> AND //
             sentinel_for<S, I>) //
         I RANGES_FUNC(stable_sort)(I first, S end_, C pred = C{}, P proj = P{})
         {
@@ -214,8 +214,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename C = less, typename P = identity)( //
-            requires sortable<iterator_t<Rng>, C, P> && random_access_range<Rng>) //
+        template(typename Rng, typename C = less, typename P = identity)( //
+            requires sortable<iterator_t<Rng>, C, P> AND random_access_range<Rng>) //
         auto RANGES_FUNC(stable_sort)(Rng && rng, C pred = C{}, P proj = P{}) //
             -> borrowed_iterator_t<Rng>
         {
@@ -231,6 +231,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

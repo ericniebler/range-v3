@@ -32,7 +32,7 @@
 #include <range/v3/view/interface.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -82,7 +82,7 @@ namespace ranges
         enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)( //
+    template(typename Rng, typename Fun)( //
         requires copy_constructible<Fun>)
     drop_while_view(Rng &&, Fun)
         -> drop_while_view<views::all_t<Rng>, Fun>;
@@ -95,16 +95,16 @@ namespace ranges
     {
         struct drop_while_base_fn
         {
-            CPP_template(typename Rng, typename Pred)( //
-                requires viewable_range<Rng> && input_range<Rng>  && //
+            template(typename Rng, typename Pred)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND //
                     indirect_unary_predicate<Pred, iterator_t<Rng>>) //
             auto operator()(Rng && rng, Pred pred) const
                 -> drop_while_view<all_t<Rng>, Pred>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
-            CPP_template(typename Rng, typename Pred, typename Proj)( //
-                requires viewable_range<Rng> && input_range<Rng>  && //
+            template(typename Rng, typename Pred, typename Proj)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND //
                     indirect_unary_predicate<composed<Pred, Proj>, iterator_t<Rng>>) //
             auto operator()(Rng && rng, Pred pred, Proj proj) const
                 -> drop_while_view<all_t<Rng>, composed<Pred, Proj>>
@@ -150,15 +150,15 @@ namespace ranges
         {
             using ranges::views::drop_while;
         }
-        CPP_template(typename Rng, typename Pred)( //
-            requires viewable_range<Rng> && input_range<Rng> &&
+        template(typename Rng, typename Pred)( //
+            requires viewable_range<Rng> AND input_range<Rng> AND
                 indirect_unary_predicate<Pred, iterator_t<Rng>>) //
             using drop_while_view = ranges::drop_while_view<Rng, Pred>;
     } // namespace cpp20
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::drop_while_view)
 

@@ -31,7 +31,7 @@
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -44,8 +44,8 @@ namespace ranges
         ///
         /// \pre `Rng` is a model of the `forward_range` concept.
         /// \pre `Pred` is a model of the `BinaryPredicate` concept.
-        CPP_template(typename I, typename S, typename Pred, typename Proj = identity)( //
-            requires permutable<I> && sentinel_for<S, I> &&
+        template(typename I, typename S, typename Pred, typename Proj = identity)( //
+            requires permutable<I> AND sentinel_for<S, I> AND
                 indirect_relation<Pred, projected<I, Proj>>) //
         auto RANGES_FUNC(adjacent_remove_if)(
             I first, S last, Pred pred = {}, Proj proj = {})
@@ -71,9 +71,9 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename Pred, typename Proj = identity)( //
-            requires forward_range<Rng>  && //
-            indirect_relation<Pred, projected<iterator_t<Rng>, Proj>>  && //
+        template(typename Rng, typename Pred, typename Proj = identity)( //
+            requires forward_range<Rng> AND //
+            indirect_relation<Pred, projected<iterator_t<Rng>, Proj>> AND //
             permutable<iterator_t<Rng>>) //
         auto RANGES_FUNC(adjacent_remove_if)(Rng && rng, Pred pred, Proj proj = {}) //
             -> borrowed_iterator_t<Rng>
@@ -89,6 +89,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_ALGORITHM_ADJACENT_REMOVE_IF_HPP

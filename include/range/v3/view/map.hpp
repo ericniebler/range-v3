@@ -26,7 +26,7 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 // TODO: Reuse subrange's pair_like concept here and have get_first and get_second
 // dispatch through get<>()
@@ -42,7 +42,7 @@ namespace ranges
             return t;
         }
 
-        CPP_template(typename T)( //
+        template(typename T)( //
             requires move_constructible<T>) //
         constexpr auto get_first_second_helper(T & t, std::false_type) noexcept(
             std::is_nothrow_move_constructible<T>::value) -> T
@@ -95,8 +95,8 @@ namespace ranges
     {
         struct keys_fn
         {
-            CPP_template(typename Rng)( //
-                requires viewable_range<Rng> && input_range<Rng> &&
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND
                     detail::kv_pair_like_<range_reference_t<Rng>>) //
             auto operator()(Rng && rng) const -> keys_range_view<all_t<Rng>>
             {
@@ -106,8 +106,8 @@ namespace ranges
 
         struct values_fn
         {
-            CPP_template(typename Rng)( //
-                requires viewable_range<Rng> && input_range<Rng> &&
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND
                     detail::kv_pair_like_<range_reference_t<Rng>>) //
             auto operator()(Rng && rng) const -> values_view<all_t<Rng>>
             {
@@ -143,6 +143,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

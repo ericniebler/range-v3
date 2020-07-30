@@ -34,7 +34,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -86,8 +86,8 @@ namespace ranges
         {
             return begin_(meta::bool_<(bool)common_range<Rng>>{});
         }
-        CPP_template(bool Const = true)( //
-            requires Const && common_range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)( //
+            requires Const AND common_range<meta::const_if_c<Const, Rng>>) //
         constexpr auto begin() const
             -> reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>>
         {
@@ -97,8 +97,8 @@ namespace ranges
         {
             return make_reverse_iterator(ranges::begin(rng_));
         }
-        CPP_template(bool Const = true)( //
-            requires Const && common_range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)( //
+            requires Const AND common_range<meta::const_if_c<Const, Rng>>) //
         constexpr auto end() const
             -> reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>>
         {
@@ -150,8 +150,8 @@ namespace ranges
     {
         struct reverse_fn
         {
-            CPP_template(typename Rng)( //
-                requires viewable_range<Rng> && bidirectional_range<Rng>) //
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND bidirectional_range<Rng>) //
             constexpr auto operator()(Rng && rng) const
                 -> reverse_view<all_t<Rng>>
             {
@@ -170,14 +170,14 @@ namespace ranges
         {
             using ranges::views::reverse;
         }
-        CPP_template(typename Rng)(                          //
+        template(typename Rng)(                          //
             requires view_<Rng> && bidirectional_range<Rng>) //
             using reverse_view = ranges::reverse_view<Rng>;
     } // namespace cpp20
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::reverse_view)
 

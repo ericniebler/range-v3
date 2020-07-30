@@ -31,29 +31,29 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/subrange.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
     /// \cond
     namespace detail
     {
-        CPP_template(typename I, typename S)( //
-            requires input_iterator<I> && sentinel_for<S, I>) //
+        template(typename I, typename S)( //
+            requires input_iterator<I> AND sentinel_for<S, I>) //
         auto next_to_if(I i, S s, std::true_type) -> I
         {
             return ranges::next(i, s);
         }
 
-        CPP_template(typename I, typename S)( //
-            requires input_iterator<I> && sentinel_for<S, I>) //
+        template(typename I, typename S)( //
+            requires input_iterator<I> AND sentinel_for<S, I>) //
         auto next_to_if(I, S s, std::false_type) -> S
         {
             return s;
         }
 
-        CPP_template(bool B, typename I, typename S)( //
-            requires input_iterator<I> && sentinel_for<S, I>) //
+        template(bool B, typename I, typename S)( //
+            requires input_iterator<I> AND sentinel_for<S, I>) //
         auto next_to_if(I i, S s) -> meta::if_c<B, I, S>
         {
             return detail::next_to_if(std::move(i), std::move(s), meta::bool_<B>{});
@@ -181,7 +181,7 @@ namespace ranges
     RANGES_FUNC_BEGIN(find_end)
 
         /// \brief function template \c find_end
-        CPP_template(typename I1,
+        template(typename I1,
                  typename S1,
                  typename I2,
                  typename S2,
@@ -207,7 +207,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng1,
+        template(typename Rng1,
                  typename Rng2,
                  typename R = equal_to,
                  typename P = identity)( //
@@ -234,6 +234,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -27,7 +27,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/interface.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -79,8 +79,8 @@ namespace ranges
                 return make_action_closure(bind_back(slice_fn{}, from, to));
             }
 
-            CPP_template(typename Rng, typename I = iterator_t<Rng>)( //
-                requires forward_range<Rng> && erasable_range<Rng &, I, I>) //
+            template(typename Rng, typename I = iterator_t<Rng>)( //
+                requires forward_range<Rng> AND erasable_range<Rng &, I, I>) //
             auto operator()(Rng && rng, diff_t<Rng> from, diff_t<Rng> to) const
                 -> Rng
             {
@@ -91,8 +91,8 @@ namespace ranges
                 return static_cast<Rng &&>(rng);
             }
 
-            CPP_template(typename Rng, typename I = iterator_t<Rng>)( //
-                requires bidirectional_range<Rng> && erasable_range<Rng &, I, I>) //
+            template(typename Rng, typename I = iterator_t<Rng>)( //
+                requires bidirectional_range<Rng> AND erasable_range<Rng &, I, I>) //
             auto operator()(Rng && rng, diff_t<Rng> from,
                             detail::from_end_<diff_t<Rng>> to) const -> Rng
             {
@@ -107,8 +107,8 @@ namespace ranges
                 return static_cast<Rng &&>(rng);
             }
 
-            CPP_template(typename Rng, typename I = iterator_t<Rng>)( //
-                requires bidirectional_range<Rng> && erasable_range<Rng &, I, I>) //
+            template(typename Rng, typename I = iterator_t<Rng>)( //
+                requires bidirectional_range<Rng> AND erasable_range<Rng &, I, I>) //
             auto operator()(Rng && rng, detail::from_end_<diff_t<Rng>> from,
                             detail::from_end_<diff_t<Rng>> to) const -> Rng
             {
@@ -122,8 +122,8 @@ namespace ranges
                 return static_cast<Rng &&>(rng);
             }
 
-            CPP_template(typename Rng, typename I = iterator_t<Rng>)( //
-                requires forward_range<Rng> && erasable_range<Rng &, I, I>) //
+            template(typename Rng, typename I = iterator_t<Rng>)( //
+                requires forward_range<Rng> AND erasable_range<Rng &, I, I>) //
             auto operator()(Rng && rng, diff_t<Rng> from, end_fn const &) const
                 -> Rng
             {
@@ -133,8 +133,8 @@ namespace ranges
                 return static_cast<Rng &&>(rng);
             }
 
-            CPP_template(typename Rng, typename I = iterator_t<Rng>)( //
-                requires bidirectional_range<Rng> && erasable_range<Rng &, I, I>) //
+            template(typename Rng, typename I = iterator_t<Rng>)( //
+                requires bidirectional_range<Rng> AND erasable_range<Rng &, I, I>) //
             auto operator()(Rng && rng, detail::from_end_<diff_t<Rng>> from,
                             end_fn const &) const -> Rng
             {
@@ -152,6 +152,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

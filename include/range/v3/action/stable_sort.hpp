@@ -25,7 +25,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -43,8 +43,8 @@ namespace ranges
                     bind_back(stable_sort_fn{}, std::move(pred), std::move(proj)));
             }
 
-            CPP_template(typename Rng, typename C = less, typename P = identity)( //
-                requires forward_range<Rng> && sortable<iterator_t<Rng>, C, P>) //
+            template(typename Rng, typename C = less, typename P = identity)( //
+                requires forward_range<Rng> AND sortable<iterator_t<Rng>, C, P>) //
             auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
                 -> Rng
             {
@@ -60,6 +60,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -26,7 +26,7 @@
 
 #include <range/v3/utility/swap.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
@@ -137,8 +137,8 @@ namespace ranges
             ptr_.reset(that.ptr_ ? that.ptr_->clone() : nullptr);
             return *this;
         }
-        CPP_template(typename TRef, typename T = detail::decay_t<TRef>)( //
-            requires copyable<T> && (!same_as<T, any>)) //
+        template(typename TRef, typename T = detail::decay_t<TRef>)( //
+            requires copyable<T> AND (!same_as<T, any>)) //
         auto operator=(TRef && t) -> any &
         {
             any{static_cast<TRef &&>(t)}.swap(*this);
@@ -229,6 +229,6 @@ namespace ranges
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

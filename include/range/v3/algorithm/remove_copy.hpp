@@ -28,7 +28,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -40,9 +40,9 @@ namespace ranges
     RANGES_FUNC_BEGIN(remove_copy)
 
         /// \brief function template \c remove_copy
-        CPP_template(typename I, typename S, typename O, typename T, typename P = identity)( //
-            requires input_iterator<I> && sentinel_for<S, I> &&
-                weakly_incrementable<O> &&
+        template(typename I, typename S, typename O, typename T, typename P = identity)( //
+            requires input_iterator<I> AND sentinel_for<S, I> AND
+                weakly_incrementable<O> AND
                 indirect_relation<equal_to, projected<I, P>, T const *> &&
                 indirectly_copyable<I, O>) //
         auto RANGES_FUNC(remove_copy)(
@@ -62,9 +62,9 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename O, typename T, typename P = identity)( //
-            requires input_range<Rng> && weakly_incrementable<O>  && //
-            indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *>  && //
+        template(typename Rng, typename O, typename T, typename P = identity)( //
+            requires input_range<Rng> AND weakly_incrementable<O> AND //
+            indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *> AND //
             indirectly_copyable<iterator_t<Rng>, O>) //
         auto RANGES_FUNC(remove_copy)(Rng && rng, O out, T const & val, P proj = P{}) //
             -> remove_copy_result<borrowed_iterator_t<Rng>, O>
@@ -82,6 +82,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

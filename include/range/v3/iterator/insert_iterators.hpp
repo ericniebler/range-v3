@@ -21,7 +21,7 @@
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/addressof.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -214,6 +214,6 @@ namespace std
 RANGES_DIAGNOSTIC_POP
 /// \endcond
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_ITERATOR_INSERT_ITERATORS_HPP

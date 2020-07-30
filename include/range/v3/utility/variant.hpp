@@ -23,7 +23,7 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/primitives.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -98,8 +98,8 @@ namespace ranges
                 return *this;
             }
             // \pre Requires ranges::distance(r) <= N
-            CPP_template(typename R)( //
-                requires input_range<R> && assignable_from<T &, range_reference_t<R>>) //
+            template(typename R)( //
+                requires input_range<R> AND assignable_from<T &, range_reference_t<R>>) //
             auto operator=(R && r) -> indexed_datum &
             {
                 ranges::copy(r, data_);
@@ -126,6 +126,6 @@ namespace ranges
     /// \endcond
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

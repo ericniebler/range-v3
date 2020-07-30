@@ -29,7 +29,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -41,9 +41,9 @@ namespace ranges
     RANGES_FUNC_BEGIN(copy_if)
 
         /// \brief function template \c copy_if
-        CPP_template(typename I, typename S, typename O, typename F, typename P = identity)( //
-            requires input_iterator<I> && sentinel_for<S, I>  && //
-            weakly_incrementable<O> && indirect_unary_predicate<F, projected<I, P>>  && //
+        template(typename I, typename S, typename O, typename F, typename P = identity)( //
+            requires input_iterator<I> AND sentinel_for<S, I> AND //
+            weakly_incrementable<O> AND indirect_unary_predicate<F, projected<I, P>> AND //
             indirectly_copyable<I, O>) //
         auto RANGES_FUNC(copy_if)(I first, S last, O out, F pred, P proj = P{}) //
             -> copy_if_result<I, O>
@@ -61,9 +61,9 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename O, typename F, typename P = identity)( //
-            requires input_range<Rng> && weakly_incrementable<O>  && //
-            indirect_unary_predicate<F, projected<iterator_t<Rng>, P>>  && //
+        template(typename Rng, typename O, typename F, typename P = identity)( //
+            requires input_range<Rng> AND weakly_incrementable<O> AND //
+            indirect_unary_predicate<F, projected<iterator_t<Rng>, P>> AND //
             indirectly_copyable<iterator_t<Rng>, O>) //
         auto RANGES_FUNC(copy_if)(Rng && rng, O out, F pred, P proj = P{})
             -> copy_if_result<borrowed_iterator_t<Rng>, O>
@@ -82,6 +82,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

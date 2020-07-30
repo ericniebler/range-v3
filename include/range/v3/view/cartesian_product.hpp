@@ -34,7 +34,7 @@
 #include <range/v3/view/facade.hpp>
 #include <range/v3/view/view.hpp> // for dereference_fn
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -57,8 +57,8 @@ namespace ranges
 
         struct cartesian_size_fn
         {
-            CPP_template(typename Size, typename Rng)( //
-                requires integer_like_<Size> && sized_range<Rng>  && //
+            template(typename Size, typename Rng)( //
+                requires integer_like_<Size> AND sized_range<Rng> AND //
                     common_with<Size, range_size_t<Rng>>) //
             auto operator()(Size s, Rng && rng) const
                 -> common_type_t<Size, range_size_t<Rng>>
@@ -85,7 +85,7 @@ namespace ranges
     CPP_concept cartesian_produce_view_can_const =
         and_v<range<Views const>...>;
 
-    CPP_template(typename IsConst, typename... Views)(
+    template(typename IsConst, typename... Views)(
     concept (cartesian_produce_view_can_size_)(IsConst, Views...),
         and_v<common_with<std::uintmax_t, range_size_t<meta::const_if<IsConst, Views>>>...>
     );
@@ -94,7 +94,7 @@ namespace ranges
         and_v<sized_range<meta::const_if<IsConst, Views>>...> &&
         CPP_concept_ref(ranges::cartesian_produce_view_can_size_, IsConst, Views...);
 
-    CPP_template(typename IsConst, typename... Views)(
+    template(typename IsConst, typename... Views)(
     concept (cartesian_produce_view_can_distance_)(IsConst, Views...),
         and_v<sized_sentinel_for<
             iterator_t<meta::const_if<IsConst, Views>>,
@@ -105,7 +105,7 @@ namespace ranges
         cartesian_produce_view_can_size<IsConst, Views...> &&
         CPP_concept_ref(ranges::cartesian_produce_view_can_distance_, IsConst, Views...);
 
-    CPP_template(typename IsConst, typename... Views)(
+    template(typename IsConst, typename... Views)(
     concept (cartesian_produce_view_can_random_)(IsConst, Views...),
         and_v<random_access_iterator<iterator_t<meta::const_if<IsConst, Views>>>...>
     );
@@ -114,7 +114,7 @@ namespace ranges
         cartesian_produce_view_can_distance<IsConst, Views...> &&
         CPP_concept_ref(ranges::cartesian_produce_view_can_random_, IsConst, Views...);
 
-    CPP_template(typename IsConst, typename... Views)(
+    template(typename IsConst, typename... Views)(
     concept (cartesian_produce_view_can_bidi_)(IsConst, Views...),
         and_v<common_range<meta::const_if<IsConst, Views>>...,
             bidirectional_iterator<iterator_t<meta::const_if<IsConst, Views>>>...>
@@ -322,8 +322,8 @@ namespace ranges
                     meta::bool_<
                         common_range<meta::at_c<meta::list<constify_if<Views>...>, 0>>>{})
             {}
-            CPP_template(bool Other)( //
-                requires IsConst_ && (!Other)) cursor(cursor<Other> that)
+            template(bool Other)( //
+                requires IsConst_ AND (!Other)) cursor(cursor<Other> that)
               : view_(that.view_)
               , its_(std::move(that.its_))
             {}
@@ -396,7 +396,7 @@ namespace ranges
         constexpr explicit cartesian_product_view(Views... views)
           : views_{detail::move(views)...}
         {}
-        CPP_template(int = 42)(            //
+        template(int = 42)(            //
             requires (my_cardinality >= 0)) //
             static constexpr std::size_t size() noexcept
         {
@@ -430,8 +430,8 @@ namespace ranges
             {
                 return {};
             }
-            CPP_template(typename... Rngs)( //
-                requires (sizeof...(Rngs) != 0)  && //
+            template(typename... Rngs)( //
+                requires (sizeof...(Rngs) != 0) AND //
                 concepts::and_v<(forward_range<Rngs> && viewable_range<Rngs>)...>) //
             constexpr auto operator()(Rngs &&... rngs) const
                 -> cartesian_product_view<all_t<Rngs>...>
@@ -440,17 +440,17 @@ namespace ranges
                     all(static_cast<Rngs &&>(rngs))...};
             }
 #if defined(_MSC_VER)
-            CPP_template(typename Rng0)( //
-                requires forward_range<Rng0> && viewable_range<Rng0>) //
+            template(typename Rng0)( //
+                requires forward_range<Rng0> AND viewable_range<Rng0>) //
             constexpr auto operator()(Rng0 && rng0) const
                 -> cartesian_product_view<all_t<Rng0>>
             {
                 return cartesian_product_view<all_t<Rng0>>{
                     all(static_cast<Rng0 &&>(rng0))};
             }
-            CPP_template(typename Rng0, typename Rng1)( //
-                requires forward_range<Rng0> && viewable_range<Rng0> &&   //
-                             forward_range<Rng1> && viewable_range<Rng1>) //
+            template(typename Rng0, typename Rng1)( //
+                requires forward_range<Rng0> AND viewable_range<Rng0> AND   //
+                             forward_range<Rng1> AND viewable_range<Rng1>) //
             constexpr auto operator()(Rng0 && rng0, Rng1 && rng1) const
                 -> cartesian_product_view<all_t<Rng0>, all_t<Rng1>>
             {
@@ -458,9 +458,9 @@ namespace ranges
                     all(static_cast<Rng0 &&>(rng0)), //
                     all(static_cast<Rng1 &&>(rng1))};
             }
-            CPP_template(typename Rng0, typename Rng1, typename Rng2)( //
-                requires forward_range<Rng0> && viewable_range<Rng0> &&            //
-                             forward_range<Rng1> && viewable_range<Rng1> &&
+            template(typename Rng0, typename Rng1, typename Rng2)( //
+                requires forward_range<Rng0> AND viewable_range<Rng0> AND            //
+                             forward_range<Rng1> AND viewable_range<Rng1> AND
                              forward_range<Rng2> && viewable_range<Rng2>) //
             constexpr auto operator()(Rng0 && rng0, Rng1 && rng1, Rng2 && rng2) const
                 -> cartesian_product_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>>
@@ -479,6 +479,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

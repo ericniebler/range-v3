@@ -23,7 +23,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -57,8 +57,8 @@ namespace ranges
     {
         struct lower_bound_n_fn
         {
-            CPP_template(typename I, typename V, typename C = less, typename P = identity)( //
-                requires forward_iterator<I> &&
+            template(typename I, typename V, typename C = less, typename P = identity)( //
+                requires forward_iterator<I> AND
                     indirect_strict_weak_order<C, V const *, projected<I, P>>) //
             auto operator()(I first, iter_difference_t<I> d, V const & val, C pred = C{},
                             P proj = P{}) const -> I
@@ -74,6 +74,6 @@ namespace ranges
     } // namespace aux
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

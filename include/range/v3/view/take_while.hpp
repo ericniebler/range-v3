@@ -32,7 +32,7 @@
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -60,8 +60,8 @@ namespace ranges
             sentinel_adaptor(semiregular_box_ref_or_val_t<Pred, IsConst> pred)
               : pred_(std::move(pred))
             {}
-            CPP_template(bool Other)( //
-                requires IsConst && CPP_NOT(Other)) //
+            template(bool Other)( //
+                requires IsConst AND CPP_NOT(Other)) //
                 sentinel_adaptor(sentinel_adaptor<Other> that)
               : pred_(std::move(that.pred_))
             {}
@@ -74,8 +74,8 @@ namespace ranges
         {
             return {pred_};
         }
-        CPP_template(bool Const = true)( //
-            requires Const && range<meta::const_if_c<Const, Rng>> &&
+        template(bool Const = true)( //
+            requires Const AND range<meta::const_if_c<Const, Rng>> AND
                 invocable<Pred const &, iterator_t<meta::const_if_c<Const, Rng>>>) //
         auto end_adaptor() const -> sentinel_adaptor<Const>
         {
@@ -101,7 +101,7 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)( //
+    template(typename Rng, typename Fun)( //
         requires copy_constructible<Fun>)
     take_while_view(Rng &&, Fun)
         -> take_while_view<views::all_t<Rng>, Fun>;
@@ -111,9 +111,9 @@ namespace ranges
     {
         struct iter_take_while_base_fn
         {
-            CPP_template(typename Rng, typename Pred)( //
-                requires viewable_range<Rng> && input_range<Rng>  && //
-                    predicate<Pred &, iterator_t<Rng>> && copy_constructible<Pred>) //
+            template(typename Rng, typename Pred)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND //
+                    predicate<Pred &, iterator_t<Rng>> AND copy_constructible<Pred>) //
             constexpr auto operator()(Rng && rng, Pred pred) const
                 -> iter_take_while_view<all_t<Rng>, Pred>
             {
@@ -135,16 +135,16 @@ namespace ranges
 
         struct take_while_base_fn
         {
-            CPP_template(typename Rng, typename Pred)( //
-                requires viewable_range<Rng> && input_range<Rng>  && //
+            template(typename Rng, typename Pred)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND //
                     indirect_unary_predicate<Pred &, iterator_t<Rng>>) //
             constexpr auto operator()(Rng && rng, Pred pred) const
                 -> take_while_view<all_t<Rng>, Pred>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
-            CPP_template(typename Rng, typename Pred, typename Proj)( //
-                requires viewable_range<Rng> && input_range<Rng>  && //
+            template(typename Rng, typename Pred, typename Proj)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND //
                     indirect_unary_predicate<composed<Pred, Proj> &, iterator_t<Rng>>) //
             constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
                 -> take_while_view<all_t<Rng>, composed<Pred, Proj>>
@@ -194,15 +194,15 @@ namespace ranges
         {
             using ranges::views::take_while;
         }
-        CPP_template(typename Rng, typename Pred)( //
-            requires viewable_range<Rng> && input_range<Rng> &&
-                predicate<Pred &, iterator_t<Rng>> && copy_constructible<Pred>) //
+        template(typename Rng, typename Pred)( //
+            requires viewable_range<Rng> AND input_range<Rng> AND
+                predicate<Pred &, iterator_t<Rng>> AND copy_constructible<Pred>) //
             using take_while_view = ranges::take_while_view<Rng, Pred>;
     } // namespace cpp20
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::iter_take_while_view)
 RANGES_SATISFY_BOOST_RANGE(::ranges::take_while_view)

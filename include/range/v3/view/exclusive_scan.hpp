@@ -24,14 +24,14 @@
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
     // clang-format off
-    CPP_template(typename Rng, typename T, typename Fun)(
+    template(typename Rng, typename T, typename Fun)(
     concept (exclusive_scan_constraints_)(Rng, T, Fun),
-        invocable<Fun &, T, range_reference_t<Rng>> CPP_and
+        invocable<Fun &, T, range_reference_t<Rng>> AND
         assignable_from<T &, invoke_result_t<Fun &, T, range_reference_t<Rng>>>
     );
     template<typename Rng, typename T, typename Fun>
@@ -82,8 +82,8 @@ namespace ranges
             adaptor(exclusive_scan_view_t * rng)
               : rng_(rng)
             {}
-            CPP_template(bool Other)( //
-                requires IsConst && (!Other)) adaptor(adaptor<Other> that)
+            template(bool Other)( //
+                requires IsConst AND (!Other)) adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
             iterator_t<CRng> begin(exclusive_scan_view_t &)
@@ -146,7 +146,7 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename T,
+    template(typename Rng, typename T,
                  typename Fun)(requires copy_constructible<T> && copy_constructible<Fun>)
         exclusive_scan_view(Rng &&, T, Fun)
             ->exclusive_scan_view<views::all_t<Rng>, T, Fun>;
@@ -156,7 +156,7 @@ namespace ranges
     {
         struct exclusive_scan_base_fn
         {
-            CPP_template(typename Rng, typename T, typename Fun = plus)( //
+            template(typename Rng, typename T, typename Fun = plus)( //
                 requires exclusive_scan_constraints<Rng, T, Fun>) //
             constexpr auto operator()(Rng && rng, T init, Fun fun = Fun{}) const
                 -> exclusive_scan_view<all_t<Rng>, T, Fun>
@@ -184,6 +184,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_VIEW_EXCLUSIVE_SCAN_HPP

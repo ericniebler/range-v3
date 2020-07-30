@@ -29,7 +29,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -38,8 +38,8 @@ namespace ranges
     RANGES_FUNC_BEGIN(remove_if)
 
         /// \brief function template \c remove_if
-        CPP_template(typename I, typename S, typename C, typename P = identity)( //
-            requires permutable<I> && sentinel_for<S, I>  && //
+        template(typename I, typename S, typename C, typename P = identity)( //
+            requires permutable<I> AND sentinel_for<S, I> AND //
             indirect_unary_predicate<C, projected<I, P>>) //
         I RANGES_FUNC(remove_if)(I first, S last, C pred, P proj = P{})
         {
@@ -59,8 +59,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename C, typename P = identity)( //
-            requires forward_range<Rng> && permutable<iterator_t<Rng>>  && //
+        template(typename Rng, typename C, typename P = identity)( //
+            requires forward_range<Rng> AND permutable<iterator_t<Rng>> AND //
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(remove_if)(Rng && rng, C pred, P proj = P{}) //
             -> borrowed_iterator_t<Rng>
@@ -77,6 +77,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

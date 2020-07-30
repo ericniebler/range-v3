@@ -26,7 +26,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -42,7 +42,7 @@ namespace ranges
     RANGES_FUNC_BEGIN(starts_with)
 
         /// \brief function template \c starts_with
-        CPP_template(typename I1,
+        template(typename I1,
                  typename S1,
                  typename I2,
                  typename S2,
@@ -72,7 +72,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename R1,
+        template(typename R1,
                  typename R2,
                  typename Comp = equal_to,
                  typename Proj1 = identity,
@@ -97,6 +97,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_ALGORITHM_STARTS_WITH_HPP

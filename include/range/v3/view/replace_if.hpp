@@ -32,7 +32,7 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -61,7 +61,7 @@ namespace ranges
                 RANGES_EXPECT(false);
             }
 
-            CPP_template(typename I)( //
+            template(typename I)( //
                 requires (!invocable<Pred const &, iter_reference_t<I>>))
             auto operator()(I const & i)
                 -> common_reference_t<unwrap_reference_t<Val const &>,
@@ -72,7 +72,7 @@ namespace ranges
                     return unwrap_reference(second());
                 return (decltype(x) &&)x;
             }
-            CPP_template(typename I)( //
+            template(typename I)( //
                 requires invocable<Pred const &, iter_reference_t<I>>)
             auto operator()(I const & i) const
                 -> common_reference_t<unwrap_reference_t<Val const &>,
@@ -84,7 +84,7 @@ namespace ranges
                 return (decltype(x) &&)x;
             }
 
-            CPP_template(typename I)( //
+            template(typename I)( //
                 requires (!invocable<Pred const &, iter_rvalue_reference_t<I>>))
             auto operator()(move_tag, I const & i)
                 -> common_reference_t<unwrap_reference_t<Val const &>,
@@ -95,7 +95,7 @@ namespace ranges
                     return unwrap_reference(second());
                 return (decltype(x) &&)x;
             }
-            CPP_template(typename I)( //
+            template(typename I)( //
                 requires invocable<Pred const &, iter_rvalue_reference_t<I>>)
             auto operator()(move_tag, I const & i) const
                 -> common_reference_t<unwrap_reference_t<Val const &>,
@@ -116,9 +116,9 @@ namespace ranges
     {
         struct replace_if_base_fn
         {
-            CPP_template(typename Rng, typename Pred, typename Val)( //
-                requires viewable_range<Rng> && input_range<Rng> &&
-                        indirect_unary_predicate<Pred, iterator_t<Rng>> &&
+            template(typename Rng, typename Pred, typename Val)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND
+                        indirect_unary_predicate<Pred, iterator_t<Rng>> AND
                             common_with<detail::decay_t<unwrap_reference_t<Val const &>>,
                                         range_value_t<Rng>> &&
                                 common_reference_with<unwrap_reference_t<Val const &>,
@@ -152,6 +152,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

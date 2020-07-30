@@ -38,7 +38,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -47,7 +47,7 @@ namespace ranges
     RANGES_FUNC_BEGIN(includes)
 
         /// \brief function template \c includes
-        CPP_template(typename I1,
+        template(typename I1,
                  typename S1,
                  typename I2,
                  typename S2,
@@ -78,7 +78,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng1,
+        template(typename Rng1,
                  typename Rng2,
                  typename C = less,
                  typename P1 = identity,
@@ -113,7 +113,7 @@ namespace ranges
     RANGES_FUNC_BEGIN(set_union)
 
         /// \brief function template \c set_union
-        CPP_template(typename I1,
+        template(typename I1,
                  typename S1,
                  typename I2,
                  typename S2,
@@ -158,7 +158,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng1,
+        template(typename Rng1,
                  typename Rng2,
                  typename O,
                  typename C = less,
@@ -195,7 +195,7 @@ namespace ranges
     RANGES_FUNC_BEGIN(set_intersection)
 
         /// \brief function template \c set_intersection
-        CPP_template(typename I1,
+        template(typename I1,
                  typename S1,
                  typename I2,
                  typename S2,
@@ -234,7 +234,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng1,
+        template(typename Rng1,
                  typename Rng2,
                  typename O,
                  typename C = less,
@@ -273,7 +273,7 @@ namespace ranges
     RANGES_FUNC_BEGIN(set_difference)
 
         /// \brief function template \c set_difference
-        CPP_template(typename I1,
+        template(typename I1,
                  typename S1,
                  typename I2,
                  typename S2,
@@ -317,7 +317,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng1,
+        template(typename Rng1,
                  typename Rng2,
                  typename O,
                  typename C = less,
@@ -357,7 +357,7 @@ namespace ranges
     RANGES_FUNC_BEGIN(set_symmetric_difference)
 
         /// \brief function template \c set_symmetric_difference
-        CPP_template(typename I1,
+        template(typename I1,
                  typename S1,
                  typename I2,
                  typename S2,
@@ -407,7 +407,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng1,
+        template(typename Rng1,
                  typename Rng2,
                  typename O,
                  typename C = less,
@@ -445,6 +445,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

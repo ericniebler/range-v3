@@ -24,7 +24,7 @@
 #include <range/v3/utility/addressof.hpp>
 #include <range/v3/view/interface.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -82,14 +82,14 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename R)(requires range<R>) ref_view(R &)->ref_view<R>;
+    template(typename R)(requires range<R>) ref_view(R &)->ref_view<R>;
 #endif
 
     namespace views
     {
         struct ref_fn
         {
-            CPP_template(typename Rng)( //
+            template(typename Rng)( //
                 requires range<Rng>) //
             constexpr auto operator()(Rng & rng) const noexcept
                 -> ref_view<Rng>
@@ -107,7 +107,7 @@ namespace ranges
 
     namespace cpp20
     {
-        CPP_template(typename Rng)(              //
+        template(typename Rng)(              //
             requires std::is_object<Rng>::value) //
             using ref_view = ranges::ref_view<Rng>;
     }
@@ -116,6 +116,6 @@ namespace ranges
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::ref_view)
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

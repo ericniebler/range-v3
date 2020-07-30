@@ -28,7 +28,7 @@
 #include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -43,7 +43,7 @@ namespace ranges
             struct pred_
             {
                 Value value_;
-                CPP_template(typename T)( //
+                template(typename T)( //
                     requires equality_comparable_with<T, Value const &>) //
                 auto operator()(T && other) const -> bool
                 {
@@ -105,6 +105,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_VIEW_REMOVE_HPP

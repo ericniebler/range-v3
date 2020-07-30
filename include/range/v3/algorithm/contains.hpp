@@ -25,7 +25,7 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -34,8 +34,8 @@ namespace ranges
     RANGES_FUNC_BEGIN(contains)
 
         /// \brief function template \c contains
-        CPP_template(typename I, typename S, typename T, typename P = identity)( //
-            requires input_iterator<I> && sentinel_for<S, I>  && //
+        template(typename I, typename S, typename T, typename P = identity)( //
+            requires input_iterator<I> AND sentinel_for<S, I> AND //
             indirect_relation<equal_to, projected<I, P>, const T *>) //
         constexpr auto RANGES_FUNC(contains)(I first, S last, const T & val, P proj = {})
             -> bool
@@ -44,8 +44,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename T, typename P = identity)( //
-            requires input_range<Rng>  && //
+        template(typename Rng, typename T, typename P = identity)( //
+            requires input_range<Rng> AND //
             indirect_relation<equal_to, projected<iterator_t<Rng>, P>, const T *>) //
         constexpr auto RANGES_FUNC(contains)(Rng && rng, const T & val, P proj = {})
             -> bool
@@ -57,6 +57,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_ALGORITHM_CONTAINS_HPP

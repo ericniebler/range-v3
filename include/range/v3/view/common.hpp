@@ -28,7 +28,7 @@
 #include <range/v3/view/interface.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -71,15 +71,15 @@ namespace ranges
         {
             return ranges::begin(rng_) + ranges::distance(rng_);
         }
-        CPP_template(bool Const = true)( //
-            requires Const && range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)( //
+            requires Const AND range<meta::const_if_c<Const, Rng>>) //
         auto end_(std::false_type) const
             -> sentinel_t<meta::const_if_c<Const, Rng>>
         {
             return ranges::end(rng_);
         }
-        CPP_template(bool Const = true)( //
-            requires Const && range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)( //
+            requires Const AND range<meta::const_if_c<Const, Rng>>) //
         auto end_(std::true_type) const
             -> iterator_t<meta::const_if_c<Const, Rng>>
         {
@@ -111,7 +111,7 @@ namespace ranges
             return ranges::size(rng_);
         }
 
-        CPP_template(bool Const = true)( //
+        template(bool Const = true)( //
             requires range<meta::const_if_c<Const, Rng>>) //
         auto begin() const
             -> detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>
@@ -119,7 +119,7 @@ namespace ranges
             return detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>{
                 ranges::begin(rng_)};
         }
-        CPP_template(bool Const = true)( //
+        template(bool Const = true)( //
             requires range<meta::const_if_c<Const, Rng>>) //
         auto end() const
             -> detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>
@@ -139,7 +139,7 @@ namespace ranges
     RANGES_INLINE_VAR constexpr bool enable_borrowed_range<common_view<Rng, B>> = enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng)(       //
+    template(typename Rng)(       //
         requires (!common_range<Rng>)) //
         common_view(Rng &&)
             ->common_view<views::all_t<Rng>>;
@@ -156,15 +156,15 @@ namespace ranges
     {
         struct cpp20_common_fn
         {
-            CPP_template(typename Rng)( //
-                requires viewable_range<Rng> && common_range<Rng>) //
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND common_range<Rng>) //
             auto operator()(Rng && rng) const -> all_t<Rng>
             {
                 return all(static_cast<Rng &&>(rng));
             }
 
-            CPP_template(typename Rng)( //
-                requires viewable_range<Rng> && (!common_range<Rng>)) //
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND (!common_range<Rng>)) //
             auto operator()(Rng && rng) const -> common_view<all_t<Rng>>
             {
                 return common_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
@@ -173,7 +173,7 @@ namespace ranges
 
         struct common_fn
         {
-            CPP_template(typename Rng)( //
+            template(typename Rng)( //
                 requires viewable_range<Rng>) //
             auto operator()(Rng && rng) const -> common_view<all_t<Rng>>
             {
@@ -218,13 +218,13 @@ namespace ranges
             RANGES_INLINE_VARIABLE(
                 ranges::views::view_closure<ranges::views::cpp20_common_fn>, common)
         }
-        CPP_template(typename Rng)(                      //
+        template(typename Rng)(                      //
             requires view_<Rng> && (!common_range<Rng>)) //
             using common_view = ranges::common_view<Rng>;
     } // namespace cpp20
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::common_view)

@@ -25,7 +25,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -35,8 +35,8 @@ namespace ranges
     struct at_fn
     {
         /// \return `begin(rng)[n]`
-        CPP_template(typename Rng)( //
-            requires random_access_range<Rng> && sized_range<Rng>  && //
+        template(typename Rng)( //
+            requires random_access_range<Rng> AND sized_range<Rng> AND //
                 borrowed_range<Rng>) //
         constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
             -> range_reference_t<Rng>
@@ -67,8 +67,8 @@ namespace ranges
     struct index_fn
     {
         /// \return `begin(rng)[n]`
-        CPP_template(typename Rng, typename Int)( //
-            requires random_access_range<Rng> && integral<Int> && borrowed_range<Rng>) //
+        template(typename Rng, typename Int)( //
+            requires random_access_range<Rng> AND integral<Int> AND borrowed_range<Rng>) //
         constexpr auto operator()(Rng && rng, Int n) const //
             -> range_reference_t<Rng>
         {
@@ -90,7 +90,7 @@ namespace ranges
     struct back_fn
     {
         /// \return `*prev(end(rng))`
-        CPP_template(typename Rng)(                                   //
+        template(typename Rng)(                                   //
             requires common_range<Rng> && bidirectional_range<Rng> && //
                 borrowed_range<Rng>)                                  //
         constexpr auto operator()(Rng && rng) const -> range_reference_t<Rng>
@@ -107,8 +107,8 @@ namespace ranges
     struct front_fn
     {
         /// \return `*begin(rng)`
-        CPP_template(typename Rng)( //
-            requires forward_range<Rng> && borrowed_range<Rng>) //
+        template(typename Rng)( //
+            requires forward_range<Rng> AND borrowed_range<Rng>) //
         constexpr auto operator()(Rng && rng) const -> range_reference_t<Rng>
         {
             return *begin(rng);
@@ -120,6 +120,6 @@ namespace ranges
     RANGES_INLINE_VARIABLE(front_fn, front)
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

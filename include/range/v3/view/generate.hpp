@@ -31,7 +31,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -93,9 +93,9 @@ namespace ranges
     {
         struct generate_fn
         {
-            CPP_template(typename G)( //
-                requires invocable<G &> && copy_constructible<G> &&
-                    std::is_object<detail::decay_t<invoke_result_t<G &>>>::value &&
+            template(typename G)( //
+                requires invocable<G &> AND copy_constructible<G> AND
+                    std::is_object<detail::decay_t<invoke_result_t<G &>>>::value AND
                         constructible_from<detail::decay_t<invoke_result_t<G &>>,
                                            invoke_result_t<G &>> &&
                             assignable_from<detail::decay_t<invoke_result_t<G &>> &,
@@ -113,7 +113,7 @@ namespace ranges
     /// \@}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::generate_view)
 

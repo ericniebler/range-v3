@@ -23,7 +23,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/iota.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -34,13 +34,13 @@ namespace ranges
         {
             indices_fn() = default;
 
-            CPP_template(typename Val)( //
+            template(typename Val)( //
                 requires integral<Val>) //
             auto operator()(Val to) const -> iota_view<Val, Val>
             {
                 return {Val(), to};
             }
-            CPP_template(typename Val)( //
+            template(typename Val)( //
                 requires integral<Val>) //
             auto operator()(Val from, Val to) const -> iota_view<Val, Val>
             {
@@ -51,13 +51,13 @@ namespace ranges
         /// Inclusive range of indices: [from, to].
         struct closed_indices_fn
         {
-            CPP_template(typename Val)( //
+            template(typename Val)( //
                 requires integral<Val>) //
             auto operator()(Val to) const -> closed_iota_view<Val>
             {
                 return {Val(), to};
             }
-            CPP_template(typename Val)( //
+            template(typename Val)( //
                 requires integral<Val>) //
             auto operator()(Val from, Val to) const -> closed_iota_view<Val>
             {
@@ -75,6 +75,6 @@ namespace ranges
     } // namespace views
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_VIEW_INDICES_HPP

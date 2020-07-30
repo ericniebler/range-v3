@@ -30,7 +30,7 @@
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -137,7 +137,7 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)( //
+    template(typename Rng, typename Fun)( //
         requires copy_constructible<Rng>)
     adjacent_remove_if_view(Rng &&, Fun)
         -> adjacent_remove_if_view<views::all_t<Rng>, Fun>;
@@ -147,8 +147,8 @@ namespace ranges
     {
         struct adjacent_remove_if_base_fn
         {
-            CPP_template(typename Rng, typename Pred)( //
-                requires viewable_range<Rng> && forward_range<Rng> &&
+            template(typename Rng, typename Pred)( //
+                requires viewable_range<Rng> AND forward_range<Rng> AND
                     indirect_binary_predicate_<Pred, iterator_t<Rng>, iterator_t<Rng>>) //
             constexpr auto operator()(Rng && rng, Pred pred) const
                 -> adjacent_remove_if_view<all_t<Rng>, Pred>
@@ -176,7 +176,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::adjacent_remove_if_view)
 

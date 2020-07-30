@@ -10,15 +10,15 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGES_V3_DETAIL_DISABLE_WARNINGS_HPP
-#define RANGES_V3_DETAIL_DISABLE_WARNINGS_HPP
+#ifndef RANGES_V3_DETAIL_PROLOGUE_HPP
+#define RANGES_V3_DETAIL_PROLOGUE_HPP
 #include <range/v3/detail/config.hpp>
 #endif
 
-#ifdef RANGES_DISABLE_WARNINGS_INCLUDED
-#error "Warnings already disabled!"
+#ifdef RANGES_PROLOGUE_INCLUDED
+#error "Prologue already included!"
 #endif
-#define RANGES_DISABLE_WARNINGS_INCLUDED
+#define RANGES_PROLOGUE_INCLUDED
 
 RANGES_DIAGNOSTIC_PUSH
 
@@ -27,3 +27,12 @@ RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_INTERNAL
 RANGES_DIAGNOSTIC_IGNORE_INDENTATION
 RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 #endif
+
+RANGES_DIAGNOSTIC_KEYWORD_MACRO
+
+#define template(...)                                                           \
+    CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                            \
+    template<__VA_ARGS__ CPP_TEMPLATE_AUX_                                      \
+    /**/
+
+#define AND CPP_and

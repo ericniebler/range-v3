@@ -28,7 +28,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -40,8 +40,8 @@ namespace ranges
     RANGES_FUNC_BEGIN(for_each)
 
         /// \brief function template \c for_each
-        CPP_template(typename I, typename S, typename F, typename P = identity)( //
-            requires input_iterator<I> && sentinel_for<S, I>  && //
+        template(typename I, typename S, typename F, typename P = identity)( //
+            requires input_iterator<I> AND sentinel_for<S, I> AND //
             indirectly_unary_invocable<F, projected<I, P>>) //
         auto RANGES_FUNC(for_each)(I first, S last, F fun, P proj = P{})
             -> for_each_result<I, F>
@@ -54,8 +54,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename F, typename P = identity)( //
-            requires input_range<Rng>  && //
+        template(typename Rng, typename F, typename P = identity)( //
+            requires input_range<Rng> AND //
             indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(for_each)(Rng && rng, F fun, P proj = P{})
             -> for_each_result<borrowed_iterator_t<Rng>, F>
@@ -74,6 +74,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

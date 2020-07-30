@@ -41,7 +41,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -50,8 +50,8 @@ namespace ranges
     {
         // stable, 2-3 compares, 0-2 swaps
 
-        CPP_template(typename I, typename C, typename P)( //
-            requires forward_iterator<I> && indirect_relation<C, projected<I, P>>) //
+        template(typename I, typename C, typename P)( //
+            requires forward_iterator<I> AND indirect_relation<C, projected<I, P>>) //
         auto sort3(I x, I y, I z, C & pred, P & proj) -> unsigned
         {
             unsigned r = 0;
@@ -85,8 +85,8 @@ namespace ranges
             return r;
         } // x <= y && y <= z
 
-        CPP_template(typename I, typename C, typename P)( //
-            requires bidirectional_iterator<I> && indirect_relation<C, projected<I, P>>) //
+        template(typename I, typename C, typename P)( //
+            requires bidirectional_iterator<I> AND indirect_relation<C, projected<I, P>>) //
         auto selection_sort(I first, I last, C & pred, P & proj) -> void
         {
             RANGES_EXPECT(first != last);
@@ -105,8 +105,8 @@ namespace ranges
     RANGES_FUNC_BEGIN(nth_element)
 
         /// \brief function template \c nth_element
-        CPP_template(typename I, typename S, typename C = less, typename P = identity)( //
-            requires random_access_iterator<I> && sortable<I, C, P>) //
+        template(typename I, typename S, typename C = less, typename P = identity)( //
+            requires random_access_iterator<I> AND sortable<I, C, P>) //
         auto RANGES_FUNC(nth_element)(
             I first, I nth, S end_, C pred = C{}, P proj = P{}) //
             -> I
@@ -309,8 +309,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename C = less, typename P = identity)( //
-            requires random_access_range<Rng> && sortable<iterator_t<Rng>, C, P>) //
+        template(typename Rng, typename C = less, typename P = identity)( //
+            requires random_access_range<Rng> AND sortable<iterator_t<Rng>, C, P>) //
         auto RANGES_FUNC(nth_element)(
             Rng && rng, iterator_t<Rng> nth, C pred = C{}, P proj = P{}) //
             -> borrowed_iterator_t<Rng>
@@ -328,6 +328,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

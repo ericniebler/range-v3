@@ -31,7 +31,7 @@
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/view/facade.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_UNSIGNED_MATH
@@ -118,7 +118,7 @@ namespace ranges
             CPP_requires_ref(detail::_advanceable_, I);
         // clang-format on
 
-        CPP_template(typename I)( //
+        template(typename I)( //
             requires (!unsigned_integral<I>)) //
         auto iota_advance_(I & i, iota_difference_t<I> n) -> void
         {
@@ -126,7 +126,7 @@ namespace ranges
             i += n;
         }
 
-        CPP_template(typename Int)( //
+        template(typename Int)( //
             requires unsigned_integral<Int>) //
         auto iota_advance_(Int & i, iota_difference_t<Int> n) -> void
         {
@@ -137,14 +137,14 @@ namespace ranges
                 i -= static_cast<Int>(-n);
         }
 
-        CPP_template(typename I)( //
-            requires advanceable_<I> && (!integral<I>)) //
+        template(typename I)( //
+            requires advanceable_<I> AND (!integral<I>)) //
         auto iota_distance_(I const & i, I const & s) -> iota_difference_t<I>
         {
             return static_cast<iota_difference_t<I>>(s - i);
         }
 
-        CPP_template(typename Int)( //
+        template(typename Int)( //
             requires signed_integral<Int>) //
         auto iota_distance_(Int i0, Int i1) -> iota_difference_t<Int>
         {
@@ -154,7 +154,7 @@ namespace ranges
                 static_cast<iota_difference_t<Int>>(i0));
         }
 
-        CPP_template(typename Int)( //
+        template(typename Int)( //
             requires unsigned_integral<Int>) //
         auto iota_distance_(Int i0, Int i1) -> iota_difference_t<Int>
         {
@@ -298,8 +298,8 @@ namespace ranges
     RANGES_INLINE_VAR constexpr bool enable_borrowed_range<closed_iota_view<From, To>> = true;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename From, typename To)( //
-        requires weakly_incrementable<From> && semiregular<To> &&
+    template(typename From, typename To)( //
+        requires weakly_incrementable<From> AND semiregular<To> AND
         (!integral<From> || !integral<To> ||
          std::is_signed<From>::value == std::is_signed<To>::value)) //
         closed_iota_view(From, To)
@@ -436,8 +436,8 @@ namespace ranges
     RANGES_INLINE_VAR constexpr bool enable_borrowed_range<iota_view<From, To>> = true;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename From, typename To)( //
-        requires weakly_incrementable<From> && semiregular<To> &&
+    template(typename From, typename To)( //
+        requires weakly_incrementable<From> AND semiregular<To> AND
         (!integral<From> || !integral<To> ||
          std::is_signed<From>::value == std::is_signed<To>::value)) //
         iota_view(From, To)
@@ -448,15 +448,15 @@ namespace ranges
     {
         struct iota_fn
         {
-            CPP_template(typename From)( //
+            template(typename From)( //
                 requires weakly_incrementable<From>) //
             auto operator()(From value) const -> iota_view<From>
             {
                 return iota_view<From>{std::move(value)};
             }
-            CPP_template(typename From, typename To)( //
-                requires weakly_incrementable<From> && semiregular<To> &&
-                    detail::weakly_equality_comparable_with_<From, To> &&
+            template(typename From, typename To)( //
+                requires weakly_incrementable<From> AND semiregular<To> AND
+                    detail::weakly_equality_comparable_with_<From, To> AND
                 (!integral<From> || !integral<To> ||
                  std::is_signed<From>::value == std::is_signed<To>::value)) //
             auto operator()(From from, To to) const -> iota_view<From, To>
@@ -467,9 +467,9 @@ namespace ranges
 
         struct closed_iota_fn
         {
-            CPP_template(typename From, typename To)( //
-                requires weakly_incrementable<From> && semiregular<To> &&
-                        detail::weakly_equality_comparable_with_<From, To> &&
+            template(typename From, typename To)( //
+                requires weakly_incrementable<From> AND semiregular<To> AND
+                        detail::weakly_equality_comparable_with_<From, To> AND
                     (!integral<From> || !integral<To> ||
                      std::is_signed<From>::value == std::is_signed<To>::value)) //
             auto operator()(From from, To to) const
@@ -502,14 +502,14 @@ namespace ranges
             {
                 return iota_view<Val>{value};
             }
-            CPP_template(typename Val)( //
+            template(typename Val)( //
                 requires integral<Val>) //
             constexpr auto operator()(Val value, unreachable_sentinel_t) const
                 -> iota_view<Val>
             {
                 return iota_view<Val>{value};
             }
-            CPP_template(typename Val)( //
+            template(typename Val)( //
                 requires integral<Val>) //
             constexpr auto operator()(Val from, Val to) const
                 -> iota_view<Val, Val>
@@ -539,6 +539,6 @@ RANGES_SATISFY_BOOST_RANGE(::ranges::iota_view)
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

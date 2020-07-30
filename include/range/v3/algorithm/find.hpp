@@ -27,7 +27,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -43,8 +43,8 @@ namespace ranges
         /// \pre `S` is a model of the `sentinel_for<I>` concept
         /// \pre `P` is a model of the `invocable<iter_common_reference_t<I>>` concept
         /// \pre The ResultType of `P` is equality_comparable with V
-        CPP_template(typename I, typename S, typename V, typename P = identity)( //
-            requires input_iterator<I> && sentinel_for<S, I>  && //
+        template(typename I, typename S, typename V, typename P = identity)( //
+            requires input_iterator<I> AND sentinel_for<S, I> AND //
             indirect_relation<equal_to, projected<I, P>, V const *>) //
         constexpr auto RANGES_FUNC(find)(I first, S last, V const & val, P proj = P{})
             -> I
@@ -56,8 +56,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename V, typename P = identity)( //
-            requires input_range<Rng>  && //
+        template(typename Rng, typename V, typename P = identity)( //
+            requires input_range<Rng> AND //
             indirect_relation<equal_to, projected<iterator_t<Rng>, P>, V const *>) //
         constexpr auto RANGES_FUNC(find)(Rng && rng, V const & val, P proj = P{})
             -> borrowed_iterator_t<Rng>
@@ -74,6 +74,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

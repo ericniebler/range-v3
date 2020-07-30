@@ -38,7 +38,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/subrange.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -135,7 +135,7 @@ namespace ranges
     RANGES_FUNC_BEGIN(search_n)
 
         /// \brief function template \c search_n
-        CPP_template(typename I,
+        template(typename I,
                  typename S,
                  typename V,
                  typename C = equal_to,
@@ -167,8 +167,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename V, typename C = equal_to, typename P = identity)( //
-            requires forward_range<Rng> &&
+        template(typename Rng, typename V, typename C = equal_to, typename P = identity)( //
+            requires forward_range<Rng> AND
                 indirectly_comparable<iterator_t<Rng>, V const *, C, P>) //
         auto RANGES_FUNC(search_n)(Rng && rng,
                                    iter_difference_t<iterator_t<Rng>>
@@ -196,6 +196,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

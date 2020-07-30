@@ -18,7 +18,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -26,7 +26,7 @@ namespace ranges
     /// @{
     struct equal_to
     {
-        CPP_template(typename T, typename U)( //
+        template(typename T, typename U)( //
             requires equality_comparable_with<T, U>) //
         constexpr auto operator()(T && t, U && u) const -> bool
         {
@@ -37,7 +37,7 @@ namespace ranges
 
     struct not_equal_to
     {
-        CPP_template(typename T, typename U)( //
+        template(typename T, typename U)( //
             requires equality_comparable_with<T, U>) //
         constexpr auto operator()(T && t, U && u) const -> bool
         {
@@ -48,7 +48,7 @@ namespace ranges
 
     struct less
     {
-        CPP_template(typename T, typename U)( //
+        template(typename T, typename U)( //
             requires totally_ordered_with<T, U>) //
         constexpr auto operator()(T && t, U && u) const -> bool
         {
@@ -59,7 +59,7 @@ namespace ranges
 
     struct less_equal
     {
-        CPP_template(typename T, typename U)( //
+        template(typename T, typename U)( //
             requires totally_ordered_with<T, U>) //
         constexpr auto operator()(T && t, U && u) const -> bool
         {
@@ -70,7 +70,7 @@ namespace ranges
 
     struct greater_equal
     {
-        CPP_template(typename T, typename U)( //
+        template(typename T, typename U)( //
             requires totally_ordered_with<T, U>) //
         constexpr auto operator()(T && t, U && u) const -> bool
         {
@@ -81,7 +81,7 @@ namespace ranges
 
     struct greater
     {
-        CPP_template(typename T, typename U)( //
+        template(typename T, typename U)( //
             requires totally_ordered_with<T, U>) //
         constexpr bool operator()(T && t, U && u) const
         {
@@ -96,7 +96,7 @@ namespace ranges
 #if __cplusplus > 201703L && defined(__cpp_impl_three_way_comparison) && __has_include(<compare>)
     struct compare_three_way
     {
-        CPP_template(typename T, typename U)( //
+        template(typename T, typename U)( //
             requires three_way_comparable_with<T, U>)
         constexpr auto operator()(T && t, U && u) const
             -> decltype((T &&) t <=> (U &&) u)
@@ -120,6 +120,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -50,7 +50,7 @@
 #endif
 #endif // RANGES_SILENCE_COROUTINE_WARNINGS
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -210,8 +210,8 @@ namespace ranges
                 except_ = std::current_exception();
                 RANGES_EXPECT(except_);
             }
-            CPP_template(typename Arg)( //
-                requires convertible_to<Arg, Reference> &&
+            template(typename Arg)( //
+                requires convertible_to<Arg, Reference> AND
                         std::is_assignable<semiregular_box_t<Reference> &, Arg>::value) //
             auto yield_value(Arg && arg) noexcept(
                 std::is_nothrow_assignable<semiregular_box_t<Reference> &, Arg>::value)
@@ -362,7 +362,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
 

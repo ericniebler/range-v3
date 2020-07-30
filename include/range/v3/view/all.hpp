@@ -27,7 +27,7 @@
 #include <range/v3/view/subrange.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -65,8 +65,8 @@ namespace ranges
             }
 
         public:
-            CPP_template(typename T)( //
-                requires range<T &> CPP_and viewable_range<T>) //
+            template(typename T)( //
+                requires range<T &> AND viewable_range<T>) //
             constexpr auto operator()(T && t) const
             {
                 return all_fn::from_range_(static_cast<T &&>(t),
@@ -113,13 +113,13 @@ namespace ranges
             using ranges::views::all;
             using ranges::views::all_t;
         }
-        CPP_template(typename Rng)(       //
+        template(typename Rng)(       //
             requires viewable_range<Rng>) //
             using all_view RANGES_DEPRECATED("Please use ranges::cpp20::views::all_t instead.") = ranges::views::all_t<Rng>;
     } // namespace cpp20
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

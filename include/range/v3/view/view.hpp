@@ -29,7 +29,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -56,9 +56,9 @@ namespace ranges
       /// \endcond
 
     // clang-format off
-    CPP_template(typename Rng)(
+    template(typename Rng)(
     concept (simple_view_impl_)(Rng),
-        same_as<iterator_t<Rng>, iterator_t<Rng const>> CPP_and
+        same_as<iterator_t<Rng>, iterator_t<Rng const>> AND
         same_as<sentinel_t<Rng>, sentinel_t<Rng const>>);
 
     template<typename Rng>
@@ -67,7 +67,7 @@ namespace ranges
         range<Rng const> &&
         CPP_concept_ref(ranges::simple_view_impl_, Rng);
 
-    CPP_template(typename ViewFn, typename Rng)(
+    template(typename ViewFn, typename Rng)(
     concept (invocable_view_closure_)(ViewFn, Rng),
         !derived_from<invoke_result_t<ViewFn, Rng>, detail::view_closure_base_>);
 
@@ -103,8 +103,8 @@ namespace ranges
         {
             // Piping requires viewable_ranges. Pipeing a value into a closure
             // should not yield another closure.
-            CPP_template(typename Rng, typename ViewFn)( //
-                requires viewable_range<Rng> CPP_and     //
+            template(typename Rng, typename ViewFn)( //
+                requires viewable_range<Rng> AND     //
                     invocable_view_closure<ViewFn, Rng>) //
             friend constexpr auto operator|(Rng && rng, view_closure<ViewFn> vw)
             {
@@ -244,8 +244,8 @@ namespace ranges
             {}
 
             // Calling directly requires a viewable_range.
-            CPP_template(typename Rng, typename... Rest)( //
-                requires viewable_range<Rng> && invocable<ViewFn const &, Rng, Rest...>) //
+            template(typename Rng, typename... Rest)( //
+                requires viewable_range<Rng> AND invocable<ViewFn const &, Rng, Rest...>) //
             constexpr auto operator()(Rng && rng, Rest &&... rest) const
                 -> invoke_result_t<ViewFn const &, Rng, Rest...>
             {
@@ -275,6 +275,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

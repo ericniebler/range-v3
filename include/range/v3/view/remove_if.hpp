@@ -34,7 +34,7 @@
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -135,7 +135,7 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Pred)( //
+    template(typename Rng, typename Pred)( //
         requires copy_constructible<Pred>)
     remove_if_view(Rng &&, Pred)
         -> remove_if_view<views::all_t<Rng>, Pred>;
@@ -147,8 +147,8 @@ namespace ranges
         /// present a view of the elements that do not satisfy the predicate.
         struct remove_if_base_fn
         {
-            CPP_template(typename Rng, typename Pred)( //
-                requires viewable_range<Rng> && input_range<Rng>  && //
+            template(typename Rng, typename Pred)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND //
                     indirect_unary_predicate<Pred, iterator_t<Rng>>) //
             constexpr auto operator()(Rng && rng, Pred pred) const
                 -> remove_if_view<all_t<Rng>, Pred>
@@ -156,8 +156,8 @@ namespace ranges
                 return remove_if_view<all_t<Rng>, Pred>{all(static_cast<Rng &&>(rng)),
                                                         std::move(pred)};
             }
-            CPP_template(typename Rng, typename Pred, typename Proj)( //
-                requires viewable_range<Rng> && input_range<Rng>  && //
+            template(typename Rng, typename Pred, typename Proj)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND //
                     indirect_unary_predicate<Pred, projected<iterator_t<Rng>, Proj>>) //
             constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
                 -> remove_if_view<all_t<Rng>, composed<Pred, Proj>>
@@ -202,6 +202,6 @@ namespace ranges
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::remove_if_view)
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

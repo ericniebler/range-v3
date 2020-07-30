@@ -25,7 +25,7 @@
 #include <range/v3/view/interface.hpp>
 #include <range/v3/view/subrange.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -73,14 +73,14 @@ namespace ranges
     {
         struct cpp20_counted_fn
         {
-            CPP_template(typename I)( //
-                requires input_or_output_iterator<I> && (!random_access_iterator<I>)) //
+            template(typename I)( //
+                requires input_or_output_iterator<I> AND (!random_access_iterator<I>)) //
             auto operator()(I it, iter_difference_t<I> n) const
                 -> subrange<counted_iterator<I>, default_sentinel_t>
             {
                 return {make_counted_iterator(std::move(it), n), default_sentinel};
             }
-            CPP_template(typename I)( //
+            template(typename I)( //
                 requires random_access_iterator<I>) //
             auto operator()(I it, iter_difference_t<I> n) const
                 -> subrange<I>
@@ -91,14 +91,14 @@ namespace ranges
 
         struct counted_fn
         {
-            CPP_template(typename I)( //
-                requires input_or_output_iterator<I> && (!random_access_iterator<I>)) //
+            template(typename I)( //
+                requires input_or_output_iterator<I> AND (!random_access_iterator<I>)) //
             auto operator()(I it, iter_difference_t<I> n) const
                 -> counted_view<I>
             {
                 return {std::move(it), n};
             }
-            CPP_template(typename I)( //
+            template(typename I)( //
                 requires random_access_iterator<I>) //
             auto operator()(I it, iter_difference_t<I> n) const
                 -> subrange<I>
@@ -122,7 +122,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::counted_view)
 

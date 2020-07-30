@@ -30,7 +30,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/facade.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_INCONSISTENT_OVERRIDE
@@ -154,7 +154,7 @@ namespace ranges
         };
 
         // clang-format off
-        CPP_template(typename Rng, typename Ref)(
+        template(typename Rng, typename Ref)(
         concept (any_compatible_range_)(Rng, Ref),
             convertible_to<range_reference_t<Rng>, Ref>
         );
@@ -414,9 +414,9 @@ namespace ranges
 
         public:
             any_cursor() = default;
-            CPP_template(typename Rng)( //
-                requires (!same_as<detail::decay_t<Rng>, any_cursor>) CPP_and //
-                    forward_range<Rng> CPP_and //
+            template(typename Rng)( //
+                requires (!same_as<detail::decay_t<Rng>, any_cursor>) AND //
+                    forward_range<Rng> AND //
                     any_compatible_range<Rng, Ref>) //
             explicit any_cursor(Rng && rng)
               : ptr_{detail::make_unique<impl_t<Rng>>(begin(rng))}
@@ -546,10 +546,10 @@ namespace ranges
         CPP_assert((Cat & category::forward) == category::forward);
 
         any_view() = default;
-        CPP_template(typename Rng)( //
+        template(typename Rng)( //
             requires //
-                (!same_as<detail::decay_t<Rng>, any_view>) CPP_and //
-                input_range<Rng> CPP_and //
+                (!same_as<detail::decay_t<Rng>, any_view>) AND //
+                input_range<Rng> AND //
                 detail::any_compatible_range<Rng, Ref>) //
         any_view(Rng && rng)
           : any_view(static_cast<Rng &&>(rng),
@@ -609,10 +609,10 @@ namespace ranges
         friend range_access;
 
         any_view() = default;
-        CPP_template(typename Rng)( //
+        template(typename Rng)( //
             requires //
-                (!same_as<detail::decay_t<Rng>, any_view>) CPP_and //
-                input_range<Rng> CPP_and //
+                (!same_as<detail::decay_t<Rng>, any_view>) AND //
+                input_range<Rng> AND //
                 detail::any_compatible_range<Rng, Ref>) //
         any_view(Rng && rng)
           : ptr_{std::make_shared<impl_t<Rng>>(views::all(static_cast<Rng &&>(rng)))}
@@ -646,7 +646,7 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng)( //
+    template(typename Rng)( //
         requires view_<Rng>)    //
         any_view(Rng &&)
             ->any_view<range_reference_t<Rng>, get_categories<Rng>()>;
@@ -677,6 +677,6 @@ RANGES_SATISFY_BOOST_RANGE(::ranges::any_view)
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

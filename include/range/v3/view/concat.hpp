@@ -36,7 +36,7 @@
 #include <range/v3/view/facade.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -93,8 +93,8 @@ namespace ranges
             sentinel(concat_view_t * rng, end_tag)
               : end_(end(std::get<cranges - 1>(rng->rngs_)))
             {}
-            CPP_template(bool Other)( //
-                requires IsConst && CPP_NOT(Other)) //
+            template(bool Other)( //
+                requires IsConst AND CPP_NOT(Other)) //
             sentinel(sentinel<Other> that)
               : end_(std::move(that.end_))
             {}
@@ -130,7 +130,7 @@ namespace ranges
             struct next_fun
             {
                 cursor * pos;
-                CPP_template(typename I, std::size_t N)( //
+                template(typename I, std::size_t N)( //
                     requires input_iterator<I>) //
                 auto operator()(indexed_element<I, N> it) const -> void
                 {
@@ -142,15 +142,15 @@ namespace ranges
             struct prev_fun
             {
                 cursor * pos;
-                CPP_template(typename I)( //
+                template(typename I)( //
                     requires bidirectional_iterator<I>) //
                 auto operator()(indexed_element<I, 0> it) const -> void
                 {
                     RANGES_ASSERT(it.get() != begin(std::get<0>(pos->rng_->rngs_)));
                     --it.get();
                 }
-                CPP_template(typename I, std::size_t N)( //
-                    requires (N != 0) && bidirectional_iterator<I>) //
+                template(typename I, std::size_t N)( //
+                    requires (N != 0) AND bidirectional_iterator<I>) //
                 auto operator()(indexed_element<I, N> it) const -> void
                 {
                     if(it.get() == begin(std::get<N>(pos->rng_->rngs_)))
@@ -169,14 +169,14 @@ namespace ranges
             {
                 cursor * pos;
                 difference_type n;
-                CPP_template(typename I)( //
+                template(typename I)( //
                     requires random_access_iterator<I>) //
                 auto operator()(indexed_element<I, cranges - 1> it) const
                     -> void
                 {
                     ranges::advance(it.get(), n);
                 }
-                CPP_template(typename I, std::size_t N)( //
+                template(typename I, std::size_t N)( //
                     requires random_access_iterator<I>) //
                 auto operator()(indexed_element<I, N> it) const -> void
                 {
@@ -195,13 +195,13 @@ namespace ranges
             {
                 cursor * pos;
                 difference_type n;
-                CPP_template(typename I)( //
+                template(typename I)( //
                     requires random_access_iterator<I>) //
                 auto operator()(indexed_element<I, 0> it) const -> void
                 {
                     ranges::advance(it.get(), n);
                 }
-                CPP_template(typename I, std::size_t N)( //
+                template(typename I, std::size_t N)( //
                     requires random_access_iterator<I>) //
                 auto operator()(indexed_element<I, N> it) const -> void
                 {
@@ -266,7 +266,7 @@ namespace ranges
               : rng_(rng)
               , its_{emplaced_index<cranges - 1>, end(std::get<cranges - 1>(rng->rngs_))}
             {}
-            CPP_template(bool Other)(               //
+            template(bool Other)(               //
                 requires IsConst && CPP_NOT(Other)) //
             cursor(cursor<Other> that)
               : rng_(that.rng_)
@@ -389,15 +389,15 @@ namespace ranges
     {
         struct concat_fn
         {
-            CPP_template(typename... Rngs)( //
+            template(typename... Rngs)( //
                 requires and_v<(viewable_range<Rngs> && input_range<Rngs>)...>) //
             auto operator()(Rngs &&... rngs) const
                 -> concat_view<all_t<Rngs>...>
             {
                 return concat_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
             }
-            CPP_template(typename Rng)( //
-                requires viewable_range<Rng> && input_range<Rng>) //
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng>) //
             auto operator()(Rng && rng) const //
                 -> all_t<Rng>
             {
@@ -405,9 +405,9 @@ namespace ranges
             }
             // MSVC doesn't like variadics in operator() for some reason
 #if defined(_MSC_VER)
-            CPP_template(typename Rng0, typename Rng1)( //
-                requires viewable_range<Rng0> && input_range<Rng0> && //
-                        viewable_range<Rng1> && input_range<Rng1>) //
+            template(typename Rng0, typename Rng1)( //
+                requires viewable_range<Rng0> AND input_range<Rng0> AND //
+                        viewable_range<Rng1> AND input_range<Rng1>) //
             auto operator()(Rng0 && rng0, Rng1 && rng1) const
                 -> concat_view<all_t<Rng0>, all_t<Rng1>>
             {
@@ -415,9 +415,9 @@ namespace ranges
                     all(static_cast<Rng0 &&>(rng0)),
                     all(static_cast<Rng1 &&>(rng1))};
             }
-            CPP_template(typename Rng0, typename Rng1, typename Rng2)( //
-                requires viewable_range<Rng0> && input_range<Rng0> && //
-                        viewable_range<Rng1> && input_range<Rng1> &&
+            template(typename Rng0, typename Rng1, typename Rng2)( //
+                requires viewable_range<Rng0> AND input_range<Rng0> AND //
+                        viewable_range<Rng1> AND input_range<Rng1> AND
                         viewable_range<Rng2> && input_range<Rng2>) //
             auto operator()(Rng0 && rng0, Rng1 && rng1, Rng2 && rng2) const
                 -> concat_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>>
@@ -437,7 +437,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::concat_view)
 

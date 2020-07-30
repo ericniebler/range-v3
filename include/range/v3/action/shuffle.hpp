@@ -25,7 +25,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -53,9 +53,9 @@ namespace ranges
                     bind_back(shuffle_fn{}, static_cast<Gen &&>(gen)));
             }
 
-            CPP_template(typename Rng, typename Gen)( //
-                requires random_access_range<Rng> && permutable<iterator_t<Rng>> &&
-                    uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+            template(typename Rng, typename Gen)( //
+                requires random_access_range<Rng> AND permutable<iterator_t<Rng>> AND
+                    uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
                         convertible_to<invoke_result_t<Gen &>, range_difference_t<Rng>>) //
             auto operator()(Rng && rng, Gen && gen) const -> Rng
             {
@@ -80,6 +80,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

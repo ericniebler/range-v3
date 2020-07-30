@@ -29,7 +29,7 @@
 #include <range/v3/view/interface.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -65,8 +65,8 @@ namespace ranges
         {
             return next(ranges::begin(rng_), 1, ranges::end(rng_));
         }
-        CPP_template(bool Const = true)( //
-            requires Const && range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)( //
+            requires Const AND range<meta::const_if_c<Const, Rng>>) //
         auto begin() const -> iterator_t<meta::const_if_c<Const, Rng>>
         {
             return next(ranges::begin(rng_), 1, ranges::end(rng_));
@@ -75,8 +75,8 @@ namespace ranges
         {
             return ranges::end(rng_);
         }
-        CPP_template(bool Const = true)( //
-            requires Const && range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)( //
+            requires Const AND range<meta::const_if_c<Const, Rng>>) //
         auto end() const -> sentinel_t<meta::const_if_c<Const, Rng>>
         {
             return ranges::end(rng_);
@@ -108,7 +108,7 @@ namespace ranges
     RANGES_INLINE_VAR constexpr bool enable_borrowed_range<tail_view<Rng>> = enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng)(       //
+    template(typename Rng)(       //
         requires viewable_range<Rng>) //
         tail_view(Rng &&)
             ->tail_view<views::all_t<Rng>>;
@@ -118,8 +118,8 @@ namespace ranges
     {
         struct tail_fn
         {
-            CPP_template(typename Rng)( //
-                requires viewable_range<Rng> && input_range<Rng>) //
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng>) //
             auto operator()(Rng && rng) const
                 -> meta::if_c<range_cardinality<Rng>::value == 0, all_t<Rng>,
                                       tail_view<all_t<Rng>>>
@@ -135,7 +135,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::tail_view)
 

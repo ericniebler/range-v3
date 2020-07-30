@@ -32,20 +32,20 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
     /// \addtogroup group-numerics
     /// @{
     // clang-format off
-    CPP_template(typename I, typename O, typename BOp, typename P)(
+    template(typename I, typename O, typename BOp, typename P)(
     concept (differenceable_)(I, O, BOp, P),
-        invocable<P&, iter_value_t<I>> CPP_and
-        copy_constructible<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> CPP_and
-        movable<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> CPP_and
-        output_iterator<O, invoke_result_t<P&, iter_value_t<I>>> CPP_and
-        invocable<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>> CPP_and
+        invocable<P&, iter_value_t<I>> AND
+        copy_constructible<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> AND
+        movable<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> AND
+        output_iterator<O, invoke_result_t<P&, iter_value_t<I>>> AND
+        invocable<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>> AND
         output_iterator<O, invoke_result_t<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>>>);
 
     template<typename I, typename O, typename BOp = minus, typename P = identity>
@@ -59,7 +59,7 @@ namespace ranges
 
     struct adjacent_difference_fn
     {
-        CPP_template(typename I, typename S, typename O, typename S2, typename BOp = minus,
+        template(typename I, typename S, typename O, typename S2, typename BOp = minus,
                  typename P = identity)( //
             requires sentinel_for<S, I> && sentinel_for<S2, O> &&
                     differenceable<I, O, BOp, P>) //
@@ -88,7 +88,7 @@ namespace ranges
             return {first, result};
         }
 
-        CPP_template(typename I, typename S, typename O, typename BOp = minus,
+        template(typename I, typename S, typename O, typename BOp = minus,
                  typename P = identity)( //
             requires sentinel_for<S, I> && differenceable<I, O, BOp, P>) //
         auto operator()(I first, S last, O result, BOp bop = BOp{}, P proj = P{}) const
@@ -135,6 +135,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

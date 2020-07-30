@@ -28,7 +28,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -37,7 +37,7 @@ namespace ranges
     RANGES_FUNC_BEGIN(min)
 
         /// \brief function template \c min
-        CPP_template(typename T, typename C = less, typename P = identity)( //
+        template(typename T, typename C = less, typename P = identity)( //
             requires indirect_strict_weak_order<C, projected<T const *, P>>) //
         constexpr auto RANGES_FUNC(min)(
             T const & a, T const & b, C pred = C{}, P proj = P{}) //
@@ -47,9 +47,9 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename C = less, typename P = identity)( //
-            requires input_range<Rng>  && //
-            indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>  && //
+        template(typename Rng, typename C = less, typename P = identity)( //
+            requires input_range<Rng> AND //
+            indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>> AND //
             indirectly_copyable_storable<iterator_t<Rng>, range_value_t<Rng> *>) //
         constexpr auto RANGES_FUNC(min)(Rng && rng, C pred = C{}, P proj = P{}) //
             -> range_value_t<Rng>
@@ -68,8 +68,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename T, typename C = less, typename P = identity)( //
-            requires copyable<T> &&
+        template(typename T, typename C = less, typename P = identity)( //
+            requires copyable<T> AND
                 indirect_strict_weak_order<C, projected<T const *, P>>) //
         constexpr auto RANGES_FUNC(min)(
             std::initializer_list<T> const && rng, C pred = C{}, P proj = P{}) //
@@ -87,6 +87,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

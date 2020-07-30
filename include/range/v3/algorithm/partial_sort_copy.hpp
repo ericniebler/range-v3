@@ -29,7 +29,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -38,7 +38,7 @@ namespace ranges
     RANGES_FUNC_BEGIN(partial_sort_copy)
 
         /// \brief function template \c partial_sort_copy
-        CPP_template(typename I,
+        template(typename I,
                  typename SI,
                  typename O,
                  typename SO,
@@ -84,7 +84,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename InRng,
+        template(typename InRng,
                  typename OutRng,
                  typename C = less,
                  typename PI = identity,
@@ -120,6 +120,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

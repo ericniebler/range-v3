@@ -34,7 +34,7 @@
 #include <range/v3/view/subrange.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -52,8 +52,8 @@ namespace ranges
         Rng rng_;
         difference_type_ n_;
 
-        CPP_template(bool Const = true)( //
-            requires Const && range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)( //
+            requires Const AND range<meta::const_if_c<Const, Rng>>) //
         auto get_begin_(std::true_type, std::true_type) const
             -> iterator_t<meta::const_if_c<Const, Rng>>
         {
@@ -93,14 +93,14 @@ namespace ranges
         {
             return ranges::end(rng_);
         }
-        CPP_template(bool Const = true)( //
-            requires Const && random_access_range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)( //
+            requires Const AND random_access_range<meta::const_if_c<Const, Rng>>) //
         auto begin() const -> iterator_t<meta::const_if_c<Const, Rng>>
         {
             return this->get_begin_(std::true_type{}, std::true_type{});
         }
-        CPP_template(bool Const = true)( //
-            requires Const && random_access_range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)( //
+            requires Const AND random_access_range<meta::const_if_c<Const, Rng>>) //
         auto end() const -> sentinel_t<meta::const_if_c<Const, Rng>>
         {
             return ranges::end(rng_);
@@ -144,8 +144,8 @@ namespace ranges
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
-            CPP_template(typename Rng)( //
-                requires borrowed_range<Rng> && sized_range<Rng>) //
+            template(typename Rng)( //
+                requires borrowed_range<Rng> AND sized_range<Rng>) //
             static auto impl_(Rng && rng, range_difference_t<Rng> n,
                               random_access_range_tag)
                 -> subrange<iterator_t<Rng>, sentinel_t<Rng>>
@@ -187,14 +187,14 @@ namespace ranges
         {
             using ranges::views::drop;
         }
-        CPP_template(typename Rng)( //
+        template(typename Rng)( //
             requires view_<Rng>)    //
             using drop_view = ranges::drop_view<Rng>;
     } // namespace cpp20
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::drop_view)
 

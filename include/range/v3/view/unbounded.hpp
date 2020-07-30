@@ -18,7 +18,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/interface.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -52,7 +52,7 @@ namespace ranges
     {
         struct unbounded_fn
         {
-            CPP_template(typename I)( //
+            template(typename I)( //
                 requires input_iterator<I>) //
             constexpr auto operator()(I it) const -> unbounded_view<I>
             {
@@ -67,7 +67,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::unbounded_view)
 

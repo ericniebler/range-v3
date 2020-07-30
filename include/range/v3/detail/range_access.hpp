@@ -26,7 +26,7 @@
 
 #include <range/v3/iterator/concepts.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -338,7 +338,7 @@ namespace ranges
             sized_sentinel_for_cursor<T, T> && //
             CPP_requires_ref(detail::random_access_cursor_, T);
 
-        CPP_template(class T)( //
+        template(class T)( //
             requires std::is_lvalue_reference<T>::value)
         void is_lvalue_reference(T&&);
 
@@ -369,6 +369,6 @@ namespace ranges
     /// \endcond
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

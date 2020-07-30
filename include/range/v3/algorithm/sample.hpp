@@ -29,7 +29,7 @@
 #include <range/v3/utility/random.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -73,7 +73,7 @@ namespace ranges
     RANGES_FUNC_BEGIN(sample)
 
         /// \brief function template \c sample
-        CPP_template(typename I,
+        template(typename I,
                  typename S,
                  typename O,
                  typename Gen = detail::default_random_engine &)( //
@@ -132,7 +132,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename I,
+        template(typename I,
                  typename S,
                  typename ORng,
                  typename Gen = detail::default_random_engine &)( //
@@ -170,9 +170,9 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename O, typename Gen = detail::default_random_engine &)( //
-            requires input_range<Rng> && weakly_incrementable<O> &&
-                indirectly_copyable<iterator_t<Rng>, O> &&
+        template(typename Rng, typename O, typename Gen = detail::default_random_engine &)( //
+            requires input_range<Rng> AND weakly_incrementable<O> AND
+                indirectly_copyable<iterator_t<Rng>, O> AND
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
                 (random_access_iterator<O> || forward_range<Rng> || sized_range<Rng>))
         auto RANGES_FUNC(sample)(Rng && rng,
@@ -198,7 +198,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename IRng,
+        template(typename IRng,
                  typename ORng,
                  typename Gen = detail::default_random_engine &)( //
             requires input_range<IRng> && range<ORng> &&
@@ -240,6 +240,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

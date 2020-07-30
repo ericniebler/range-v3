@@ -207,7 +207,7 @@
 //   void foo(A a, B b)
 //   {}
 #if CPP_CXX_CONCEPTS
-#define CPP_template(...) template<__VA_ARGS__> CPP_TEMPLATE_AUX_
+#define CPP_template(...) template<__VA_ARGS__ CPP_TEMPLATE_AUX_
 #define CPP_template_def CPP_template
 #define CPP_member
 #define CPP_ctor(TYPE) TYPE CPP_CTOR_IMPL_1_
@@ -217,7 +217,7 @@
 
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_AUX_(...)                                                  \
-    CPP_PP_CAT(                                                                 \
+    > CPP_PP_CAT(                                                               \
         CPP_TEMPLATE_AUX_,                                                      \
         CPP_TEMPLATE_AUX_WHICH_(__VA_ARGS__,))(__VA_ARGS__)                     \
     /**/
@@ -258,6 +258,9 @@
     (1u == sizeof(CPP_PP_CAT(NAME, _concept_)(                                  \
         (::concepts::detail::tag<__VA_ARGS__>*)nullptr)))                       \
     /**/
+
+/// INTERNAL ONLY
+#define CPP_TEMPLATE_AUX_ CPP_TEMPLATE_SFINAE_AUX_
 
 #endif
 

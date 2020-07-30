@@ -33,7 +33,7 @@ RANGES_DEPRECATED_HEADER(
     "This header is deprecated. Please switch to subrange in "
     "<range/v3/view/subrange.hpp>.")
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -164,15 +164,15 @@ namespace ranges
             requires constructible_from<I, X> && constructible_from<S, Y>)
           : compressed_pair<I, S>{detail::move(rng.first), detail::move(rng.second)}
         {}
-        CPP_template(typename X, typename Y)( //
-            requires assignable_from<I &, X> && assignable_from<S &, Y>) //
+        template(typename X, typename Y)( //
+            requires assignable_from<I &, X> AND assignable_from<S &, Y>) //
         auto operator=(iterator_range<X, Y> rng) -> iterator_range &
         {
             base().first() = std::move(rng.base()).first();
             base().second() = std::move(rng.base()).second();
             return *this;
         }
-        CPP_template(typename X, typename Y)(                      //
+        template(typename X, typename Y)(                      //
             requires convertible_to<I, X> && convertible_to<S, Y>) //
             constexpr
             operator std::pair<X, Y>() const
@@ -242,8 +242,8 @@ namespace ranges
                                  detail::move(rng).rng_.second,
                                  rng.size_}
         {}
-        CPP_template(typename X, typename Y)( //
-            requires assignable_from<I &, X> && assignable_from<S &, Y>) //
+        template(typename X, typename Y)( //
+            requires assignable_from<I &, X> AND assignable_from<S &, Y>) //
         auto operator=(sized_iterator_range<X, Y> rng)
             -> sized_iterator_range &
         {
@@ -263,14 +263,14 @@ namespace ranges
         {
             return size_;
         }
-        CPP_template(typename X, typename Y)(                      //
+        template(typename X, typename Y)(                      //
             requires convertible_to<I, X> && convertible_to<S, Y>) //
             constexpr
             operator std::pair<X, Y>() const
         {
             return rng_;
         }
-        CPP_template(typename X, typename Y)(                      //
+        template(typename X, typename Y)(                      //
             requires convertible_to<I, X> && convertible_to<S, Y>) //
             constexpr
             operator iterator_range<X, Y>() const
@@ -283,7 +283,7 @@ namespace ranges
         }
         // clang-format off
         /// Tuple-like access for `sized_iterator_range`
-        CPP_template(std::size_t N)( //
+        template(std::size_t N)( //
             requires (N < 2))        //
         friend constexpr auto CPP_auto_fun(get)(sized_iterator_range const &p)
         (
@@ -292,7 +292,7 @@ namespace ranges
         )
         // clang-format on
         /// \overload
-        CPP_template(std::size_t N)( //
+        template(std::size_t N)( //
             requires (N == 2)) //
         friend constexpr auto get(sized_iterator_range const & p) noexcept
             -> size_type
@@ -304,7 +304,7 @@ namespace ranges
     struct make_iterator_range_fn
     {
         /// \return `{first, last}`
-        CPP_template(typename I, typename S)( //
+        template(typename I, typename S)( //
             requires sentinel_for<S, I>) //
         constexpr auto operator()(I first, S last) const
             -> iterator_range<I, S>
@@ -313,7 +313,7 @@ namespace ranges
         }
 
         /// \return `{first, last, size}`
-        CPP_template(typename I, typename S)( //
+        template(typename I, typename S)( //
             requires sentinel_for<S, I>) //
         constexpr auto operator()(I first, S last, detail::iter_size_t<I> sz) const
             -> sized_iterator_range<I, S>
@@ -381,6 +381,6 @@ namespace std
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

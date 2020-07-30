@@ -20,7 +20,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -28,8 +28,8 @@ namespace ranges
     /// @{
     struct iota_fn
     {
-        CPP_template(typename O, typename S, typename T)( //
-            requires output_iterator<O, T const &> && sentinel_for<S, O> &&
+        template(typename O, typename S, typename T)( //
+            requires output_iterator<O, T const &> AND sentinel_for<S, O> AND
                 weakly_incrementable<T>) //
         auto operator()(O first, S last, T val) const -> O
         {
@@ -38,8 +38,8 @@ namespace ranges
             return first;
         }
 
-        CPP_template(typename Rng, typename T)( //
-            requires output_range<Rng, T const &> && weakly_incrementable<T>) //
+        template(typename Rng, typename T)( //
+            requires output_range<Rng, T const &> AND weakly_incrementable<T>) //
         auto operator()(Rng && rng, T val) const //
             -> borrowed_iterator_t<Rng>
         {
@@ -51,6 +51,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

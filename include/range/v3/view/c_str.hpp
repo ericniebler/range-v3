@@ -22,7 +22,7 @@
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/view/subrange.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -63,7 +63,7 @@ namespace ranges
         struct c_str_fn
         {
             // Fixed-length
-            CPP_template(typename Char, std::size_t N)( //
+            template(typename Char, std::size_t N)( //
                 requires detail::is_char_type<Char>::value) //
             auto operator()(Char (&sz)[N]) const -> ranges::subrange<Char *>
             {
@@ -71,7 +71,7 @@ namespace ranges
             }
 
             // Null-terminated
-            CPP_template(typename Char)( //
+            template(typename Char)( //
                 requires detail::is_char_type<Char>::value) //
             auto operator()(Char * sz) const volatile
                 -> ranges::delimit_view<
@@ -89,6 +89,6 @@ namespace ranges
     } // namespace views
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

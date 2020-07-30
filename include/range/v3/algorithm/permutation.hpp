@@ -38,7 +38,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -99,7 +99,7 @@ namespace ranges
     RANGES_FUNC_BEGIN(is_permutation)
 
         /// \brief function template \c is_permutation
-        CPP_template(typename I1,
+        template(typename I1,
                      typename S1,
                      typename I2,
                      typename C = equal_to,
@@ -158,7 +158,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename I1,
+        template(typename I1,
                      typename S1,
                      typename I2,
                      typename S2,
@@ -200,7 +200,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng1,
+        template(typename Rng1,
                      typename I2Ref,
                      typename C = equal_to,
                      typename P1 = identity,
@@ -228,7 +228,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng1,
+        template(typename Rng1,
                      typename Rng2,
                      typename C = equal_to,
                      typename P1 = identity,
@@ -264,8 +264,8 @@ namespace ranges
     RANGES_FUNC_BEGIN(next_permutation)
 
         /// \brief function template \c next_permutation
-        CPP_template(typename I, typename S, typename C = less, typename P = identity)( //
-            requires bidirectional_iterator<I> && sentinel_for<S, I>  && //
+        template(typename I, typename S, typename C = less, typename P = identity)( //
+            requires bidirectional_iterator<I> AND sentinel_for<S, I> AND //
                 sortable<I, C, P>) //
         bool RANGES_FUNC(next_permutation)(I first, S end_, C pred = C{}, P proj = P{}) //
         {
@@ -295,8 +295,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename C = less, typename P = identity)( //
-            requires bidirectional_range<Rng> && sortable<iterator_t<Rng>, C, P>) //
+        template(typename Rng, typename C = less, typename P = identity)( //
+            requires bidirectional_range<Rng> AND sortable<iterator_t<Rng>, C, P>) //
         bool RANGES_FUNC(next_permutation)(Rng && rng, C pred = C{}, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
@@ -307,8 +307,8 @@ namespace ranges
     RANGES_FUNC_BEGIN(prev_permutation)
 
         /// \brief function template \c prev_permutation
-        CPP_template(typename I, typename S, typename C = less, typename P = identity)( //
-            requires bidirectional_iterator<I> && sentinel_for<S, I>  && //
+        template(typename I, typename S, typename C = less, typename P = identity)( //
+            requires bidirectional_iterator<I> AND sentinel_for<S, I> AND //
                 sortable<I, C, P>) //
         bool RANGES_FUNC(prev_permutation)(I first, S end_, C pred = C{}, P proj = P{}) //
         {
@@ -338,8 +338,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename C = less, typename P = identity)( //
-            requires bidirectional_range<Rng> && sortable<iterator_t<Rng>, C, P>) //
+        template(typename Rng, typename C = less, typename P = identity)( //
+            requires bidirectional_range<Rng> AND sortable<iterator_t<Rng>, C, P>) //
         bool RANGES_FUNC(prev_permutation)(Rng && rng, C pred = C{}, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
@@ -356,6 +356,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

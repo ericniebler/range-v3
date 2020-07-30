@@ -26,7 +26,7 @@
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -45,8 +45,8 @@ namespace ranges
         /// \pre `R` and `projected<I, P>` model the `indirect_strict_weak_order<R,
         /// projected<I, P>>` concept
         ///
-        CPP_template(typename I, typename S, typename R = less, typename P = identity)( //
-            requires forward_iterator<I> && sentinel_for<S, I>  && //
+        template(typename I, typename S, typename R = less, typename P = identity)( //
+            requires forward_iterator<I> AND sentinel_for<S, I> AND //
             indirect_strict_weak_order<R, projected<I, P>>) //
         auto RANGES_FUNC(is_sorted)(I first, S last, R rel = R{}, P proj = P{})
             -> bool
@@ -56,8 +56,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename R = less, typename P = identity)( //
-            requires forward_range<Rng>  && //
+        template(typename Rng, typename R = less, typename P = identity)( //
+            requires forward_range<Rng> AND //
             indirect_strict_weak_order<R, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(is_sorted)(Rng && rng, R rel = R{}, P proj = P{}) //
             -> bool
@@ -74,6 +74,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

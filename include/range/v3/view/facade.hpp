@@ -27,7 +27,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/view/interface.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -91,7 +91,7 @@ namespace ranges
         /// otherwise, let `b` be `d.begin_cursor()`. Let `B` be the type of
         /// `b`.
         /// \return `ranges::basic_iterator<B>(b)`
-        CPP_template(typename D = Derived)( //
+        template(typename D = Derived)( //
             requires same_as<D, Derived>) //
         constexpr auto begin() -> detail::facade_iterator_t<D>
         {
@@ -99,7 +99,7 @@ namespace ranges
                 range_access::begin_cursor(*static_cast<Derived *>(this))};
         }
         /// \overload
-        CPP_template(typename D = Derived)( //
+        template(typename D = Derived)( //
             requires same_as<D, Derived>) //
         constexpr auto begin() const -> detail::facade_iterator_t<D const>
         {
@@ -112,7 +112,7 @@ namespace ranges
         /// `e`.
         /// \return `ranges::basic_iterator<E>(e)` if `E` is the same
         /// as `B` computed above for `begin()`; otherwise, return `e`.
-        CPP_template(typename D = Derived)( //
+        template(typename D = Derived)( //
             requires same_as<D, Derived>) //
         constexpr auto end() -> detail::facade_sentinel_t<D>
         {
@@ -120,7 +120,7 @@ namespace ranges
                 range_access::end_cursor(*static_cast<Derived *>(this)));
         }
         /// \overload
-        CPP_template(typename D = Derived)( //
+        template(typename D = Derived)( //
             requires same_as<D, Derived>) //
         constexpr auto end() const -> detail::facade_sentinel_t<D const>
         {
@@ -132,6 +132,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

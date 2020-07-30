@@ -34,7 +34,7 @@
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -213,9 +213,9 @@ namespace ranges
             {
                 satisfy();
             }
-            CPP_template(bool Other)( //
-                requires Const && CPP_NOT(Other) &&
-                convertible_to<iterator_t<Rng>, iterator_t<COuter>> &&
+            template(bool Other)( //
+                requires Const AND CPP_NOT(Other) AND
+                convertible_to<iterator_t<Rng>, iterator_t<COuter>> AND
                 convertible_to<iterator_t<range_reference_t<Rng>>,
                                iterator_t<CInner>>) //
             constexpr cursor(cursor<Other> that)
@@ -304,8 +304,8 @@ namespace ranges
             return {this, ranges::begin};
         }
 
-        CPP_template(bool Const = true)( //
-            requires Const && input_range<meta::const_if_c<Const, Rng>> &&
+        template(bool Const = true)( //
+            requires Const AND input_range<meta::const_if_c<Const, Rng>> AND
                 std::is_reference<range_reference_t<meta::const_if_c<Const, Rng>>>::value) //
         constexpr auto begin_cursor() const -> cursor<Const>
         {
@@ -487,9 +487,9 @@ namespace ranges
         // Don't forget to update views::for_each whenever this set
         // of concepts changes
         // clang-format off
-        CPP_template(typename Rng)(
+        template(typename Rng)(
         concept (joinable_range_)(Rng),
-            input_range<range_reference_t<Rng>> CPP_and
+            input_range<range_reference_t<Rng>> AND
             (std::is_reference<range_reference_t<Rng>>::value ||
                 view_<range_reference_t<Rng>>)
         );
@@ -498,18 +498,18 @@ namespace ranges
             viewable_range<Rng> && input_range<Rng> &&
             CPP_concept_ref(views::joinable_range_, Rng);
 
-        CPP_template(typename Rng, typename ValRng)(
+        template(typename Rng, typename ValRng)(
         concept (joinable_with_range_)(Rng, ValRng),
             common_with<
                 range_value_t<ValRng>,
-                range_value_t<range_reference_t<Rng>>> CPP_and
+                range_value_t<range_reference_t<Rng>>> AND
             semiregular<
                 common_type_t<
                     range_value_t<ValRng>,
-                    range_value_t<range_reference_t<Rng>>>> CPP_and
+                    range_value_t<range_reference_t<Rng>>>> AND
             common_reference_with<
                 range_reference_t<ValRng>,
-                range_reference_t<range_reference_t<Rng>>> CPP_and
+                range_reference_t<range_reference_t<Rng>>> AND
             common_reference_with<
                 range_rvalue_reference_t<ValRng>,
                 range_rvalue_reference_t<range_reference_t<Rng>>>
@@ -524,7 +524,7 @@ namespace ranges
 
         struct cpp20_join_fn
         {
-            CPP_template(typename Rng)( //
+            template(typename Rng)( //
                 requires joinable_range<Rng>) //
             auto operator()(Rng && rng) const -> join_view<all_t<Rng>>
             {
@@ -540,7 +540,7 @@ namespace ranges
         public:
             using cpp20_join_fn::operator();
 
-            CPP_template(typename Rng)( //
+            template(typename Rng)( //
                 requires joinable_with_range<Rng, single_view<inner_value_t<Rng>>>) //
             auto operator()(Rng && rng, inner_value_t<Rng> v) const
                 -> join_with_view<all_t<Rng>,
@@ -549,7 +549,7 @@ namespace ranges
                 return {all(static_cast<Rng &&>(rng)), single(std::move(v))};
             }
 
-            CPP_template(typename Rng, typename ValRng)( //
+            template(typename Rng, typename ValRng)( //
                 requires joinable_with_range<Rng, ValRng>) //
             auto operator()(Rng && rng, ValRng && val) const
                 -> join_with_view<all_t<Rng>, all_t<ValRng>>
@@ -597,12 +597,12 @@ namespace ranges
     /// @}
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng)(              //
+    template(typename Rng)(              //
         requires views::joinable_range<Rng>) //
         explicit join_view(Rng &&)
             ->join_view<views::all_t<Rng>>;
 
-    CPP_template(typename Rng, typename ValRng)(          //
+    template(typename Rng, typename ValRng)(          //
         requires views::joinable_with_range<Rng, ValRng>) //
         explicit join_with_view(Rng &&, ValRng &&)
             ->join_with_view<views::all_t<Rng>, views::all_t<ValRng>>;
@@ -615,16 +615,16 @@ namespace ranges
             RANGES_INLINE_VARIABLE(
                 ranges::views::view_closure<ranges::views::cpp20_join_fn>, join)
         }
-        CPP_template(typename Rng)( //
-            requires input_range<Rng> && view_<Rng> &&
-                input_range<iter_reference_t<iterator_t<Rng>>> &&
+        template(typename Rng)( //
+            requires input_range<Rng> AND view_<Rng> AND
+                input_range<iter_reference_t<iterator_t<Rng>>> AND
             (std::is_reference<iter_reference_t<iterator_t<Rng>>>::value ||
              view_<iter_value_t<iterator_t<Rng>>>)) //
             using join_view = ranges::join_view<Rng>;
     } // namespace cpp20
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::join_view)

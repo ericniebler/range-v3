@@ -27,7 +27,7 @@
 
 #include <range/v3/utility/get.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
@@ -171,25 +171,25 @@ namespace ranges
           : value{}
         {}
 #if defined(__cpp_conditional_explicit) && __cpp_conditional_explicit > 0
-        CPP_template(typename E)( //
-            requires (!same_as<box, detail::decay_t<E>>) CPP_and
+        template(typename E)( //
+            requires (!same_as<box, detail::decay_t<E>>) AND
                 constructible_from<Element, E>)
         constexpr explicit(!convertible_to<E, Element>) box(E && e)
             noexcept(std::is_nothrow_constructible<Element, E>::value) //
           : value(static_cast<E &&>(e))
         {}
 #else
-        CPP_template(typename E)( //
-            requires (!same_as<box, detail::decay_t<E>>) CPP_and
-                constructible_from<Element, E> CPP_and
+        template(typename E)( //
+            requires (!same_as<box, detail::decay_t<E>>) AND
+                constructible_from<Element, E> AND
                 convertible_to<E, Element>)
         constexpr box(E && e)
             noexcept(std::is_nothrow_constructible<Element, E>::value)
           : value(static_cast<E &&>(e))
         {}
-        CPP_template(typename E)( //
-            requires (!same_as<box, detail::decay_t<E>>) CPP_and
-                constructible_from<Element, E> CPP_and
+        template(typename E)( //
+            requires (!same_as<box, detail::decay_t<E>>) AND
+                constructible_from<Element, E> AND
                 (!convertible_to<E, Element>))
         constexpr explicit box(E && e)
             noexcept(std::is_nothrow_constructible<Element, E>::value) //
@@ -226,25 +226,25 @@ namespace ranges
           : Element{}
         {}
 #if defined(__cpp_conditional_explicit) && __cpp_conditional_explicit > 0
-        CPP_template(typename E)( //
-            requires (!same_as<box, detail::decay_t<E>>) CPP_and
+        template(typename E)( //
+            requires (!same_as<box, detail::decay_t<E>>) AND
                 constructible_from<Element, E>)
         constexpr explicit(!convertible_to<E, Element>) box(E && e)
             noexcept(std::is_nothrow_constructible<Element, E>::value) //
           : Element(static_cast<E &&>(e))
         {}
 #else
-        CPP_template(typename E)( //
-            requires (!same_as<box, detail::decay_t<E>>) CPP_and
-                constructible_from<Element, E> CPP_and
+        template(typename E)( //
+            requires (!same_as<box, detail::decay_t<E>>) AND
+                constructible_from<Element, E> AND
                 convertible_to<E, Element>)
         constexpr box(E && e)
             noexcept(std::is_nothrow_constructible<Element, E>::value) //
           : Element(static_cast<E &&>(e))
         {}
-        CPP_template(typename E)( //
-            requires (!same_as<box, detail::decay_t<E>>) CPP_and
-                constructible_from<Element, E> CPP_and
+        template(typename E)( //
+            requires (!same_as<box, detail::decay_t<E>>) AND
+                constructible_from<Element, E> AND
                 (!convertible_to<E, Element>))
         constexpr explicit box(E && e)
             noexcept(std::is_nothrow_constructible<Element, E>::value) //
@@ -279,21 +279,21 @@ namespace ranges
         constexpr box() noexcept = default;
 
 #if defined(__cpp_conditional_explicit) && __cpp_conditional_explicit > 0
-        CPP_template(typename E)( //
-            requires (!same_as<box, detail::decay_t<E>>) CPP_and
+        template(typename E)( //
+            requires (!same_as<box, detail::decay_t<E>>) AND
                 constructible_from<Element, E>)
         constexpr explicit(!convertible_to<E, Element>) box(E &&) noexcept
         {}
 #else
-        CPP_template(typename E)( //
-            requires (!same_as<box, detail::decay_t<E>>) CPP_and
-                constructible_from<Element, E> CPP_and
+        template(typename E)( //
+            requires (!same_as<box, detail::decay_t<E>>) AND
+                constructible_from<Element, E> AND
                 convertible_to<E, Element>)
         constexpr box(E &&) noexcept
         {}
-        CPP_template(typename E)( //
-            requires (!same_as<box, detail::decay_t<E>>) CPP_and
-                constructible_from<Element, E> CPP_and
+        template(typename E)( //
+            requires (!same_as<box, detail::decay_t<E>>) AND
+                constructible_from<Element, E> AND
                 (!convertible_to<E, Element>))
         constexpr explicit box(E &&) noexcept
         {}
@@ -365,6 +365,6 @@ namespace ranges
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

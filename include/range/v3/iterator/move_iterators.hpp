@@ -22,7 +22,7 @@
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -51,7 +51,7 @@ namespace ranges
             requires convertible_to<O, I>)
           : current_(i.base())
         {}
-        CPP_template(typename O)( //
+        template(typename O)( //
             requires convertible_to<O, I>) //
         auto operator=(move_iterator<O> const & i) -> move_iterator &
         {
@@ -194,7 +194,7 @@ namespace ranges
 
     struct make_move_iterator_fn
     {
-        CPP_template(typename I)( //
+        template(typename I)( //
             requires input_iterator<I>) //
         constexpr auto operator()(I it) const -> move_iterator<I>
         {
@@ -222,7 +222,7 @@ namespace ranges
             requires convertible_to<OS, S>)
           : sent_(that.base())
         {}
-        CPP_template(typename OS)( //
+        template(typename OS)( //
             requires convertible_to<OS, S>) //
         auto operator=(move_sentinel<OS> const & that) -> move_sentinel &
         {
@@ -266,15 +266,15 @@ namespace ranges
 
     struct make_move_sentinel_fn
     {
-        CPP_template(typename I)( //
+        template(typename I)( //
             requires input_iterator<I>) //
         constexpr auto operator()(I i) const -> move_iterator<I>
         {
             return move_iterator<I>{detail::move(i)};
         }
 
-        CPP_template(typename S)( //
-            requires semiregular<S> && (!input_iterator<S>)) //
+        template(typename S)( //
+            requires semiregular<S> AND (!input_iterator<S>)) //
         constexpr auto operator()(S s) const -> move_sentinel<S>
         {
             return move_sentinel<S>{detail::move(s)};
@@ -336,13 +336,13 @@ namespace ranges
             {
                 ++it_;
             }
-            CPP_template(typename T)( //
+            template(typename T)( //
                 requires indirectly_writable<I, aux::move_t<T>>) //
             void write(T && t) noexcept(noexcept(*it_ = std::move(t)))
             {
                 *it_ = std::move(t);
             }
-            CPP_template(typename T)( //
+            template(typename T)( //
                 requires indirectly_writable<I, aux::move_t<T>>) //
             void write(T && t) const noexcept(noexcept(*it_ = std::move(t)))
             {
@@ -380,8 +380,8 @@ namespace ranges
             {
                 return that.it_ - it_;
             }
-            CPP_template(typename II = I const)( //
-                requires same_as<I const, II> && indirectly_readable<II>) //
+            template(typename II = I const)( //
+                requires same_as<I const, II> AND indirectly_readable<II>) //
             constexpr auto move() const noexcept(has_nothrow_iter_move_v<II>)
                 -> iter_rvalue_reference_t<II>
             {
@@ -435,6 +435,6 @@ namespace std
 RANGES_DIAGNOSTIC_POP
 /// \endcond
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_ITERATOR_MOVE_ITERATORS_HPP

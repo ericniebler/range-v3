@@ -27,7 +27,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -37,8 +37,8 @@ namespace ranges
     {
         struct unique_base_fn
         {
-            CPP_template(typename Rng, typename C = equal_to)( //
-                requires viewable_range<Rng> && forward_range<Rng>  && //
+            template(typename Rng, typename C = equal_to)( //
+                requires viewable_range<Rng> AND forward_range<Rng> AND //
                     indirect_relation<C, iterator_t<Rng>>) //
             constexpr auto operator()(Rng && rng, C pred = {}) const
                 -> adjacent_filter_view<all_t<Rng>, logical_negate<C>>
@@ -67,6 +67,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

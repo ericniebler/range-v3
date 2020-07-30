@@ -26,7 +26,7 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -137,6 +137,6 @@ namespace ranges
     } // namespace cpp20
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

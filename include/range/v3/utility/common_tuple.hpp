@@ -28,7 +28,7 @@
 #include <range/v3/utility/common_type.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -119,7 +119,7 @@ namespace ranges
             requires default_constructible<std::tuple<Ts...>>)
           : common_tuple::forward_tuple_interface{}
         {}
-        CPP_template(typename... Us)(                                              //
+        template(typename... Us)(                                              //
             requires constructible_from<detail::args<Ts...>, detail::args<Us...>>) //
             explicit common_tuple(Us &&... us) noexcept(
                 meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
@@ -178,7 +178,7 @@ namespace ranges
         }
 
         // Assignment
-        CPP_template(typename... Us)( //
+        template(typename... Us)( //
             requires std::is_assignable<detail::args<Ts...> &, detail::rargs<Us...>>::value) //
         auto operator=(std::tuple<Us...> & that) noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts &, Us &>::value...>::value)
@@ -187,7 +187,7 @@ namespace ranges
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
         }
-        CPP_template(typename... Us)( //
+        template(typename... Us)( //
             requires std::is_assignable<detail::args<Ts...> &,
                                         detail::rargs<Us const...>>::value) //
         auto operator=(std::tuple<Us...> const & that) noexcept(
@@ -197,7 +197,7 @@ namespace ranges
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
         }
-        CPP_template(typename... Us)( //
+        template(typename... Us)( //
             requires std::is_assignable<detail::args<Ts...> &, detail::args<Us...>>::value) //
         auto operator=(std::tuple<Us...> && that) noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts &, Us>::value...>::value)
@@ -207,7 +207,7 @@ namespace ranges
             return *this;
         }
 
-        CPP_template(typename... Us)( //
+        template(typename... Us)( //
             requires std::is_assignable<detail::args<Ts const...> &,
                                         detail::rargs<Us...>>::value)
         auto operator=(std::tuple<Us...> & that) const noexcept(
@@ -217,7 +217,7 @@ namespace ranges
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
         }
-        CPP_template(typename... Us)( //
+        template(typename... Us)( //
                 requires std::is_assignable<detail::args<Ts const...> &,
                                             detail::rargs<Us const...>>::value)
         auto operator=(std::tuple<Us...> const & that) const
@@ -228,7 +228,7 @@ namespace ranges
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
         }
-        CPP_template(typename... Us)( //
+        template(typename... Us)( //
             requires std::is_assignable<detail::args<Ts const...> &,
                                         detail::args<Us...>>::value)
         auto operator=(std::tuple<Us...> && that) const noexcept(
@@ -240,7 +240,7 @@ namespace ranges
         }
 
         // Conversion
-        CPP_template(typename... Us)(                                               //
+        template(typename... Us)(                                               //
             requires constructible_from<detail::args<Us...>, detail::rargs<Ts...>>) //
             operator std::tuple<Us...>() &
             noexcept(
@@ -249,7 +249,7 @@ namespace ranges
             return detail::to_std_tuple<Us...>(
                 *this, meta::make_index_sequence<sizeof...(Ts)>{});
         }
-        CPP_template(typename... Us)( //
+        template(typename... Us)( //
             requires constructible_from<detail::args<Us...>,
                                         detail::rargs<Ts const...>>) //
         operator std::tuple<Us...>() const & noexcept(
@@ -258,7 +258,7 @@ namespace ranges
             return detail::to_std_tuple<Us...>(
                 *this, meta::make_index_sequence<sizeof...(Ts)>{});
         }
-        CPP_template(typename... Us)(                                              //
+        template(typename... Us)(                                              //
             requires constructible_from<detail::args<Us...>, detail::args<Ts...>>) //
             operator std::tuple<Us...>() &&
             noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts>::value...>::value)
@@ -362,7 +362,7 @@ namespace ranges
         {}
 
         // Conversion
-        CPP_template(typename F2, typename S2)(                                  //
+        template(typename F2, typename S2)(                                  //
             requires constructible_from<F2, F &> && constructible_from<S2, S &>) //
             operator std::pair<F2, S2>() &
             noexcept(std::is_nothrow_constructible<F2, F &>::value &&
@@ -370,8 +370,8 @@ namespace ranges
         {
             return {this->first, this->second};
         }
-        CPP_template(typename F2, typename S2)( //
-            requires constructible_from<F2, F const &> &&
+        template(typename F2, typename S2)( //
+            requires constructible_from<F2, F const &> AND
                 constructible_from<S2, S const &>) //
         operator std::pair<F2, S2>() const & noexcept(
             std::is_nothrow_constructible<F2, F const &>::value &&
@@ -379,7 +379,7 @@ namespace ranges
         {
             return {this->first, this->second};
         }
-        CPP_template(typename F2, typename S2)(                              //
+        template(typename F2, typename S2)(                              //
             requires constructible_from<F2, F> && constructible_from<S2, S>) //
             operator std::pair<F2, S2>() &&
             noexcept(std::is_nothrow_constructible<F2, F>::value &&
@@ -389,8 +389,8 @@ namespace ranges
         }
 
         // Assignment
-        CPP_template(typename F2, typename S2)( //
-            requires assignable_from<F &, F2 &> && assignable_from<S &, S2 &>) //
+        template(typename F2, typename S2)( //
+            requires assignable_from<F &, F2 &> AND assignable_from<S &, S2 &>) //
         auto operator=(std::pair<F2, S2> & that) noexcept(
             std::is_nothrow_assignable<F &, F2 &>::value &&
                 std::is_nothrow_assignable<S &, S2 &>::value)
@@ -400,8 +400,8 @@ namespace ranges
             this->second = that.second;
             return *this;
         }
-        CPP_template(typename F2, typename S2)( //
-            requires assignable_from<F &, F2 const &> &&
+        template(typename F2, typename S2)( //
+            requires assignable_from<F &, F2 const &> AND
                     assignable_from<S &, S2 const &>) //
         auto operator=(std::pair<F2, S2> const & that) noexcept(
             std::is_nothrow_assignable<F &, F2 const &>::value &&
@@ -412,8 +412,8 @@ namespace ranges
             this->second = that.second;
             return *this;
         }
-        CPP_template(typename F2, typename S2)( //
-            requires assignable_from<F &, F2> && assignable_from<S &, S2>) //
+        template(typename F2, typename S2)( //
+            requires assignable_from<F &, F2> AND assignable_from<S &, S2>) //
         auto operator=(std::pair<F2, S2> && that) noexcept(
             std::is_nothrow_assignable<F &, F2>::value &&
                 std::is_nothrow_assignable<S &, S2>::value) -> common_pair &
@@ -423,8 +423,8 @@ namespace ranges
             return *this;
         }
 
-        CPP_template(typename F2, typename S2)( //
-            requires assignable_from<F const &, F2 &> &&
+        template(typename F2, typename S2)( //
+            requires assignable_from<F const &, F2 &> AND
                         assignable_from<S const &, S2 &>) //
         auto operator=(std::pair<F2, S2> & that) const
             noexcept(std::is_nothrow_assignable<F const &, F2 &>::value &&
@@ -435,8 +435,8 @@ namespace ranges
             this->second = that.second;
             return *this;
         }
-        CPP_template(typename F2, typename S2)( //
-            requires assignable_from<F const &, F2 const &> &&
+        template(typename F2, typename S2)( //
+            requires assignable_from<F const &, F2 const &> AND
                         assignable_from<S const &, S2 const &>) //
         auto operator=(std::pair<F2, S2> const & that) const
             noexcept(std::is_nothrow_assignable<F const &, F2 const &>::value &&
@@ -447,8 +447,8 @@ namespace ranges
             this->second = that.second;
             return *this;
         }
-        CPP_template(typename F2, typename S2)( //
-            requires assignable_from<F const &, F2> && assignable_from<S const &, S2>) //
+        template(typename F2, typename S2)( //
+            requires assignable_from<F const &, F2> AND assignable_from<S const &, S2>) //
         auto operator=(std::pair<F2, S2> && that) const noexcept(
             std::is_nothrow_assignable<F const &, F2 &&>::value &&
                 std::is_nothrow_assignable<S const &, S2 &&>::value)
@@ -461,43 +461,43 @@ namespace ranges
     };
 
     // Logical operators
-    CPP_template(typename F1, typename S1, typename F2, typename S2)( //
-        requires equality_comparable_with<F1, F2> && equality_comparable_with<S1, S2>) //
+    template(typename F1, typename S1, typename F2, typename S2)( //
+        requires equality_comparable_with<F1, F2> AND equality_comparable_with<S1, S2>) //
     auto operator==(common_pair<F1, S1> const & a, common_pair<F2, S2> const & b)
         -> bool
     {
         return a.first == b.first && a.second == b.second;
     }
-    CPP_template(typename F1, typename S1, typename F2, typename S2)( //
-        requires equality_comparable_with<F1, F2> && equality_comparable_with<S1, S2>) //
+    template(typename F1, typename S1, typename F2, typename S2)( //
+        requires equality_comparable_with<F1, F2> AND equality_comparable_with<S1, S2>) //
     auto operator==(common_pair<F1, S1> const & a, std::pair<F2, S2> const & b)
         -> bool
     {
         return a.first == b.first && a.second == b.second;
     }
-    CPP_template(typename F1, typename S1, typename F2, typename S2)( //
-        requires equality_comparable_with<F1, F2> && equality_comparable_with<S1, S2>) //
+    template(typename F1, typename S1, typename F2, typename S2)( //
+        requires equality_comparable_with<F1, F2> AND equality_comparable_with<S1, S2>) //
     auto operator==(std::pair<F1, S1> const & a, common_pair<F2, S2> const & b)
         -> bool
     {
         return a.first == b.first && a.second == b.second;
     }
-    CPP_template(typename F1, typename S1, typename F2, typename S2)( //
-        requires totally_ordered_with<F1, F2> && totally_ordered_with<S1, S2>) //
+    template(typename F1, typename S1, typename F2, typename S2)( //
+        requires totally_ordered_with<F1, F2> AND totally_ordered_with<S1, S2>) //
     auto operator<(common_pair<F1, S1> const & a, common_pair<F2, S2> const & b)
         -> bool
     {
         return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
     }
-    CPP_template(typename F1, typename S1, typename F2, typename S2)( //
-        requires totally_ordered_with<F1, F2> && totally_ordered_with<S1, S2>) //
+    template(typename F1, typename S1, typename F2, typename S2)( //
+        requires totally_ordered_with<F1, F2> AND totally_ordered_with<S1, S2>) //
     auto operator<(std::pair<F1, S1> const & a, common_pair<F2, S2> const & b)
         -> bool
     {
         return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
     }
-    CPP_template(typename F1, typename S1, typename F2, typename S2)( //
-        requires totally_ordered_with<F1, F2> && totally_ordered_with<S1, S2>) //
+    template(typename F1, typename S1, typename F2, typename S2)( //
+        requires totally_ordered_with<F1, F2> AND totally_ordered_with<S1, S2>) //
     auto operator<(common_pair<F1, S1> const & a, std::pair<F2, S2> const & b)
         -> bool
     {
@@ -803,6 +803,6 @@ RANGES_END_NAMESPACE_VERSION
 RANGES_END_NAMESPACE_STD
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

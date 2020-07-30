@@ -40,7 +40,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -48,9 +48,9 @@ namespace ranges
     {
         struct merge_n_with_buffer_fn
         {
-            CPP_template(typename I, typename B, typename C = less, typename P = identity)( //
+            template(typename I, typename B, typename C = less, typename P = identity)( //
                 requires same_as<iter_common_reference_t<I>,
-                                     iter_common_reference_t<B>> &&
+                                     iter_common_reference_t<B>> AND
                         indirectly_copyable<I, B> && mergeable<B, I, I, C, P, P>) //
             auto operator()(I begin0, iter_difference_t<I> n0, I begin1,
                             iter_difference_t<I> n1, B buff, C r = C{}, P p = P{}) const
@@ -65,6 +65,6 @@ namespace ranges
     } // namespace aux
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

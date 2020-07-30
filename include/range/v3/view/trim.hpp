@@ -33,7 +33,7 @@
 #include <range/v3/view/interface.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -102,18 +102,18 @@ namespace ranges
     {
         struct trim_base_fn
         {
-            CPP_template(typename Rng, typename Pred)( //
-                requires viewable_range<Rng> && bidirectional_range<Rng>  && //
-                    indirect_unary_predicate<Pred, iterator_t<Rng>>  && //
+            template(typename Rng, typename Pred)( //
+                requires viewable_range<Rng> AND bidirectional_range<Rng> AND //
+                    indirect_unary_predicate<Pred, iterator_t<Rng>> AND //
                         common_range<Rng>) //
             constexpr auto operator()(Rng && rng, Pred pred) const //
                 -> trim_view<all_t<Rng>, Pred>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
-            CPP_template(typename Rng, typename Pred, typename Proj)( //
-                requires viewable_range<Rng> && bidirectional_range<Rng>  && //
-                    indirect_unary_predicate<composed<Pred, Proj>, iterator_t<Rng>>  && //
+            template(typename Rng, typename Pred, typename Proj)( //
+                requires viewable_range<Rng> AND bidirectional_range<Rng> AND //
+                    indirect_unary_predicate<composed<Pred, Proj>, iterator_t<Rng>> AND //
                         common_range<Rng>) //
             constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
                 -> trim_view<all_t<Rng>, composed<Pred, Proj>>
@@ -154,7 +154,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::trim_view)
 

@@ -20,7 +20,7 @@
 #include <range/v3/iterator/basic_iterator.hpp>
 #include <range/v3/iterator/concepts.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -79,7 +79,7 @@ namespace ranges
             {
                 return it_;
             }
-            CPP_template(typename J)( //
+            template(typename J)( //
                 requires sentinel_for<J, I>) //
             constexpr auto equal(reverse_cursor<J> const & that) const
                 -> bool
@@ -100,7 +100,7 @@ namespace ranges
             {
                 it_ -= n;
             }
-            CPP_template(typename J)( //
+            template(typename J)( //
                 requires sized_sentinel_for<J, I>) //
             constexpr auto distance_to(reverse_cursor<J> const & that) const
                 -> iter_difference_t<I>
@@ -129,7 +129,7 @@ namespace ranges
 
     struct make_reverse_iterator_fn
     {
-        CPP_template(typename I)( //
+        template(typename I)( //
             requires bidirectional_iterator<I>) //
         constexpr auto operator()(I i) const -> reverse_iterator<I>
         {
@@ -147,6 +147,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_ITERATOR_REVERSE_ITERATOR_HPP

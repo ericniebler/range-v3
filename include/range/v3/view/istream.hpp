@@ -23,7 +23,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -99,8 +99,8 @@ namespace ranges
     namespace _istream_
     {
         /// \endcond
-        CPP_template(typename Val)( //
-            requires copy_constructible<Val> && default_constructible<Val>) //
+        template(typename Val)( //
+            requires copy_constructible<Val> AND default_constructible<Val>) //
         inline auto istream(std::istream & sin) -> istream_view<Val>
         {
             return istream_view<Val>{sin};
@@ -118,6 +118,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

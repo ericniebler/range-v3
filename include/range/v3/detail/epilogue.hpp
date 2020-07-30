@@ -10,9 +10,12 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGES_DISABLE_WARNINGS_INCLUDED
-#error "Re-enabling warnings, but never disabled them!"
+#ifndef RANGES_PROLOGUE_INCLUDED
+#error "Including epilogue, but prologue not included!"
 #endif
-#undef RANGES_DISABLE_WARNINGS_INCLUDED
+#undef RANGES_PROLOGUE_INCLUDED
+
+#undef template
+#undef AND
 
 RANGES_DIAGNOSTIC_POP

@@ -34,7 +34,7 @@
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -365,8 +365,8 @@ namespace ranges
         // Out: range<range<T>>, where each inner range has $n$ elements.
         struct sliding_base_fn
         {
-            CPP_template(typename Rng)( //
-                requires viewable_range<Rng> && forward_range<Rng>) //
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND forward_range<Rng>) //
             constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 -> sliding_view<all_t<Rng>>
             {
@@ -393,6 +393,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -31,7 +31,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -43,7 +43,7 @@ namespace ranges
     RANGES_FUNC_BEGIN(mismatch)
 
         /// \brief function template \c mismatch
-        CPP_template(typename I1,
+        template(typename I1,
                      typename S1,
                      typename I2,
                      typename C = equal_to,
@@ -69,7 +69,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename I1,
+        template(typename I1,
                      typename S1,
                      typename I2,
                      typename S2,
@@ -95,7 +95,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng1,
+        template(typename Rng1,
                      typename I2Ref,
                      typename C = equal_to,
                      typename P1 = identity,
@@ -126,7 +126,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng1,
+        template(typename Rng1,
                      typename Rng2,
                      typename C = equal_to,
                      typename P1 = identity,
@@ -168,6 +168,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

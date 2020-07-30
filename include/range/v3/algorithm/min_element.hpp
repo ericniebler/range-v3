@@ -27,7 +27,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -36,8 +36,8 @@ namespace ranges
     RANGES_FUNC_BEGIN(min_element)
 
         /// \brief function template \c min_element
-        CPP_template(typename I, typename S, typename C = less, typename P = identity)( //
-            requires forward_iterator<I> && sentinel_for<S, I>  && //
+        template(typename I, typename S, typename C = less, typename P = identity)( //
+            requires forward_iterator<I> AND sentinel_for<S, I> AND //
             indirect_strict_weak_order<C, projected<I, P>>) //
         I RANGES_FUNC(min_element)(I first, S last, C pred = C{}, P proj = P{})
         {
@@ -49,8 +49,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename C = less, typename P = identity)( //
-            requires forward_range<Rng>  && //
+        template(typename Rng, typename C = less, typename P = identity)( //
+            requires forward_range<Rng> AND //
             indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(min_element)(Rng && rng, C pred = C{}, P proj = P{}) //
             -> borrowed_iterator_t<Rng>
@@ -67,6 +67,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

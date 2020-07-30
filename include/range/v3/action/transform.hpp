@@ -24,7 +24,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -42,8 +42,8 @@ namespace ranges
                     bind_back(transform_fn{}, std::move(fun), std::move(proj)));
             }
 
-            CPP_template(typename Rng, typename F, typename P = identity)( //
-                requires input_range<Rng> && copy_constructible<F> &&
+            template(typename Rng, typename F, typename P = identity)( //
+                requires input_range<Rng> AND copy_constructible<F> AND
                     indirectly_writable<
                         iterator_t<Rng>,
                         indirect_result_t<F &, projected<iterator_t<Rng>, P>>>) //
@@ -60,6 +60,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

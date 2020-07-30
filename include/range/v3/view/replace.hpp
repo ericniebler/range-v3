@@ -29,7 +29,7 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -88,8 +88,8 @@ namespace ranges
     {
         struct replace_base_fn
         {
-            CPP_template(typename Rng, typename Val1, typename Val2)( //
-                requires viewable_range<Rng> && input_range<Rng> && same_as<
+            template(typename Rng, typename Val1, typename Val2)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND same_as<
                         detail::decay_t<unwrap_reference_t<Val1>>,
                         detail::decay_t<unwrap_reference_t<Val2>>> &&
                         equality_comparable_with<
@@ -135,6 +135,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

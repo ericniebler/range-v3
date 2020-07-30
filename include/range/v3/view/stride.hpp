@@ -33,7 +33,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -169,8 +169,8 @@ namespace ranges
             constexpr adaptor(stride_view_t * rng) noexcept
               : rng_(rng)
             {}
-            CPP_template(bool Other)( //
-                requires Const && CPP_NOT(Other)) //
+            template(bool Other)( //
+                requires Const AND CPP_NOT(Other)) //
             adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
@@ -197,7 +197,7 @@ namespace ranges
                 }
                 ranges::advance(it, delta);
             }
-            CPP_template(typename Other)( //
+            template(typename Other)( //
                 requires sized_sentinel_for<Other, iterator_t<CRng>>) //
             constexpr auto distance_to(iterator_t<CRng> const & here,
                                        Other const & there) const
@@ -302,8 +302,8 @@ namespace ranges
     {
         struct stride_base_fn
         {
-            CPP_template(typename Rng)( //
-                requires viewable_range<Rng> && input_range<Rng>) //
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng>) //
             constexpr auto operator()(Rng && rng, range_difference_t<Rng> step) const
                 -> stride_view<all_t<Rng>>
             {
@@ -331,7 +331,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::stride_view)
 

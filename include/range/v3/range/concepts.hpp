@@ -40,7 +40,7 @@
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/range/traits.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -71,7 +71,7 @@ namespace ranges
     RANGES_DEPRECATED("Please use ranges::borrowed_range instead.")
     RANGES_INLINE_VAR constexpr bool safe_range = borrowed_range<R>;
 
-    CPP_template(typename T, typename V)(
+    template(typename T, typename V)(
     concept (output_range_)(T, V),
         output_iterator<iterator_t<T>, V>
     );
@@ -79,7 +79,7 @@ namespace ranges
     CPP_concept output_range =
         range<T> && CPP_concept_ref(ranges::output_range_, T, V);
 
-    CPP_template(typename T)(
+    template(typename T)(
     concept (input_range_)(T),
         input_iterator<iterator_t<T>>
     );
@@ -87,7 +87,7 @@ namespace ranges
     CPP_concept input_range =
         range<T> && CPP_concept_ref(ranges::input_range_, T);
 
-    CPP_template(typename T)(
+    template(typename T)(
     concept (forward_range_)(T),
         forward_iterator<iterator_t<T>>
     );
@@ -95,7 +95,7 @@ namespace ranges
     CPP_concept forward_range =
         input_range<T> && CPP_concept_ref(ranges::forward_range_, T);
 
-    CPP_template(typename T)(
+    template(typename T)(
     concept (bidirectional_range_)(T),
         bidirectional_iterator<iterator_t<T>>
     );
@@ -103,7 +103,7 @@ namespace ranges
     CPP_concept bidirectional_range =
         forward_range<T> && CPP_concept_ref(ranges::bidirectional_range_, T);
 
-    CPP_template(typename T)(
+    template(typename T)(
     concept (random_access_range_)(T),
         random_access_iterator<iterator_t<T>>
     );
@@ -125,9 +125,9 @@ namespace ranges
       /// \endcond
 
     // clang-format off
-    CPP_template(typename T)(
+    template(typename T)(
     concept (contiguous_range_)(T),
-        contiguous_iterator<iterator_t<T>> CPP_and
+        contiguous_iterator<iterator_t<T>> AND
         same_as<detail::data_t<T>, std::add_pointer_t<iter_reference_t<iterator_t<T>>>>
     );
 
@@ -135,7 +135,7 @@ namespace ranges
     CPP_concept contiguous_range =
         random_access_range<T> && CPP_concept_ref(ranges::contiguous_range_, T);
 
-    CPP_template(typename T)(
+    template(typename T)(
     concept (common_range_)(T),
         same_as<iterator_t<T>, sentinel_t<T>>
     );
@@ -156,7 +156,7 @@ namespace ranges
         (
             ranges::size(t)
         ));
-    CPP_template(typename T)(
+    template(typename T)(
     concept (sized_range_)(T),
         detail::integer_like_<range_size_t<T>>);
 
@@ -301,6 +301,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -24,7 +24,7 @@
 
 #include <range/v3/iterator/concepts.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -49,7 +49,7 @@ namespace ranges
           : sout_(&s)
           , delim_(d)
         {}
-        CPP_template(typename U)( //
+        template(typename U)( //
             requires convertible_to<U, value_t<U> const &>) //
         auto operator=(U && value) -> ostream_iterator &
         {
@@ -129,7 +129,7 @@ namespace ranges
 
     struct make_ostream_joiner_fn
     {
-        CPP_template(typename Delim, typename Char, typename Traits)( //
+        template(typename Delim, typename Char, typename Traits)( //
             requires semiregular<detail::decay_t<Delim>>) //
         auto operator()(std::basic_ostream<Char, Traits> & s, Delim && d) const
             -> ostream_joiner<detail::decay_t<Delim>, Char, Traits>
@@ -220,6 +220,6 @@ namespace std
 RANGES_DIAGNOSTIC_POP
 /// \endcond
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_ITERATOR_STREAM_ITERATORS_HPP

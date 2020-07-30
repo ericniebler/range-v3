@@ -35,7 +35,7 @@
 #include <range/v3/view/subrange.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -144,14 +144,14 @@ namespace ranges
                            rng_, from_, range_tag_of<Rng>{}, is_infinite<Rng>{}) +
                        count_;
             }
-            CPP_template(typename BaseRng = Rng)( //
+            template(typename BaseRng = Rng)( //
                 requires range<BaseRng const>) //
             auto begin() const -> iterator_t<BaseRng const>
             {
                 return detail::pos_at_(
                     rng_, from_, range_tag_of<Rng>{}, is_infinite<Rng>{});
             }
-            CPP_template(typename BaseRng = Rng)( //
+            template(typename BaseRng = Rng)( //
                 requires range<BaseRng const>) //
             auto end() const -> iterator_t<BaseRng const>
             {
@@ -201,7 +201,7 @@ namespace ranges
             {
                 return {all(static_cast<Rng &&>(rng)), from, count};
             }
-            CPP_template(typename Rng)( //
+            template(typename Rng)( //
                 requires borrowed_range<Rng>) //
             static auto impl_(Rng && rng, range_difference_t<Rng> from,
                               range_difference_t<Rng> count, random_access_range_tag,
@@ -342,7 +342,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::slice_view)
 

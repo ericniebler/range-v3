@@ -30,7 +30,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -56,9 +56,9 @@ namespace ranges
 
     // axiom: BOp is associative over values of I.
     // clang-format off
-    CPP_template(typename I, typename BOp)(
+    template(typename I, typename BOp)(
     concept (indirect_semigroup_)(I, BOp),
-        copyable<iter_value_t<I>> CPP_and
+        copyable<iter_value_t<I>> AND
         indirectly_regular_binary_invocable_<
             composed<coerce<iter_value_t<I>>, BOp>,
             iter_value_t<I>*, I>
@@ -68,11 +68,11 @@ namespace ranges
         indirectly_readable<I> &&
         CPP_concept_ref(ranges::indirect_semigroup_, I, BOp);
 
-    CPP_template(typename I, typename O, typename BOp, typename P)(
+    template(typename I, typename O, typename BOp, typename P)(
     concept (partial_sum_constraints_)(I, O, BOp, P),
         indirect_semigroup<
             projected<projected<I, detail::as_value_type_t<I>>, P>,
-            BOp> CPP_and
+            BOp> AND
         output_iterator<
             O,
             iter_value_t<
@@ -89,7 +89,7 @@ namespace ranges
 
     struct partial_sum_fn
     {
-        CPP_template(typename I, typename S1, typename O, typename S2, typename BOp = plus,
+        template(typename I, typename S1, typename O, typename S2, typename BOp = plus,
                  typename P = identity)( //
             requires sentinel_for<S1, I> && sentinel_for<S2, O> &&
                 partial_sum_constraints<I, O, BOp, P>) //
@@ -115,7 +115,7 @@ namespace ranges
             return {first, result};
         }
 
-        CPP_template(typename I, typename S, typename O, typename BOp = plus,
+        template(typename I, typename S, typename O, typename BOp = plus,
                  typename P = identity)( //
             requires sentinel_for<S, I> && partial_sum_constraints<I, O, BOp, P>) //
         auto operator()(I first, S last, O result, BOp bop = BOp{}, P proj = P{}) const
@@ -163,6 +163,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

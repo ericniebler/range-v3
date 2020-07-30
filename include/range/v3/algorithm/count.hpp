@@ -26,7 +26,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -35,8 +35,8 @@ namespace ranges
     RANGES_FUNC_BEGIN(count)
 
         /// \brief function template \c count
-        CPP_template(typename I, typename S, typename V, typename P = identity)( //
-            requires input_iterator<I> && sentinel_for<S, I>  && //
+        template(typename I, typename S, typename V, typename P = identity)( //
+            requires input_iterator<I> AND sentinel_for<S, I> AND //
             indirect_relation<equal_to, projected<I, P>, V const *>) //
         auto RANGES_FUNC(count)(I first, S last, V const & val, P proj = P{})
             -> iter_difference_t<I>
@@ -49,8 +49,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename V, typename P = identity)( //
-            requires input_range<Rng>  && //
+        template(typename Rng, typename V, typename P = identity)( //
+            requires input_range<Rng> AND //
             indirect_relation<equal_to, projected<iterator_t<Rng>, P>, V const *>) //
         auto RANGES_FUNC(count)(Rng && rng, V const & val, P proj = P{})
             -> iter_difference_t<iterator_t<Rng>>
@@ -67,6 +67,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

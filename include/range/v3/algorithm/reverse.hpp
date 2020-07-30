@@ -25,7 +25,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -60,8 +60,8 @@ namespace ranges
     RANGES_FUNC_BEGIN(reverse)
 
         /// \brief function template \c reverse
-        CPP_template(typename I, typename S)( //
-            requires bidirectional_iterator<I> && sentinel_for<S, I> && permutable<I>) //
+        template(typename I, typename S)( //
+            requires bidirectional_iterator<I> AND sentinel_for<S, I> AND permutable<I>) //
         I RANGES_FUNC(reverse)(I first, S end_)
         {
             I last = ranges::next(first, end_);
@@ -70,8 +70,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename I = iterator_t<Rng>)( //
-            requires bidirectional_range<Rng> && permutable<I>) //
+        template(typename Rng, typename I = iterator_t<Rng>)( //
+            requires bidirectional_range<Rng> AND permutable<I>) //
         auto RANGES_FUNC(reverse)(Rng && rng) //
             -> borrowed_iterator_t<Rng>
         {
@@ -87,6 +87,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

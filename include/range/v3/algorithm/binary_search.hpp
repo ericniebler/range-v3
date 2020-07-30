@@ -29,7 +29,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -41,7 +41,7 @@ namespace ranges
         /// range-based version of the \c binary_search std algorithm
         ///
         /// \pre `Rng` is a model of the `range` concept
-        CPP_template(typename I,
+        template(typename I,
                  typename S,
                  typename V,
                  typename C = less,
@@ -58,8 +58,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename V, typename C = less, typename P = identity)( //
-            requires forward_range<Rng> &&
+        template(typename Rng, typename V, typename C = less, typename P = identity)( //
+            requires forward_range<Rng> AND
                 indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(binary_search)(
             Rng && rng, V const & val, C pred = C{}, P proj = P{}) //
@@ -78,6 +78,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

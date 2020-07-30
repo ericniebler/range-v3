@@ -28,29 +28,29 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
     /// \addtogroup group-numerics
     /// @{
     // clang-format off
-    CPP_template(typename I1, typename I2, typename T, typename BOp1, typename BOp2,
+    template(typename I1, typename I2, typename T, typename BOp1, typename BOp2,
         typename P1, typename P2)(
     concept (inner_product_constraints_)(I1, I2, T, BOp1, BOp2, P1, P2),
-        invocable<P1&, iter_value_t<I1>> CPP_and
-        invocable<P2&, iter_value_t<I2>> CPP_and
+        invocable<P1&, iter_value_t<I1>> AND
+        invocable<P2&, iter_value_t<I2>> AND
         invocable<
             BOp2&,
             invoke_result_t<P1&, iter_value_t<I1>>,
-            invoke_result_t<P2&, iter_value_t<I2>>> CPP_and
+            invoke_result_t<P2&, iter_value_t<I2>>> AND
         invocable<
             BOp1&,
             T,
             invoke_result_t<
                 BOp2&,
                 invoke_result_t<P1&, iter_value_t<I1>>,
-                invoke_result_t<P2&, iter_value_t<I2>>>> CPP_and
+                invoke_result_t<P2&, iter_value_t<I2>>>> AND
         assignable_from<
             T&,
             invoke_result_t<
@@ -71,7 +71,7 @@ namespace ranges
 
     struct inner_product_fn
     {
-        CPP_template(typename I1, typename S1, typename I2, typename S2, typename T,
+        template(typename I1, typename S1, typename I2, typename S2, typename T,
                  typename BOp1 = plus, typename BOp2 = multiplies, typename P1 = identity,
                  typename P2 = identity)( //
             requires sentinel_for<S1, I1> && sentinel_for<S2, I2> &&
@@ -88,7 +88,7 @@ namespace ranges
             return init;
         }
 
-        CPP_template(typename I1, typename S1, typename I2, typename T, typename BOp1 = plus,
+        template(typename I1, typename S1, typename I2, typename T, typename BOp1 = plus,
                  typename BOp2 = multiplies, typename P1 = identity,
                  typename P2 = identity)( //
             requires sentinel_for<S1, I1> &&
@@ -154,6 +154,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

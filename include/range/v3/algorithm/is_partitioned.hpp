@@ -34,7 +34,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -43,8 +43,8 @@ namespace ranges
     RANGES_FUNC_BEGIN(is_partitioned)
 
         /// \brief function template \c is_partitioned
-        CPP_template(typename I, typename S, typename C, typename P = identity)( //
-            requires input_iterator<I> && sentinel_for<S, I>  && //
+        template(typename I, typename S, typename C, typename P = identity)( //
+            requires input_iterator<I> AND sentinel_for<S, I> AND //
             indirect_unary_predicate<C, projected<I, P>>) //
         auto RANGES_FUNC(is_partitioned)(I first, S last, C pred, P proj = P{}) //
             -> bool
@@ -59,8 +59,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename C, typename P = identity)( //
-            requires input_range<Rng>  && //
+        template(typename Rng, typename C, typename P = identity)( //
+            requires input_range<Rng> AND //
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(is_partitioned)(Rng && rng, C pred, P proj = P{}) //
             -> bool
@@ -77,6 +77,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

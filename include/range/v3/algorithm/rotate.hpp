@@ -39,7 +39,7 @@
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/view/subrange.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -196,8 +196,8 @@ namespace ranges
     RANGES_FUNC_BEGIN(rotate)
 
         /// \brief function template \c rotate
-        CPP_template(typename I, typename S)( //
-            requires permutable<I> && sentinel_for<S, I>) //
+        template(typename I, typename S)( //
+            requires permutable<I> AND sentinel_for<S, I>) //
         auto RANGES_FUNC(rotate)(I first, I middle, S last) //
             -> subrange<I>
         {
@@ -214,8 +214,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename I = iterator_t<Rng>)( //
-            requires range<Rng> && permutable<I>) //
+        template(typename Rng, typename I = iterator_t<Rng>)( //
+            requires range<Rng> AND permutable<I>) //
         auto RANGES_FUNC(rotate)(Rng && rng, I middle) //
             -> safe_subrange_t<Rng>
         {
@@ -231,6 +231,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -23,7 +23,7 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -61,7 +61,7 @@ namespace ranges
         !view_<T>;
 
     // std::vector is a container, std::array is not
-    CPP_template(typename T)(
+    template(typename T)(
     concept (container_)(T),
         constructible_from<
             uncvref_t<T>,
@@ -111,14 +111,14 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        CPP_template(typename T)( //
+        template(typename T)( //
             requires container<T>) //
         auto is_lvalue_container_like(T &) noexcept -> std::true_type
         {
             return {};
         }
 
-        CPP_template(typename T)( //
+        template(typename T)( //
             requires container<T>) //
         auto is_lvalue_container_like(reference_wrapper<T>) noexcept
             -> meta::not_<std::is_rvalue_reference<T>>
@@ -126,7 +126,7 @@ namespace ranges
             return {};
         }
 
-        CPP_template(typename T)( //
+        template(typename T)( //
             requires container<T>) //
         auto is_lvalue_container_like(std::reference_wrapper<T>) noexcept
             -> std::true_type
@@ -134,7 +134,7 @@ namespace ranges
             return {};
         }
 
-        CPP_template(typename T)( //
+        template(typename T)( //
             requires container<T>) //
         auto is_lvalue_container_like(ref_view<T>) noexcept -> std::true_type
         {
@@ -149,7 +149,7 @@ namespace ranges
       /// \endcond
 
     // clang-format off
-    CPP_template(typename T)(
+    template(typename T)(
     concept (lvalue_container_like_)(T),
         implicitly_convertible_to<detail::is_lvalue_container_like_t<T>, std::true_type>
     );
@@ -161,6 +161,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

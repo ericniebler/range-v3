@@ -25,7 +25,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -33,7 +33,7 @@ namespace ranges
     /// @{
     struct accumulate_fn
     {
-        CPP_template(typename I, typename S, typename T, typename Op = plus,
+        template(typename I, typename S, typename T, typename Op = plus,
                  typename P = identity)( //
             requires sentinel_for<S, I> && input_iterator<I> &&
                 indirectly_binary_invocable_<Op, T *, projected<I, P>> &&
@@ -46,9 +46,9 @@ namespace ranges
             return init;
         }
 
-        CPP_template(typename Rng, typename T, typename Op = plus, typename P = identity)( //
-            requires input_range<Rng> &&
-                indirectly_binary_invocable_<Op, T *, projected<iterator_t<Rng>, P>> &&
+        template(typename Rng, typename T, typename Op = plus, typename P = identity)( //
+            requires input_range<Rng> AND
+                indirectly_binary_invocable_<Op, T *, projected<iterator_t<Rng>, P>> AND
                     assignable_from<
                         T &, indirect_result_t<Op &, T *, projected<iterator_t<Rng>, P>>>) //
         auto operator()(Rng && rng, T init, Op op = Op{},
@@ -63,6 +63,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

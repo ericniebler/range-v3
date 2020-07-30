@@ -26,7 +26,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -45,9 +45,9 @@ namespace ranges
                     bind_back(adjacent_remove_if_fn{}, std::move(pred), std::move(proj)));
             }
 
-            CPP_template(typename Rng, typename Pred, typename Proj = identity)( //
-                requires forward_range<Rng> &&
-                        erasable_range<Rng, iterator_t<Rng>, sentinel_t<Rng>> &&
+            template(typename Rng, typename Pred, typename Proj = identity)( //
+                requires forward_range<Rng> AND
+                        erasable_range<Rng, iterator_t<Rng>, sentinel_t<Rng>> AND
                             indirect_relation<Pred, projected<iterator_t<Rng>, Proj>> &&
                                 permutable<iterator_t<Rng>>) //
             auto operator()(Rng && rng, Pred pred, Proj proj = {}) const
@@ -65,6 +65,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_ACTION_ADJACENT_REMOVE_IF_HPP

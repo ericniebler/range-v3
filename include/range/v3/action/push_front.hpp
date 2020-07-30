@@ -26,7 +26,7 @@
 #include <range/v3/functional/bind_back.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -45,16 +45,16 @@ namespace ranges
             ranges::insert(std::declval<Cont &>(), std::declval<iterator_t<Cont>>(),
                            std::declval<Rng>())));
 
-        CPP_template(typename Cont, typename T)( //
-            requires lvalue_container_like<Cont> &&
+        template(typename Cont, typename T)( //
+            requires lvalue_container_like<Cont> AND
             (!range<T>)&&constructible_from<range_value_t<Cont>, T>) //
         auto push_front(Cont && cont, T && t) -> push_front_t<Cont, T>
         {
             unwrap_reference(cont).push_front(static_cast<T &&>(t));
         }
 
-        CPP_template(typename Cont, typename Rng)( //
-            requires lvalue_container_like<Cont> && range<Rng>) //
+        template(typename Cont, typename Rng)( //
+            requires lvalue_container_like<Cont> AND range<Rng>) //
         auto push_front(Cont && cont, Rng && rng) -> insert_t<Cont, Rng>
         {
             ranges::insert(cont, begin(cont), static_cast<Rng &&>(rng));
@@ -95,8 +95,8 @@ namespace ranges
                     bind_back(push_front_fn{}, detail::reference_wrapper_<T>(t)));
             }
 
-            CPP_template(typename Rng, typename T)( //
-                requires input_range<Rng> && can_push_front_<Rng, T>  && //
+            template(typename Rng, typename T)( //
+                requires input_range<Rng> AND can_push_front_<Rng, T> AND //
                 (range<T> || constructible_from<range_value_t<Rng>, T>)) //
             auto operator()(Rng && rng, T && t) const //
                 -> Rng
@@ -105,9 +105,9 @@ namespace ranges
                 return static_cast<Rng &&>(rng);
             }
 
-            CPP_template(typename Rng, typename T)( //
-                requires input_range<Rng> &&                          //
-                        can_push_front_<Rng, std::initializer_list<T>> &&
+            template(typename Rng, typename T)( //
+                requires input_range<Rng> AND                          //
+                        can_push_front_<Rng, std::initializer_list<T>> AND
                             constructible_from<range_value_t<Rng>, T const &>) //
             auto operator()(Rng && rng, std::initializer_list<T> t) const //
                 -> Rng
@@ -138,6 +138,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

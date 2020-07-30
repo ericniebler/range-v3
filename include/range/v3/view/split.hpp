@@ -33,7 +33,7 @@
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -60,10 +60,10 @@ namespace ranges
             sized_range<R> &&
             detail::_is_tiny_range_(static_cast<std::add_pointer_t<R>>(nullptr));
 #else // ^^^^ workaround / no workaround vvvv
-        CPP_template(typename R)(
+        template(typename R)(
         concept (tiny_range_)(R),
             ranges::type<
-                std::integral_constant<decltype(R::size()), R::size()>> CPP_and
+                std::integral_constant<decltype(R::size()), R::size()>> AND
             (R::size() <= 1)
         );
         template<typename R>
@@ -397,8 +397,8 @@ namespace ranges
               , parent_(&parent)
             {}
 
-            CPP_template(bool Other)( //
-                requires Const && CPP_NOT(Other) &&
+            template(bool Other)( //
+                requires Const AND CPP_NOT(Other) AND
                 convertible_to<iterator_t<V>, iterator_t<Base>>) //
             constexpr split_outer_iterator(
                 split_outer_iterator<split_view<V, Pattern>, Other> i)
@@ -607,15 +607,15 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename R, typename P)( //
-        requires input_range<R> && forward_range<P> && viewable_range<R> &&
-            viewable_range<P> &&
+    template(typename R, typename P)( //
+        requires input_range<R> AND forward_range<P> AND viewable_range<R> AND
+            viewable_range<P> AND
                 indirectly_comparable<iterator_t<R>, iterator_t<P>, ranges::equal_to> &&
         (forward_range<R> || detail::tiny_range<P>)) //
         split_view(R &&, P &&)
             ->split_view<views::all_t<R>, views::all_t<P>>;
 
-    CPP_template(typename R)(    //
+    template(typename R)(    //
         requires input_range<R>) //
         split_view(R &&, range_value_t<R>)
             ->split_view<views::all_t<R>, single_view<range_value_t<R>>>;
@@ -625,8 +625,8 @@ namespace ranges
     {
         struct split_base_fn
         {
-            CPP_template(typename Rng)( //
-                requires viewable_range<Rng> && input_range<Rng> &&
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND
                         indirectly_comparable<iterator_t<Rng>, range_value_t<Rng> const *,
                                               ranges::equal_to>) //
             constexpr auto operator()(Rng && rng, range_value_t<Rng> val) const
@@ -635,9 +635,9 @@ namespace ranges
                 return {all(static_cast<Rng &&>(rng)), single(std::move(val))};
             }
 
-            CPP_template(typename Rng, typename Pattern)( //
-                requires viewable_range<Rng> && input_range<Rng> &&
-                        viewable_range<Pattern> && forward_range<Pattern> &&
+            template(typename Rng, typename Pattern)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND
+                        viewable_range<Pattern> AND forward_range<Pattern> AND
                             indirectly_comparable<iterator_t<Rng>,
                                                   iterator_t<Pattern>,
                                                   ranges::equal_to> &&
@@ -671,9 +671,9 @@ namespace ranges
         {
             using ranges::views::split;
         }
-        CPP_template(typename Rng, typename Pattern)( //
-            requires input_range<Rng> && forward_range<Pattern> && view_<Rng> &&
-                view_<Pattern> && indirectly_comparable<
+        template(typename Rng, typename Pattern)( //
+            requires input_range<Rng> AND forward_range<Pattern> AND view_<Rng> AND
+                view_<Pattern> AND indirectly_comparable<
                     iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
             (forward_range<Rng> || ranges::detail::tiny_range<Pattern>)) //
         using split_view =
@@ -683,7 +683,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::split_view)

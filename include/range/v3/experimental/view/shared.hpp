@@ -24,7 +24,7 @@
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/view/all.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -71,7 +71,7 @@ namespace ranges
         struct RANGES_STRUCT_WITH_ADL_BARRIER(shared_closure_base)
         {
             // Piping requires viewable_ranges.
-            CPP_template(typename Rng, typename SharedFn)(      //
+            template(typename Rng, typename SharedFn)(      //
                 requires range<Rng> && (!viewable_range<Rng>)&& //
                 constructible_from<detail::decay_t<Rng>, Rng>)  //
                 friend constexpr auto
@@ -105,8 +105,8 @@ namespace ranges
         {
             struct shared_fn
             {
-                CPP_template(typename Rng)( //
-                    requires range<Rng> && (!viewable_range<Rng>)&& //
+                template(typename Rng)( //
+                    requires range<Rng> AND (!viewable_range<Rng>)&& //
                         constructible_from<detail::decay_t<Rng>, Rng>) //
                 auto operator()(Rng && rng) const                       //
                     -> shared_view<detail::decay_t<Rng>>
@@ -127,6 +127,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -23,7 +23,7 @@
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -107,15 +107,15 @@ namespace ranges
           , second_{static_cast<Rest &&>(rest)...}
         {}
 
-        CPP_template(typename... Args)(
+        template(typename... Args)(
             requires invocable<First, Args...>)
         constexpr auto operator()(Args &&... args) &&
             -> _result_t<detail::_id, Args...>
         {
             return invoke((First &&) first_, (Args &&) args...);
         }
-        CPP_template(typename... Args)(
-            requires (!invocable<First, Args...>) CPP_and
+        template(typename... Args)(
+            requires (!invocable<First, Args...>) AND
                 invocable<overloaded<Rest...>, Args...>)
         constexpr auto operator()(Args &&... args) &&
             -> _result_t<detail::_id, Args...>
@@ -123,15 +123,15 @@ namespace ranges
             return invoke((overloaded<Rest...> &&) second_, (Args &&) args...);
         }
 
-        CPP_template(typename... Args)(
+        template(typename... Args)(
             requires invocable<First &, Args...>)
         constexpr auto operator()(Args &&... args) &
             -> _result_t<detail::_ref, Args...>
         {
             return invoke(first_, (Args &&) args...);
         }
-        CPP_template(typename... Args)(
-            requires (!invocable<First &, Args...>) CPP_and
+        template(typename... Args)(
+            requires (!invocable<First &, Args...>) AND
                 invocable<overloaded<Rest...> &, Args...>)
         constexpr auto operator()(Args &&... args) &
             -> _result_t<detail::_ref, Args...>
@@ -139,15 +139,15 @@ namespace ranges
             return invoke(second_, (Args &&) args...);
         }
 
-        CPP_template(typename... Args)(
+        template(typename... Args)(
             requires invocable<First const &, Args...>)
         constexpr auto operator()(Args &&... args) const &
             -> _result_t<detail::_cref, Args...>
         {
             return invoke(first_, (Args &&) args...);
         }
-        CPP_template(typename... Args)(
-            requires (!invocable<First const &, Args...>) CPP_and
+        template(typename... Args)(
+            requires (!invocable<First const &, Args...>) AND
                 invocable<overloaded<Rest...> const &, Args...>)
         constexpr auto operator()(Args &&... args) const &
             -> _result_t<detail::_cref, Args...>
@@ -176,6 +176,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

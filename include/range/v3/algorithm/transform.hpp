@@ -31,7 +31,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -47,9 +47,9 @@ namespace ranges
 
         // Single-range variant
         /// \brief function template \c transform
-        CPP_template(typename I, typename S, typename O, typename F, typename P = identity)( //
-            requires input_iterator<I> && sentinel_for<S, I>  && //
-            weakly_incrementable<O> && copy_constructible<F>  && //
+        template(typename I, typename S, typename O, typename F, typename P = identity)( //
+            requires input_iterator<I> AND sentinel_for<S, I> AND //
+            weakly_incrementable<O> AND copy_constructible<F> AND //
             indirectly_writable<O, indirect_result_t<F &, projected<I, P>>>) //
         auto RANGES_FUNC(transform)(I first, S last, O out, F fun, P proj = P{}) //
             -> unary_transform_result<I, O>
@@ -60,9 +60,9 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename O, typename F, typename P = identity)( //
-            requires input_range<Rng> && weakly_incrementable<O>  && //
-            copy_constructible<F>  && //
+        template(typename Rng, typename O, typename F, typename P = identity)( //
+            requires input_range<Rng> AND weakly_incrementable<O> AND //
+            copy_constructible<F> AND //
             indirectly_writable<O, indirect_result_t<F &, projected<iterator_t<Rng>, P>>>)
         auto RANGES_FUNC(transform)(Rng && rng, O out, F fun, P proj = P{}) //
             -> unary_transform_result<borrowed_iterator_t<Rng>, O>
@@ -73,7 +73,7 @@ namespace ranges
 
         // Double-range variant, 4-iterator version
         /// \overload
-        CPP_template(typename I0,
+        template(typename I0,
                  typename S0,
                  typename I1,
                  typename S1,
@@ -103,7 +103,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng0,
+        template(typename Rng0,
                  typename Rng1,
                  typename O,
                  typename F,
@@ -134,7 +134,7 @@ namespace ranges
 
         // Double-range variant, 3-iterator version
         /// \overload
-        CPP_template(typename I0,
+        template(typename I0,
                      typename S0,
                      typename I1,
                      typename O,
@@ -169,7 +169,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng0,
+        template(typename Rng0,
                  typename I1Ref,
                  typename O,
                  typename F,
@@ -214,6 +214,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

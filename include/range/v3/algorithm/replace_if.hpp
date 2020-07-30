@@ -27,7 +27,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -36,9 +36,9 @@ namespace ranges
     RANGES_FUNC_BEGIN(replace_if)
 
         /// \brief function template \c replace_if
-        CPP_template(typename I, typename S, typename C, typename T, typename P = identity)( //
-            requires input_iterator<I> && sentinel_for<S, I> &&
-                indirect_unary_predicate<C, projected<I, P>> &&
+        template(typename I, typename S, typename C, typename T, typename P = identity)( //
+            requires input_iterator<I> AND sentinel_for<S, I> AND
+                indirect_unary_predicate<C, projected<I, P>> AND
                 indirectly_writable<I, T const &>) //
         I RANGES_FUNC(replace_if)(
             I first, S last, C pred, T const & new_value, P proj = P{}) //
@@ -50,9 +50,9 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename C, typename T, typename P = identity)( //
-            requires input_range<Rng> &&
-                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> &&
+        template(typename Rng, typename C, typename T, typename P = identity)( //
+            requires input_range<Rng> AND
+                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> AND
                 indirectly_writable<iterator_t<Rng>, T const &>) //
         auto RANGES_FUNC(replace_if)(
             Rng && rng, C pred, T const & new_value, P proj = P{}) //
@@ -71,6 +71,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

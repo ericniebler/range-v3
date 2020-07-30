@@ -37,7 +37,7 @@
 #include <range/v3/view/facade.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -100,8 +100,8 @@ namespace ranges
               : rng_(rng)
               , it_(ranges::begin(rng->rng_))
             {}
-            CPP_template(bool Other)( //
-                requires IsConst && (!Other)) cursor(cursor<Other> that)
+            template(bool Other)( //
+                requires IsConst AND (!Other)) cursor(cursor<Other> that)
               : rng_(that.rng_)
               , it_(std::move(that.it_))
             {}
@@ -141,8 +141,8 @@ namespace ranges
                 }
                 --it_;
             }
-            CPP_template(typename Diff)( //
-                requires random_access_range<CRng> &&
+            template(typename Diff)( //
+                requires random_access_range<CRng> AND
                     detail::integer_like_<Diff>) void advance(Diff n)
             {
                 auto const first = ranges::begin(rng_->rng_);
@@ -215,8 +215,8 @@ namespace ranges
         struct cycle_fn
         {
             /// \pre <tt>!empty(rng)</tt>
-            CPP_template(typename Rng)( //
-                requires viewable_range<Rng> && forward_range<Rng>) //
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND forward_range<Rng>) //
             auto operator()(Rng && rng) const -> cycled_view<all_t<Rng>>
             {
                 return cycled_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
@@ -230,7 +230,7 @@ namespace ranges
       /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::cycled_view)

@@ -25,7 +25,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -34,7 +34,7 @@ namespace ranges
     RANGES_FUNC_BEGIN(lexicographical_compare)
 
         /// \brief function template \c lexicographical_compare
-        CPP_template(typename I0,
+        template(typename I0,
                  typename S0,
                  typename I1,
                  typename S1,
@@ -65,7 +65,7 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng0,
+        template(typename Rng0,
                  typename Rng1,
                  typename C = less,
                  typename P0 = identity,
@@ -96,6 +96,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

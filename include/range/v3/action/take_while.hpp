@@ -24,7 +24,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -41,9 +41,9 @@ namespace ranges
                 return make_action_closure(bind_back(take_while_fn{}, std::move(fun)));
             }
 
-            CPP_template(typename Rng, typename Fun)( //
-                requires forward_range<Rng> &&
-                    erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
+            template(typename Rng, typename Fun)( //
+                requires forward_range<Rng> AND
+                    erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> AND
                         indirect_unary_predicate<Fun, iterator_t<Rng>>) //
             auto operator()(Rng && rng, Fun fun) const -> Rng
             {
@@ -59,6 +59,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

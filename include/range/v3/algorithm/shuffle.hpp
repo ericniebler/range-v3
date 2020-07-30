@@ -29,7 +29,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -38,9 +38,9 @@ namespace ranges
     RANGES_FUNC_BEGIN(shuffle)
 
         /// \brief function template \c shuffle
-        CPP_template(typename I, typename S, typename Gen = detail::default_random_engine &)( //
-            requires random_access_iterator<I> && sentinel_for<S, I> &&
-                permutable<I> &&
+        template(typename I, typename S, typename Gen = detail::default_random_engine &)( //
+            requires random_access_iterator<I> AND sentinel_for<S, I> AND
+                permutable<I> AND
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
                 convertible_to<invoke_result_t<Gen &>, iter_difference_t<I>>) //
         auto RANGES_FUNC(shuffle)(I const first,
@@ -65,9 +65,9 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename Gen = detail::default_random_engine &)( //
-            requires random_access_range<Rng> && permutable<iterator_t<Rng>> &&
-                uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+        template(typename Rng, typename Gen = detail::default_random_engine &)( //
+            requires random_access_range<Rng> AND permutable<iterator_t<Rng>> AND
+                uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
                 convertible_to<invoke_result_t<Gen &>,
                                iter_difference_t<iterator_t<Rng>>>) //
         auto RANGES_FUNC(shuffle)(Rng && rng,
@@ -86,6 +86,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

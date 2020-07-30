@@ -28,7 +28,7 @@
 #include <range/v3/view/facade.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -138,8 +138,8 @@ namespace ranges
                     rng->size_ = n;
                 advance();
             }
-            CPP_template(bool Other)( //
-                requires IsConst && (!Other)) cursor(cursor<Other> that)
+            template(bool Other)( //
+                requires IsConst AND (!Other)) cursor(cursor<Other> that)
               : parent_(that.parent_)
               , current_(std::move(that.current_))
               , size_(that.size_)
@@ -169,8 +169,8 @@ namespace ranges
         {
             return cursor<false>{this};
         }
-        CPP_template(bool Const = true)( //
-            requires Const &&
+        template(bool Const = true)( //
+            requires Const AND
             (sized_range<meta::const_if_c<Const, Rng>> ||
              sized_sentinel_for<sentinel_t<meta::const_if_c<Const, Rng>>,
                                 iterator_t<meta::const_if_c<Const, Rng>>> ||
@@ -208,9 +208,9 @@ namespace ranges
         /// Returns a random sample of a range of length `size(range)`.
         struct sample_base_fn
         {
-            CPP_template(typename Rng, typename URNG = detail::default_random_engine)( //
-                requires viewable_range<Rng> && input_range<Rng> &&
-                        uniform_random_bit_generator<URNG> && convertible_to<
+            template(typename Rng, typename URNG = detail::default_random_engine)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND
+                        uniform_random_bit_generator<URNG> AND convertible_to<
                             invoke_result_t<URNG &>, range_difference_t<Rng>> &&
                     (sized_range<Rng> ||
                      sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>> ||
@@ -256,7 +256,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::sample_view)
 

@@ -25,7 +25,7 @@
 #include <range/v3/detail/adl_get.hpp>
 #include <range/v3/utility/swap.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
@@ -100,20 +100,20 @@ namespace ranges
         // Clang 3.x have a problem with inheriting constructors
         // that causes the declarations in the preceeding PP block to get
         // instantiated too early.
-        CPP_template(typename Other)(                        //
+        template(typename Other)(                        //
             requires can_convert<Other>::value)              //
             constexpr tagged(tagged<Other, Tags...> && that) //
             noexcept(std::is_nothrow_constructible<Base, Other>::value)
           : base_t(static_cast<Other &&>(that))
         {}
-        CPP_template(typename Other)(                             //
+        template(typename Other)(                             //
             requires can_convert<Other>::value)                   //
             constexpr tagged(tagged<Other, Tags...> const & that) //
             noexcept(std::is_nothrow_constructible<Base, Other const &>::value)
           : base_t(static_cast<Other const &>(that))
         {}
 #endif
-        CPP_template(typename Other)( //
+        template(typename Other)( //
             requires can_convert<Other>::value) //
         constexpr auto operator=(tagged<Other, Tags...> && that) noexcept(
             noexcept(std::declval<Base &>() = static_cast<Other &&>(that)))
@@ -122,7 +122,7 @@ namespace ranges
             static_cast<Base &>(*this) = static_cast<Other &&>(that);
             return *this;
         }
-        CPP_template(typename Other)( //
+        template(typename Other)( //
             requires can_convert<Other>::value) //
         constexpr auto operator=(tagged<Other, Tags...> const & that) noexcept(
             noexcept(std::declval<Base &>() = static_cast<Other const &>(that)))
@@ -131,8 +131,8 @@ namespace ranges
             static_cast<Base &>(*this) = static_cast<Other const &>(that);
             return *this;
         }
-        CPP_template(typename U)( //
-            requires (!same_as<tagged, detail::decay_t<U>>) CPP_and
+        template(typename U)( //
+            requires (!same_as<tagged, detail::decay_t<U>>) AND
             satisfies<Base &, std::is_assignable, U>) //
         constexpr tagged & operator=(U && u) noexcept(noexcept(
             std::declval<Base &>() = static_cast<U &&>(u)))
@@ -140,7 +140,7 @@ namespace ranges
             static_cast<Base &>(*this) = static_cast<U &&>(u);
             return *this;
         }
-        CPP_template(typename B = Base)( //
+        template(typename B = Base)( //
             requires is_swappable<B>::value) //
         constexpr void swap(tagged & that) noexcept(is_nothrow_swappable<B>::value)
         {
@@ -161,7 +161,7 @@ namespace ranges
 #if RANGES_BROKEN_CPO_LOOKUP
     namespace _tagged_
     {
-        CPP_template(typename Base, typename... Tags)( //
+        template(typename Base, typename... Tags)( //
             requires is_swappable<Base>::value) //
         constexpr auto swap(
             tagged<Base, Tags...> & x,
@@ -243,6 +243,6 @@ namespace std
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

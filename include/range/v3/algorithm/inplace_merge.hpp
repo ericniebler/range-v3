@@ -51,7 +51,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -96,8 +96,8 @@ namespace ranges
             }
 
         public:
-            CPP_template(typename I, typename C = less, typename P = identity)( //
-                requires bidirectional_iterator<I> && sortable<I, C, P>) //
+            template(typename I, typename C = less, typename P = identity)( //
+                requires bidirectional_iterator<I> AND sortable<I, C, P>) //
             auto operator()(I first, I middle, I last, iter_difference_t<I> len1,
                             iter_difference_t<I> len2, iter_value_t<I> * buf,
                             std::ptrdiff_t buf_size, C pred = C{}, P proj = P{}) const
@@ -221,8 +221,8 @@ namespace ranges
 
         struct inplace_merge_no_buffer_fn
         {
-            CPP_template(typename I, typename C = less, typename P = identity)( //
-                requires bidirectional_iterator<I> && sortable<I, C, P>) //
+            template(typename I, typename C = less, typename P = identity)( //
+                requires bidirectional_iterator<I> AND sortable<I, C, P>) //
             auto operator()(I first, I middle, I last, iter_difference_t<I> len1,
                             iter_difference_t<I> len2, C pred = C{}, P proj = P{}) const
                 -> void
@@ -250,8 +250,8 @@ namespace ranges
         // TODO reimplement to only need forward iterators
 
         /// \brief function template \c inplace_merge
-        CPP_template(typename I, typename S, typename C = less, typename P = identity)( //
-            requires bidirectional_iterator<I> && sortable<I, C, P>) //
+        template(typename I, typename S, typename C = less, typename P = identity)( //
+            requires bidirectional_iterator<I> AND sortable<I, C, P>) //
         auto RANGES_FUNC(inplace_merge)(
             I first, I middle, S last, C pred = C{}, P proj = P{})
             -> I
@@ -280,8 +280,8 @@ namespace ranges
         }
 
         /// \overload
-        CPP_template(typename Rng, typename C = less, typename P = identity)( //
-            requires bidirectional_range<Rng> && sortable<iterator_t<Rng>, C, P>) //
+        template(typename Rng, typename C = less, typename P = identity)( //
+            requires bidirectional_range<Rng> AND sortable<iterator_t<Rng>, C, P>) //
         auto RANGES_FUNC(inplace_merge)(
             Rng && rng, iterator_t<Rng> middle, C pred = C{}, P proj = P{})
             -> borrowed_iterator_t<Rng>
@@ -302,6 +302,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

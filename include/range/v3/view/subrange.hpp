@@ -31,7 +31,7 @@
 #include <range/v3/utility/get.hpp>
 #include <range/v3/view/interface.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -71,7 +71,7 @@ namespace ranges
         template<typename T>
         CPP_concept pair_like_impl_ = CPP_requires_ref(detail::pair_like_impl_, T);
 
-        CPP_template(typename T)(
+        template(typename T)(
         concept (is_complete_)(T),
             0 != sizeof(T));
 
@@ -79,10 +79,10 @@ namespace ranges
         CPP_concept is_complete_ = //
             CPP_concept_ref(is_complete_, T);
 
-        CPP_template(typename T)( //
+        template(typename T)( //
         concept (pair_like_)(T), //
-            is_complete_<std::tuple_size<T>> CPP_and //
-            derived_from<std::tuple_size<T>, meta::size_t<2>> CPP_and //
+            is_complete_<std::tuple_size<T>> AND //
+            derived_from<std::tuple_size<T>, meta::size_t<2>> AND //
             detail::pair_like_impl_<T>);
 
         template<typename T>
@@ -90,29 +90,29 @@ namespace ranges
             CPP_concept_ref(detail::pair_like_, T);
 
         // clang-format off
-        CPP_template(typename T, typename U, typename V)( //
+        template(typename T, typename U, typename V)( //
         concept (pair_like_convertible_from_helper_)(T, U, V), //
-            convertible_to_not_slicing_<U, meta::_t<std::tuple_element<0, T>>> CPP_and
+            convertible_to_not_slicing_<U, meta::_t<std::tuple_element<0, T>>> AND
             convertible_to<V, meta::_t<std::tuple_element<1, T>>>);
 
         template<typename T, typename U, typename V>
         CPP_concept pair_like_convertible_from_helper_ = //
             CPP_concept_ref(pair_like_convertible_from_helper_, T, U, V);
 
-        CPP_template(typename T, typename U, typename V)( //
+        template(typename T, typename U, typename V)( //
         concept (pair_like_convertible_from_impl_)(T, U, V),
-            (!range<T>) CPP_and
-            constructible_from<T, U, V> CPP_and
-            pair_like<uncvref_t<T>> CPP_and
+            (!range<T>) AND
+            constructible_from<T, U, V> AND
+            pair_like<uncvref_t<T>> AND
             pair_like_convertible_from_helper_<T, U, V>);
 
         template<typename T, typename U, typename V>
         CPP_concept pair_like_convertible_from_ =
             CPP_concept_ref(detail::pair_like_convertible_from_impl_, T, U, V);
 
-        CPP_template(typename R, typename I, typename S)(
+        template(typename R, typename I, typename S)(
         concept (range_convertible_to_impl_)(R, I, S),
-            convertible_to_not_slicing_<iterator_t<R>, I> CPP_and
+            convertible_to_not_slicing_<iterator_t<R>, I> AND
             convertible_to<sentinel_t<R>, S>);
 
         template<typename R, typename I, typename S>
@@ -121,7 +121,7 @@ namespace ranges
             CPP_concept_ref(detail::range_convertible_to_impl_, R, I, S);
         // clang-format on
 
-        CPP_template(typename S, typename I)( //
+        template(typename S, typename I)( //
             requires sentinel_for<S, I>) //
         constexpr bool is_sized_sentinel_() noexcept
         {
@@ -151,13 +151,13 @@ namespace ranges
         struct adl_hook
         {};
 
-        CPP_template(std::size_t N, typename I, typename S, subrange_kind K)( //
+        template(std::size_t N, typename I, typename S, subrange_kind K)( //
             requires (N == 0)) //
         constexpr I get(subrange<I, S, K> const & r)
         {
             return r.begin();
         }
-        CPP_template(std::size_t N, typename I, typename S, subrange_kind K)( //
+        template(std::size_t N, typename I, typename S, subrange_kind K)( //
             requires (N == 1)) //
         constexpr S get(subrange<I, S, K> const & r)
         {
@@ -214,18 +214,18 @@ namespace ranges
             RANGES_EXPECT(static_cast<size_type>(last_() - first_()) == n);
         }
 
-        CPP_template(typename R)(
-            requires (!same_as<detail::decay_t<R>, subrange>) CPP_and //
-                detail::range_convertible_to_<R, I, S> CPP_and //
+        template(typename R)(
+            requires (!same_as<detail::decay_t<R>, subrange>) AND //
+                detail::range_convertible_to_<R, I, S> AND //
                 (!detail::store_size_<K, S, I>()))
         constexpr subrange(R && r)
           : subrange{ranges::begin(r), ranges::end(r)}
         {}
 
-        CPP_template(typename R)( //
-            requires (!same_as<detail::decay_t<R>, subrange>) CPP_and //
-                detail::range_convertible_to_<R, I, S> CPP_and //
-                (detail::store_size_<K, S, I>()) CPP_and //
+        template(typename R)( //
+            requires (!same_as<detail::decay_t<R>, subrange>) AND //
+                detail::range_convertible_to_<R, I, S> AND //
+                (detail::store_size_<K, S, I>()) AND //
                 sized_range<R>) //
         constexpr subrange(R && r)
           : subrange{ranges::begin(r), ranges::end(r), ranges::size(r)}
@@ -243,8 +243,8 @@ namespace ranges
             }
         }
 
-        CPP_template(typename PairLike)( //
-            requires (!same_as<PairLike, subrange>) CPP_and //
+        template(typename PairLike)( //
+            requires (!same_as<PairLike, subrange>) AND //
                 detail::pair_like_convertible_from_<PairLike, I const &, S const &>) //
         constexpr operator PairLike() const
         {
@@ -346,12 +346,12 @@ namespace ranges
     template<typename I, typename S>
     subrange(I, S)->subrange<I, S>;
 
-    CPP_template(typename I, typename S)(                           //
+    template(typename I, typename S)(                           //
         requires input_or_output_iterator<I> && sentinel_for<S, I>) //
         subrange(I, S, detail::iter_size_t<I>)
             ->subrange<I, S, subrange_kind::sized>;
 
-    CPP_template(typename R)(   //
+    template(typename R)(   //
         requires borrowed_range<R>) //
         subrange(R &&)
             ->subrange<iterator_t<R>, sentinel_t<R>,
@@ -360,7 +360,7 @@ namespace ranges
                            ? subrange_kind::sized
                            : subrange_kind::unsized>;
 
-    CPP_template(typename R)(   //
+    template(typename R)(   //
         requires borrowed_range<R>) //
         subrange(R &&, detail::iter_size_t<iterator_t<R>>)
             ->subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>;
@@ -374,14 +374,14 @@ namespace ranges
         {
             return {i, s};
         }
-        CPP_template(typename I, typename S)( //
-            requires input_or_output_iterator<I> && sentinel_for<S, I>) //
+        template(typename I, typename S)( //
+            requires input_or_output_iterator<I> AND sentinel_for<S, I>) //
         constexpr auto operator()(I i, S s, detail::iter_size_t<I> n) const
             -> subrange<I, S, subrange_kind::sized>
         {
             return {i, s, n};
         }
-        CPP_template(typename R)( //
+        template(typename R)( //
             requires borrowed_range<R>) //
         constexpr auto operator()(R && r) const
             -> subrange<iterator_t<R>, sentinel_t<R>,
@@ -391,7 +391,7 @@ namespace ranges
         {
             return {(R &&) r};
         }
-        CPP_template(typename R)( //
+        template(typename R)( //
             requires borrowed_range<R>) //
         constexpr auto operator()(R && r, detail::iter_size_t<iterator_t<R>> n) const
             -> subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>
@@ -411,7 +411,7 @@ namespace ranges
     {
         using ranges::subrange_kind;
 
-        CPP_template(typename I,                                          //
+        template(typename I,                                          //
                      typename S = I,                                      //
                      subrange_kind K =                                    //
                      static_cast<subrange_kind>(                          //
@@ -447,6 +447,6 @@ namespace std
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

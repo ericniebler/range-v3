@@ -38,7 +38,7 @@
 #include <range/v3/view/empty.hpp>
 #include <range/v3/view/facade.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -77,8 +77,8 @@ namespace ranges
 
         struct _advance_
         {
-            CPP_template(typename I, typename Diff)( //
-                requires input_or_output_iterator<I> && integer_like_<Diff>) //
+            template(typename I, typename Diff)( //
+                requires input_or_output_iterator<I> AND integer_like_<Diff>) //
             auto operator()(I & i, Diff n) const -> void
             {
                 advance(i, static_cast<iter_difference_t<I>>(n));
@@ -137,10 +137,10 @@ namespace ranges
     namespace views
     {
         // clang-format off
-        CPP_template(typename Fun, typename... Rngs)(
+        template(typename Fun, typename... Rngs)(
         concept (zippable_with_)(Fun, Rngs...),
-            invocable<Fun&, iterator_t<Rngs>...> CPP_and
-            invocable<Fun&, copy_tag, iterator_t<Rngs>...> CPP_and
+            invocable<Fun&, iterator_t<Rngs>...> AND
+            invocable<Fun&, copy_tag, iterator_t<Rngs>...> AND
             invocable<Fun&, move_tag, iterator_t<Rngs>...>
         );
         template<typename Fun, typename ...Rngs>
@@ -185,8 +185,8 @@ namespace ranges
                      std::tuple<sentinel_t<meta::const_if_c<Const, Rngs>>...> ends)
               : ends_(std::move(ends))
             {}
-            CPP_template(bool Other)( //
-                requires Const && CPP_NOT(Other)) //
+            template(bool Other)( //
+                requires Const AND CPP_NOT(Other)) //
             sentinel(sentinel<Other> that)
               : ends_(std::move(that.ends_))
             {}
@@ -215,8 +215,8 @@ namespace ranges
               : fun_(std::move(fun))
               , its_(std::move(its))
             {}
-            CPP_template(bool Other)( //
-                requires Const && CPP_NOT(Other)) //
+            template(bool Other)( //
+                requires Const AND CPP_NOT(Other)) //
             cursor(cursor<Other> that)
               : fun_(std::move(that.fun_))
               , its_(std::move(that.its_))
@@ -226,8 +226,8 @@ namespace ranges
             (
                 return tuple_apply(fun_, its_)
             )
-                // clang-format on
-                void next()
+            // clang-format on
+            void next()
             {
                 tuple_for_each(its_, detail::inc);
             }
@@ -314,15 +314,15 @@ namespace ranges
         {
             return {fun_, tuple_transform(rngs_, ranges::end)};
         }
-        CPP_template(bool Const = true)( //
-            requires Const && and_v<range<Rngs const>...> &&
+        template(bool Const = true)( //
+            requires Const AND and_v<range<Rngs const>...> AND
                 views::zippable_with<Fun, meta::if_c<Const, Rngs const>...>) //
         auto begin_cursor() const -> cursor<Const>
         {
             return {fun_, tuple_transform(rngs_, ranges::begin)};
         }
-        CPP_template(bool Const = true)( //
-            requires Const && and_v<range<Rngs const>...> &&
+        template(bool Const = true)( //
+            requires Const AND and_v<range<Rngs const>...> AND
                 views::zippable_with<Fun, meta::if_c<Const, Rngs const>...>) //
         auto end_cursor() const -> end_cursor_t<Const>
         {
@@ -371,7 +371,7 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Fun, typename... Rng)( //
+    template(typename Fun, typename... Rng)( //
         requires copy_constructible<Fun>)
     zip_with_view(Fun, Rng &&...)
         -> zip_with_view<Fun, views::all_t<Rng>...>;
@@ -381,8 +381,8 @@ namespace ranges
     {
         struct iter_zip_with_fn
         {
-            CPP_template(typename... Rngs, typename Fun)( //
-                requires and_v<viewable_range<Rngs>...> && zippable_with<Fun, Rngs...> &&
+            template(typename... Rngs, typename Fun)( //
+                requires and_v<viewable_range<Rngs>...> AND zippable_with<Fun, Rngs...> AND
                 (sizeof...(Rngs) != 0)) //
             auto operator()(Fun fun, Rngs &&... rngs) const ->
                 iter_zip_with_view<Fun, all_t<Rngs>...>
@@ -391,7 +391,7 @@ namespace ranges
                     std::move(fun), all(static_cast<Rngs &&>(rngs))...};
             }
 
-            CPP_template(typename Fun)( //
+            template(typename Fun)( //
                 requires zippable_with<Fun>) //
             constexpr auto operator()(Fun) const noexcept
                 -> empty_view<std::tuple<>>
@@ -406,9 +406,9 @@ namespace ranges
 
         struct zip_with_fn
         {
-            CPP_template(typename... Rngs, typename Fun)( //
-                requires and_v<viewable_range<Rngs>...> &&
-                        and_v<input_range<Rngs>...> && copy_constructible<Fun> &&
+            template(typename... Rngs, typename Fun)( //
+                requires and_v<viewable_range<Rngs>...> AND
+                        and_v<input_range<Rngs>...> AND copy_constructible<Fun> AND
                             invocable<Fun &, range_reference_t<Rngs>...> &&
                     (sizeof...(Rngs) != 0)) //
             auto operator()(Fun fun, Rngs &&... rngs) const
@@ -418,8 +418,8 @@ namespace ranges
                     std::move(fun), all(static_cast<Rngs &&>(rngs))...};
             }
 
-            CPP_template(typename Fun)( //
-                requires copy_constructible<Fun> && invocable<Fun &>) //
+            template(typename Fun)( //
+                requires copy_constructible<Fun> AND invocable<Fun &>) //
             constexpr auto operator()(Fun) const noexcept
                 -> empty_view<std::tuple<>>
             {
@@ -434,7 +434,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::iter_zip_with_view)

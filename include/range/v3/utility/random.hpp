@@ -66,7 +66,7 @@
 #include <mutex>
 #endif
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
@@ -83,10 +83,10 @@ namespace ranges
             Gen::min(),
             Gen::max()
         ));
-    CPP_template(typename Gen)(
+    template(typename Gen)(
     concept (uniform_random_bit_generator_)(Gen),
-        unsigned_integral<invoke_result_t<Gen &>> CPP_and
-        same_as<invoke_result_t<Gen &>, decltype(Gen::min())> CPP_and
+        unsigned_integral<invoke_result_t<Gen &>> AND
+        same_as<invoke_result_t<Gen &>, decltype(Gen::min())> AND
         same_as<invoke_result_t<Gen &>, decltype(Gen::max())>);
 
     template<typename Gen>
@@ -118,7 +118,7 @@ namespace ranges
                 return seeds;
             }
 
-            CPP_template(typename I)( //
+            template(typename I)( //
                 requires unsigned_integral<I>) //
             constexpr auto fast_exp(I x, I power, I result = I{1}) -> I
             {
@@ -218,8 +218,8 @@ namespace ranges
 
                 std::array<IntRep, count> mixer_;
 
-                CPP_template(typename I, typename S)( //
-                    requires input_iterator<I> && sentinel_for<S, I> &&
+                template(typename I, typename S)( //
+                    requires input_iterator<I> AND sentinel_for<S, I> AND
                         convertible_to<iter_reference_t<I>, IntRep>) //
                 auto mix_entropy(I first, S last) -> void
                 {
@@ -304,8 +304,8 @@ namespace ranges
                     return count;
                 }
 
-                CPP_template(typename O)( //
-                    requires weakly_incrementable<O>  && //
+                template(typename O)( //
+                    requires weakly_incrementable<O> AND //
                         indirectly_copyable<decltype(mixer_.begin()), O>) //
                 RANGES_INTENDED_MODULAR_ARITHMETIC auto param(O dest) const
                     -> void
@@ -354,8 +354,8 @@ namespace ranges
                     ranges::copy(mixer_copy, dest);
                 }
 
-                CPP_template(typename I, typename S)( //
-                    requires input_iterator<I> && sentinel_for<S, I> &&
+                template(typename I, typename S)( //
+                    requires input_iterator<I> AND sentinel_for<S, I> AND
                         convertible_to<iter_reference_t<I>, IntRep>) //
                 auto seed(I first, S last) -> void
                 {
@@ -488,6 +488,6 @@ namespace ranges
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif
