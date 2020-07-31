@@ -163,13 +163,12 @@ namespace ranges
         {
             return *ranges::get<0>(data_);
         }
-        template<typename J = I>
-        auto operator-> () const
-            noexcept(noexcept(common_iterator::operator_arrow_(std::declval<I const &>(),
-                                                               42)))
-                -> CPP_ret(decltype(
-                    common_iterator::operator_arrow_(std::declval<J const &>(), 42)))( //
-                    requires indirectly_readable<J>)
+        template(typename J = I)( //
+            requires indirectly_readable<J>)
+        auto operator->() const
+            noexcept(
+                noexcept(common_iterator::operator_arrow_(std::declval<I const &>(), 42)))
+            -> decltype(common_iterator::operator_arrow_(std::declval<J const &>(), 42))
         {
             return common_iterator::operator_arrow_(ranges::get<0>(data_), 42);
         }
@@ -288,12 +287,11 @@ namespace ranges
         return !(x == y);
     }
 
-    template<typename I1, typename I2, typename S1, typename S2>
-    auto operator-(common_iterator<I1, S1> const & x,
-                   common_iterator<I2, S2> const & y) //
-        -> CPP_ret(iter_difference_t<I2>)(            //
-            requires sized_sentinel_for<I1, I2> && sized_sentinel_for<S1, I2> &&
-                sized_sentinel_for<S2, I1>)
+    template(typename I1, typename I2, typename S1, typename S2)( //
+        requires sized_sentinel_for<I1, I2> AND sized_sentinel_for<S1, I2> AND //
+            sized_sentinel_for<S2, I1>) //
+    iter_difference_t<I2> operator-(common_iterator<I1, S1> const & x,
+                                    common_iterator<I2, S2> const & y)
     {
         return detail::cidata(x).index() == 1u
                    ? (detail::cidata(y).index() == 1u
