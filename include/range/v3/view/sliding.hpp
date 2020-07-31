@@ -308,9 +308,9 @@ namespace ranges
             adaptor(range_difference_t<Rng> n)
               : n_(n)
             {}
-            template<bool Other>
-            CPP_ctor(adaptor)(adaptor<Other> that)( //
-                requires Const && (!Other))
+            template(bool Other)( //
+                requires Const AND CPP_NOT(Other)) //
+            adaptor(adaptor<Other> that)
               : n_(that.n_)
             {}
             iterator_t<CRng> end(meta::const_if_c<Const, sliding_view> & v) const
@@ -356,7 +356,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    sliding_view(Rng &&, range_difference_t<Rng>)->sliding_view<views::all_t<Rng>>;
+    sliding_view(Rng &&, range_difference_t<Rng>) //
+        -> sliding_view<views::all_t<Rng>>;
 #endif
 
     namespace views

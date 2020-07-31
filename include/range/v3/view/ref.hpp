@@ -82,7 +82,10 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    template(typename R)(requires range<R>) ref_view(R &)->ref_view<R>;
+    template(typename R)( //
+        requires range<R>)
+    ref_view(R &) //
+        -> ref_view<R>;
 #endif
 
     namespace views

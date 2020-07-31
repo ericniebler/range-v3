@@ -57,8 +57,8 @@ namespace ranges
             template(typename Rng, typename Fun)( //
                 requires forward_range<Rng> AND                            //
                         invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> AND //
-                            invocable<Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
-                                copy_constructible<Fun> &&
+                            invocable<Fun &, iterator_t<Rng>, iterator_t<Rng>> AND
+                                copy_constructible<Fun> AND
                                     convertible_to<invoke_result_t<Fun &, iterator_t<Rng>,
                                                                    sentinel_t<Rng>>,
                                                    std::pair<bool, iterator_t<Rng>>>) //

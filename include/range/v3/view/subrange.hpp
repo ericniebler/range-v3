@@ -185,17 +185,17 @@ namespace ranges
 
         subrange() = default;
 
-        template<typename I2>
-        constexpr CPP_ctor(subrange)(I2 && i, S s)( //
-            requires detail::convertible_to_not_slicing_<I2, I> &&
-            (!detail::store_size_<K, S, I>()))
+        template(typename I2)( //
+            requires detail::convertible_to_not_slicing_<I2, I> AND //
+            (!detail::store_size_<K, S, I>())) //
+        constexpr subrange(I2 && i, S s)
           : data_{static_cast<I2 &&>(i), std::move(s)}
         {}
 
-        template<typename I2>
-        constexpr CPP_ctor(subrange)(I2 && i, S s, size_type n)( //
-            requires detail::convertible_to_not_slicing_<I2, I> &&
-            (detail::store_size_<K, S, I>()))
+        template(typename I2)( //
+            requires detail::convertible_to_not_slicing_<I2, I> AND //
+            (detail::store_size_<K, S, I>())) //
+        constexpr subrange(I2 && i, S s, size_type n)
           : data_{static_cast<I2 &&>(i), std::move(s), n}
         {
             if(RANGES_CONSTEXPR_IF((bool)random_access_iterator<I>))
@@ -205,10 +205,10 @@ namespace ranges
                 RANGES_EXPECT(ranges::next(first_(), (D)n) == last_());
             }
         }
-        template<typename I2>
-        constexpr CPP_ctor(subrange)(I2 && i, S s, size_type n)( //
-            requires detail::convertible_to_not_slicing_<I2, I> &&
-                sized_sentinel_for<S, I>)
+        template(typename I2)( //
+            requires detail::convertible_to_not_slicing_<I2, I> AND //
+                sized_sentinel_for<S, I>) //
+        constexpr subrange(I2 && i, S s, size_type n)
           : data_{static_cast<I2 &&>(i), std::move(s)}
         {
             RANGES_EXPECT(static_cast<size_type>(last_() - first_()) == n);
@@ -231,10 +231,10 @@ namespace ranges
           : subrange{ranges::begin(r), ranges::end(r), ranges::size(r)}
         {}
 
-        template<typename R>
-        constexpr CPP_ctor(subrange)(R && r, size_type n)(
-            requires detail::range_convertible_to_<R, I, S> &&
-                (K == subrange_kind::sized))
+        template(typename R)( //
+            requires (K == subrange_kind::sized) AND //
+                detail::range_convertible_to_<R, I, S>) //
+        constexpr subrange(R && r, size_type n) //
           : subrange{ranges::begin(r), ranges::end(r), n}
         {
             if(RANGES_CONSTEXPR_IF((bool)sized_range<R>))
@@ -344,26 +344,27 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename I, typename S>
-    subrange(I, S)->subrange<I, S>;
+    subrange(I, S) //
+        -> subrange<I, S>;
 
     template(typename I, typename S)(                           //
         requires input_or_output_iterator<I> && sentinel_for<S, I>) //
-        subrange(I, S, detail::iter_size_t<I>)
-            ->subrange<I, S, subrange_kind::sized>;
+    subrange(I, S, detail::iter_size_t<I>)
+        -> subrange<I, S, subrange_kind::sized>;
 
     template(typename R)(   //
         requires borrowed_range<R>) //
-        subrange(R &&)
-            ->subrange<iterator_t<R>, sentinel_t<R>,
-                       (sized_range<R> ||
+    subrange(R &&) //
+        -> subrange<iterator_t<R>, sentinel_t<R>,
+                    (sized_range<R> ||
                         sized_sentinel_for<sentinel_t<R>, iterator_t<R>>)
                            ? subrange_kind::sized
                            : subrange_kind::unsized>;
 
     template(typename R)(   //
         requires borrowed_range<R>) //
-        subrange(R &&, detail::iter_size_t<iterator_t<R>>)
-            ->subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>;
+    subrange(R &&, detail::iter_size_t<iterator_t<R>>) //
+        -> subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>;
 #endif
 
     // in lieu of deduction guides, use make_subrange

@@ -79,7 +79,8 @@ namespace ranges
               : val_{val}
             {}
             template(bool Other)( //
-                requires Const AND (!Other)) cursor_adaptor(cursor_adaptor<Other> that)
+                requires Const AND CPP_NOT(Other)) //
+            cursor_adaptor(cursor_adaptor<Other> that)
               : toggle_(that.toggle_)
               , val_(std::move(that.val_))
             {}
@@ -144,7 +145,8 @@ namespace ranges
         public:
             sentinel_adaptor() = default;
             template(bool Other)( //
-                requires Const AND (!Other)) sentinel_adaptor(sentinel_adaptor<Other>)
+                requires Const AND CPP_NOT(Other)) //
+            sentinel_adaptor(sentinel_adaptor<Other>)
             {}
             static constexpr bool empty(iterator_t<CRng> const & it,
                                         cursor_adaptor<Const> const &,
@@ -201,7 +203,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    intersperse_view(Rng &&, range_value_t<Rng>)->intersperse_view<views::all_t<Rng>>;
+    intersperse_view(Rng &&, range_value_t<Rng>) //
+        -> intersperse_view<views::all_t<Rng>>;
 #endif
 
     namespace views

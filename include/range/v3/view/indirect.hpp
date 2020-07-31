@@ -113,7 +113,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    indirect_view(Rng &&)->indirect_view<views::all_t<Rng>>;
+    indirect_view(Rng &&) //
+        -> indirect_view<views::all_t<Rng>>;
 #endif
 
     namespace views

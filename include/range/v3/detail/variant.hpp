@@ -151,11 +151,10 @@ namespace ranges
                     std::is_nothrow_constructible<T, Ts...>::value)
               : datum_(static_cast<Ts &&>(ts)...)
             {}
-            template<typename U>
-            constexpr CPP_ctor(indexed_datum)(indexed_datum<U, Index> that)( //
-                noexcept(std::is_nothrow_constructible<T, U>::value)         //
-                requires (!same_as<T, U>) &&
-                convertible_to<U, T>)
+            template(typename U)( //
+                requires (!same_as<T, U>) AND convertible_to<U, T>) //
+            constexpr indexed_datum(indexed_datum<U, Index> that) //
+                noexcept(std::is_nothrow_constructible<T, U>::value) //
               : datum_(std::move(that.datum_))
             {}
             constexpr auto ref() noexcept
@@ -705,10 +704,10 @@ namespace ranges
                                         static_cast<Args &&>(args)...}
           , index_(N)
         {}
-        template<std::size_t N>
-        constexpr CPP_ctor(variant)(emplaced_index_t<N>, meta::nil_)(              //
-            noexcept(std::is_nothrow_constructible<datum_t<N>, meta::nil_>::value) //
-            requires constructible_from<datum_t<N>, meta::nil_>)
+        template(std::size_t N)( //
+            requires constructible_from<datum_t<N>, meta::nil_>) //
+        constexpr variant(emplaced_index_t<N>, meta::nil_)
+            noexcept(std::is_nothrow_constructible<datum_t<N>, meta::nil_>::value)
           : detail::variant_data<Ts...>{meta::size_t<N>{}, meta::nil_{}}
           , index_(N)
         {}
@@ -721,10 +720,10 @@ namespace ranges
           : detail::variant_data<Ts...>{}
           , index_(detail::variant_move_copy_(that.index(), data_(), that.data_()))
         {}
-        template<typename... Args>
-        CPP_ctor(variant)(variant<Args...> that)( //
-            requires (!same_as<variant<Args...>, variant>) &&
-            (all_convertible_to<Args...>(0)))
+        template(typename... Args)( //
+            requires (!same_as<variant<Args...>, variant>) AND //
+            (all_convertible_to<Args...>(0))) //
+        variant(variant<Args...> that)
           : detail::variant_data<Ts...>{}
           , index_(detail::variant_move_copy_(that.index(), data_(),
                                               std::move(that.data_())))

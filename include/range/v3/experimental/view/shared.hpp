@@ -106,7 +106,7 @@ namespace ranges
             struct shared_fn
             {
                 template(typename Rng)( //
-                    requires range<Rng> AND (!viewable_range<Rng>)&& //
+                    requires range<Rng> AND (!viewable_range<Rng>)AND //
                         constructible_from<detail::decay_t<Rng>, Rng>) //
                 auto operator()(Rng && rng) const                       //
                     -> shared_view<detail::decay_t<Rng>>

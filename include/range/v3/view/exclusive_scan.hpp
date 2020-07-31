@@ -83,7 +83,8 @@ namespace ranges
               : rng_(rng)
             {}
             template(bool Other)( //
-                requires IsConst AND (!Other)) adaptor(adaptor<Other> that)
+                requires IsConst AND CPP_NOT(Other)) //
+            adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
             iterator_t<CRng> begin(exclusive_scan_view_t &)

@@ -187,11 +187,10 @@ namespace ranges
             // public:
             basic_proxy_reference_() = default;
             basic_proxy_reference_(basic_proxy_reference_ const &) = default;
-            template<typename OtherCur>
-            constexpr CPP_ctor(basic_proxy_reference_)(
-                basic_proxy_reference<OtherCur> const & that)( //
-                noexcept(true)                                 //
-                requires convertible_to<OtherCur *, Cur *>)
+            template(typename OtherCur)( //
+                requires convertible_to<OtherCur *, Cur *>) //
+            constexpr basic_proxy_reference_(
+                basic_proxy_reference<OtherCur> const & that) noexcept
               : cur_(that.cur_)
             {}
             constexpr explicit basic_proxy_reference_(Cur & cur) noexcept
@@ -549,10 +548,10 @@ namespace ranges
     public:
         using typename assoc_types_::difference_type;
         constexpr basic_iterator() = default;
-        template<typename OtherCur>
-        constexpr CPP_ctor(basic_iterator)(basic_iterator<OtherCur> that)( //
-            requires (!same_as<OtherCur, Cur>) && convertible_to<OtherCur, Cur> &&
-            constructible_from<mixin_t, OtherCur>)
+        template(typename OtherCur)( //
+            requires (!same_as<OtherCur, Cur>) AND convertible_to<OtherCur, Cur> AND //
+            constructible_from<mixin_t, OtherCur>) //
+        constexpr basic_iterator(basic_iterator<OtherCur> that)
           : base_t{std::move(that.pos())}
         {}
         // Mix in any additional constructors provided by the mixin

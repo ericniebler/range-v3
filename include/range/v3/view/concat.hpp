@@ -382,7 +382,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename... Rng>
-    concat_view(Rng &&...)->concat_view<views::all_t<Rng>...>;
+    concat_view(Rng &&...) //
+        -> concat_view<views::all_t<Rng>...>;
 #endif
 
     namespace views

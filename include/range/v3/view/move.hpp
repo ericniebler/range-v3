@@ -44,7 +44,8 @@ namespace ranges
         {
             adaptor() = default;
             template(bool Other)( //
-                requires Const AND (!Other)) constexpr adaptor(adaptor<Other>)
+                requires Const AND CPP_NOT(Other)) //
+            constexpr adaptor(adaptor<Other>)
             {}
             using CRng = meta::const_if_c<Const, Rng>;
             using value_type = range_value_t<Rng>;
@@ -100,7 +101,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    move_view(Rng &&)->move_view<views::all_t<Rng>>;
+    move_view(Rng &&) //
+        -> move_view<views::all_t<Rng>>;
 #endif
 
     namespace views

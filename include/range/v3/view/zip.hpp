@@ -124,7 +124,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename... Rng>
-    zip_view(Rng &&...)->zip_view<views::all_t<Rng>...>;
+    zip_view(Rng &&...) //
+        -> zip_view<views::all_t<Rng>...>;
 #endif
 
     namespace views
@@ -164,7 +165,7 @@ namespace ranges
             template(typename Rng0, typename Rng1, typename Rng2)( //
                 requires input_range<Rng0> AND viewable_range<Rng0> AND    //
                              input_range<Rng1> AND viewable_range<Rng1> AND    //
-                             input_range<Rng2> && viewable_range<Rng2>) //
+                             input_range<Rng2> AND viewable_range<Rng2>) //
             constexpr auto operator()(Rng0 && rng0, Rng1 && rng1, Rng2 && rng2) const
                 -> zip_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>>
             {

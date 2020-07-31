@@ -158,7 +158,7 @@ namespace ranges
                 satisfy();
             }
             template(bool Other)(         //
-                requires IsConst && (!Other)) //
+                requires IsConst && CPP_NOT(Other)) //
                 set_difference_cursor(
                     set_difference_cursor<Other, Rng1, Rng2, C, P1, P2> that)
               : pred_(std::move(that.pred_))
@@ -327,7 +327,7 @@ namespace ranges
                 satisfy();
             }
             template(bool Other)(         //
-                requires IsConst && (!Other)) //
+                requires IsConst && CPP_NOT(Other)) //
                 set_intersection_cursor(
                     set_intersection_cursor<Other, Rng1, Rng2, C, P1, P2> that)
               : pred_(std::move(that.pred_))
@@ -519,7 +519,7 @@ namespace ranges
                 satisfy();
             }
             template(bool Other)( //
-                requires IsConst AND (!Other))
+                requires IsConst AND CPP_NOT(Other))
                 set_union_cursor(set_union_cursor<Other, Rng1, Rng2, C, P1, P2> that)
               : pred_(std::move(that.pred_))
               , proj1_(std::move(that.proj1_))
@@ -732,7 +732,7 @@ namespace ranges
                 satisfy();
             }
             template(bool Other)(         //
-                requires IsConst && (!Other)) //
+                requires IsConst && CPP_NOT(Other)) //
                 set_symmetric_difference_cursor(
                     set_symmetric_difference_cursor<Other, Rng1, Rng2, C, P1, P2> that)
               : pred_(std::move(that.pred_))

@@ -68,19 +68,19 @@ namespace ranges
             }
             // \pre Requires distance(first, last) <= N
             // \pre Requires default_constructible<T> || distance(first, last) == N
-            template<typename I, typename S>
-            CPP_ctor(indexed_datum)(I first, S last)( //
-                requires sentinel_for<S, I> && input_iterator<I> &&
-                    constructible_from<T, iter_reference_t<I>>)
+            template(typename I, typename S)( //
+                requires sentinel_for<S, I> AND input_iterator<I> AND //
+                    constructible_from<T, iter_reference_t<I>>) //
+            indexed_datum(I first, S last)
             {
                 T * p = detail::uninitialized_copy(first, last, data_);
                 this->fill_default_(p, meta::bool_<default_constructible<T>>{});
             }
             // \pre Requires distance(r) <= N
             // \pre Requires default_constructible<T> || distance(r) == N
-            template<typename R>
-            explicit CPP_ctor(indexed_datum)(R && r)( //
-                requires input_range<R> && constructible_from<T, range_reference_t<R>>)
+            template(typename R)( //
+                requires input_range<R> AND constructible_from<T, range_reference_t<R>>) //
+            explicit indexed_datum(R && r)
               : indexed_datum{ranges::begin(r), ranges::end(r)}
             {}
             CPP_member

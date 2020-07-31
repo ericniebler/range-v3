@@ -92,7 +92,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng, typename Pred>
-    trim_view(Rng &&, Pred)->trim_view<views::all_t<Rng>, Pred>;
+    trim_view(Rng &&, Pred) //
+        -> trim_view<views::all_t<Rng>, Pred>;
 #endif
 
     template<typename Rng, typename Pred>

@@ -46,9 +46,9 @@ namespace ranges
         explicit move_iterator(I i)
           : current_(i)
         {}
-        template<typename O>
-        CPP_ctor(move_iterator)(move_iterator<O> const & i)( //
-            requires convertible_to<O, I>)
+        template(typename O)( //
+            requires convertible_to<O, I>) //
+        move_iterator(move_iterator<O> const & i)
           : current_(i.base())
         {}
         template(typename O)( //
@@ -217,9 +217,9 @@ namespace ranges
         constexpr explicit move_sentinel(S s)
           : sent_(detail::move(s))
         {}
-        template<typename OS>
-        constexpr explicit CPP_ctor(move_sentinel)(move_sentinel<OS> const & that)( //
-            requires convertible_to<OS, S>)
+        template(typename OS)( //
+            requires convertible_to<OS, S>) //
+        constexpr explicit move_sentinel(move_sentinel<OS> const & that)
           : sent_(that.base())
         {}
         template(typename OS)( //

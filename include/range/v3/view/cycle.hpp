@@ -101,7 +101,8 @@ namespace ranges
               , it_(ranges::begin(rng->rng_))
             {}
             template(bool Other)( //
-                requires IsConst AND (!Other)) cursor(cursor<Other> that)
+                requires IsConst AND CPP_NOT(Other)) //
+            cursor(cursor<Other> that)
               : rng_(that.rng_)
               , it_(std::move(that.it_))
             {}
@@ -205,7 +206,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    cycled_view(Rng &&)->cycled_view<views::all_t<Rng>>;
+    cycled_view(Rng &&) //
+        -> cycled_view<views::all_t<Rng>>;
 #endif
 
     namespace views

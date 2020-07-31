@@ -240,7 +240,8 @@ namespace ranges
               , end2_(end(parent->rng2_))
             {}
             template(bool Other)( //
-                requires Const AND (!Other)) sentinel(sentinel<Other> that)
+                requires Const AND CPP_NOT(Other)) //
+            sentinel(sentinel<Other> that)
               : end1_(std::move(that.end1_))
               , end2_(std::move(that.end2_))
             {}
@@ -274,7 +275,8 @@ namespace ranges
               , it2_(begin_end(parent->rng2_))
             {}
             template(bool Other)( //
-                requires Const AND (!Other)) cursor(cursor<Other> that)
+                requires Const AND CPP_NOT(Other)) //
+            cursor(cursor<Other> that)
               : fun_(std::move(that.fun_))
               , it1_(std::move(that.end1_))
               , it2_(std::move(that.end2_))

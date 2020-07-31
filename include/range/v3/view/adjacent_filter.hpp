@@ -75,7 +75,7 @@ namespace ranges
               : rng_(rng)
             {}
             template(bool Other)(       //
-                requires Const && (!Other)) //
+                requires Const && CPP_NOT(Other)) //
                 constexpr adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}

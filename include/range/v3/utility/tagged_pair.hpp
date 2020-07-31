@@ -83,59 +83,41 @@ namespace ranges
     public:
         tagged() = default;
         using base_t::base_t;
-#if !defined(__clang__) || __clang_major__ > 3
-        template<typename Other>
-        constexpr CPP_ctor(tagged)(tagged<Other, Tags...> && that)(     //
-            noexcept(std::is_nothrow_constructible<Base, Other>::value) //
-            requires (can_convert<Other>::value))
-          : base_t(static_cast<Other &&>(that))
-        {}
-        template<typename Other>
-        constexpr CPP_ctor(tagged)(tagged<Other, Tags...> const & that)(        //
-            noexcept(std::is_nothrow_constructible<Base, Other const &>::value) //
-            requires (can_convert<Other>::value))
-          : base_t(static_cast<Other const &>(that))
-        {}
-#else
-        // Clang 3.x have a problem with inheriting constructors
-        // that causes the declarations in the preceeding PP block to get
-        // instantiated too early.
         template(typename Other)(                        //
-            requires can_convert<Other>::value)              //
-            constexpr tagged(tagged<Other, Tags...> && that) //
+            requires can_convert<Other>::value)          //
+        constexpr tagged(tagged<Other, Tags...> && that) //
             noexcept(std::is_nothrow_constructible<Base, Other>::value)
           : base_t(static_cast<Other &&>(that))
         {}
         template(typename Other)(                             //
-            requires can_convert<Other>::value)                   //
-            constexpr tagged(tagged<Other, Tags...> const & that) //
+            requires can_convert<Other>::value)               //
+        constexpr tagged(tagged<Other, Tags...> const & that) //
             noexcept(std::is_nothrow_constructible<Base, Other const &>::value)
           : base_t(static_cast<Other const &>(that))
         {}
-#endif
         template(typename Other)( //
             requires can_convert<Other>::value) //
-        constexpr auto operator=(tagged<Other, Tags...> && that) noexcept(
-            noexcept(std::declval<Base &>() = static_cast<Other &&>(that)))
-            -> tagged &
+        constexpr tagged & operator=(tagged<Other, Tags...> && that) //
+            noexcept(
+                noexcept(std::declval<Base &>() = static_cast<Other &&>(that)))
         {
             static_cast<Base &>(*this) = static_cast<Other &&>(that);
             return *this;
         }
         template(typename Other)( //
             requires can_convert<Other>::value) //
-        constexpr auto operator=(tagged<Other, Tags...> const & that) noexcept(
-            noexcept(std::declval<Base &>() = static_cast<Other const &>(that)))
-            -> tagged &
+        constexpr tagged & operator=(tagged<Other, Tags...> const & that) //
+            noexcept(
+                noexcept(std::declval<Base &>() = static_cast<Other const &>(that)))
         {
             static_cast<Base &>(*this) = static_cast<Other const &>(that);
             return *this;
         }
         template(typename U)( //
             requires (!same_as<tagged, detail::decay_t<U>>) AND
-            satisfies<Base &, std::is_assignable, U>) //
-        constexpr tagged & operator=(U && u) noexcept(noexcept(
-            std::declval<Base &>() = static_cast<U &&>(u)))
+                satisfies<Base &, std::is_assignable, U>) //
+        constexpr tagged & operator=(U && u) //
+            noexcept(noexcept(std::declval<Base &>() = static_cast<U &&>(u)))
         {
             static_cast<Base &>(*this) = static_cast<U &&>(u);
             return *this;
@@ -148,8 +130,8 @@ namespace ranges
         }
 #if !RANGES_BROKEN_CPO_LOOKUP
         template<typename B = Base>
-        friend constexpr auto swap(tagged & x,
-                                   tagged & y) noexcept(is_nothrow_swappable<B>::value)
+        friend constexpr auto swap(tagged & x, tagged & y) //
+            noexcept(is_nothrow_swappable<B>::value)
             -> CPP_broken_friend_ret(void)( //
                 requires is_swappable<B>::value)
         {
@@ -163,10 +145,8 @@ namespace ranges
     {
         template(typename Base, typename... Tags)( //
             requires is_swappable<Base>::value) //
-        constexpr auto swap(
-            tagged<Base, Tags...> & x,
-            tagged<Base, Tags...> & y) noexcept(is_nothrow_swappable<Base>::value)
-            -> void
+        constexpr void swap(tagged<Base, Tags...> & x, tagged<Base, Tags...> & y) //
+            noexcept(is_nothrow_swappable<Base>::value)
         {
             x.swap(y);
         }

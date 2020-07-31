@@ -260,17 +260,17 @@ namespace ranges
                 seed_seq_fe(const seed_seq_fe &) = delete;
                 void operator=(const seed_seq_fe &) = delete;
 
-                template<typename T>
-                CPP_ctor(seed_seq_fe)(std::initializer_list<T> init)( //
-                    requires convertible_to<T const &, IntRep>)
+                template(typename T)( //
+                    requires convertible_to<T const &, IntRep>) //
+                seed_seq_fe(std::initializer_list<T> init)
                 {
                     seed(init.begin(), init.end());
                 }
 
-                template<typename I, typename S>
-                CPP_ctor(seed_seq_fe)(I first, S last)( //
-                    requires input_iterator<I> && sentinel_for<S, I> &&
-                        convertible_to<iter_reference_t<I>, IntRep>)
+                template(typename I, typename S)( //
+                    requires input_iterator<I> AND sentinel_for<S, I> AND //
+                        convertible_to<iter_reference_t<I>, IntRep>) //
+                seed_seq_fe(I first, S last)
                 {
                     seed(first, last);
                 }

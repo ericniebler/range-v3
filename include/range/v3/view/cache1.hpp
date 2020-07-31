@@ -160,7 +160,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    cache1_view(Rng &&)->cache1_view<views::all_t<Rng>>;
+    cache1_view(Rng &&) //
+        -> cache1_view<views::all_t<Rng>>;
 #endif
 
     namespace views

@@ -323,7 +323,8 @@ namespace ranges
                         common_range<meta::at_c<meta::list<constify_if<Views>...>, 0>>>{})
             {}
             template(bool Other)( //
-                requires IsConst_ AND (!Other)) cursor(cursor<Other> that)
+                requires IsConst_ AND CPP_NOT(Other)) //
+            cursor(cursor<Other> that)
               : view_(that.view_)
               , its_(std::move(that.its_))
             {}
@@ -419,7 +420,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename... Rng>
-    cartesian_product_view(Rng &&...)->cartesian_product_view<views::all_t<Rng>...>;
+    cartesian_product_view(Rng &&...) //
+        -> cartesian_product_view<views::all_t<Rng>...>;
 #endif
 
     namespace views

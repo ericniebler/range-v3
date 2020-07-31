@@ -122,9 +122,9 @@ namespace ranges
 
     public:
         any() noexcept = default;
-        template<typename TRef, typename T = detail::decay_t<TRef>>
-        CPP_ctor(any)(TRef && t)( //
-            requires copyable<T> && (!same_as<T, any>))
+        template(typename TRef, typename T = detail::decay_t<TRef>)( //
+            requires copyable<T> AND (!same_as<T, any>)) //
+        any(TRef && t)
           : ptr_(new impl<T>(static_cast<TRef &&>(t)))
         {}
         any(any &&) noexcept = default;

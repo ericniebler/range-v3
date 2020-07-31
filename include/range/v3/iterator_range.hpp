@@ -154,14 +154,14 @@ namespace ranges
         constexpr iterator_range(I first, S last)
           : compressed_pair<I, S>{detail::move(first), detail::move(last)}
         {}
-        template<typename X, typename Y>
-        constexpr CPP_ctor(iterator_range)(iterator_range<X, Y> rng)( //
-            requires constructible_from<I, X> && constructible_from<S, Y>)
+        template(typename X, typename Y)( //
+            requires constructible_from<I, X> AND constructible_from<S, Y>) //
+        constexpr iterator_range(iterator_range<X, Y> rng)
           : compressed_pair<I, S>{detail::move(rng.begin()), detail::move(rng.end())}
         {}
-        template<typename X, typename Y>
-        constexpr explicit CPP_ctor(iterator_range)(std::pair<X, Y> rng)( //
-            requires constructible_from<I, X> && constructible_from<S, Y>)
+        template(typename X, typename Y)( //
+            requires constructible_from<I, X> AND constructible_from<S, Y>) //
+        constexpr explicit iterator_range(std::pair<X, Y> rng)
           : compressed_pair<I, S>{detail::move(rng.first), detail::move(rng.second)}
         {}
         template(typename X, typename Y)( //
@@ -220,24 +220,22 @@ namespace ranges
                           static_cast<size_type>(ranges::distance(rng_)) == size_);
 #endif
         }
-        template<typename X, typename Y>
-        RANGES_NDEBUG_CONSTEXPR CPP_ctor(sized_iterator_range)(std::pair<X, Y> rng,
-                                                               size_type size)( //
-            requires constructible_from<I, X> && constructible_from<S, Y>)
+        template(typename X, typename Y)( //
+            requires constructible_from<I, X> AND constructible_from<S, Y>)
+        RANGES_NDEBUG_CONSTEXPR sized_iterator_range(std::pair<X, Y> rng, size_type size)
           : sized_iterator_range{detail::move(rng).first, detail::move(rng).second, size}
         {}
-        template<typename X, typename Y>
-        RANGES_NDEBUG_CONSTEXPR CPP_ctor(sized_iterator_range)(iterator_range<X, Y> rng,
-                                                               size_type size)( //
-            requires constructible_from<I, X> && constructible_from<S, Y>)
+        template(typename X, typename Y)( //
+            requires constructible_from<I, X> AND constructible_from<S, Y>) //
+        RANGES_NDEBUG_CONSTEXPR sized_iterator_range(iterator_range<X, Y> rng,
+                                                     size_type size)
           : sized_iterator_range{detail::move(rng).first(),
                                  detail::move(rng).second,
                                  size}
         {}
-        template<typename X, typename Y>
-        RANGES_NDEBUG_CONSTEXPR CPP_ctor(sized_iterator_range)(
-            sized_iterator_range<X, Y> rng)( //
-            requires constructible_from<I, X> && constructible_from<S, Y>)
+        template(typename X, typename Y)( //
+            requires constructible_from<I, X> && constructible_from<S, Y>) //
+        RANGES_NDEBUG_CONSTEXPR sized_iterator_range(sized_iterator_range<X, Y> rng)
           : sized_iterator_range{detail::move(rng).rng_.first(),
                                  detail::move(rng).rng_.second,
                                  rng.size_}

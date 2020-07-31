@@ -254,10 +254,9 @@ namespace ranges
       , private detail::semiregular_get
     {
         semiregular_box() = default;
-        template<typename Arg>
-        CPP_ctor(semiregular_box)(in_place_t, Arg & arg)( //
-            noexcept(true)                                //
+        template(typename Arg)( //
             requires constructible_from<ranges::reference_wrapper<T &>, Arg &>)
+        semiregular_box(in_place_t, Arg & arg) noexcept //
           : ranges::reference_wrapper<T &>(arg)
         {}
         using ranges::reference_wrapper<T &>::get;
@@ -283,10 +282,9 @@ namespace ranges
       , private detail::semiregular_get
     {
         semiregular_box() = default;
-        template<typename Arg>
-        CPP_ctor(semiregular_box)(in_place_t, Arg && arg)( //
-            noexcept(true)                                 //
+        template(typename Arg)( //
             requires constructible_from<ranges::reference_wrapper<T &&>, Arg>)
+        semiregular_box(in_place_t, Arg && arg) noexcept //
           : ranges::reference_wrapper<T &&>(static_cast<Arg &&>(arg))
         {}
         using ranges::reference_wrapper<T &&>::get;

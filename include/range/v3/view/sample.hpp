@@ -139,7 +139,8 @@ namespace ranges
                 advance();
             }
             template(bool Other)( //
-                requires IsConst AND (!Other)) cursor(cursor<Other> that)
+                requires IsConst AND CPP_NOT(Other)) //
+            cursor(cursor<Other> that)
               : parent_(that.parent_)
               , current_(std::move(that.current_))
               , size_(that.size_)

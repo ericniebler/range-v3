@@ -61,9 +61,9 @@ namespace ranges
         public:
             diffmax_t() = default;
 
-            template<typename T>
-            constexpr CPP_ctor(diffmax_t)(T val)(noexcept(true) //
-                                                 requires integral<T>)
+            template(typename T)( //
+                requires integral<T>) //
+            constexpr diffmax_t(T val) noexcept
               : neg_(0 > val)
               , val_(0 > val ? static_cast<std::uintmax_t>(-val)
                              : static_cast<std::uintmax_t>(val))

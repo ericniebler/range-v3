@@ -51,7 +51,7 @@ namespace ranges
                 common_reference_t<value_ const &&, range_rvalue_reference_t<CRng>>;
             adaptor() = default;
             template(bool Other)(       //
-                requires Const && (!Other)) //
+                requires Const && CPP_NOT(Other)) //
                 constexpr adaptor(adaptor<Other>)
             {}
             reference_ read(iterator_t<CRng> const & it) const
@@ -107,7 +107,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    const_view(Rng &&)->const_view<views::all_t<Rng>>;
+    const_view(Rng &&) //
+        -> const_view<views::all_t<Rng>>;
 #endif
 
     namespace views

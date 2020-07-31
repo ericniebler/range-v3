@@ -53,7 +53,7 @@ namespace ranges
               : end_(std::move(last))
             {}
             template(bool Other)( //
-                requires Const AND (!Other) AND
+                requires Const AND CPP_NOT(Other) AND
                 convertible_to<sentinel_t<Rng>,
                                sentinel_t<Base>>) //
                 constexpr sentinel(sentinel<Other> that)
@@ -265,7 +265,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    take_view(Rng &&, range_difference_t<Rng>)->take_view<views::all_t<Rng>>;
+    take_view(Rng &&, range_difference_t<Rng>) //
+        -> take_view<views::all_t<Rng>>;
 #endif
 
     namespace views

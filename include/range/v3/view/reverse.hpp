@@ -140,10 +140,12 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    reverse_view(Rng &&)->reverse_view<views::all_t<Rng>>;
+    reverse_view(Rng &&) //
+        -> reverse_view<views::all_t<Rng>>;
 
     template<typename Rng>
-    reverse_view(reverse_view<Rng>)->reverse_view<reverse_view<Rng>>;
+    reverse_view(reverse_view<Rng>) //
+        -> reverse_view<reverse_view<Rng>>;
 #endif
 
     namespace views

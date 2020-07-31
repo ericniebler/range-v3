@@ -127,7 +127,8 @@ namespace ranges
               , end_(ranges::end(cv->base()))
             {}
             template(bool Other)( //
-                requires Const AND (!Other)) constexpr adaptor(adaptor<Other> that)
+                requires Const AND CPP_NOT(Other)) //
+            constexpr adaptor(adaptor<Other> that)
               : box<offset_t<Const>>(that.offset())
               , n_(that.n_)
               , end_(that.end_)
@@ -410,7 +411,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    chunk_view(Rng &&, range_difference_t<Rng>)->chunk_view<views::all_t<Rng>>;
+    chunk_view(Rng &&, range_difference_t<Rng>) //
+        -> chunk_view<views::all_t<Rng>>;
 #endif
 
     namespace views

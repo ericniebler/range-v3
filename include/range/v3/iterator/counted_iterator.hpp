@@ -107,9 +107,9 @@ namespace ranges
             RANGES_EXPECT(n >= 0);
         }
 
-        template<typename I2>
-        constexpr CPP_ctor(counted_iterator)(counted_iterator<I2> const & i)( //
-            requires convertible_to<I2, I>)
+        template(typename I2)( //
+            requires convertible_to<I2, I>) //
+        constexpr counted_iterator(counted_iterator<I2> const & i)
           : current_(_counted_iterator_::access::current(i))
           , cnt_(i.count())
         {}

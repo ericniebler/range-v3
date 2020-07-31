@@ -276,10 +276,9 @@ namespace ranges
             struct optional_base<T &>
             {
                 optional_base() = default;
-                template<typename Arg>
-                constexpr explicit CPP_ctor(optional_base)(in_place_t, Arg && arg)( //
-                    noexcept(true)                                                  //
+                template(typename Arg)( //
                     requires constructible_from<T &, Arg>)
+                constexpr explicit optional_base(in_place_t, Arg && arg) noexcept //
                   : ptr_(detail::addressof(arg))
                 {}
                 constexpr bool has_value() const noexcept
@@ -569,18 +568,18 @@ namespace ranges
         }
 #endif
 
-        template<typename U>
-        CPP_ctor(optional)(optional<U> && that)( //
-            requires optional_should_convert<U, T> && constructible_from<T, U> &&
-                convertible_to<U, T>)
+        template(typename U)( //
+            requires optional_should_convert<U, T> AND constructible_from<T, U> AND //
+                convertible_to<U, T>) //
+        optional(optional<U> && that)
         {
             if(that.has_value())
                 base_t::construct_from(detail::move(*that));
         }
-        template<typename U>
-        explicit CPP_ctor(optional)(optional<U> && that)( //
-            requires optional_should_convert<U, T> && constructible_from<T, U> &&
-            (!convertible_to<U, T>))
+        template(typename U)( //
+            requires optional_should_convert<U, T> AND constructible_from<T, U> AND //
+            (!convertible_to<U, T>)) //
+        explicit optional(optional<U> && that)
         {
             if(that.has_value())
                 base_t::construct_from(detail::move(*that));
@@ -597,8 +596,7 @@ namespace ranges
 
         template(typename U = T)( //
             requires (!same_as<optional, detail::decay_t<U>>) AND //
-                (!(satisfies<T, std::is_scalar> &&
-                    same_as<T, detail::decay_t<U>>)) AND //
+                (!(satisfies<T, std::is_scalar> && same_as<T, detail::decay_t<U>>)) AND //
                 constructible_from<T, U> AND //
                 assignable_from<T &, U>) //
         constexpr optional & operator=(U && u) noexcept(
@@ -641,7 +639,7 @@ namespace ranges
             return base_t::construct_from(static_cast<Args &&>(args)...);
         }
         template(typename E, typename... Args)( //
-            requires constructible_from<T, std::initializer_list<E> &, Args &&...>) //
+            requires constructible_from<T, std::initializer_list<E> &, Args...>) //
         T & emplace(std::initializer_list<E> il, Args &&... args) noexcept(
             std::is_nothrow_constructible<T, std::initializer_list<E> &, Args...>::value)
         {
