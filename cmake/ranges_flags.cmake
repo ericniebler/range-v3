@@ -60,7 +60,11 @@ if(CMAKE_CXX_STANDARD)
     cxx_standard_denormalize(${CMAKE_CXX_STANDARD} RANGES_CXX_STD)
   endif()
 elseif("x${RANGES_CXX_STD}" STREQUAL "xdefault")
-  set(RANGES_CXX_STD 14)
+  if (RANGES_CXX_COMPILER_CLANGCL OR RANGES_CXX_COMPILER_MSVC)
+    set(RANGES_CXX_STD 17)
+  else()
+    set(RANGES_CXX_STD 14)
+  endif()
 endif()
 
 # All compilation flags
