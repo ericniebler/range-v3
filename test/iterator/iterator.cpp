@@ -23,6 +23,7 @@
 #include <range/v3/algorithm/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
+#include "range/v3/iterator/concepts.hpp"
 
 using namespace ranges;
 
@@ -427,6 +428,23 @@ void deep_integration_test()
 }
 
 #endif
+
+struct move_only_iterator {
+    using difference_type = std::ptrdiff_t;
+
+    move_only_iterator() = default;
+
+    move_only_iterator(move_only_iterator&&) = default;
+    move_only_iterator& operator=(move_only_iterator&&) = default;
+
+    move_only_iterator(move_only_iterator const&) = delete;
+    move_only_iterator& operator=(move_only_iterator const&) = delete;
+
+    move_only_iterator& operator++() { return *this; }
+    void operator++(int) { ++*this; }
+};
+static_assert(ranges::weakly_incrementable<move_only_iterator>, "");
+static_assert(!ranges::incrementable<move_only_iterator>, "");
 
 int main()
 {
