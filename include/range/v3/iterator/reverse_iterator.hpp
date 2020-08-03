@@ -95,8 +95,9 @@ namespace ranges
                 ++it_;
             }
             CPP_member
-            constexpr auto advance(iter_difference_t<I> n) -> CPP_ret(void)( //
-                requires random_access_iterator<I>)
+            constexpr auto advance(iter_difference_t<I> n) //
+                -> CPP_ret(void)( //
+                    requires random_access_iterator<I>)
             {
                 it_ -= n;
             }

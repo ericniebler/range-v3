@@ -122,7 +122,7 @@ namespace ranges
         using zip_cardinality = std::integral_constant<
             cardinality, State::value >= 0 && Value::value >= 0
                             ? min_(State::value, Value::value)
-                            : State::value >=0 && Value::value == infinite 
+                            : State::value >=0 && Value::value == infinite
                                 ? State::value
                                 : State::value == infinite && Value::value >= 0
                                     ? Value::value
@@ -232,10 +232,11 @@ namespace ranges
                 tuple_for_each(its_, detail::inc);
             }
             CPP_member
-            auto equal(cursor const & that) const -> CPP_ret(bool)( //
-                requires and_v<
-                    sentinel_for<iterator_t<meta::const_if_c<Const, Rngs>>,
-                                 iterator_t<meta::const_if_c<Const, Rngs>>>...>)
+            auto equal(cursor const & that) const //
+                -> CPP_ret(bool)( //
+                    requires and_v<
+                        sentinel_for<iterator_t<meta::const_if_c<Const, Rngs>>,
+                                    iterator_t<meta::const_if_c<Const, Rngs>>>...>)
             {
                 // By returning true if *any* of the iterators are equal, we allow
                 // zipped ranges to be of different lengths, stopping when the first
@@ -254,22 +255,25 @@ namespace ranges
                                    [](bool a, bool b) { return a || b; });
             }
             CPP_member
-            auto prev() -> CPP_ret(void)( //
-                requires and_v<bidirectional_range<meta::const_if_c<Const, Rngs>>...>)
+            auto prev() //
+                -> CPP_ret(void)( //
+                    requires and_v<bidirectional_range<meta::const_if_c<Const, Rngs>>...>)
             {
                 tuple_for_each(its_, detail::dec);
             }
             CPP_member
-            auto advance(difference_type n) -> CPP_ret(void)( //
-                requires and_v<random_access_range<meta::const_if_c<Const, Rngs>>...>)
+            auto advance(difference_type n) //
+                -> CPP_ret(void)( //
+                    requires and_v<random_access_range<meta::const_if_c<Const, Rngs>>...>)
             {
                 tuple_for_each(its_, bind_back(detail::advance_, n));
             }
             CPP_member
-            auto distance_to(cursor const & that) const -> CPP_ret(difference_type)( //
-                requires and_v<
-                    sized_sentinel_for<iterator_t<meta::const_if_c<Const, Rngs>>,
-                                       iterator_t<meta::const_if_c<Const, Rngs>>>...>)
+            auto distance_to(cursor const & that) const //
+                -> CPP_ret(difference_type)( //
+                    requires and_v<
+                        sized_sentinel_for<iterator_t<meta::const_if_c<Const, Rngs>>,
+                                           iterator_t<meta::const_if_c<Const, Rngs>>>...>)
             {
                 // Return the smallest distance (in magnitude) of any of the iterator
                 // pairs. This is to accommodate zippers of sequences of different length.

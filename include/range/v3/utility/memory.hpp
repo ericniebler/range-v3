@@ -118,15 +118,17 @@ namespace ranges
             return *this;
         }
         CPP_member
-        auto operator=(Val const & val) -> CPP_ret(raw_storage_iterator &)( //
-            requires copy_constructible<Val>)
+        auto operator=(Val const & val) //
+            -> CPP_ret(raw_storage_iterator &)( //
+                requires copy_constructible<Val>)
         {
             ::new((void *)std::addressof(*out_)) Val(val);
             return *this;
         }
         CPP_member
-        auto operator=(Val && val) -> CPP_ret(raw_storage_iterator &)( //
-            requires move_constructible<Val>)
+        auto operator=(Val && val) //
+            -> CPP_ret(raw_storage_iterator &)( //
+                requires move_constructible<Val>)
         {
             ::new((void *)std::addressof(*out_)) Val(std::move(val));
             return *this;
@@ -137,14 +139,16 @@ namespace ranges
             return *this;
         }
         CPP_member
-        auto operator++(int) -> CPP_ret(void)( //
-            requires (!forward_iterator<O>))
+        auto operator++(int) //
+            -> CPP_ret(void)( //
+                requires (!forward_iterator<O>))
         {
             ++out_;
         }
         CPP_member
-        auto operator++(int) -> CPP_ret(raw_storage_iterator)( //
-            requires forward_iterator<O>)
+        auto operator++(int) //
+            -> CPP_ret(raw_storage_iterator)( //
+                requires forward_iterator<O>)
         {
             auto tmp = *this;
             ++out_;

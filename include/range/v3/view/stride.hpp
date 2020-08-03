@@ -185,8 +185,9 @@ namespace ranges
                 }
             }
             CPP_member
-            constexpr auto prev(iterator_t<CRng> & it) -> CPP_ret(void)( //
-                requires bidirectional_range<CRng>)
+            constexpr auto prev(iterator_t<CRng> & it) //
+                -> CPP_ret(void)( //
+                    requires bidirectional_range<CRng>)
             {
                 RANGES_EXPECT(it != ranges::begin(rng_->base()));
                 auto delta = -rng_->stride_;
@@ -211,9 +212,9 @@ namespace ranges
                 return delta / rng_->stride_;
             }
             CPP_member
-            constexpr auto advance(iterator_t<CRng> & it,
-                                   range_difference_t<Rng> n) -> CPP_ret(void)( //
-                requires random_access_range<CRng>)
+            constexpr auto advance(iterator_t<CRng> & it, range_difference_t<Rng> n) //
+                -> CPP_ret(void)( //
+                    requires random_access_range<CRng>)
             {
                 if(0 == n)
                     return;
@@ -252,7 +253,8 @@ namespace ranges
         }
         CPP_member
         constexpr auto begin_adaptor() const noexcept
-            -> CPP_ret(adaptor<true>)(requires(const_iterable()))
+            -> CPP_ret(adaptor<true>)( //
+                requires(const_iterable()))
         {
             return adaptor<true>{this};
         }

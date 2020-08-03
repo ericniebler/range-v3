@@ -111,10 +111,11 @@ namespace ranges
             (
                 return *it_
             )
-                // clang-format on
-                CPP_member
-            auto equal(cursor const & pos) const -> CPP_ret(bool)( //
-                requires equality_comparable<iterator>)
+            // clang-format on
+            CPP_member
+            auto equal(cursor const & pos) const //
+                -> CPP_ret(bool)( //
+                    requires equality_comparable<iterator>)
             {
                 RANGES_EXPECT(rng_ == pos.rng_);
                 return n_ == pos.n_ && it_ == pos.it_;
@@ -131,8 +132,9 @@ namespace ranges
                 }
             }
             CPP_member
-            auto prev() -> CPP_ret(void)( //
-                requires bidirectional_range<CRng>)
+            auto prev() //
+                -> CPP_ret(void)( //
+                    requires bidirectional_range<CRng>)
             {
                 if(it_ == ranges::begin(rng_->rng_))
                 {
@@ -171,14 +173,16 @@ namespace ranges
         };
 
         CPP_member
-        auto begin_cursor() -> CPP_ret(cursor<false>)( //
-            requires (!simple_view<Rng>() || !common_range<Rng const>))
+        auto begin_cursor() //
+            -> CPP_ret(cursor<false>)( //
+                requires (!simple_view<Rng>() || !common_range<Rng const>))
         {
             return {this};
         }
         CPP_member
-        auto begin_cursor() const -> CPP_ret(cursor<true>)( //
-            requires common_range<Rng const>)
+        auto begin_cursor() const //
+            -> CPP_ret(cursor<true>)( //
+                requires common_range<Rng const>)
         {
             return {this};
         }

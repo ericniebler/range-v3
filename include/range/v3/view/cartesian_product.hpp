@@ -357,8 +357,9 @@ namespace ranges
                 return distance_(that, meta::size_t<sizeof...(Views)>{});
             }
             CPP_member
-            auto advance(difference_type n) -> CPP_ret(void)( //
-                requires cartesian_produce_view_can_random<IsConst, Views...>)
+            auto advance(difference_type n) //
+                -> CPP_ret(void)( //
+                    requires cartesian_produce_view_can_random<IsConst, Views...>)
             {
                 advance_(meta::size_t<sizeof...(Views)>{}, n);
             }
@@ -368,26 +369,30 @@ namespace ranges
             return cursor<false>{begin_tag{}, this};
         }
         CPP_member
-        auto begin_cursor() const -> CPP_ret(cursor<true>)( //
-            requires cartesian_produce_view_can_const<Views...>)
+        auto begin_cursor() const //
+            -> CPP_ret(cursor<true>)( //
+                requires cartesian_produce_view_can_const<Views...>)
         {
             return cursor<true>{begin_tag{}, this};
         }
         CPP_member
-        auto end_cursor() -> CPP_ret(cursor<false>)( //
-            requires cartesian_produce_view_can_bidi<std::false_type, Views...>)
+        auto end_cursor() //
+            -> CPP_ret(cursor<false>)( //
+                requires cartesian_produce_view_can_bidi<std::false_type, Views...>)
         {
             return cursor<false>{end_tag{}, this};
         }
         CPP_member
-        auto end_cursor() const -> CPP_ret(cursor<true>)( //
-            requires cartesian_produce_view_can_bidi<std::true_type, Views...>)
+        auto end_cursor() const //
+            -> CPP_ret(cursor<true>)( //
+                requires cartesian_produce_view_can_bidi<std::true_type, Views...>)
         {
             return cursor<true>{end_tag{}, this};
         }
         CPP_member
-        auto end_cursor() const -> CPP_ret(default_sentinel_t)( //
-            requires (!cartesian_produce_view_can_bidi<std::true_type, Views...>))
+        auto end_cursor() const //
+            -> CPP_ret(default_sentinel_t)( //
+                requires (!cartesian_produce_view_can_bidi<std::true_type, Views...>))
         {
             return {};
         }

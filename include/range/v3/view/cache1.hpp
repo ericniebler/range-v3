@@ -44,8 +44,9 @@ namespace ranges
         detail::non_propagating_cache<range_value_t<Rng>> cache_;
 
         CPP_member
-        auto update_(range_reference_t<Rng> && val) -> CPP_ret(void)(
-            requires assignable_from<range_value_t<Rng> &, range_reference_t<Rng>>)
+        auto update_(range_reference_t<Rng> && val) //
+            -> CPP_ret(void)( //
+                requires assignable_from<range_value_t<Rng> &, range_reference_t<Rng>>)
         {
             if(!cache_)
                 cache_.emplace(static_cast<range_reference_t<Rng> &&>(val));
@@ -53,8 +54,9 @@ namespace ranges
                 *cache_ = static_cast<range_reference_t<Rng> &&>(val);
         }
         CPP_member
-        auto update_(range_reference_t<Rng> && val) -> CPP_ret(void)(
-            requires (!assignable_from<range_value_t<Rng> &, range_reference_t<Rng>>))
+        auto update_(range_reference_t<Rng> && val) //
+            -> CPP_ret(void)( //
+                requires (!assignable_from<range_value_t<Rng> &, range_reference_t<Rng>>))
         {
             cache_.emplace(static_cast<range_reference_t<Rng> &&>(val));
         }
@@ -114,14 +116,16 @@ namespace ranges
                 return current_ == that.last_;
             }
             CPP_member
-            auto distance_to(cursor const & that) const -> CPP_ret(difference_type)( //
-                requires sized_sentinel_for<iterator_t<Rng>, iterator_t<Rng>>)
+            auto distance_to(cursor const & that) const //
+                -> CPP_ret(difference_type)( //
+                    requires sized_sentinel_for<iterator_t<Rng>, iterator_t<Rng>>)
             {
                 return that.current_ - current_;
             }
             CPP_member
-            auto distance_to(sentinel const & that) const -> CPP_ret(difference_type)( //
-                requires sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>>)
+            auto distance_to(sentinel const & that) const //
+                -> CPP_ret(difference_type)( //
+                    requires sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>>)
             {
                 return that.last_ - current_;
             }

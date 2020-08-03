@@ -208,14 +208,16 @@ namespace ranges
                 return done_;
             }
             CPP_member
-            auto equal(cursor const & that) const -> CPP_ret(bool)( //
-                requires equality_comparable<From>)
+            auto equal(cursor const & that) const //
+                -> CPP_ret(bool)( //
+                    requires equality_comparable<From>)
             {
                 return that.from_ == from_ && that.done_ == done_;
             }
             CPP_member
-            auto prev() -> CPP_ret(void)( //
-                requires detail::decrementable_<From>)
+            auto prev() //
+                -> CPP_ret(void)( //
+                    requires detail::decrementable_<From>)
             {
                 if(done_)
                     done_ = false;
@@ -223,8 +225,9 @@ namespace ranges
                     --from_;
             }
             CPP_member
-            auto advance(difference_type n) -> CPP_ret(void)( //
-                requires detail::advanceable_<From>)
+            auto advance(difference_type n) //
+                -> CPP_ret(void)( //
+                    requires detail::advanceable_<From>)
             {
                 if(n > 0)
                 {
@@ -237,16 +240,18 @@ namespace ranges
                     detail::iota_advance_(from_, n + std::exchange(done_, false));
             }
             CPP_member
-            auto distance_to(cursor const & that) const -> CPP_ret(difference_type)( //
-                requires detail::advanceable_<From>)
+            auto distance_to(cursor const & that) const //
+                -> CPP_ret(difference_type)( //
+                    requires detail::advanceable_<From>)
             {
                 using D = difference_type;
                 return static_cast<D>(detail::iota_distance_(from_, that.from_)) +
                        ((D)that.done_ - (D)done_);
             }
             CPP_member
-            auto distance_to(default_sentinel_t) const -> CPP_ret(difference_type)( //
-                requires sized_sentinel_for<To, From>)
+            auto distance_to(default_sentinel_t) const //
+                -> CPP_ret(difference_type)( //
+                    requires sized_sentinel_for<To, From>)
             {
                 return difference_type(to_ - from_) + !done_;
             }
@@ -265,14 +270,16 @@ namespace ranges
             return {from_, to_};
         }
         CPP_member
-        auto end_cursor() const -> CPP_ret(cursor)( //
-            requires same_as<From, To>)
+        auto end_cursor() const //
+            -> CPP_ret(cursor)( //
+                requires same_as<From, To>)
         {
             return {to_, to_, true};
         }
         CPP_member
-        auto end_cursor() const -> CPP_ret(default_sentinel_t)( //
-            requires (!same_as<From, To>))
+        auto end_cursor() const //
+            -> CPP_ret(default_sentinel_t)( //
+                requires (!same_as<From, To>))
         {
             return {};
         }
@@ -355,20 +362,23 @@ namespace ranges
                 return from_ == that.to_;
             }
             CPP_member
-            auto equal(cursor const & that) const -> CPP_ret(bool)( //
-                requires equality_comparable<From>)
+            auto equal(cursor const & that) const //
+                -> CPP_ret(bool)( //
+                    requires equality_comparable<From>)
             {
                 return that.from_ == from_;
             }
             CPP_member
-            auto prev() -> CPP_ret(void)( //
-                requires detail::decrementable_<From>)
+            auto prev() //
+                -> CPP_ret(void)( //
+                    requires detail::decrementable_<From>)
             {
                 --from_;
             }
             CPP_member
-            auto advance(difference_type n) -> CPP_ret(void)( //
-                requires detail::advanceable_<From>)
+            auto advance(difference_type n) //
+                -> CPP_ret(void)( //
+                    requires detail::advanceable_<From>)
             {
                 detail::iota_advance_(from_, n);
             }
@@ -376,15 +386,17 @@ namespace ranges
             // with Advanceable, but they should be constrained with totally_ordered.
             // Reimplement iota_view without view_facade or basic_iterator.
             CPP_member
-            auto distance_to(cursor const & that) const -> CPP_ret(difference_type)( //
-                requires detail::advanceable_<From>)
+            auto distance_to(cursor const & that) const //
+                -> CPP_ret(difference_type)( //
+                    requires detail::advanceable_<From>)
             {
                 return detail::iota_distance_(from_, that.from_);
             }
             // Extension: see https://github.com/ericniebler/stl2/issues/613
             CPP_member
-            auto distance_to(sentinel const & that) const -> CPP_ret(difference_type)( //
-                requires sized_sentinel_for<To, From>)
+            auto distance_to(sentinel const & that) const //
+                -> CPP_ret(difference_type)( //
+                    requires sized_sentinel_for<To, From>)
             {
                 return that.to_ - from_;
             }
@@ -491,28 +503,25 @@ namespace ranges
         {
             ints_fn() = default;
 
-            template<typename Val>
+            template(typename Val)( //
+                requires integral<Val>)
             RANGES_DEPRECATED(
                 "This potentially confusing API is deprecated. Prefer to "
                 "explicitly specify the upper bound as with ranges::unreachable, as in "
                 "views::ints( n, unreachable )")
-            constexpr auto
-            operator()(Val value) const -> CPP_ret(iota_view<Val>)( //
-                requires integral<Val>)
+            constexpr iota_view<Val> operator()(Val value) const //
             {
                 return iota_view<Val>{value};
             }
             template(typename Val)( //
                 requires integral<Val>) //
-            constexpr auto operator()(Val value, unreachable_sentinel_t) const
-                -> iota_view<Val>
+            constexpr iota_view<Val> operator()(Val value, unreachable_sentinel_t) const
             {
                 return iota_view<Val>{value};
             }
             template(typename Val)( //
                 requires integral<Val>) //
-            constexpr auto operator()(Val from, Val to) const
-                -> iota_view<Val, Val>
+            constexpr iota_view<Val, Val> operator()(Val from, Val to) const
             {
                 return {from, to};
             }

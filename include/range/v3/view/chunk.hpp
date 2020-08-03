@@ -147,8 +147,9 @@ namespace ranges
                 offset() = ranges::advance(it, n_, end_);
             }
             CPP_member
-            constexpr auto prev(iterator_t<CRng> & it) -> CPP_ret(void)( //
-                requires bidirectional_range<CRng>)
+            constexpr auto prev(iterator_t<CRng> & it) //
+                -> CPP_ret(void)( //
+                    requires bidirectional_range<CRng>)
             {
                 ranges::advance(it, -n_ + offset());
                 offset() = 0;
@@ -168,9 +169,9 @@ namespace ranges
                 return delta / n_;
             }
             CPP_member
-            constexpr auto advance(iterator_t<CRng> & it,
-                                   range_difference_t<Rng> n) -> CPP_ret(void)( //
-                requires random_access_range<CRng>)
+            constexpr auto advance(iterator_t<CRng> & it, range_difference_t<Rng> n) //
+                -> CPP_ret(void)( //
+                    requires random_access_range<CRng>)
             {
                 using Limits = std::numeric_limits<range_difference_t<CRng>>;
                 if(0 < n)
@@ -195,8 +196,9 @@ namespace ranges
             return adaptor<simple_view<Rng>()>{this};
         }
         CPP_member
-        constexpr auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires forward_range<Rng const>)
+        constexpr auto begin_adaptor() const //
+            -> CPP_ret(adaptor<true>)( //
+                requires forward_range<Rng const>)
         {
             return adaptor<true>{this};
         }

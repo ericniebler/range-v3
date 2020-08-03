@@ -200,10 +200,11 @@ namespace ranges
                     return RANGES_EXPECT(engaged_), detail::addressof(data_);
                 }
                 CPP_member
-                constexpr auto swap(optional_base & that) noexcept(
-                    std::is_nothrow_move_constructible<T>::value &&
-                        is_nothrow_swappable<T>::value) -> CPP_ret(void)( //
-                    requires move_constructible<T> && swappable<T>)
+                constexpr auto swap(optional_base & that) //
+                    noexcept(std::is_nothrow_move_constructible<T>::value &&
+                             is_nothrow_swappable<T>::value) //
+                    -> CPP_ret(void)( //
+                        requires move_constructible<T> && swappable<T>)
                 {
                     constexpr bool can_swap_trivially =
                         !::concepts::adl_swap_detail::is_adl_swappable_v<T> &&

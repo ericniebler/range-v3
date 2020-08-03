@@ -283,8 +283,10 @@ namespace ranges
                 its_.visit_i(next_fun{this});
             }
             CPP_member
-            auto equal(cursor const & pos) const -> CPP_ret(bool)( //
-                requires equality_comparable<variant<iterator_t<constify_if<Rngs>>...>>)
+            auto equal(cursor const & pos) const //
+                -> CPP_ret(bool)( //
+                    requires //
+                        equality_comparable<variant<iterator_t<constify_if<Rngs>>...>>)
             {
                 return its_ == pos.its_;
             }
@@ -294,14 +296,16 @@ namespace ranges
                        ranges::get<cranges - 1>(its_) == pos.end_;
             }
             CPP_member
-            auto prev() -> CPP_ret(void)( //
-                requires and_v<bidirectional_range<Rngs>...>)
+            auto prev() //
+                -> CPP_ret(void)( //
+                    requires and_v<bidirectional_range<Rngs>...>)
             {
                 its_.visit_i(prev_fun{this});
             }
             CPP_member
-            auto advance(difference_type n) -> CPP_ret(void)( //
-                requires and_v<random_access_range<Rngs>...>)
+            auto advance(difference_type n) //
+                -> CPP_ret(void)( //
+                    requires and_v<random_access_range<Rngs>...>)
             {
                 if(n > 0)
                     its_.visit_i(advance_fwd_fun{this, n});
@@ -309,8 +313,10 @@ namespace ranges
                     its_.visit_i(advance_rev_fun{this, n});
             }
             CPP_member
-            auto distance_to(cursor const & that) const -> CPP_ret(difference_type)( //
-                requires and_v<sized_sentinel_for<iterator_t<Rngs>, iterator_t<Rngs>>...>)
+            auto distance_to(cursor const & that) const //
+                -> CPP_ret(difference_type)( //
+                    requires and_v<sized_sentinel_for<iterator_t<Rngs>,
+                                                      iterator_t<Rngs>>...>)
             {
                 if(its_.index() <= that.its_.index())
                     return cursor::distance_to_(meta::size_t<0>{}, *this, that);
@@ -329,15 +335,18 @@ namespace ranges
             return {this, end_tag{}};
         }
         CPP_member
-        auto begin_cursor() const -> CPP_ret(cursor<true>)( //
-            requires and_v<range<Rngs const>...>)
+        auto begin_cursor() const //
+            -> CPP_ret(cursor<true>)( //
+                requires and_v<range<Rngs const>...>)
         {
             return {this, begin_tag{}};
         }
         CPP_member
-        auto end_cursor() const -> CPP_ret(
-            meta::if_<meta::and_c<(bool)common_range<Rngs const>...>, cursor<true>,
-                      sentinel<true>>)( //
+        auto end_cursor() const //
+            -> CPP_ret(
+                meta::if_<meta::and_c<(bool)common_range<Rngs const>...>, //
+                          cursor<true>, //
+                          sentinel<true>>)( //
             requires and_v<range<Rngs const>...>)
         {
             return {this, end_tag{}};
@@ -349,8 +358,9 @@ namespace ranges
           : rngs_{std::move(rngs)...}
         {}
         CPP_member
-        constexpr auto size() const -> CPP_ret(std::size_t)( //
-            requires (detail::concat_cardinality<Rngs...>::value >= 0))
+        constexpr auto size() const //
+            -> CPP_ret(std::size_t)( //
+                requires (detail::concat_cardinality<Rngs...>::value >= 0))
         {
             return static_cast<std::size_t>(detail::concat_cardinality<Rngs...>::value);
         }

@@ -145,20 +145,21 @@ namespace ranges
         {
             // This overload is deleted because when piping a range into an
             // view, it must be moved in.
-            template<typename Rng, typename ViewFn>         // **************************
-            constexpr auto                                  // **************************
-            operator|(Rng &&, view_closure<ViewFn> const &) // ******* READ THIS ********
-                                                            // **** IF YOUR COMPILE *****
-                -> CPP_ret(Rng)(                             // ****** BREAKS HERE *******
-                    requires range<Rng> &&                  // **************************
-                    (!viewable_range<Rng>)) = delete;       // **************************
-            // **************************************************************************
-            // *    When piping a range into an adaptor, the range must satisfy the     *
-            // *    "viewable_range" concept. A range is viewable when either or both   *
-            // *    of these things are true:                                           *
-            // *      - The range is an lvalue (not a temporary object), OR             *
-            // *      - The range is a view (not a container).                          *
-            // **************************************************************************
+            template(typename Rng, typename ViewFn)(           // ************************
+                requires range<Rng> AND (!viewable_range<Rng>))// ************************
+            constexpr Rng                                      // ************************
+            operator|(Rng &&, view_closure<ViewFn> const &)    // ****** READ THIS *******
+                = delete;                                      // *** IF YOUR COMPILE ****
+                                                               // ***** BREAKS HERE ******
+                                                               // ************************
+                                                               // ************************
+            // ***************************************************************************
+            // *    When piping a range into an adaptor, the range must satisfy the      *
+            // *    "viewable_range" concept. A range is viewable when either or both    *
+            // *    of these things are true:                                            *
+            // *      - The range is an lvalue (not a temporary object), OR              *
+            // *      - The range is a view (not a container).                           *
+            // ***************************************************************************
         } // namespace )
 #endif    // RANGES_WORKAROUND_CLANG_43400
 

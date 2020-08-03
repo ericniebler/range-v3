@@ -102,11 +102,11 @@ namespace ranges
                            std::move(proj));
         }
 
-        template<typename Rng, typename ORef, typename BOp = minus, typename P = identity,
-                 typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>>
+        template(typename Rng, typename ORef, typename BOp = minus, typename P = identity,
+                 typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>)( //
+            requires range<Rng> AND differenceable<I, O, BOp, P>)
         auto operator()(Rng && rng, ORef && result, BOp bop = BOp{}, P proj = P{}) const
-            -> CPP_ret(adjacent_difference_result<borrowed_iterator_t<Rng>, O>)( //
-                requires range<Rng> && differenceable<I, O, BOp, P>)
+            -> adjacent_difference_result<borrowed_iterator_t<Rng>, O>
         {
             return (*this)(begin(rng),
                            end(rng),
@@ -115,12 +115,12 @@ namespace ranges
                            std::move(proj));
         }
 
-        template<typename Rng, typename ORng, typename BOp = minus, typename P = identity,
-                 typename I = iterator_t<Rng>, typename O = iterator_t<ORng>>
+        template(typename Rng, typename ORng, typename BOp = minus, typename P = identity,
+                 typename I = iterator_t<Rng>, typename O = iterator_t<ORng>)( //
+            requires range<Rng> AND range<ORng> AND differenceable<I, O, BOp, P>)
         auto operator()(Rng && rng, ORng && result, BOp bop = BOp{}, P proj = P{}) const
-            -> CPP_ret(adjacent_difference_result<borrowed_iterator_t<Rng>,
-                                                  borrowed_iterator_t<ORng>>)( //
-                requires range<Rng> && range<ORng> && differenceable<I, O, BOp, P>)
+            -> adjacent_difference_result<borrowed_iterator_t<Rng>,
+                                          borrowed_iterator_t<ORng>>
         {
             return (*this)(begin(rng),
                            end(rng),

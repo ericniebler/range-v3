@@ -71,8 +71,9 @@ namespace ranges
                 rng_->satisfy_forward(++it);
             }
             CPP_member
-            constexpr auto prev(iterator_t<Rng> & it) const -> CPP_ret(void)( //
-                requires bidirectional_range<Rng>)
+            constexpr auto prev(iterator_t<Rng> & it) const //
+                -> CPP_ret(void)( //
+                    requires bidirectional_range<Rng>)
             {
                 rng_->satisfy_reverse(it);
             }
@@ -85,16 +86,18 @@ namespace ranges
             return {this};
         }
         CPP_member
-        constexpr auto end_adaptor() -> CPP_ret(adaptor)( //
-            requires common_range<Rng>)
+        constexpr auto end_adaptor() //
+            -> CPP_ret(adaptor)( //
+                requires common_range<Rng>)
         {
             if(bidirectional_range<Rng>)
                 cache_begin();
             return {this};
         }
         CPP_member
-        constexpr auto end_adaptor() noexcept -> CPP_ret(adaptor_base)( //
-            requires (!common_range<Rng>))
+        constexpr auto end_adaptor() noexcept //
+            -> CPP_ret(adaptor_base)( //
+                requires (!common_range<Rng>))
         {
             return {};
         }

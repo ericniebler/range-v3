@@ -85,7 +85,9 @@ namespace ranges
                 ++it_;
             }
             CPP_member
-            auto prev() -> CPP_ret(void)(requires bidirectional_range<Rng>)
+            auto prev() //
+                -> CPP_ret(void)( //
+                    requires bidirectional_range<Rng>)
             {
                 --it_;
             }
@@ -208,8 +210,9 @@ namespace ranges
                 base_t::next();
             }
             CPP_member
-            auto prev(iterator_t<Rng> & it) -> CPP_ret(void)( //
-                requires bidirectional_range<Rng>)
+            auto prev(iterator_t<Rng> & it) //
+                -> CPP_ret(void)( //
+                    requires bidirectional_range<Rng>)
             {
                 base_t::prev();
                 --it;
@@ -331,8 +334,9 @@ namespace ranges
             return {this->n_};
         }
         CPP_member
-        auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires range<Rng const>)
+        auto begin_adaptor() const //
+            -> CPP_ret(adaptor<true>)( //
+                requires range<Rng const>)
         {
             return {this->n_};
         }
@@ -341,8 +345,9 @@ namespace ranges
             return {this->n_};
         }
         CPP_member
-        auto end_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires range<Rng const>)
+        auto end_adaptor() const //
+            -> CPP_ret(adaptor<true>)( //
+                requires range<Rng const>)
         {
             return {this->n_};
         }

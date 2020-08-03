@@ -305,23 +305,23 @@ namespace ranges
         {
             return ++it;
         }
-        template<typename I>
-        constexpr auto operator()(I it, iter_difference_t<I> n) const
-            -> CPP_ret(I)(requires input_or_output_iterator<I>)
+        template(typename I)( //
+            requires input_or_output_iterator<I>) //
+        constexpr I operator()(I it, iter_difference_t<I> n) const
         {
             advance(it, n);
             return it;
         }
-        template<typename I, typename S>
-        constexpr auto operator()(I it, S s) const
-            -> CPP_ret(I)(requires sentinel_for<S, I>)
+        template(typename I, typename S)( //
+            requires sentinel_for<S, I>) //
+        constexpr I operator()(I it, S s) const
         {
             advance(it, static_cast<S &&>(s));
             return it;
         }
-        template<typename I, typename S>
-        constexpr auto operator()(I it, iter_difference_t<I> n, S bound) const
-            -> CPP_ret(I)(requires sentinel_for<S, I>)
+        template(typename I, typename S)( //
+            requires sentinel_for<S, I>) //
+        constexpr I operator()(I it, iter_difference_t<I> n, S bound) const
         {
             advance(it, n, static_cast<S &&>(bound));
             return it;
@@ -333,22 +333,22 @@ namespace ranges
 
     struct prev_fn
     {
-        template<typename I>
-        constexpr auto operator()(I it) const
-            -> CPP_ret(I)(requires bidirectional_iterator<I>)
+        template(typename I)( //
+            requires bidirectional_iterator<I>) //
+        constexpr I operator()(I it) const
         {
             return --it;
         }
-        template<typename I>
-        constexpr auto operator()(I it, iter_difference_t<I> n) const
-            -> CPP_ret(I)(requires bidirectional_iterator<I>)
+        template(typename I)( //
+            requires bidirectional_iterator<I>) //
+        constexpr I operator()(I it, iter_difference_t<I> n) const
         {
             advance(it, -n);
             return it;
         }
-        template<typename I>
-        constexpr auto operator()(I it, iter_difference_t<I> n, I bound) const
-            -> CPP_ret(I)(requires bidirectional_iterator<I>)
+        template(typename I)( //
+            requires bidirectional_iterator<I>) //
+        constexpr I operator()(I it, iter_difference_t<I> n, I bound) const
         {
             advance(it, -n, static_cast<I &&>(bound));
             return it;

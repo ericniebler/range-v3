@@ -69,8 +69,9 @@ namespace ranges
             return {};
         }
         CPP_member
-        auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires range<Rng const>)
+        auto begin_adaptor() const //
+            -> CPP_ret(adaptor<true>)( //
+                requires range<Rng const>)
         {
             return {};
         }
@@ -79,8 +80,9 @@ namespace ranges
             return {};
         }
         CPP_member
-        auto end_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires range<Rng const>)
+        auto end_adaptor() const //
+            -> CPP_ret(adaptor<true>)( //
+                requires range<Rng const>)
         {
             return {};
         }

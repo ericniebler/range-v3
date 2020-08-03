@@ -142,12 +142,12 @@ namespace ranges
             CPP_member
             constexpr CPP_ctor(indexed_datum)()(                          //
                 noexcept(std::is_nothrow_default_constructible<T>::value) //
-                requires default_constructible<T>)
+                    requires default_constructible<T>)
               : datum_{}
             {}
             template(typename... Ts)(                                      //
                 requires constructible_from<T, Ts...> && (sizeof...(Ts) != 0)) //
-                constexpr indexed_datum(Ts &&... ts) noexcept(
+            constexpr indexed_datum(Ts &&... ts) noexcept(
                     std::is_nothrow_constructible<T, Ts...>::value)
               : datum_(static_cast<Ts &&>(ts)...)
             {}
@@ -680,7 +680,7 @@ namespace ranges
         CPP_member
         constexpr CPP_ctor(variant)()(                                         //
             noexcept(std::is_nothrow_default_constructible<datum_t<0>>::value) //
-            requires default_constructible<datum_t<0>>)
+                requires default_constructible<datum_t<0>>)
           : variant{emplaced_index<0>}
         {}
         template(std::size_t N, typename... Args)(        //

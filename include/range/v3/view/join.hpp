@@ -148,8 +148,9 @@ namespace ranges
         {}
         // Not to spec
         CPP_member
-        static constexpr auto size() -> CPP_ret(std::size_t)( //
-            requires (detail::join_cardinality<Rng>() >= 0))
+        static constexpr auto size() //
+            -> CPP_ret(std::size_t)( //
+                requires (detail::join_cardinality<Rng>() >= 0))
         {
             return static_cast<std::size_t>(detail::join_cardinality<Rng>());
         }
@@ -224,8 +225,9 @@ namespace ranges
               , inner_it_(std::move(that.inner_it_))
             {}
             CPP_member
-            constexpr auto arrow() -> CPP_ret(iterator_t<CInner>)( //
-                requires detail::has_arrow_<iterator_t<CInner>>)
+            constexpr auto arrow() //
+                -> CPP_ret(iterator_t<CInner>)( //
+                    requires detail::has_arrow_<iterator_t<CInner>>)
             {
                 return inner_it_;
             }
@@ -234,9 +236,11 @@ namespace ranges
                 return outer_it_ == ranges::end(rng_->outer_);
             }
             CPP_member
-            constexpr auto equal(cursor const & that) const -> CPP_ret(bool)( //
-                requires ref_is_glvalue::value && equality_comparable<
-                    iterator_t<COuter>> && equality_comparable<iterator_t<CInner>>)
+            constexpr auto equal(cursor const & that) const //
+                -> CPP_ret(bool)( //
+                    requires ref_is_glvalue::value && //
+                        equality_comparable<iterator_t<COuter>> && //
+                        equality_comparable<iterator_t<CInner>>)
             {
                 return outer_it_ == that.outer_it_ && inner_it_ == that.inner_it_;
             }
@@ -250,9 +254,11 @@ namespace ranges
                 }
             }
             CPP_member
-            constexpr auto prev() -> CPP_ret(void)( //
-                requires ref_is_glvalue::value && bidirectional_range<COuter> &&
-                    bidirectional_range<CInner> &&
+            constexpr auto prev() //
+                -> CPP_ret(void)( //
+                    requires ref_is_glvalue::value && //
+                        bidirectional_range<COuter> && //
+                        bidirectional_range<CInner> && //
                         common_range<CInner>) // ericniebler/stl2#606
             {
                 if(outer_it_ == ranges::end(rng_->outer_))
@@ -356,8 +362,9 @@ namespace ranges
           , val_(views::all(std::move(val)))
         {}
         CPP_member
-        static constexpr auto size() -> CPP_ret(std::size_t)( //
-            requires (detail::join_cardinality<Rng, ValRng>() >= 0))
+        static constexpr auto size() //
+            -> CPP_ret(std::size_t)( //
+                requires (detail::join_cardinality<Rng, ValRng>() >= 0))
         {
             return static_cast<std::size_t>(detail::join_cardinality<Rng, ValRng>());
         }

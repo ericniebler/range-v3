@@ -827,15 +827,15 @@ namespace ranges
 // necessary operation.
 namespace __gnu_debug
 {
-    template<typename I1, typename I2, typename Seq>
-    auto operator-(_Safe_iterator<I1, Seq> const &, _Safe_iterator<I2, Seq> const &)
-        -> CPP_ret(void)( //
-            requires(!::ranges::sized_sentinel_for<I1, I2>)) = delete;
+    template(typename I1, typename I2, typename Seq)( //
+        requires (!::ranges::sized_sentinel_for<I1, I2>)) //
+    void operator-(_Safe_iterator<I1, Seq> const &, _Safe_iterator<I2, Seq> const &) =
+        delete;
 
-    template<typename I1, typename Seq>
-    auto operator-(_Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &)
-        -> CPP_ret(void)( //
-            requires (!::ranges::sized_sentinel_for<I1, I1>)) = delete;
+    template(typename I1, typename Seq)( //
+        requires (!::ranges::sized_sentinel_for<I1, I1>)) //
+    void operator-(_Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &) =
+        delete;
 } // namespace __gnu_debug
 #endif
 

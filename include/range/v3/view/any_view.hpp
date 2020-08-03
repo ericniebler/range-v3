@@ -452,22 +452,25 @@ namespace ranges
                 ptr_->next();
             }
             CPP_member
-            auto prev() -> CPP_ret(void)( //
-                requires (category::bidirectional == (Cat & category::bidirectional)))
+            auto prev() //
+                -> CPP_ret(void)( //
+                    requires (category::bidirectional == (Cat & category::bidirectional)))
             {
                 RANGES_EXPECT(ptr_);
                 ptr_->prev();
             }
             CPP_member
-            auto advance(std::ptrdiff_t n) -> CPP_ret(void)( //
-                requires (category::random_access == (Cat & category::random_access)))
+            auto advance(std::ptrdiff_t n) //
+                -> CPP_ret(void)( //
+                    requires (category::random_access == (Cat & category::random_access)))
             {
                 RANGES_EXPECT(ptr_);
                 ptr_->advance(n);
             }
             CPP_member
-            auto distance_to(any_cursor const & that) const -> CPP_ret(std::ptrdiff_t)( //
-                requires (category::random_access == (Cat & category::random_access)))
+            auto distance_to(any_cursor const & that) const //
+                -> CPP_ret(std::ptrdiff_t)( //
+                    requires (category::random_access == (Cat & category::random_access)))
             {
                 RANGES_EXPECT(!ptr_ == !that.ptr_);
                 return !ptr_ ? 0 : ptr_->distance_to(*that.ptr_);
@@ -567,8 +570,9 @@ namespace ranges
         }
 
         CPP_member
-        auto size() -> CPP_ret(std::size_t)( //
-            requires (category::sized == (Cat & category::sized)))
+        auto size() //
+            -> CPP_ret(std::size_t)( //
+                requires (category::sized == (Cat & category::sized)))
         {
             return ptr_ ? ptr_->size() : 0;
         }
@@ -619,8 +623,9 @@ namespace ranges
         {}
 
         CPP_member
-        auto size() -> CPP_ret(std::size_t)( //
-            requires (category::sized == (Cat & category::sized)))
+        auto size() //
+            -> CPP_ret(std::size_t)( //
+                requires (category::sized == (Cat & category::sized)))
         {
             return ptr_ ? ptr_->size() : 0;
         }

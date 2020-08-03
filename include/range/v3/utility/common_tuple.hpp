@@ -114,15 +114,15 @@ namespace ranges
         // Construction
         CPP_member
         CPP_ctor(common_tuple)()( //
-            noexcept(meta::and_c<
-                     std::is_nothrow_default_constructible<Ts>::value...>::value) //
-            requires default_constructible<std::tuple<Ts...>>)
+            noexcept( //
+                meta::and_c<std::is_nothrow_default_constructible<Ts>::value...>::value)
+                requires default_constructible<std::tuple<Ts...>>)
           : common_tuple::forward_tuple_interface{}
         {}
         template(typename... Us)(                                              //
             requires constructible_from<detail::args<Ts...>, detail::args<Us...>>) //
-            explicit common_tuple(Us &&... us) noexcept(
-                meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
+        explicit common_tuple(Us &&... us) //
+            noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
           : common_tuple::forward_tuple_interface{static_cast<Us &&>(us)...}
         {}
         template(typename... Us)( //
@@ -270,21 +270,21 @@ namespace ranges
 
     // Logical operators
 #define LOGICAL_OP(OP, CONCEPT)                                                    \
-    template<typename... Ts, typename... Us>                                       \
-    auto operator OP(common_tuple<Ts...> const & a, common_tuple<Us...> const & b) \
-        -> CPP_ret(bool)(requires and_v<CONCEPT<Ts, Us>...>)                        \
+    template(typename... Ts, typename... Us)(                                      \
+        requires and_v<CONCEPT<Ts, Us>...>)                                        \
+    bool operator OP(common_tuple<Ts...> const & a, common_tuple<Us...> const & b) \
     {                                                                              \
         return a.base() OP b.base();                                               \
     }                                                                              \
-    template<typename... Ts, typename... Us>                                       \
-    auto operator OP(std::tuple<Ts...> const & a, common_tuple<Us...> const & b)   \
-        -> CPP_ret(bool)(requires and_v<CONCEPT<Ts, Us>...>)                        \
+    template(typename... Ts, typename... Us)(                                      \
+        requires and_v<CONCEPT<Ts, Us>...>)                                        \
+    bool operator OP(std::tuple<Ts...> const & a, common_tuple<Us...> const & b)   \
     {                                                                              \
         return a OP b.base();                                                      \
     }                                                                              \
-    template<typename... Ts, typename... Us>                                       \
-    auto operator OP(common_tuple<Ts...> const & a, std::tuple<Us...> const & b)   \
-        -> CPP_ret(bool)(requires and_v<CONCEPT<Ts, Us>...>)                        \
+    template(typename... Ts, typename... Us)(                                      \
+        requires and_v<CONCEPT<Ts, Us>...>)                                        \
+    bool operator OP(common_tuple<Ts...> const & a, std::tuple<Us...> const & b)   \
     {                                                                              \
         return a.base() OP b;                                                      \
     }                                                                              \
@@ -326,8 +326,8 @@ namespace ranges
         // Construction
         CPP_member
         CPP_ctor(common_pair)()( //
-            noexcept(std::is_nothrow_default_constructible<F>::value &&
-                         std::is_nothrow_default_constructible<S>::value) //
+            noexcept(std::is_nothrow_default_constructible<F>::value && //
+                     std::is_nothrow_default_constructible<S>::value) //
             requires default_constructible<F> && default_constructible<S>)
           : std::pair<F, S>{}
         {}

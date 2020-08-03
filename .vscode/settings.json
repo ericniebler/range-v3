@@ -93,7 +93,8 @@
         "valarray": "cpp",
         "version": "cpp",
         "source_location": "cpp",
-        "span": "cpp"
+        "span": "cpp",
+        "ranges": "cpp"
     },
     "C_Cpp.configurationWarnings": "Disabled",
     "cmake.configureOnOpen": true

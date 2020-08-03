@@ -75,9 +75,9 @@ namespace ranges
         template<typename T>
         void begin(std::initializer_list<T>) = delete;
 
-        template<class I>
-        auto is_iterator(I)
-            -> CPP_ret(void)(requires input_or_output_iterator<I>);
+        template(typename I)( //
+            requires input_or_output_iterator<I>) //
+        void is_iterator(I);
 
         // clang-format off
         template<typename T>
@@ -199,8 +199,9 @@ namespace ranges
         template<typename T>
         void end(std::initializer_list<T>) = delete;
 
-        template<typename I, typename S>
-        auto _is_sentinel(S, I) -> CPP_ret(void)(requires sentinel_for<S, I>);
+        template(typename I, typename S)( //
+            requires sentinel_for<S, I>)
+        void _is_sentinel(S, I);
 
         // clang-format off
         template<typename T>

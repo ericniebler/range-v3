@@ -276,11 +276,10 @@ namespace ranges
                 }
 
                 // generating functions
-                template<typename I, typename S>
-                RANGES_INTENDED_MODULAR_ARITHMETIC auto generate(I first,
-                                                                 S const last) const
-                    -> CPP_ret(void)( //
-                        requires random_access_iterator<I> && sentinel_for<S, I>)
+                template(typename I, typename S)( //
+                    requires random_access_iterator<I> AND sentinel_for<S, I>)
+                RANGES_INTENDED_MODULAR_ARITHMETIC //
+                void generate(I first, S const last) const
                 {
                     auto src_begin = mixer_.begin();
                     auto src_end = mixer_.end();

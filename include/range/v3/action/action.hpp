@@ -117,12 +117,12 @@ namespace ranges
         // clang-format off
         namespace RANGES_ADL_BARRIER_FOR(action_closure_base)
         {
-            template(typename Rng, typename ActionFn) // *****************************
-                (requires range<Rng>)                     // *****************************
-            constexpr auto                                // ********* READ THIS *********
-            operator|(Rng &,                              // ****** IF YOUR COMPILE ******
-                      action_closure<ActionFn> const &)   // ******** BREAKS HERE ********
-                -> Rng = delete;                          // *****************************
+            template(typename Rng, typename ActionFn)(  // *******************************
+                requires range<Rng>)                    // *******************************
+            constexpr Rng                               // ********** READ THIS **********
+            operator|(Rng &,                            // ******* IF YOUR COMPILE *******
+                      action_closure<ActionFn> const &) // ********* BREAKS HERE *********
+                = delete;                               // *******************************
             // ***************************************************************************
             // *    When piping a range into an action, the range must be moved in.      *
             // ***************************************************************************

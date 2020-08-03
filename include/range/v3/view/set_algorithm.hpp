@@ -73,8 +73,9 @@ namespace ranges
                         ranges::end(rng2_)};
             }
             CPP_member
-            auto begin_cursor() const -> CPP_ret(cursor<true>)( //
-                requires range<Rng1 const> && range<Rng2 const>)
+            auto begin_cursor() const //
+                -> CPP_ret(cursor<true>)( //
+                    requires range<Rng1 const> && range<Rng2 const>)
             {
                 return {pred_,
                         proj1_,
@@ -181,8 +182,9 @@ namespace ranges
                 satisfy();
             }
             CPP_member
-            auto equal(set_difference_cursor const & that) const -> CPP_ret(bool)( //
-                requires forward_range<Rng1>)
+            auto equal(set_difference_cursor const & that) const //
+                -> CPP_ret(bool)( //
+                    requires forward_range<Rng1>)
             {
                 // does not support comparing iterators from different ranges
                 return it1_ == that.it1_;
@@ -351,8 +353,9 @@ namespace ranges
                 satisfy();
             }
             CPP_member
-            auto equal(set_intersection_cursor const & that) const -> CPP_ret(bool)( //
-                requires forward_range<Rng1>)
+            auto equal(set_intersection_cursor const & that) const //
+                -> CPP_ret(bool)( //
+                    requires forward_range<Rng1>)
             {
                 // does not support comparing iterators from different ranges
                 return it1_ == that.it1_;
@@ -545,8 +548,9 @@ namespace ranges
                 satisfy();
             }
             CPP_member
-            auto equal(set_union_cursor const & that) const -> CPP_ret(bool)( //
-                requires forward_range<Rng1> && forward_range<Rng2>)
+            auto equal(set_union_cursor const & that) const //
+                -> CPP_ret(bool)( //
+                    requires forward_range<Rng1> && forward_range<Rng2>)
             {
                 // does not support comparing iterators from different ranges
                 return (it1_ == that.it1_) && (it2_ == that.it2_);

@@ -293,8 +293,9 @@ namespace ranges
                 ++it2_;
             }
             CPP_member
-            auto equal(cursor const & that) const -> CPP_ret(bool)( //
-                requires forward_range<Rng1> && forward_range<Rng2>)
+            auto equal(cursor const & that) const //
+                -> CPP_ret(bool)( //
+                    requires forward_range<Rng1> && forward_range<Rng2>)
             {
                 // By returning true if *any* of the iterators are equal, we allow
                 // transformed ranges to be of different lengths, stopping when the first
@@ -309,8 +310,9 @@ namespace ranges
                 return it1_ == s.end1_ || it2_ == s.end2_;
             }
             CPP_member
-            auto prev() -> CPP_ret(void)( //
-                requires bidirectional_range<R1> && bidirectional_range<R2>)
+            auto prev() //
+                -> CPP_ret(void)( //
+                    requires bidirectional_range<R1> && bidirectional_range<R2>)
             {
                 --it1_;
                 --it2_;
@@ -323,9 +325,10 @@ namespace ranges
                 ranges::advance(it2_, n);
             }
             CPP_member
-            auto distance_to(cursor const & that) const -> CPP_ret(difference_type)( //
-                requires sized_sentinel_for<iterator_t<R1>, iterator_t<R1>> &&
-                    sized_sentinel_for<iterator_t<R2>, iterator_t<R2>>)
+            auto distance_to(cursor const & that) const //
+                -> CPP_ret(difference_type)( //
+                    requires sized_sentinel_for<iterator_t<R1>, iterator_t<R1>> &&
+                        sized_sentinel_for<iterator_t<R2>, iterator_t<R2>>)
             {
                 // Return the smallest distance (in magnitude) of any of the iterator
                 // pairs. This is to accommodate zippers of sequences of different length.
@@ -395,8 +398,9 @@ namespace ranges
           , rng2_(std::move(rng2))
         {}
         CPP_member
-        static constexpr auto size() -> CPP_ret(std::size_t)( //
-            requires (my_cardinality >= 0))
+        static constexpr auto size() //
+            -> CPP_ret(std::size_t)( //
+                requires (my_cardinality >= 0))
         {
             return static_cast<std::size_t>(my_cardinality);
         }

@@ -580,14 +580,16 @@ namespace ranges
 #endif
         }
         CPP_member
-        constexpr auto begin() const -> CPP_ret(outer_iterator<true>)( //
-            requires forward_range<V> && forward_range<const V>)
+        constexpr auto begin() const //
+            -> CPP_ret(outer_iterator<true>)( //
+                requires forward_range<V> && forward_range<const V>)
         {
             return {*this, ranges::begin(base_)};
         }
         CPP_member
-        constexpr auto end() -> CPP_ret(outer_iterator<simple_view<V>()>)( //
-            requires forward_range<V> && common_range<V>)
+        constexpr auto end() //
+            -> CPP_ret(outer_iterator<simple_view<V>()>)( //
+                requires forward_range<V> && common_range<V>)
         {
             return outer_iterator<simple_view<V>()>{*this, ranges::end(base_)};
         }

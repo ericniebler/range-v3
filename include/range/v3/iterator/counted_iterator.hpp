@@ -163,8 +163,9 @@ namespace ranges
         constexpr auto operator++(int) -> decltype(std::declval<I2 &>()++)
 #else  // ^^^ workaround ^^^ / vvv no workaround vvv
         CPP_member
-        constexpr auto operator++(int) -> CPP_ret(decltype(std::declval<I &>()++))( //
-            requires (!forward_iterator<I>))
+        constexpr auto operator++(int) //
+            -> CPP_ret(decltype(std::declval<I &>()++))( //
+                requires (!forward_iterator<I>))
 #endif // RANGES_WORKAROUND_MSVC_677925
         {
             RANGES_EXPECT(cnt_ > 0);
@@ -172,8 +173,9 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto operator++(int) -> CPP_ret(counted_iterator)( //
-            requires forward_iterator<I>)
+        constexpr auto operator++(int) //
+            -> CPP_ret(counted_iterator)( //
+                requires forward_iterator<I>)
         {
             auto tmp(*this);
             ++*this;
@@ -181,8 +183,9 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto operator--() -> CPP_ret(counted_iterator &)( //
-            requires bidirectional_iterator<I>)
+        constexpr auto operator--() //
+            -> CPP_ret(counted_iterator &)( //
+                requires bidirectional_iterator<I>)
         {
             --current_;
             ++cnt_;
@@ -190,8 +193,9 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto operator--(int) -> CPP_ret(counted_iterator)( //
-            requires bidirectional_iterator<I>)
+        constexpr auto operator--(int) //
+            -> CPP_ret(counted_iterator)( //
+                requires bidirectional_iterator<I>)
         {
             auto tmp(*this);
             --*this;
@@ -199,8 +203,9 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto operator+=(difference_type n) -> CPP_ret(counted_iterator &)( //
-            requires random_access_iterator<I>)
+        constexpr auto operator+=(difference_type n) //
+            -> CPP_ret(counted_iterator &)( //
+                requires random_access_iterator<I>)
         {
             RANGES_EXPECT(cnt_ >= n);
             current_ += n;
@@ -209,8 +214,9 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto operator+(difference_type n) const -> CPP_ret(counted_iterator)( //
-            requires random_access_iterator<I>)
+        constexpr auto operator+(difference_type n) const //
+            -> CPP_ret(counted_iterator)( //
+                requires random_access_iterator<I>)
         {
             auto tmp(*this);
             tmp += n;
@@ -218,8 +224,9 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto operator-=(difference_type n) -> CPP_ret(counted_iterator &)( //
-            requires random_access_iterator<I>)
+        constexpr auto operator-=(difference_type n) //
+            -> CPP_ret(counted_iterator &)( //
+                requires random_access_iterator<I>)
         {
             RANGES_EXPECT(cnt_ >= -n);
             current_ -= n;
@@ -228,8 +235,9 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto operator-(difference_type n) const -> CPP_ret(counted_iterator)( //
-            requires random_access_iterator<I>)
+        constexpr auto operator-(difference_type n) const //
+            -> CPP_ret(counted_iterator)( //
+                requires random_access_iterator<I>)
         {
             auto tmp(*this);
             tmp -= n;
@@ -237,7 +245,7 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto operator[](difference_type n) const
+        constexpr auto operator[](difference_type n) const //
             -> CPP_ret(iter_reference_t<I>)( //
                 requires random_access_iterator<I>)
         {
@@ -247,8 +255,8 @@ namespace ranges
 
 #if !RANGES_BROKEN_CPO_LOOKUP
         CPP_broken_friend_member
-        friend constexpr auto iter_move(counted_iterator const & i) noexcept(
-            detail::has_nothrow_iter_move_v<I>)
+        friend constexpr auto iter_move(counted_iterator const & i) //
+            noexcept(detail::has_nothrow_iter_move_v<I>) //
             -> CPP_broken_friend_ret(iter_rvalue_reference_t<I>)( //
                 requires input_iterator<I>)
         {
@@ -258,8 +266,8 @@ namespace ranges
         friend constexpr auto iter_swap(counted_iterator const & x,
                                         counted_iterator<I2> const & y) //
             noexcept(is_nothrow_indirectly_swappable<I, I2>::value)
-                -> CPP_broken_friend_ret(void)( //
-                    requires indirectly_swappable<I2, I>)
+            -> CPP_broken_friend_ret(void)( //
+                requires indirectly_swappable<I2, I>)
         {
             return ranges::iter_swap(x.current_, _counted_iterator_::access::current(y));
         }
@@ -365,11 +373,10 @@ namespace ranges
         return !(x < y);
     }
 
-    template<typename I1, typename I2>
-    constexpr auto operator-(counted_iterator<I1> const & x,
-                             counted_iterator<I2> const & y)
-        -> CPP_ret(iter_difference_t<I2>)( //
-            requires common_with<I1, I2>)
+    template(typename I1, typename I2)( //
+        requires common_with<I1, I2>) //
+    constexpr iter_difference_t<I2> operator-(counted_iterator<I1> const & x,
+                                              counted_iterator<I2> const & y)
     {
         return y.count() - x.count();
     }

@@ -115,30 +115,38 @@ namespace ranges
                 return tmp;
             }
             CPP_member
-            auto operator--() -> CPP_ret(to_container_iterator &)(
-                requires derived_from<iterator_category, std::bidirectional_iterator_tag>)
+            auto operator--() //
+                -> CPP_ret(to_container_iterator &)(
+                    requires derived_from<iterator_category,
+                                          std::bidirectional_iterator_tag>)
             {
                 --it_;
                 return *this;
             }
             CPP_member
-            auto operator--(int) -> CPP_ret(to_container_iterator &)(
-                requires derived_from<iterator_category, std::bidirectional_iterator_tag>)
+            auto operator--(int) //
+                -> CPP_ret(to_container_iterator &)(
+                    requires derived_from<iterator_category,
+                                          std::bidirectional_iterator_tag>)
             {
                 auto tmp = *this;
                 ++it_;
                 return tmp;
             }
             CPP_member
-            auto operator+=(difference_type n) -> CPP_ret(to_container_iterator &)(
-                requires derived_from<iterator_category, std::random_access_iterator_tag>)
+            auto operator+=(difference_type n) //
+                -> CPP_ret(to_container_iterator &)(
+                    requires derived_from<iterator_category,
+                                          std::random_access_iterator_tag>)
             {
                 it_ += n;
                 return *this;
             }
             CPP_member
-            auto operator-=(difference_type n) -> CPP_ret(to_container_iterator &)(
-                requires derived_from<iterator_category, std::random_access_iterator_tag>)
+            auto operator-=(difference_type n) //
+                -> CPP_ret(to_container_iterator &)(
+                    requires derived_from<iterator_category,
+                                          std::random_access_iterator_tag>)
             {
                 it_ -= n;
                 return *this;
@@ -177,8 +185,10 @@ namespace ranges
                 return i.it_ - j.it_;
             }
             CPP_member
-            auto operator[](difference_type n) const -> CPP_ret(reference)(
-                requires derived_from<iterator_category, std::random_access_iterator_tag>)
+            auto operator[](difference_type n) const //
+                -> CPP_ret(reference)(
+                    requires derived_from<iterator_category,
+                                          std::random_access_iterator_tag>)
             {
                 return *(*this + n);
             }
@@ -443,43 +453,42 @@ namespace ranges
         // The old name "ranges::to_" is now deprecated:
         template<template<typename...> class ContT>
         RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
-        auto to_(detail::to_container = {})
-            -> detail::to_container_fn<detail::from_range<ContT>>
+        detail::to_container_fn<detail::from_range<ContT>> to_(detail::to_container = {})
         {
             return {};
         }
-        template<template<typename...> class ContT, typename Rng>
-        RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
-        auto to_(Rng && rng) -> CPP_ret(ContT<range_value_t<Rng>>)( //
-            requires range<Rng> &&
+        template(template<typename...> class ContT, typename Rng)( //
+            requires range<Rng> AND
                 detail::convertible_to_cont<Rng, ContT<range_value_t<Rng>>>)
+        RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
+        ContT<range_value_t<Rng>> to_(Rng && rng)
         {
             return static_cast<Rng &&>(rng) | ranges::to_<ContT>();
         }
-        template<template<typename...> class ContT, typename T>
-        RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
-        auto to_(std::initializer_list<T> il) -> CPP_ret(ContT<T>)( //
+        template(template<typename...> class ContT, typename T)( //
             requires detail::convertible_to_cont<std::initializer_list<T>, ContT<T>>)
+        RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
+        ContT<T> to_(std::initializer_list<T> il)
         {
             return il | ranges::to_<ContT>();
         }
         template<typename Cont>
         RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
-        auto to_(detail::to_container = {}) -> detail::to_container_fn<meta::id<Cont>>
+        detail::to_container_fn<meta::id<Cont>> to_(detail::to_container = {})
         {
             return {};
         }
-        template<typename Cont, typename Rng>
+        template(typename Cont, typename Rng)( //
+            requires range<Rng> AND detail::convertible_to_cont<Rng, Cont>)
         RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
-        auto to_(Rng && rng) -> CPP_ret(Cont)( //
-            requires range<Rng> && detail::convertible_to_cont<Rng, Cont>)
+        Cont to_(Rng && rng)
         {
             return static_cast<Rng &&>(rng) | ranges::to_<Cont>();
         }
-        template<typename Cont, typename T>
-        RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
-        auto to_(std::initializer_list<T> list) -> CPP_ret(Cont)( //
+        template(typename Cont, typename T)( //
             requires detail::convertible_to_cont<std::initializer_list<T>, Cont>)
+        RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
+        Cont to_(std::initializer_list<T> list)
         {
             return list | ranges::to_<Cont>();
         }

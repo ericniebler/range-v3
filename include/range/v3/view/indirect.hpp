@@ -66,27 +66,31 @@ namespace ranges
         };
 
         CPP_member
-        constexpr auto begin_adaptor() noexcept -> CPP_ret(adaptor<false>)( //
-            requires (!simple_view<Rng>()))
+        constexpr auto begin_adaptor() noexcept //
+            -> CPP_ret(adaptor<false>)( //
+                requires (!simple_view<Rng>()))
         {
             return {};
         }
         CPP_member
-        constexpr auto begin_adaptor() const noexcept -> CPP_ret(adaptor<true>)( //
-            requires range<Rng const>)
+        constexpr auto begin_adaptor() const noexcept //
+            -> CPP_ret(adaptor<true>)( //
+                requires range<Rng const>)
         {
             return {};
         }
 
         CPP_member
-        constexpr auto end_adaptor() noexcept -> CPP_ret(adaptor<false>)( //
-            requires (!simple_view<Rng>()))
+        constexpr auto end_adaptor() noexcept //
+            -> CPP_ret(adaptor<false>)( //
+                requires (!simple_view<Rng>()))
         {
             return {};
         }
         CPP_member
-        constexpr auto end_adaptor() const noexcept -> CPP_ret(adaptor<true>)( //
-            requires range<Rng const>)
+        constexpr auto end_adaptor() const noexcept //
+            -> CPP_ret(adaptor<true>)( //
+                requires range<Rng const>)
         {
             return {};
         }

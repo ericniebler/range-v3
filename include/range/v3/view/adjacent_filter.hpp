@@ -89,8 +89,9 @@ namespace ranges
                         break;
             }
             CPP_member
-            constexpr auto prev(iterator_t<CRng> & it) const -> CPP_ret(void)( //
-                requires bidirectional_range<CRng>)
+            constexpr auto prev(iterator_t<CRng> & it) const //
+                -> CPP_ret(void)( //
+                    requires bidirectional_range<CRng>)
             {
                 auto const first = ranges::begin(rng_->base());
                 auto & pred = rng_->adjacent_filter_view::box::get();
@@ -111,8 +112,9 @@ namespace ranges
             return {this};
         }
         CPP_member
-        constexpr auto begin_adaptor() const noexcept -> CPP_ret(adaptor<true>)( //
-            requires detail::adjacent_filter_constraints<Rng const, Pred const>)
+        constexpr auto begin_adaptor() const noexcept //
+            -> CPP_ret(adaptor<true>)( //
+                requires detail::adjacent_filter_constraints<Rng const, Pred const>)
         {
             return {this};
         }
@@ -121,8 +123,9 @@ namespace ranges
             return {this};
         }
         CPP_member
-        constexpr auto end_adaptor() const noexcept -> CPP_ret(adaptor<true>)( //
-            requires detail::adjacent_filter_constraints<Rng const, Pred const>)
+        constexpr auto end_adaptor() const noexcept //
+            -> CPP_ret(adaptor<true>)( //
+                requires detail::adjacent_filter_constraints<Rng const, Pred const>)
         {
             return {this};
         }

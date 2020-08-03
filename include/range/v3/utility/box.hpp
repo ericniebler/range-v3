@@ -167,7 +167,7 @@ namespace ranges
         CPP_member
         constexpr CPP_ctor(box)()(                                          //
             noexcept(std::is_nothrow_default_constructible<Element>::value) //
-            requires std::is_default_constructible<Element>::value)
+                requires std::is_default_constructible<Element>::value)
           : value{}
         {}
 #if defined(__cpp_conditional_explicit) && __cpp_conditional_explicit > 0
@@ -222,7 +222,7 @@ namespace ranges
         CPP_member
         constexpr CPP_ctor(box)()(                                          //
             noexcept(std::is_nothrow_default_constructible<Element>::value) //
-            requires std::is_default_constructible<Element>::value)
+                requires std::is_default_constructible<Element>::value)
           : Element{}
         {}
 #if defined(__cpp_conditional_explicit) && __cpp_conditional_explicit > 0

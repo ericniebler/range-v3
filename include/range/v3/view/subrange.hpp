@@ -265,8 +265,9 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto size() const -> CPP_ret(size_type)( //
-            requires (K == subrange_kind::sized))
+        constexpr auto size() const //
+            -> CPP_ret(size_type)( //
+                requires (K == subrange_kind::sized))
         {
             return get_size_();
         }
@@ -321,22 +322,25 @@ namespace ranges
             return std::get<1>(data_);
         }
         CPP_member
-        constexpr auto get_size_() const -> CPP_ret(size_type)( //
-            requires sized_sentinel_for<S, I>)
+        constexpr auto get_size_() const //
+            -> CPP_ret(size_type)( //
+                requires sized_sentinel_for<S, I>)
         {
             return static_cast<size_type>(last_() - first_());
         }
         CPP_member
-        constexpr auto get_size_() const noexcept -> CPP_ret(size_type)( //
-            requires (detail::store_size_<K, S, I>()))
+        constexpr auto get_size_() const noexcept //
+            -> CPP_ret(size_type)( //
+                requires (detail::store_size_<K, S, I>()))
         {
             return std::get<2>(data_);
         }
         static constexpr void set_size_(...) noexcept
         {}
         CPP_member
-        constexpr auto set_size_(size_type n) noexcept -> CPP_ret(void)( //
-            requires (detail::store_size_<K, S, I>()))
+        constexpr auto set_size_(size_type n) noexcept //
+            -> CPP_ret(void)( //
+                requires (detail::store_size_<K, S, I>()))
         {
             std::get<2>(data_) = n;
         }

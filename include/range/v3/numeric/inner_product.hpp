@@ -76,9 +76,9 @@ namespace ranges
                  typename P2 = identity)( //
             requires sentinel_for<S1, I1> && sentinel_for<S2, I2> &&
                 inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>) //
-        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, T init,
-                        BOp1 bop1 = BOp1{}, BOp2 bop2 = BOp2{}, P1 proj1 = P1{},
-                        P2 proj2 = P2{}) const -> T
+        T operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, T init,
+                     BOp1 bop1 = BOp1{}, BOp2 bop2 = BOp2{}, P1 proj1 = P1{},
+                     P2 proj2 = P2{}) const
         {
             for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
                 init =
@@ -93,9 +93,8 @@ namespace ranges
                  typename P2 = identity)( //
             requires sentinel_for<S1, I1> &&
                     inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>) //
-        auto operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
-                        BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
-            -> T
+        T operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
+                     BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
         {
             return (*this)(std::move(begin1),
                            std::move(end1),
@@ -108,15 +107,14 @@ namespace ranges
                            std::move(proj2));
         }
 
-        template<typename Rng1, typename I2Ref, typename T, typename BOp1 = plus,
+        template(typename Rng1, typename I2Ref, typename T, typename BOp1 = plus,
                  typename BOp2 = multiplies, typename P1 = identity,
                  typename P2 = identity, typename I1 = iterator_t<Rng1>,
-                 typename I2 = uncvref_t<I2Ref>>
-        auto operator()(Rng1 && rng1, I2Ref && begin2, T init, BOp1 bop1 = BOp1{},
-                        BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
-            -> CPP_ret(T)( //
-                requires range<Rng1> &&
-                    inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
+                 typename I2 = uncvref_t<I2Ref>)( //
+            requires range<Rng1> AND
+                inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
+        T operator()(Rng1 && rng1, I2Ref && begin2, T init, BOp1 bop1 = BOp1{},
+                     BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
         {
             return (*this)(begin(rng1),
                            end(rng1),
@@ -128,15 +126,14 @@ namespace ranges
                            std::move(proj2));
         }
 
-        template<typename Rng1, typename Rng2, typename T, typename BOp1 = plus,
+        template(typename Rng1, typename Rng2, typename T, typename BOp1 = plus,
                  typename BOp2 = multiplies, typename P1 = identity,
                  typename P2 = identity, typename I1 = iterator_t<Rng1>,
-                 typename I2 = iterator_t<Rng2>>
-        auto operator()(Rng1 && rng1, Rng2 && rng2, T init, BOp1 bop1 = BOp1{},
-                        BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
-            -> CPP_ret(T)( //
-                requires range<Rng1> && range<Rng2> &&
-                    inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
+                 typename I2 = iterator_t<Rng2>)( //
+            requires range<Rng1> && range<Rng2> &&
+                inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
+        T operator()(Rng1 && rng1, Rng2 && rng2, T init, BOp1 bop1 = BOp1{},
+                     BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
         {
             return (*this)(begin(rng1),
                            end(rng1),

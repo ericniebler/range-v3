@@ -114,8 +114,9 @@ namespace ranges
             return {this};
         }
         CPP_member
-        auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires exclusive_scan_constraints<Rng const, T, Fun const>)
+        auto begin_adaptor() const //
+            -> CPP_ret(adaptor<true>)( //
+                requires exclusive_scan_constraints<Rng const, T, Fun const>)
         {
             return {this};
         }
