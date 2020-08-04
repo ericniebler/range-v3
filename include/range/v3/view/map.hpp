@@ -26,7 +26,7 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 // TODO: Reuse subrange's pair_like concept here and have get_first and get_second
 // dispatch through get<>()
@@ -42,10 +42,10 @@ namespace ranges
             return t;
         }
 
-        template<typename T>
+        template(typename T)( //
+            requires move_constructible<T>) //
         constexpr auto get_first_second_helper(T & t, std::false_type) noexcept(
-            std::is_nothrow_move_constructible<T>::value) -> CPP_ret(T)( //
-            requires move_constructible<T>)
+            std::is_nothrow_move_constructible<T>::value) -> T
         {
             return std::move(t);
         }
@@ -82,7 +82,7 @@ namespace ranges
 
         // clang-format off
         template<typename T>
-        CPP_concept_bool kv_pair_like_ =
+        CPP_concept kv_pair_like_ =
             invocable<get_first const &, T> &&
             invocable<get_second const &, T>;
         // clang-format on
@@ -95,10 +95,10 @@ namespace ranges
     {
         struct keys_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(keys_range_view<all_t<Rng>>)( //
-                requires viewable_range<Rng> && input_range<Rng> &&
-                    detail::kv_pair_like_<range_reference_t<Rng>>)
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND
+                    detail::kv_pair_like_<range_reference_t<Rng>>) //
+            auto operator()(Rng && rng) const -> keys_range_view<all_t<Rng>>
             {
                 return {all(static_cast<Rng &&>(rng)), detail::get_first{}};
             }
@@ -106,10 +106,10 @@ namespace ranges
 
         struct values_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(values_view<all_t<Rng>>)( //
-                requires viewable_range<Rng> && input_range<Rng> &&
-                    detail::kv_pair_like_<range_reference_t<Rng>>)
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND
+                    detail::kv_pair_like_<range_reference_t<Rng>>) //
+            auto operator()(Rng && rng) const -> values_view<all_t<Rng>>
             {
                 return {all(static_cast<Rng &&>(rng)), detail::get_second{}};
             }
@@ -143,6 +143,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

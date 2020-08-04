@@ -24,7 +24,7 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -35,18 +35,19 @@ namespace ranges
     {
         dangling() = default;
         /// Implicit converting constructor; ignores argument
-        template<typename T>
-        constexpr CPP_ctor(dangling)(T &&)( //
-            requires not_same_as_<T, dangling>)
+        template(typename T)( //
+            requires not_same_as_<T, dangling>) //
+        constexpr dangling(T &&)
         {}
     };
 
     /// \cond
     namespace detail
     {
-        CPP_template(class R, class U)( //
+        template(class R, class U)( //
             requires range<R>)          //
-            using maybe_dangling_ = if_then_t<detail::_borrowed_range<R>, U, dangling>;
+            using maybe_dangling_ =     //
+                meta::conditional_t<detail::_borrowed_range<R>, U, dangling>;
     }
     /// \endcond
 
@@ -82,10 +83,12 @@ namespace ranges
         using ranges::dangling;
         using ranges::borrowed_iterator_t;
 
-        using ranges::safe_iterator_t; // this is deprecated use borrowed_iterator_t instead.
+        template<typename Rng>
+        using safe_iterator_t RANGES_DEPRECATED(
+            "Please use ranges::borrowed_iterator_t instead.") = borrowed_iterator_t<Rng>;
     } // namespace cpp20
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

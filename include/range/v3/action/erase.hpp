@@ -21,28 +21,28 @@
 #include <range/v3/action/insert.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
     /// \cond
     namespace adl_erase_detail
     {
-        template<typename Cont, typename I, typename S>
+        template(typename Cont, typename I, typename S)( //
+            requires lvalue_container_like<Cont> AND forward_iterator<I> AND //
+                sentinel_for<S, I>) //
         auto erase(Cont && cont, I first, S last)                            //
-            -> CPP_ret(decltype(unwrap_reference(cont).erase(first, last)))( //
-                requires lvalue_container_like<Cont> && forward_iterator<I> &&
-                    sentinel_for<S, I>)
+            -> decltype(unwrap_reference(cont).erase(first, last))
         {
             return unwrap_reference(cont).erase(first, last);
         }
 
         struct erase_fn
         {
-            template<typename Rng, typename I, typename S>
+            template(typename Rng, typename I, typename S)( //
+                requires range<Rng> AND forward_iterator<I> AND sentinel_for<S, I>) //
             auto operator()(Rng && rng, I first, S last) const
-                -> CPP_ret(decltype(erase((Rng &&) rng, first, last)))( //
-                    requires range<Rng> && forward_iterator<I> && sentinel_for<S, I>)
+                -> decltype(erase((Rng &&) rng, first, last))
             {
                 return erase(static_cast<Rng &&>(rng), first, last);
             }
@@ -62,19 +62,19 @@ namespace ranges
     /// @{
     // clang-format off
     template<typename Rng, typename I, typename S>
-    CPP_concept_fragment(erasable_range_,
+    CPP_requires(erasable_range_,
         requires(Rng && rng, I first, S last)
         (
             ranges::erase((Rng &&) rng, first, last)
         )
     );
     template<typename Rng, typename I, typename S>
-    CPP_concept_bool erasable_range =
-        range<Rng> && CPP_fragment(ranges::erasable_range_, Rng, I, S);
+    CPP_concept erasable_range =
+        range<Rng> && CPP_requires_ref(ranges::erasable_range_, Rng, I, S);
     // clang-format on
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -27,7 +27,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -46,7 +46,7 @@ namespace ranges
     {
         struct tag
         {};
-        explicit constexpr nullopt_t(tag) noexcept
+        constexpr explicit nullopt_t(tag) noexcept
         {}
     };
 #if RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
@@ -97,7 +97,7 @@ namespace ranges
                         meta::bool_<detail::is_trivially_default_constructible_v<T> &&
                                     detail::is_trivially_copyable_v<T>>{})
                 {}
-                CPP_template(typename... Args)(              //
+                template(typename... Args)(              //
                     requires constructible_from<T, Args...>) //
                     constexpr explicit optional_storage(in_place_t,
                                                         Args &&... args) //
@@ -142,7 +142,7 @@ namespace ranges
                   : dummy_{}
                   , engaged_{false}
                 {}
-                CPP_template(typename... Args)(              //
+                template(typename... Args)(              //
                     requires constructible_from<T, Args...>) //
                     constexpr explicit optional_storage(in_place_t,
                                                         Args &&... args) //
@@ -200,10 +200,11 @@ namespace ranges
                     return RANGES_EXPECT(engaged_), detail::addressof(data_);
                 }
                 CPP_member
-                constexpr auto swap(optional_base & that) noexcept(
-                    std::is_nothrow_move_constructible<T>::value &&
-                        is_nothrow_swappable<T>::value) -> CPP_ret(void)( //
-                    requires move_constructible<T> && swappable<T>)
+                constexpr auto swap(optional_base & that) //
+                    noexcept(std::is_nothrow_move_constructible<T>::value &&
+                             is_nothrow_swappable<T>::value) //
+                    -> CPP_ret(void)( //
+                        requires move_constructible<T> && swappable<T>)
                 {
                     constexpr bool can_swap_trivially =
                         !::concepts::adl_swap_detail::is_adl_swappable_v<T> &&
@@ -214,10 +215,10 @@ namespace ranges
                 }
 
             protected:
-                template<typename... Args>
+                template(typename... Args)( //
+                    requires constructible_from<T, Args...>) //
                 auto construct_from(Args &&... args) noexcept(
-                    std::is_nothrow_constructible<T, Args...>::value) -> CPP_ret(T &)( //
-                    requires constructible_from<T, Args...>)
+                    std::is_nothrow_constructible<T, Args...>::value) -> T &
                 {
                     RANGES_EXPECT(!engaged_);
                     auto const address = static_cast<void *>(std::addressof(data_));
@@ -276,10 +277,9 @@ namespace ranges
             struct optional_base<T &>
             {
                 optional_base() = default;
-                template<typename Arg>
-                constexpr explicit CPP_ctor(optional_base)(in_place_t, Arg && arg)( //
-                    noexcept(true)                                                  //
+                template(typename Arg)( //
                     requires constructible_from<T &, Arg>)
+                constexpr explicit optional_base(in_place_t, Arg && arg) noexcept //
                   : ptr_(detail::addressof(arg))
                 {}
                 constexpr bool has_value() const noexcept
@@ -299,9 +299,10 @@ namespace ranges
                     ptr_ = nullptr;
                 }
                 CPP_member
-                constexpr auto swap(optional_base & that) noexcept(
-                    is_nothrow_swappable<T>::value) -> CPP_ret(void)( //
-                    requires swappable<T>)
+                constexpr auto swap(optional_base & that) //
+                    noexcept(is_nothrow_swappable<T>::value) //
+                    -> CPP_ret(void)( //
+                        requires swappable<T>)
                 {
                     if(ptr_ && that.ptr_)
                         ranges::swap(*ptr_, *that.ptr_);
@@ -310,9 +311,9 @@ namespace ranges
                 }
 
             protected:
-                template<typename U>
-                constexpr auto construct_from(U && ref) noexcept -> CPP_ret(T &)( //
-                    requires convertible_to<U &, T &>)
+                template(typename U)( //
+                    requires convertible_to<U &, T &>) //
+                constexpr auto construct_from(U && ref) noexcept -> T &
                 {
                     RANGES_EXPECT(!ptr_);
                     ptr_ = detail::addressof(ref);
@@ -460,7 +461,7 @@ namespace ranges
 
     // clang-format off
     template<typename U, typename T>
-    CPP_concept_bool optional_should_convert =
+    CPP_concept optional_should_convert =
         !(
             constructible_from<T, optional<U> &       > ||
             constructible_from<T, optional<U> &&      > ||
@@ -473,7 +474,7 @@ namespace ranges
         );
 
     template<typename U, typename T>
-    CPP_concept_bool optional_should_convert_assign =
+    CPP_concept optional_should_convert_assign =
         optional_should_convert<U, T> &&
         !(assignable_from<T &, optional<U> &> ||
         assignable_from<T &, optional<U> &&> ||
@@ -504,61 +505,82 @@ namespace ranges
 
         using base_t::base_t;
 
-        CPP_template(typename E, typename... Args)(                              //
+        template(typename E, typename... Args)(                              //
             requires constructible_from<T, std::initializer_list<E> &, Args...>) //
-            constexpr explicit optional(in_place_t, std::initializer_list<E> il,
-                                        Args &&... args) //
+        constexpr explicit optional(in_place_t, std::initializer_list<E> il,
+                                    Args &&... args) //
             noexcept(std::is_nothrow_constructible<T, std::initializer_list<E> &,
                                                    Args...>::value)
           : base_t(in_place, il, static_cast<Args &&>(args)...)
         {}
 
-        template<typename U = T>
-        constexpr CPP_ctor(optional)(U && v)( //
-            requires(!defer::same_as<detail::decay_t<U>, in_place_t>) &&
-            (!defer::same_as<detail::decay_t<U>,
-                             optional>)&&defer::constructible_from<T, U> &&
-            defer::convertible_to<U, T>)
-          : base_t(in_place, static_cast<U &&>(v))
-        {}
-        template<typename U = T>
-        explicit constexpr CPP_ctor(optional)(U && v)( //
-            requires(!defer::same_as<detail::decay_t<U>, in_place_t>) &&
-            (!defer::same_as<detail::decay_t<U>,
-                             optional>)&&defer::constructible_from<T, U> &&
-            (!defer::convertible_to<U, T>))
+#if defined(__cpp_conditional_explicit) && __cpp_conditional_explicit > 0
+        template(typename U = T)( //
+            requires (!same_as<detail::decay_t<U>, in_place_t>) AND
+                (!same_as<detail::decay_t<U>, optional>) AND
+                constructible_from<T, U>)
+        constexpr explicit(!convertible_to<U, T>) optional(U && v)
           : base_t(in_place, static_cast<U &&>(v))
         {}
 
-        template<typename U>
-        CPP_ctor(optional)(optional<U> const & that)( //
-            requires optional_should_convert<U, T> && constructible_from<T, U const &> &&
-                convertible_to<U const &, T>)
+        template(typename U)( //
+            requires optional_should_convert<U, T> AND
+                constructible_from<T, U const &>)
+        explicit(!convertible_to<U const &, T>) optional(optional<U> const & that)
         {
             if(that.has_value())
                 base_t::construct_from(*that);
         }
-        template<typename U>
-        explicit CPP_ctor(optional)(optional<U> const & that)( //
-            requires optional_should_convert<U, T> && constructible_from<T, U const &> &&
-            (!convertible_to<U const &, T>))
-        {
-            if(that.has_value())
-                base_t::construct_from(*that);
-        }
-
-        template<typename U>
-        CPP_ctor(optional)(optional<U> && that)( //
-            requires optional_should_convert<U, T> && constructible_from<T, U> &&
+#else
+        template(typename U = T)( //
+            requires (!same_as<detail::decay_t<U>, in_place_t>) AND
+                (!same_as<detail::decay_t<U>, optional>) AND
+                constructible_from<T, U> AND
                 convertible_to<U, T>)
+        constexpr optional(U && v)
+          : base_t(in_place, static_cast<U &&>(v))
+        {}
+        template(typename U = T)( //
+            requires (!same_as<detail::decay_t<U>, in_place_t>) AND
+                (!same_as<detail::decay_t<U>, optional>) AND
+                constructible_from<T, U> AND
+                (!convertible_to<U, T>))
+        constexpr explicit optional(U && v)
+          : base_t(in_place, static_cast<U &&>(v))
+        {}
+
+        template(typename U)( //
+            requires optional_should_convert<U, T> AND
+                constructible_from<T, U const &> AND
+                convertible_to<U const &, T>)
+        optional(optional<U> const & that)
+        {
+            if(that.has_value())
+                base_t::construct_from(*that);
+        }
+        template(typename U)( //
+            requires optional_should_convert<U, T> AND
+                constructible_from<T, U const &> AND
+                (!convertible_to<U const &, T>))
+        explicit optional(optional<U> const & that)
+        {
+            if(that.has_value())
+                base_t::construct_from(*that);
+        }
+#endif
+
+        template(typename U)( //
+            requires optional_should_convert<U, T> AND constructible_from<T, U> AND //
+                convertible_to<U, T>) //
+        optional(optional<U> && that)
         {
             if(that.has_value())
                 base_t::construct_from(detail::move(*that));
         }
-        template<typename U>
-        explicit CPP_ctor(optional)(optional<U> && that)( //
-            requires optional_should_convert<U, T> && constructible_from<T, U> &&
-            (!convertible_to<U, T>))
+        template(typename U)( //
+            requires optional_should_convert<U, T> AND constructible_from<T, U> AND //
+            (!convertible_to<U, T>)) //
+        explicit optional(optional<U> && that)
         {
             if(that.has_value())
                 base_t::construct_from(detail::move(*that));
@@ -573,14 +595,14 @@ namespace ranges
         optional & operator=(optional const &) = default;
         optional & operator=(optional &&) = default;
 
-        template<typename U = T>
-        constexpr auto operator=(U && u) noexcept(
+        template(typename U = T)( //
+            requires (!same_as<optional, detail::decay_t<U>>) AND //
+                (!(satisfies<T, std::is_scalar> && same_as<T, detail::decay_t<U>>)) AND //
+                constructible_from<T, U> AND //
+                assignable_from<T &, U>) //
+        constexpr optional & operator=(U && u) noexcept(
             std::is_nothrow_constructible<T, U>::value &&
-                std::is_nothrow_assignable<T &, U>::value) -> CPP_ret(optional &)( //
-            requires(!defer::same_as<optional, detail::decay_t<U>>) &&
-            (!(defer::satisfies<T, std::is_scalar> &&
-               defer::same_as<T, detail::decay_t<U>>)) &&
-            defer::constructible_from<T, U> && defer::assignable_from<T &, U>)
+                std::is_nothrow_assignable<T &, U>::value)
         {
             if(has_value())
                 **this = static_cast<U &&>(u);
@@ -589,37 +611,38 @@ namespace ranges
             return *this;
         }
 
-        template<typename U>
-        constexpr auto operator=(optional<U> const & that) -> CPP_ret(optional &)( //
-            requires optional_should_convert_assign<U, T> &&
-                constructible_from<T, const U &> && assignable_from<T &, const U &>)
+        template(typename U)( //
+            requires optional_should_convert_assign<U, T> AND //
+                constructible_from<T, const U &> AND //
+                assignable_from<T &, const U &>) //
+        constexpr optional & operator=(optional<U> const & that)
         {
             base_t::assign_from(that);
             return *this;
         }
 
-        template<typename U>
-        constexpr auto operator=(optional<U> && that) -> CPP_ret(optional &)( //
-            requires optional_should_convert_assign<U, T> && constructible_from<T, U> &&
-                assignable_from<T &, U>)
+        template(typename U)( //
+            requires optional_should_convert_assign<U, T> AND //
+                constructible_from<T, U> AND //
+                assignable_from<T &, U>) //
+        constexpr optional & operator=(optional<U> && that)
         {
             base_t::assign_from(std::move(that));
             return *this;
         }
 
-        template<typename... Args>
-        auto emplace(Args &&... args) noexcept(
-            std::is_nothrow_constructible<T, Args...>::value) -> CPP_ret(T &)( //
-            requires constructible_from<T, Args...>)
+        template(typename... Args)( //
+            requires constructible_from<T, Args...>) //
+        T & emplace(Args &&... args) noexcept(
+            std::is_nothrow_constructible<T, Args...>::value)
         {
             reset();
             return base_t::construct_from(static_cast<Args &&>(args)...);
         }
-        template<typename E, typename... Args>
-        auto emplace(std::initializer_list<E> il, Args &&... args) noexcept(
+        template(typename E, typename... Args)( //
+            requires constructible_from<T, std::initializer_list<E> &, Args...>) //
+        T & emplace(std::initializer_list<E> il, Args &&... args) noexcept(
             std::is_nothrow_constructible<T, std::initializer_list<E> &, Args...>::value)
-            -> CPP_ret(T &)( //
-                requires constructible_from<T, std::initializer_list<E> &, Args &&...>)
         {
             reset();
             return base_t::construct_from(il, static_cast<Args &&>(args)...);
@@ -654,15 +677,15 @@ namespace ranges
                    detail::move(**this);
         }
 
-        CPP_template(typename U)(                                   //
+        template(typename U)(                                   //
             requires copy_constructible<T> && convertible_to<U, T>) //
-            constexpr T value_or(U && u) const &
+        constexpr T value_or(U && u) const &
         {
             return has_value() ? **this : static_cast<T>((U &&) u);
         }
-        CPP_template(typename U)(                                   //
+        template(typename U)(                                   //
             requires move_constructible<T> && convertible_to<U, T>) //
-            constexpr T value_or(U && u) &&
+        constexpr T value_or(U && u) &&
         {
             return has_value() ? detail::move(**this) : static_cast<T>((U &&) u);
         }
@@ -879,8 +902,8 @@ namespace ranges
             )
             // clang-format on
         } // namespace optional_adl
-    }     // namespace detail
-          /// \endcond
+    } // namespace detail
+    /// \endcond
 
     // clang-format off
     template<typename T>
@@ -899,10 +922,10 @@ namespace ranges
     (
         return optional<T>{in_place, il, static_cast<Args &&>(args)...}
     )
-        // clang-format on
+    // clang-format on
 
-        /// \cond
-        namespace detail
+    /// \cond
+    namespace detail
     {
         template<typename T, typename Tag = void, bool Enable = true>
         struct non_propagating_cache : optional<T>
@@ -941,6 +964,6 @@ namespace ranges
     /// \endcond
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -23,7 +23,7 @@
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -40,32 +40,32 @@ namespace ranges
         CPP_member
         constexpr CPP_ctor(logical_negate)()(                          //
             noexcept(std::is_nothrow_default_constructible<FD>::value) //
-            requires default_constructible<FD>)
+                requires default_constructible<FD>)
         {}
-        template<typename T>
-        explicit constexpr CPP_ctor(logical_negate)(T && pred)( //
-            requires(!defer::same_as<detail::decay_t<T>, logical_negate>) &&
-            defer::constructible_from<FD, T>)
+        template(typename T)( //
+            requires (!same_as<detail::decay_t<T>, logical_negate>) AND //
+                constructible_from<FD, T>) //
+        constexpr explicit logical_negate(T && pred)
           : pred_(static_cast<T &&>(pred))
         {}
 
-        template<typename... Args>
-        constexpr auto operator()(Args &&... args) & -> CPP_ret(bool)( //
-            requires predicate<FD &, Args...>)
+        template(typename... Args)( //
+            requires predicate<FD &, Args...>) //
+        constexpr auto operator()(Args &&... args) & -> bool
         {
             return !invoke(pred_, static_cast<Args &&>(args)...);
         }
         /// \overload
-        template<typename... Args>
-        constexpr auto operator()(Args &&... args) const & -> CPP_ret(bool)( //
-            requires predicate<FD const &, Args...>)
+        template(typename... Args)( //
+            requires predicate<FD const &, Args...>) //
+        constexpr auto operator()(Args &&... args) const & -> bool
         {
             return !invoke(pred_, static_cast<Args &&>(args)...);
         }
         /// \overload
-        template<typename... Args>
-        constexpr auto operator()(Args &&... args) && -> CPP_ret(bool)( //
-            requires predicate<FD, Args...>)
+        template(typename... Args)( //
+            requires predicate<FD, Args...>) //
+        constexpr auto operator()(Args &&... args) && -> bool
         {
             return !invoke(static_cast<FD &&>(pred_), static_cast<Args &&>(args)...);
         }
@@ -73,11 +73,11 @@ namespace ranges
 
     struct not_fn_fn
     {
-        template<typename Pred>
+        template(typename Pred)( //
+            requires move_constructible<detail::decay_t<Pred>> AND //
+                constructible_from<detail::decay_t<Pred>, Pred>) //
         constexpr auto operator()(Pred && pred) const
-            -> CPP_ret(logical_negate<detail::decay_t<Pred>>)( //
-                requires move_constructible<detail::decay_t<Pred>> &&
-                    constructible_from<detail::decay_t<Pred>, Pred>)
+            -> logical_negate<detail::decay_t<Pred>>
         {
             return logical_negate<detail::decay_t<Pred>>{(Pred &&) pred};
         }
@@ -94,6 +94,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

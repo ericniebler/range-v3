@@ -30,7 +30,7 @@
 #include <range/v3/view/facade.hpp>
 #include <range/v3/view/generate.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -100,14 +100,14 @@ namespace ranges
     {
         struct generate_n_fn
         {
-            template<typename G>
-            auto operator()(G g, std::size_t n) const -> CPP_ret(generate_n_view<G>)( //
-                requires invocable<G &> && copy_constructible<G> &&
-                    std::is_object<detail::decay_t<invoke_result_t<G &>>>::value &&
+            template(typename G)( //
+                requires invocable<G &> AND copy_constructible<G> AND
+                    std::is_object<detail::decay_t<invoke_result_t<G &>>>::value AND
                         constructible_from<detail::decay_t<invoke_result_t<G &>>,
                                            invoke_result_t<G &>> &&
                             assignable_from<detail::decay_t<invoke_result_t<G &>> &,
-                                            invoke_result_t<G &>>)
+                                            invoke_result_t<G &>>) //
+            auto operator()(G g, std::size_t n) const -> generate_n_view<G>
             {
                 return generate_n_view<G>{std::move(g), n};
             }
@@ -120,7 +120,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::generate_n_view)
 

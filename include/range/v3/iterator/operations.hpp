@@ -22,7 +22,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/concepts.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -30,18 +30,17 @@ namespace ranges
     /// @{
 
     /// \cond
-    CPP_template(typename I)(                 //
-        requires input_or_output_iterator<I>) //
-        struct counted_iterator;
+    template<typename I>
+        // requires input_or_output_iterator<I>
+    struct counted_iterator;
     /// \endcond
 
     struct advance_fn
     {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-        template<typename I>
-        constexpr auto operator()(I & i, iter_difference_t<I> n) const
-            -> CPP_ret(void)( //
-                requires input_or_output_iterator<I>)
+        template(typename I)( //
+            requires input_or_output_iterator<I>) //
+        constexpr void operator()(I & i, iter_difference_t<I> n) const
         // [[expects: n >= 0 || bidirectional_iterator<I>]]
         {
             if constexpr(random_access_iterator<I>)
@@ -59,9 +58,9 @@ namespace ranges
             }
         }
 
-        template<typename I, typename S>
-        constexpr auto operator()(I & i, S bound) const -> CPP_ret(void)( //
-            requires sentinel_for<S, I>)
+        template(typename I, typename S)( //
+            requires sentinel_for<S, I>) //
+        constexpr void operator()(I & i, S bound) const
         // [[expects axiom: reachable(i, bound)]]
         {
             if constexpr(assignable_from<I &, S>)
@@ -79,10 +78,10 @@ namespace ranges
                     ++i;
         }
 
-        template<typename I, typename S>
+        template(typename I, typename S)( //
+            requires sentinel_for<S, I>) //
         constexpr auto operator()(I & i, iter_difference_t<I> n, S bound) const
-            -> CPP_ret(iter_difference_t<I>)( //
-                requires sentinel_for<S, I>)
+            -> iter_difference_t<I>
         // [[expects axiom: 0 == n ||
         //     (0 < n && reachable(i, bound)) ||
         //     (0 > n && same_as<I, S> && bidirectional_iterator<I> && reachable(bound,
@@ -170,26 +169,25 @@ namespace ranges
 
     public:
         // Advance a certain number of steps:
-        template<typename I>
-        constexpr auto operator()(I & i, iter_difference_t<I> n) const
-            -> CPP_ret(void)( //
-                requires input_or_output_iterator<I>)
+        template(typename I)( //
+            requires input_or_output_iterator<I>) //
+        constexpr void operator()(I & i, iter_difference_t<I> n) const
         {
             advance_fn::n_(i, n, iterator_tag_of<I>{});
         }
         // Advance to a certain position:
-        template<typename I, typename S>
-        constexpr auto operator()(I & i, S s) const -> CPP_ret(void)( //
-            requires sentinel_for<S, I>)
+        template(typename I, typename S)( //
+            requires sentinel_for<S, I>) //
+        constexpr void operator()(I & i, S s) const
         {
             advance_fn::to_(
                 i, static_cast<S &&>(s), meta::bool_<assignable_from<I &, S>>());
         }
         // Advance a certain number of times, with a bound:
-        template<typename I, typename S>
+        template(typename I, typename S)( //
+            requires sentinel_for<S, I>) //
         constexpr auto operator()(I & it, iter_difference_t<I> n, S bound) const
-            -> CPP_ret(iter_difference_t<I>)( //
-                requires sentinel_for<S, I>)
+            -> iter_difference_t<I>
         {
             return advance_fn::bounded_(it,
                                         n,
@@ -199,10 +197,9 @@ namespace ranges
         }
 #endif
 
-        template<typename I>
-        constexpr auto operator()(counted_iterator<I> & i, iter_difference_t<I> n) const
-            -> CPP_ret(void)( //
-                requires input_or_output_iterator<I>);
+        template(typename I)( //
+            requires input_or_output_iterator<I>) //
+        constexpr void operator()(counted_iterator<I> & i, iter_difference_t<I> n) const;
     };
 
     /// \sa `advance_fn`
@@ -302,29 +299,29 @@ namespace ranges
 
     struct next_fn
     {
-        template<typename I>
-        constexpr auto operator()(I it) const
-            -> CPP_ret(I)(requires input_or_output_iterator<I>)
+        template(typename I)( //
+            requires input_or_output_iterator<I>) //
+        constexpr I operator()(I it) const
         {
             return ++it;
         }
-        template<typename I>
-        constexpr auto operator()(I it, iter_difference_t<I> n) const
-            -> CPP_ret(I)(requires input_or_output_iterator<I>)
+        template(typename I)( //
+            requires input_or_output_iterator<I>) //
+        constexpr I operator()(I it, iter_difference_t<I> n) const
         {
             advance(it, n);
             return it;
         }
-        template<typename I, typename S>
-        constexpr auto operator()(I it, S s) const
-            -> CPP_ret(I)(requires sentinel_for<S, I>)
+        template(typename I, typename S)( //
+            requires sentinel_for<S, I>) //
+        constexpr I operator()(I it, S s) const
         {
             advance(it, static_cast<S &&>(s));
             return it;
         }
-        template<typename I, typename S>
-        constexpr auto operator()(I it, iter_difference_t<I> n, S bound) const
-            -> CPP_ret(I)(requires sentinel_for<S, I>)
+        template(typename I, typename S)( //
+            requires sentinel_for<S, I>) //
+        constexpr I operator()(I it, iter_difference_t<I> n, S bound) const
         {
             advance(it, n, static_cast<S &&>(bound));
             return it;
@@ -336,22 +333,22 @@ namespace ranges
 
     struct prev_fn
     {
-        template<typename I>
-        constexpr auto operator()(I it) const
-            -> CPP_ret(I)(requires bidirectional_iterator<I>)
+        template(typename I)( //
+            requires bidirectional_iterator<I>) //
+        constexpr I operator()(I it) const
         {
             return --it;
         }
-        template<typename I>
-        constexpr auto operator()(I it, iter_difference_t<I> n) const
-            -> CPP_ret(I)(requires bidirectional_iterator<I>)
+        template(typename I)( //
+            requires bidirectional_iterator<I>) //
+        constexpr I operator()(I it, iter_difference_t<I> n) const
         {
             advance(it, -n);
             return it;
         }
-        template<typename I>
-        constexpr auto operator()(I it, iter_difference_t<I> n, I bound) const
-            -> CPP_ret(I)(requires bidirectional_iterator<I>)
+        template(typename I)( //
+            requires bidirectional_iterator<I>) //
+        constexpr I operator()(I it, iter_difference_t<I> n, I bound) const
         {
             advance(it, -n, static_cast<I &&>(bound));
             return it;
@@ -364,20 +361,20 @@ namespace ranges
     struct iter_enumerate_fn
     {
     private:
-        template<typename I, typename S>
+        template(typename I, typename S)( //
+            requires (!sized_sentinel_for<I, I>)) //
         static constexpr auto impl_i(I first, S last, sentinel_tag)
-            -> CPP_ret(std::pair<iter_difference_t<I>, I>)( //
-                requires(!sized_sentinel_for<I, I>))
+            -> std::pair<iter_difference_t<I>, I>
         {
             iter_difference_t<I> d = 0;
             for(; first != last; ++first)
                 ++d;
             return {d, first};
         }
-        template<typename I, typename S>
+        template(typename I, typename S)( //
+            requires sized_sentinel_for<I, I>) //
         static constexpr auto impl_i(I first, S end_, sentinel_tag)
-            -> CPP_ret(std::pair<iter_difference_t<I>, I>)( //
-                requires sized_sentinel_for<I, I>)
+            -> std::pair<iter_difference_t<I>, I>
         {
             I last = ranges::next(first, end_);
             auto n = static_cast<iter_difference_t<I>>(last - first);
@@ -394,10 +391,10 @@ namespace ranges
         }
 
     public:
-        template<typename I, typename S>
+        template(typename I, typename S)( //
+            requires sentinel_for<S, I>) //
         constexpr auto operator()(I first, S last) const
-            -> CPP_ret(std::pair<iter_difference_t<I>, I>)( //
-                requires sentinel_for<S, I>)
+            -> std::pair<iter_difference_t<I>, I>
         {
             return iter_enumerate_fn::impl_i(static_cast<I &&>(first),
                                              static_cast<S &&>(last),
@@ -426,10 +423,10 @@ namespace ranges
         }
 
     public:
-        template<typename I, typename S>
+        template(typename I, typename S)( //
+            requires input_or_output_iterator<I> AND sentinel_for<S, I>) //
         constexpr auto operator()(I first, S last) const
-            -> CPP_ret(iter_difference_t<I>)( //
-                requires input_or_output_iterator<I> && sentinel_for<S, I>)
+            -> iter_difference_t<I>
         {
             return iter_distance_fn::impl_i(static_cast<I &&>(first),
                                             static_cast<S &&>(last),
@@ -468,10 +465,10 @@ namespace ranges
         }
 
     public:
-        template<typename I, typename S>
+        template(typename I, typename S)( //
+            requires input_iterator<I> AND sentinel_for<S, I>) //
         constexpr auto operator()(I first, S last, iter_difference_t<I> n) const
-            -> CPP_ret(int)( //
-                requires input_iterator<I> && sentinel_for<S, I>)
+            -> int
         {
             return iter_distance_compare_fn::impl_i(static_cast<I &&>(first),
                                                     static_cast<S &&>(last),
@@ -486,10 +483,10 @@ namespace ranges
     // Like distance(b,e), but guaranteed to be O(1)
     struct iter_size_fn
     {
-        template<typename I, typename S>
+        template(typename I, typename S)( //
+            requires sized_sentinel_for<S, I>) //
         constexpr auto operator()(I const & first, S last) const
-            -> CPP_ret(meta::_t<std::make_unsigned<iter_difference_t<I>>>)( //
-                requires sized_sentinel_for<S, I>)
+            -> meta::_t<std::make_unsigned<iter_difference_t<I>>>
         {
             using size_type = meta::_t<std::make_unsigned<iter_difference_t<I>>>;
             iter_difference_t<I> n = last - first;
@@ -560,10 +557,10 @@ namespace ranges
     public:
         using iter_enumerate_fn::operator();
 
-        template<typename Rng>
+        template(typename Rng)( //
+            requires range<Rng>) //
         auto operator()(Rng && rng) const
-            -> CPP_ret(std::pair<range_difference_t<Rng>, iterator_t<Rng>>)( //
-                requires range<Rng>)
+            -> std::pair<range_difference_t<Rng>, iterator_t<Rng>>
         {
             // Better not be trying to compute the distance of an infinite range:
             RANGES_EXPECT(!is_infinite<Rng>::value);
@@ -592,10 +589,10 @@ namespace ranges
     public:
         using iter_distance_fn::operator();
 
-        template<typename Rng>
+        template(typename Rng)( //
+            requires range<Rng>) //
         constexpr auto operator()(Rng && rng) const
-            -> CPP_ret(range_difference_t<Rng>)( //
-                requires range<Rng>)
+            -> range_difference_t<Rng>
         {
             // Better not be trying to compute the distance of an infinite range:
             RANGES_EXPECT(!is_infinite<Rng>::value);
@@ -633,9 +630,9 @@ namespace ranges
     public:
         using iter_distance_compare_fn::operator();
 
-        template<typename Rng>
-        auto operator()(Rng && rng, range_difference_t<Rng> n) const -> CPP_ret(int)( //
-            requires range<Rng>)
+        template(typename Rng)( //
+            requires range<Rng>) //
+        auto operator()(Rng && rng, range_difference_t<Rng> n) const -> int
         {
             return distance_compare_fn::impl_r(rng, n, sized_range_tag_of<Rng>());
         }
@@ -654,6 +651,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_ITERATOR_OPERATIONS_HPP

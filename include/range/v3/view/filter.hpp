@@ -22,7 +22,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/remove_if.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -38,9 +38,9 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Pred)( //
-        requires input_range<Rng> && indirect_unary_predicate<Pred, iterator_t<Rng>> &&
-            view_<Rng> && std::is_object<Pred>::value) //
+    template(typename Rng, typename Pred)( //
+        requires input_range<Rng> AND indirect_unary_predicate<Pred, iterator_t<Rng>> AND
+            view_<Rng> AND std::is_object<Pred>::value) //
         filter_view(Rng &&, Pred)
             ->filter_view<views::all_t<Rng>, Pred>;
 #endif
@@ -53,11 +53,11 @@ namespace ranges
         /// present a view of the elements that satisfy the predicate.
         struct cpp20_filter_base_fn
         {
-            template<typename Rng, typename Pred>
+            template(typename Rng, typename Pred)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND //
+                    indirect_unary_predicate<Pred, iterator_t<Rng>>) //
             constexpr auto operator()(Rng && rng, Pred pred) const
-                -> CPP_ret(filter_view<all_t<Rng>, Pred>)( //
-                    requires viewable_range<Rng> && input_range<Rng> &&
-                        indirect_unary_predicate<Pred, iterator_t<Rng>>)
+                -> filter_view<all_t<Rng>, Pred>
             {
                 return filter_view<all_t<Rng>, Pred>{all(static_cast<Rng &&>(rng)),
                                                      std::move(pred)};
@@ -82,11 +82,11 @@ namespace ranges
         {
             using cpp20_filter_base_fn::operator();
 
-            template<typename Rng, typename Pred, typename Proj>
+            template(typename Rng, typename Pred, typename Proj)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND //
+                    indirect_unary_predicate<Pred, projected<iterator_t<Rng>, Proj>>) //
             constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
-                -> CPP_ret(filter_view<all_t<Rng>, composed<Pred, Proj>>)( //
-                    requires viewable_range<Rng> && input_range<Rng> &&
-                        indirect_unary_predicate<Pred, projected<iterator_t<Rng>, Proj>>)
+                -> filter_view<all_t<Rng>, composed<Pred, Proj>>
             {
                 return filter_view<all_t<Rng>, composed<Pred, Proj>>{
                     all(static_cast<Rng &&>(rng)),
@@ -124,15 +124,15 @@ namespace ranges
         {
             RANGES_INLINE_VARIABLE(ranges::views::cpp20_filter_fn, filter)
         }
-        CPP_template(typename V, typename Pred)( //
-            requires input_range<V> && indirect_unary_predicate<Pred, iterator_t<V>> &&
-                view_<V> && std::is_object<Pred>::value) //
+        template(typename V, typename Pred)( //
+            requires input_range<V> AND indirect_unary_predicate<Pred, iterator_t<V>> AND
+                view_<V> AND std::is_object<Pred>::value) //
             using filter_view = ranges::filter_view<V, Pred>;
     } // namespace cpp20
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::filter_view)
 

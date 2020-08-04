@@ -37,7 +37,7 @@
 #include <range/v3/view/facade.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -100,8 +100,9 @@ namespace ranges
               : rng_(rng)
               , it_(ranges::begin(rng->rng_))
             {}
-            CPP_template(bool Other)( //
-                requires IsConst && (!Other)) cursor(cursor<Other> that)
+            template(bool Other)( //
+                requires IsConst AND CPP_NOT(Other)) //
+            cursor(cursor<Other> that)
               : rng_(that.rng_)
               , it_(std::move(that.it_))
             {}
@@ -110,10 +111,11 @@ namespace ranges
             (
                 return *it_
             )
-                // clang-format on
-                CPP_member
-            auto equal(cursor const & pos) const -> CPP_ret(bool)( //
-                requires equality_comparable<iterator>)
+            // clang-format on
+            CPP_member
+            auto equal(cursor const & pos) const //
+                -> CPP_ret(bool)( //
+                    requires equality_comparable<iterator>)
             {
                 RANGES_EXPECT(rng_ == pos.rng_);
                 return n_ == pos.n_ && it_ == pos.it_;
@@ -130,8 +132,9 @@ namespace ranges
                 }
             }
             CPP_member
-            auto prev() -> CPP_ret(void)( //
-                requires bidirectional_range<CRng>)
+            auto prev() //
+                -> CPP_ret(void)( //
+                    requires bidirectional_range<CRng>)
             {
                 if(it_ == ranges::begin(rng_->rng_))
                 {
@@ -141,8 +144,8 @@ namespace ranges
                 }
                 --it_;
             }
-            CPP_template(typename Diff)( //
-                requires random_access_range<CRng> &&
+            template(typename Diff)( //
+                requires random_access_range<CRng> AND
                     detail::integer_like_<Diff>) void advance(Diff n)
             {
                 auto const first = ranges::begin(rng_->rng_);
@@ -170,14 +173,16 @@ namespace ranges
         };
 
         CPP_member
-        auto begin_cursor() -> CPP_ret(cursor<false>)( //
-            requires(!simple_view<Rng>() || !common_range<Rng const>))
+        auto begin_cursor() //
+            -> CPP_ret(cursor<false>)( //
+                requires (!simple_view<Rng>() || !common_range<Rng const>))
         {
             return {this};
         }
         CPP_member
-        auto begin_cursor() const -> CPP_ret(cursor<true>)( //
-            requires common_range<Rng const>)
+        auto begin_cursor() const //
+            -> CPP_ret(cursor<true>)( //
+                requires common_range<Rng const>)
         {
             return {this};
         }
@@ -205,7 +210,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    cycled_view(Rng &&)->cycled_view<views::all_t<Rng>>;
+    cycled_view(Rng &&) //
+        -> cycled_view<views::all_t<Rng>>;
 #endif
 
     namespace views
@@ -215,9 +221,9 @@ namespace ranges
         struct cycle_fn
         {
             /// \pre <tt>!empty(rng)</tt>
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(cycled_view<all_t<Rng>>)( //
-                requires viewable_range<Rng> && forward_range<Rng>)
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND forward_range<Rng>) //
+            auto operator()(Rng && rng) const -> cycled_view<all_t<Rng>>
             {
                 return cycled_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -230,7 +236,7 @@ namespace ranges
       /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::cycled_view)

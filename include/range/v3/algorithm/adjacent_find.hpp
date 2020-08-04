@@ -25,7 +25,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -38,11 +38,10 @@ namespace ranges
         ///
         /// \pre `Rng` is a model of the `range` concept
         /// \pre `C` is a model of the `BinaryPredicate` concept
-        template<typename I, typename S, typename C = equal_to, typename P = identity>
-        auto RANGES_FUNC(adjacent_find)(I first, S last, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(I)(                                                            //
-                requires forward_iterator<I> && sentinel_for<S, I> &&
-                indirect_relation<C, projected<I, P>>)
+        template(typename I, typename S, typename C = equal_to, typename P = identity)( //
+            requires forward_iterator<I> AND sentinel_for<S, I> AND //
+            indirect_relation<C, projected<I, P>>) //
+        I RANGES_FUNC(adjacent_find)(I first, S last, C pred = C{}, P proj = P{})
         {
             if(first == last)
                 return first;
@@ -54,11 +53,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C = equal_to, typename P = identity>
+        template(typename Rng, typename C = equal_to, typename P = identity)( //
+            requires forward_range<Rng> AND //
+            indirect_relation<C, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(adjacent_find)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(borrowed_iterator_t<Rng>)(                                //
-                requires forward_range<Rng> &&
-                indirect_relation<C, projected<iterator_t<Rng>, P>>)
+            -> borrowed_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
@@ -71,6 +70,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGE_ALGORITHM_ADJACENT_FIND_HPP

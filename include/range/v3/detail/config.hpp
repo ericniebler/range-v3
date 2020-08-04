@@ -215,6 +215,7 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_MULTIPLE_ASSIGNMENT_OPERATORS \
     RANGES_DIAGNOSTIC_IGNORE(4522)
 #define RANGES_DIAGNOSTIC_IGNORE_VOID_PTR_DEREFERENCE
+#define RANGES_DIAGNOSTIC_KEYWORD_MACRO
 
 #define RANGES_CXX_VER _MSVC_LANG
 
@@ -328,6 +329,7 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_MULTIPLE_ASSIGNMENT_OPERATORS
 #define RANGES_DIAGNOSTIC_IGNORE_VOID_PTR_DEREFERENCE \
     RANGES_DIAGNOSTIC_IGNORE("-Wvoid-ptr-dereference")
+#define RANGES_DIAGNOSTIC_KEYWORD_MACRO RANGES_DIAGNOSTIC_IGNORE("-Wkeyword-macro")
 
 #define RANGES_WORKAROUND_CWG_1554
 #ifdef __clang__
@@ -344,9 +346,6 @@ namespace ranges
 #define RANGES_WORKAROUND_GCC_91525 /* Workaround strange GCC ICE */
 #endif
 #if __GNUC__ >= 9
-#ifdef __cpp_concepts
-#define RANGES_WORKAROUND_GCC_89953 // ICE in nothrow_spec_p, at cp/except.c:1244
-#endif
 #if __GNUC__ == 9 && __GNUC_MINOR__ < 3 && __cplusplus == RANGES_CXX_STD_17
 #define RANGES_WORKAROUND_GCC_91923 // Failure-to-SFINAE with class type NTTP in C++17
 #endif
@@ -380,6 +379,7 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_TRUNCATION
 #define RANGES_DIAGNOSTIC_IGNORE_MULTIPLE_ASSIGNMENT_OPERATORS
 #define RANGES_DIAGNOSTIC_IGNORE_VOID_PTR_DEREFERENCE
+#define RANGES_DIAGNOSTIC_KEYWORD_MACRO
 #endif
 
 // Configuration via feature-test macros, with fallback to __cplusplus

@@ -24,7 +24,7 @@
 #include <range/v3/utility/addressof.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -83,24 +83,13 @@ namespace ranges
         using reference = meta::if_<std::is_reference<T>, T, T &>;
 
         constexpr reference_wrapper() = default;
-#if !defined(__clang__) || __clang_major__ > 3
-        template<typename U>
-        constexpr CPP_ctor(reference_wrapper)(U && u)(               //
-            noexcept(std::is_nothrow_constructible<base_, U>::value) //
-            requires(!defer::same_as<uncvref_t<U>, reference_wrapper>) &&
-            defer::constructible_from<base_, U>)
+        template(typename U)( //
+            requires (!same_as<uncvref_t<U>, reference_wrapper>) AND //
+                constructible_from<base_, U>) //
+        constexpr reference_wrapper(U && u) noexcept(
+            std::is_nothrow_constructible<base_, U>::value)
           : detail::reference_wrapper_<T>{static_cast<U &&>(u)}
         {}
-#else
-        // BUGBUG clang-3.7 prefers a CPP_template here instead of a CPP_ctor
-        CPP_template(typename U)( //
-            requires(!defer::same_as<uncvref_t<U>, reference_wrapper>) &&
-            defer::constructible_from<base_, U>) //
-            constexpr reference_wrapper(U && u) noexcept(
-                std::is_nothrow_constructible<base_, U>::value)
-          : detail::reference_wrapper_<T>{static_cast<U &&>(u)}
-        {}
-#endif
         constexpr reference get() const noexcept
         {
             return this->base_::get();
@@ -109,8 +98,8 @@ namespace ranges
         {
             return get();
         }
-        CPP_template(typename...)(                         //
-            requires(!std::is_rvalue_reference<T>::value)) //
+        template(typename...)(                          //
+            requires (!std::is_rvalue_reference<T>::value)) //
         operator std::reference_wrapper<type>() const noexcept
         {
             return {get()};
@@ -126,9 +115,9 @@ namespace ranges
 
     struct ref_fn
     {
-        template<typename T>
-        auto operator()(T & t) const -> CPP_ret(reference_wrapper<T>)( //
-            requires(!is_reference_wrapper_v<T>))
+        template(typename T)( //
+            requires (!is_reference_wrapper_v<T>)) //
+        auto operator()(T & t) const -> reference_wrapper<T>
         {
             return {t};
         }
@@ -190,6 +179,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

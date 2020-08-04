@@ -24,7 +24,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -36,17 +36,18 @@ namespace ranges
         {
             template<typename F, typename P = identity>
             constexpr auto CPP_fun(operator())(F fun, P proj = P{})(const //
-                                                                    requires(!range<F>))
+                                                                    requires (!range<F>))
             {
                 return make_action_closure(
                     bind_back(transform_fn{}, std::move(fun), std::move(proj)));
             }
 
-            template<typename Rng, typename F, typename P = identity>
-            auto operator()(Rng && rng, F fun, P proj = P{}) const -> CPP_ret(Rng)( //
-                requires input_range<Rng> && copy_constructible<F> &&
-                    indirectly_writable<iterator_t<Rng>,
-                                        indirect_result_t<F &, projected<iterator_t<Rng>, P>>>)
+            template(typename Rng, typename F, typename P = identity)( //
+                requires input_range<Rng> AND copy_constructible<F> AND
+                    indirectly_writable<
+                        iterator_t<Rng>,
+                        indirect_result_t<F &, projected<iterator_t<Rng>, P>>>) //
+            auto operator()(Rng && rng, F fun, P proj = P{}) const -> Rng
             {
                 ranges::transform(rng, begin(rng), std::move(fun), std::move(proj));
                 return static_cast<Rng &&>(rng);
@@ -59,6 +60,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

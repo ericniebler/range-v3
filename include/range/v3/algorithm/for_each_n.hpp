@@ -28,7 +28,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -37,12 +37,12 @@ namespace ranges
     RANGES_FUNC_BEGIN(for_each_n)
 
         /// \brief function template \c for_each_n
-        template<typename I, typename F, typename P = identity>
+        template(typename I, typename F, typename P = identity)( //
+            requires input_iterator<I> AND
+                indirectly_unary_invocable<F, projected<I, P>>) //
         auto RANGES_FUNC(for_each_n)(
             I first, iter_difference_t<I> n, F fun, P proj = P{}) //
-            ->CPP_ret(I)(                                         //
-                requires input_iterator<I> &&
-                indirectly_unary_invocable<F, projected<I, P>>)
+            -> I
         {
             RANGES_EXPECT(0 <= n);
             auto norig = n;
@@ -53,12 +53,12 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename F, typename P = identity>
+        template(typename Rng, typename F, typename P = identity)( //
+            requires input_range<Rng> AND
+                indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(for_each_n)(
             Rng && rng, range_difference_t<Rng> n, F fun, P proj = P{})
-            ->CPP_ret(borrowed_iterator_t<Rng>)( //
-                requires input_range<Rng> &&
-                indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
+            -> borrowed_iterator_t<Rng>
         {
             if(sized_range<Rng>)
                 RANGES_EXPECT(n <= distance(rng));
@@ -75,6 +75,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -16,7 +16,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -26,13 +26,13 @@ namespace ranges
         // Extensions: the dangling story actually works, and result structs
         // are conditionally equality_comparable
 #define RANGES_ALGO_RESULT_AUX_2(C, T1, M1, T2, M2)                                   \
-    CPP_template(typename X, typename Y)(requires convertible_to<T1 const &, X> &&    \
+    template(typename X, typename Y)(requires convertible_to<T1 const &, X> &&    \
                                          convertible_to<T2 const &, Y>)               \
     operator C<X, Y>() const &                                                        \
     {                                                                                 \
         return {M1, M2};                                                              \
     }                                                                                 \
-    CPP_template(typename X,                                                          \
+    template(typename X,                                                          \
                  typename Y)(requires convertible_to<T1, X> && convertible_to<T2, Y>) \
     operator C<X, Y>() &&                                                             \
     {                                                                                 \
@@ -55,14 +55,14 @@ namespace ranges
     /**/
 
 #define RANGES_ALGO_RESULT_AUX_3(C, T1, M1, T2, M2, T3, M3)                              \
-    CPP_template(typename X, typename Y, typename Z)(                                    \
+    template(typename X, typename Y, typename Z)(                                    \
         requires convertible_to<T1 const &, X> && convertible_to<T2 const &, Y> &&       \
         convertible_to<T3 const &, Z>)                                                   \
     operator C<X, Y, Z>() const &                                                        \
     {                                                                                    \
         return {M1, M2, M3};                                                             \
     }                                                                                    \
-    CPP_template(typename X, typename Y, typename Z)(requires convertible_to<T1, X> &&   \
+    template(typename X, typename Y, typename Z)(requires convertible_to<T1, X> &&   \
                                                      convertible_to<T2, Y> &&            \
                                                      convertible_to<T3, Z>)              \
     operator C<X, Y, Z>() &&                                                             \
@@ -164,6 +164,6 @@ namespace ranges
     /// \endcond
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -24,7 +24,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -33,10 +33,10 @@ namespace ranges
     RANGES_FUNC_BEGIN(fill_n)
 
         /// \brief function template \c equal
-        template<typename O, typename V>
+        template(typename O, typename V)( //
+            requires output_iterator<O, V const &>) //
         auto RANGES_FUNC(fill_n)(O first, iter_difference_t<O> n, V const & val)
-            ->CPP_ret(O)( //
-                requires output_iterator<O, V const &>)
+            -> O
         {
             RANGES_EXPECT(n >= 0);
             auto norig = n;
@@ -55,6 +55,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

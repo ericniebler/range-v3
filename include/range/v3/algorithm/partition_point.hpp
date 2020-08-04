@@ -38,7 +38,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -48,11 +48,10 @@ namespace ranges
     RANGES_FUNC_BEGIN(partition_point)
 
         /// \brief function template \c partition_point
-        template<typename I, typename S, typename C, typename P = identity>
-        auto RANGES_FUNC(partition_point)(I first, S last, C pred, P proj = P{}) //
-            ->CPP_ret(I)(                                                        //
-                requires forward_iterator<I> && sentinel_for<S, I> &&
-                indirect_unary_predicate<C, projected<I, P>>)
+        template(typename I, typename S, typename C, typename P = identity)( //
+            requires forward_iterator<I> AND sentinel_for<S, I> AND //
+            indirect_unary_predicate<C, projected<I, P>>) //
+        I RANGES_FUNC(partition_point)(I first, S last, C pred, P proj = P{})
         {
             if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S, I>))
             {
@@ -80,11 +79,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C, typename P = identity>
+        template(typename Rng, typename C, typename P = identity)( //
+            requires forward_range<Rng> AND //
+            indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>) //
         auto RANGES_FUNC(partition_point)(Rng && rng, C pred, P proj = P{}) //
-            ->CPP_ret(borrowed_iterator_t<Rng>)(                            //
-                requires forward_range<Rng> &&
-                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
+            -> borrowed_iterator_t<Rng>
         {
             if(RANGES_CONSTEXPR_IF(sized_range<Rng>))
             {
@@ -104,6 +103,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

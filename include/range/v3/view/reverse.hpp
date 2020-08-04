@@ -34,7 +34,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -75,7 +75,7 @@ namespace ranges
 
     public:
         reverse_view() = default;
-        explicit constexpr reverse_view(Rng rng)
+        constexpr explicit reverse_view(Rng rng)
           : rng_(detail::move(rng))
         {}
         Rng base() const
@@ -86,10 +86,10 @@ namespace ranges
         {
             return begin_(meta::bool_<(bool)common_range<Rng>>{});
         }
-        template<bool Const = true>
+        template(bool Const = true)( //
+            requires Const AND common_range<meta::const_if_c<Const, Rng>>) //
         constexpr auto begin() const
-            -> CPP_ret(reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>>)( //
-                requires Const && common_range<meta::const_if_c<Const, Rng>>)
+            -> reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>>
         {
             return make_reverse_iterator(ranges::end(rng_));
         }
@@ -97,10 +97,10 @@ namespace ranges
         {
             return make_reverse_iterator(ranges::begin(rng_));
         }
-        template<bool Const = true>
+        template(bool Const = true)( //
+            requires Const AND common_range<meta::const_if_c<Const, Rng>>) //
         constexpr auto end() const
-            -> CPP_ret(reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>>)( //
-                requires Const && common_range<meta::const_if_c<Const, Rng>>)
+            -> reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>>
         {
             return make_reverse_iterator(ranges::begin(rng_));
         }
@@ -125,7 +125,7 @@ namespace ranges
                     Rng>);
 
         reverse_view() = default;
-        explicit constexpr reverse_view(reverse_view<Rng> rng)
+        constexpr explicit reverse_view(reverse_view<Rng> rng)
           : Rng(rng.base())
         {}
 
@@ -140,20 +140,22 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    reverse_view(Rng &&)->reverse_view<views::all_t<Rng>>;
+    reverse_view(Rng &&) //
+        -> reverse_view<views::all_t<Rng>>;
 
     template<typename Rng>
-    reverse_view(reverse_view<Rng>)->reverse_view<reverse_view<Rng>>;
+    reverse_view(reverse_view<Rng>) //
+        -> reverse_view<reverse_view<Rng>>;
 #endif
 
     namespace views
     {
         struct reverse_fn
         {
-            template<typename Rng>
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND bidirectional_range<Rng>) //
             constexpr auto operator()(Rng && rng) const
-                -> CPP_ret(reverse_view<all_t<Rng>>)( //
-                    requires viewable_range<Rng> && bidirectional_range<Rng>)
+                -> reverse_view<all_t<Rng>>
             {
                 return reverse_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -170,14 +172,14 @@ namespace ranges
         {
             using ranges::views::reverse;
         }
-        CPP_template(typename Rng)(                          //
+        template(typename Rng)(                          //
             requires view_<Rng> && bidirectional_range<Rng>) //
             using reverse_view = ranges::reverse_view<Rng>;
     } // namespace cpp20
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::reverse_view)
 

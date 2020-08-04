@@ -33,7 +33,7 @@
 #include <range/v3/view/interface.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -92,7 +92,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng, typename Pred>
-    trim_view(Rng &&, Pred)->trim_view<views::all_t<Rng>, Pred>;
+    trim_view(Rng &&, Pred) //
+        -> trim_view<views::all_t<Rng>, Pred>;
 #endif
 
     template<typename Rng, typename Pred>
@@ -102,21 +103,21 @@ namespace ranges
     {
         struct trim_base_fn
         {
-            template<typename Rng, typename Pred>
+            template(typename Rng, typename Pred)( //
+                requires viewable_range<Rng> AND bidirectional_range<Rng> AND //
+                    indirect_unary_predicate<Pred, iterator_t<Rng>> AND //
+                        common_range<Rng>) //
             constexpr auto operator()(Rng && rng, Pred pred) const //
-                -> CPP_ret(trim_view<all_t<Rng>, Pred>)(           //
-                    requires viewable_range<Rng> && bidirectional_range<Rng> &&
-                        indirect_unary_predicate<Pred, iterator_t<Rng>> &&
-                            common_range<Rng>)
+                -> trim_view<all_t<Rng>, Pred>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
-            template<typename Rng, typename Pred, typename Proj>
+            template(typename Rng, typename Pred, typename Proj)( //
+                requires viewable_range<Rng> AND bidirectional_range<Rng> AND //
+                    indirect_unary_predicate<composed<Pred, Proj>, iterator_t<Rng>> AND //
+                        common_range<Rng>) //
             constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
-                -> CPP_ret(trim_view<all_t<Rng>, composed<Pred, Proj>>)( //
-                    requires viewable_range<Rng> && bidirectional_range<Rng> &&
-                        indirect_unary_predicate<composed<Pred, Proj>, iterator_t<Rng>> &&
-                            common_range<Rng>)
+                -> trim_view<all_t<Rng>, composed<Pred, Proj>>
             {
                 return {all(static_cast<Rng &&>(rng)),
                         compose(std::move(pred), std::move(proj))};
@@ -133,7 +134,7 @@ namespace ranges
             template<typename Pred, typename Proj>
             constexpr auto CPP_fun(operator())(Pred && pred,
                                                Proj proj)(const //
-                                                          requires(!range<Pred>)) // TODO: underconstrained
+                                                          requires (!range<Pred>)) // TODO: underconstrained
             {
                 return make_view_closure(bind_back(
                     trim_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));
@@ -154,7 +155,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::trim_view)
 

@@ -29,7 +29,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -50,8 +50,8 @@ namespace ranges
             using rvalue_reference_ =
                 common_reference_t<value_ const &&, range_rvalue_reference_t<CRng>>;
             adaptor() = default;
-            CPP_template(bool Other)(       //
-                requires Const && (!Other)) //
+            template(bool Other)(       //
+                requires Const && CPP_NOT(Other)) //
                 constexpr adaptor(adaptor<Other>)
             {}
             reference_ read(iterator_t<CRng> const & it) const
@@ -69,8 +69,9 @@ namespace ranges
             return {};
         }
         CPP_member
-        auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires range<Rng const>)
+        auto begin_adaptor() const //
+            -> CPP_ret(adaptor<true>)( //
+                requires range<Rng const>)
         {
             return {};
         }
@@ -79,8 +80,9 @@ namespace ranges
             return {};
         }
         CPP_member
-        auto end_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires range<Rng const>)
+        auto end_adaptor() const //
+            -> CPP_ret(adaptor<true>)( //
+                requires range<Rng const>)
         {
             return {};
         }
@@ -107,16 +109,17 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    const_view(Rng &&)->const_view<views::all_t<Rng>>;
+    const_view(Rng &&) //
+        -> const_view<views::all_t<Rng>>;
 #endif
 
     namespace views
     {
         struct const_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(const_view<all_t<Rng>>)( //
-                requires viewable_range<Rng> && input_range<Rng>)
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng>) //
+            auto operator()(Rng && rng) const -> const_view<all_t<Rng>>
             {
                 return const_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -129,7 +132,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::const_view)
 

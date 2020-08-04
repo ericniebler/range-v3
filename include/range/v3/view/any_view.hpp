@@ -30,7 +30,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/facade.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_INCONSISTENT_OVERRIDE
@@ -154,19 +154,13 @@ namespace ranges
         };
 
         // clang-format off
-        template<typename Rng, typename Ref>
-        CPP_concept_fragment(any_compatible_range_, requires()(0) &&
+        template(typename Rng, typename Ref)(
+        concept (any_compatible_range_)(Rng, Ref),
             convertible_to<range_reference_t<Rng>, Ref>
         );
         template<typename Rng, typename Ref>
-        CPP_concept_bool any_compatible_range =
-            CPP_fragment(detail::any_compatible_range_, Rng, Ref);
-        namespace defer
-        {
-            template<typename Rng, typename Ref>
-            CPP_concept any_compatible_range =
-                CPP_defer(detail::any_compatible_range, Rng, Ref);
-        }
+        CPP_concept any_compatible_range =
+            CPP_concept_ref(detail::any_compatible_range_, Rng, Ref);
         // clang-format on
 
         template<typename Rng, typename = void>
@@ -420,11 +414,11 @@ namespace ranges
 
         public:
             any_cursor() = default;
-            template<typename Rng>
-            explicit CPP_ctor(any_cursor)(Rng && rng)( //
-                requires(!ranges::defer::same_as<detail::decay_t<Rng>, any_cursor>) &&
-                ranges::defer::forward_range<Rng> &&
-                defer::any_compatible_range<Rng, Ref>)
+            template(typename Rng)( //
+                requires (!same_as<detail::decay_t<Rng>, any_cursor>) AND //
+                    forward_range<Rng> AND //
+                    any_compatible_range<Rng, Ref>) //
+            explicit any_cursor(Rng && rng)
               : ptr_{detail::make_unique<impl_t<Rng>>(begin(rng))}
             {}
             any_cursor(any_cursor &&) = default;
@@ -458,22 +452,25 @@ namespace ranges
                 ptr_->next();
             }
             CPP_member
-            auto prev() -> CPP_ret(void)( //
-                requires(category::bidirectional == (Cat & category::bidirectional)))
+            auto prev() //
+                -> CPP_ret(void)( //
+                    requires (category::bidirectional == (Cat & category::bidirectional)))
             {
                 RANGES_EXPECT(ptr_);
                 ptr_->prev();
             }
             CPP_member
-            auto advance(std::ptrdiff_t n) -> CPP_ret(void)( //
-                requires(category::random_access == (Cat & category::random_access)))
+            auto advance(std::ptrdiff_t n) //
+                -> CPP_ret(void)( //
+                    requires (category::random_access == (Cat & category::random_access)))
             {
                 RANGES_EXPECT(ptr_);
                 ptr_->advance(n);
             }
             CPP_member
-            auto distance_to(any_cursor const & that) const -> CPP_ret(std::ptrdiff_t)( //
-                requires(category::random_access == (Cat & category::random_access)))
+            auto distance_to(any_cursor const & that) const //
+                -> CPP_ret(std::ptrdiff_t)( //
+                    requires (category::random_access == (Cat & category::random_access)))
             {
                 RANGES_EXPECT(!ptr_ == !that.ptr_);
                 return !ptr_ ? 0 : ptr_->distance_to(*that.ptr_);
@@ -552,10 +549,12 @@ namespace ranges
         CPP_assert((Cat & category::forward) == category::forward);
 
         any_view() = default;
-        template<typename Rng>
-        CPP_ctor(any_view)(Rng && rng)( //
-            requires(!defer::same_as<detail::decay_t<Rng>, any_view>) &&
-            defer::input_range<Rng> && detail::defer::any_compatible_range<Rng, Ref>)
+        template(typename Rng)( //
+            requires //
+                (!same_as<detail::decay_t<Rng>, any_view>) AND //
+                input_range<Rng> AND //
+                detail::any_compatible_range<Rng, Ref>) //
+        any_view(Rng && rng)
           : any_view(static_cast<Rng &&>(rng),
                      meta::bool_<(get_categories<Rng>() & Cat) == Cat>{})
         {}
@@ -571,8 +570,9 @@ namespace ranges
         }
 
         CPP_member
-        auto size() -> CPP_ret(std::size_t)( //
-            requires(category::sized == (Cat & category::sized)))
+        auto size() //
+            -> CPP_ret(std::size_t)( //
+                requires (category::sized == (Cat & category::sized)))
         {
             return ptr_ ? ptr_->size() : 0;
         }
@@ -613,16 +613,19 @@ namespace ranges
         friend range_access;
 
         any_view() = default;
-        template<typename Rng>
-        CPP_ctor(any_view)(Rng && rng)( //
-            requires(!defer::same_as<detail::decay_t<Rng>, any_view>) &&
-            defer::input_range<Rng> && detail::defer::any_compatible_range<Rng, Ref>)
+        template(typename Rng)( //
+            requires //
+                (!same_as<detail::decay_t<Rng>, any_view>) AND //
+                input_range<Rng> AND //
+                detail::any_compatible_range<Rng, Ref>) //
+        any_view(Rng && rng)
           : ptr_{std::make_shared<impl_t<Rng>>(views::all(static_cast<Rng &&>(rng)))}
         {}
 
         CPP_member
-        auto size() -> CPP_ret(std::size_t)( //
-            requires(category::sized == (Cat & category::sized)))
+        auto size() //
+            -> CPP_ret(std::size_t)( //
+                requires (category::sized == (Cat & category::sized)))
         {
             return ptr_ ? ptr_->size() : 0;
         }
@@ -648,7 +651,7 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng)( //
+    template(typename Rng)( //
         requires view_<Rng>)    //
         any_view(Rng &&)
             ->any_view<range_reference_t<Rng>, get_categories<Rng>()>;
@@ -679,6 +682,6 @@ RANGES_SATISFY_BOOST_RANGE(::ranges::any_view)
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -17,7 +17,7 @@
 RANGES_DEPRECATED_HEADER(
     "This header is deprecated and will be removed from a future version of range-v3.")
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -35,6 +35,6 @@ namespace ranges
 #endif
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

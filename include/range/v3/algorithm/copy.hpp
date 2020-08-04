@@ -28,7 +28,7 @@
 #include <range/v3/utility/copy.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -41,11 +41,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(copy)
 
         /// \brief function template \c copy
-        template<typename I, typename S, typename O>
+        template(typename I, typename S, typename O)( //
+            requires input_iterator<I> AND sentinel_for<S, I> AND //
+            weakly_incrementable<O> AND indirectly_copyable<I, O>) //
         constexpr auto RANGES_FUNC(copy)(I first, S last, O out) //
-            ->CPP_ret(copy_result<I, O>)(                        //
-                requires input_iterator<I> && sentinel_for<S, I> &&
-                weakly_incrementable<O> && indirectly_copyable<I, O>)
+            -> copy_result<I, O>
         {
             for(; first != last; ++first, ++out)
                 *out = *first;
@@ -53,11 +53,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename O>
-        constexpr auto RANGES_FUNC(copy)(Rng && rng, O out)      //
-            ->CPP_ret(copy_result<borrowed_iterator_t<Rng>, O>)( //
-                requires input_range<Rng> && weakly_incrementable<O> &&
-                indirectly_copyable<iterator_t<Rng>, O>)
+        template(typename Rng, typename O)( //
+            requires input_range<Rng> AND weakly_incrementable<O> AND //
+            indirectly_copyable<iterator_t<Rng>, O>) //
+        constexpr auto RANGES_FUNC(copy)(Rng && rng, O out)  //
+            -> copy_result<borrowed_iterator_t<Rng>, O>
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }
@@ -85,6 +85,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -26,7 +26,7 @@
 #include <range/v3/functional/bind_back.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -45,17 +45,17 @@ namespace ranges
             ranges::insert(std::declval<Cont &>(), std::declval<sentinel_t<Cont>>(),
                            std::declval<Rng>())));
 
-        template<typename Cont, typename T>
-        auto push_back(Cont && cont, T && t) -> CPP_ret(push_back_t<Cont, T>)( //
-            requires lvalue_container_like<Cont> &&
-            (!range<T>)&&constructible_from<range_value_t<Cont>, T>)
+        template(typename Cont, typename T)( //
+            requires lvalue_container_like<Cont> AND
+            (!range<T>)&&constructible_from<range_value_t<Cont>, T>) //
+        auto push_back(Cont && cont, T && t) -> push_back_t<Cont, T>
         {
             unwrap_reference(cont).push_back(static_cast<T &&>(t));
         }
 
-        template<typename Cont, typename Rng>
-        auto push_back(Cont && cont, Rng && rng) -> CPP_ret(insert_t<Cont, Rng>)( //
-            requires lvalue_container_like<Cont> && range<Rng>)
+        template(typename Cont, typename Rng)( //
+            requires lvalue_container_like<Cont> AND range<Rng>) //
+        auto push_back(Cont && cont, Rng && rng) -> insert_t<Cont, Rng>
         {
             ranges::insert(cont, end(cont), static_cast<Rng &&>(rng));
         }
@@ -63,15 +63,14 @@ namespace ranges
         /// \cond
         // clang-format off
         template<typename Rng, typename T>
-        CPP_concept_fragment(can_push_back_frag_,
+        CPP_requires(can_push_back_frag_,
             requires(Rng && rng, T && t) //
             (
                 push_back(rng, (T &&) t)
-            )
-        );
+            ));
         template<typename Rng, typename T>
         CPP_concept can_push_back_ =
-            CPP_fragment(adl_push_back_detail::can_push_back_frag_, Rng, T);
+            CPP_requires_ref(adl_push_back_detail::can_push_back_frag_, Rng, T);
         // clang-format on
         /// \endcond
 
@@ -98,22 +97,22 @@ namespace ranges
                 return make_action_closure(bind_back(push_back_fn{}, val));
             }
 
-            template<typename Rng, typename T>
+            template(typename Rng, typename T)( //
+                requires input_range<Rng> AND can_push_back_<Rng, T> AND //
+                (range<T> || constructible_from<range_value_t<Rng>, T>)) //
             auto operator()(Rng && rng, T && t) const //
-                -> CPP_ret(Rng)(                      //
-                    requires input_range<Rng> && can_push_back_<Rng, T> &&
-                    (range<T> || constructible_from<range_value_t<Rng>, T>))
+                -> Rng
             {
                 push_back(rng, static_cast<T &&>(t));
                 return static_cast<Rng &&>(rng);
             }
 
-            template<typename Rng, typename T>
+            template(typename Rng, typename T)( //
+                requires input_range<Rng> AND                          //
+                        can_push_back_<Rng, std::initializer_list<T>> AND  //
+                            constructible_from<range_value_t<Rng>, T const &>) //
             auto operator()(Rng && rng, std::initializer_list<T> t) const //
-                -> CPP_ret(Rng)(                                          //
-                    requires input_range<Rng> &&                          //
-                        can_push_back_<Rng, std::initializer_list<T>> &&  //
-                            constructible_from<range_value_t<Rng>, T const &>)
+                -> Rng
             {
                 push_back(rng, t);
                 return static_cast<Rng &&>(rng);
@@ -141,6 +140,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

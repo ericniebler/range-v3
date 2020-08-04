@@ -21,7 +21,7 @@
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -29,12 +29,12 @@ namespace ranges
     {
         struct partition_point_n_fn
         {
-            template<typename I, typename C, typename P = identity>
+            template(typename I, typename C, typename P = identity)( //
+                requires forward_iterator<I> AND
+                        indirect_unary_predicate<C, projected<I, P>>) //
             auto operator()(I first, iter_difference_t<I> d, C pred,
                             P proj = P{}) const //
-                -> CPP_ret(I)(                  //
-                    requires forward_iterator<I> &&
-                        indirect_unary_predicate<C, projected<I, P>>)
+                -> I
             {
                 if(0 < d)
                 {
@@ -59,6 +59,6 @@ namespace ranges
     } // namespace aux
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

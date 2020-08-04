@@ -31,7 +31,7 @@
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -75,11 +75,12 @@ namespace ranges
 
         public:
             cursor_adaptor() = default;
-            explicit constexpr cursor_adaptor(range_value_t<Rng> const & val)
+            constexpr explicit cursor_adaptor(range_value_t<Rng> const & val)
               : val_{val}
             {}
-            CPP_template(bool Other)( //
-                requires Const && (!Other)) cursor_adaptor(cursor_adaptor<Other> that)
+            template(bool Other)( //
+                requires Const AND CPP_NOT(Other)) //
+            cursor_adaptor(cursor_adaptor<Other> that)
               : toggle_(that.toggle_)
               , val_(std::move(that.val_))
             {}
@@ -97,8 +98,9 @@ namespace ranges
             CPP_member
             constexpr auto equal(iterator_t<CRng> const & it0,
                                  iterator_t<CRng> const & it1,
-                                 cursor_adaptor const & other) const -> CPP_ret(bool)( //
-                requires sentinel_for<iterator_t<CRng>, iterator_t<CRng>>)
+                                 cursor_adaptor const & other) const //
+                -> CPP_ret(bool)( //
+                    requires sentinel_for<iterator_t<CRng>, iterator_t<CRng>>)
             {
                 return it0 == it1 && toggle_ == other.toggle_;
             }
@@ -109,8 +111,9 @@ namespace ranges
                 toggle_ = !toggle_;
             }
             CPP_member
-            constexpr auto prev(iterator_t<CRng> & it) -> CPP_ret(void)( //
-                requires bidirectional_range<CRng>)
+            constexpr auto prev(iterator_t<CRng> & it) //
+                -> CPP_ret(void)( //
+                    requires bidirectional_range<CRng>)
             {
                 toggle_ = !toggle_;
                 if(toggle_)
@@ -126,9 +129,9 @@ namespace ranges
                 return (other_it - it) * 2 + (other.toggle_ - toggle_);
             }
             CPP_member
-            constexpr auto advance(iterator_t<CRng> & it,
-                                   range_difference_t<CRng> n) -> CPP_ret(void)( //
-                requires random_access_range<CRng>)
+            constexpr auto advance(iterator_t<CRng> & it, range_difference_t<CRng> n) //
+                -> CPP_ret(void)( //
+                    requires random_access_range<CRng>)
             {
                 ranges::advance(it, n >= 0 ? (n + toggle_) / 2 : (n - !toggle_) / 2);
                 if(n % 2 != 0)
@@ -143,8 +146,9 @@ namespace ranges
 
         public:
             sentinel_adaptor() = default;
-            CPP_template(bool Other)( //
-                requires Const && (!Other)) sentinel_adaptor(sentinel_adaptor<Other>)
+            template(bool Other)( //
+                requires Const AND CPP_NOT(Other)) //
+            sentinel_adaptor(sentinel_adaptor<Other>)
             {}
             static constexpr bool empty(iterator_t<CRng> const & it,
                                         cursor_adaptor<Const> const &,
@@ -158,37 +162,40 @@ namespace ranges
             return cursor_adaptor<false>{val_};
         }
         CPP_member
-        constexpr auto begin_adaptor() const -> CPP_ret(cursor_adaptor<true>)( //
-            requires range<Rng const>)
+        constexpr auto begin_adaptor() const //
+            -> CPP_ret(cursor_adaptor<true>)( //
+                requires range<Rng const>)
         {
             return cursor_adaptor<true>{val_};
         }
         CPP_member
-        constexpr auto end_adaptor() -> CPP_ret(cursor_adaptor<false>)( //
-            requires common_range<Rng> && (!single_pass_iterator_<iterator_t<Rng>>))
+        constexpr auto end_adaptor() //
+            -> CPP_ret(cursor_adaptor<false>)( //
+                requires common_range<Rng> && (!single_pass_iterator_<iterator_t<Rng>>))
         {
             return cursor_adaptor<false>{val_};
         }
         CPP_member
-        constexpr auto end_adaptor() noexcept -> CPP_ret(sentinel_adaptor<false>)( //
-            requires(!common_range<Rng>) || single_pass_iterator_<iterator_t<Rng>>)
+        constexpr auto end_adaptor() noexcept //
+            -> CPP_ret(sentinel_adaptor<false>)( //
+                requires (!common_range<Rng>) || single_pass_iterator_<iterator_t<Rng>>)
         {
             return {};
         }
-        template<bool Const = true>
-        constexpr auto end_adaptor() const -> CPP_ret(cursor_adaptor<Const>)( //
-            requires Const && range<meta::const_if_c<Const, Rng>> &&
-                common_range<meta::const_if_c<Const, Rng>> &&
-            (!single_pass_iterator_<iterator_t<meta::const_if_c<Const, Rng>>>))
+        template(bool Const = true)( //
+            requires Const AND range<meta::const_if_c<Const, Rng>> AND
+                common_range<meta::const_if_c<Const, Rng>> AND
+            (!single_pass_iterator_<iterator_t<meta::const_if_c<Const, Rng>>>)) //
+        constexpr auto end_adaptor() const -> cursor_adaptor<Const>
         {
             return cursor_adaptor<true>{val_};
         }
-        template<bool Const = true>
-        constexpr auto end_adaptor() const noexcept
-            -> CPP_ret(sentinel_adaptor<Const>)( //
-                requires Const && range<meta::const_if_c<Const, Rng>> &&
+        template(bool Const = true)( //
+            requires Const AND range<meta::const_if_c<Const, Rng>> AND
                 (!common_range<meta::const_if_c<Const, Rng>> ||
-                 single_pass_iterator_<iterator_t<meta::const_if_c<Const, Rng>>>))
+                 single_pass_iterator_<iterator_t<meta::const_if_c<Const, Rng>>>)) //
+        constexpr auto end_adaptor() const noexcept
+            -> sentinel_adaptor<Const>
         {
             return {};
         }
@@ -201,19 +208,20 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    intersperse_view(Rng &&, range_value_t<Rng>)->intersperse_view<views::all_t<Rng>>;
+    intersperse_view(Rng &&, range_value_t<Rng>) //
+        -> intersperse_view<views::all_t<Rng>>;
 #endif
 
     namespace views
     {
         struct intersperse_base_fn
         {
-            template<typename Rng>
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND //
+                    convertible_to<range_reference_t<Rng>, range_value_t<Rng>> AND //
+                        semiregular<range_value_t<Rng>>) //
             constexpr auto operator()(Rng && rng, range_value_t<Rng> val) const
-                -> CPP_ret(intersperse_view<all_t<Rng>>)( //
-                    requires viewable_range<Rng> && input_range<Rng> &&
-                        convertible_to<range_reference_t<Rng>, range_value_t<Rng>> &&
-                            semiregular<range_value_t<Rng>>)
+                -> intersperse_view<all_t<Rng>>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(val)};
             }
@@ -237,7 +245,7 @@ namespace ranges
     } // namespace views
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::intersperse_view)
 

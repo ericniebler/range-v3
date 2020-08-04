@@ -1123,6 +1123,31 @@ namespace meta
     } // namespace lazy
 
     ///////////////////////////////////////////////////////////////////////////////////////////
+    // conditional_t
+    /// \cond
+    namespace detail
+    {
+        template <bool>
+        struct _cond
+        {
+            template <typename Then, typename Else>
+            using invoke = Then;
+        };
+        template <>
+        struct _cond<false>
+        {
+            template <typename Then, typename Else>
+            using invoke = Else;
+        };
+    } // namespace detail
+    /// \endcond
+
+    /// Select one type or another depending on a compile-time Boolean.
+    /// \ingroup logical
+    template <bool If, typename Then, typename Else = void>
+    using conditional_t = typename detail::_cond<If>::template invoke<Then, Else>;
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
     // if_
     /// \cond
     namespace detail

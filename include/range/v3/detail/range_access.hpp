@@ -26,7 +26,7 @@
 
 #include <range/v3/iterator/concepts.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -229,71 +229,67 @@ namespace ranges
         // clang-format off
         //
         template<typename T>
-        CPP_concept_bool cursor =
+        CPP_concept cursor =
             semiregular<T> && semiregular<range_access::mixin_base_t<T>> &&
             constructible_from<range_access::mixin_base_t<T>, T> &&
             constructible_from<range_access::mixin_base_t<T>, T const &>;
             // Axiom: mixin_base_t<T> has a member get(), accessible to derived classes,
             //   which perfectly-returns the contained cursor object and does not throw
             //   exceptions.
+
         template<typename T>
-        CPP_concept_fragment(has_cursor_next_,
+        CPP_requires(has_cursor_next_,
             requires(T & t)
             (
                 range_access::next(t)
-            )
-        );
+            ));
         template<typename T>
-        CPP_concept_bool has_cursor_next = CPP_fragment(detail::has_cursor_next_, T);
+        CPP_concept has_cursor_next = CPP_requires_ref(detail::has_cursor_next_, T);
 
         template<typename S, typename C>
-        CPP_concept_fragment(sentinel_for_cursor_,
+        CPP_requires(sentinel_for_cursor_,
             requires(S & s, C & c) //
             (
                 range_access::equal(c, s),
                 concepts::requires_<convertible_to<decltype(
                     range_access::equal(c, s)), bool>>
-            )
-        );
+            ));
         template<typename S, typename C>
-        CPP_concept_bool sentinel_for_cursor =
+        CPP_concept sentinel_for_cursor =
             semiregular<S> &&
             cursor<C> &&
-            CPP_fragment(detail::sentinel_for_cursor_, S, C);
+            CPP_requires_ref(detail::sentinel_for_cursor_, S, C);
 
         template<typename T>
-        CPP_concept_fragment(readable_cursor_,
+        CPP_requires(readable_cursor_,
             requires(T & t) //
             (
                 range_access::read(t)
-            )
-        );
+            ));
         template<typename T>
-        CPP_concept_bool readable_cursor = CPP_fragment(detail::readable_cursor_, T);
+        CPP_concept readable_cursor = CPP_requires_ref(detail::readable_cursor_, T);
 
         template<typename T>
-        CPP_concept_fragment(has_cursor_arrow_,
+        CPP_requires(has_cursor_arrow_,
             requires(T const & t) //
             (
                 range_access::arrow(t)
-            )
-        );
+            ));
         template<typename T>
-        CPP_concept_bool has_cursor_arrow = CPP_fragment(detail::has_cursor_arrow_, T);
+        CPP_concept has_cursor_arrow = CPP_requires_ref(detail::has_cursor_arrow_, T);
 
         template<typename T, typename U>
-        CPP_concept_fragment(writable_cursor_,
+        CPP_requires(writable_cursor_,
             requires(T & t, U && u) //
             (
                 range_access::write(t, (U &&) u)
-            )
-        );
+            ));
         template<typename T, typename U>
-        CPP_concept_bool writable_cursor =
-            CPP_fragment(detail::writable_cursor_, T, U);
+        CPP_concept writable_cursor =
+            CPP_requires_ref(detail::writable_cursor_, T, U);
 
         template<typename S, typename C>
-        CPP_concept_fragment(sized_sentinel_for_cursor_,
+        CPP_requires(sized_sentinel_for_cursor_,
             requires(S & s, C & c) //
             (
                 range_access::distance_to(c, s),
@@ -302,74 +298,77 @@ namespace ranges
             )
         );
         template<typename S, typename C>
-        CPP_concept_bool sized_sentinel_for_cursor =
+        CPP_concept sized_sentinel_for_cursor =
             sentinel_for_cursor<S, C> &&
-            CPP_fragment(detail::sized_sentinel_for_cursor_, S, C);
+            CPP_requires_ref(detail::sized_sentinel_for_cursor_, S, C);
 
         template<typename T, typename U>
-        CPP_concept_bool output_cursor =
+        CPP_concept output_cursor =
             writable_cursor<T, U> && cursor<T>;
+
         template<typename T>
-        CPP_concept_bool input_cursor =
+        CPP_concept input_cursor =
             readable_cursor<T> && cursor<T> && has_cursor_next<T>;
+
         template<typename T>
-        CPP_concept_bool forward_cursor =
+        CPP_concept forward_cursor =
             input_cursor<T> && sentinel_for_cursor<T, T> &&
             !range_access::single_pass_t<uncvref_t<T>>::value;
+
         template<typename T>
-        CPP_concept_fragment(bidirectional_cursor_,
+        CPP_requires(bidirectional_cursor_,
             requires(T & t) //
             (
                 range_access::prev(t)
             ));
         template<typename T>
-        CPP_concept_bool bidirectional_cursor =
+        CPP_concept bidirectional_cursor =
             forward_cursor<T> &&
-            CPP_fragment(detail::bidirectional_cursor_, T);
+            CPP_requires_ref(detail::bidirectional_cursor_, T);
+
         template<typename T>
-        CPP_concept_fragment(random_access_cursor_,
+        CPP_requires(random_access_cursor_,
             requires(T & t) //
             (
                 range_access::advance(t, range_access::distance_to(t, t))
             ));
         template<typename T>
-        CPP_concept_bool random_access_cursor =
+        CPP_concept random_access_cursor =
             bidirectional_cursor<T> && //
             sized_sentinel_for_cursor<T, T> && //
-            CPP_fragment(detail::random_access_cursor_, T);
-        template<class T>
-        auto is_lvalue_reference(T&&)
-            -> CPP_ret(void)(requires std::is_lvalue_reference<T>::value);
+            CPP_requires_ref(detail::random_access_cursor_, T);
+
+        template(class T)( //
+            requires std::is_lvalue_reference<T>::value)
+        void is_lvalue_reference(T&&);
+
         template<typename T>
-        CPP_concept_fragment(contiguous_cursor_,
+        CPP_requires(contiguous_cursor_,
             requires(T & t) //
             (
                 detail::is_lvalue_reference(range_access::read(t))
             ));
         template<typename T>
-        CPP_concept_bool contiguous_cursor =
+        CPP_concept contiguous_cursor =
             random_access_cursor<T> && //
             range_access::contiguous_t<uncvref_t<T>>::value && //
-            CPP_fragment(detail::contiguous_cursor_, T);
+            CPP_requires_ref(detail::contiguous_cursor_, T);
         // clang-format on
 
         template<typename Cur, bool IsReadable>
-        struct is_writable_cursor_ : std::true_type
-        {};
+        RANGES_INLINE_VAR constexpr bool is_writable_cursor_ = true;
 
         template<typename Cur>
-        struct is_writable_cursor_<Cur, true>
-          : meta::bool_<(bool)writable_cursor<Cur, range_access::cursor_value_t<Cur>>>
-        {};
+        RANGES_INLINE_VAR constexpr bool is_writable_cursor_<Cur, true> =
+            (bool) writable_cursor<Cur, range_access::cursor_value_t<Cur>>;
 
         template<typename Cur>
-        struct is_writable_cursor
-          : detail::is_writable_cursor_<Cur, (bool)readable_cursor<Cur>>
-        {};
+        RANGES_INLINE_VAR constexpr bool is_writable_cursor_v =
+            is_writable_cursor_<Cur, (bool)readable_cursor<Cur>>;
     } // namespace detail
     /// \endcond
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

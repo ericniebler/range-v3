@@ -30,7 +30,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/split_when.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -54,27 +54,27 @@ namespace ranges
 
             // BUGBUG something is not right with the actions. It should be possible
             // to move a container into a split and have elements moved into the result.
-            template<typename Rng, typename Fun>
-            auto operator()(Rng && rng, Fun fun) const                        //
-                -> CPP_ret(std::vector<split_value_t<Rng>>)(                  //
-                    requires forward_range<Rng> &&                            //
-                        invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> && //
-                            invocable<Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
-                                copy_constructible<Fun> &&
+            template(typename Rng, typename Fun)( //
+                requires forward_range<Rng> AND                            //
+                        invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> AND //
+                            invocable<Fun &, iterator_t<Rng>, iterator_t<Rng>> AND
+                                copy_constructible<Fun> AND
                                     convertible_to<invoke_result_t<Fun &, iterator_t<Rng>,
                                                                    sentinel_t<Rng>>,
-                                                   std::pair<bool, iterator_t<Rng>>>)
+                                                   std::pair<bool, iterator_t<Rng>>>) //
+            auto operator()(Rng && rng, Fun fun) const                        //
+                -> std::vector<split_value_t<Rng>>
             {
                 return views::split_when(rng, std::move(fun)) |
                        to<std::vector<split_value_t<Rng>>>();
             }
 
-            template<typename Rng, typename Fun>
+            template(typename Rng, typename Fun)( //
+                requires forward_range<Rng> AND                        //
+                        predicate<Fun const &, range_reference_t<Rng>> AND //
+                            copy_constructible<Fun>) //
             auto operator()(Rng && rng, Fun fun) const
-                -> CPP_ret(std::vector<split_value_t<Rng>>)(              //
-                    requires forward_range<Rng> &&                        //
-                        predicate<Fun const &, range_reference_t<Rng>> && //
-                            copy_constructible<Fun>)
+                -> std::vector<split_value_t<Rng>>
             {
                 return views::split_when(rng, std::move(fun)) |
                        to<std::vector<split_value_t<Rng>>>();
@@ -87,6 +87,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

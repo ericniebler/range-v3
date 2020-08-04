@@ -53,7 +53,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -194,11 +194,10 @@ namespace ranges
     RANGES_FUNC_BEGIN(sort)
 
         /// \brief function template \c sort
-        template<typename I, typename S, typename C = less, typename P = identity>
-        auto RANGES_FUNC(sort)(I first, S end_, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(I)(                                                   //
-                requires sortable<I, C, P> && random_access_iterator<I> &&
-                sentinel_for<S, I>)
+        template(typename I, typename S, typename C = less, typename P = identity)( //
+            requires sortable<I, C, P> AND random_access_iterator<I> AND //
+            sentinel_for<S, I>) //
+        I RANGES_FUNC(sort)(I first, S end_, C pred = C{}, P proj = P{})
         {
             I last = ranges::next(first, std::move(end_));
             if(first != last)
@@ -211,10 +210,10 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C = less, typename P = identity>
+        template(typename Rng, typename C = less, typename P = identity)( //
+            requires sortable<iterator_t<Rng>, C, P> AND random_access_range<Rng>) //
         auto RANGES_FUNC(sort)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(borrowed_iterator_t<Rng>)(                       //
-                requires sortable<iterator_t<Rng>, C, P> && random_access_range<Rng>)
+            -> borrowed_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
@@ -228,6 +227,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

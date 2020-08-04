@@ -29,7 +29,7 @@
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -48,9 +48,9 @@ namespace ranges
             using CRng = meta::const_if_c<IsConst, Rng>;
 
             adaptor() = default;
-            CPP_template(bool Other)(         //
-                requires IsConst && (!Other)) //
-                constexpr adaptor(adaptor<Other>) noexcept
+            template(bool Other)(               //
+                requires IsConst && CPP_NOT(Other)) //
+            constexpr adaptor(adaptor<Other>) noexcept
             {}
 
             // clang-format off
@@ -66,34 +66,38 @@ namespace ranges
         };
 
         CPP_member
-        constexpr auto begin_adaptor() noexcept -> CPP_ret(adaptor<false>)( //
-            requires(!simple_view<Rng>()))
+        constexpr auto begin_adaptor() noexcept //
+            -> CPP_ret(adaptor<false>)( //
+                requires (!simple_view<Rng>()))
         {
             return {};
         }
         CPP_member
-        constexpr auto begin_adaptor() const noexcept -> CPP_ret(adaptor<true>)( //
-            requires range<Rng const>)
+        constexpr auto begin_adaptor() const noexcept //
+            -> CPP_ret(adaptor<true>)( //
+                requires range<Rng const>)
         {
             return {};
         }
 
         CPP_member
-        constexpr auto end_adaptor() noexcept -> CPP_ret(adaptor<false>)( //
-            requires(!simple_view<Rng>()))
+        constexpr auto end_adaptor() noexcept //
+            -> CPP_ret(adaptor<false>)( //
+                requires (!simple_view<Rng>()))
         {
             return {};
         }
         CPP_member
-        constexpr auto end_adaptor() const noexcept -> CPP_ret(adaptor<true>)( //
-            requires range<Rng const>)
+        constexpr auto end_adaptor() const noexcept //
+            -> CPP_ret(adaptor<true>)( //
+                requires range<Rng const>)
         {
             return {};
         }
 
     public:
         indirect_view() = default;
-        explicit constexpr indirect_view(Rng rng)
+        constexpr explicit indirect_view(Rng rng)
           : indirect_view::view_adaptor{detail::move(rng)}
         {}
         CPP_member
@@ -113,7 +117,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    indirect_view(Rng &&)->indirect_view<views::all_t<Rng>>;
+    indirect_view(Rng &&) //
+        -> indirect_view<views::all_t<Rng>>;
 #endif
 
     namespace views
@@ -139,7 +144,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::indirect_view)

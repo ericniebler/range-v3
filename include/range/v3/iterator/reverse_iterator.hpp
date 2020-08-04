@@ -20,7 +20,7 @@
 #include <range/v3/iterator/basic_iterator.hpp>
 #include <range/v3/iterator/concepts.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -44,10 +44,10 @@ namespace ranges
                 #ifndef _MSC_VER
                 using basic_mixin<reverse_cursor>::basic_mixin;
                 #else
-                explicit constexpr mixin(reverse_cursor && cur)
+                constexpr explicit mixin(reverse_cursor && cur)
                   : basic_mixin<reverse_cursor>(static_cast<reverse_cursor &&>(cur))
                 {}
-                explicit constexpr mixin(reverse_cursor const & cur)
+                constexpr explicit mixin(reverse_cursor const & cur)
                   : basic_mixin<reverse_cursor>(cur)
                 {}
                 #endif
@@ -79,10 +79,10 @@ namespace ranges
             {
                 return it_;
             }
-            template<typename J>
+            template(typename J)( //
+                requires sentinel_for<J, I>) //
             constexpr auto equal(reverse_cursor<J> const & that) const
-                -> CPP_ret(bool)( //
-                    requires sentinel_for<J, I>)
+                -> bool
             {
                 return it_ == that.it_;
             }
@@ -95,15 +95,16 @@ namespace ranges
                 ++it_;
             }
             CPP_member
-            constexpr auto advance(iter_difference_t<I> n) -> CPP_ret(void)( //
-                requires random_access_iterator<I>)
+            constexpr auto advance(iter_difference_t<I> n) //
+                -> CPP_ret(void)( //
+                    requires random_access_iterator<I>)
             {
                 it_ -= n;
             }
-            template<typename J>
+            template(typename J)( //
+                requires sized_sentinel_for<J, I>) //
             constexpr auto distance_to(reverse_cursor<J> const & that) const
-                -> CPP_ret(iter_difference_t<I>)( //
-                    requires sized_sentinel_for<J, I>)
+                -> iter_difference_t<I>
             {
                 return it_ - that.base();
             }
@@ -118,9 +119,9 @@ namespace ranges
 
         public:
             reverse_cursor() = default;
-            template<typename U>
-            constexpr CPP_ctor(reverse_cursor)(reverse_cursor<U> const & u)( //
-                requires convertible_to<U, I>)
+            template(typename U)( //
+                requires convertible_to<U, I>) //
+            constexpr reverse_cursor(reverse_cursor<U> const & u)
               : it_(u.base())
             {}
         };
@@ -129,9 +130,9 @@ namespace ranges
 
     struct make_reverse_iterator_fn
     {
-        template<typename I>
-        constexpr auto operator()(I i) const -> CPP_ret(reverse_iterator<I>)( //
-            requires bidirectional_iterator<I>)
+        template(typename I)( //
+            requires bidirectional_iterator<I>) //
+        constexpr auto operator()(I i) const -> reverse_iterator<I>
         {
             return reverse_iterator<I>(i);
         }
@@ -147,6 +148,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_ITERATOR_REVERSE_ITERATOR_HPP

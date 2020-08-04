@@ -27,7 +27,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -39,11 +39,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(copy_backward)
 
         /// \brief function template \c copy_backward
-        template<typename I, typename S, typename O>
+        template(typename I, typename S, typename O)( //
+            requires bidirectional_iterator<I> AND sentinel_for<S, I> AND //
+            bidirectional_iterator<O> AND indirectly_copyable<I, O>) //
         auto RANGES_FUNC(copy_backward)(I first, S end_, O out)
-            ->CPP_ret(copy_backward_result<I, O>)( //
-                requires bidirectional_iterator<I> && sentinel_for<S, I> &&
-                bidirectional_iterator<O> && indirectly_copyable<I, O>)
+            -> copy_backward_result<I, O>
         {
             I i = ranges::next(first, end_), last = i;
             while(first != i)
@@ -52,11 +52,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename O>
+        template(typename Rng, typename O)( //
+            requires bidirectional_range<Rng> AND bidirectional_iterator<O> AND //
+            indirectly_copyable<iterator_t<Rng>, O>) //
         auto RANGES_FUNC(copy_backward)(Rng && rng, O out)
-            ->CPP_ret(copy_backward_result<borrowed_iterator_t<Rng>, O>)( //
-                requires bidirectional_range<Rng> && bidirectional_iterator<O> &&
-                indirectly_copyable<iterator_t<Rng>, O>)
+            -> copy_backward_result<borrowed_iterator_t<Rng>, O>
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }
@@ -70,6 +70,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

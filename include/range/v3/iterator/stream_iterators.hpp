@@ -24,7 +24,7 @@
 
 #include <range/v3/iterator/concepts.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -49,9 +49,9 @@ namespace ranges
           : sout_(&s)
           , delim_(d)
         {}
-        template<typename U>
-        auto operator=(U && value) -> CPP_ret(ostream_iterator &)( //
-            requires convertible_to<U, value_t<U> const &>)
+        template(typename U)( //
+            requires convertible_to<U, value_t<U> const &>) //
+        auto operator=(U && value) -> ostream_iterator &
         {
             RANGES_EXPECT(sout_);
             *sout_ << static_cast<value_t<U> const &>(static_cast<U &&>(value));
@@ -129,10 +129,10 @@ namespace ranges
 
     struct make_ostream_joiner_fn
     {
-        template<typename Delim, typename Char, typename Traits>
+        template(typename Delim, typename Char, typename Traits)( //
+            requires semiregular<detail::decay_t<Delim>>) //
         auto operator()(std::basic_ostream<Char, Traits> & s, Delim && d) const
-            -> CPP_ret(ostream_joiner<detail::decay_t<Delim>, Char, Traits>)( //
-                requires semiregular<detail::decay_t<Delim>>)
+            -> ostream_joiner<detail::decay_t<Delim>, Char, Traits>
         {
             return {s, std::forward<Delim>(d)};
         }
@@ -220,6 +220,6 @@ namespace std
 RANGES_DIAGNOSTIC_POP
 /// \endcond
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_ITERATOR_STREAM_ITERATORS_HPP

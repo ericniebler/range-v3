@@ -28,7 +28,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -43,8 +43,9 @@ namespace ranges
         struct adaptor : adaptor_base
         {
             adaptor() = default;
-            CPP_template(bool Other)( //
-                requires Const && (!Other)) constexpr adaptor(adaptor<Other>)
+            template(bool Other)( //
+                requires Const AND CPP_NOT(Other)) //
+            constexpr adaptor(adaptor<Other>)
             {}
             using CRng = meta::const_if_c<Const, Rng>;
             using value_type = range_value_t<Rng>;
@@ -66,14 +67,16 @@ namespace ranges
             return {};
         }
         CPP_member
-        auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires input_range<Rng const>)
+        auto begin_adaptor() const //
+            -> CPP_ret(adaptor<true>)( //
+                requires input_range<Rng const>)
         {
             return {};
         }
         CPP_member
-        auto end_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires input_range<Rng const>)
+        auto end_adaptor() const //
+            -> CPP_ret(adaptor<true>)( //
+                requires input_range<Rng const>)
         {
             return {};
         }
@@ -100,16 +103,17 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    move_view(Rng &&)->move_view<views::all_t<Rng>>;
+    move_view(Rng &&) //
+        -> move_view<views::all_t<Rng>>;
 #endif
 
     namespace views
     {
         struct move_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(move_view<all_t<Rng>>)( //
-                requires viewable_range<Rng> && input_range<Rng>)
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng>) //
+            auto operator()(Rng && rng) const -> move_view<all_t<Rng>>
             {
                 return move_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -122,7 +126,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::move_view)
 

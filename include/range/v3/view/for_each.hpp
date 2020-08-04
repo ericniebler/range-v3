@@ -31,7 +31,7 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -69,9 +69,9 @@ namespace ranges
 
     struct yield_fn
     {
-        template<typename V>
-        auto operator()(V v) const -> CPP_ret(single_view<V>)( //
-            requires copy_constructible<V>)
+        template(typename V)( //
+            requires copy_constructible<V>) //
+        auto operator()(V v) const -> single_view<V>
         {
             return views::single(std::move(v));
         }
@@ -83,9 +83,9 @@ namespace ranges
 
     struct yield_from_fn
     {
-        template<typename Rng>
-        auto operator()(Rng rng) const -> CPP_ret(Rng)( //
-            requires view_<Rng>)
+        template(typename Rng)( //
+            requires view_<Rng>) //
+        auto operator()(Rng rng) const -> Rng
         {
             return rng;
         }
@@ -110,9 +110,9 @@ namespace ranges
 
     struct lazy_yield_if_fn
     {
-        template<typename F>
-        auto operator()(bool b, F f) const -> CPP_ret(generate_n_view<F>)( //
-            requires invocable<F &>)
+        template(typename F)( //
+            requires invocable<F &>) //
+        auto operator()(bool b, F f) const -> generate_n_view<F>
         {
             return views::generate_n(std::move(f), b ? 1 : 0);
         }
@@ -124,8 +124,8 @@ namespace ranges
     /// @}
 
     /// \cond
-    CPP_template(typename Rng, typename Fun)( //
-        requires viewable_range<Rng> && views::transformable_range<Rng, Fun> &&
+    template(typename Rng, typename Fun)( //
+        requires viewable_range<Rng> AND views::transformable_range<Rng, Fun> AND
             input_range<invoke_result_t<Fun &, range_reference_t<Rng>>>) //
         auto
         operator>>=(Rng && rng, Fun fun)
@@ -135,6 +135,6 @@ namespace ranges
     /// \endcond
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

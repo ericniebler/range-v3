@@ -28,7 +28,7 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -40,18 +40,18 @@ namespace ranges
         {
             template<typename C, typename P = identity>
             constexpr auto CPP_fun(operator())(C pred, P proj = P{})(const //
-                                                                     requires(!range<C>))
+                                                                     requires (!range<C>))
             {
                 return make_action_closure(
                     bind_back(unstable_remove_if_fn{}, std::move(pred), std::move(proj)));
             }
 
-            template<typename Rng, typename C, typename P = identity>
-            auto operator()(Rng && rng, C pred, P proj = P{}) const -> CPP_ret(Rng)( //
-                requires bidirectional_range<Rng> && common_range<Rng> &&
-                    permutable<iterator_t<Rng>> &&
+            template(typename Rng, typename C, typename P = identity)( //
+                requires bidirectional_range<Rng> AND common_range<Rng> AND
+                    permutable<iterator_t<Rng>> AND
                         indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> &&
-                            erasable_range<Rng, iterator_t<Rng>, iterator_t<Rng>>)
+                            erasable_range<Rng, iterator_t<Rng>, iterator_t<Rng>>) //
+            auto operator()(Rng && rng, C pred, P proj = P{}) const -> Rng
             {
                 auto it = ranges::unstable_remove_if(ranges::begin(rng),
                                                      ranges::end(rng),
@@ -68,6 +68,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_ACTION_UNSTABLE_REMOVE_IF_HPP

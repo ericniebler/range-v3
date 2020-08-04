@@ -22,7 +22,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -31,10 +31,10 @@ namespace ranges
     RANGES_FUNC_BEGIN(fill)
 
         /// \brief function template \c fill
-        template<typename O, typename S, typename V>
+        template(typename O, typename S, typename V)( //
+            requires output_iterator<O, V const &> AND sentinel_for<S, O>) //
         auto RANGES_FUNC(fill)(O first, S last, V const & val) //
-            ->CPP_ret(O)(                                      //
-                requires output_iterator<O, V const &> && sentinel_for<S, O>)
+            -> O
         {
             for(; first != last; ++first)
                 *first = val;
@@ -42,10 +42,10 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename V>
+        template(typename Rng, typename V)( //
+            requires output_range<Rng, V const &>) //
         auto RANGES_FUNC(fill)(Rng && rng, V const & val)
-            ->CPP_ret(borrowed_iterator_t<Rng>)( //
-                requires output_range<Rng, V const &>)
+            -> borrowed_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), val);
         }
@@ -59,6 +59,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

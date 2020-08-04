@@ -24,7 +24,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -101,9 +101,9 @@ namespace ranges
     {
         struct repeat_fn
         {
-            template<typename Val>
-            auto operator()(Val value) const -> CPP_ret(repeat_view<Val>)( //
-                requires copy_constructible<Val>)
+            template(typename Val)( //
+                requires copy_constructible<Val>) //
+            auto operator()(Val value) const -> repeat_view<Val>
             {
                 return repeat_view<Val>{std::move(value)};
             }
@@ -116,7 +116,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::repeat_view)
 

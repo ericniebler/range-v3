@@ -31,7 +31,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -43,12 +43,14 @@ namespace ranges
     RANGES_FUNC_BEGIN(mismatch)
 
         /// \brief function template \c mismatch
-        template<typename I1,
-                 typename S1,
-                 typename I2,
-                 typename C = equal_to,
-                 typename P1 = identity,
-                 typename P2 = identity>
+        template(typename I1,
+                     typename S1,
+                     typename I2,
+                     typename C = equal_to,
+                     typename P1 = identity,
+                     typename P2 = identity)( //
+            requires input_iterator<I1> && sentinel_for<S1, I1> && input_iterator<I2> &&
+                indirect_relation<C, projected<I1, P1>, projected<I2, P2>>)
         RANGES_DEPRECATED(
             "Use the variant of ranges::mismatch that takes an upper bound for "
             "both sequences")
@@ -58,10 +60,7 @@ namespace ranges
                                    C pred = C{},
                                    P1 proj1 = P1{},
                                    P2 proj2 = P2{}) //
-            ->CPP_ret(mismatch_result<I1, I2>)(     //
-                requires input_iterator<I1> && sentinel_for<S1, I1> &&
-                input_iterator<I2> &&
-                indirect_relation<C, projected<I1, P1>, projected<I2, P2>>)
+            -> mismatch_result<I1, I2>
         {
             for(; begin1 != end1; ++begin1, ++begin2)
                 if(!invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
@@ -70,13 +69,16 @@ namespace ranges
         }
 
         /// \overload
-        template<typename I1,
-                 typename S1,
-                 typename I2,
-                 typename S2,
-                 typename C = equal_to,
-                 typename P1 = identity,
-                 typename P2 = identity>
+        template(typename I1,
+                     typename S1,
+                     typename I2,
+                     typename S2,
+                     typename C = equal_to,
+                     typename P1 = identity,
+                     typename P2 = identity)( //
+            requires input_iterator<I1> && sentinel_for<S1, I1> &&
+                input_iterator<I2> && sentinel_for<S2, I2> &&
+                indirect_relation<C, projected<I1, P1>, projected<I2, P2>>) //
         auto RANGES_FUNC(mismatch)(I1 begin1,
                                    S1 end1,
                                    I2 begin2,
@@ -84,10 +86,7 @@ namespace ranges
                                    C pred = C{},
                                    P1 proj1 = P1{},
                                    P2 proj2 = P2{}) //
-            ->CPP_ret(mismatch_result<I1, I2>)(     //
-                requires input_iterator<I1> && sentinel_for<S1, I1> &&
-                input_iterator<I2> && sentinel_for<S2, I2> &&
-                indirect_relation<C, projected<I1, P1>, projected<I2, P2>>)
+            -> mismatch_result<I1, I2>
         {
             for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
                 if(!invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
@@ -96,11 +95,15 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng1,
-                 typename I2Ref,
-                 typename C = equal_to,
-                 typename P1 = identity,
-                 typename P2 = identity>
+        template(typename Rng1,
+                     typename I2Ref,
+                     typename C = equal_to,
+                     typename P1 = identity,
+                     typename P2 = identity)( //s
+            requires input_range<Rng1> && input_iterator<uncvref_t<I2Ref>> &&
+                indirect_relation<C,
+                                  projected<iterator_t<Rng1>, P1>,
+                                  projected<uncvref_t<I2Ref>, P2>>)
         RANGES_DEPRECATED(
             "Use the variant of ranges::mismatch that takes an upper bound for "
             "both sequences")
@@ -108,12 +111,8 @@ namespace ranges
                                    I2Ref && begin2,
                                    C pred = C{}, // see below [*]
                                    P1 proj1 = P1{},
-                                   P2 proj2 = P2{})                                  //
-            ->CPP_ret(mismatch_result<borrowed_iterator_t<Rng1>, uncvref_t<I2Ref>>)( //
-                requires input_range<Rng1> && input_iterator<uncvref_t<I2Ref>> &&
-                indirect_relation<C,
-                                  projected<iterator_t<Rng1>, P1>,
-                                  projected<uncvref_t<I2Ref>, P2>>)
+                                   P2 proj2 = P2{}) //
+            -> mismatch_result<borrowed_iterator_t<Rng1>, uncvref_t<I2Ref>>
         {
             RANGES_DIAGNOSTIC_PUSH
             RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
@@ -127,18 +126,18 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng1,
-                 typename Rng2,
-                 typename C = equal_to,
-                 typename P1 = identity,
-                 typename P2 = identity>
-        auto RANGES_FUNC(mismatch)(
-            Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{})       //
-            ->CPP_ret(mismatch_result<borrowed_iterator_t<Rng1>, borrowed_iterator_t<Rng2>>)( //
-                requires input_range<Rng1> && input_range<Rng2> &&
+        template(typename Rng1,
+                     typename Rng2,
+                     typename C = equal_to,
+                     typename P1 = identity,
+                     typename P2 = identity)( //
+            requires input_range<Rng1> && input_range<Rng2> &&
                 indirect_relation<C,
                                   projected<iterator_t<Rng1>, P1>,
-                                  projected<iterator_t<Rng2>, P2>>)
+                                  projected<iterator_t<Rng2>, P2>>) //
+        auto RANGES_FUNC(mismatch)(
+            Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) //
+            -> mismatch_result<borrowed_iterator_t<Rng1>, borrowed_iterator_t<Rng2>>
         {
             return (*this)(begin(rng1),
                            end(rng1),
@@ -169,6 +168,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

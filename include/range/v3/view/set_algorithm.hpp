@@ -38,7 +38,7 @@
 #include <range/v3/view/facade.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -73,8 +73,9 @@ namespace ranges
                         ranges::end(rng2_)};
             }
             CPP_member
-            auto begin_cursor() const -> CPP_ret(cursor<true>)( //
-                requires range<Rng1 const> && range<Rng2 const>)
+            auto begin_cursor() const //
+                -> CPP_ret(cursor<true>)( //
+                    requires range<Rng1 const> && range<Rng2 const>)
             {
                 return {pred_,
                         proj1_,
@@ -157,8 +158,8 @@ namespace ranges
             {
                 satisfy();
             }
-            CPP_template(bool Other)(         //
-                requires IsConst && (!Other)) //
+            template(bool Other)(         //
+                requires IsConst && CPP_NOT(Other)) //
                 set_difference_cursor(
                     set_difference_cursor<Other, Rng1, Rng2, C, P1, P2> that)
               : pred_(std::move(that.pred_))
@@ -181,8 +182,9 @@ namespace ranges
                 satisfy();
             }
             CPP_member
-            auto equal(set_difference_cursor const & that) const -> CPP_ret(bool)( //
-                requires forward_range<Rng1>)
+            auto equal(set_difference_cursor const & that) const //
+                -> CPP_ret(bool)( //
+                    requires forward_range<Rng1>)
             {
                 // does not support comparing iterators from different ranges
                 return it1_ == that.it1_;
@@ -220,15 +222,15 @@ namespace ranges
     {
         struct set_difference_base_fn
         {
-            template<typename Rng1, typename Rng2, typename C = less,
-                     typename P1 = identity, typename P2 = identity>
-            auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
-                            P2 proj2 = P2{}) const
-                -> CPP_ret(set_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)( //
-                    requires viewable_range<Rng1> && input_range<Rng1> &&
+            template(typename Rng1, typename Rng2, typename C = less,
+                     typename P1 = identity, typename P2 = identity)( //
+                requires viewable_range<Rng1> && input_range<Rng1> &&
                         viewable_range<Rng2> && input_range<Rng2> &&
                             indirect_relation<C, projected<iterator_t<Rng1>, P1>,
-                                              projected<iterator_t<Rng2>, P2>>)
+                                              projected<iterator_t<Rng2>, P2>>) //
+            auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
+                            P2 proj2 = P2{}) const
+                -> set_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),
@@ -326,8 +328,8 @@ namespace ranges
             {
                 satisfy();
             }
-            CPP_template(bool Other)(         //
-                requires IsConst && (!Other)) //
+            template(bool Other)(         //
+                requires IsConst && CPP_NOT(Other)) //
                 set_intersection_cursor(
                     set_intersection_cursor<Other, Rng1, Rng2, C, P1, P2> that)
               : pred_(std::move(that.pred_))
@@ -351,8 +353,9 @@ namespace ranges
                 satisfy();
             }
             CPP_member
-            auto equal(set_intersection_cursor const & that) const -> CPP_ret(bool)( //
-                requires forward_range<Rng1>)
+            auto equal(set_intersection_cursor const & that) const //
+                -> CPP_ret(bool)( //
+                    requires forward_range<Rng1>)
             {
                 // does not support comparing iterators from different ranges
                 return it1_ == that.it1_;
@@ -390,15 +393,15 @@ namespace ranges
     {
         struct set_intersection_base_fn
         {
-            template<typename Rng1, typename Rng2, typename C = less,
-                     typename P1 = identity, typename P2 = identity>
-            auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
-                            P2 proj2 = P2{}) const
-                -> CPP_ret(set_intersection_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)( //
-                    requires viewable_range<Rng1> && input_range<Rng1> &&
+            template(typename Rng1, typename Rng2, typename C = less,
+                     typename P1 = identity, typename P2 = identity)( //
+                requires viewable_range<Rng1> && input_range<Rng1> &&
                         viewable_range<Rng2> && input_range<Rng2> &&
                             indirect_relation<C, projected<iterator_t<Rng1>, P1>,
-                                              projected<iterator_t<Rng2>, P2>>)
+                                              projected<iterator_t<Rng2>, P2>>) //
+            auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
+                            P2 proj2 = P2{}) const
+                -> set_intersection_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),
@@ -518,8 +521,8 @@ namespace ranges
             {
                 satisfy();
             }
-            CPP_template(bool Other)( //
-                requires IsConst && (!Other))
+            template(bool Other)( //
+                requires IsConst AND CPP_NOT(Other))
                 set_union_cursor(set_union_cursor<Other, Rng1, Rng2, C, P1, P2> that)
               : pred_(std::move(that.pred_))
               , proj1_(std::move(that.proj1_))
@@ -545,8 +548,9 @@ namespace ranges
                 satisfy();
             }
             CPP_member
-            auto equal(set_union_cursor const & that) const -> CPP_ret(bool)( //
-                requires forward_range<Rng1> && forward_range<Rng2>)
+            auto equal(set_union_cursor const & that) const //
+                -> CPP_ret(bool)( //
+                    requires forward_range<Rng1> && forward_range<Rng2>)
             {
                 // does not support comparing iterators from different ranges
                 return (it1_ == that.it1_) && (it2_ == that.it2_);
@@ -587,12 +591,9 @@ namespace ranges
         struct set_union_base_fn
         {
         public:
-            template<typename Rng1, typename Rng2, typename C = less,
-                     typename P1 = identity, typename P2 = identity>
-            auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
-                            P2 proj2 = P2{}) const
-                -> CPP_ret(set_union_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)( //
-                    requires viewable_range<Rng1> && input_range<Rng1> &&
+            template(typename Rng1, typename Rng2, typename C = less,
+                     typename P1 = identity, typename P2 = identity)( //
+                requires viewable_range<Rng1> && input_range<Rng1> &&
                         viewable_range<Rng2> && input_range<Rng2> && common_with<
                             range_value_t<Rng1>, range_value_t<Rng2>> &&
                             common_reference_with<range_reference_t<Rng1>,
@@ -600,7 +601,10 @@ namespace ranges
                                 common_reference_with<range_rvalue_reference_t<Rng1>,
                                                       range_rvalue_reference_t<Rng2>> &&
                                     indirect_relation<C, projected<iterator_t<Rng1>, P1>,
-                                                      projected<iterator_t<Rng2>, P2>>)
+                                                      projected<iterator_t<Rng2>, P2>>) //
+            auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
+                            P2 proj2 = P2{}) const
+                -> set_union_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),
@@ -731,8 +735,8 @@ namespace ranges
             {
                 satisfy();
             }
-            CPP_template(bool Other)(         //
-                requires IsConst && (!Other)) //
+            template(bool Other)(         //
+                requires IsConst && CPP_NOT(Other)) //
                 set_symmetric_difference_cursor(
                     set_symmetric_difference_cursor<Other, Rng1, Rng2, C, P1, P2> that)
               : pred_(std::move(that.pred_))
@@ -816,13 +820,9 @@ namespace ranges
     {
         struct set_symmetric_difference_base_fn
         {
-            template<typename Rng1, typename Rng2, typename C = less,
-                     typename P1 = identity, typename P2 = identity>
-            auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
-                            P2 proj2 = P2{}) const
-                -> CPP_ret(set_symmetric_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1,
-                                                         P2>)( //
-                    requires viewable_range<Rng1> && input_range<Rng1> &&
+            template(typename Rng1, typename Rng2, typename C = less,
+                     typename P1 = identity, typename P2 = identity)( //
+                requires viewable_range<Rng1> && input_range<Rng1> &&
                         viewable_range<Rng2> && input_range<Rng2> && common_with<
                             range_value_t<Rng1>, range_value_t<Rng2>> &&
                             common_reference_with<range_reference_t<Rng1>,
@@ -830,7 +830,11 @@ namespace ranges
                                 common_reference_with<range_rvalue_reference_t<Rng1>,
                                                       range_rvalue_reference_t<Rng2>> &&
                                     indirect_relation<C, projected<iterator_t<Rng1>, P1>,
-                                                      projected<iterator_t<Rng2>, P2>>)
+                                                      projected<iterator_t<Rng2>, P2>>) //
+            auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
+                            P2 proj2 = P2{}) const
+                -> set_symmetric_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1,
+                                                         P2>
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),
@@ -867,6 +871,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

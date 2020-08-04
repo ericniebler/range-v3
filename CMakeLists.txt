@@ -84,7 +84,7 @@ if(RANGE_V3_HEADER_CHECKS)
                     "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
   # These headers are not meant to be included directly:
   list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS std/detail/associated_types.hpp)
-  list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/detail/reenable_warnings.hpp)
+  list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/detail/epilogue.hpp)
   # Deprecated headers
   if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
     foreach(header ${RANGE_V3_PUBLIC_HEADERS})

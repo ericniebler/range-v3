@@ -33,7 +33,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -169,8 +169,9 @@ namespace ranges
             constexpr adaptor(stride_view_t * rng) noexcept
               : rng_(rng)
             {}
-            CPP_template(bool Other)( //
-                requires Const && (!Other)) adaptor(adaptor<Other> that)
+            template(bool Other)( //
+                requires Const AND CPP_NOT(Other)) //
+            adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
             constexpr void next(iterator_t<CRng> & it)
@@ -184,8 +185,9 @@ namespace ranges
                 }
             }
             CPP_member
-            constexpr auto prev(iterator_t<CRng> & it) -> CPP_ret(void)( //
-                requires bidirectional_range<CRng>)
+            constexpr auto prev(iterator_t<CRng> & it) //
+                -> CPP_ret(void)( //
+                    requires bidirectional_range<CRng>)
             {
                 RANGES_EXPECT(it != ranges::begin(rng_->base()));
                 auto delta = -rng_->stride_;
@@ -196,11 +198,11 @@ namespace ranges
                 }
                 ranges::advance(it, delta);
             }
-            template<typename Other>
+            template(typename Other)( //
+                requires sized_sentinel_for<Other, iterator_t<CRng>>) //
             constexpr auto distance_to(iterator_t<CRng> const & here,
                                        Other const & there) const
-                -> CPP_ret(range_difference_t<Rng>)( //
-                    requires sized_sentinel_for<Other, iterator_t<CRng>>)
+                -> range_difference_t<Rng>
             {
                 range_difference_t<Rng> delta = there - here;
                 if(delta < 0)
@@ -210,9 +212,9 @@ namespace ranges
                 return delta / rng_->stride_;
             }
             CPP_member
-            constexpr auto advance(iterator_t<CRng> & it,
-                                   range_difference_t<Rng> n) -> CPP_ret(void)( //
-                requires random_access_range<CRng>)
+            constexpr auto advance(iterator_t<CRng> & it, range_difference_t<Rng> n) //
+                -> CPP_ret(void)( //
+                    requires random_access_range<CRng>)
             {
                 if(0 == n)
                     return;
@@ -251,7 +253,8 @@ namespace ranges
         }
         CPP_member
         constexpr auto begin_adaptor() const noexcept
-            -> CPP_ret(adaptor<true>)(requires(const_iterable()))
+            -> CPP_ret(adaptor<true>)( //
+                requires(const_iterable()))
         {
             return adaptor<true>{this};
         }
@@ -264,7 +267,7 @@ namespace ranges
         CPP_member
         constexpr auto end_adaptor() const noexcept
             -> CPP_ret(meta::if_c<can_bound<true>(), adaptor<true>, adaptor_base>)( //
-                requires(const_iterable()))
+                requires (const_iterable()))
         {
             return {this};
         }
@@ -294,17 +297,18 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    stride_view(Rng &&, range_difference_t<Rng>)->stride_view<views::all_t<Rng>>;
+    stride_view(Rng &&, range_difference_t<Rng>) //
+        -> stride_view<views::all_t<Rng>>;
 #endif
 
     namespace views
     {
         struct stride_base_fn
         {
-            template<typename Rng>
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng>) //
             constexpr auto operator()(Rng && rng, range_difference_t<Rng> step) const
-                -> CPP_ret(stride_view<all_t<Rng>>)( //
-                    requires viewable_range<Rng> && input_range<Rng>)
+                -> stride_view<all_t<Rng>>
             {
                 return stride_view<all_t<Rng>>{all(static_cast<Rng &&>(rng)), step};
             }
@@ -330,7 +334,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::stride_view)
 

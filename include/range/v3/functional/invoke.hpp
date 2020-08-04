@@ -25,7 +25,7 @@
 
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
@@ -55,14 +55,14 @@ namespace ranges
 
         // clang-format off
         template<typename T>
-        CPP_concept_fragment(dereferenceable_part_,
+        CPP_requires(dereferenceable_part_,
             requires(T && t) //
             (
                 detail::can_reference_(*(T &&) t)
             ));
         template<typename T>
-        CPP_concept_bool dereferenceable_ = //
-            CPP_fragment(detail::dereferenceable_part_, T);
+        CPP_concept dereferenceable_ = //
+            CPP_requires_ref(detail::dereferenceable_part_, T);
         // clang-format on
 
         RANGES_DIAGNOSTIC_POP
@@ -90,25 +90,24 @@ namespace ranges
     struct invoke_fn
     {
     private:
-        template<typename, typename T1>
-        static constexpr decltype(auto) CPP_fun(coerce)(T1 && t1, long)( //
-            noexcept(noexcept(*static_cast<T1 &&>(t1)))                  //
-            requires detail::dereferenceable_<T1>)
+        template(typename, typename T1)( //
+            requires detail::dereferenceable_<T1>) //
+        static constexpr decltype(auto) coerce(T1 && t1, long)
+            noexcept(noexcept(*static_cast<T1 &&>(t1)))
         {
             return *static_cast<T1 &&>(t1);
         }
 
-        template<typename T, typename T1>
-        static constexpr auto coerce(T1 && t1, int) noexcept -> CPP_ret(T1 &&)( //
-            requires derived_from<detail::decay_t<T1>, T>)
+        template(typename T, typename T1)( //
+            requires derived_from<detail::decay_t<T1>, T>) //
+        static constexpr T1 && coerce(T1 && t1, int) noexcept
         {
             return static_cast<T1 &&>(t1);
         }
 
-        template<typename, typename T1>
-        static constexpr decltype(auto) CPP_fun(coerce)(T1 && t1, int)(
-            noexcept(true) //
-            requires detail::is_reference_wrapper_v<detail::decay_t<T1>>)
+        template(typename, typename T1)( //
+            requires detail::is_reference_wrapper_v<detail::decay_t<T1>>) //
+        static constexpr decltype(auto) coerce(T1 && t1, int) noexcept
         {
             return static_cast<T1 &&>(t1).get();
         }
@@ -238,6 +237,6 @@ namespace ranges
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_FUNCTIONAL_INVOKE_HPP

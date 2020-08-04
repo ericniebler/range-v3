@@ -25,7 +25,7 @@
 #include <range/v3/view/interface.hpp>
 #include <range/v3/view/subrange.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -66,24 +66,25 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename I>
-    counted_view(I, iter_difference_t<I>)->counted_view<I>;
+    counted_view(I, iter_difference_t<I>) //
+        -> counted_view<I>;
 #endif
 
     namespace views
     {
         struct cpp20_counted_fn
         {
-            template<typename I>
+            template(typename I)( //
+                requires input_or_output_iterator<I> AND (!random_access_iterator<I>)) //
             auto operator()(I it, iter_difference_t<I> n) const
-                -> CPP_ret(subrange<counted_iterator<I>, default_sentinel_t>)( //
-                    requires input_or_output_iterator<I> && (!random_access_iterator<I>))
+                -> subrange<counted_iterator<I>, default_sentinel_t>
             {
                 return {make_counted_iterator(std::move(it), n), default_sentinel};
             }
-            template<typename I>
+            template(typename I)( //
+                requires random_access_iterator<I>) //
             auto operator()(I it, iter_difference_t<I> n) const
-                -> CPP_ret(subrange<I>)( //
-                    requires random_access_iterator<I>)
+                -> subrange<I>
             {
                 return {it, it + n};
             }
@@ -91,17 +92,17 @@ namespace ranges
 
         struct counted_fn
         {
-            template<typename I>
+            template(typename I)( //
+                requires input_or_output_iterator<I> AND (!random_access_iterator<I>)) //
             auto operator()(I it, iter_difference_t<I> n) const
-                -> CPP_ret(counted_view<I>)( //
-                    requires input_or_output_iterator<I> && (!random_access_iterator<I>))
+                -> counted_view<I>
             {
                 return {std::move(it), n};
             }
-            template<typename I>
+            template(typename I)( //
+                requires random_access_iterator<I>) //
             auto operator()(I it, iter_difference_t<I> n) const
-                -> CPP_ret(subrange<I>)( //
-                    requires random_access_iterator<I>)
+                -> subrange<I>
             {
                 return {it, it + n};
             }
@@ -122,7 +123,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::counted_view)
 

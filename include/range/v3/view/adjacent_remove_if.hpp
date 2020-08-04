@@ -30,7 +30,7 @@
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -71,8 +71,9 @@ namespace ranges
                 rng_->satisfy_forward(++it);
             }
             CPP_member
-            constexpr auto prev(iterator_t<Rng> & it) const -> CPP_ret(void)( //
-                requires bidirectional_range<Rng>)
+            constexpr auto prev(iterator_t<Rng> & it) const //
+                -> CPP_ret(void)( //
+                    requires bidirectional_range<Rng>)
             {
                 rng_->satisfy_reverse(it);
             }
@@ -85,16 +86,18 @@ namespace ranges
             return {this};
         }
         CPP_member
-        constexpr auto end_adaptor() -> CPP_ret(adaptor)( //
-            requires common_range<Rng>)
+        constexpr auto end_adaptor() //
+            -> CPP_ret(adaptor)( //
+                requires common_range<Rng>)
         {
             if(bidirectional_range<Rng>)
                 cache_begin();
             return {this};
         }
         CPP_member
-        constexpr auto end_adaptor() noexcept -> CPP_ret(adaptor_base)( //
-            requires(!common_range<Rng>))
+        constexpr auto end_adaptor() noexcept //
+            -> CPP_ret(adaptor_base)( //
+                requires (!common_range<Rng>))
         {
             return {};
         }
@@ -137,20 +140,21 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)(requires copy_constructible<Rng>)
-        adjacent_remove_if_view(Rng &&, Fun)
-            ->adjacent_remove_if_view<views::all_t<Rng>, Fun>;
+    template(typename Rng, typename Fun)( //
+        requires copy_constructible<Rng>)
+    adjacent_remove_if_view(Rng &&, Fun)
+        -> adjacent_remove_if_view<views::all_t<Rng>, Fun>;
 #endif
 
     namespace views
     {
         struct adjacent_remove_if_base_fn
         {
-            template<typename Rng, typename Pred>
-            constexpr auto operator()(Rng && rng, Pred pred) const -> CPP_ret(
-                adjacent_remove_if_view<all_t<Rng>, Pred>)( //
-                requires viewable_range<Rng> && forward_range<Rng> &&
-                    indirect_binary_predicate_<Pred, iterator_t<Rng>, iterator_t<Rng>>)
+            template(typename Rng, typename Pred)( //
+                requires viewable_range<Rng> AND forward_range<Rng> AND
+                    indirect_binary_predicate_<Pred, iterator_t<Rng>, iterator_t<Rng>>) //
+            constexpr auto operator()(Rng && rng, Pred pred) const
+                -> adjacent_remove_if_view<all_t<Rng>, Pred>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
@@ -175,7 +179,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::adjacent_remove_if_view)
 

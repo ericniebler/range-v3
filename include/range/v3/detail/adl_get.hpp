@@ -18,7 +18,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -70,14 +70,14 @@ namespace ranges
             // Clang 3.x have a problem with inheriting constructors
             // that causes the declarations in the preceeding PP block to get
             // instantiated too early.
-            CPP_template(typename B = TupleLike)( //
-                requires move_constructible<B>)   //
+            template(typename B = TupleLike)( //
+                requires move_constructible<B>) //
                 constexpr forward_tuple_interface(TupleLike && base) noexcept(
                     std::is_nothrow_move_constructible<TupleLike>::value)
               : TupleLike(static_cast<TupleLike &&>(base))
             {}
-            CPP_template(typename B = TupleLike)( //
-                requires copy_constructible<B>)   //
+            template(typename B = TupleLike)( //
+                requires copy_constructible<B>) //
                 constexpr forward_tuple_interface(TupleLike const & base) noexcept(
                     std::is_nothrow_copy_constructible<TupleLike>::value)
               : TupleLike(base)
@@ -139,6 +139,6 @@ namespace ranges
     /// \endcond
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_DETAIL_ADL_GET_HPP

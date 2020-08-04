@@ -29,7 +29,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -38,11 +38,10 @@ namespace ranges
     RANGES_FUNC_BEGIN(remove)
 
         /// \brief function template \c remove
-        template<typename I, typename S, typename T, typename P = identity>
-        auto RANGES_FUNC(remove)(I first, S last, T const & val, P proj = P{}) //
-            ->CPP_ret(I)(                                                      //
-                requires permutable<I> && sentinel_for<S, I> &&
-                indirect_relation<equal_to, projected<I, P>, T const *>)
+        template(typename I, typename S, typename T, typename P = identity)( //
+            requires permutable<I> AND sentinel_for<S, I> AND //
+            indirect_relation<equal_to, projected<I, P>, T const *>) //
+        I RANGES_FUNC(remove)(I first, S last, T const & val, P proj = P{})
         {
             first = find(std::move(first), last, val, std::ref(proj));
             if(first != last)
@@ -60,11 +59,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename T, typename P = identity>
+        template(typename Rng, typename T, typename P = identity)( //
+            requires forward_range<Rng> AND permutable<iterator_t<Rng>> AND //
+            indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *>) //
         auto RANGES_FUNC(remove)(Rng && rng, T const & val, P proj = P{})
-            ->CPP_ret(borrowed_iterator_t<Rng>)( //
-                requires forward_range<Rng> && permutable<iterator_t<Rng>> &&
-                indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *>)
+            -> borrowed_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), val, std::move(proj));
         }
@@ -78,6 +77,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -27,7 +27,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -43,10 +43,10 @@ namespace ranges
 
         struct join_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(join_action_value_t_<Rng>)( //
-                requires input_range<Rng> && input_range<range_value_t<Rng>> &&
-                    semiregular<join_action_value_t_<Rng>>)
+            template(typename Rng)( //
+                requires input_range<Rng> AND input_range<range_value_t<Rng>> AND
+                    semiregular<join_action_value_t_<Rng>>) //
+            auto operator()(Rng && rng) const -> join_action_value_t_<Rng>
             {
                 join_action_value_t_<Rng> ret;
                 auto last = ranges::end(rng);
@@ -63,6 +63,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -23,7 +23,7 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 // Sadly, this is necessary because of:
 //  - std::common_type is !SFINAE-friendly, and
@@ -170,6 +170,6 @@ RANGES_DIAGNOSTIC_POP
 #endif // RANGES_CXX_VER > RANGES_CXX_STD_17
 /// \endcond
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

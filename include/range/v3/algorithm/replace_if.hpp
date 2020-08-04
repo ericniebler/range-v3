@@ -27,7 +27,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -36,12 +36,12 @@ namespace ranges
     RANGES_FUNC_BEGIN(replace_if)
 
         /// \brief function template \c replace_if
-        template<typename I, typename S, typename C, typename T, typename P = identity>
-        auto RANGES_FUNC(replace_if)(
+        template(typename I, typename S, typename C, typename T, typename P = identity)( //
+            requires input_iterator<I> AND sentinel_for<S, I> AND
+                indirect_unary_predicate<C, projected<I, P>> AND
+                indirectly_writable<I, T const &>) //
+        I RANGES_FUNC(replace_if)(
             I first, S last, C pred, T const & new_value, P proj = P{}) //
-            ->CPP_ret(I)(                                               //
-                requires input_iterator<I> && sentinel_for<S, I> &&
-                indirect_unary_predicate<C, projected<I, P>> && indirectly_writable<I, T const &>)
         {
             for(; first != last; ++first)
                 if(invoke(pred, invoke(proj, *first)))
@@ -50,13 +50,13 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C, typename T, typename P = identity>
+        template(typename Rng, typename C, typename T, typename P = identity)( //
+            requires input_range<Rng> AND
+                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> AND
+                indirectly_writable<iterator_t<Rng>, T const &>) //
         auto RANGES_FUNC(replace_if)(
             Rng && rng, C pred, T const & new_value, P proj = P{}) //
-            ->CPP_ret(borrowed_iterator_t<Rng>)(                   //
-                requires input_range<Rng> &&
-                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> &&
-                indirectly_writable<iterator_t<Rng>, T const &>)
+            -> borrowed_iterator_t<Rng>
         {
             return (*this)(
                 begin(rng), end(rng), std::move(pred), new_value, std::move(proj));
@@ -71,6 +71,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

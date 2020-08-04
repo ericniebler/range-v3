@@ -28,7 +28,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -37,22 +37,22 @@ namespace ranges
     RANGES_FUNC_BEGIN(max)
 
         /// \brief function template \c max
-        template<typename T, typename C = less, typename P = identity>
+        template(typename T, typename C = less, typename P = identity)( //
+            requires indirect_strict_weak_order<C, projected<T const *, P>>) //
         constexpr auto RANGES_FUNC(max)(
             T const & a, T const & b, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(T const &)(                                 //
-                requires indirect_strict_weak_order<C, projected<T const *, P>>)
+            -> T const &
         {
             return invoke(pred, invoke(proj, b), invoke(proj, a)) ? a : b;
         }
 
         /// \overload
-        template<typename Rng, typename C = less, typename P = identity>
+        template(typename Rng, typename C = less, typename P = identity)( //
+            requires input_range<Rng> AND //
+            indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>> AND //
+            indirectly_copyable_storable<iterator_t<Rng>, range_value_t<Rng> *>) //
         constexpr auto RANGES_FUNC(max)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(range_value_t<Rng>)(                                      //
-                requires input_range<Rng> &&
-                indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>> &&
-                indirectly_copyable_storable<iterator_t<Rng>, range_value_t<Rng> *>)
+            -> range_value_t<Rng>
         {
             auto first = ranges::begin(rng);
             auto last = ranges::end(rng);
@@ -68,12 +68,12 @@ namespace ranges
         }
 
         /// \overload
-        template<typename T, typename C = less, typename P = identity>
+        template(typename T, typename C = less, typename P = identity)( //
+            requires copyable<T> AND
+                indirect_strict_weak_order<C, projected<T const *, P>>) //
         constexpr auto RANGES_FUNC(max)(
             std::initializer_list<T> const && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(T)(                                                      //
-                requires copyable<T> &&
-                indirect_strict_weak_order<C, projected<T const *, P>>)
+            -> T
         {
             return (*this)(rng, std::move(pred), std::move(proj));
         }
@@ -87,6 +87,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

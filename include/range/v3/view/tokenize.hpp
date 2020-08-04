@@ -30,7 +30,7 @@
 #include <range/v3/view/interface.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -68,9 +68,9 @@ namespace ranges
             meta::const_if_c<simple_view<Rng>(), Rng> & rng = rng_;
             return {ranges::begin(rng), ranges::end(rng), rex_, subs_, flags_};
         }
-        template<bool Const = true>
-        auto begin() const -> CPP_ret(iterator_t<Const>)( //
-            requires range<Rng const>)
+        template(bool Const = true)( //
+            requires range<Rng const>) //
+        auto begin() const -> iterator_t<Const>
         {
             return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
         }
@@ -78,9 +78,9 @@ namespace ranges
         {
             return {};
         }
-        template<bool Const = true>
-        auto end() const -> CPP_ret(iterator_t<Const>)( //
-            requires range<Rng const>)
+        template(bool Const = true)( //
+            requires range<Rng const>) //
+        auto end() const -> iterator_t<Const>
         {
             return {};
         }
@@ -91,8 +91,8 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Regex, typename SubMatchRange)(
-        requires copy_constructible<Regex> && copy_constructible<SubMatchRange>)
+    template(typename Rng, typename Regex, typename SubMatchRange)( //
+        requires copy_constructible<Regex> AND copy_constructible<SubMatchRange>)
         tokenize_view(Rng &&, Regex, SubMatchRange)
             ->tokenize_view<views::all_t<Rng>, Regex, SubMatchRange>;
 #endif
@@ -101,13 +101,13 @@ namespace ranges
     {
         struct tokenize_base_fn
         {
-            template<typename Rng, typename Regex>
+            template(typename Rng, typename Regex)( //
+                requires bidirectional_range<Rng> AND common_range<Rng> AND same_as<
+                        range_value_t<Rng>, typename detail::decay_t<Regex>::value_type>) //
             auto operator()(Rng && rng, Regex && rex, int sub = 0,
                             std::regex_constants::match_flag_type flags =
                                 std::regex_constants::match_default) const //
-                -> CPP_ret(tokenize_view<all_t<Rng>, detail::decay_t<Regex>, int>)(
-                    requires bidirectional_range<Rng> && common_range<Rng> && same_as<
-                        range_value_t<Rng>, typename detail::decay_t<Regex>::value_type>)
+                -> tokenize_view<all_t<Rng>, detail::decay_t<Regex>, int>
             {
                 return {all(static_cast<Rng &&>(rng)),
                         static_cast<Regex &&>(rex),
@@ -115,14 +115,14 @@ namespace ranges
                         flags};
             }
 
-            template<typename Rng, typename Regex>
+            template(typename Rng, typename Regex)( //
+                requires bidirectional_range<Rng> AND common_range<Rng> AND same_as<
+                        range_value_t<Rng>, typename detail::decay_t<Regex>::value_type>) //
             auto operator()(Rng && rng, Regex && rex, std::vector<int> subs,
                             std::regex_constants::match_flag_type flags =
                                 std::regex_constants::match_default) const //
-                -> CPP_ret(
-                    tokenize_view<all_t<Rng>, detail::decay_t<Regex>, std::vector<int>>)(
-                    requires bidirectional_range<Rng> && common_range<Rng> && same_as<
-                        range_value_t<Rng>, typename detail::decay_t<Regex>::value_type>)
+                ->
+                    tokenize_view<all_t<Rng>, detail::decay_t<Regex>, std::vector<int>>
             {
                 return {all(static_cast<Rng &&>(rng)),
                         static_cast<Regex &&>(rex),
@@ -130,14 +130,14 @@ namespace ranges
                         flags};
             }
 
-            template<typename Rng, typename Regex>
+            template(typename Rng, typename Regex)( //
+                requires bidirectional_range<Rng> AND common_range<Rng> AND same_as<
+                        range_value_t<Rng>, typename detail::decay_t<Regex>::value_type>) //
             auto operator()(Rng && rng, Regex && rex, std::initializer_list<int> subs,
                             std::regex_constants::match_flag_type flags =
                                 std::regex_constants::match_default) const //
-                -> CPP_ret(tokenize_view<all_t<Rng>, detail::decay_t<Regex>,
-                                         std::initializer_list<int>>)(
-                    requires bidirectional_range<Rng> && common_range<Rng> && same_as<
-                        range_value_t<Rng>, typename detail::decay_t<Regex>::value_type>)
+                -> tokenize_view<all_t<Rng>, detail::decay_t<Regex>,
+                                         std::initializer_list<int>>
             {
                 return {all(static_cast<Rng &&>(rng)),
                         static_cast<Regex &&>(rex),
@@ -187,7 +187,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::tokenize_view)
 

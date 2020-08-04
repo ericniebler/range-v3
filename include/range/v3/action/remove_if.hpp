@@ -26,7 +26,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -40,18 +40,18 @@ namespace ranges
         {
             template<typename C, typename P = identity>
             constexpr auto CPP_fun(operator())(C pred, P proj = P{})(const //
-                                                                     requires(!range<C>))
+                                                                     requires (!range<C>))
             {
                 return make_action_closure(
                     bind_back(remove_if_fn{}, std::move(pred), std::move(proj)));
             }
 
-            template<typename Rng, typename C, typename P = identity>
-            auto operator()(Rng && rng, C pred, P proj = P{}) const -> CPP_ret(Rng)( //
-                requires forward_range<Rng> &&
-                    erasable_range<Rng &, iterator_t<Rng>, iterator_t<Rng>> &&
+            template(typename Rng, typename C, typename P = identity)( //
+                requires forward_range<Rng> AND
+                    erasable_range<Rng &, iterator_t<Rng>, iterator_t<Rng>> AND
                         permutable<iterator_t<Rng>> &&
-                            indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
+                            indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>) //
+            auto operator()(Rng && rng, C pred, P proj = P{}) const -> Rng
             {
                 auto it = ranges::remove_if(rng, std::move(pred), std::move(proj));
                 ranges::erase(rng, it, ranges::end(rng));
@@ -65,6 +65,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

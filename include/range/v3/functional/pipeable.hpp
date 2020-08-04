@@ -21,7 +21,7 @@
 #include <range/v3/functional/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -78,8 +78,8 @@ namespace ranges
         friend pipeable_access;
 
         // Evaluate the pipe with an argument
-        CPP_template(typename Arg, typename Pipe)( //
-            requires(!is_pipeable_v<Arg>) && is_pipeable_v<Pipe> &&
+        template(typename Arg, typename Pipe)( //
+            requires (!is_pipeable_v<Arg>) AND is_pipeable_v<Pipe> AND
             invocable<Pipe, Arg>) // clang-format off
         friend constexpr auto operator|(Arg &&arg, Pipe pipe) // clang-format off
         {
@@ -87,8 +87,8 @@ namespace ranges
         }
 
         // Compose two pipes
-        CPP_template(typename Pipe0, typename Pipe1)( //
-            requires is_pipeable_v<Pipe0> && is_pipeable_v<Pipe1>) // clang-format off
+        template(typename Pipe0, typename Pipe1)( //
+            requires is_pipeable_v<Pipe0> AND is_pipeable_v<Pipe1>) // clang-format off
         friend constexpr auto operator|(Pipe0 pipe0, Pipe1 pipe1) // clang-format on
         {
             return make_pipeable(compose(detail::move(pipe1), detail::move(pipe0)));
@@ -97,7 +97,7 @@ namespace ranges
         template<typename Arg, typename Pipe>
         friend auto operator|=(Arg & arg, Pipe pipe) //
             -> CPP_broken_friend_ret(Arg &)(         //
-                requires(is_pipeable_v<Pipe>) &&
+                requires (is_pipeable_v<Pipe>) &&
                 (!is_pipeable_v<Arg>)&&invocable<Pipe, Arg &>)
         {
             static_cast<Pipe &&>(pipe)(arg);
@@ -123,6 +123,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

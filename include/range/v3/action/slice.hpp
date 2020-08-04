@@ -27,7 +27,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/interface.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -79,10 +79,10 @@ namespace ranges
                 return make_action_closure(bind_back(slice_fn{}, from, to));
             }
 
-            template<typename Rng, typename I = iterator_t<Rng>>
+            template(typename Rng, typename I = iterator_t<Rng>)( //
+                requires forward_range<Rng> AND erasable_range<Rng &, I, I>) //
             auto operator()(Rng && rng, diff_t<Rng> from, diff_t<Rng> to) const
-                -> CPP_ret(Rng)( //
-                    requires forward_range<Rng> && erasable_range<Rng &, I, I>)
+                -> Rng
             {
                 RANGES_EXPECT(0 <= from && 0 <= to && from <= to);
                 RANGES_EXPECT(!sized_range<Rng> || to <= distance(rng));
@@ -91,10 +91,10 @@ namespace ranges
                 return static_cast<Rng &&>(rng);
             }
 
-            template<typename Rng, typename I = iterator_t<Rng>>
+            template(typename Rng, typename I = iterator_t<Rng>)( //
+                requires bidirectional_range<Rng> AND erasable_range<Rng &, I, I>) //
             auto operator()(Rng && rng, diff_t<Rng> from,
-                            detail::from_end_<diff_t<Rng>> to) const -> CPP_ret(Rng)( //
-                requires bidirectional_range<Rng> && erasable_range<Rng &, I, I>)
+                            detail::from_end_<diff_t<Rng>> to) const -> Rng
             {
                 RANGES_EXPECT(0 <= from && to.dist_ <= 0);
                 RANGES_EXPECT(!sized_range<Rng> || from - to.dist_ <= distance(rng));
@@ -107,10 +107,10 @@ namespace ranges
                 return static_cast<Rng &&>(rng);
             }
 
-            template<typename Rng, typename I = iterator_t<Rng>>
+            template(typename Rng, typename I = iterator_t<Rng>)( //
+                requires bidirectional_range<Rng> AND erasable_range<Rng &, I, I>) //
             auto operator()(Rng && rng, detail::from_end_<diff_t<Rng>> from,
-                            detail::from_end_<diff_t<Rng>> to) const -> CPP_ret(Rng)( //
-                requires bidirectional_range<Rng> && erasable_range<Rng &, I, I>)
+                            detail::from_end_<diff_t<Rng>> to) const -> Rng
             {
                 RANGES_EXPECT(from.dist_ <= 0 && to.dist_ <= 0 && from.dist_ <= to.dist_);
                 RANGES_EXPECT(!sized_range<Rng> || 0 <= distance(rng) + from.dist_);
@@ -122,10 +122,10 @@ namespace ranges
                 return static_cast<Rng &&>(rng);
             }
 
-            template<typename Rng, typename I = iterator_t<Rng>>
+            template(typename Rng, typename I = iterator_t<Rng>)( //
+                requires forward_range<Rng> AND erasable_range<Rng &, I, I>) //
             auto operator()(Rng && rng, diff_t<Rng> from, end_fn const &) const
-                -> CPP_ret(Rng)( //
-                    requires forward_range<Rng> && erasable_range<Rng &, I, I>)
+                -> Rng
             {
                 RANGES_EXPECT(0 <= from);
                 RANGES_EXPECT(!sized_range<Rng> || from <= distance(rng));
@@ -133,10 +133,10 @@ namespace ranges
                 return static_cast<Rng &&>(rng);
             }
 
-            template<typename Rng, typename I = iterator_t<Rng>>
+            template(typename Rng, typename I = iterator_t<Rng>)( //
+                requires bidirectional_range<Rng> AND erasable_range<Rng &, I, I>) //
             auto operator()(Rng && rng, detail::from_end_<diff_t<Rng>> from,
-                            end_fn const &) const -> CPP_ret(Rng)( //
-                requires bidirectional_range<Rng> && erasable_range<Rng &, I, I>)
+                            end_fn const &) const -> Rng
             {
                 RANGES_EXPECT(from.dist_ <= 0);
                 RANGES_EXPECT(!sized_range<Rng> || 0 <= distance(rng) + from.dist_);
@@ -152,6 +152,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -33,7 +33,7 @@ RANGES_DEPRECATED_HEADER(
     "This header is deprecated. Please switch to subrange in "
     "<range/v3/view/subrange.hpp>.")
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -154,25 +154,25 @@ namespace ranges
         constexpr iterator_range(I first, S last)
           : compressed_pair<I, S>{detail::move(first), detail::move(last)}
         {}
-        template<typename X, typename Y>
-        constexpr CPP_ctor(iterator_range)(iterator_range<X, Y> rng)( //
-            requires constructible_from<I, X> && constructible_from<S, Y>)
+        template(typename X, typename Y)( //
+            requires constructible_from<I, X> AND constructible_from<S, Y>) //
+        constexpr iterator_range(iterator_range<X, Y> rng)
           : compressed_pair<I, S>{detail::move(rng.begin()), detail::move(rng.end())}
         {}
-        template<typename X, typename Y>
-        explicit constexpr CPP_ctor(iterator_range)(std::pair<X, Y> rng)( //
-            requires constructible_from<I, X> && constructible_from<S, Y>)
+        template(typename X, typename Y)( //
+            requires constructible_from<I, X> AND constructible_from<S, Y>) //
+        constexpr explicit iterator_range(std::pair<X, Y> rng)
           : compressed_pair<I, S>{detail::move(rng.first), detail::move(rng.second)}
         {}
-        template<typename X, typename Y>
-        auto operator=(iterator_range<X, Y> rng) -> CPP_ret(iterator_range &)( //
-            requires assignable_from<I &, X> && assignable_from<S &, Y>)
+        template(typename X, typename Y)( //
+            requires assignable_from<I &, X> AND assignable_from<S &, Y>) //
+        auto operator=(iterator_range<X, Y> rng) -> iterator_range &
         {
             base().first() = std::move(rng.base()).first();
             base().second() = std::move(rng.base()).second();
             return *this;
         }
-        CPP_template(typename X, typename Y)(                      //
+        template(typename X, typename Y)(                      //
             requires convertible_to<I, X> && convertible_to<S, Y>) //
             constexpr
             operator std::pair<X, Y>() const
@@ -220,32 +220,30 @@ namespace ranges
                           static_cast<size_type>(ranges::distance(rng_)) == size_);
 #endif
         }
-        template<typename X, typename Y>
-        RANGES_NDEBUG_CONSTEXPR CPP_ctor(sized_iterator_range)(std::pair<X, Y> rng,
-                                                               size_type size)( //
-            requires constructible_from<I, X> && constructible_from<S, Y>)
+        template(typename X, typename Y)( //
+            requires constructible_from<I, X> AND constructible_from<S, Y>)
+        RANGES_NDEBUG_CONSTEXPR sized_iterator_range(std::pair<X, Y> rng, size_type size)
           : sized_iterator_range{detail::move(rng).first, detail::move(rng).second, size}
         {}
-        template<typename X, typename Y>
-        RANGES_NDEBUG_CONSTEXPR CPP_ctor(sized_iterator_range)(iterator_range<X, Y> rng,
-                                                               size_type size)( //
-            requires constructible_from<I, X> && constructible_from<S, Y>)
+        template(typename X, typename Y)( //
+            requires constructible_from<I, X> AND constructible_from<S, Y>) //
+        RANGES_NDEBUG_CONSTEXPR sized_iterator_range(iterator_range<X, Y> rng,
+                                                     size_type size)
           : sized_iterator_range{detail::move(rng).first(),
                                  detail::move(rng).second,
                                  size}
         {}
-        template<typename X, typename Y>
-        RANGES_NDEBUG_CONSTEXPR CPP_ctor(sized_iterator_range)(
-            sized_iterator_range<X, Y> rng)( //
-            requires constructible_from<I, X> && constructible_from<S, Y>)
+        template(typename X, typename Y)( //
+            requires constructible_from<I, X> && constructible_from<S, Y>) //
+        RANGES_NDEBUG_CONSTEXPR sized_iterator_range(sized_iterator_range<X, Y> rng)
           : sized_iterator_range{detail::move(rng).rng_.first(),
                                  detail::move(rng).rng_.second,
                                  rng.size_}
         {}
-        template<typename X, typename Y>
+        template(typename X, typename Y)( //
+            requires assignable_from<I &, X> AND assignable_from<S &, Y>) //
         auto operator=(sized_iterator_range<X, Y> rng)
-            -> CPP_ret(sized_iterator_range &)( //
-                requires assignable_from<I &, X> && assignable_from<S &, Y>)
+            -> sized_iterator_range &
         {
             rng_ = detail::move(rng).rng_;
             size_ = rng.size_;
@@ -263,14 +261,14 @@ namespace ranges
         {
             return size_;
         }
-        CPP_template(typename X, typename Y)(                      //
+        template(typename X, typename Y)(                      //
             requires convertible_to<I, X> && convertible_to<S, Y>) //
             constexpr
             operator std::pair<X, Y>() const
         {
             return rng_;
         }
-        CPP_template(typename X, typename Y)(                      //
+        template(typename X, typename Y)(                      //
             requires convertible_to<I, X> && convertible_to<S, Y>) //
             constexpr
             operator iterator_range<X, Y>() const
@@ -283,19 +281,19 @@ namespace ranges
         }
         // clang-format off
         /// Tuple-like access for `sized_iterator_range`
-        CPP_template(std::size_t N)( //
+        template(std::size_t N)( //
             requires (N < 2))        //
         friend constexpr auto CPP_auto_fun(get)(sized_iterator_range const &p)
         (
             // return ranges::get<N>(p.rng_)
             return ranges::get<N>(p.*&sized_iterator_range::rng_) // makes clang happy
         )
-            // clang-format on
-            /// \overload
-            template<std::size_t N>
-            friend constexpr auto get(sized_iterator_range const & p) noexcept
-            -> CPP_ret(size_type)( //
-                requires(N == 2))
+        // clang-format on
+        /// \overload
+        template(std::size_t N)( //
+            requires (N == 2)) //
+        friend constexpr auto get(sized_iterator_range const & p) noexcept
+            -> size_type
         {
             return p.size();
         }
@@ -304,19 +302,19 @@ namespace ranges
     struct make_iterator_range_fn
     {
         /// \return `{first, last}`
-        template<typename I, typename S>
+        template(typename I, typename S)( //
+            requires sentinel_for<S, I>) //
         constexpr auto operator()(I first, S last) const
-            -> CPP_ret(iterator_range<I, S>)( //
-                requires sentinel_for<S, I>)
+            -> iterator_range<I, S>
         {
             return {detail::move(first), detail::move(last)};
         }
 
         /// \return `{first, last, size}`
-        template<typename I, typename S>
+        template(typename I, typename S)( //
+            requires sentinel_for<S, I>) //
         constexpr auto operator()(I first, S last, detail::iter_size_t<I> sz) const
-            -> CPP_ret(sized_iterator_range<I, S>)( //
-                requires sentinel_for<S, I>)
+            -> sized_iterator_range<I, S>
         {
             return {detail::move(first), detail::move(last), sz};
         }
@@ -381,6 +379,6 @@ namespace std
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

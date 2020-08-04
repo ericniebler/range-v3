@@ -25,7 +25,7 @@
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/all.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -44,8 +44,9 @@ namespace ranges
         detail::non_propagating_cache<range_value_t<Rng>> cache_;
 
         CPP_member
-        auto update_(range_reference_t<Rng> && val) -> CPP_ret(void)(
-            requires assignable_from<range_value_t<Rng> &, range_reference_t<Rng>>)
+        auto update_(range_reference_t<Rng> && val) //
+            -> CPP_ret(void)( //
+                requires assignable_from<range_value_t<Rng> &, range_reference_t<Rng>>)
         {
             if(!cache_)
                 cache_.emplace(static_cast<range_reference_t<Rng> &&>(val));
@@ -53,8 +54,9 @@ namespace ranges
                 *cache_ = static_cast<range_reference_t<Rng> &&>(val);
         }
         CPP_member
-        auto update_(range_reference_t<Rng> && val) -> CPP_ret(void)(
-            requires(!assignable_from<range_value_t<Rng> &, range_reference_t<Rng>>))
+        auto update_(range_reference_t<Rng> && val) //
+            -> CPP_ret(void)( //
+                requires (!assignable_from<range_value_t<Rng> &, range_reference_t<Rng>>))
         {
             cache_.emplace(static_cast<range_reference_t<Rng> &&>(val));
         }
@@ -114,14 +116,16 @@ namespace ranges
                 return current_ == that.last_;
             }
             CPP_member
-            auto distance_to(cursor const & that) const -> CPP_ret(difference_type)( //
-                requires sized_sentinel_for<iterator_t<Rng>, iterator_t<Rng>>)
+            auto distance_to(cursor const & that) const //
+                -> CPP_ret(difference_type)( //
+                    requires sized_sentinel_for<iterator_t<Rng>, iterator_t<Rng>>)
             {
                 return that.current_ - current_;
             }
             CPP_member
-            auto distance_to(sentinel const & that) const -> CPP_ret(difference_type)( //
-                requires sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>>)
+            auto distance_to(sentinel const & that) const //
+                -> CPP_ret(difference_type)( //
+                    requires sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>>)
             {
                 return that.last_ - current_;
             }
@@ -160,7 +164,8 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    cache1_view(Rng &&)->cache1_view<views::all_t<Rng>>;
+    cache1_view(Rng &&) //
+        -> cache1_view<views::all_t<Rng>>;
 #endif
 
     namespace views
@@ -172,11 +177,11 @@ namespace ranges
             /// recomputation. This can be useful in adaptor pipelines that include
             /// combinations of \c view::filter and \c view::transform, for instance.
             /// \note \c views::cache1 is always single-pass.
-            template<typename Rng>
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND //
+                    constructible_from<range_value_t<Rng>, range_reference_t<Rng>>) //
             constexpr auto operator()(Rng && rng) const //
-                -> CPP_ret(cache1_view<all_t<Rng>>)(    //
-                    requires viewable_range<Rng> && input_range<Rng> &&
-                        constructible_from<range_value_t<Rng>, range_reference_t<Rng>>)
+                -> cache1_view<all_t<Rng>>
             {
                 return cache1_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -190,7 +195,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::cache1_view)
 

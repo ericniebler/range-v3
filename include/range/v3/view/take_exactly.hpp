@@ -32,7 +32,7 @@
 #include <range/v3/view/subrange.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -68,9 +68,9 @@ namespace ranges
             {
                 return {ranges::begin(rng_), n_};
             }
-            template<typename BaseRng = Rng>
-            auto begin() const -> CPP_ret(counted_iterator<iterator_t<BaseRng const>>)( //
-                requires range<BaseRng const>)
+            template(typename BaseRng = Rng)( //
+                requires range<BaseRng const>) //
+            auto begin() const -> counted_iterator<iterator_t<BaseRng const>>
             {
                 return {ranges::begin(rng_), n_};
             }
@@ -154,11 +154,11 @@ namespace ranges
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
-            template<typename Rng>
+            template(typename Rng)( //
+                requires borrowed_range<Rng>) //
             static constexpr auto impl_(Rng && rng, range_difference_t<Rng> n,
                                         random_access_range_tag)
-                -> CPP_ret(subrange<iterator_t<Rng>>)( //
-                    requires borrowed_range<Rng>)
+                -> subrange<iterator_t<Rng>>
             {
                 return {begin(rng), next(begin(rng), n)};
             }
@@ -193,7 +193,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::detail::take_exactly_view_)
 

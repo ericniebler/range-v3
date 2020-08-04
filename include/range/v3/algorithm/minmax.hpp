@@ -29,7 +29,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -41,23 +41,23 @@ namespace ranges
     RANGES_FUNC_BEGIN(minmax)
 
         /// \brief function template \c minmax
-        template<typename T, typename C = less, typename P = identity>
+        template(typename T, typename C = less, typename P = identity)( //
+            requires indirect_strict_weak_order<C, projected<T const *, P>>) //
         constexpr auto RANGES_FUNC(minmax)(
             T const & a, T const & b, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(minmax_result<T const &>)(                  //
-                requires indirect_strict_weak_order<C, projected<T const *, P>>)
+            -> minmax_result<T const &>
         {
             using R = minmax_result<T const &>;
             return invoke(pred, invoke(proj, b), invoke(proj, a)) ? R{b, a} : R{a, b};
         }
 
         /// \overload
-        template<typename Rng, typename C = less, typename P = identity>
+        template(typename Rng, typename C = less, typename P = identity)( //
+            requires input_range<Rng> AND //
+            indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>> AND //
+            indirectly_copyable_storable<iterator_t<Rng>, range_value_t<Rng> *>) //
         constexpr auto RANGES_FUNC(minmax)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(minmax_result<range_value_t<Rng>>)(                          //
-                requires input_range<Rng> &&
-                indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>> &&
-                indirectly_copyable_storable<iterator_t<Rng>, range_value_t<Rng> *>)
+            -> minmax_result<range_value_t<Rng>>
         {
             using R = minmax_result<range_value_t<Rng>>;
             auto first = ranges::begin(rng);
@@ -107,12 +107,12 @@ namespace ranges
         }
 
         /// \overload
-        template<typename T, typename C = less, typename P = identity>
+        template(typename T, typename C = less, typename P = identity)( //
+            requires copyable<T> AND
+                indirect_strict_weak_order<C, projected<T const *, P>>) //
         constexpr auto RANGES_FUNC(minmax)(
             std::initializer_list<T> const && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(minmax_result<T>)(                                       //
-                requires copyable<T> &&
-                indirect_strict_weak_order<C, projected<T const *, P>>)
+            -> minmax_result<T>
         {
             return (*this)(rng, std::move(pred), std::move(proj));
         }
@@ -127,6 +127,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -33,7 +33,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/polymorphic_cast.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -88,9 +88,9 @@ namespace ranges
             }
         };
 
-        template<typename T, typename... Args>
-        auto make_unique(Args &&... args) -> CPP_ret(std::unique_ptr<T>)( //
-            requires(!std::is_array<T>::value))
+        template(typename T, typename... Args)( //
+            requires (!std::is_array<T>::value)) //
+        auto make_unique(Args &&... args) -> std::unique_ptr<T>
         {
             return std::unique_ptr<T>{new T(static_cast<Args &&>(args)...)};
         }
@@ -118,15 +118,17 @@ namespace ranges
             return *this;
         }
         CPP_member
-        auto operator=(Val const & val) -> CPP_ret(raw_storage_iterator &)( //
-            requires copy_constructible<Val>)
+        auto operator=(Val const & val) //
+            -> CPP_ret(raw_storage_iterator &)( //
+                requires copy_constructible<Val>)
         {
             ::new((void *)std::addressof(*out_)) Val(val);
             return *this;
         }
         CPP_member
-        auto operator=(Val && val) -> CPP_ret(raw_storage_iterator &)( //
-            requires move_constructible<Val>)
+        auto operator=(Val && val) //
+            -> CPP_ret(raw_storage_iterator &)( //
+                requires move_constructible<Val>)
         {
             ::new((void *)std::addressof(*out_)) Val(std::move(val));
             return *this;
@@ -137,14 +139,16 @@ namespace ranges
             return *this;
         }
         CPP_member
-        auto operator++(int) -> CPP_ret(void)( //
-            requires(!forward_iterator<O>))
+        auto operator++(int) //
+            -> CPP_ret(void)( //
+                requires (!forward_iterator<O>))
         {
             ++out_;
         }
         CPP_member
-        auto operator++(int) -> CPP_ret(raw_storage_iterator)( //
-            requires forward_iterator<O>)
+        auto operator++(int) //
+            -> CPP_ret(raw_storage_iterator)( //
+                requires forward_iterator<O>)
         {
             auto tmp = *this;
             ++out_;
@@ -202,9 +206,9 @@ namespace ranges
         }
     };
 
-    template<typename I>
-    auto iter_ref(I & i) -> CPP_ret(iterator_wrapper<I>)( //
-        requires input_or_output_iterator<I>)
+    template(typename I)( //
+        requires input_or_output_iterator<I>) //
+    auto iter_ref(I & i) -> iterator_wrapper<I>
     {
         return i;
     }
@@ -247,6 +251,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

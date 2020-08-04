@@ -28,7 +28,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -43,7 +43,7 @@ namespace ranges
         struct sentinel
         {
         private:
-            using Base = detail::if_then_t<Const, Rng const, Rng>;
+            using Base = meta::conditional_t<Const, Rng const, Rng>;
             using CI = counted_iterator<iterator_t<Base>>;
             sentinel_t<Base> end_ = sentinel_t<Base>();
 
@@ -52,8 +52,8 @@ namespace ranges
             constexpr explicit sentinel(sentinel_t<Base> last)
               : end_(std::move(last))
             {}
-            CPP_template(bool Other)( //
-                requires Const && (!Other) &&
+            template(bool Other)( //
+                requires Const AND CPP_NOT(Other) AND
                 convertible_to<sentinel_t<Rng>,
                                sentinel_t<Base>>) //
                 constexpr sentinel(sentinel<Other> that)
@@ -265,17 +265,18 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    take_view(Rng &&, range_difference_t<Rng>)->take_view<views::all_t<Rng>>;
+    take_view(Rng &&, range_difference_t<Rng>) //
+        -> take_view<views::all_t<Rng>>;
 #endif
 
     namespace views
     {
         struct take_base_fn
         {
-            template<typename Rng>
+            template(typename Rng)( //
+                requires viewable_range<Rng>) //
             auto operator()(Rng && rng, range_difference_t<Rng> n) const
-                -> CPP_ret(take_view<all_t<Rng>>)( //
-                    requires viewable_range<Rng>)
+                -> take_view<all_t<Rng>>
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
@@ -304,14 +305,14 @@ namespace ranges
         {
             using ranges::views::take;
         }
-        CPP_template(typename Rng)( //
+        template(typename Rng)( //
             requires view_<Rng>)    //
             using take_view = ranges::take_view<Rng>;
     } // namespace cpp20
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::take_view)
 

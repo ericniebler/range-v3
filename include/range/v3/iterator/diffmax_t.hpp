@@ -24,7 +24,7 @@
 
 #include <range/v3/iterator/concepts.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_UNSIGNED_MATH
@@ -61,9 +61,9 @@ namespace ranges
         public:
             diffmax_t() = default;
 
-            template<typename T>
-            constexpr CPP_ctor(diffmax_t)(T val)(noexcept(true) //
-                                                 requires integral<T>)
+            template(typename T)( //
+                requires integral<T>) //
+            constexpr diffmax_t(T val) noexcept
               : neg_(0 > val)
               , val_(0 > val ? static_cast<std::uintmax_t>(-val)
                              : static_cast<std::uintmax_t>(val))
@@ -313,14 +313,14 @@ namespace ranges
                 return tmp;
             }
 
-            CPP_template(typename T)( //
+            template(typename T)( //
                 requires integral<T>) //
-                explicit constexpr
+                constexpr explicit
                 operator T() const noexcept
             {
                 return neg_ ? -static_cast<T>(val_) : static_cast<T>(val_);
             }
-            explicit constexpr operator bool() const noexcept
+            constexpr explicit operator bool() const noexcept
             {
                 return val_ != 0;
             }
@@ -465,6 +465,6 @@ namespace std
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -24,7 +24,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -41,12 +41,12 @@ namespace ranges
                 return make_action_closure(bind_back(stride_fn{}, step));
             }
 
-            template<typename Rng, typename D = range_difference_t<Rng>>
+            template(typename Rng, typename D = range_difference_t<Rng>)( //
+                requires forward_range<Rng> AND //
+                    erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> AND //
+                        permutable<iterator_t<Rng>>) //
             auto operator()(Rng && rng, range_difference_t<Rng> const step) const
-                -> CPP_ret(Rng)( //
-                    requires forward_range<Rng> &&
-                        erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                            permutable<iterator_t<Rng>>)
+                -> Rng
             {
                 using I = iterator_t<Rng>;
                 using S = sentinel_t<Rng>;
@@ -75,6 +75,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif
