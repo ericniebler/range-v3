@@ -52,8 +52,8 @@ namespace ranges
         template(typename Rng, typename C = less, typename P = identity)( //
             requires forward_range<Rng> AND //
             indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>) //
-        auto RANGES_FUNC(min_element)(Rng && rng, C pred = C{}, P proj = P{}) //
-            -> borrowed_iterator_t<Rng>
+        borrowed_iterator_t<Rng> //
+        RANGES_FUNC(min_element)(Rng && rng, C pred = C{}, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

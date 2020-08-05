@@ -44,9 +44,9 @@ namespace ranges
                 meta::if_c<(bool)ranges::container<Rng>, //
                            uncvref_t<Rng>, std::vector<range_value_t<Rng>>>;
 
-            template<typename T>
-            constexpr auto CPP_fun(operator())(T & t)(const //
+            template(typename T)( //
                 requires range<T &>)
+            constexpr auto operator()(T & t) const
             {
                 return make_action_closure(
                     bind_back(split_fn{}, detail::reference_wrapper_<T>(t)));
@@ -63,8 +63,8 @@ namespace ranges
             template(typename Rng)( //
                 requires input_range<Rng> AND indirectly_comparable<
                         iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>) //
-            auto operator()(Rng && rng, range_value_t<Rng> val) const
-                -> std::vector<split_value_t<Rng>>
+            std::vector<split_value_t<Rng>> //
+            operator()(Rng && rng, range_value_t<Rng> val) const
             {
                 return views::split(rng, std::move(val)) |
                        to<std::vector<split_value_t<Rng>>>();
@@ -72,11 +72,14 @@ namespace ranges
 
             template(typename Rng, typename Pattern)( //
                 requires input_range<Rng> AND viewable_range<Pattern> AND
-                        forward_range<Pattern> AND indirectly_comparable<
-                            iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
+                    forward_range<Pattern> AND //
+                    indirectly_comparable<
+                        iterator_t<Rng>,
+                        iterator_t<Pattern>,
+                        ranges::equal_to> AND
                     (forward_range<Rng> || detail::tiny_range<Pattern>)) //
-            auto operator()(Rng && rng, Pattern && pattern) const
-                -> std::vector<split_value_t<Rng>>
+            std::vector<split_value_t<Rng>> operator()(Rng && rng, Pattern && pattern)
+                const
             {
                 return views::split(rng, static_cast<Pattern &&>(pattern)) |
                        to<std::vector<split_value_t<Rng>>>();
@@ -84,8 +87,8 @@ namespace ranges
 
             /// \cond
             template<typename Rng, typename T>
-            auto operator()(Rng && rng, detail::reference_wrapper_<T> r) const
-                -> invoke_result_t<split_fn, Rng, T &>
+            invoke_result_t<split_fn, Rng, T &> //
+            operator()(Rng && rng, detail::reference_wrapper_<T> r) const
             {
                 return (*this)(static_cast<Rng &&>(rng), r.get());
             }

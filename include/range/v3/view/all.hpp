@@ -77,8 +77,7 @@ namespace ranges
 
             template<typename T>
             RANGES_DEPRECATED("Passing a reference_wrapper to views::all is deprecated.")
-            constexpr auto operator()(std::reference_wrapper<T> r) const
-                -> ref_view<T>
+            constexpr ref_view<T> operator()(std::reference_wrapper<T> r) const
             {
                 return ranges::views::ref(r.get());
             }
@@ -115,7 +114,9 @@ namespace ranges
         }
         template(typename Rng)(       //
             requires viewable_range<Rng>) //
-            using all_view RANGES_DEPRECATED("Please use ranges::cpp20::views::all_t instead.") = ranges::views::all_t<Rng>;
+        using all_view RANGES_DEPRECATED(
+            "Please use ranges::cpp20::views::all_t instead.") =
+                ranges::views::all_t<Rng>;
     } // namespace cpp20
     /// @}
 } // namespace ranges

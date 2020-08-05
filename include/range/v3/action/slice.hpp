@@ -43,46 +43,41 @@ namespace ranges
 
         public:
             // Overloads for the pipe syntax: rng | actions::slice(from, to)
-            template<typename D>
-            constexpr auto CPP_fun(operator())(D from, D to)(const //
-                                                             requires integral<D>)
-            {
-                return make_action_closure(bind_back(slice_fn{}, from, to));
-            }
-            template<typename D>
-            constexpr auto CPP_fun(operator())(D from, detail::from_end_<D> to)(
-                const //
+            template(typename D)( //
                 requires integral<D>)
+            constexpr auto operator()(D from, D to) const
             {
                 return make_action_closure(bind_back(slice_fn{}, from, to));
             }
-            template<typename D>
-            constexpr auto CPP_fun(operator())(detail::from_end_<D> from,
-                                               detail::from_end_<D> to)(
-                const //
+            template(typename D)( //
                 requires integral<D>)
+            constexpr auto operator()(D from, detail::from_end_<D> to) const
             {
                 return make_action_closure(bind_back(slice_fn{}, from, to));
             }
-            template<typename D>
-            constexpr auto CPP_fun(operator())(D from,
-                                               end_fn const & to)(const //
-                                                                  requires integral<D>)
+            template(typename D)( //
+                requires integral<D>)
+            constexpr auto operator()(detail::from_end_<D> from, detail::from_end_<D> to)
+                const
             {
                 return make_action_closure(bind_back(slice_fn{}, from, to));
             }
-            template<typename D>
-            constexpr auto CPP_fun(operator())(detail::from_end_<D> from,
-                                               end_fn const & to)(const //
-                                                                  requires integral<D>)
+            template(typename D)( //
+                requires integral<D>)
+            constexpr auto operator()(D from, end_fn const & to) const
+            {
+                return make_action_closure(bind_back(slice_fn{}, from, to));
+            }
+            template(typename D)( //
+                requires integral<D>)
+            constexpr auto operator()(detail::from_end_<D> from, end_fn const & to) const
             {
                 return make_action_closure(bind_back(slice_fn{}, from, to));
             }
 
             template(typename Rng, typename I = iterator_t<Rng>)( //
                 requires forward_range<Rng> AND erasable_range<Rng &, I, I>) //
-            auto operator()(Rng && rng, diff_t<Rng> from, diff_t<Rng> to) const
-                -> Rng
+            Rng operator()(Rng && rng, diff_t<Rng> from, diff_t<Rng> to) const
             {
                 RANGES_EXPECT(0 <= from && 0 <= to && from <= to);
                 RANGES_EXPECT(!sized_range<Rng> || to <= distance(rng));
@@ -93,8 +88,9 @@ namespace ranges
 
             template(typename Rng, typename I = iterator_t<Rng>)( //
                 requires bidirectional_range<Rng> AND erasable_range<Rng &, I, I>) //
-            auto operator()(Rng && rng, diff_t<Rng> from,
-                            detail::from_end_<diff_t<Rng>> to) const -> Rng
+            Rng operator()(Rng && rng,
+                           diff_t<Rng> from,
+                           detail::from_end_<diff_t<Rng>> to) const
             {
                 RANGES_EXPECT(0 <= from && to.dist_ <= 0);
                 RANGES_EXPECT(!sized_range<Rng> || from - to.dist_ <= distance(rng));
@@ -109,8 +105,9 @@ namespace ranges
 
             template(typename Rng, typename I = iterator_t<Rng>)( //
                 requires bidirectional_range<Rng> AND erasable_range<Rng &, I, I>) //
-            auto operator()(Rng && rng, detail::from_end_<diff_t<Rng>> from,
-                            detail::from_end_<diff_t<Rng>> to) const -> Rng
+            Rng operator()(Rng && rng,
+                           detail::from_end_<diff_t<Rng>> from,
+                           detail::from_end_<diff_t<Rng>> to) const
             {
                 RANGES_EXPECT(from.dist_ <= 0 && to.dist_ <= 0 && from.dist_ <= to.dist_);
                 RANGES_EXPECT(!sized_range<Rng> || 0 <= distance(rng) + from.dist_);
@@ -124,8 +121,7 @@ namespace ranges
 
             template(typename Rng, typename I = iterator_t<Rng>)( //
                 requires forward_range<Rng> AND erasable_range<Rng &, I, I>) //
-            auto operator()(Rng && rng, diff_t<Rng> from, end_fn const &) const
-                -> Rng
+            Rng operator()(Rng && rng, diff_t<Rng> from, end_fn const &) const
             {
                 RANGES_EXPECT(0 <= from);
                 RANGES_EXPECT(!sized_range<Rng> || from <= distance(rng));
@@ -135,8 +131,9 @@ namespace ranges
 
             template(typename Rng, typename I = iterator_t<Rng>)( //
                 requires bidirectional_range<Rng> AND erasable_range<Rng &, I, I>) //
-            auto operator()(Rng && rng, detail::from_end_<diff_t<Rng>> from,
-                            end_fn const &) const -> Rng
+            Rng operator()(Rng && rng,
+                           detail::from_end_<diff_t<Rng>> from,
+                           end_fn const &) const
             {
                 RANGES_EXPECT(from.dist_ <= 0);
                 RANGES_EXPECT(!sized_range<Rng> || 0 <= distance(rng) + from.dist_);

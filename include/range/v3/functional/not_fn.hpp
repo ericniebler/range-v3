@@ -51,21 +51,21 @@ namespace ranges
 
         template(typename... Args)( //
             requires predicate<FD &, Args...>) //
-        constexpr auto operator()(Args &&... args) & -> bool
+        constexpr bool operator()(Args &&... args) &
         {
             return !invoke(pred_, static_cast<Args &&>(args)...);
         }
         /// \overload
         template(typename... Args)( //
             requires predicate<FD const &, Args...>) //
-        constexpr auto operator()(Args &&... args) const & -> bool
+        constexpr bool operator()(Args &&... args) const &
         {
             return !invoke(pred_, static_cast<Args &&>(args)...);
         }
         /// \overload
         template(typename... Args)( //
             requires predicate<FD, Args...>) //
-        constexpr auto operator()(Args &&... args) && -> bool
+        constexpr bool operator()(Args &&... args) &&
         {
             return !invoke(static_cast<FD &&>(pred_), static_cast<Args &&>(args)...);
         }
@@ -76,8 +76,7 @@ namespace ranges
         template(typename Pred)( //
             requires move_constructible<detail::decay_t<Pred>> AND //
                 constructible_from<detail::decay_t<Pred>, Pred>) //
-        constexpr auto operator()(Pred && pred) const
-            -> logical_negate<detail::decay_t<Pred>>
+        constexpr logical_negate<detail::decay_t<Pred>> operator()(Pred && pred) const
         {
             return logical_negate<detail::decay_t<Pred>>{(Pred &&) pred};
         }

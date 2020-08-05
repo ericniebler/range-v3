@@ -31,7 +31,7 @@ namespace ranges
         template(typename O, typename S, typename T)( //
             requires output_iterator<O, T const &> AND sentinel_for<S, O> AND
                 weakly_incrementable<T>) //
-        auto operator()(O first, S last, T val) const -> O
+        O operator()(O first, S last, T val) const
         {
             for(; first != last; ++first, ++val)
                 *first = detail::as_const(val);
@@ -40,8 +40,7 @@ namespace ranges
 
         template(typename Rng, typename T)( //
             requires output_range<Rng, T const &> AND weakly_incrementable<T>) //
-        auto operator()(Rng && rng, T val) const //
-            -> borrowed_iterator_t<Rng>
+        borrowed_iterator_t<Rng> operator()(Rng && rng, T val) const //
         {
             return (*this)(begin(rng), end(rng), detail::move(val));
         }

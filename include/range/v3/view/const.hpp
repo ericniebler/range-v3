@@ -105,7 +105,8 @@ namespace ranges
     };
 
     template<typename Rng>
-    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<const_view<Rng>> = enable_borrowed_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<const_view<Rng>> = //
+        enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
@@ -119,7 +120,7 @@ namespace ranges
         {
             template(typename Rng)( //
                 requires viewable_range<Rng> AND input_range<Rng>) //
-            auto operator()(Rng && rng) const -> const_view<all_t<Rng>>
+            const_view<all_t<Rng>> operator()(Rng && rng) const
             {
                 return const_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

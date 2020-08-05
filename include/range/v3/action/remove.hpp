@@ -35,9 +35,9 @@ namespace ranges
     {
         struct remove_fn
         {
-            template<typename V, typename P>
-            constexpr auto CPP_fun(operator())(V && value, P proj)(const //
-                                                                   requires (!range<V>))
+            template(typename V, typename P)( //
+                requires (!range<V>))
+            constexpr auto operator()(V && value, P proj) const
             {
                 return make_action_closure(
                     bind_back(remove_fn{}, static_cast<V &&>(value), std::move(proj)));
@@ -55,8 +55,7 @@ namespace ranges
                         erasable_range<Rng, iterator_t<Rng>, sentinel_t<Rng>> AND
                             indirect_relation<equal_to, projected<iterator_t<Rng>, P>,
                                               V const *>) //
-            auto operator()(Rng && rng, V const & value, P proj = {}) const
-                -> Rng
+            Rng operator()(Rng && rng, V const & value, P proj = {}) const
             {
                 auto it = ranges::remove(rng, value, std::move(proj));
                 ranges::erase(rng, it, ranges::end(rng));

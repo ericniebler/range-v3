@@ -60,8 +60,7 @@ namespace ranges
             template(typename Size, typename Rng)( //
                 requires integer_like_<Size> AND sized_range<Rng> AND //
                     common_with<Size, range_size_t<Rng>>) //
-            auto operator()(Size s, Rng && rng) const
-                -> common_type_t<Size, range_size_t<Rng>>
+            common_type_t<Size, range_size_t<Rng>> operator()(Size s, Rng && rng) const
             {
                 using S = common_type_t<Size, range_size_t<Rng>>;
                 return static_cast<S>(s) * static_cast<S>(ranges::size(rng));
@@ -440,8 +439,8 @@ namespace ranges
             template(typename... Rngs)( //
                 requires (sizeof...(Rngs) != 0) AND //
                 concepts::and_v<(forward_range<Rngs> && viewable_range<Rngs>)...>) //
-            constexpr auto operator()(Rngs &&... rngs) const
-                -> cartesian_product_view<all_t<Rngs>...>
+            constexpr cartesian_product_view<all_t<Rngs>...> operator()(Rngs &&... rngs)
+                const
             {
                 return cartesian_product_view<all_t<Rngs>...>{
                     all(static_cast<Rngs &&>(rngs))...};
@@ -449,8 +448,7 @@ namespace ranges
 #if defined(_MSC_VER)
             template(typename Rng0)( //
                 requires forward_range<Rng0> AND viewable_range<Rng0>) //
-            constexpr auto operator()(Rng0 && rng0) const
-                -> cartesian_product_view<all_t<Rng0>>
+            constexpr cartesian_product_view<all_t<Rng0>> operator()(Rng0 && rng0) const
             {
                 return cartesian_product_view<all_t<Rng0>>{
                     all(static_cast<Rng0 &&>(rng0))};
@@ -458,19 +456,19 @@ namespace ranges
             template(typename Rng0, typename Rng1)( //
                 requires forward_range<Rng0> AND viewable_range<Rng0> AND   //
                              forward_range<Rng1> AND viewable_range<Rng1>) //
-            constexpr auto operator()(Rng0 && rng0, Rng1 && rng1) const
-                -> cartesian_product_view<all_t<Rng0>, all_t<Rng1>>
+            constexpr cartesian_product_view<all_t<Rng0>, all_t<Rng1>> //
+            operator()(Rng0 && rng0, Rng1 && rng1) const
             {
                 return cartesian_product_view<all_t<Rng0>, all_t<Rng1>>{
                     all(static_cast<Rng0 &&>(rng0)), //
                     all(static_cast<Rng1 &&>(rng1))};
             }
             template(typename Rng0, typename Rng1, typename Rng2)( //
-                requires forward_range<Rng0> AND viewable_range<Rng0> AND            //
-                             forward_range<Rng1> AND viewable_range<Rng1> AND
-                             forward_range<Rng2> && viewable_range<Rng2>) //
-            constexpr auto operator()(Rng0 && rng0, Rng1 && rng1, Rng2 && rng2) const
-                -> cartesian_product_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>>
+                requires forward_range<Rng0> AND viewable_range<Rng0> AND //
+                    forward_range<Rng1> AND viewable_range<Rng1> AND //
+                    forward_range<Rng2> AND viewable_range<Rng2>) //
+            constexpr cartesian_product_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>> //
+            operator()(Rng0 && rng0, Rng1 && rng1, Rng2 && rng2) const
             {
                 return cartesian_product_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>>{
                     all(static_cast<Rng0 &&>(rng0)), //

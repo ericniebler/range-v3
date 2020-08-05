@@ -212,8 +212,8 @@ namespace ranges
         /// \overload
         template(typename Rng, typename C = less, typename P = identity)( //
             requires sortable<iterator_t<Rng>, C, P> AND random_access_range<Rng>) //
-        auto RANGES_FUNC(sort)(Rng && rng, C pred = C{}, P proj = P{}) //
-            -> borrowed_iterator_t<Rng>
+        borrowed_iterator_t<Rng> //
+        RANGES_FUNC(sort)(Rng && rng, C pred = C{}, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

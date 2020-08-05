@@ -51,7 +51,7 @@ namespace ranges
         {}
         template(typename U)( //
             requires convertible_to<U, value_t<U> const &>) //
-        auto operator=(U && value) -> ostream_iterator &
+        ostream_iterator & operator=(U && value)
         {
             RANGES_EXPECT(sout_);
             *sout_ << static_cast<value_t<U> const &>(static_cast<U &&>(value));
@@ -131,8 +131,8 @@ namespace ranges
     {
         template(typename Delim, typename Char, typename Traits)( //
             requires semiregular<detail::decay_t<Delim>>) //
-        auto operator()(std::basic_ostream<Char, Traits> & s, Delim && d) const
-            -> ostream_joiner<detail::decay_t<Delim>, Char, Traits>
+        ostream_joiner<detail::decay_t<Delim>, Char, Traits> //
+        operator()(std::basic_ostream<Char, Traits> & s, Delim && d) const
         {
             return {s, std::forward<Delim>(d)};
         }

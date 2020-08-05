@@ -42,9 +42,12 @@ namespace ranges
     namespace detail
     {
         template<typename I, typename S, typename O, typename Gen>
-        auto sample_sized_impl(I first, S last, iter_difference_t<I> pop_size, O out,
-                               iter_difference_t<O> sample_size, Gen && gen)
-            -> sample_result<I, O>
+        sample_result<I, O> sample_sized_impl(I first,
+                                              S last,
+                                              iter_difference_t<I> pop_size,
+                                              O out,
+                                              iter_difference_t<O> sample_size,
+                                              Gen && gen)
         {
             if(pop_size > 0 && sample_size > 0)
             {
@@ -77,17 +80,16 @@ namespace ranges
                  typename S,
                  typename O,
                  typename Gen = detail::default_random_engine &)( //
-            requires input_iterator<I> && sentinel_for<S, I> &&
-                weakly_incrementable<O> && indirectly_copyable<I, O> &&
-                uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+            requires input_iterator<I> AND sentinel_for<S, I> AND
+                weakly_incrementable<O> AND indirectly_copyable<I, O> AND
+                uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
                 (random_access_iterator<O> || forward_iterator<I> ||
                  sized_sentinel_for<S, I>))
-        auto RANGES_FUNC(sample)(I first,
-                                 S last,
-                                 O out,
-                                 iter_difference_t<O> const n,
-                                 Gen && gen = detail::get_random_engine()) //
-            -> sample_result<I, O>
+        sample_result<I, O> RANGES_FUNC(sample)(I first,
+                                                S last,
+                                                O out,
+                                                iter_difference_t<O> const n,
+                                                Gen && gen = detail::get_random_engine())
         {
             if(RANGES_CONSTEXPR_IF(forward_iterator<I> || sized_sentinel_for<S, I>)) //
             {
@@ -136,18 +138,18 @@ namespace ranges
                  typename S,
                  typename ORng,
                  typename Gen = detail::default_random_engine &)( //
-            requires input_iterator<I> && sentinel_for<S, I> &&
-                weakly_incrementable<iterator_t<ORng>> &&
-                indirectly_copyable<I, iterator_t<ORng>> &&
-                uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+            requires input_iterator<I> AND sentinel_for<S, I> AND
+                weakly_incrementable<iterator_t<ORng>> AND
+                indirectly_copyable<I, iterator_t<ORng>> AND
+                uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
                 (forward_range<ORng> ||
                  sized_range<ORng>)&&(random_access_iterator<iterator_t<ORng>> ||
                                       forward_iterator<I> || sized_sentinel_for<S, I>))
-        auto RANGES_FUNC(sample)(I first,
-                                 S last,
-                                 ORng && out,
-                                 Gen && gen = detail::get_random_engine()) //
-            -> sample_result<I, borrowed_iterator_t<ORng>>
+        sample_result<I, borrowed_iterator_t<ORng>> RANGES_FUNC(sample)(
+            I first,
+            S last,
+            ORng && out,
+            Gen && gen = detail::get_random_engine()) //
         {
             if(RANGES_CONSTEXPR_IF(forward_iterator<I> || sized_sentinel_for<S, I>)) //
             {
@@ -170,16 +172,18 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename O, typename Gen = detail::default_random_engine &)( //
+        template(typename Rng,
+                 typename O,
+                 typename Gen = detail::default_random_engine &)(
             requires input_range<Rng> AND weakly_incrementable<O> AND
                 indirectly_copyable<iterator_t<Rng>, O> AND
-                uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+                uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
                 (random_access_iterator<O> || forward_range<Rng> || sized_range<Rng>))
-        auto RANGES_FUNC(sample)(Rng && rng,
-                                 O out,
-                                 iter_difference_t<O> const n,
-                                 Gen && gen = detail::get_random_engine()) //
-            -> sample_result<borrowed_iterator_t<Rng>, O>
+        sample_result<borrowed_iterator_t<Rng>, O> RANGES_FUNC(sample)(
+            Rng && rng,
+            O out,
+            iter_difference_t<O> const n,
+            Gen && gen = detail::get_random_engine()) //
         {
             if(RANGES_CONSTEXPR_IF(forward_range<Rng> || sized_range<Rng>)) //
             {
@@ -201,15 +205,15 @@ namespace ranges
         template(typename IRng,
                  typename ORng,
                  typename Gen = detail::default_random_engine &)( //
-            requires input_range<IRng> && range<ORng> &&
-                indirectly_copyable<iterator_t<IRng>, iterator_t<ORng>> &&
-                uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+            requires input_range<IRng> AND range<ORng> AND
+                indirectly_copyable<iterator_t<IRng>, iterator_t<ORng>> AND
+                uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
                 (random_access_iterator<iterator_t<ORng>> || forward_range<IRng> ||
                  sized_range<IRng>)&&(forward_range<ORng> || sized_range<ORng>))
-        auto RANGES_FUNC(sample)(IRng && rng,
-                                 ORng && out,
-                                 Gen && gen = detail::get_random_engine())          //
-            -> sample_result<borrowed_iterator_t<IRng>, borrowed_iterator_t<ORng>>
+        sample_result<borrowed_iterator_t<IRng>, borrowed_iterator_t<ORng>> //
+        RANGES_FUNC(sample)(IRng && rng,
+                            ORng && out,
+                            Gen && gen = detail::get_random_engine())
         {
             if(RANGES_CONSTEXPR_IF(forward_range<IRng> || sized_range<IRng>)) //
             {

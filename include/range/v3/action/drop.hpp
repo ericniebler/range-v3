@@ -34,9 +34,9 @@ namespace ranges
     {
         struct drop_fn
         {
-            template<typename Int>
-            constexpr auto CPP_fun(operator())(Int n)(const //
-                                                      requires detail::integer_like_<Int>)
+            template(typename Int)( //
+                requires detail::integer_like_<Int>)
+            constexpr auto operator()(Int n) const
             {
                 RANGES_EXPECT(n >= Int(0));
                 return make_action_closure(bind_back(drop_fn{}, n));
@@ -45,8 +45,7 @@ namespace ranges
             template(typename Rng)( //
                 requires forward_range<Rng> AND //
                     erasable_range<Rng &, iterator_t<Rng>, iterator_t<Rng>>) //
-            auto operator()(Rng && rng, range_difference_t<Rng> n) const
-                -> Rng
+            Rng operator()(Rng && rng, range_difference_t<Rng> n) const
             {
                 RANGES_EXPECT(n >= 0);
                 ranges::actions::erase(

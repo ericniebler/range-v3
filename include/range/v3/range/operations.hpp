@@ -38,8 +38,8 @@ namespace ranges
         template(typename Rng)( //
             requires random_access_range<Rng> AND sized_range<Rng> AND //
                 borrowed_range<Rng>) //
-        constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
-            -> range_reference_t<Rng>
+        constexpr range_reference_t<Rng> //
+        operator()(Rng && rng, range_difference_t<Rng> n) const
         {
             // Workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67371 in GCC 5
             check_throw(rng, n);
@@ -68,9 +68,8 @@ namespace ranges
     {
         /// \return `begin(rng)[n]`
         template(typename Rng, typename Int)( //
-            requires random_access_range<Rng> AND integral<Int> AND borrowed_range<Rng>) //
-        constexpr auto operator()(Rng && rng, Int n) const //
-            -> range_reference_t<Rng>
+            requires random_access_range<Rng> AND integral<Int> AND borrowed_range<Rng>)
+        constexpr range_reference_t<Rng> operator()(Rng && rng, Int n) const //
         {
             using D = range_difference_t<Rng>;
             RANGES_EXPECT(0 <= static_cast<D>(n));
@@ -91,9 +90,9 @@ namespace ranges
     {
         /// \return `*prev(end(rng))`
         template(typename Rng)(                                   //
-            requires common_range<Rng> && bidirectional_range<Rng> && //
+            requires common_range<Rng> AND bidirectional_range<Rng> AND //
                 borrowed_range<Rng>)                                  //
-        constexpr auto operator()(Rng && rng) const -> range_reference_t<Rng>
+        constexpr range_reference_t<Rng> operator()(Rng && rng) const
         {
             return *prev(end(rng));
         }
@@ -109,7 +108,7 @@ namespace ranges
         /// \return `*begin(rng)`
         template(typename Rng)( //
             requires forward_range<Rng> AND borrowed_range<Rng>) //
-        constexpr auto operator()(Rng && rng) const -> range_reference_t<Rng>
+        constexpr range_reference_t<Rng> operator()(Rng && rng) const
         {
             return *begin(rng);
         }

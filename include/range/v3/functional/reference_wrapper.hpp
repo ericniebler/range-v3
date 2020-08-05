@@ -117,7 +117,7 @@ namespace ranges
     {
         template(typename T)( //
             requires (!is_reference_wrapper_v<T>)) //
-        auto operator()(T & t) const -> reference_wrapper<T>
+        reference_wrapper<T> operator()(T & t) const
         {
             return {t};
         }

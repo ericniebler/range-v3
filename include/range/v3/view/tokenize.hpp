@@ -70,7 +70,7 @@ namespace ranges
         }
         template(bool Const = true)( //
             requires range<Rng const>) //
-        auto begin() const -> iterator_t<Const>
+        iterator_t<Const> begin() const
         {
             return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
         }
@@ -80,7 +80,7 @@ namespace ranges
         }
         template(bool Const = true)( //
             requires range<Rng const>) //
-        auto end() const -> iterator_t<Const>
+        iterator_t<Const> end() const
         {
             return {};
         }
@@ -102,12 +102,16 @@ namespace ranges
         struct tokenize_base_fn
         {
             template(typename Rng, typename Regex)( //
-                requires bidirectional_range<Rng> AND common_range<Rng> AND same_as<
-                        range_value_t<Rng>, typename detail::decay_t<Regex>::value_type>) //
-            auto operator()(Rng && rng, Regex && rex, int sub = 0,
-                            std::regex_constants::match_flag_type flags =
-                                std::regex_constants::match_default) const //
-                -> tokenize_view<all_t<Rng>, detail::decay_t<Regex>, int>
+                requires bidirectional_range<Rng> AND common_range<Rng> AND //
+                    same_as< //
+                        range_value_t<Rng>, //
+                        typename detail::decay_t<Regex>::value_type>) //
+            tokenize_view<all_t<Rng>, detail::decay_t<Regex>, int> //
+            operator()(Rng && rng,
+                       Regex && rex,
+                       int sub = 0,
+                       std::regex_constants::match_flag_type flags =
+                            std::regex_constants::match_default) const //
             {
                 return {all(static_cast<Rng &&>(rng)),
                         static_cast<Regex &&>(rex),
@@ -116,13 +120,15 @@ namespace ranges
             }
 
             template(typename Rng, typename Regex)( //
-                requires bidirectional_range<Rng> AND common_range<Rng> AND same_as<
-                        range_value_t<Rng>, typename detail::decay_t<Regex>::value_type>) //
-            auto operator()(Rng && rng, Regex && rex, std::vector<int> subs,
-                            std::regex_constants::match_flag_type flags =
-                                std::regex_constants::match_default) const //
-                ->
-                    tokenize_view<all_t<Rng>, detail::decay_t<Regex>, std::vector<int>>
+                requires bidirectional_range<Rng> AND common_range<Rng> AND //
+                    same_as<range_value_t<Rng>,
+                            typename detail::decay_t<Regex>::value_type>) //
+            tokenize_view<all_t<Rng>, detail::decay_t<Regex>, std::vector<int>> //
+            operator()(Rng && rng,
+                       Regex && rex,
+                       std::vector<int> subs,
+                       std::regex_constants::match_flag_type flags =
+                           std::regex_constants::match_default) const //
             {
                 return {all(static_cast<Rng &&>(rng)),
                         static_cast<Regex &&>(rex),
@@ -131,13 +137,17 @@ namespace ranges
             }
 
             template(typename Rng, typename Regex)( //
-                requires bidirectional_range<Rng> AND common_range<Rng> AND same_as<
-                        range_value_t<Rng>, typename detail::decay_t<Regex>::value_type>) //
-            auto operator()(Rng && rng, Regex && rex, std::initializer_list<int> subs,
-                            std::regex_constants::match_flag_type flags =
-                                std::regex_constants::match_default) const //
-                -> tokenize_view<all_t<Rng>, detail::decay_t<Regex>,
-                                         std::initializer_list<int>>
+                requires bidirectional_range<Rng> AND common_range<Rng> AND //
+                    same_as<range_value_t<Rng>,
+                            typename detail::decay_t<Regex>::value_type>) //
+            tokenize_view<all_t<Rng>,
+                          detail::decay_t<Regex>,
+                          std::initializer_list<int>> //
+            operator()(Rng && rng,
+                       Regex && rex,
+                       std::initializer_list<int> subs,
+                       std::regex_constants::match_flag_type flags =
+                           std::regex_constants::match_default) const //
             {
                 return {all(static_cast<Rng &&>(rng)),
                         static_cast<Regex &&>(rex),
@@ -151,7 +161,8 @@ namespace ranges
             using tokenize_base_fn::operator();
 
             template<typename Regex>
-            constexpr auto operator()(Regex && rex, int sub = 0,
+            constexpr auto operator()(Regex && rex,
+                                      int sub = 0,
                                       std::regex_constants::match_flag_type flags =
                                           std::regex_constants::match_default) const
             {
@@ -160,7 +171,8 @@ namespace ranges
             }
 
             template<typename Regex>
-            auto operator()(Regex && rex, std::vector<int> subs,
+            auto operator()(Regex && rex,
+                            std::vector<int> subs,
                             std::regex_constants::match_flag_type flags =
                                 std::regex_constants::match_default) const
             {
@@ -171,7 +183,8 @@ namespace ranges
             }
 
             template<typename Regex>
-            constexpr auto operator()(Regex && rex, std::initializer_list<int> subs,
+            constexpr auto operator()(Regex && rex,
+                                      std::initializer_list<int> subs,
                                       std::regex_constants::match_flag_type flags =
                                           std::regex_constants::match_default) const
             {

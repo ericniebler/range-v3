@@ -100,13 +100,13 @@ namespace ranges
 
         /// \brief function template \c is_permutation
         template(typename I1,
-                     typename S1,
-                     typename I2,
-                     typename C = equal_to,
-                     typename P1 = identity,
-                     typename P2 = identity)( //
-            requires forward_iterator<I1> && sentinel_for<S1, I1> &&
-                forward_iterator<I2> && indirectly_comparable<I1, I2, C, P1, P2>)
+                 typename S1,
+                 typename I2,
+                 typename C = equal_to,
+                 typename P1 = identity,
+                 typename P2 = identity)( //
+            requires forward_iterator<I1> AND sentinel_for<S1, I1> AND
+                forward_iterator<I2> AND indirectly_comparable<I1, I2, C, P1, P2>)
         RANGES_DEPRECATED(
             "Use the variant of ranges::is_permutation that takes an upper bound "
             "for both sequences")
@@ -159,14 +159,14 @@ namespace ranges
 
         /// \overload
         template(typename I1,
-                     typename S1,
-                     typename I2,
-                     typename S2,
-                     typename C = equal_to,
-                     typename P1 = identity,
-                     typename P2 = identity)( //
-            requires forward_iterator<I1> && sentinel_for<S1, I1> &&
-                forward_iterator<I2> && sentinel_for<S2, I2> &&
+                 typename S1,
+                 typename I2,
+                 typename S2,
+                 typename C = equal_to,
+                 typename P1 = identity,
+                 typename P2 = identity)( //
+            requires forward_iterator<I1> AND sentinel_for<S1, I1> AND
+                forward_iterator<I2> AND sentinel_for<S2, I2> AND
                 indirectly_comparable<I1, I2, C, P1, P2>) //
         bool RANGES_FUNC(is_permutation)(I1 begin1,
                                          S1 end1,
@@ -205,7 +205,7 @@ namespace ranges
                      typename C = equal_to,
                      typename P1 = identity,
                      typename P2 = identity)( //
-            requires forward_range<Rng1> && forward_iterator<uncvref_t<I2Ref>> &&
+            requires forward_range<Rng1> AND forward_iterator<uncvref_t<I2Ref>> AND
                 indirectly_comparable<iterator_t<Rng1>, uncvref_t<I2Ref>, C, P1, P2>)
         RANGES_DEPRECATED(
             "Use the variant of ranges::is_permutation that takes an upper bound "
@@ -233,7 +233,7 @@ namespace ranges
                      typename C = equal_to,
                      typename P1 = identity,
                      typename P2 = identity)( //
-            requires forward_range<Rng1> && forward_range<Rng2> &&
+            requires forward_range<Rng1> AND forward_range<Rng2> AND
                 indirectly_comparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>) //
         bool RANGES_FUNC(is_permutation)(
             Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) //

@@ -217,8 +217,8 @@ namespace ranges
             protected:
                 template(typename... Args)( //
                     requires constructible_from<T, Args...>) //
-                auto construct_from(Args &&... args) noexcept(
-                    std::is_nothrow_constructible<T, Args...>::value) -> T &
+                T & construct_from(Args &&... args)
+                    noexcept(std::is_nothrow_constructible<T, Args...>::value)
                 {
                     RANGES_EXPECT(!engaged_);
                     auto const address = static_cast<void *>(std::addressof(data_));
@@ -313,7 +313,7 @@ namespace ranges
             protected:
                 template(typename U)( //
                     requires convertible_to<U &, T &>) //
-                constexpr auto construct_from(U && ref) noexcept -> T &
+                constexpr T & construct_from(U && ref) noexcept
                 {
                     RANGES_EXPECT(!ptr_);
                     ptr_ = detail::addressof(ref);
@@ -678,13 +678,13 @@ namespace ranges
         }
 
         template(typename U)(                                   //
-            requires copy_constructible<T> && convertible_to<U, T>) //
+            requires copy_constructible<T> AND convertible_to<U, T>) //
         constexpr T value_or(U && u) const &
         {
             return has_value() ? **this : static_cast<T>((U &&) u);
         }
         template(typename U)(                                   //
-            requires move_constructible<T> && convertible_to<U, T>) //
+            requires move_constructible<T> AND convertible_to<U, T>) //
         constexpr T value_or(U && u) &&
         {
             return has_value() ? detail::move(**this) : static_cast<T>((U &&) u);

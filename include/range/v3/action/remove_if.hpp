@@ -38,9 +38,9 @@ namespace ranges
     {
         struct remove_if_fn
         {
-            template<typename C, typename P = identity>
-            constexpr auto CPP_fun(operator())(C pred, P proj = P{})(const //
-                                                                     requires (!range<C>))
+            template(typename C, typename P = identity)( //
+                requires (!range<C>))
+            constexpr auto operator()(C pred, P proj = P{}) const
             {
                 return make_action_closure(
                     bind_back(remove_if_fn{}, std::move(pred), std::move(proj)));
@@ -49,9 +49,9 @@ namespace ranges
             template(typename Rng, typename C, typename P = identity)( //
                 requires forward_range<Rng> AND
                     erasable_range<Rng &, iterator_t<Rng>, iterator_t<Rng>> AND
-                        permutable<iterator_t<Rng>> &&
+                        permutable<iterator_t<Rng>> AND
                             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>) //
-            auto operator()(Rng && rng, C pred, P proj = P{}) const -> Rng
+            Rng operator()(Rng && rng, C pred, P proj = P{}) const
             {
                 auto it = ranges::remove_if(rng, std::move(pred), std::move(proj));
                 ranges::erase(rng, it, ranges::end(rng));

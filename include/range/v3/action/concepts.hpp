@@ -113,30 +113,29 @@ namespace ranges
     {
         template(typename T)( //
             requires container<T>) //
-        auto is_lvalue_container_like(T &) noexcept -> std::true_type
+        std::true_type is_lvalue_container_like(T &) noexcept
         {
             return {};
         }
 
         template(typename T)( //
             requires container<T>) //
-        auto is_lvalue_container_like(reference_wrapper<T>) noexcept
-            -> meta::not_<std::is_rvalue_reference<T>>
+        meta::not_<std::is_rvalue_reference<T>> //
+        is_lvalue_container_like(reference_wrapper<T>) noexcept
         {
             return {};
         }
 
         template(typename T)( //
             requires container<T>) //
-        auto is_lvalue_container_like(std::reference_wrapper<T>) noexcept
-            -> std::true_type
+        std::true_type is_lvalue_container_like(std::reference_wrapper<T>) noexcept
         {
             return {};
         }
 
         template(typename T)( //
             requires container<T>) //
-        auto is_lvalue_container_like(ref_view<T>) noexcept -> std::true_type
+        std::true_type is_lvalue_container_like(ref_view<T>) noexcept
         {
             return {};
         }

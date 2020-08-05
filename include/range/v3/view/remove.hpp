@@ -45,28 +45,28 @@ namespace ranges
                 Value value_;
                 template(typename T)( //
                     requires equality_comparable_with<T, Value const &>) //
-                auto operator()(T && other) const -> bool
+                bool operator()(T && other) const
                 {
                     return static_cast<T &&>(other) == value_;
                 }
             };
 
         public:
-            template<typename Rng, typename Value>
-            constexpr auto CPP_fun(operator())(Rng && rng, Value value)(
-                const requires move_constructible<Value> && viewable_range<Rng> &&
-                    input_range<Rng> &&
-                        indirectly_comparable<iterator_t<Rng>, Value const *, equal_to>)
+            template(typename Rng, typename Value)( //
+                requires move_constructible<Value> AND viewable_range<Rng> AND
+                    input_range<Rng> AND
+                    indirectly_comparable<iterator_t<Rng>, Value const *, equal_to>)
+            constexpr auto operator()(Rng && rng, Value value) const
             {
                 return remove_if(static_cast<Rng &&>(rng),
                                  pred_<Value>{std::move(value)});
             }
 
-            template<typename Rng, typename Value, typename Proj>
-            constexpr auto CPP_fun(operator())(Rng && rng, Value value, Proj proj)(
-                const requires move_constructible<Value> && viewable_range<Rng> &&
-                    input_range<Rng> && indirectly_comparable<
-                        iterator_t<Rng>, Value const *, equal_to, Proj>)
+            template(typename Rng, typename Value, typename Proj)( //
+                requires move_constructible<Value> AND viewable_range<Rng> AND
+                    input_range<Rng> AND //
+                    indirectly_comparable<iterator_t<Rng>, Value const *, equal_to, Proj>)
+            constexpr auto operator()(Rng && rng, Value value, Proj proj) const
             {
                 return remove_if(static_cast<Rng &&>(rng),
                                  pred_<Value>{std::move(value)},
@@ -81,10 +81,9 @@ namespace ranges
             {
                 return make_view_closure(bind_back(remove_base_fn{}, std::move(value)));
             }
-            template<typename Value, typename Proj>
-            constexpr auto CPP_fun(operator())(Value && value,
-                                               Proj proj)(const //
-                                                          requires (!range<Value>)) // TODO: underconstrained
+            template(typename Value, typename Proj)( //
+                requires (!range<Value>)) // TODO: underconstrained
+            constexpr auto operator()(Value && value, Proj proj) const
             {
                 return make_view_closure(bind_back(
                     remove_base_fn{}, static_cast<Value &&>(value), std::move(proj)));

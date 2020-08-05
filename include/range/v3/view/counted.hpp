@@ -76,15 +76,14 @@ namespace ranges
         {
             template(typename I)( //
                 requires input_or_output_iterator<I> AND (!random_access_iterator<I>)) //
-            auto operator()(I it, iter_difference_t<I> n) const
-                -> subrange<counted_iterator<I>, default_sentinel_t>
+            subrange<counted_iterator<I>, default_sentinel_t> //
+            operator()(I it, iter_difference_t<I> n) const
             {
                 return {make_counted_iterator(std::move(it), n), default_sentinel};
             }
             template(typename I)( //
                 requires random_access_iterator<I>) //
-            auto operator()(I it, iter_difference_t<I> n) const
-                -> subrange<I>
+            subrange<I> operator()(I it, iter_difference_t<I> n) const
             {
                 return {it, it + n};
             }
@@ -94,15 +93,13 @@ namespace ranges
         {
             template(typename I)( //
                 requires input_or_output_iterator<I> AND (!random_access_iterator<I>)) //
-            auto operator()(I it, iter_difference_t<I> n) const
-                -> counted_view<I>
+            counted_view<I> operator()(I it, iter_difference_t<I> n) const
             {
                 return {std::move(it), n};
             }
             template(typename I)( //
                 requires random_access_iterator<I>) //
-            auto operator()(I it, iter_difference_t<I> n) const
-                -> subrange<I>
+            subrange<I> operator()(I it, iter_difference_t<I> n) const
             {
                 return {it, it + n};
             }

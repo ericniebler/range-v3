@@ -48,14 +48,14 @@ namespace ranges
         template(typename Cont, typename T)( //
             requires lvalue_container_like<Cont> AND
             (!range<T>)&&constructible_from<range_value_t<Cont>, T>) //
-        auto push_front(Cont && cont, T && t) -> push_front_t<Cont, T>
+        push_front_t<Cont, T> push_front(Cont && cont, T && t)
         {
             unwrap_reference(cont).push_front(static_cast<T &&>(t));
         }
 
         template(typename Cont, typename Rng)( //
             requires lvalue_container_like<Cont> AND range<Rng>) //
-        auto push_front(Cont && cont, Rng && rng) -> insert_t<Cont, Rng>
+        insert_t<Cont, Rng> push_front(Cont && cont, Rng && rng)
         {
             ranges::insert(cont, begin(cont), static_cast<Rng &&>(rng));
         }
@@ -87,9 +87,9 @@ namespace ranges
                 return make_action_closure(bind_back(push_front_fn{}, val));
             }
 
-            template<typename T>
-            constexpr auto CPP_fun(operator())(T & t)( //
-                const requires range<T &>)
+            template(typename T)( //
+                requires range<T &>)
+            constexpr auto operator()(T & t) const
             {
                 return make_action_closure(
                     bind_back(push_front_fn{}, detail::reference_wrapper_<T>(t)));
@@ -98,8 +98,7 @@ namespace ranges
             template(typename Rng, typename T)( //
                 requires input_range<Rng> AND can_push_front_<Rng, T> AND //
                 (range<T> || constructible_from<range_value_t<Rng>, T>)) //
-            auto operator()(Rng && rng, T && t) const //
-                -> Rng
+            Rng operator()(Rng && rng, T && t) const //
             {
                 push_front(rng, static_cast<T &&>(t));
                 return static_cast<Rng &&>(rng);
@@ -109,8 +108,7 @@ namespace ranges
                 requires input_range<Rng> AND                          //
                         can_push_front_<Rng, std::initializer_list<T>> AND
                             constructible_from<range_value_t<Rng>, T const &>) //
-            auto operator()(Rng && rng, std::initializer_list<T> t) const //
-                -> Rng
+            Rng operator()(Rng && rng, std::initializer_list<T> t) const //
             {
                 push_front(rng, t);
                 return static_cast<Rng &&>(rng);
@@ -118,8 +116,8 @@ namespace ranges
 
             /// \cond
             template<typename Rng, typename T>
-            auto operator()(Rng && rng, detail::reference_wrapper_<T> r) const
-                -> invoke_result_t<push_front_fn, Rng, T &>
+            invoke_result_t<push_front_fn, Rng, T &> //
+            operator()(Rng && rng, detail::reference_wrapper_<T> r) const
             {
                 return (*this)(static_cast<Rng &&>(rng), r.get());
             }

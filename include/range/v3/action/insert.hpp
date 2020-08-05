@@ -39,16 +39,16 @@ namespace ranges
         template(typename Cont, typename T)( //
             requires lvalue_container_like<Cont> AND
             (!range<T> && constructible_from<range_value_t<Cont>, T>)) //
-        auto insert(Cont && cont, T && t) -> insert_result_t<Cont &, T>
+        insert_result_t<Cont &, T> insert(Cont && cont, T && t)
         {
             return unwrap_reference(cont).insert(static_cast<T &&>(t));
         }
 
         template(typename Cont, typename I, typename S)( //
-            requires lvalue_container_like<Cont> AND sentinel_for<S, I> AND (!range<S>)) //
-        auto insert(Cont && cont, I i, S j)
-            -> insert_result_t<Cont &, detail::cpp17_iterator_t<I, S>,
-                                       detail::cpp17_iterator_t<I, S>>
+            requires lvalue_container_like<Cont> AND sentinel_for<S, I> AND (!range<S>))
+        insert_result_t<Cont &, detail::cpp17_iterator_t<I, S>,
+                                detail::cpp17_iterator_t<I, S>>
+        insert(Cont && cont, I i, S j)
         {
             return unwrap_reference(cont).insert(detail::cpp17_iterator_t<I, S>{i},
                                                  detail::cpp17_iterator_t<I, S>{j});
@@ -56,9 +56,9 @@ namespace ranges
 
         template(typename Cont, typename Rng)( //
             requires lvalue_container_like<Cont> AND range<Rng>) //
-        auto insert(Cont && cont, Rng && rng)
-            -> insert_result_t<Cont &, detail::range_cpp17_iterator_t<Rng>,
-                                       detail::range_cpp17_iterator_t<Rng>>
+        insert_result_t<Cont &, detail::range_cpp17_iterator_t<Rng>,
+                                detail::range_cpp17_iterator_t<Rng>>
+        insert(Cont && cont, Rng && rng)
         {
             return unwrap_reference(cont).insert(
                 detail::range_cpp17_iterator_t<Rng>{ranges::begin(rng)},
@@ -68,8 +68,7 @@ namespace ranges
         template(typename Cont, typename I, typename T)( //
             requires lvalue_container_like<Cont> AND input_iterator<I> AND //
             (!range<T> && constructible_from<range_value_t<Cont>, T>)) //
-        auto insert(Cont && cont, I p, T && t)
-            -> insert_result_t<Cont &, I, T>
+        insert_result_t<Cont &, I, T> insert(Cont && cont, I p, T && t)
         {
             return unwrap_reference(cont).insert(p, static_cast<T &&>(t));
         }
@@ -77,8 +76,7 @@ namespace ranges
         template(typename Cont, typename I, typename N, typename T)( //
             requires lvalue_container_like<Cont> AND input_iterator<I> AND //
                 integral<N> AND constructible_from<range_value_t<Cont>, T>) //
-        auto insert(Cont && cont, I p, N n, T && t)
-            -> insert_result_t<Cont &, I, N, T>
+        insert_result_t<Cont &, I, N, T> insert(Cont && cont, I p, N n, T && t)
         {
             return unwrap_reference(cont).insert(p, n, static_cast<T &&>(t));
         }
@@ -92,9 +90,8 @@ namespace ranges
             template(typename Cont, typename P)( //
                 requires container<Cont> AND input_iterator<P> AND
                         random_access_reservable<Cont>) //
-            auto insert_reserve_helper(Cont & cont, P const p,
-                                       range_size_t<Cont> const delta)
-                -> iterator_t<Cont>
+            iterator_t<Cont> insert_reserve_helper(
+                Cont & cont, P const p, range_size_t<Cont> const delta)
             {
                 auto const old_size = ranges::size(cont);
                 auto const max_size = cont.max_size();
@@ -171,17 +168,21 @@ namespace ranges
             requires lvalue_container_like<Cont> AND input_iterator<P> AND
                 sentinel_for<S, I> AND
             (!range<S>)) //
-        auto insert(Cont && cont, P p, I i, S j) -> decltype(detail::insert_impl(
-            static_cast<Cont &&>(cont), std::move(p), std::move(i), std::move(j),
-            meta::bool_<random_access_reservable<Cont> &&
-                        sized_sentinel_for<S, I>>{}))
+        auto insert(Cont && cont, P p, I i, S j) //
+            -> decltype(detail::insert_impl(
+                static_cast<Cont &&>(cont),
+                static_cast<P &&>(p),
+                static_cast<I &&>(i),
+                static_cast<S &&>(j),
+                meta::bool_<random_access_reservable<Cont> && //
+                            sized_sentinel_for<S, I>>{}))
         {
             return detail::insert_impl(static_cast<Cont &&>(cont),
-                                       std::move(p),
-                                       std::move(i),
-                                       std::move(j),
-                                       meta::bool_ < random_access_reservable<Cont> &&
-                                           sized_sentinel_for<S, I> > {});
+                                       static_cast<P &&>(p),
+                                       static_cast<I &&>(i),
+                                       static_cast<S &&>(j),
+                                       meta::bool_<random_access_reservable<Cont> &&
+                                                   sized_sentinel_for<S, I>>{});
         }
 
         template(typename Cont, typename I, typename Rng)( //
@@ -194,8 +195,8 @@ namespace ranges
             return detail::insert_impl(static_cast<Cont &&>(cont),
                                        std::move(p),
                                        static_cast<Rng &&>(rng),
-                                       meta::bool_ < random_access_reservable<Cont> &&
-                                           sized_range<Rng> > {});
+                                       meta::bool_<random_access_reservable<Cont> &&
+                                                   sized_range<Rng>>{});
         }
 
         struct insert_fn
@@ -207,16 +208,14 @@ namespace ranges
             template(typename Rng, typename T)( //
                 requires range<Rng> AND //
                 (!range<T>)&&constructible_from<range_value_t<Rng>, T>) //
-            auto operator()(Rng && rng, T && t) const
-                -> insert_result_t<Rng, T>
+            insert_result_t<Rng, T> operator()(Rng && rng, T && t) const
             {
                 return insert(static_cast<Rng &&>(rng), static_cast<T &&>(t));
             }
 
             template(typename Rng, typename Rng2)( //
                 requires range<Rng> AND range<Rng2>) //
-            auto operator()(Rng && rng, Rng2 && rng2) const
-                -> insert_result_t<Rng, Rng2>
+            insert_result_t<Rng, Rng2> operator()(Rng && rng, Rng2 && rng2) const
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Attempting to insert an infinite range into a container");
@@ -225,16 +224,15 @@ namespace ranges
 
             template(typename Rng, typename T)( //
                 requires range<Rng>) //
-            auto operator()(Rng && rng, std::initializer_list<T> rng2) const
-                -> insert_result_t<Rng, std::initializer_list<T> &>
+            insert_result_t<Rng, std::initializer_list<T> &> //
+            operator()(Rng && rng, std::initializer_list<T> rng2) const
             {
                 return insert(static_cast<Rng &&>(rng), rng2);
             }
 
             template(typename Rng, typename I, typename S)( //
                 requires range<Rng> AND sentinel_for<S, I> AND (!range<S>)) //
-            auto operator()(Rng && rng, I i, S j) const
-                -> insert_result_t<Rng, I, S>
+            insert_result_t<Rng, I, S> operator()(Rng && rng, I i, S j) const
             {
                 return insert(static_cast<Rng &&>(rng), std::move(i), std::move(j));
             }
@@ -242,8 +240,7 @@ namespace ranges
             template(typename Rng, typename I, typename T)( //
                 requires range<Rng> AND input_iterator<I> AND //
                 (!range<T>)&&constructible_from<range_value_t<Rng>, T>) //
-            auto operator()(Rng && rng, I p, T && t) const
-                -> insert_result_t<Rng, I, T>
+            insert_result_t<Rng, I, T> operator()(Rng && rng, I p, T && t) const
             {
                 return insert(
                     static_cast<Rng &&>(rng), std::move(p), static_cast<T &&>(t));
@@ -251,8 +248,7 @@ namespace ranges
 
             template(typename Rng, typename I, typename Rng2)( //
                 requires range<Rng> AND input_iterator<I> AND range<Rng2>) //
-            auto operator()(Rng && rng, I p, Rng2 && rng2) const
-                -> insert_result_t<Rng, I, Rng2>
+            insert_result_t<Rng, I, Rng2> operator()(Rng && rng, I p, Rng2 && rng2) const
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Attempting to insert an infinite range into a container");
@@ -262,8 +258,8 @@ namespace ranges
 
             template(typename Rng, typename I, typename T)( //
                 requires range<Rng> AND input_iterator<I>) //
-            auto operator()(Rng && rng, I p, std::initializer_list<T> rng2) const
-                -> insert_result_t<Rng, I, std::initializer_list<T> &>
+            insert_result_t<Rng, I, std::initializer_list<T> &> //
+            operator()(Rng && rng, I p, std::initializer_list<T> rng2) const
             {
                 return insert(static_cast<Rng &&>(rng), std::move(p), rng2);
             }
@@ -271,8 +267,7 @@ namespace ranges
             template(typename Rng, typename I, typename N, typename T)( //
                 requires range<Rng> AND input_iterator<I> AND integral<N> AND //
                 (!range<T>)&&constructible_from<range_value_t<Rng>, T>) //
-            auto operator()(Rng && rng, I p, N n, T && t) const
-                -> insert_result_t<Rng, I, N, T>
+            insert_result_t<Rng, I, N, T> operator()(Rng && rng, I p, N n, T && t) const
             {
                 return insert(
                     static_cast<Rng &&>(rng), std::move(p), n, static_cast<T &&>(t));
@@ -281,8 +276,7 @@ namespace ranges
             template(typename Rng, typename P, typename I, typename S)( //
                 requires range<Rng> AND input_iterator<P> AND sentinel_for<S, I> AND //
                 (!range<S>)) //
-            auto operator()(Rng && rng, P p, I i, S j) const
-                -> insert_result_t<Rng, P, I, S>
+            insert_result_t<Rng, P, I, S> operator()(Rng && rng, P p, I i, S j) const
             {
                 return insert(
                     static_cast<Rng &&>(rng), std::move(p), std::move(i), std::move(j));

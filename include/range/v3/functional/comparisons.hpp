@@ -28,7 +28,7 @@ namespace ranges
     {
         template(typename T, typename U)( //
             requires equality_comparable_with<T, U>) //
-        constexpr auto operator()(T && t, U && u) const -> bool
+        constexpr bool operator()(T && t, U && u) const
         {
             return (T &&) t == (U &&) u;
         }
@@ -39,7 +39,7 @@ namespace ranges
     {
         template(typename T, typename U)( //
             requires equality_comparable_with<T, U>) //
-        constexpr auto operator()(T && t, U && u) const -> bool
+        constexpr bool operator()(T && t, U && u) const
         {
             return !equal_to{}((T &&) t, (U &&) u);
         }
@@ -50,7 +50,7 @@ namespace ranges
     {
         template(typename T, typename U)( //
             requires totally_ordered_with<T, U>) //
-        constexpr auto operator()(T && t, U && u) const -> bool
+        constexpr bool operator()(T && t, U && u) const
         {
             return (T &&) t < (U &&) u;
         }
@@ -61,7 +61,7 @@ namespace ranges
     {
         template(typename T, typename U)( //
             requires totally_ordered_with<T, U>) //
-        constexpr auto operator()(T && t, U && u) const -> bool
+        constexpr bool operator()(T && t, U && u) const
         {
             return !less{}((U &&) u, (T &&) t);
         }
@@ -72,7 +72,7 @@ namespace ranges
     {
         template(typename T, typename U)( //
             requires totally_ordered_with<T, U>) //
-        constexpr auto operator()(T && t, U && u) const -> bool
+        constexpr bool operator()(T && t, U && u) const
         {
             return !less{}((T &&) t, (U &&) u);
         }
@@ -93,7 +93,8 @@ namespace ranges
     using ordered_less RANGES_DEPRECATED(
         "Repace uses of ranges::ordered_less with ranges::less") = less;
 
-#if __cplusplus > 201703L && defined(__cpp_impl_three_way_comparison) && __has_include(<compare>)
+#if __cplusplus > 201703L && defined(__cpp_impl_three_way_comparison) && \
+    __has_include(<compare>)
     struct compare_three_way
     {
         template(typename T, typename U)( //

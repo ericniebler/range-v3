@@ -36,7 +36,7 @@ namespace ranges
     RANGES_FUNC_BEGIN(replace)
 
         /// \brief function template \c replace
-        template(typename I, typename S, typename T1, typename T2, typename P = identity)( //
+        template(typename I, typename S, typename T1, typename T2, typename P = identity)(
             requires input_iterator<I> AND sentinel_for<S, I> AND
                 indirectly_writable<I, T2 const &> AND
                 indirect_relation<equal_to, projected<I, P>, T1 const *>) //
@@ -54,9 +54,8 @@ namespace ranges
             requires input_range<Rng> AND
                 indirectly_writable<iterator_t<Rng>, T2 const &> AND
                 indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>) //
-        auto RANGES_FUNC(replace)(
+        borrowed_iterator_t<Rng> RANGES_FUNC(replace)(
             Rng && rng, T1 const & old_value, T2 const & new_value, P proj = {}) //
-            -> borrowed_iterator_t<Rng>
         {
             return (*this)(begin(rng), end(rng), old_value, new_value, std::move(proj));
         }

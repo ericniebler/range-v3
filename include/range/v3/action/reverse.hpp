@@ -36,7 +36,7 @@ namespace ranges
         {
             template(typename Rng)( //
                 requires bidirectional_range<Rng> AND permutable<iterator_t<Rng>>) //
-            auto operator()(Rng && rng) const -> Rng
+            Rng operator()(Rng && rng) const
             {
                 ranges::reverse(rng);
                 return static_cast<Rng &&>(rng);

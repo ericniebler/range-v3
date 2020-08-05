@@ -62,8 +62,7 @@ namespace ranges
                                     convertible_to<invoke_result_t<Fun &, iterator_t<Rng>,
                                                                    sentinel_t<Rng>>,
                                                    std::pair<bool, iterator_t<Rng>>>) //
-            auto operator()(Rng && rng, Fun fun) const                        //
-                -> std::vector<split_value_t<Rng>>
+            std::vector<split_value_t<Rng>> operator()(Rng && rng, Fun fun) const
             {
                 return views::split_when(rng, std::move(fun)) |
                        to<std::vector<split_value_t<Rng>>>();
@@ -73,8 +72,7 @@ namespace ranges
                 requires forward_range<Rng> AND                        //
                         predicate<Fun const &, range_reference_t<Rng>> AND //
                             copy_constructible<Fun>) //
-            auto operator()(Rng && rng, Fun fun) const
-                -> std::vector<split_value_t<Rng>>
+            std::vector<split_value_t<Rng>> operator()(Rng && rng, Fun fun) const
             {
                 return views::split_when(rng, std::move(fun)) |
                        to<std::vector<split_value_t<Rng>>>();

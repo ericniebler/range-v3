@@ -103,11 +103,11 @@ namespace ranges
             template(typename G)( //
                 requires invocable<G &> AND copy_constructible<G> AND
                     std::is_object<detail::decay_t<invoke_result_t<G &>>>::value AND
-                        constructible_from<detail::decay_t<invoke_result_t<G &>>,
-                                           invoke_result_t<G &>> &&
-                            assignable_from<detail::decay_t<invoke_result_t<G &>> &,
-                                            invoke_result_t<G &>>) //
-            auto operator()(G g, std::size_t n) const -> generate_n_view<G>
+                    constructible_from<detail::decay_t<invoke_result_t<G &>>,
+                                       invoke_result_t<G &>> AND
+                    assignable_from<detail::decay_t<invoke_result_t<G &>> &,
+                                    invoke_result_t<G &>>) //
+            generate_n_view<G> operator()(G g, std::size_t n) const
             {
                 return generate_n_view<G>{std::move(g), n};
             }

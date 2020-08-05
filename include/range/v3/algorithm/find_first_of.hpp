@@ -49,17 +49,16 @@ namespace ranges
                  typename R = equal_to,
                  typename P0 = identity,
                  typename P1 = identity)( //
-            requires input_iterator<I0> && sentinel_for<S0, I0> &&
-                forward_iterator<I1> && sentinel_for<S1, I1> &&
+            requires input_iterator<I0> AND sentinel_for<S0, I0> AND
+                forward_iterator<I1> AND sentinel_for<S1, I1> AND
                 indirect_relation<R, projected<I0, P0>, projected<I1, P1>>) //
-        constexpr auto RANGES_FUNC(find_first_of)(I0 begin0,
-                                                  S0 end0,
-                                                  I1 begin1,
-                                                  S1 end1,
-                                                  R pred = R{},
-                                                  P0 proj0 = P0{},
-                                                  P1 proj1 = P1{}) //
-            -> I0
+        constexpr I0 RANGES_FUNC(find_first_of)(I0 begin0,
+                                                S0 end0,
+                                                I1 begin1,
+                                                S1 end1,
+                                                R pred = R{},
+                                                P0 proj0 = P0{},
+                                                P1 proj1 = P1{}) //
         {
             for(; begin0 != end0; ++begin0)
                 for(auto tmp = begin1; tmp != end1; ++tmp)
@@ -74,13 +73,12 @@ namespace ranges
                      typename R = equal_to,
                      typename P0 = identity,
                      typename P1 = identity)( //
-            requires input_range<Rng0> && forward_range<Rng1> &&
+            requires input_range<Rng0> AND forward_range<Rng1> AND
                 indirect_relation<R,
                                   projected<iterator_t<Rng0>, P0>,
                                   projected<iterator_t<Rng1>, P1>>) //
-        constexpr auto RANGES_FUNC(find_first_of)(
+        constexpr borrowed_iterator_t<Rng0> RANGES_FUNC(find_first_of)(
             Rng0 && rng0, Rng1 && rng1, R pred = R{}, P0 proj0 = P0{}, P1 proj1 = P1{}) //
-            -> borrowed_iterator_t<Rng0>
         {
             return (*this)(begin(rng0),
                            end(rng0),

@@ -46,12 +46,12 @@ namespace ranges
                  typename C,
                  typename T,
                  typename P = identity)( //
-            requires input_iterator<I> && sentinel_for<S, I> &&
-                output_iterator<O, T const &> &&
-                indirect_unary_predicate<C, projected<I, P>> && indirectly_copyable<I, O>) //
-        auto RANGES_FUNC(replace_copy_if)(
+            requires input_iterator<I> AND sentinel_for<S, I> AND
+                output_iterator<O, T const &> AND
+                indirect_unary_predicate<C, projected<I, P>> AND
+                indirectly_copyable<I, O>) //
+        replace_copy_if_result<I, O> RANGES_FUNC(replace_copy_if)(
             I first, S last, O out, C pred, T const & new_value, P proj = {}) //
-            -> replace_copy_if_result<I, O>
         {
             for(; first != last; ++first, ++out)
             {
@@ -65,13 +65,12 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename O, typename C, typename T, typename P = identity)( //
+        template(typename Rng, typename O, typename C, typename T, typename P = identity)(
             requires input_range<Rng> AND output_iterator<O, T const &> AND
                 indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> AND
                 indirectly_copyable<iterator_t<Rng>, O>) //
-        auto RANGES_FUNC(replace_copy_if)(
+        replace_copy_if_result<borrowed_iterator_t<Rng>, O> RANGES_FUNC(replace_copy_if)(
             Rng && rng, O out, C pred, T const & new_value, P proj = {}) //
-            -> replace_copy_if_result<borrowed_iterator_t<Rng>, O>
         {
             return (*this)(begin(rng),
                            end(rng),

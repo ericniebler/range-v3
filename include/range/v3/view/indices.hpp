@@ -36,13 +36,13 @@ namespace ranges
 
             template(typename Val)( //
                 requires integral<Val>) //
-            auto operator()(Val to) const -> iota_view<Val, Val>
+            iota_view<Val, Val> operator()(Val to) const
             {
                 return {Val(), to};
             }
             template(typename Val)( //
                 requires integral<Val>) //
-            auto operator()(Val from, Val to) const -> iota_view<Val, Val>
+            iota_view<Val, Val> operator()(Val from, Val to) const
             {
                 return {from, to};
             }
@@ -53,13 +53,13 @@ namespace ranges
         {
             template(typename Val)( //
                 requires integral<Val>) //
-            auto operator()(Val to) const -> closed_iota_view<Val>
+            closed_iota_view<Val> operator()(Val to) const
             {
                 return {Val(), to};
             }
             template(typename Val)( //
                 requires integral<Val>) //
-            auto operator()(Val from, Val to) const -> closed_iota_view<Val>
+            closed_iota_view<Val> operator()(Val from, Val to) const
             {
                 return {from, to};
             }

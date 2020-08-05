@@ -43,9 +43,8 @@ namespace ranges
         /// \brief function template \c minmax
         template(typename T, typename C = less, typename P = identity)( //
             requires indirect_strict_weak_order<C, projected<T const *, P>>) //
-        constexpr auto RANGES_FUNC(minmax)(
+        constexpr minmax_result<T const &> RANGES_FUNC(minmax)(
             T const & a, T const & b, C pred = C{}, P proj = P{}) //
-            -> minmax_result<T const &>
         {
             using R = minmax_result<T const &>;
             return invoke(pred, invoke(proj, b), invoke(proj, a)) ? R{b, a} : R{a, b};
@@ -56,8 +55,8 @@ namespace ranges
             requires input_range<Rng> AND //
             indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>> AND //
             indirectly_copyable_storable<iterator_t<Rng>, range_value_t<Rng> *>) //
-        constexpr auto RANGES_FUNC(minmax)(Rng && rng, C pred = C{}, P proj = P{}) //
-            -> minmax_result<range_value_t<Rng>>
+        constexpr minmax_result<range_value_t<Rng>> //
+        RANGES_FUNC(minmax)(Rng && rng, C pred = C{}, P proj = P{}) //
         {
             using R = minmax_result<range_value_t<Rng>>;
             auto first = ranges::begin(rng);
@@ -110,9 +109,8 @@ namespace ranges
         template(typename T, typename C = less, typename P = identity)( //
             requires copyable<T> AND
                 indirect_strict_weak_order<C, projected<T const *, P>>) //
-        constexpr auto RANGES_FUNC(minmax)(
+        constexpr minmax_result<T> RANGES_FUNC(minmax)(
             std::initializer_list<T> const && rng, C pred = C{}, P proj = P{}) //
-            -> minmax_result<T>
         {
             return (*this)(rng, std::move(pred), std::move(proj));
         }

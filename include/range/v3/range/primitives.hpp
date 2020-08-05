@@ -65,9 +65,9 @@ namespace ranges
             // Prefer member if it returns integral.
             template(typename R)( //
                 requires integral<member_size_t<R>> AND //
-                (!disable_sized_range<uncvref_t<R>>)) //
-            static constexpr auto impl_(R && r, int) noexcept(noexcept(((R &&) r).size()))
-                -> member_size_t<R>
+                    (!disable_sized_range<uncvref_t<R>>)) //
+            static constexpr member_size_t<R> impl_(R && r, int) //
+                noexcept(noexcept(((R &&) r).size()))
             {
                 return ((R &&) r).size();
             }
@@ -75,9 +75,9 @@ namespace ranges
             // Use ADL if it returns integral.
             template(typename R)( //
                 requires integral<non_member_size_t<R>> AND //
-                (!disable_sized_range<uncvref_t<R>>)) //
-            static constexpr auto impl_(R && r, long) noexcept(noexcept(size((R &&) r)))
-                -> non_member_size_t<R>
+                    (!disable_sized_range<uncvref_t<R>>)) //
+            static constexpr non_member_size_t<R> impl_(R && r, long) //
+                noexcept(noexcept(size((R &&) r)))
             {
                 return size((R &&) r);
             }
@@ -163,15 +163,15 @@ namespace ranges
 
             template(typename R)( //
                 requires std::is_pointer<member_data_t<R &>>::value) //
-            static constexpr auto impl_(R & r, detail::priority_tag<2>) noexcept(
-                noexcept(r.data())) -> member_data_t<R &>
+            static constexpr member_data_t<R &> impl_(R & r, detail::priority_tag<2>)
+                noexcept(noexcept(r.data())) 
             {
                 return r.data();
             }
             template(typename R)( //
                 requires std::is_pointer<_begin_::_t<R>>::value) //
-            static constexpr auto impl_(R && r, detail::priority_tag<1>) noexcept(
-                noexcept(ranges::begin((R &&) r))) -> _begin_::_t<R>
+            static constexpr _begin_::_t<R> impl_(R && r, detail::priority_tag<1>)
+                noexcept(noexcept(ranges::begin((R &&) r)))
             {
                 return ranges::begin((R &&) r);
             }

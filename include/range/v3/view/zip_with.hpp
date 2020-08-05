@@ -79,7 +79,7 @@ namespace ranges
         {
             template(typename I, typename Diff)( //
                 requires input_or_output_iterator<I> AND integer_like_<Diff>) //
-            auto operator()(I & i, Diff n) const -> void
+            void operator()(I & i, Diff n) const
             {
                 advance(i, static_cast<iter_difference_t<I>>(n));
             }
@@ -120,17 +120,18 @@ namespace ranges
 
         template<typename State, typename Value>
         using zip_cardinality = std::integral_constant<
-            cardinality, State::value >= 0 && Value::value >= 0
-                            ? min_(State::value, Value::value)
-                            : State::value >=0 && Value::value == infinite
-                                ? State::value
-                                : State::value == infinite && Value::value >= 0
-                                    ? Value::value
-                                    : State::value == finite || Value::value == finite
-                                        ? finite
-                                        : State::value == unknown || Value::value == unknown
-                                                ? unknown
-                                                : infinite>;
+            cardinality,
+            State::value >= 0 && Value::value >= 0
+                ? min_(State::value, Value::value)
+                : State::value >=0 && Value::value == infinite
+                    ? State::value
+                    : State::value == infinite && Value::value >= 0
+                        ? Value::value
+                        : State::value == finite || Value::value == finite
+                            ? finite
+                            : State::value == unknown || Value::value == unknown
+                                    ? unknown
+                                    : infinite>;
     } // namespace detail
     /// \endcond
 
@@ -321,14 +322,14 @@ namespace ranges
         template(bool Const = true)( //
             requires Const AND and_v<range<Rngs const>...> AND
                 views::zippable_with<Fun, meta::if_c<Const, Rngs const>...>) //
-        auto begin_cursor() const -> cursor<Const>
+        cursor<Const> begin_cursor() const
         {
             return {fun_, tuple_transform(rngs_, ranges::begin)};
         }
         template(bool Const = true)( //
             requires Const AND and_v<range<Rngs const>...> AND
                 views::zippable_with<Fun, meta::if_c<Const, Rngs const>...>) //
-        auto end_cursor() const -> end_cursor_t<Const>
+        end_cursor_t<Const> end_cursor() const
         {
             return {fun_, tuple_transform(rngs_, ranges::end)};
         }
@@ -344,7 +345,8 @@ namespace ranges
           , rngs_{std::move(rngs)...}
         {}
         CPP_member
-        constexpr auto CPP_fun(size)()(const requires and_v<sized_range<Rngs const>...>)
+        constexpr auto CPP_fun(size)()(const //
+            requires and_v<sized_range<Rngs const>...>)
         {
             using size_type = common_type_t<range_size_t<Rngs const>...>;
             return range_cardinality<iter_zip_with_view>::value >= 0
@@ -386,10 +388,10 @@ namespace ranges
         struct iter_zip_with_fn
         {
             template(typename... Rngs, typename Fun)( //
-                requires and_v<viewable_range<Rngs>...> AND zippable_with<Fun, Rngs...> AND
-                (sizeof...(Rngs) != 0)) //
-            auto operator()(Fun fun, Rngs &&... rngs) const ->
-                iter_zip_with_view<Fun, all_t<Rngs>...>
+                requires and_v<viewable_range<Rngs>...> AND //
+                    zippable_with<Fun, Rngs...> AND (sizeof...(Rngs) != 0)) //
+            iter_zip_with_view<Fun, all_t<Rngs>...> //
+            operator()(Fun fun, Rngs &&... rngs) const
             {
                 return iter_zip_with_view<Fun, all_t<Rngs>...>{
                     std::move(fun), all(static_cast<Rngs &&>(rngs))...};
@@ -397,8 +399,7 @@ namespace ranges
 
             template(typename Fun)( //
                 requires zippable_with<Fun>) //
-            constexpr auto operator()(Fun) const noexcept
-                -> empty_view<std::tuple<>>
+            constexpr empty_view<std::tuple<>> operator()(Fun) const noexcept
             {
                 return {};
             }
@@ -412,11 +413,10 @@ namespace ranges
         {
             template(typename... Rngs, typename Fun)( //
                 requires and_v<viewable_range<Rngs>...> AND
-                        and_v<input_range<Rngs>...> AND copy_constructible<Fun> AND
-                            invocable<Fun &, range_reference_t<Rngs>...> &&
+                    and_v<input_range<Rngs>...> AND copy_constructible<Fun> AND
+                    invocable<Fun &, range_reference_t<Rngs>...> AND
                     (sizeof...(Rngs) != 0)) //
-            auto operator()(Fun fun, Rngs &&... rngs) const
-                -> zip_with_view<Fun, all_t<Rngs>...>
+            zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
             {
                 return zip_with_view<Fun, all_t<Rngs>...>{
                     std::move(fun), all(static_cast<Rngs &&>(rngs))...};
@@ -424,8 +424,7 @@ namespace ranges
 
             template(typename Fun)( //
                 requires copy_constructible<Fun> AND invocable<Fun &>) //
-            constexpr auto operator()(Fun) const noexcept
-                -> empty_view<std::tuple<>>
+            constexpr empty_view<std::tuple<>> operator()(Fun) const noexcept
             {
                 return {};
             }

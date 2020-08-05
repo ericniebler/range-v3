@@ -34,9 +34,9 @@ namespace ranges
     {
         struct drop_while_fn
         {
-            template<typename Fun>
-            constexpr auto CPP_fun(operator())(Fun fun)(const //
-                                                        requires (!range<Fun>))
+            template(typename Fun)( //
+                requires (!range<Fun>))
+            constexpr auto operator()(Fun fun) const
             {
                 return make_action_closure(bind_back(drop_while_fn{}, std::move(fun)));
             }
@@ -45,7 +45,7 @@ namespace ranges
                 requires forward_range<Rng> AND
                     indirect_unary_predicate<Fun, iterator_t<Rng>> AND
                         erasable_range<Rng &, iterator_t<Rng>, iterator_t<Rng>>) //
-            auto operator()(Rng && rng, Fun fun) const -> Rng
+            Rng operator()(Rng && rng, Fun fun) const
             {
                 ranges::actions::erase(
                     rng, begin(rng), find_if_not(begin(rng), end(rng), std::move(fun)));

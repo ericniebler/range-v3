@@ -47,9 +47,7 @@ namespace ranges
         template(typename I, typename S, typename Pred, typename Proj = identity)( //
             requires permutable<I> AND sentinel_for<S, I> AND
                 indirect_relation<Pred, projected<I, Proj>>) //
-        auto RANGES_FUNC(adjacent_remove_if)(
-            I first, S last, Pred pred = {}, Proj proj = {})
-            -> I
+        I RANGES_FUNC(adjacent_remove_if)(I first, S last, Pred pred = {}, Proj proj = {})
         {
             first = adjacent_find(std::move(first), last, std::ref(pred), std::ref(proj));
             if(first == last)
@@ -75,8 +73,8 @@ namespace ranges
             requires forward_range<Rng> AND //
             indirect_relation<Pred, projected<iterator_t<Rng>, Proj>> AND //
             permutable<iterator_t<Rng>>) //
-        auto RANGES_FUNC(adjacent_remove_if)(Rng && rng, Pred pred, Proj proj = {}) //
-            -> borrowed_iterator_t<Rng>
+        borrowed_iterator_t<Rng>
+        RANGES_FUNC(adjacent_remove_if)(Rng && rng, Pred pred, Proj proj = {}) //
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

@@ -40,11 +40,10 @@ namespace ranges
                  typename V,
                  typename C = less,
                  typename P = identity)( //
-            requires forward_iterator<I> && sentinel_for<S, I> &&
+            requires forward_iterator<I> AND sentinel_for<S, I> AND
                 indirect_strict_weak_order<C, V const *, projected<I, P>>) //
-        auto RANGES_FUNC(upper_bound)(
+        I RANGES_FUNC(upper_bound)(
             I first, S last, V const & val, C pred = C{}, P proj = P{}) //
-            -> I
         {
             return partition_point(std::move(first),
                                    std::move(last),
@@ -55,10 +54,9 @@ namespace ranges
         /// \overload
         template(typename Rng, typename V, typename C = less, typename P = identity)( //
             requires forward_range<Rng> AND
-                indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>) //
-        auto RANGES_FUNC(upper_bound)(
+                indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
+        borrowed_iterator_t<Rng> RANGES_FUNC(upper_bound)(
             Rng && rng, V const & val, C pred = C{}, P proj = P{}) //
-            -> borrowed_iterator_t<Rng>
         {
             return partition_point(
                 rng, detail::make_upper_bound_predicate(pred, val), std::move(proj));

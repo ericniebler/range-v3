@@ -352,8 +352,8 @@ namespace ranges
         -> subrange<I, S>;
 
     template(typename I, typename S)(                           //
-        requires input_or_output_iterator<I> && sentinel_for<S, I>) //
-    subrange(I, S, detail::iter_size_t<I>)
+        requires input_or_output_iterator<I> AND sentinel_for<S, I>) //
+    subrange(I, S, detail::iter_size_t<I>) //
         -> subrange<I, S, subrange_kind::sized>;
 
     template(typename R)(   //
@@ -375,14 +375,14 @@ namespace ranges
     struct make_subrange_fn
     {
         template<typename I, typename S>
-        constexpr auto operator()(I i, S s) const -> subrange<I, S>
+        constexpr subrange<I, S> operator()(I i, S s) const
         {
             return {i, s};
         }
         template(typename I, typename S)( //
             requires input_or_output_iterator<I> AND sentinel_for<S, I>) //
-        constexpr auto operator()(I i, S s, detail::iter_size_t<I> n) const
-            -> subrange<I, S, subrange_kind::sized>
+        constexpr subrange<I, S, subrange_kind::sized> //
+        operator()(I i, S s, detail::iter_size_t<I> n) const
         {
             return {i, s, n};
         }
@@ -398,8 +398,8 @@ namespace ranges
         }
         template(typename R)( //
             requires borrowed_range<R>) //
-        constexpr auto operator()(R && r, detail::iter_size_t<iterator_t<R>> n) const
-            -> subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>
+        constexpr subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized> //
+        operator()(R && r, detail::iter_size_t<iterator_t<R>> n) const
         {
             return {(R &&) r, n};
         }
@@ -416,14 +416,14 @@ namespace ranges
     {
         using ranges::subrange_kind;
 
-        template(typename I,                                          //
-                     typename S = I,                                      //
-                     subrange_kind K =                                    //
-                     static_cast<subrange_kind>(                          //
-                         detail::is_sized_sentinel_<S, I>()))(            //
-            requires input_or_output_iterator<I> && sentinel_for<S, I> && //
-            (K == subrange_kind::sized || !sized_sentinel_for<S, I>))     //
-            using subrange = ranges::subrange<I, S, K>;
+        template(typename I,                                                //
+                 typename S = I,                                            //
+                 subrange_kind K =                                          //
+                 static_cast<subrange_kind>(                                //
+                     detail::is_sized_sentinel_<S, I>()))(                  //
+            requires input_or_output_iterator<I> AND sentinel_for<S, I> AND //
+                (K == subrange_kind::sized || !sized_sentinel_for<S, I>))   //
+        using subrange = ranges::subrange<I, S, K>;
 
         using ranges::safe_subrange_t;
     } // namespace cpp20

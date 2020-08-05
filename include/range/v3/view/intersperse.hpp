@@ -50,13 +50,15 @@ namespace ranges
           , val_(detail::move(val))
         {}
         CPP_member
-        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        constexpr auto CPP_fun(size)()(const //
+            requires sized_range<Rng const>)
         {
             auto const n = ranges::size(this->base());
             return n ? n * 2 - 1 : 0;
         }
         CPP_member
-        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
+        constexpr auto CPP_fun(size)()( //
+            requires sized_range<Rng>)
         {
             auto const n = ranges::size(this->base());
             return n ? n * 2 - 1 : 0;
@@ -157,7 +159,7 @@ namespace ranges
                 return it == sent;
             }
         };
-        constexpr auto begin_adaptor() -> cursor_adaptor<false>
+        constexpr cursor_adaptor<false> begin_adaptor()
         {
             return cursor_adaptor<false>{val_};
         }
@@ -186,7 +188,7 @@ namespace ranges
             requires Const AND range<meta::const_if_c<Const, Rng>> AND
                 common_range<meta::const_if_c<Const, Rng>> AND
             (!single_pass_iterator_<iterator_t<meta::const_if_c<Const, Rng>>>)) //
-        constexpr auto end_adaptor() const -> cursor_adaptor<Const>
+        constexpr cursor_adaptor<Const> end_adaptor() const
         {
             return cursor_adaptor<true>{val_};
         }
@@ -194,8 +196,7 @@ namespace ranges
             requires Const AND range<meta::const_if_c<Const, Rng>> AND
                 (!common_range<meta::const_if_c<Const, Rng>> ||
                  single_pass_iterator_<iterator_t<meta::const_if_c<Const, Rng>>>)) //
-        constexpr auto end_adaptor() const noexcept
-            -> sentinel_adaptor<Const>
+        constexpr sentinel_adaptor<Const> end_adaptor() const noexcept
         {
             return {};
         }
@@ -204,7 +205,8 @@ namespace ranges
     };
 
     template<typename Rng>
-    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<intersperse_view<Rng>> = enable_borrowed_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<intersperse_view<Rng>> = //
+        enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
@@ -220,8 +222,8 @@ namespace ranges
                 requires viewable_range<Rng> AND input_range<Rng> AND //
                     convertible_to<range_reference_t<Rng>, range_value_t<Rng>> AND //
                         semiregular<range_value_t<Rng>>) //
-            constexpr auto operator()(Rng && rng, range_value_t<Rng> val) const
-                -> intersperse_view<all_t<Rng>>
+            constexpr intersperse_view<all_t<Rng>> //
+            operator()(Rng && rng, range_value_t<Rng> val) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(val)};
             }
@@ -231,9 +233,9 @@ namespace ranges
         {
             using intersperse_base_fn::operator();
 
-            template<typename T>
-            constexpr auto CPP_fun(operator())(T t)(const //
-                                                    requires copyable<T>)
+            template(typename T)( //
+                requires copyable<T>)
+            constexpr auto operator()(T t) const
             {
                 return make_view_closure(bind_back(intersperse_base_fn{}, std::move(t)));
             }

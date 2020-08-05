@@ -426,8 +426,8 @@ namespace ranges
         {
             template(typename Rng)( //
                 requires viewable_range<Rng> AND input_range<Rng>) //
-            constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
-                -> chunk_view<all_t<Rng>>
+            constexpr chunk_view<all_t<Rng>> //
+            operator()(Rng && rng, range_difference_t<Rng> n) const
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
@@ -437,9 +437,9 @@ namespace ranges
         {
             using chunk_base_fn::operator();
 
-            template<typename Int>
-            constexpr auto CPP_fun(operator())(Int n)(const //
-                                                      requires detail::integer_like_<Int>)
+            template(typename Int)( //
+                requires detail::integer_like_<Int>)
+            constexpr auto operator()(Int n) const
             {
                 return make_view_closure(bind_back(chunk_base_fn{}, n));
             }

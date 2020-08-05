@@ -180,8 +180,7 @@ namespace ranges
             template(typename Rng)( //
                 requires viewable_range<Rng> AND input_range<Rng> AND //
                     constructible_from<range_value_t<Rng>, range_reference_t<Rng>>) //
-            constexpr auto operator()(Rng && rng) const //
-                -> cache1_view<all_t<Rng>>
+            constexpr cache1_view<all_t<Rng>> operator()(Rng && rng) const //
             {
                 return cache1_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

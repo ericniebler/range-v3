@@ -43,8 +43,8 @@ namespace ranges
         {}
         // value_type (needs no impl)
         template<typename... Its>
-        [[noreturn]] auto operator()(copy_tag, Its...) const
-            -> invoke_result_t<Fn &, iter_reference_t<Its>...>
+        [[noreturn]] invoke_result_t<Fn &, iter_reference_t<Its>...> //
+        operator()(copy_tag, Its...) const
         {
             RANGES_EXPECT(false);
         }

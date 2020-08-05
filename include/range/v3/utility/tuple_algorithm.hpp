@@ -42,7 +42,8 @@ namespace ranges
         // clang-format off
     private:
         template<typename Fun, typename Tup, std::size_t... Is>
-        static constexpr auto CPP_auto_fun(impl)(Fun &&fun, Tup &&tup, meta::index_sequence<Is...>)
+        static constexpr auto //
+        CPP_auto_fun(impl)(Fun &&fun, Tup &&tup, meta::index_sequence<Is...>)
         (
             return invoke(static_cast<Fun &&>(fun),
                           detail::adl_get<Is>(static_cast<Tup &&>(tup))...)
@@ -67,7 +68,8 @@ namespace ranges
         // clang-format off
     private:
         template<typename Tup, typename Fun, std::size_t... Is>
-        static constexpr auto CPP_auto_fun(impl1)(Tup &&tup, Fun &fun, meta::index_sequence<Is...>)
+        static constexpr auto //
+        CPP_auto_fun(impl1)(Tup &&tup, Fun &fun, meta::index_sequence<Is...>)
         (
             return std::tuple<
                 decltype(fun(detail::adl_get<Is>(static_cast<Tup &&>(tup))))...>{

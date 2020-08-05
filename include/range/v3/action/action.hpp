@@ -206,8 +206,8 @@ namespace ranges
             // Calling directly requires things are passed by reference.
             template(typename Rng, typename... Rest)( //
                 requires range<Rng> AND invocable<Action const &, Rng &, Rest...>) //
-            auto operator()(Rng & rng, Rest &&... rest) const
-                -> invoke_result_t<Action const &, Rng &, Rest...>
+            invoke_result_t<Action const &, Rng &, Rest...> //
+            operator()(Rng & rng, Rest &&... rest) const
             {
                 return invoke(act_, rng, static_cast<Rest &&>(rest)...);
             }

@@ -40,8 +40,11 @@ namespace ranges
             template(typename I, typename V, typename R = less, typename P = identity)( //
                 requires forward_iterator<I> AND
                     indirect_strict_weak_order<R, V const *, projected<I, P>>) //
-            auto operator()(I first, iter_difference_t<I> dist, V const & val,
-                            R pred = R{}, P proj = P{}) const -> subrange<I>
+            subrange<I> operator()(I first,
+                                   iter_difference_t<I> dist,
+                                   V const & val,
+                                   R pred = R{},
+                                   P proj = P{}) const
             {
                 if(0 < dist)
                 {

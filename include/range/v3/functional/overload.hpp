@@ -109,48 +109,42 @@ namespace ranges
 
         template(typename... Args)(
             requires invocable<First, Args...>)
-        constexpr auto operator()(Args &&... args) &&
-            -> _result_t<detail::_id, Args...>
+        constexpr _result_t<detail::_id, Args...> operator()(Args &&... args) &&
         {
             return invoke((First &&) first_, (Args &&) args...);
         }
         template(typename... Args)(
             requires (!invocable<First, Args...>) AND
                 invocable<overloaded<Rest...>, Args...>)
-        constexpr auto operator()(Args &&... args) &&
-            -> _result_t<detail::_id, Args...>
+        constexpr _result_t<detail::_id, Args...> operator()(Args &&... args) &&
         {
             return invoke((overloaded<Rest...> &&) second_, (Args &&) args...);
         }
 
         template(typename... Args)(
             requires invocable<First &, Args...>)
-        constexpr auto operator()(Args &&... args) &
-            -> _result_t<detail::_ref, Args...>
+        constexpr _result_t<detail::_ref, Args...> operator()(Args &&... args) &
         {
             return invoke(first_, (Args &&) args...);
         }
         template(typename... Args)(
             requires (!invocable<First &, Args...>) AND
                 invocable<overloaded<Rest...> &, Args...>)
-        constexpr auto operator()(Args &&... args) &
-            -> _result_t<detail::_ref, Args...>
+        constexpr _result_t<detail::_ref, Args...> operator()(Args &&... args) &
         {
             return invoke(second_, (Args &&) args...);
         }
 
         template(typename... Args)(
             requires invocable<First const &, Args...>)
-        constexpr auto operator()(Args &&... args) const &
-            -> _result_t<detail::_cref, Args...>
+        constexpr _result_t<detail::_cref, Args...> operator()(Args &&... args) const &
         {
             return invoke(first_, (Args &&) args...);
         }
         template(typename... Args)(
             requires (!invocable<First const &, Args...>) AND
                 invocable<overloaded<Rest...> const &, Args...>)
-        constexpr auto operator()(Args &&... args) const &
-            -> _result_t<detail::_cref, Args...>
+        constexpr _result_t<detail::_cref, Args...> operator()(Args &&... args) const &
         {
             return invoke(second_, (Args &&) args...);
         }

@@ -265,7 +265,7 @@ namespace ranges
             template(typename Rng, typename MetaFn, typename Fn)(             //
                 requires input_range<Rng> AND                                 //
                     (!convertible_to_cont<Rng, container_t<MetaFn, Rng>>) AND //
-                    convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>>)               //
+                    convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>>)  //
             friend constexpr auto
             operator|(Rng && rng, to_container::closure<MetaFn, Fn> fn)
             {
@@ -321,7 +321,7 @@ namespace ranges
             template(typename Rng)( //
                 requires input_range<Rng> AND                                        //
                     convertible_to_cont<Rng, container_t<MetaFn, Rng>>) //
-            auto operator()(Rng && rng) const -> container_t<MetaFn, Rng>
+            container_t<MetaFn, Rng> operator()(Rng && rng) const
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Attempt to convert an infinite range to a container.");
@@ -335,7 +335,7 @@ namespace ranges
                 requires input_range<Rng> AND                                 //
                     (!convertible_to_cont<Rng, container_t<MetaFn, Rng>>) AND //
                     convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>>)      //
-            auto operator()(Rng && rng) const -> container_t<MetaFn, Rng>
+            container_t<MetaFn, Rng> operator()(Rng && rng) const
             {
                 static_assert(!is_infinite<Rng>::value,
                               "Attempt to convert an infinite range to a container.");
@@ -359,12 +359,13 @@ namespace ranges
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
             // Attempt to use a deduction guide first...
             template<typename Rng>
-            static auto from_rng_(int) -> decltype(ContT(range_cpp17_iterator_t<Rng>{},
-                                                         range_cpp17_iterator_t<Rng>{}));
+            static auto from_rng_(int) //
+                -> decltype(ContT(range_cpp17_iterator_t<Rng>{},
+                                  range_cpp17_iterator_t<Rng>{}));
             // No deduction guide. Fallback to instantiating with the
             // iterator's value type.
             template<typename Rng>
-            static auto from_rng_(long)
+            static auto from_rng_(long) //
                 -> meta::invoke<meta::quote<ContT>, range_value_t<Rng>>;
 
             template<typename Rng>

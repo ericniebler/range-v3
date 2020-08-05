@@ -56,8 +56,8 @@ namespace ranges
             template(typename Rng, typename Pred)( //
                 requires viewable_range<Rng> AND input_range<Rng> AND //
                     indirect_unary_predicate<Pred, iterator_t<Rng>>) //
-            constexpr auto operator()(Rng && rng, Pred pred) const
-                -> filter_view<all_t<Rng>, Pred>
+            constexpr filter_view<all_t<Rng>, Pred> operator()(Rng && rng, Pred pred) //
+                const
             {
                 return filter_view<all_t<Rng>, Pred>{all(static_cast<Rng &&>(rng)),
                                                      std::move(pred)};
@@ -85,8 +85,8 @@ namespace ranges
             template(typename Rng, typename Pred, typename Proj)( //
                 requires viewable_range<Rng> AND input_range<Rng> AND //
                     indirect_unary_predicate<Pred, projected<iterator_t<Rng>, Proj>>) //
-            constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
-                -> filter_view<all_t<Rng>, composed<Pred, Proj>>
+            constexpr filter_view<all_t<Rng>, composed<Pred, Proj>> //
+            operator()(Rng && rng, Pred pred, Proj proj) const
             {
                 return filter_view<all_t<Rng>, composed<Pred, Proj>>{
                     all(static_cast<Rng &&>(rng)),
@@ -104,9 +104,9 @@ namespace ranges
                 return make_view_closure(bind_back(filter_base_fn{}, std::move(pred)));
             }
 
-            template<typename Pred, typename Proj>
-            constexpr auto CPP_fun(operator())(Pred pred, Proj proj)(const //
+            template(typename Pred, typename Proj)( //
                 requires (!range<Pred>))
+            constexpr auto operator()(Pred pred, Proj proj) const
             {
                 return make_view_closure(
                     bind_back(filter_base_fn{}, std::move(pred), std::move(proj)));

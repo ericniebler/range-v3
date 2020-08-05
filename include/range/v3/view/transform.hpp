@@ -151,7 +151,7 @@ namespace ranges
             requires Const AND range<meta::const_if_c<Const, Rng>> AND
                 detail::iter_transform_1_readable<Fun const,
                                                   meta::const_if_c<Const, Rng>>) //
-        auto begin_adaptor() const -> adaptor<Const>
+        adaptor<Const> begin_adaptor() const
         {
             return {fun_};
         }
@@ -163,8 +163,7 @@ namespace ranges
             requires Const AND range<meta::const_if_c<Const, Rng>> AND
                     detail::iter_transform_1_readable<Fun const,
                                                       meta::const_if_c<Const, Rng>>) //
-        auto end_adaptor() const
-            -> meta::if_<use_sentinel_t<Const>, adaptor_base, adaptor<Const>>
+        meta::if_<use_sentinel_t<Const>, adaptor_base, adaptor<Const>> end_adaptor() const
         {
             return {fun_};
         }
@@ -176,12 +175,14 @@ namespace ranges
           , fun_(std::move(fun))
         {}
         CPP_member
-        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
+        constexpr auto CPP_fun(size)()( //
+            requires sized_range<Rng>)
         {
             return ranges::size(this->base());
         }
         CPP_member
-        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        constexpr auto CPP_fun(size)()(const //
+            requires sized_range<Rng const>)
         {
             return ranges::size(this->base());
         }
@@ -361,19 +362,23 @@ namespace ranges
         }
         template(bool Const = true)( //
             requires Const AND range<meta::const_if_c<Const, Rng1>> AND
-                range<meta::const_if_c<Const, Rng2>> AND detail::iter_transform_2_readable<
-                    Fun const, meta::const_if_c<Const, Rng1>,
+                range<meta::const_if_c<Const, Rng2>> AND //
+                detail::iter_transform_2_readable< //
+                    Fun const, //
+                    meta::const_if_c<Const, Rng1>, //
                     meta::const_if_c<Const, Rng2>>) //
-        auto begin_cursor() const -> cursor<true>
+        cursor<true> begin_cursor() const
         {
             return {this, ranges::begin};
         }
         template(bool Const = true)( //
             requires Const AND range<meta::const_if_c<Const, Rng1>> AND
-                range<meta::const_if_c<Const, Rng2>> AND detail::iter_transform_2_readable<
-                    Fun const, meta::const_if_c<Const, Rng1>,
+                range<meta::const_if_c<Const, Rng2>> AND //
+                detail::iter_transform_2_readable< //
+                    Fun const, //
+                    meta::const_if_c<Const, Rng1>, //
                     meta::const_if_c<Const, Rng2>>) //
-        auto end_cursor() const -> end_cursor_t<Const>
+        end_cursor_t<Const> end_cursor() const
         {
             return {this, ranges::end};
         }
@@ -439,20 +444,21 @@ namespace ranges
             template(typename Rng, typename Fun)( //
                 requires viewable_range<Rng> AND input_range<Rng> AND //
                     copy_constructible<Fun> AND //
-                        detail::iter_transform_1_readable<Fun, Rng>) //
-            constexpr auto operator()(Rng && rng, Fun fun) const
-                -> iter_transform_view<all_t<Rng>, Fun>
+                    detail::iter_transform_1_readable<Fun, Rng>) //
+            constexpr iter_transform_view<all_t<Rng>, Fun> //
+            operator()(Rng && rng, Fun fun) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
 
             template(typename Rng1, typename Rng2, typename Fun)( //
-                requires viewable_range<Rng1> AND input_range<Rng1> AND viewable_range<
-                        Rng2> AND input_range<Rng2> AND copy_constructible<Fun> AND
-                        common_with<range_difference_t<Rng1>, range_difference_t<Rng1>> &&
-                            detail::iter_transform_2_readable<Fun, Rng1, Rng2>) //
-            constexpr auto operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
-                -> iter_transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>
+                requires viewable_range<Rng1> AND input_range<Rng1> AND
+                    viewable_range<Rng2> AND input_range<Rng2> AND
+                    copy_constructible<Fun> AND
+                    common_with<range_difference_t<Rng1>, range_difference_t<Rng1>> AND
+                    detail::iter_transform_2_readable<Fun, Rng1, Rng2>) //
+            constexpr iter_transform2_view<all_t<Rng1>, all_t<Rng2>, Fun> //
+            operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),
@@ -508,16 +514,16 @@ namespace ranges
         {
             template(typename Rng, typename Fun)( //
                 requires transformable_range<Rng, Fun>) //
-            constexpr auto operator()(Rng && rng, Fun fun) const
-                -> transform_view<all_t<Rng>, Fun>
+            constexpr transform_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun)
+                const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
 
             template(typename Rng1, typename Rng2, typename Fun)( //
                 requires transformable_ranges<Rng1, Rng2, Fun>) //
-            constexpr auto operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
-                -> transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>
+            constexpr transform2_view<all_t<Rng1>, all_t<Rng2>, Fun> //
+            operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),

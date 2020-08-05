@@ -54,7 +54,8 @@ namespace ranges
     namespace detail
     {
         template<typename T>
-        RANGES_INLINE_VAR constexpr bool _borrowed_range = enable_borrowed_range<uncvref_t<T>>;
+        RANGES_INLINE_VAR constexpr bool _borrowed_range =
+            enable_borrowed_range<uncvref_t<T>>;
 
         template<typename T>
         RANGES_INLINE_VAR constexpr bool _borrowed_range<T &> = true;
@@ -128,12 +129,11 @@ namespace ranges
                 return array;
             }
 
-            template<typename R>
-            constexpr auto CPP_fun(operator())(R && r)(
-                const                            //
-                noexcept(noexcept(impl<R>::invoke(r))) //
-                requires ((detail::_borrowed_range<R>)&&(has_member_begin<R> ||
-                                                         has_non_member_begin<R>)))
+            template(typename R)( //
+                requires detail::_borrowed_range<R> AND //
+                    (has_member_begin<R> || has_non_member_begin<R>))
+            constexpr auto operator()(R && r) const //
+                noexcept(noexcept(impl<R>::invoke(r)))
             {
                 return impl<R>::invoke(r);
             }
@@ -258,11 +258,11 @@ namespace ranges
                 return array + N;
             }
 
-            template<typename R>
-            constexpr auto CPP_fun(operator())(R && r)(
-                const noexcept(noexcept(impl<R>::invoke(r))) //
-                requires ((detail::_borrowed_range<R>)&&(has_member_end<R> ||
-                                                         has_non_member_end<R>)))
+            template(typename R)( //
+                requires detail::_borrowed_range<R> AND //
+                    (has_member_end<R> || has_non_member_end<R>))
+            constexpr auto operator()(R && r) const //
+                noexcept(noexcept(impl<R>::invoke(r))) //
             {
                 return impl<R>::invoke(r);
             }
@@ -437,12 +437,13 @@ namespace ranges
                 impl_<has_member_rbegin<R> ? 0 : has_non_member_rbegin<R> ? 1 : 2>;
 
         public:
-            template<typename R>
-            constexpr auto CPP_fun(operator())(R && r)(
-                const noexcept(noexcept(impl<R>::invoke(r))) //
-                requires ((detail::_borrowed_range<R>)&&(has_member_rbegin<R> ||
-                                                         has_non_member_rbegin<R> ||
-                                                         can_reverse_end<R>)))
+            template(typename R)( //
+                requires detail::_borrowed_range<R> AND //
+                    (has_member_rbegin<R> ||
+                     has_non_member_rbegin<R> ||
+                     can_reverse_end<R>)) //
+            constexpr auto operator()(R && r) const //
+                noexcept(noexcept(impl<R>::invoke(r))) //
             {
                 return impl<R>::invoke(r);
             }
@@ -451,9 +452,9 @@ namespace ranges
             RANGES_DEPRECATED(
                 "Using a reference_wrapper as a range is deprecated. Use views::ref "
                 "instead.")
-            constexpr auto
-            operator()(std::reference_wrapper<T> ref) const
-                noexcept(noexcept(Fn{}(ref.get()))) -> decltype(Fn{}(ref.get()))
+            constexpr auto operator()(std::reference_wrapper<T> ref) const //
+                noexcept(noexcept(Fn{}(ref.get()))) //
+                -> decltype(Fn{}(ref.get()))
             {
                 return Fn{}(ref.get());
             }
@@ -464,7 +465,8 @@ namespace ranges
                 "instead.")
             constexpr auto
             operator()(ranges::reference_wrapper<T> ref) const
-                noexcept(noexcept(Fn{}(ref.get()))) -> decltype(Fn{}(ref.get()))
+                noexcept(noexcept(Fn{}(ref.get()))) //
+                -> decltype(Fn{}(ref.get()))
             {
                 return Fn{}(ref.get());
             }
@@ -572,12 +574,13 @@ namespace ranges
             using impl = impl_<has_member_rend<R> ? 0 : has_non_member_rend<R> ? 1 : 2>;
 
         public:
-            template<typename R>
-            constexpr auto CPP_fun(operator())(R && r)(
-                const noexcept(noexcept(impl<R>::invoke(r))) //
-                requires ((detail::_borrowed_range<R>)&&(has_member_rend<R> ||
-                                                         has_non_member_rend<R> ||
-                                                         can_reverse_begin<R>)))
+            template(typename R)( //
+                requires detail::_borrowed_range<R> AND //
+                    (has_member_rend<R> || //
+                     has_non_member_rend<R> || //
+                     can_reverse_begin<R>)) //
+            constexpr auto operator()(R && r) const
+                noexcept(noexcept(impl<R>::invoke(r))) //
             {
                 return impl<R>::invoke(r);
             }
@@ -586,9 +589,9 @@ namespace ranges
             RANGES_DEPRECATED(
                 "Using a reference_wrapper as a range is deprecated. Use views::ref "
                 "instead.")
-            constexpr auto
-            operator()(std::reference_wrapper<T> ref) const
-                noexcept(noexcept(Fn{}(ref.get()))) -> decltype(Fn{}(ref.get()))
+            constexpr auto operator()(std::reference_wrapper<T> ref) const
+                noexcept(noexcept(Fn{}(ref.get()))) //
+                -> decltype(Fn{}(ref.get()))
             {
                 return Fn{}(ref.get());
             }
@@ -597,9 +600,9 @@ namespace ranges
             RANGES_DEPRECATED(
                 "Using a reference_wrapper as a range is deprecated. Use views::ref "
                 "instead.")
-            constexpr auto
-            operator()(ranges::reference_wrapper<T> ref) const
-                noexcept(noexcept(Fn{}(ref.get()))) -> decltype(Fn{}(ref.get()))
+            constexpr auto operator()(ranges::reference_wrapper<T> ref) const
+                noexcept(noexcept(Fn{}(ref.get()))) //
+                -> decltype(Fn{}(ref.get()))
             {
                 return Fn{}(ref.get());
             }

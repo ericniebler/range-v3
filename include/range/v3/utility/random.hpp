@@ -120,7 +120,7 @@ namespace ranges
 
             template(typename I)( //
                 requires unsigned_integral<I>) //
-            constexpr auto fast_exp(I x, I power, I result = I{1}) -> I
+            constexpr I fast_exp(I x, I power, I result = I{1})
             {
                 return power == I{0}
                            ? result
@@ -221,7 +221,7 @@ namespace ranges
                 template(typename I, typename S)( //
                     requires input_iterator<I> AND sentinel_for<S, I> AND
                         convertible_to<iter_reference_t<I>, IntRep>) //
-                auto mix_entropy(I first, S last) -> void
+                void mix_entropy(I first, S last)
                 {
                     auto hash_const = INIT_A;
                     auto hash = [&](IntRep value) RANGES_INTENDED_MODULAR_ARITHMETIC {
@@ -306,8 +306,7 @@ namespace ranges
                 template(typename O)( //
                     requires weakly_incrementable<O> AND //
                         indirectly_copyable<decltype(mixer_.begin()), O>) //
-                RANGES_INTENDED_MODULAR_ARITHMETIC auto param(O dest) const
-                    -> void
+                RANGES_INTENDED_MODULAR_ARITHMETIC void param(O dest) const
                 {
                     constexpr IntRep INV_A = randutils::fast_exp(MULT_A, IntRep(-1));
                     constexpr IntRep MIX_INV_L =
@@ -356,7 +355,7 @@ namespace ranges
                 template(typename I, typename S)( //
                     requires input_iterator<I> AND sentinel_for<S, I> AND
                         convertible_to<iter_reference_t<I>, IntRep>) //
-                auto seed(I first, S last) -> void
+                void seed(I first, S last)
                 {
                     mix_entropy(first, last);
                     // For very small sizes, we do some additional mixing.  For normal

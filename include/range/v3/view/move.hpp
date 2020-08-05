@@ -87,19 +87,22 @@ namespace ranges
           : move_view::view_adaptor{std::move(rng)}
         {}
         CPP_member
-        auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        auto CPP_fun(size)()(const //
+            requires sized_range<Rng const>)
         {
             return ranges::size(this->base());
         }
         CPP_member
-        auto CPP_fun(size)()(requires sized_range<Rng>)
+        auto CPP_fun(size)()( //
+            requires sized_range<Rng>)
         {
             return ranges::size(this->base());
         }
     };
 
     template<typename Rng>
-    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<move_view<Rng>> = enable_borrowed_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<move_view<Rng>> =
+        enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
@@ -113,7 +116,7 @@ namespace ranges
         {
             template(typename Rng)( //
                 requires viewable_range<Rng> AND input_range<Rng>) //
-            auto operator()(Rng && rng) const -> move_view<all_t<Rng>>
+            move_view<all_t<Rng>> operator()(Rng && rng) const
             {
                 return move_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

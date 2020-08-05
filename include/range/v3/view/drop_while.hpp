@@ -89,7 +89,8 @@ namespace ranges
 #endif
 
     template<typename Rng, typename Pred>
-    RANGES_INLINE_VAR constexpr bool disable_sized_range<drop_while_view<Rng, Pred>> = true;
+    RANGES_INLINE_VAR constexpr bool disable_sized_range<drop_while_view<Rng, Pred>> =
+        true;
 
     namespace views
     {
@@ -122,10 +123,9 @@ namespace ranges
                 return make_view_closure(
                     bind_back(drop_while_base_fn{}, std::move(pred)));
             }
-            template<typename Pred, typename Proj>
-            constexpr auto CPP_fun(operator())(Pred && pred,
-                                               Proj proj)(const //
-                                                          requires (!range<Pred>)) // TODO: underconstrained
+            template(typename Pred, typename Proj)( //
+                requires (!range<Pred>)) // TODO: underconstrained
+            constexpr auto operator()(Pred && pred, Proj proj) const
             {
                 return make_view_closure(bind_back(
                     drop_while_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));

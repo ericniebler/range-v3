@@ -56,8 +56,8 @@ namespace ranges
         template(typename Rng, typename C = equal_to, typename P = identity)( //
             requires forward_range<Rng> AND //
             indirect_relation<C, projected<iterator_t<Rng>, P>>) //
-        auto RANGES_FUNC(adjacent_find)(Rng && rng, C pred = C{}, P proj = P{}) //
-            -> borrowed_iterator_t<Rng>
+        borrowed_iterator_t<Rng> //
+        RANGES_FUNC(adjacent_find)(Rng && rng, C pred = C{}, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

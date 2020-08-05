@@ -229,9 +229,9 @@ namespace ranges
             friend pipeable_access;
 
             // Piping requires range arguments or lvalue containers.
-            template<typename Rng, typename Vw>
-            static constexpr auto CPP_fun(pipe)(Rng && rng, Vw && v)( //
-                requires viewable_range<Rng> && invocable<ViewFn &, Rng>)
+            template(typename Rng, typename Vw)( //
+                requires viewable_range<Rng> AND invocable<ViewFn &, Rng>)
+            static constexpr auto pipe(Rng && rng, Vw && v)
             {
                 return v.vw_(static_cast<Rng &&>(rng));
             }
@@ -246,9 +246,9 @@ namespace ranges
 
             // Calling directly requires a viewable_range.
             template(typename Rng, typename... Rest)( //
-                requires viewable_range<Rng> AND invocable<ViewFn const &, Rng, Rest...>) //
-            constexpr auto operator()(Rng && rng, Rest &&... rest) const
-                -> invoke_result_t<ViewFn const &, Rng, Rest...>
+                requires viewable_range<Rng> AND invocable<ViewFn const &, Rng, Rest...>)
+            constexpr invoke_result_t<ViewFn const &, Rng, Rest...> //
+            operator()(Rng && rng, Rest &&... rest) const
             {
                 return vw_(static_cast<Rng &&>(rng), static_cast<Rest &&>(rest)...);
             }

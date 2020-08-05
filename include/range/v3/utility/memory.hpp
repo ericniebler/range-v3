@@ -90,7 +90,7 @@ namespace ranges
 
         template(typename T, typename... Args)( //
             requires (!std::is_array<T>::value)) //
-        auto make_unique(Args &&... args) -> std::unique_ptr<T>
+        std::unique_ptr<T> make_unique(Args &&... args)
         {
             return std::unique_ptr<T>{new T(static_cast<Args &&>(args)...)};
         }
@@ -208,7 +208,7 @@ namespace ranges
 
     template(typename I)( //
         requires input_or_output_iterator<I>) //
-    auto iter_ref(I & i) -> iterator_wrapper<I>
+    iterator_wrapper<I> iter_ref(I & i)
     {
         return i;
     }

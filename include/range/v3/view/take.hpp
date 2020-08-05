@@ -161,7 +161,8 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto CPP_fun(begin)()(requires(!simple_view<Rng>()))
+        constexpr auto CPP_fun(begin)()( //
+            requires(!simple_view<Rng>()))
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(sized_range<Rng>)
@@ -187,7 +188,8 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto CPP_fun(begin)()(const requires range<Rng const>)
+        constexpr auto CPP_fun(begin)()(const //
+            requires range<Rng const>)
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(sized_range<Rng const>)
@@ -206,7 +208,8 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto CPP_fun(end)()(requires(!simple_view<Rng>()))
+        constexpr auto CPP_fun(end)()( //
+            requires(!simple_view<Rng>()))
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(sized_range<Rng>)
@@ -226,7 +229,8 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto CPP_fun(end)()(const requires range<Rng const>)
+        constexpr auto CPP_fun(end)()(const //
+            requires range<Rng const>)
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(sized_range<Rng const>)
@@ -247,13 +251,15 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
+        constexpr auto CPP_fun(size)()( //
+            requires sized_range<Rng>)
         {
             auto n = ranges::size(base_);
             return ranges::min(n, static_cast<decltype(n)>(count_));
         }
         CPP_member
-        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        constexpr auto CPP_fun(size)()(const //
+            requires sized_range<Rng const>)
         {
             auto n = ranges::size(base_);
             return ranges::min(n, static_cast<decltype(n)>(count_));
@@ -261,7 +267,8 @@ namespace ranges
     };
 
     template<typename Rng>
-    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<take_view<Rng>> = enable_borrowed_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<take_view<Rng>> = //
+        enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
@@ -275,8 +282,7 @@ namespace ranges
         {
             template(typename Rng)( //
                 requires viewable_range<Rng>) //
-            auto operator()(Rng && rng, range_difference_t<Rng> n) const
-                -> take_view<all_t<Rng>>
+            take_view<all_t<Rng>> operator()(Rng && rng, range_difference_t<Rng> n) const
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
@@ -286,9 +292,9 @@ namespace ranges
         {
             using take_base_fn::operator();
 
-            template<typename Int>
-            constexpr auto CPP_fun(operator())(Int n)(const //
-                                                      requires detail::integer_like_<Int>)
+            template(typename Int)( //
+                requires detail::integer_like_<Int>)
+            constexpr auto operator()(Int n) const
             {
                 return make_view_closure(bind_back(take_base_fn{}, n));
             }
