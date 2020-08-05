@@ -44,8 +44,7 @@ namespace ranges
         template(typename I, typename O, typename P = identity)( //
             requires input_iterator<I> AND weakly_incrementable<O> AND //
             indirectly_copyable<I, O>) //
-        auto RANGES_FUNC(copy_n)(I first, iter_difference_t<I> n, O out)
-            -> copy_n_result<I, O>
+        copy_n_result<I, O> RANGES_FUNC(copy_n)(I first, iter_difference_t<I> n, O out)
         {
             RANGES_EXPECT(0 <= n);
             auto norig = n;

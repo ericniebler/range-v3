@@ -54,7 +54,7 @@ namespace ranges
         {
             template(typename I)( //
                 requires input_iterator<I>) //
-            constexpr auto operator()(I it) const -> unbounded_view<I>
+            constexpr unbounded_view<I> operator()(I it) const
             {
                 return unbounded_view<I>{detail::move(it)};
             }

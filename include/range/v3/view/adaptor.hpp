@@ -60,15 +60,15 @@ namespace ranges
             return 0;
         }
         template<typename BaseIter, typename Adapt>
-        constexpr auto which_adaptor_value_(priority_tag<1>)
-            -> always_<int, decltype(Adapt::read(std::declval<BaseIter const &>(),
-                                                 adaptor_base_current_mem_fn{}))>
+        constexpr always_<int, decltype(Adapt::read(std::declval<BaseIter const &>(),
+                                                    adaptor_base_current_mem_fn{}))> //
+        which_adaptor_value_(priority_tag<1>)
         {
             return 1;
         }
         template<typename BaseIter, typename Adapt>
-        constexpr auto which_adaptor_value_(priority_tag<2>)
-            -> always_<int, typename Adapt::value_type>
+        constexpr always_<int, typename Adapt::value_type> //
+        which_adaptor_value_(priority_tag<2>)
         {
             return 2;
         }
@@ -130,45 +130,45 @@ namespace ranges
             // clang-format on
             template(typename I)( //
                 requires equality_comparable<I>) //
-            static auto equal(I const & it0, I const & it1) -> bool
+            static bool equal(I const & it0, I const & it1)
         {
             return it0 == it1;
         }
         template(typename I)( //
             requires input_or_output_iterator<I>) //
-        static auto read(I const & it, detail::adaptor_base_current_mem_fn = {}) noexcept(
-            noexcept(iter_reference_t<I>(*it))) -> iter_reference_t<I>
+        static iter_reference_t<I> read(I const & it,
+                                        detail::adaptor_base_current_mem_fn = {})
+            noexcept(noexcept(iter_reference_t<I>(*it)))
         {
             return *it;
         }
         template(typename I)( //
             requires input_or_output_iterator<I>) //
-        static auto next(I & it) -> void
+        static void next(I & it)
         {
             ++it;
         }
         template(typename I)( //
             requires bidirectional_iterator<I>) //
-        static auto prev(I & it) -> void
+        static void prev(I & it)
         {
             --it;
         }
         template(typename I)( //
             requires random_access_iterator<I>) //
-        static auto advance(I & it, iter_difference_t<I> n) -> void
+        static void advance(I & it, iter_difference_t<I> n)
         {
             it += n;
         }
         template(typename I)( //
             requires sized_sentinel_for<I, I>) //
-        static auto distance_to(I const & it0, I const & it1)
-            -> iter_difference_t<I>
+        static iter_difference_t<I> distance_to(I const & it0, I const & it1)
         {
             return it1 - it0;
         }
         template(typename I, typename S)( //
             requires sentinel_for<S, I>) //
-        static constexpr auto empty(I const & it, S const & last) -> bool
+        static constexpr bool empty(I const & it, S const & last)
         {
             return it == last;
         }

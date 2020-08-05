@@ -32,9 +32,10 @@ namespace ranges
             template(typename I, typename C, typename P = identity)( //
                 requires forward_iterator<I> AND
                         indirect_unary_predicate<C, projected<I, P>>) //
-            auto operator()(I first, iter_difference_t<I> d, C pred,
-                            P proj = P{}) const //
-                -> I
+            I operator()(I first,
+                         iter_difference_t<I> d,
+                         C pred,
+                         P proj = P{}) const //
             {
                 if(0 < d)
                 {

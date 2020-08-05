@@ -44,8 +44,7 @@ namespace ranges
         template(typename I, typename S, typename O)( //
             requires input_iterator<I> AND sentinel_for<S, I> AND //
             weakly_incrementable<O> AND indirectly_copyable<I, O>) //
-        constexpr auto RANGES_FUNC(copy)(I first, S last, O out) //
-            -> copy_result<I, O>
+        constexpr copy_result<I, O> RANGES_FUNC(copy)(I first, S last, O out) //
         {
             for(; first != last; ++first, ++out)
                 *out = *first;
@@ -56,8 +55,8 @@ namespace ranges
         template(typename Rng, typename O)( //
             requires input_range<Rng> AND weakly_incrementable<O> AND //
             indirectly_copyable<iterator_t<Rng>, O>) //
-        constexpr auto RANGES_FUNC(copy)(Rng && rng, O out)  //
-            -> copy_result<borrowed_iterator_t<Rng>, O>
+        constexpr copy_result<borrowed_iterator_t<Rng>, O> //
+        RANGES_FUNC(copy)(Rng && rng, O out)  //
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }

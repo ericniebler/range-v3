@@ -42,10 +42,10 @@ namespace ranges
         /// the result.
         struct for_each_base_fn
         {
-            template<typename Rng, typename Fun>
-            constexpr auto CPP_fun(operator())(Rng && rng, Fun fun)(
-                const requires viewable_range<Rng> && transformable_range<Rng, Fun> &&
+            template(typename Rng, typename Fun)( //
+                requires viewable_range<Rng> AND transformable_range<Rng, Fun> AND
                     joinable_range<transform_view<all_t<Rng>, Fun>>)
+            constexpr auto operator()(Rng && rng, Fun fun) const
             {
                 return join(transform(static_cast<Rng &&>(rng), std::move(fun)));
             }
@@ -71,7 +71,7 @@ namespace ranges
     {
         template(typename V)( //
             requires copy_constructible<V>) //
-        auto operator()(V v) const -> single_view<V>
+        single_view<V> operator()(V v) const
         {
             return views::single(std::move(v));
         }
@@ -85,7 +85,7 @@ namespace ranges
     {
         template(typename Rng)( //
             requires view_<Rng>) //
-        auto operator()(Rng rng) const -> Rng
+        Rng operator()(Rng rng) const
         {
             return rng;
         }
@@ -112,7 +112,7 @@ namespace ranges
     {
         template(typename F)( //
             requires invocable<F &>) //
-        auto operator()(bool b, F f) const -> generate_n_view<F>
+        generate_n_view<F> operator()(bool b, F f) const
         {
             return views::generate_n(std::move(f), b ? 1 : 0);
         }

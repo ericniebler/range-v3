@@ -67,7 +67,7 @@ namespace ranges
         }
         template(bool Const = true)( //
             requires Const AND range<meta::const_if_c<Const, Rng>>) //
-        auto begin() const -> iterator_t<meta::const_if_c<Const, Rng>>
+        iterator_t<meta::const_if_c<Const, Rng>> begin() const
         {
             return next(ranges::begin(rng_), 1, ranges::end(rng_));
         }
@@ -77,13 +77,14 @@ namespace ranges
         }
         template(bool Const = true)( //
             requires Const AND range<meta::const_if_c<Const, Rng>>) //
-        auto end() const -> sentinel_t<meta::const_if_c<Const, Rng>>
+        sentinel_t<meta::const_if_c<Const, Rng>> end() const
         {
             return ranges::end(rng_);
         }
         // Strange cast to bool in the requires clause is to work around gcc bug.
         CPP_member
-        constexpr auto CPP_fun(size)()(requires(bool(sized_range<Rng>)))
+        constexpr auto CPP_fun(size)()( //
+            requires(bool(sized_range<Rng>)))
         {
             using size_type = range_size_t<Rng>;
             return range_cardinality<Rng>::value >= 0
@@ -91,7 +92,8 @@ namespace ranges
                        : detail::prev_or_zero_(ranges::size(rng_));
         }
         CPP_member
-        constexpr auto CPP_fun(size)()(const requires(bool(sized_range<Rng const>)))
+        constexpr auto CPP_fun(size)()(const //
+            requires(bool(sized_range<Rng const>)))
         {
             using size_type = range_size_t<Rng>;
             return range_cardinality<Rng>::value >= 0
@@ -105,7 +107,8 @@ namespace ranges
     };
 
     template<typename Rng>
-    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<tail_view<Rng>> = enable_borrowed_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<tail_view<Rng>> = //
+        enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Rng)(       //
@@ -120,9 +123,10 @@ namespace ranges
         {
             template(typename Rng)( //
                 requires viewable_range<Rng> AND input_range<Rng>) //
-            auto operator()(Rng && rng) const
-                -> meta::if_c<range_cardinality<Rng>::value == 0, all_t<Rng>,
-                                      tail_view<all_t<Rng>>>
+            meta::if_c<range_cardinality<Rng>::value == 0,
+                       all_t<Rng>,
+                       tail_view<all_t<Rng>>> //
+            operator()(Rng && rng) const
             {
                 return all(static_cast<Rng &&>(rng));
             }

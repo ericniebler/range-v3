@@ -48,8 +48,7 @@ namespace ranges
         template(typename I, typename S, typename R = less, typename P = identity)( //
             requires forward_iterator<I> AND sentinel_for<S, I> AND //
             indirect_strict_weak_order<R, projected<I, P>>) //
-        auto RANGES_FUNC(is_sorted)(I first, S last, R rel = R{}, P proj = P{})
-            -> bool
+        bool RANGES_FUNC(is_sorted)(I first, S last, R rel = R{}, P proj = P{})
         {
             return is_sorted_until(
                        std::move(first), last, std::move(rel), std::move(proj)) == last;
@@ -59,8 +58,7 @@ namespace ranges
         template(typename Rng, typename R = less, typename P = identity)( //
             requires forward_range<Rng> AND //
             indirect_strict_weak_order<R, projected<iterator_t<Rng>, P>>) //
-        auto RANGES_FUNC(is_sorted)(Rng && rng, R rel = R{}, P proj = P{}) //
-            -> bool
+        bool RANGES_FUNC(is_sorted)(Rng && rng, R rel = R{}, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(rel), std::move(proj));
         }

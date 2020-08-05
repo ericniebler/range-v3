@@ -107,7 +107,7 @@ namespace ranges
             }
             void distance_to() = delete;
         };
-        constexpr auto begin_adaptor() noexcept -> adaptor<false>
+        constexpr adaptor<false> begin_adaptor() noexcept
         {
             return {this};
         }
@@ -118,7 +118,7 @@ namespace ranges
         {
             return {this};
         }
-        constexpr auto end_adaptor() noexcept -> adaptor<false>
+        constexpr adaptor<false> end_adaptor() noexcept
         {
             return {this};
         }
@@ -151,8 +151,8 @@ namespace ranges
         {
             template(typename Rng, typename Pred)( //
                 requires detail::adjacent_filter_constraints<Rng, Pred>) //
-            constexpr auto operator()(Rng && rng, Pred pred) const
-                -> adjacent_filter_view<all_t<Rng>, Pred>
+            constexpr adjacent_filter_view<all_t<Rng>, Pred> //
+            operator()(Rng && rng, Pred pred) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }

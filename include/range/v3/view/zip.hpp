@@ -40,8 +40,7 @@ namespace ranges
             // tuple value
             template(typename... Its)( //
                 requires (sizeof...(Its) != 2) AND and_v<indirectly_readable<Its>...>)
-            auto operator()(copy_tag, Its...) const
-                -> std::tuple<iter_value_t<Its>...>
+            std::tuple<iter_value_t<Its>...> operator()(copy_tag, Its...) const
             {
                 RANGES_EXPECT(false);
             }
@@ -49,9 +48,9 @@ namespace ranges
             // tuple reference
             template(typename... Its)( //
                 requires (sizeof...(Its) != 2) AND and_v<indirectly_readable<Its>...>)
-            auto operator()(Its const &... its) const
+            common_tuple<iter_reference_t<Its>...>
+            operator()(Its const &... its) const //
                 noexcept(meta::and_c<noexcept(iter_reference_t<Its>(*its))...>::value)
-                -> common_tuple<iter_reference_t<Its>...>
             {
                 return common_tuple<iter_reference_t<Its>...>{*its...};
             }
@@ -59,10 +58,10 @@ namespace ranges
             // tuple rvalue reference
             template(typename... Its)( //
                 requires (sizeof...(Its) != 2) AND and_v<indirectly_readable<Its>...>)
-            auto operator()(move_tag, Its const &... its) const
+            common_tuple<iter_rvalue_reference_t<Its>...> //
+            operator()(move_tag, Its const &... its) const //
                 noexcept(meta::and_c<noexcept(
                              iter_rvalue_reference_t<Its>(iter_move(its)))...>::value)
-                -> common_tuple<iter_rvalue_reference_t<Its>...>
             {
                 return common_tuple<iter_rvalue_reference_t<Its>...>{iter_move(its)...};
             }
@@ -70,8 +69,8 @@ namespace ranges
             // pair value
             template(typename It1, typename It2)( //
                 requires indirectly_readable<It1> AND indirectly_readable<It2>) //
-            auto operator()(copy_tag, It1, It2) const
-                -> std::pair<iter_value_t<It1>, iter_value_t<It2>>
+            std::pair<iter_value_t<It1>, iter_value_t<It2>> //
+            operator()(copy_tag, It1, It2) const
             {
                 RANGES_EXPECT(false);
             }
@@ -79,11 +78,11 @@ namespace ranges
             // pair reference
             template(typename It1, typename It2)( //
                 requires indirectly_readable<It1> AND indirectly_readable<It2>) //
-            auto operator()(It1 const & it1, It2 const & it2) const //
-                noexcept(
+            common_pair<iter_reference_t<It1>, iter_reference_t<It2>>
+            operator()(It1 const & it1, It2 const & it2) const //
+                noexcept( //
                     noexcept(iter_reference_t<It1>(*it1)) && //
                     noexcept(iter_reference_t<It2>(*it2)))
-                -> common_pair<iter_reference_t<It1>, iter_reference_t<It2>>
             {
                 return {*it1, *it2};
             }
@@ -91,11 +90,10 @@ namespace ranges
             // pair rvalue reference
             template(typename It1, typename It2)( //
                 requires indirectly_readable<It1> AND indirectly_readable<It2>) //
-            auto operator()(move_tag, It1 const & it1, It2 const & it2) const
+            common_pair<iter_rvalue_reference_t<It1>, iter_rvalue_reference_t<It2>>
+            operator()(move_tag, It1 const & it1, It2 const & it2) const
                 noexcept(noexcept(iter_rvalue_reference_t<It1>(iter_move(it1))) &&
                          noexcept(iter_rvalue_reference_t<It2>(iter_move(it2))))
-                -> common_pair<iter_rvalue_reference_t<It1>,
-                               iter_rvalue_reference_t<It2>>
             {
                 return {iter_move(it1), iter_move(it2)};
             }
@@ -137,26 +135,25 @@ namespace ranges
                 return {};
             }
             template(typename... Rngs)( //
-                requires and_v<viewable_range<Rngs>...> AND and_v<input_range<Rngs>...> AND
+                requires and_v<viewable_range<Rngs>...> AND //
+                and_v<input_range<Rngs>...> AND //
                 (sizeof...(Rngs) != 0)) //
-            auto operator()(Rngs &&... rngs) const ->
-                zip_view<all_t<Rngs>...>
+            zip_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
             {
                 return zip_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
             }
 #if defined(_MSC_VER)
             template(typename Rng0)( //
                 requires input_range<Rng0> AND viewable_range<Rng0>) //
-            constexpr auto operator()(Rng0 && rng0) const
-                -> zip_view<all_t<Rng0>>
+            constexpr zip_view<all_t<Rng0>> operator()(Rng0 && rng0) const
             {
                 return zip_view<all_t<Rng0>>{all(static_cast<Rng0 &&>(rng0))};
             }
             template(typename Rng0, typename Rng1)( //
                 requires input_range<Rng0> AND viewable_range<Rng0> AND //
-                             input_range<Rng1> AND viewable_range<Rng1>) //
-            constexpr auto operator()(Rng0 && rng0, Rng1 && rng1) const
-                -> zip_view<all_t<Rng0>, all_t<Rng1>>
+                    input_range<Rng1> AND viewable_range<Rng1>) //
+            constexpr zip_view<all_t<Rng0>, all_t<Rng1>> //
+            operator()(Rng0 && rng0, Rng1 && rng1) const
             {
                 return zip_view<all_t<Rng0>, all_t<Rng1>>{ //
                     all(static_cast<Rng0 &&>(rng0)),       //
@@ -164,10 +161,10 @@ namespace ranges
             }
             template(typename Rng0, typename Rng1, typename Rng2)( //
                 requires input_range<Rng0> AND viewable_range<Rng0> AND    //
-                             input_range<Rng1> AND viewable_range<Rng1> AND    //
-                             input_range<Rng2> AND viewable_range<Rng2>) //
-            constexpr auto operator()(Rng0 && rng0, Rng1 && rng1, Rng2 && rng2) const
-                -> zip_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>>
+                    input_range<Rng1> AND viewable_range<Rng1> AND    //
+                    input_range<Rng2> AND viewable_range<Rng2>) //
+            constexpr zip_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>> //
+            operator()(Rng0 && rng0, Rng1 && rng1, Rng2 && rng2) const
             {
                 return zip_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>>{ //
                     all(static_cast<Rng0 &&>(rng0)),                    //

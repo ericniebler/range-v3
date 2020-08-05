@@ -60,8 +60,11 @@ namespace ranges
             template(typename I, typename V, typename C = less, typename P = identity)( //
                 requires forward_iterator<I> AND
                     indirect_strict_weak_order<C, V const *, projected<I, P>>) //
-            auto operator()(I first, iter_difference_t<I> d, V const & val, C pred = C{},
-                            P proj = P{}) const -> I
+            I operator()(I first,
+                         iter_difference_t<I> d,
+                         V const & val,
+                         C pred = C{},
+                         P proj = P{}) const
             {
                 return partition_point_n(std::move(first),
                                          d,

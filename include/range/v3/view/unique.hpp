@@ -40,8 +40,8 @@ namespace ranges
             template(typename Rng, typename C = equal_to)( //
                 requires viewable_range<Rng> AND forward_range<Rng> AND //
                     indirect_relation<C, iterator_t<Rng>>) //
-            constexpr auto operator()(Rng && rng, C pred = {}) const
-                -> adjacent_filter_view<all_t<Rng>, logical_negate<C>>
+            constexpr adjacent_filter_view<all_t<Rng>, logical_negate<C>> //
+            operator()(Rng && rng, C pred = {}) const
             {
                 return {all(static_cast<Rng &&>(rng)), not_fn(pred)};
             }
@@ -51,9 +51,9 @@ namespace ranges
         {
             using unique_base_fn::operator();
 
-            template<typename C>
-            constexpr auto CPP_fun(operator())(C && pred)(const //
-                                                          requires (!range<C>))
+            template(typename C)( //
+                requires (!range<C>))
+            constexpr auto operator()(C && pred) const
             {
                 return make_view_closure(
                     bind_back(unique_base_fn{}, static_cast<C &&>(pred)));

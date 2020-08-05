@@ -88,7 +88,8 @@ namespace ranges
     };
 
     template<typename Rng, typename Pred>
-    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<trim_view<Rng, Pred>> = enable_borrowed_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<trim_view<Rng, Pred>> = //
+        enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng, typename Pred>
@@ -107,17 +108,17 @@ namespace ranges
                 requires viewable_range<Rng> AND bidirectional_range<Rng> AND //
                     indirect_unary_predicate<Pred, iterator_t<Rng>> AND //
                         common_range<Rng>) //
-            constexpr auto operator()(Rng && rng, Pred pred) const //
-                -> trim_view<all_t<Rng>, Pred>
+            constexpr trim_view<all_t<Rng>, Pred> //
+            operator()(Rng && rng, Pred pred) const //
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
             template(typename Rng, typename Pred, typename Proj)( //
                 requires viewable_range<Rng> AND bidirectional_range<Rng> AND //
                     indirect_unary_predicate<composed<Pred, Proj>, iterator_t<Rng>> AND //
-                        common_range<Rng>) //
-            constexpr auto operator()(Rng && rng, Pred pred, Proj proj) const
-                -> trim_view<all_t<Rng>, composed<Pred, Proj>>
+                    common_range<Rng>) //
+            constexpr trim_view<all_t<Rng>, composed<Pred, Proj>> //
+            operator()(Rng && rng, Pred pred, Proj proj) const
             {
                 return {all(static_cast<Rng &&>(rng)),
                         compose(std::move(pred), std::move(proj))};
@@ -131,10 +132,9 @@ namespace ranges
             {
                 return make_view_closure(bind_back(trim_base_fn{}, std::move(pred)));
             }
-            template<typename Pred, typename Proj>
-            constexpr auto CPP_fun(operator())(Pred && pred,
-                                               Proj proj)(const //
-                                                          requires (!range<Pred>)) // TODO: underconstrained
+            template(typename Pred, typename Proj)( //
+                requires (!range<Pred>)) // TODO: underconstrained
+            constexpr auto operator()(Pred && pred, Proj proj) const
             {
                 return make_view_closure(bind_back(
                     trim_base_fn{}, static_cast<Pred &&>(pred), std::move(proj)));

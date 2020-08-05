@@ -70,10 +70,11 @@ namespace ranges
         {}
     };
 
-    // the begin iterator will be an iterator into the underlying view (conditionally safe)
-    // and the end iterator owns the value to be compared against (safe)
+    // the begin iterator will be an iterator into the underlying view (conditionally
+    // borrowed) and the end iterator owns the value to be compared against (borrowed)
     template<typename Rng, typename Val>
-    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<delimit_view<Rng, Val>> = enable_borrowed_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<delimit_view<Rng, Val>> = //
+        enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Rng, typename Val)( //
@@ -87,9 +88,9 @@ namespace ranges
         struct delimit_base_fn
         {
             template(typename I_, typename Val, typename I = detail::decay_t<I_>)( //
-                requires (!range<I_>) AND convertible_to<I_, I> AND input_iterator<I> AND //
-                         semiregular<Val> AND //
-                         equality_comparable_with<Val, iter_reference_t<I>>) //
+                requires (!range<I_>) AND convertible_to<I_, I> AND input_iterator<I> AND
+                    semiregular<Val> AND //
+                    equality_comparable_with<Val, iter_reference_t<I>>) //
             constexpr auto operator()(I_ && begin_, Val value) const
                 -> delimit_view<subrange<I, unreachable_sentinel_t>, Val>
             {

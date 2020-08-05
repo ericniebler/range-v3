@@ -65,7 +65,7 @@ namespace ranges
             // Fixed-length
             template(typename Char, std::size_t N)( //
                 requires detail::is_char_type<Char>::value) //
-            auto operator()(Char (&sz)[N]) const -> ranges::subrange<Char *>
+            ranges::subrange<Char *> operator()(Char (&sz)[N]) const
             {
                 return {&sz[0], &sz[N - 1]};
             }
@@ -73,10 +73,10 @@ namespace ranges
             // Null-terminated
             template(typename Char)( //
                 requires detail::is_char_type<Char>::value) //
-            auto operator()(Char * sz) const volatile
-                -> ranges::delimit_view<
-                           ranges::subrange<Char *, ranges::unreachable_sentinel_t>,
-                           meta::_t<std::remove_cv<Char>>>
+            ranges::delimit_view<
+                ranges::subrange<Char *, ranges::unreachable_sentinel_t>,
+                meta::_t<std::remove_cv<Char>>> //
+            operator()(Char * sz) const volatile
             {
                 using ch_t = meta::_t<std::remove_cv<Char>>;
                 return ranges::views::delimit(sz, ch_t(0));

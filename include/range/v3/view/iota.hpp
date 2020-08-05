@@ -120,7 +120,7 @@ namespace ranges
 
         template(typename I)( //
             requires (!unsigned_integral<I>)) //
-        auto iota_advance_(I & i, iota_difference_t<I> n) -> void
+        void iota_advance_(I & i, iota_difference_t<I> n)
         {
             // TODO: bounds-check this
             i += n;
@@ -128,7 +128,7 @@ namespace ranges
 
         template(typename Int)( //
             requires unsigned_integral<Int>) //
-        auto iota_advance_(Int & i, iota_difference_t<Int> n) -> void
+        void iota_advance_(Int & i, iota_difference_t<Int> n)
         {
             // TODO: bounds-check this
             if(n >= 0)
@@ -139,14 +139,14 @@ namespace ranges
 
         template(typename I)( //
             requires advanceable_<I> AND (!integral<I>)) //
-        auto iota_distance_(I const & i, I const & s) -> iota_difference_t<I>
+        iota_difference_t<I> iota_distance_(I const & i, I const & s)
         {
             return static_cast<iota_difference_t<I>>(s - i);
         }
 
         template(typename Int)( //
             requires signed_integral<Int>) //
-        auto iota_distance_(Int i0, Int i1) -> iota_difference_t<Int>
+        iota_difference_t<Int> iota_distance_(Int i0, Int i1)
         {
             // TODO: bounds-check this
             return static_cast<iota_difference_t<Int>>(
@@ -156,7 +156,7 @@ namespace ranges
 
         template(typename Int)( //
             requires unsigned_integral<Int>) //
-        auto iota_distance_(Int i0, Int i1) -> iota_difference_t<Int>
+        iota_difference_t<Int> iota_distance_(Int i0, Int i1)
         {
             // TODO: bounds-check this
             return (i0 > i1) ? static_cast<iota_difference_t<Int>>(
@@ -302,7 +302,8 @@ namespace ranges
     };
 
     template<typename From, typename To>
-    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<closed_iota_view<From, To>> = true;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<closed_iota_view<From, To>> =
+        true;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename From, typename To)( //
@@ -412,12 +413,14 @@ namespace ranges
             return cursor{from_};
         }
         CPP_member
-        auto CPP_fun(end_cursor)()(const requires(same_as<To, unreachable_sentinel_t>))
+        auto CPP_fun(end_cursor)()(const //
+            requires(same_as<To, unreachable_sentinel_t>))
         {
             return unreachable;
         }
         CPP_member
-        auto CPP_fun(end_cursor)()(const requires(!same_as<To, unreachable_sentinel_t>))
+        auto CPP_fun(end_cursor)()(const //
+            requires(!same_as<To, unreachable_sentinel_t>))
         {
             return meta::conditional_t<same_as<From, To>, cursor, sentinel>{to_};
         }
@@ -462,7 +465,7 @@ namespace ranges
         {
             template(typename From)( //
                 requires weakly_incrementable<From>) //
-            auto operator()(From value) const -> iota_view<From>
+            iota_view<From> operator()(From value) const
             {
                 return iota_view<From>{std::move(value)};
             }
@@ -471,7 +474,7 @@ namespace ranges
                     detail::weakly_equality_comparable_with_<From, To> AND
                 (!integral<From> || !integral<To> ||
                  std::is_signed<From>::value == std::is_signed<To>::value)) //
-            auto operator()(From from, To to) const -> iota_view<From, To>
+            iota_view<From, To> operator()(From from, To to) const
             {
                 return {std::move(from), std::move(to)};
             }
@@ -484,8 +487,7 @@ namespace ranges
                         detail::weakly_equality_comparable_with_<From, To> AND
                     (!integral<From> || !integral<To> ||
                      std::is_signed<From>::value == std::is_signed<To>::value)) //
-            auto operator()(From from, To to) const
-                -> closed_iota_view<From, To>
+            closed_iota_view<From, To> operator()(From from, To to) const
             {
                 return {std::move(from), std::move(to)};
             }

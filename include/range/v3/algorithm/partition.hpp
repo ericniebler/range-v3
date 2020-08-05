@@ -114,8 +114,7 @@ namespace ranges
         template(typename Rng, typename C, typename P = identity)( //
             requires forward_range<Rng> AND permutable<iterator_t<Rng>> AND //
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>) //
-        auto RANGES_FUNC(partition)(Rng && rng, C pred, P proj = P{}) //
-            -> borrowed_iterator_t<Rng>
+        borrowed_iterator_t<Rng> RANGES_FUNC(partition)(Rng && rng, C pred, P proj = P{})
         {
             return detail::partition_impl(begin(rng),
                                           end(rng),

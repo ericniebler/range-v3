@@ -38,21 +38,21 @@ namespace ranges
     RANGES_FUNC_BEGIN(shuffle)
 
         /// \brief function template \c shuffle
-        template(typename I, typename S, typename Gen = detail::default_random_engine &)( //
+        template(typename I, typename S, typename Gen = detail::default_random_engine &)(
             requires random_access_iterator<I> AND sentinel_for<S, I> AND
                 permutable<I> AND
-                uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
+                uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
                 convertible_to<invoke_result_t<Gen &>, iter_difference_t<I>>) //
-        auto RANGES_FUNC(shuffle)(I const first,
-                                  S const last,
-                                  Gen && gen = detail::get_random_engine()) //
-            -> I
+        I RANGES_FUNC(shuffle)(I const first,
+                               S const last,
+                               Gen && gen = detail::get_random_engine()) //
         {
             auto mid = first;
             if(mid == last)
                 return mid;
             using D1 = iter_difference_t<I>;
-            using D2 = meta::conditional_t<std::is_integral<D1>::value, D1, std::ptrdiff_t>;
+            using D2 =
+                meta::conditional_t<std::is_integral<D1>::value, D1, std::ptrdiff_t>;
             std::uniform_int_distribution<D2> uid{};
             using param_t = typename decltype(uid)::param_type;
             while(++mid != last)
@@ -70,9 +70,8 @@ namespace ranges
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
                 convertible_to<invoke_result_t<Gen &>,
                                iter_difference_t<iterator_t<Rng>>>) //
-        auto RANGES_FUNC(shuffle)(Rng && rng,
-                                  Gen && rand = detail::get_random_engine()) //
-            -> borrowed_iterator_t<Rng>
+        borrowed_iterator_t<Rng> //
+        RANGES_FUNC(shuffle)(Rng && rng, Gen && rand = detail::get_random_engine()) //
         {
             return (*this)(begin(rng), end(rng), static_cast<Gen &&>(rand));
         }

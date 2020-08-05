@@ -223,7 +223,7 @@ namespace ranges
             /// \pre <tt>!empty(rng)</tt>
             template(typename Rng)( //
                 requires viewable_range<Rng> AND forward_range<Rng>) //
-            auto operator()(Rng && rng) const -> cycled_view<all_t<Rng>>
+            cycled_view<all_t<Rng>> operator()(Rng && rng) const
             {
                 return cycled_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

@@ -129,14 +129,16 @@ namespace ranges
                 RANGES_ASSERT(0 < n_);
             }
             CPP_member
-            auto CPP_fun(size)()(const requires sized_range<Rng const>)
+            auto CPP_fun(size)()(const //
+                requires sized_range<Rng const>)
             {
                 auto const count = ranges::size(this->base());
                 auto const n = static_cast<range_size_t<Rng const>>(n_);
                 return count < n ? 0 : count - n + 1;
             }
             CPP_member
-            auto CPP_fun(size)()(requires sized_range<Rng>)
+            auto CPP_fun(size)()( //
+                requires sized_range<Rng>)
             {
                 auto const count = ranges::size(this->base());
                 auto const n = static_cast<range_size_t<Rng>>(n_);
@@ -357,7 +359,8 @@ namespace ranges
     };
 
     template<typename Rng>
-    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<sliding_view<Rng>> = enable_borrowed_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<sliding_view<Rng>> = //
+        enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
@@ -373,8 +376,8 @@ namespace ranges
         {
             template(typename Rng)( //
                 requires viewable_range<Rng> AND forward_range<Rng>) //
-            constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
-                -> sliding_view<all_t<Rng>>
+            constexpr sliding_view<all_t<Rng>> //
+            operator()(Rng && rng, range_difference_t<Rng> n) const
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }

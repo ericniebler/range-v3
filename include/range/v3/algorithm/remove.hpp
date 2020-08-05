@@ -62,8 +62,8 @@ namespace ranges
         template(typename Rng, typename T, typename P = identity)( //
             requires forward_range<Rng> AND permutable<iterator_t<Rng>> AND //
             indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *>) //
-        auto RANGES_FUNC(remove)(Rng && rng, T const & val, P proj = P{})
-            -> borrowed_iterator_t<Rng>
+        borrowed_iterator_t<Rng> //
+        RANGES_FUNC(remove)(Rng && rng, T const & val, P proj = P{})
         {
             return (*this)(begin(rng), end(rng), val, std::move(proj));
         }

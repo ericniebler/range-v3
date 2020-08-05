@@ -132,7 +132,7 @@ namespace ranges
                 cursor * pos;
                 template(typename I, std::size_t N)( //
                     requires input_iterator<I>) //
-                auto operator()(indexed_element<I, N> it) const -> void
+                void operator()(indexed_element<I, N> it) const
                 {
                     RANGES_ASSERT(it.get() != end(std::get<N>(pos->rng_->rngs_)));
                     ++it.get();
@@ -144,14 +144,14 @@ namespace ranges
                 cursor * pos;
                 template(typename I)( //
                     requires bidirectional_iterator<I>) //
-                auto operator()(indexed_element<I, 0> it) const -> void
+                void operator()(indexed_element<I, 0> it) const
                 {
                     RANGES_ASSERT(it.get() != begin(std::get<0>(pos->rng_->rngs_)));
                     --it.get();
                 }
                 template(typename I, std::size_t N)( //
                     requires (N != 0) AND bidirectional_iterator<I>) //
-                auto operator()(indexed_element<I, N> it) const -> void
+                void operator()(indexed_element<I, N> it) const
                 {
                     if(it.get() == begin(std::get<N>(pos->rng_->rngs_)))
                     {
@@ -171,14 +171,13 @@ namespace ranges
                 difference_type n;
                 template(typename I)( //
                     requires random_access_iterator<I>) //
-                auto operator()(indexed_element<I, cranges - 1> it) const
-                    -> void
+                void operator()(indexed_element<I, cranges - 1> it) const
                 {
                     ranges::advance(it.get(), n);
                 }
                 template(typename I, std::size_t N)( //
                     requires random_access_iterator<I>) //
-                auto operator()(indexed_element<I, N> it) const -> void
+                void operator()(indexed_element<I, N> it) const
                 {
                     auto last = ranges::end(std::get<N>(pos->rng_->rngs_));
                     // BUGBUG If distance(it, last) > n, then using bounded advance
@@ -197,13 +196,13 @@ namespace ranges
                 difference_type n;
                 template(typename I)( //
                     requires random_access_iterator<I>) //
-                auto operator()(indexed_element<I, 0> it) const -> void
+                void operator()(indexed_element<I, 0> it) const
                 {
                     ranges::advance(it.get(), n);
                 }
                 template(typename I, std::size_t N)( //
                     requires random_access_iterator<I>) //
-                auto operator()(indexed_element<I, N> it) const -> void
+                void operator()(indexed_element<I, N> it) const
                 {
                     auto first = ranges::begin(std::get<N>(pos->rng_->rngs_));
                     if(it.get() == first)
@@ -402,15 +401,13 @@ namespace ranges
         {
             template(typename... Rngs)( //
                 requires and_v<(viewable_range<Rngs> && input_range<Rngs>)...>) //
-            auto operator()(Rngs &&... rngs) const
-                -> concat_view<all_t<Rngs>...>
+            concat_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
             {
                 return concat_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
             }
             template(typename Rng)( //
                 requires viewable_range<Rng> AND input_range<Rng>) //
-            auto operator()(Rng && rng) const //
-                -> all_t<Rng>
+            all_t<Rng> operator()(Rng && rng) const //
             {
                 return all(static_cast<Rng &&>(rng));
             }
@@ -419,8 +416,8 @@ namespace ranges
             template(typename Rng0, typename Rng1)( //
                 requires viewable_range<Rng0> AND input_range<Rng0> AND //
                         viewable_range<Rng1> AND input_range<Rng1>) //
-            auto operator()(Rng0 && rng0, Rng1 && rng1) const
-                -> concat_view<all_t<Rng0>, all_t<Rng1>>
+            concat_view<all_t<Rng0>, all_t<Rng1>> operator()(Rng0 && rng0, Rng1 && rng1)
+                const
             {
                 return concat_view<all_t<Rng0>, all_t<Rng1>>{
                     all(static_cast<Rng0 &&>(rng0)),
@@ -428,10 +425,10 @@ namespace ranges
             }
             template(typename Rng0, typename Rng1, typename Rng2)( //
                 requires viewable_range<Rng0> AND input_range<Rng0> AND //
-                        viewable_range<Rng1> AND input_range<Rng1> AND
-                        viewable_range<Rng2> && input_range<Rng2>) //
-            auto operator()(Rng0 && rng0, Rng1 && rng1, Rng2 && rng2) const
-                -> concat_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>>
+                    viewable_range<Rng1> AND input_range<Rng1> AND //
+                    viewable_range<Rng2> AND input_range<Rng2>) //
+            concat_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>> //
+            operator()(Rng0 && rng0, Rng1 && rng1, Rng2 && rng2) const
             {
                 return concat_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>>{
                     all(static_cast<Rng0 &&>(rng0)),

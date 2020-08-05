@@ -95,8 +95,9 @@ namespace ranges
         /// its corresponding index.
         struct enumerate_fn
         {
-            template<typename Rng>
-            auto CPP_fun(operator())(Rng && rng)(const requires viewable_range<Rng>)
+            template(typename Rng)( //
+                requires viewable_range<Rng>)
+            auto operator()(Rng && rng) const
             {
                 using D = range_difference_t<Rng>;
                 using S = detail::iter_size_t<iterator_t<Rng>>;

@@ -43,8 +43,8 @@ namespace ranges
         template(typename I, typename S, typename O, typename P = identity)( //
             requires forward_iterator<I> AND sentinel_for<S, I> AND //
             weakly_incrementable<O> AND indirectly_copyable<I, O>) //
-        auto RANGES_FUNC(rotate_copy)(I first, I middle, S last, O out) //
-            -> rotate_copy_result<I, O>
+        rotate_copy_result<I, O> //
+        RANGES_FUNC(rotate_copy)(I first, I middle, S last, O out) //
         {
             auto res = ranges::copy(middle, std::move(last), std::move(out));
             return {std::move(res.in),
@@ -55,8 +55,8 @@ namespace ranges
         template(typename Rng, typename O, typename P = identity)( //
             requires range<Rng> AND weakly_incrementable<O> AND //
             indirectly_copyable<iterator_t<Rng>, O>) //
-        auto RANGES_FUNC(rotate_copy)(Rng && rng, iterator_t<Rng> middle, O out) //
-            -> rotate_copy_result<borrowed_iterator_t<Rng>, O>
+        rotate_copy_result<borrowed_iterator_t<Rng>, O> //
+        RANGES_FUNC(rotate_copy)(Rng && rng, iterator_t<Rng> middle, O out) //
         {
             return (*this)(begin(rng), std::move(middle), end(rng), std::move(out));
         }

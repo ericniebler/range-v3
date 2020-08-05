@@ -63,9 +63,8 @@ namespace ranges
 
             template(typename I)( //
                 requires (!invocable<Pred const &, iter_reference_t<I>>))
-            auto operator()(I const & i)
-                -> common_reference_t<unwrap_reference_t<Val const &>,
-                                              iter_reference_t<I>>
+            common_reference_t<unwrap_reference_t<Val const &>, iter_reference_t<I>> //
+            operator()(I const & i)
             {
                 auto && x = *i;
                 if(invoke(first(), (decltype(x) &&)x)) //
@@ -74,9 +73,8 @@ namespace ranges
             }
             template(typename I)( //
                 requires invocable<Pred const &, iter_reference_t<I>>)
-            auto operator()(I const & i) const
-                -> common_reference_t<unwrap_reference_t<Val const &>,
-                                              iter_reference_t<I>>
+            common_reference_t<unwrap_reference_t<Val const &>, iter_reference_t<I>> //
+            operator()(I const & i) const
             {
                 auto && x = *i;
                 if(invoke(first(), (decltype(x) &&)x)) //
@@ -86,9 +84,10 @@ namespace ranges
 
             template(typename I)( //
                 requires (!invocable<Pred const &, iter_rvalue_reference_t<I>>))
-            auto operator()(move_tag, I const & i)
-                -> common_reference_t<unwrap_reference_t<Val const &>,
-                                              iter_rvalue_reference_t<I>>
+            common_reference_t<
+                unwrap_reference_t<Val const &>, //
+                iter_rvalue_reference_t<I>> //
+            operator()(move_tag, I const & i)
             {
                 auto && x = iter_move(i);
                 if(invoke(first(), (decltype(x) &&)x)) //
@@ -97,9 +96,10 @@ namespace ranges
             }
             template(typename I)( //
                 requires invocable<Pred const &, iter_rvalue_reference_t<I>>)
-            auto operator()(move_tag, I const & i) const
-                -> common_reference_t<unwrap_reference_t<Val const &>,
-                                              iter_rvalue_reference_t<I>>
+            common_reference_t< //
+                unwrap_reference_t<Val const &>, //
+                iter_rvalue_reference_t<I>> //
+            operator()(move_tag, I const & i) const
             {
                 auto && x = iter_move(i);
                 if(invoke(first(), (decltype(x) &&)x)) //
@@ -118,15 +118,15 @@ namespace ranges
         {
             template(typename Rng, typename Pred, typename Val)( //
                 requires viewable_range<Rng> AND input_range<Rng> AND
-                        indirect_unary_predicate<Pred, iterator_t<Rng>> AND
-                            common_with<detail::decay_t<unwrap_reference_t<Val const &>>,
-                                        range_value_t<Rng>> &&
-                                common_reference_with<unwrap_reference_t<Val const &>,
-                                                      range_reference_t<Rng>> &&
-                                    common_reference_with<unwrap_reference_t<Val const &>,
-                                                          range_rvalue_reference_t<Rng>>) //
-            constexpr auto operator()(Rng && rng, Pred pred, Val new_value) const
-                -> replace_if_view<all_t<Rng>, Pred, Val>
+                    indirect_unary_predicate<Pred, iterator_t<Rng>> AND
+                    common_with<detail::decay_t<unwrap_reference_t<Val const &>>,
+                                range_value_t<Rng>> AND
+                    common_reference_with<unwrap_reference_t<Val const &>,
+                                          range_reference_t<Rng>> AND
+                    common_reference_with<unwrap_reference_t<Val const &>,
+                                          range_rvalue_reference_t<Rng>>) //
+            constexpr replace_if_view<all_t<Rng>, Pred, Val> //
+            operator()(Rng && rng, Pred pred, Val new_value) const
             {
                 return {all(static_cast<Rng &&>(rng)),
                         {std::move(pred), std::move(new_value)}};

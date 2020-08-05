@@ -107,7 +107,8 @@ namespace ranges
         template<typename... Args>
         constexpr auto CPP_auto_fun(operator())(Args &&... args) (const)
         (
-            return compressed_tuple<bind_element_t<Args>...>{static_cast<Args &&>(args)...}
+            return compressed_tuple<bind_element_t<Args>...>{
+                static_cast<Args &&>(args)...}
         )
         // clang-format on
     };
@@ -126,11 +127,10 @@ namespace ranges
 
         compressed_pair() = default;
 
-        template(typename U, typename V)(                                       //
-            requires constructible_from<First, U> && constructible_from<Second, V>) //
-            constexpr compressed_pair(U && u,
-                                      V && v) noexcept(noexcept(First((U &&) u)) &&
-                                                       noexcept(Second((V &&) v)))
+        template(typename U, typename V)( //
+            requires constructible_from<First, U> AND constructible_from<Second, V>) //
+        constexpr compressed_pair(U && u, V && v) //
+            noexcept(noexcept(First((U &&) u)) && noexcept(Second((V &&) v)))
           : box<First, meta::size_t<0>>{(U &&) u}
           , box<Second, meta::size_t<1>>{(V &&) v}
         {}

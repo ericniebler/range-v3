@@ -52,7 +52,7 @@ namespace ranges
 
         template(typename I, typename C, typename P)( //
             requires forward_iterator<I> AND indirect_relation<C, projected<I, P>>) //
-        auto sort3(I x, I y, I z, C & pred, P & proj) -> unsigned
+        unsigned sort3(I x, I y, I z, C & pred, P & proj)
         {
             unsigned r = 0;
             if(!invoke(pred, invoke(proj, *y), invoke(proj, *x))) // if x <= y
@@ -86,8 +86,8 @@ namespace ranges
         } // x <= y && y <= z
 
         template(typename I, typename C, typename P)( //
-            requires bidirectional_iterator<I> AND indirect_relation<C, projected<I, P>>) //
-        auto selection_sort(I first, I last, C & pred, P & proj) -> void
+            requires bidirectional_iterator<I> AND indirect_relation<C, projected<I, P>>)
+        void selection_sort(I first, I last, C & pred, P & proj)
         {
             RANGES_EXPECT(first != last);
             for(I lm1 = ranges::prev(last); first != lm1; ++first)
@@ -107,9 +107,8 @@ namespace ranges
         /// \brief function template \c nth_element
         template(typename I, typename S, typename C = less, typename P = identity)( //
             requires random_access_iterator<I> AND sortable<I, C, P>) //
-        auto RANGES_FUNC(nth_element)(
+        I RANGES_FUNC(nth_element)(
             I first, I nth, S end_, C pred = C{}, P proj = P{}) //
-            -> I
         {
             I last = ranges::next(nth, end_), end_orig = last;
             // C is known to be a reference type
@@ -311,9 +310,8 @@ namespace ranges
         /// \overload
         template(typename Rng, typename C = less, typename P = identity)( //
             requires random_access_range<Rng> AND sortable<iterator_t<Rng>, C, P>) //
-        auto RANGES_FUNC(nth_element)(
+        borrowed_iterator_t<Rng> RANGES_FUNC(nth_element)(
             Rng && rng, iterator_t<Rng> nth, C pred = C{}, P proj = P{}) //
-            -> borrowed_iterator_t<Rng>
         {
             return (*this)(
                 begin(rng), std::move(nth), end(rng), std::move(pred), std::move(proj));

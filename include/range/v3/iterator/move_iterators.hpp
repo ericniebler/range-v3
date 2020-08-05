@@ -53,7 +53,7 @@ namespace ranges
         {}
         template(typename O)( //
             requires convertible_to<O, I>) //
-        auto operator=(move_iterator<O> const & i) -> move_iterator &
+        move_iterator & operator=(move_iterator<O> const & i)
         {
             current_ = i.base();
             return *this;
@@ -205,7 +205,7 @@ namespace ranges
     {
         template(typename I)( //
             requires input_iterator<I>) //
-        constexpr auto operator()(I it) const -> move_iterator<I>
+        constexpr move_iterator<I> operator()(I it) const
         {
             return move_iterator<I>{detail::move(it)};
         }
@@ -233,7 +233,7 @@ namespace ranges
         {}
         template(typename OS)( //
             requires convertible_to<OS, S>) //
-        auto operator=(move_sentinel<OS> const & that) -> move_sentinel &
+        move_sentinel & operator=(move_sentinel<OS> const & that)
         {
             sent_ = that.base();
             return *this;
@@ -277,14 +277,14 @@ namespace ranges
     {
         template(typename I)( //
             requires input_iterator<I>) //
-        constexpr auto operator()(I i) const -> move_iterator<I>
+        constexpr move_iterator<I> operator()(I i) const
         {
             return move_iterator<I>{detail::move(i)};
         }
 
         template(typename S)( //
             requires semiregular<S> AND (!input_iterator<S>)) //
-        constexpr auto operator()(S s) const -> move_sentinel<S>
+        constexpr move_sentinel<S> operator()(S s) const
         {
             return move_sentinel<S>{detail::move(s)};
         }
@@ -307,7 +307,8 @@ namespace ranges
         };
 
         template<typename I>
-        using move_into_cursor_types = move_into_cursor_types_<I, (bool)indirectly_readable<I>>;
+        using move_into_cursor_types =
+            move_into_cursor_types_<I, (bool)indirectly_readable<I>>;
 
         template<typename I>
         struct move_into_cursor : move_into_cursor_types<I>
@@ -394,8 +395,8 @@ namespace ranges
             }
             template(typename II = I const)( //
                 requires same_as<I const, II> AND indirectly_readable<II>) //
-            constexpr auto move() const noexcept(has_nothrow_iter_move_v<II>)
-                -> iter_rvalue_reference_t<II>
+            constexpr iter_rvalue_reference_t<II> move() const //
+                noexcept(has_nothrow_iter_move_v<II>)
             {
                 return iter_move(it_);
             }

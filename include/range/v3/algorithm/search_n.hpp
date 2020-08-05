@@ -140,16 +140,14 @@ namespace ranges
                  typename V,
                  typename C = equal_to,
                  typename P = identity)( //
-            requires forward_iterator<I> && sentinel_for<S, I> &&
+            requires forward_iterator<I> AND sentinel_for<S, I> AND
                 indirectly_comparable<I, V const *, C, P>) //
-        auto RANGES_FUNC(search_n)(I first,
-                                   S last,
-                                   iter_difference_t<I>
-                                       cnt,
-                                   V const & val,
-                                   C pred = C{},
-                                   P proj = P{}) //
-            -> subrange<I>
+        subrange<I> RANGES_FUNC(search_n)(I first,
+                                          S last,
+                                          iter_difference_t<I> cnt,
+                                          V const & val,
+                                          C pred = C{},
+                                          P proj = P{}) //
         {
             if(cnt <= 0)
                 return {first, first};
@@ -167,16 +165,14 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename V, typename C = equal_to, typename P = identity)( //
+        template(typename Rng, typename V, typename C = equal_to, typename P = identity)(
             requires forward_range<Rng> AND
                 indirectly_comparable<iterator_t<Rng>, V const *, C, P>) //
-        auto RANGES_FUNC(search_n)(Rng && rng,
-                                   iter_difference_t<iterator_t<Rng>>
-                                       cnt,
-                                   V const & val,
-                                   C pred = C{},
-                                   P proj = P{}) //
-            -> safe_subrange_t<Rng>
+        safe_subrange_t<Rng> RANGES_FUNC(search_n)(Rng && rng,
+                                                   iter_difference_t<iterator_t<Rng>> cnt,
+                                                   V const & val,
+                                                   C pred = C{},
+                                                   P proj = P{}) //
         {
             if(cnt <= 0)
                 return subrange<iterator_t<Rng>>{begin(rng), begin(rng)};

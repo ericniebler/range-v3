@@ -40,21 +40,21 @@ namespace ranges
     {
         template(typename I, typename S)( //
             requires input_iterator<I> AND sentinel_for<S, I>) //
-        auto next_to_if(I i, S s, std::true_type) -> I
+        I next_to_if(I i, S s, std::true_type)
         {
             return ranges::next(i, s);
         }
 
         template(typename I, typename S)( //
             requires input_iterator<I> AND sentinel_for<S, I>) //
-        auto next_to_if(I, S s, std::false_type) -> S
+        S next_to_if(I, S s, std::false_type)
         {
             return s;
         }
 
         template(bool B, typename I, typename S)( //
             requires input_iterator<I> AND sentinel_for<S, I>) //
-        auto next_to_if(I i, S s) -> meta::if_c<B, I, S>
+        meta::if_c<B, I, S> next_to_if(I i, S s)
         {
             return detail::next_to_if(std::move(i), std::move(s), meta::bool_<B>{});
         }
@@ -187,12 +187,11 @@ namespace ranges
                  typename S2,
                  typename R = equal_to,
                  typename P = identity)( //
-            requires forward_iterator<I1> && sentinel_for<S1, I1> &&
-                forward_iterator<I2> && sentinel_for<S2, I2> &&
+            requires forward_iterator<I1> AND sentinel_for<S1, I1> AND
+                forward_iterator<I2> AND sentinel_for<S2, I2> AND
                 indirect_relation<R, projected<I1, P>, I2>) //
-        auto RANGES_FUNC(find_end)(
+        subrange<I1> RANGES_FUNC(find_end)(
             I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{}, P proj = P{}) //
-            -> subrange<I1>
         {
             constexpr bool Bidi =
                 bidirectional_iterator<I1> && bidirectional_iterator<I2>;
@@ -211,11 +210,10 @@ namespace ranges
                  typename Rng2,
                  typename R = equal_to,
                  typename P = identity)( //
-            requires forward_range<Rng1> && forward_range<Rng2> &&
+            requires forward_range<Rng1> AND forward_range<Rng2> AND
                 indirect_relation<R, projected<iterator_t<Rng1>, P>, iterator_t<Rng2>>) //
-        auto RANGES_FUNC(find_end)(
+        safe_subrange_t<Rng1> RANGES_FUNC(find_end)(
             Rng1 && rng1, Rng2 && rng2, R pred = R{}, P proj = P{}) //
-            -> safe_subrange_t<Rng1>
         {
             return (*this)(begin(rng1),
                            end(rng1),

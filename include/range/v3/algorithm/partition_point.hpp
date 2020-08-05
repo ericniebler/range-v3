@@ -82,8 +82,8 @@ namespace ranges
         template(typename Rng, typename C, typename P = identity)( //
             requires forward_range<Rng> AND //
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>) //
-        auto RANGES_FUNC(partition_point)(Rng && rng, C pred, P proj = P{}) //
-            -> borrowed_iterator_t<Rng>
+        borrowed_iterator_t<Rng> //
+        RANGES_FUNC(partition_point)(Rng && rng, C pred, P proj = P{}) //
         {
             if(RANGES_CONSTEXPR_IF(sized_range<Rng>))
             {

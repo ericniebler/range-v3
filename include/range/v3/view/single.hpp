@@ -110,7 +110,7 @@ namespace ranges
         {
             template(typename Val)( //
                 requires copy_constructible<Val>) //
-            auto operator()(Val value) const -> single_view<Val>
+            single_view<Val> operator()(Val value) const
             {
                 return single_view<Val>{std::move(value)};
             }

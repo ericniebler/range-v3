@@ -40,12 +40,12 @@ namespace ranges
     RANGES_FUNC_BEGIN(remove_copy_if)
 
         /// \brief function template \c remove_copy_if
-        template(typename I, typename S, typename O, typename C, typename P = identity)( //
+        template(typename I, typename S, typename O, typename C, typename P = identity)(
             requires input_iterator<I> AND sentinel_for<S, I> AND //
-            weakly_incrementable<O> AND indirect_unary_predicate<C, projected<I, P>> AND //
+            weakly_incrementable<O> AND indirect_unary_predicate<C, projected<I, P>> AND
             indirectly_copyable<I, O>) //
-        auto RANGES_FUNC(remove_copy_if)(I first, S last, O out, C pred, P proj = P{}) //
-            -> remove_copy_if_result<I, O>
+        remove_copy_if_result<I, O> //
+        RANGES_FUNC(remove_copy_if)(I first, S last, O out, C pred, P proj = P{}) //
         {
             for(; first != last; ++first)
             {
@@ -64,8 +64,8 @@ namespace ranges
             requires input_range<Rng> AND weakly_incrementable<O> AND //
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> AND //
             indirectly_copyable<iterator_t<Rng>, O>) //
-        auto RANGES_FUNC(remove_copy_if)(Rng && rng, O out, C pred, P proj = P{}) //
-            -> remove_copy_if_result<borrowed_iterator_t<Rng>, O>
+        remove_copy_if_result<borrowed_iterator_t<Rng>, O> //
+        RANGES_FUNC(remove_copy_if)(Rng && rng, O out, C pred, P proj = P{}) //
         {
             return (*this)(
                 begin(rng), end(rng), std::move(out), std::move(pred), std::move(proj));

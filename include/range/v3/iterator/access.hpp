@@ -128,7 +128,8 @@ namespace ranges
     {
         template<typename I, typename O>
         auto is_indirectly_movable_(I & (*i)(), O & (*o)(), iter_value_t<I> * v = nullptr)
-            -> always_<std::true_type, decltype(iter_value_t<I>(iter_move(i()))),
+            -> always_<std::true_type,
+                       decltype(iter_value_t<I>(iter_move(i()))),
                        decltype(*v = iter_move(i())),
                        decltype(*o() = (iter_value_t<I> &&) * v),
                        decltype(*o() = iter_move(i()))>;

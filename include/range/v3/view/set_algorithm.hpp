@@ -224,13 +224,18 @@ namespace ranges
         {
             template(typename Rng1, typename Rng2, typename C = less,
                      typename P1 = identity, typename P2 = identity)( //
-                requires viewable_range<Rng1> && input_range<Rng1> &&
-                        viewable_range<Rng2> && input_range<Rng2> &&
-                            indirect_relation<C, projected<iterator_t<Rng1>, P1>,
-                                              projected<iterator_t<Rng2>, P2>>) //
-            auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
-                            P2 proj2 = P2{}) const
-                -> set_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
+                requires //
+                    viewable_range<Rng1> AND input_range<Rng1> AND
+                    viewable_range<Rng2> AND input_range<Rng2> AND
+                    indirect_relation<C,
+                                      projected<iterator_t<Rng1>, P1>,
+                                      projected<iterator_t<Rng2>, P2>>) //
+            set_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2> //
+            operator()(Rng1 && rng1,
+                       Rng2 && rng2,
+                       C pred = C{},
+                       P1 proj1 = P1{},
+                       P2 proj2 = P2{}) const
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),
@@ -244,13 +249,13 @@ namespace ranges
         {
             using set_difference_base_fn::operator();
 
-            template<typename Rng2, typename C = less, typename P1 = identity,
-                     typename P2 = identity>
-            constexpr auto CPP_fun(operator())(Rng2 && rng2, C && pred = C{},
-                                               P1 proj1 = P1{}, P2 proj2 = P2{})(
-                const //
-                requires viewable_range<Rng2> && input_range<Rng2> &&
-                (!range<C>))
+            template(typename Rng2, typename C = less, typename P1 = identity,
+                     typename P2 = identity)( //
+                requires viewable_range<Rng2> AND input_range<Rng2> AND (!range<C>))
+            constexpr auto operator()(Rng2 && rng2,
+                                      C && pred = C{},
+                                      P1 proj1 = P1{},
+                                      P2 proj2 = P2{}) const
             {
                 return make_view_closure(bind_back(set_difference_base_fn{},
                                                    all(rng2),
@@ -395,13 +400,18 @@ namespace ranges
         {
             template(typename Rng1, typename Rng2, typename C = less,
                      typename P1 = identity, typename P2 = identity)( //
-                requires viewable_range<Rng1> && input_range<Rng1> &&
-                        viewable_range<Rng2> && input_range<Rng2> &&
-                            indirect_relation<C, projected<iterator_t<Rng1>, P1>,
-                                              projected<iterator_t<Rng2>, P2>>) //
-            auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
-                            P2 proj2 = P2{}) const
-                -> set_intersection_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
+                requires viewable_range<Rng1> AND input_range<Rng1> AND
+                    viewable_range<Rng2> AND input_range<Rng2> AND
+                    indirect_relation<
+                        C,
+                        projected<iterator_t<Rng1>, P1>,
+                        projected<iterator_t<Rng2>, P2>>) //
+            set_intersection_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
+            operator()(Rng1 && rng1,
+                       Rng2 && rng2,
+                       C pred = C{},
+                       P1 proj1 = P1{},
+                       P2 proj2 = P2{}) const
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),
@@ -415,13 +425,13 @@ namespace ranges
         {
             using set_intersection_base_fn::operator();
 
-            template<typename Rng2, typename C = less, typename P1 = identity,
-                     typename P2 = identity>
-            constexpr auto CPP_fun(operator())(Rng2 && rng2, C && pred = C{},
-                                               P1 proj1 = P1{}, P2 proj2 = P2{})(
-                const //
-                requires viewable_range<Rng2> && input_range<Rng2> &&
-                (!range<C>))
+            template(typename Rng2, typename C = less, typename P1 = identity,
+                     typename P2 = identity)( //
+                requires viewable_range<Rng2> AND input_range<Rng2> AND (!range<C>))
+            constexpr auto operator()(Rng2 && rng2,
+                                      C && pred = C{},
+                                      P1 proj1 = P1{},
+                                      P2 proj2 = P2{}) const
             {
                 return make_view_closure(bind_back(set_intersection_base_fn{},
                                                    all(rng2),
@@ -593,18 +603,23 @@ namespace ranges
         public:
             template(typename Rng1, typename Rng2, typename C = less,
                      typename P1 = identity, typename P2 = identity)( //
-                requires viewable_range<Rng1> && input_range<Rng1> &&
-                        viewable_range<Rng2> && input_range<Rng2> && common_with<
-                            range_value_t<Rng1>, range_value_t<Rng2>> &&
-                            common_reference_with<range_reference_t<Rng1>,
-                                                  range_reference_t<Rng2>> &&
-                                common_reference_with<range_rvalue_reference_t<Rng1>,
-                                                      range_rvalue_reference_t<Rng2>> &&
-                                    indirect_relation<C, projected<iterator_t<Rng1>, P1>,
-                                                      projected<iterator_t<Rng2>, P2>>) //
-            auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
-                            P2 proj2 = P2{}) const
-                -> set_union_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
+                requires //
+                    viewable_range<Rng1> AND input_range<Rng1> AND
+                    viewable_range<Rng2> AND input_range<Rng2> AND
+                    common_with<range_value_t<Rng1>, range_value_t<Rng2>> AND
+                    common_reference_with<range_reference_t<Rng1>,
+                                          range_reference_t<Rng2>> AND
+                    common_reference_with<range_rvalue_reference_t<Rng1>,
+                                          range_rvalue_reference_t<Rng2>> AND
+                    indirect_relation<C,
+                                      projected<iterator_t<Rng1>, P1>,
+                                      projected<iterator_t<Rng2>, P2>>) //
+            set_union_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2> //
+            operator()(Rng1 && rng1,
+                       Rng2 && rng2,
+                       C pred = C{},
+                       P1 proj1 = P1{},
+                       P2 proj2 = P2{}) const
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),
@@ -618,13 +633,13 @@ namespace ranges
         {
             using set_union_base_fn::operator();
 
-            template<typename Rng2, typename C = less, typename P1 = identity,
-                     typename P2 = identity>
-            constexpr auto CPP_fun(operator())(Rng2 && rng2, C && pred = C{},
-                                               P1 proj1 = P1{}, P2 proj2 = P2{})(
-                const //
-                requires viewable_range<Rng2> && input_range<Rng2> &&
-                (!range<C>))
+            template(typename Rng2, typename C = less, typename P1 = identity,
+                     typename P2 = identity)( //
+                requires viewable_range<Rng2> AND input_range<Rng2> AND (!range<C>))
+            constexpr auto operator()(Rng2 && rng2,
+                                      C && pred = C{},
+                                      P1 proj1 = P1{},
+                                      P2 proj2 = P2{}) const
             {
                 return make_view_closure(bind_back(set_union_base_fn{},
                                                    all(rng2),
@@ -822,19 +837,23 @@ namespace ranges
         {
             template(typename Rng1, typename Rng2, typename C = less,
                      typename P1 = identity, typename P2 = identity)( //
-                requires viewable_range<Rng1> && input_range<Rng1> &&
-                        viewable_range<Rng2> && input_range<Rng2> && common_with<
-                            range_value_t<Rng1>, range_value_t<Rng2>> &&
-                            common_reference_with<range_reference_t<Rng1>,
-                                                  range_reference_t<Rng2>> &&
-                                common_reference_with<range_rvalue_reference_t<Rng1>,
-                                                      range_rvalue_reference_t<Rng2>> &&
-                                    indirect_relation<C, projected<iterator_t<Rng1>, P1>,
-                                                      projected<iterator_t<Rng2>, P2>>) //
-            auto operator()(Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{},
-                            P2 proj2 = P2{}) const
-                -> set_symmetric_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1,
-                                                         P2>
+                requires //
+                    viewable_range<Rng1> AND input_range<Rng1> AND
+                    viewable_range<Rng2> AND input_range<Rng2> AND
+                    common_with<range_value_t<Rng1>, range_value_t<Rng2>> AND
+                    common_reference_with<range_reference_t<Rng1>,
+                                          range_reference_t<Rng2>> AND
+                    common_reference_with<range_rvalue_reference_t<Rng1>,
+                                          range_rvalue_reference_t<Rng2>> AND
+                    indirect_relation<C,
+                                      projected<iterator_t<Rng1>, P1>,
+                                      projected<iterator_t<Rng2>, P2>>) //
+            set_symmetric_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
+            operator()(Rng1 && rng1,
+                       Rng2 && rng2,
+                       C pred = C{},
+                       P1 proj1 = P1{},
+                       P2 proj2 = P2{}) const
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),
@@ -848,13 +867,13 @@ namespace ranges
         {
             using set_symmetric_difference_base_fn::operator();
 
-            template<typename Rng2, typename C = less, typename P1 = identity,
-                     typename P2 = identity>
-            constexpr auto CPP_fun(operator())(Rng2 && rng2, C && pred = C{},
-                                               P1 proj1 = P1{}, P2 proj2 = P2{})(
-                const //
-                requires viewable_range<Rng2> && input_range<Rng2> &&
-                (!range<C>))
+            template(typename Rng2, typename C = less, typename P1 = identity,
+                     typename P2 = identity)( //
+                requires viewable_range<Rng2> AND input_range<Rng2> AND (!range<C>))
+            constexpr auto operator()(Rng2 && rng2,
+                                      C && pred = C{},
+                                      P1 proj1 = P1{},
+                                      P2 proj2 = P2{}) const
             {
                 return make_view_closure(bind_back(set_symmetric_difference_base_fn{},
                                                    all(rng2),

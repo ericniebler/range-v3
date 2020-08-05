@@ -33,8 +33,7 @@ namespace ranges
         /// \brief function template \c fill
         template(typename O, typename S, typename V)( //
             requires output_iterator<O, V const &> AND sentinel_for<S, O>) //
-        auto RANGES_FUNC(fill)(O first, S last, V const & val) //
-            -> O
+        O RANGES_FUNC(fill)(O first, S last, V const & val) //
         {
             for(; first != last; ++first)
                 *first = val;
@@ -44,8 +43,7 @@ namespace ranges
         /// \overload
         template(typename Rng, typename V)( //
             requires output_range<Rng, V const &>) //
-        auto RANGES_FUNC(fill)(Rng && rng, V const & val)
-            -> borrowed_iterator_t<Rng>
+        borrowed_iterator_t<Rng> RANGES_FUNC(fill)(Rng && rng, V const & val)
         {
             return (*this)(begin(rng), end(rng), val);
         }

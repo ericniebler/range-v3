@@ -101,7 +101,7 @@ namespace ranges
         /// \endcond
         template(typename Val)( //
             requires copy_constructible<Val> AND default_constructible<Val>) //
-        inline auto istream(std::istream & sin) -> istream_view<Val>
+        inline istream_view<Val> istream(std::istream & sin)
         {
             return istream_view<Val>{sin};
         }

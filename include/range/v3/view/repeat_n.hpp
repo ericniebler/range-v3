@@ -111,8 +111,7 @@ namespace ranges
         {
             template(typename Val)( //
                 requires copy_constructible<Val>) //
-            auto operator()(Val value, std::ptrdiff_t n) const
-                -> repeat_n_view<Val>
+            repeat_n_view<Val> operator()(Val value, std::ptrdiff_t n) const
             {
                 return repeat_n_view<Val>{std::move(value), n};
             }

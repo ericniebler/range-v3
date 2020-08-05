@@ -73,15 +73,13 @@ namespace ranges
         }
         template(bool Const = true)( //
             requires Const AND range<meta::const_if_c<Const, Rng>>) //
-        auto end_(std::false_type) const
-            -> sentinel_t<meta::const_if_c<Const, Rng>>
+        sentinel_t<meta::const_if_c<Const, Rng>> end_(std::false_type) const
         {
             return ranges::end(rng_);
         }
         template(bool Const = true)( //
             requires Const AND range<meta::const_if_c<Const, Rng>>) //
-        auto end_(std::true_type) const
-            -> iterator_t<meta::const_if_c<Const, Rng>>
+        iterator_t<meta::const_if_c<Const, Rng>> end_(std::true_type) const
         {
             return ranges::begin(rng_) + ranges::distance(rng_);
         }
@@ -136,7 +134,8 @@ namespace ranges
     };
 
     template<typename Rng, bool B>
-    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<common_view<Rng, B>> = enable_borrowed_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<common_view<Rng, B>> = //
+        enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Rng)(       //
@@ -158,14 +157,14 @@ namespace ranges
         {
             template(typename Rng)( //
                 requires viewable_range<Rng> AND common_range<Rng>) //
-            auto operator()(Rng && rng) const -> all_t<Rng>
+            all_t<Rng> operator()(Rng && rng) const
             {
                 return all(static_cast<Rng &&>(rng));
             }
 
             template(typename Rng)( //
                 requires viewable_range<Rng> AND (!common_range<Rng>)) //
-            auto operator()(Rng && rng) const -> common_view<all_t<Rng>>
+            common_view<all_t<Rng>> operator()(Rng && rng) const
             {
                 return common_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -175,7 +174,7 @@ namespace ranges
         {
             template(typename Rng)( //
                 requires viewable_range<Rng>) //
-            auto operator()(Rng && rng) const -> common_view<all_t<Rng>>
+            common_view<all_t<Rng>> operator()(Rng && rng) const
             {
                 return common_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

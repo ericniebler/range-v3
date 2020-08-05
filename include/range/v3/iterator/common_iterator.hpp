@@ -111,16 +111,14 @@ namespace ranges
         }
         template(typename J, typename R = iter_reference_t<J>)( //
             requires std::is_reference<R>::value) //
-        static auto operator_arrow_(J const & j, long) noexcept
-            -> meta::_t<std::add_pointer<R>>
+        static meta::_t<std::add_pointer<R>> operator_arrow_(J const & j, long) noexcept
         {
             auto && r = *j;
             return std::addressof(r);
         }
         template(typename J, typename V = iter_value_t<J>)( //
             requires constructible_from<V, iter_reference_t<J>>) //
-        static auto operator_arrow_(J const & j, ...) noexcept(noexcept(V(V(*j))))
-            -> arrow_proxy_
+        static arrow_proxy_ operator_arrow_(J const & j, ...) noexcept(noexcept(V(V(*j))))
         {
             return arrow_proxy_(*j);
         }
@@ -253,8 +251,7 @@ namespace ranges
     template(typename I1, typename I2, typename S1, typename S2)( //
         requires sentinel_for<S1, I2> AND sentinel_for<S2, I1> AND //
         (!equality_comparable_with<I1, I2>)) //
-    auto operator==(common_iterator<I1, S1> const & x, common_iterator<I2, S2> const & y)
-        -> bool
+    bool operator==(common_iterator<I1, S1> const & x, common_iterator<I2, S2> const & y)
     {
         return detail::cidata(x).index() == 1u ? (detail::cidata(y).index() == 1u ||
                                                   ranges::get<0>(detail::cidata(y)) ==
@@ -267,8 +264,7 @@ namespace ranges
     template(typename I1, typename I2, typename S1, typename S2)( //
         requires sentinel_for<S1, I2> AND sentinel_for<S2, I1> AND //
             equality_comparable_with<I1, I2>) //
-    auto operator==(common_iterator<I1, S1> const & x, common_iterator<I2, S2> const & y)
-        -> bool
+    bool operator==(common_iterator<I1, S1> const & x, common_iterator<I2, S2> const & y)
     {
         return detail::cidata(x).index() == 1u
                    ? (detail::cidata(y).index() == 1u ||
@@ -283,8 +279,7 @@ namespace ranges
 
     template(typename I1, typename I2, typename S1, typename S2)( //
         requires sentinel_for<S1, I2> AND sentinel_for<S2, I1>) //
-    auto operator!=(common_iterator<I1, S1> const & x, common_iterator<I2, S2> const & y)
-        -> bool
+    bool operator!=(common_iterator<I1, S1> const & x, common_iterator<I2, S2> const & y)
     {
         return !(x == y);
     }
@@ -309,7 +304,10 @@ namespace ranges
 
     template<typename I, typename S>
     struct indirectly_readable_traits<common_iterator<I, S>>
-      : meta::if_c<(bool)indirectly_readable<I>, indirectly_readable_traits<I>, meta::nil_>
+      : meta::if_c<
+        (bool)indirectly_readable<I>,
+        indirectly_readable_traits<I>,
+        meta::nil_>
     {};
 
     /// \cond
@@ -327,7 +325,7 @@ namespace ranges
             -> with_iterator_category<std::forward_iterator_tag>;
 
         template<typename I, bool = (bool)input_iterator<I>>
-        struct common_iterator_std_traits : decltype(detail::demote_common_iter_cat<I>(0)) //
+        struct common_iterator_std_traits : decltype(detail::demote_common_iter_cat<I>(0))
         {
             using difference_type = iter_difference_t<I>;
             using value_type = iter_value_t<I>;

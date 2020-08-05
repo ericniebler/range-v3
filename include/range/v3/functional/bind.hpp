@@ -99,14 +99,14 @@ namespace ranges
     {
         template(typename F)( //
             requires std::is_bind_expression<uncvref_t<F>>::value) //
-        auto operator()(F && f) const -> protector<uncvref_t<F>>
+        protector<uncvref_t<F>> operator()(F && f) const
         {
             return {static_cast<F &&>(f)};
         }
         /// \overload
         template(typename F)( //
             requires (!std::is_bind_expression<uncvref_t<F>>::value)) //
-        auto operator()(F && f) const -> F
+        F operator()(F && f) const
         {
             return static_cast<F &&>(f);
         }

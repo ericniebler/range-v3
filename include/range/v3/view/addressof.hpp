@@ -44,11 +44,13 @@ namespace ranges
             };
 
         public:
-            template(typename Rng)(                                      //
-                requires viewable_range<Rng> && input_range<Rng> &&          //
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND //
                     std::is_lvalue_reference<range_reference_t<Rng>>::value) //
-                constexpr auto CPP_auto_fun(operator())(Rng && rng)(const)(
-                    return transform(all(static_cast<Rng &&>(rng)), take_address{}))
+            constexpr auto CPP_auto_fun(operator())(Rng && rng)(const) //
+            (
+                return transform(all(static_cast<Rng &&>(rng)), take_address{}) //
+            )
         };
 
         /// \relates addressof_fn

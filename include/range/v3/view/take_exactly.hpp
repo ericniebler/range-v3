@@ -70,7 +70,7 @@ namespace ranges
             }
             template(typename BaseRng = Rng)( //
                 requires range<BaseRng const>) //
-            auto begin() const -> counted_iterator<iterator_t<BaseRng const>>
+            counted_iterator<iterator_t<BaseRng const>> begin() const
             {
                 return {ranges::begin(rng_), n_};
             }
@@ -114,12 +114,14 @@ namespace ranges
                 return ranges::begin(rng_) + n_;
             }
             CPP_member
-            auto CPP_fun(begin)()(const requires range<Rng const>)
+            auto CPP_fun(begin)()(const //
+                requires range<Rng const>)
             {
                 return ranges::begin(rng_);
             }
             CPP_member
-            auto CPP_fun(end)()(const requires range<Rng const>)
+            auto CPP_fun(end)()(const //
+                requires range<Rng const>)
             {
                 return ranges::begin(rng_) + n_;
             }
@@ -141,7 +143,9 @@ namespace ranges
     using take_exactly_view = detail::take_exactly_view_<Rng>;
 
     template<typename Rng, bool B>
-    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<detail::take_exactly_view_<Rng, B>> = enable_borrowed_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool //
+        enable_borrowed_range<detail::take_exactly_view_<Rng, B>> = //
+            enable_borrowed_range<Rng>;
 
     namespace views
     {
@@ -156,18 +160,17 @@ namespace ranges
             }
             template(typename Rng)( //
                 requires borrowed_range<Rng>) //
-            static constexpr auto impl_(Rng && rng, range_difference_t<Rng> n,
-                                        random_access_range_tag)
-                -> subrange<iterator_t<Rng>>
+            static constexpr subrange<iterator_t<Rng>> impl_(Rng && rng,
+                                                             range_difference_t<Rng> n,
+                                                             random_access_range_tag)
             {
                 return {begin(rng), next(begin(rng), n)};
             }
 
         public:
-            template<typename Rng>
-            constexpr auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(
-                const //
-                requires viewable_range<Rng> && input_range<Rng>)
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng>)
+            constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
             {
                 return take_exactly_base_fn::impl_(
                     static_cast<Rng &&>(rng), n, range_tag_of<Rng>{});
@@ -178,9 +181,9 @@ namespace ranges
         {
             using take_exactly_base_fn::operator();
 
-            template<typename Int>
-            constexpr auto CPP_fun(operator())(Int n)(const //
-                                                      requires detail::integer_like_<Int>)
+            template(typename Int)( //
+                requires detail::integer_like_<Int>)
+            constexpr auto operator()(Int n) const
             {
                 return make_view_closure(bind_back(take_exactly_base_fn{}, n));
             }

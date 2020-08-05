@@ -51,10 +51,14 @@ namespace ranges
             template(typename I, typename B, typename C = less, typename P = identity)( //
                 requires same_as<iter_common_reference_t<I>,
                                      iter_common_reference_t<B>> AND
-                        indirectly_copyable<I, B> && mergeable<B, I, I, C, P, P>) //
-            auto operator()(I begin0, iter_difference_t<I> n0, I begin1,
-                            iter_difference_t<I> n1, B buff, C r = C{}, P p = P{}) const
-                -> I
+                        indirectly_copyable<I, B> AND mergeable<B, I, I, C, P, P>) //
+            I operator()(I begin0,
+                         iter_difference_t<I> n0,
+                         I begin1,
+                         iter_difference_t<I> n1,
+                         B buff,
+                         C r = C{},
+                         P p = P{}) const
             {
                 copy_n(begin0, n0, buff);
                 return merge_n(buff, n0, begin1, n1, begin0, r, p, p).out;

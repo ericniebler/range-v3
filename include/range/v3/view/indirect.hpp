@@ -101,19 +101,22 @@ namespace ranges
           : indirect_view::view_adaptor{detail::move(rng)}
         {}
         CPP_member
-        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        constexpr auto CPP_fun(size)()(const //
+            requires sized_range<Rng const>)
         {
             return ranges::size(this->base());
         }
         CPP_member
-        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
+        constexpr auto CPP_fun(size)()( //
+            requires sized_range<Rng>)
         {
             return ranges::size(this->base());
         }
     };
 
     template<typename Rng>
-    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<indirect_view<Rng>> = enable_borrowed_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<indirect_view<Rng>> = //
+        enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
@@ -125,13 +128,14 @@ namespace ranges
     {
         struct indirect_fn
         {
-            template<typename Rng>
-            constexpr auto CPP_fun(operator())(Rng && rng)(
-                const requires viewable_range<Rng> && input_range<Rng> &&
+            template(typename Rng)( //
+                requires viewable_range<Rng> AND input_range<Rng> AND
                 // We shouldn't need to strip references to test if something
                 // is readable. https://github.com/ericniebler/stl2/issues/594
                 // indirectly_readable<range_reference_t<Rng>>)
-                ((bool)indirectly_readable<range_value_t<Rng>>)) // Cast to bool needed for GCC (???)
+                ((bool)indirectly_readable<range_value_t<Rng>>)) // Cast to bool needed
+                                                                 // for GCC (???))
+            constexpr auto operator()(Rng && rng) const
             {
                 return indirect_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

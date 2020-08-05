@@ -176,7 +176,7 @@ namespace ranges
              sized_sentinel_for<sentinel_t<meta::const_if_c<Const, Rng>>,
                                 iterator_t<meta::const_if_c<Const, Rng>>> ||
              forward_range<meta::const_if_c<Const, Rng>>)) //
-        auto begin_cursor() const -> cursor<Const>
+        cursor<Const> begin_cursor() const
         {
             return cursor<true>{this};
         }
@@ -211,14 +211,15 @@ namespace ranges
         {
             template(typename Rng, typename URNG = detail::default_random_engine)( //
                 requires viewable_range<Rng> AND input_range<Rng> AND
-                        uniform_random_bit_generator<URNG> AND convertible_to<
-                            invoke_result_t<URNG &>, range_difference_t<Rng>> &&
+                    uniform_random_bit_generator<URNG> AND
+                    convertible_to<invoke_result_t<URNG &>, range_difference_t<Rng>> AND
                     (sized_range<Rng> ||
                      sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>> ||
                      forward_range<Rng>)) //
-            auto operator()(Rng && rng, range_difference_t<Rng> sample_size,
-                            URNG & generator = detail::get_random_engine()) const
-                -> sample_view<all_t<Rng>, URNG>
+            sample_view<all_t<Rng>, URNG> operator()(
+                Rng && rng,
+                range_difference_t<Rng> sample_size,
+                URNG & generator = detail::get_random_engine()) const
             {
                 return sample_view<all_t<Rng>, URNG>{
                     all(static_cast<Rng &&>(rng)), sample_size, generator};
@@ -226,9 +227,11 @@ namespace ranges
 
             /// \cond
             template<typename Rng, typename URNG>
-            auto operator()(Rng && rng, range_difference_t<Rng> sample_size,
-                            detail::reference_wrapper_<URNG> r) const
-                -> invoke_result_t<sample_base_fn, Rng, range_difference_t<Rng>, URNG &>
+            invoke_result_t<sample_base_fn, Rng, range_difference_t<Rng>, URNG &> //
+            operator()(
+                Rng && rng,
+                range_difference_t<Rng> sample_size,
+                detail::reference_wrapper_<URNG> r) const
             {
                 return (*this)(static_cast<Rng &&>(rng), sample_size, r.get());
             }
@@ -239,11 +242,11 @@ namespace ranges
         {
             using sample_base_fn::operator();
 
-            template<typename Size, typename URNG = detail::default_random_engine>
-            constexpr auto CPP_fun(operator())(Size n,
-                                               URNG & urng = detail::get_random_engine())(
-                const //
-                requires integral<Size> && uniform_random_bit_generator<URNG>)
+            template(typename Size, typename URNG = detail::default_random_engine)( //
+                requires integral<Size> AND uniform_random_bit_generator<URNG>) //
+            constexpr auto operator()(
+                Size n,
+                URNG & urng = detail::get_random_engine()) const //
             {
                 return make_view_closure(bind_back(
                     sample_base_fn{}, n, detail::reference_wrapper_<URNG>(urng)));

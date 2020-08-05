@@ -71,11 +71,10 @@ namespace ranges
         struct RANGES_STRUCT_WITH_ADL_BARRIER(shared_closure_base)
         {
             // Piping requires viewable_ranges.
-            template(typename Rng, typename SharedFn)(      //
-                requires range<Rng> && (!viewable_range<Rng>)&& //
-                constructible_from<detail::decay_t<Rng>, Rng>)  //
-                friend constexpr auto
-                operator|(Rng && rng, shared_closure<SharedFn> vw)
+            template(typename Rng, typename SharedFn)( //
+                requires range<Rng> AND (!viewable_range<Rng>) AND //
+                    constructible_from<detail::decay_t<Rng>, Rng>) //
+            friend constexpr auto operator|(Rng && rng, shared_closure<SharedFn> vw)
             {
                 return static_cast<SharedFn &&>(vw)(static_cast<Rng &&>(rng));
             }
@@ -108,8 +107,7 @@ namespace ranges
                 template(typename Rng)( //
                     requires range<Rng> AND (!viewable_range<Rng>)AND //
                         constructible_from<detail::decay_t<Rng>, Rng>) //
-                auto operator()(Rng && rng) const                       //
-                    -> shared_view<detail::decay_t<Rng>>
+                shared_view<detail::decay_t<Rng>> operator()(Rng && rng) const
                 {
                     return shared_view<detail::decay_t<Rng>>{static_cast<Rng &&>(rng)};
                 }

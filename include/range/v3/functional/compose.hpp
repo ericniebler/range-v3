@@ -39,7 +39,8 @@ namespace ranges
 
         // clang-format off
         template<typename A, typename B, typename... Ts>
-        static constexpr auto CPP_auto_fun(do_)(A &&a, B &&b, std::false_type, Ts &&... ts)
+        static constexpr auto //
+        CPP_auto_fun(do_)(A &&a, B &&b, std::false_type, Ts &&... ts)
         (
             return invoke((B &&) b, invoke((A &&) a, (Ts &&) ts...))
         )

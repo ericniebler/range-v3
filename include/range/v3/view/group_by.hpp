@@ -99,12 +99,12 @@ namespace ranges
 
             #ifdef _MSC_VER
             template<typename I = iterator_t<Rng>>
-            auto read() const -> subrange<I>
+            subrange<I> read() const
             {
                 return {cur_, next_cur_};
             }
             #else
-            auto read() const -> subrange<iterator_t<Rng>>
+            subrange<iterator_t<Rng>> read() const
             {
                 return {cur_, next_cur_};
             }
@@ -173,8 +173,7 @@ namespace ranges
             template(typename Rng, typename Fun)( //
                 requires viewable_range<Rng> AND forward_range<Rng> AND //
                     indirect_relation<Fun, iterator_t<Rng>>) //
-            constexpr auto operator()(Rng && rng, Fun fun) const
-                -> group_by_view<all_t<Rng>, Fun>
+            constexpr group_by_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }

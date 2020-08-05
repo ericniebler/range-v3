@@ -46,7 +46,7 @@ namespace ranges
             template(typename Rng)( //
                 requires input_range<Rng> AND input_range<range_value_t<Rng>> AND
                     semiregular<join_action_value_t_<Rng>>) //
-            auto operator()(Rng && rng) const -> join_action_value_t_<Rng>
+            join_action_value_t_<Rng> operator()(Rng && rng) const
             {
                 join_action_value_t_<Rng> ret;
                 auto last = ranges::end(rng);

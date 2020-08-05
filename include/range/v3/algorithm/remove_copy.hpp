@@ -40,14 +40,13 @@ namespace ranges
     RANGES_FUNC_BEGIN(remove_copy)
 
         /// \brief function template \c remove_copy
-        template(typename I, typename S, typename O, typename T, typename P = identity)( //
+        template(typename I, typename S, typename O, typename T, typename P = identity)(
             requires input_iterator<I> AND sentinel_for<S, I> AND
                 weakly_incrementable<O> AND
-                indirect_relation<equal_to, projected<I, P>, T const *> &&
+                indirect_relation<equal_to, projected<I, P>, T const *> AND
                 indirectly_copyable<I, O>) //
-        auto RANGES_FUNC(remove_copy)(
+        remove_copy_result<I, O> RANGES_FUNC(remove_copy)(
             I first, S last, O out, T const & val, P proj = P{}) //
-            -> remove_copy_result<I, O>
         {
             for(; first != last; ++first)
             {
@@ -66,8 +65,8 @@ namespace ranges
             requires input_range<Rng> AND weakly_incrementable<O> AND //
             indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *> AND //
             indirectly_copyable<iterator_t<Rng>, O>) //
-        auto RANGES_FUNC(remove_copy)(Rng && rng, O out, T const & val, P proj = P{}) //
-            -> remove_copy_result<borrowed_iterator_t<Rng>, O>
+        remove_copy_result<borrowed_iterator_t<Rng>, O> //
+        RANGES_FUNC(remove_copy)(Rng && rng, O out, T const & val, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(out), val, std::move(proj));
         }

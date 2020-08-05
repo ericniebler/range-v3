@@ -39,8 +39,7 @@ namespace ranges
         template(typename I, typename S, typename C = less, typename P = identity)( //
             requires forward_iterator<I> AND sentinel_for<S, I> AND //
             indirect_strict_weak_order<C, projected<I, P>>) //
-        auto RANGES_FUNC(max_element)(I first, S last, C pred = C{}, P proj = P{})
-            -> I
+        I RANGES_FUNC(max_element)(I first, S last, C pred = C{}, P proj = P{})
         {
             if(first != last)
                 for(auto tmp = next(first); tmp != last; ++tmp)
@@ -53,8 +52,8 @@ namespace ranges
         template(typename Rng, typename C = less, typename P = identity)( //
             requires forward_range<Rng> AND //
             indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>) //
-        auto RANGES_FUNC(max_element)(Rng && rng, C pred = C{}, P proj = P{})
-            -> borrowed_iterator_t<Rng>
+        borrowed_iterator_t<Rng> //
+        RANGES_FUNC(max_element)(Rng && rng, C pred = C{}, P proj = P{})
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

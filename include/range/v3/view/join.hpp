@@ -156,10 +156,11 @@ namespace ranges
         }
         // Not to spec
         CPP_member
-        constexpr auto CPP_fun(size)()(requires(detail::join_cardinality<Rng>() < 0) &&
-                                       (range_cardinality<Rng>::value >= 0) &&
-                                       forward_range<Rng> &&
-                                       sized_range<range_reference_t<Rng>>)
+        constexpr auto CPP_fun(size)()(//
+            requires(detail::join_cardinality<Rng>() < 0) &&
+                (range_cardinality<Rng>::value >= 0) &&
+                forward_range<Rng> &&
+                sized_range<range_reference_t<Rng>>)
         {
             range_size_t<range_reference_t<Rng>> n = 0;
             RANGES_FOR(auto && inner, outer_)
@@ -312,8 +313,8 @@ namespace ranges
 
         template(bool Const = true)( //
             requires Const AND input_range<meta::const_if_c<Const, Rng>> AND
-                std::is_reference<range_reference_t<meta::const_if_c<Const, Rng>>>::value) //
-        constexpr auto begin_cursor() const -> cursor<Const>
+                std::is_reference<range_reference_t<meta::const_if_c<Const, Rng>>>::value)
+        constexpr cursor<Const> begin_cursor() const
         {
             return {this, ranges::begin};
         }
@@ -327,10 +328,10 @@ namespace ranges
             return end_cursor_fn{}(this, cond{});
         }
 
-        template<bool Const = true>
-        constexpr auto CPP_fun(end_cursor)()(
-            const requires Const && input_range<meta::const_if_c<Const, Rng>> &&
+        template(bool Const = true)( //
+            requires Const AND input_range<meta::const_if_c<Const, Rng>> AND
                 std::is_reference<range_reference_t<meta::const_if_c<Const, Rng>>>::value)
+        constexpr auto end_cursor() const
         {
             using CRng = meta::const_if_c<Const, Rng>;
             using cond =
@@ -369,10 +370,10 @@ namespace ranges
             return static_cast<std::size_t>(detail::join_cardinality<Rng, ValRng>());
         }
         CPP_member
-        auto CPP_fun(size)()(const requires(detail::join_cardinality<Rng, ValRng>() <
-                                            0) &&
-                             (range_cardinality<Rng>::value >= 0) && forward_range<Rng> &&
-                             sized_range<range_reference_t<Rng>> && sized_range<ValRng>)
+        auto CPP_fun(size)()(const //
+            requires(detail::join_cardinality<Rng, ValRng>() < 0) &&
+                (range_cardinality<Rng>::value >= 0) && forward_range<Rng> &&
+                sized_range<range_reference_t<Rng>> && sized_range<ValRng>)
         {
             range_size_t<range_reference_t<Rng>> n = 0;
             RANGES_FOR(auto && inner, outer_)
@@ -533,7 +534,7 @@ namespace ranges
         {
             template(typename Rng)( //
                 requires joinable_range<Rng>) //
-            auto operator()(Rng && rng) const -> join_view<all_t<Rng>>
+            join_view<all_t<Rng>> operator()(Rng && rng) const
             {
                 return join_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -549,25 +550,24 @@ namespace ranges
 
             template(typename Rng)( //
                 requires joinable_with_range<Rng, single_view<inner_value_t<Rng>>>) //
-            auto operator()(Rng && rng, inner_value_t<Rng> v) const
-                -> join_with_view<all_t<Rng>,
-                                          single_view<inner_value_t<Rng>>>
+            join_with_view<all_t<Rng>, single_view<inner_value_t<Rng>>> //
+            operator()(Rng && rng, inner_value_t<Rng> v) const
             {
                 return {all(static_cast<Rng &&>(rng)), single(std::move(v))};
             }
 
             template(typename Rng, typename ValRng)( //
                 requires joinable_with_range<Rng, ValRng>) //
-            auto operator()(Rng && rng, ValRng && val) const
-                -> join_with_view<all_t<Rng>, all_t<ValRng>>
+            join_with_view<all_t<Rng>, all_t<ValRng>> //
+            operator()(Rng && rng, ValRng && val) const
             {
                 return {all(static_cast<Rng &&>(rng)), all(static_cast<ValRng &&>(val))};
             }
 
             /// \cond
             template<typename Rng, typename T>
-            auto operator()(Rng && rng, detail::reference_wrapper_<T> r) const
-                -> invoke_result_t<join_base_fn, Rng, T &>
+            invoke_result_t<join_base_fn, Rng, T &> //
+            operator()(Rng && rng, detail::reference_wrapper_<T> r) const
             {
                 return (*this)(static_cast<Rng &&>(rng), r.get());
             }
@@ -576,17 +576,18 @@ namespace ranges
 
         struct join_bind_fn
         {
-            template<typename T>
-            constexpr auto CPP_fun(operator())(T && t)(const //
-                                                       requires (!joinable_range<T>)) // TODO: underconstrained
+            template(typename T)( //
+                requires (!joinable_range<T>)) // TODO: underconstrained
+            constexpr auto operator()(T && t)const
             {
                 return make_view_closure(bind_back(join_base_fn{}, static_cast<T &&>(t)));
             }
-            template<typename T>
-            constexpr auto CPP_fun(operator())(T & t)(const //
-                requires (!joinable_range<T &>) && range<T &>)
+            template(typename T)( //
+                requires (!joinable_range<T &>) AND range<T &>)
+            constexpr auto operator()(T & t) const
             {
-                return make_view_closure(bind_back(join_base_fn{}, detail::reference_wrapper_<T>(t)));
+                return make_view_closure(bind_back(join_base_fn{},
+                                                   detail::reference_wrapper_<T>(t)));
             }
         };
 

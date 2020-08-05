@@ -65,7 +65,7 @@ namespace ranges
             constexpr reverse_cursor(I it)
               : it_(std::move(it))
             {}
-            constexpr auto read() const -> iter_reference_t<I>
+            constexpr iter_reference_t<I> read() const
             {
                 return *arrow();
             }
@@ -81,8 +81,7 @@ namespace ranges
             }
             template(typename J)( //
                 requires sentinel_for<J, I>) //
-            constexpr auto equal(reverse_cursor<J> const & that) const
-                -> bool
+            constexpr bool equal(reverse_cursor<J> const & that) const
             {
                 return it_ == that.it_;
             }
@@ -103,8 +102,8 @@ namespace ranges
             }
             template(typename J)( //
                 requires sized_sentinel_for<J, I>) //
-            constexpr auto distance_to(reverse_cursor<J> const & that) const
-                -> iter_difference_t<I>
+            constexpr iter_difference_t<I> distance_to(reverse_cursor<J> const & that) //
+                const
             {
                 return it_ - that.base();
             }
@@ -132,7 +131,7 @@ namespace ranges
     {
         template(typename I)( //
             requires bidirectional_iterator<I>) //
-        constexpr auto operator()(I i) const -> reverse_iterator<I>
+        constexpr reverse_iterator<I> operator()(I i) const
         {
             return reverse_iterator<I>(i);
         }

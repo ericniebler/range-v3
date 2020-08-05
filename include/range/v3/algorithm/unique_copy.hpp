@@ -127,14 +127,13 @@ namespace ranges
                  typename O,
                  typename C = equal_to,
                  typename P = identity)( //
-            requires input_iterator<I> && sentinel_for<S, I> &&
-                indirect_relation<C, projected<I, P>> && weakly_incrementable<O> &&
-                indirectly_copyable<I, O> &&
+            requires input_iterator<I> AND sentinel_for<S, I> AND
+                indirect_relation<C, projected<I, P>> AND weakly_incrementable<O> AND
+                indirectly_copyable<I, O> AND
                 (forward_iterator<I> || forward_iterator<O> ||
                  indirectly_copyable_storable<I, O>)) //
-        auto RANGES_FUNC(unique_copy)(
+        unique_copy_result<I, O> RANGES_FUNC(unique_copy)(
             I first, S last, O out, C pred = C{}, P proj = P{}) //
-            -> unique_copy_result<I, O>
         {
             return detail::unique_copy_impl(std::move(first),
                                             std::move(last),
@@ -146,14 +145,14 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename O, typename C = equal_to, typename P = identity)( //
+        template(typename Rng, typename O, typename C = equal_to, typename P = identity)(
             requires input_range<Rng> AND
                 indirect_relation<C, projected<iterator_t<Rng>, P>> AND
-                weakly_incrementable<O> && indirectly_copyable<iterator_t<Rng>, O> &&
+                weakly_incrementable<O> AND indirectly_copyable<iterator_t<Rng>, O> AND
                 (forward_iterator<iterator_t<Rng>> || forward_iterator<O> ||
                  indirectly_copyable_storable<iterator_t<Rng>, O>)) //
-        auto RANGES_FUNC(unique_copy)(Rng && rng, O out, C pred = C{}, P proj = P{}) //
-            -> unique_copy_result<borrowed_iterator_t<Rng>, O>
+        unique_copy_result<borrowed_iterator_t<Rng>, O> //
+        RANGES_FUNC(unique_copy)(Rng && rng, O out, C pred = C{}, P proj = P{}) //
         {
             return detail::unique_copy_impl(begin(rng),
                                             end(rng),

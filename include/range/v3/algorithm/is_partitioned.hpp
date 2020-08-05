@@ -46,8 +46,7 @@ namespace ranges
         template(typename I, typename S, typename C, typename P = identity)( //
             requires input_iterator<I> AND sentinel_for<S, I> AND //
             indirect_unary_predicate<C, projected<I, P>>) //
-        auto RANGES_FUNC(is_partitioned)(I first, S last, C pred, P proj = P{}) //
-            -> bool
+        bool RANGES_FUNC(is_partitioned)(I first, S last, C pred, P proj = P{}) //
         {
             for(; first != last; ++first)
                 if(!invoke(pred, invoke(proj, *first)))
@@ -62,8 +61,7 @@ namespace ranges
         template(typename Rng, typename C, typename P = identity)( //
             requires input_range<Rng> AND //
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>) //
-        auto RANGES_FUNC(is_partitioned)(Rng && rng, C pred, P proj = P{}) //
-            -> bool
+        bool RANGES_FUNC(is_partitioned)(Rng && rng, C pred, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

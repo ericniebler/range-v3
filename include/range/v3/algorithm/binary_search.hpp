@@ -46,11 +46,10 @@ namespace ranges
                  typename V,
                  typename C = less,
                  typename P = identity)( //
-            requires forward_iterator<I> && sentinel_for<S, I> &&
+            requires forward_iterator<I> AND sentinel_for<S, I> AND
                 indirect_strict_weak_order<C, V const *, projected<I, P>>) //
-        auto RANGES_FUNC(binary_search)(
+        bool RANGES_FUNC(binary_search)(
             I first, S last, V const & val, C pred = C{}, P proj = P{})
-            -> bool
         {
             first =
                 lower_bound(std::move(first), last, val, std::ref(pred), std::ref(proj));
@@ -60,10 +59,9 @@ namespace ranges
         /// \overload
         template(typename Rng, typename V, typename C = less, typename P = identity)( //
             requires forward_range<Rng> AND
-                indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>) //
-        auto RANGES_FUNC(binary_search)(
+                indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
+        bool RANGES_FUNC(binary_search)(
             Rng && rng, V const & val, C pred = C{}, P proj = P{}) //
-            -> bool
         {
             static_assert(!is_infinite<Rng>::value,
                           "Trying to binary search an infinite range");

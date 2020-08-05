@@ -45,18 +45,17 @@ namespace ranges
                  typename C = less,
                  typename PI = identity,
                  typename PO = identity)( //
-            requires input_iterator<I> && sentinel_for<SI, I> &&
-                random_access_iterator<O> && sentinel_for<SO, O> &&
-                indirectly_copyable<I, O> && sortable<O, C, PO> &&
+            requires input_iterator<I> AND sentinel_for<SI, I> AND
+                random_access_iterator<O> AND sentinel_for<SO, O> AND
+                indirectly_copyable<I, O> AND sortable<O, C, PO> AND
                 indirect_strict_weak_order<C, projected<I, PI>, projected<O, PO>>) //
-        auto RANGES_FUNC(partial_sort_copy)(I first,
-                                            SI last,
-                                            O out_begin,
-                                            SO out_end,
-                                            C pred = C{},
-                                            PI in_proj = PI{},
-                                            PO out_proj = PO{}) //
-            -> O
+        O RANGES_FUNC(partial_sort_copy)(I first,
+                                         SI last,
+                                         O out_begin,
+                                         SO out_end,
+                                         C pred = C{},
+                                         PI in_proj = PI{},
+                                         PO out_proj = PO{}) //
         {
             O r = out_begin;
             if(r != out_end)
@@ -89,18 +88,17 @@ namespace ranges
                  typename C = less,
                  typename PI = identity,
                  typename PO = identity)( //
-            requires input_range<InRng> && random_access_range<OutRng> &&
-                indirectly_copyable<iterator_t<InRng>, iterator_t<OutRng>> &&
-                sortable<iterator_t<OutRng>, C, PO> &&
+            requires input_range<InRng> AND random_access_range<OutRng> AND
+                indirectly_copyable<iterator_t<InRng>, iterator_t<OutRng>> AND
+                sortable<iterator_t<OutRng>, C, PO> AND
                 indirect_strict_weak_order<C,
                                            projected<iterator_t<InRng>, PI>,
                                            projected<iterator_t<OutRng>, PO>>) //
-        auto RANGES_FUNC(partial_sort_copy)(InRng && in_rng,
-                                            OutRng && out_rng,
-                                            C pred = C{},
-                                            PI in_proj = PI{},
-                                            PO out_proj = PO{}) //
-            -> borrowed_iterator_t<OutRng>
+        borrowed_iterator_t<OutRng> RANGES_FUNC(partial_sort_copy)(InRng && in_rng,
+                                                                   OutRng && out_rng,
+                                                                   C pred = C{},
+                                                                   PI in_proj = PI{},
+                                                                   PO out_proj = PO{}) //
         {
             return (*this)(begin(in_rng),
                            end(in_rng),

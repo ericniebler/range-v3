@@ -179,10 +179,10 @@ namespace ranges
 
         // Assignment
         template(typename... Us)( //
-            requires std::is_assignable<detail::args<Ts...> &, detail::rargs<Us...>>::value) //
-        auto operator=(std::tuple<Us...> & that) noexcept(
+            requires std::is_assignable<detail::args<Ts...> &,
+                                        detail::rargs<Us...>>::value) //
+        common_tuple & operator=(std::tuple<Us...> & that) noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts &, Us &>::value...>::value)
-            -> common_tuple &
         {
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
@@ -190,18 +190,17 @@ namespace ranges
         template(typename... Us)( //
             requires std::is_assignable<detail::args<Ts...> &,
                                         detail::rargs<Us const...>>::value) //
-        auto operator=(std::tuple<Us...> const & that) noexcept(
+        common_tuple & operator=(std::tuple<Us...> const & that) noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts &, Us const &>::value...>::value)
-            -> common_tuple &
         {
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
         }
         template(typename... Us)( //
-            requires std::is_assignable<detail::args<Ts...> &, detail::args<Us...>>::value) //
-        auto operator=(std::tuple<Us...> && that) noexcept(
+            requires std::is_assignable<detail::args<Ts...> &,
+                                        detail::args<Us...>>::value) //
+        common_tuple & operator=(std::tuple<Us...> && that) noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts &, Us>::value...>::value)
-            -> common_tuple &
         {
             (void)tuple_transform(base(), std::move(that), element_assign_{});
             return *this;
@@ -210,20 +209,18 @@ namespace ranges
         template(typename... Us)( //
             requires std::is_assignable<detail::args<Ts const...> &,
                                         detail::rargs<Us...>>::value)
-        auto operator=(std::tuple<Us...> & that) const noexcept(
+        common_tuple const & operator=(std::tuple<Us...> & that) const noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts const &, Us &>::value...>::value)
-            -> common_tuple const &
         {
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
         }
         template(typename... Us)( //
-                requires std::is_assignable<detail::args<Ts const...> &,
-                                            detail::rargs<Us const...>>::value)
-        auto operator=(std::tuple<Us...> const & that) const
+            requires std::is_assignable<detail::args<Ts const...> &,
+                                        detail::rargs<Us const...>>::value)
+        common_tuple const & operator=(std::tuple<Us...> const & that) const
             noexcept(meta::and_c<
                      std::is_nothrow_assignable<Ts const &, Us const &>::value...>::value)
-                -> common_tuple const &
         {
             (void)tuple_transform(base(), that, element_assign_{});
             return *this;
@@ -231,9 +228,8 @@ namespace ranges
         template(typename... Us)( //
             requires std::is_assignable<detail::args<Ts const...> &,
                                         detail::args<Us...>>::value)
-        auto operator=(std::tuple<Us...> && that) const noexcept(
+        common_tuple const & operator=(std::tuple<Us...> && that) const noexcept(
             meta::and_c<std::is_nothrow_assignable<Ts const &, Us &&>::value...>::value)
-            -> common_tuple const &
         {
             (void)tuple_transform(base(), std::move(that), element_assign_{});
             return *this;
@@ -242,8 +238,7 @@ namespace ranges
         // Conversion
         template(typename... Us)(                                               //
             requires constructible_from<detail::args<Us...>, detail::rargs<Ts...>>) //
-            operator std::tuple<Us...>() &
-            noexcept(
+        operator std::tuple<Us...>() & noexcept(
                 meta::and_c<std::is_nothrow_constructible<Us, Ts &>::value...>::value)
         {
             return detail::to_std_tuple<Us...>(
@@ -258,9 +253,9 @@ namespace ranges
             return detail::to_std_tuple<Us...>(
                 *this, meta::make_index_sequence<sizeof...(Ts)>{});
         }
-        template(typename... Us)(                                              //
+        template(typename... Us)(                                                  //
             requires constructible_from<detail::args<Us...>, detail::args<Ts...>>) //
-            operator std::tuple<Us...>() &&
+        operator std::tuple<Us...>() &&
             noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts>::value...>::value)
         {
             return detail::to_std_tuple<Us...>(

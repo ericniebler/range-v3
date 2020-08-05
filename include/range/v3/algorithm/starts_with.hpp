@@ -49,17 +49,16 @@ namespace ranges
                  typename Comp = equal_to,
                  typename Proj1 = identity,
                  typename Proj2 = identity)( //
-            requires input_iterator<I1> && sentinel_for<S1, I1> &&
-                input_iterator<I2> && sentinel_for<S2, I2> &&
+            requires input_iterator<I1> AND sentinel_for<S1, I1> AND
+                input_iterator<I2> AND sentinel_for<S2, I2> AND
                 indirectly_comparable<I1, I2, Comp, Proj1, Proj2>) //
-        constexpr auto RANGES_FUNC(starts_with)(I1 first1,
+        constexpr bool RANGES_FUNC(starts_with)(I1 first1,
                                                 S1 last1,
                                                 I2 first2,
                                                 S2 last2,
                                                 Comp comp = {},
                                                 Proj1 proj1 = {},
                                                 Proj2 proj2 = {}) //
-            -> bool
         {
             return mismatch(std::move(first1),
                             std::move(last1),
@@ -77,11 +76,10 @@ namespace ranges
                  typename Comp = equal_to,
                  typename Proj1 = identity,
                  typename Proj2 = identity)( //
-            requires input_range<R1> && input_range<R2> &&
-                indirectly_comparable<iterator_t<R1>, iterator_t<R2>, Comp, Proj1, Proj2>) //
-        constexpr auto RANGES_FUNC(starts_with)(
+            requires input_range<R1> AND input_range<R2> AND
+                indirectly_comparable<iterator_t<R1>, iterator_t<R2>, Comp, Proj1, Proj2>)
+        constexpr bool RANGES_FUNC(starts_with)(
             R1 && r1, R2 && r2, Comp comp = {}, Proj1 proj1 = {}, Proj2 proj2 = {}) //
-            -> bool
         {
             return (*this)( //
                 begin(r1),

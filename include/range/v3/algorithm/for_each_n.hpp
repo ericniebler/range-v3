@@ -40,9 +40,7 @@ namespace ranges
         template(typename I, typename F, typename P = identity)( //
             requires input_iterator<I> AND
                 indirectly_unary_invocable<F, projected<I, P>>) //
-        auto RANGES_FUNC(for_each_n)(
-            I first, iter_difference_t<I> n, F fun, P proj = P{}) //
-            -> I
+        I RANGES_FUNC(for_each_n)(I first, iter_difference_t<I> n, F fun, P proj = P{})
         {
             RANGES_EXPECT(0 <= n);
             auto norig = n;
@@ -56,9 +54,8 @@ namespace ranges
         template(typename Rng, typename F, typename P = identity)( //
             requires input_range<Rng> AND
                 indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>) //
-        auto RANGES_FUNC(for_each_n)(
+        borrowed_iterator_t<Rng> RANGES_FUNC(for_each_n)(
             Rng && rng, range_difference_t<Rng> n, F fun, P proj = P{})
-            -> borrowed_iterator_t<Rng>
         {
             if(sized_range<Rng>)
                 RANGES_EXPECT(n <= distance(rng));

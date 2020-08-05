@@ -110,7 +110,7 @@ namespace ranges
 
         template(typename I, typename S, typename O)( //
             requires (!sized_sentinel_for<S, I>)) //
-        auto uninitialized_copy(I first, S last, O out) -> O
+        O uninitialized_copy(I first, S last, O out)
         {
             for(; first != last; ++first, ++out)
                 ::new((void *)std::addressof(*out)) iter_value_t<O>(*first);
@@ -119,7 +119,7 @@ namespace ranges
 
         template(typename I, typename S, typename O)( //
             requires sized_sentinel_for<S, I>) //
-        auto uninitialized_copy(I first, S last, O out) -> O
+        O uninitialized_copy(I first, S last, O out)
         {
             return std::uninitialized_copy_n(first, (last - first), out);
         }
@@ -146,7 +146,7 @@ namespace ranges
               : datum_{}
             {}
             template(typename... Ts)(                                      //
-                requires constructible_from<T, Ts...> && (sizeof...(Ts) != 0)) //
+                requires constructible_from<T, Ts...> AND (sizeof...(Ts) != 0)) //
             constexpr indexed_datum(Ts &&... ts) noexcept(
                     std::is_nothrow_constructible<T, Ts...>::value)
               : datum_(static_cast<Ts &&>(ts)...)
@@ -536,7 +536,7 @@ namespace ranges
         template<typename Variant>
         struct variant_get
         {
-            ////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////
             // get
             template<std::size_t N>
             friend meta::_t<
@@ -666,7 +666,7 @@ namespace ranges
         {}
         template(typename... Args)( //
             requires (sizeof...(Args) == sizeof...(Ts))) //
-        static constexpr auto all_convertible_to(int) noexcept -> bool
+        static constexpr bool all_convertible_to(int) noexcept
         {
             return and_v<convertible_to<Args, Ts>...>;
         }
@@ -745,7 +745,7 @@ namespace ranges
         template(typename... Args)( //
             requires (!same_as<variant<Args...>, variant>) AND
             (all_convertible_to<Args...>(0)))
-        auto operator=(variant<Args...> that) -> variant &
+        variant & operator=(variant<Args...> that)
         {
             // TODO do a simple copy assign when index()==that.index() //
             this->clear_();
@@ -758,7 +758,7 @@ namespace ranges
         }
         template(std::size_t N, typename... Args)( //
             requires constructible_from<datum_t<N>, Args...>) //
-        auto emplace(Args &&... args) -> void
+        void emplace(Args &&... args)
         {
             this->clear_();
             detail::construct_fn<N, Args &&...> fn{static_cast<Args &&>(args)...};
@@ -817,8 +817,7 @@ namespace ranges
 
     template(typename... Ts, typename... Us)( //
         requires and_v<equality_comparable_with<Ts, Us>...>) //
-    auto operator==(variant<Ts...> const & lhs, variant<Us...> const & rhs)
-        -> bool
+    bool operator==(variant<Ts...> const & lhs, variant<Us...> const & rhs)
     {
         return (!lhs.valid() && !rhs.valid()) ||
                (lhs.index() == rhs.index() &&
@@ -829,22 +828,21 @@ namespace ranges
 
     template(typename... Ts, typename... Us)( //
         requires and_v<equality_comparable_with<Ts, Us>...>) //
-    auto operator!=(variant<Ts...> const & lhs, variant<Us...> const & rhs)
-        -> bool
+    bool operator!=(variant<Ts...> const & lhs, variant<Us...> const & rhs)
     {
         return !(lhs == rhs);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////
     // emplace
     template(std::size_t N, typename... Ts, typename... Args)( //
         requires constructible_from<detail::variant_datum_t<N, Ts...>, Args...>) //
-    auto emplace(variant<Ts...> & var, Args &&... args) -> void
+    void emplace(variant<Ts...> & var, Args &&... args)
     {
         var.template emplace<N>(static_cast<Args &&>(args)...);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////
     // variant_unique
     template<typename Var>
     struct variant_unique
@@ -859,7 +857,7 @@ namespace ranges
     template<typename Var>
     using variant_unique_t = meta::_t<variant_unique<Var>>;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////
     // unique_variant
     template<typename... Ts>
     variant_unique_t<variant<Ts...>> unique_variant(variant<Ts...> const & var)

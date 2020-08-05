@@ -106,9 +106,10 @@ namespace ranges
 
         template<typename I>
         using iter_pointer_t =
-            meta::_t<meta::conditional_t<meta::is_trait<meta::defer<iter_arrow_t, I>>::value,
-                               meta::defer<iter_arrow_t, I>,
-                               std::add_pointer<iter_reference_t<I>>>>;
+            meta::_t<meta::conditional_t<
+                        meta::is_trait<meta::defer<iter_arrow_t, I>>::value,
+                        meta::defer<iter_arrow_t, I>,
+                        std::add_pointer<iter_reference_t<I>>>>;
 
         template<typename T>
         struct difference_type_ : meta::defer<iter_difference_t, T>

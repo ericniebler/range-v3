@@ -50,7 +50,7 @@ namespace ranges
     {
         template(typename To, typename From)( //
             requires integral<To> AND integral<From>) //
-        constexpr auto narrow_cast(From from) noexcept -> To
+        constexpr To narrow_cast(From from) noexcept
         {
             using C = common_type_t<To, From>;
             return RANGES_EXPECT((from > 0) == (static_cast<To>(from) > 0)),
@@ -306,7 +306,7 @@ namespace ranges
 
         template(typename U, index_type M)( //
             requires equality_comparable_with<T, U>) //
-        auto operator==(span<U, M> const & that) const -> bool
+        bool operator==(span<U, M> const & that) const
         {
             RANGES_EXPECT(!size() || data());
             RANGES_EXPECT(!that.size() || that.data());
@@ -314,14 +314,14 @@ namespace ranges
         }
         template(typename U, index_type M)( //
             requires equality_comparable_with<T, U>) //
-        auto operator!=(span<U, M> const & that) const -> bool
+        bool operator!=(span<U, M> const & that) const
         {
             return !(*this == that);
         }
 
         template(typename U, index_type M)( //
             requires totally_ordered_with<T, U>) //
-        auto operator<(span<U, M> const & that) const -> bool
+        bool operator<(span<U, M> const & that) const
         {
             RANGES_EXPECT(!size() || data());
             RANGES_EXPECT(!that.size() || that.data());
@@ -329,19 +329,19 @@ namespace ranges
         }
         template(typename U, index_type M)( //
             requires totally_ordered_with<T, U>) //
-        auto operator>(span<U, M> const & that) const -> bool
+        bool operator>(span<U, M> const & that) const
         {
             return that < *this;
         }
         template(typename U, index_type M)( //
             requires totally_ordered_with<T, U>) //
-        auto operator<=(span<U, M> const & that) const -> bool
+        bool operator<=(span<U, M> const & that) const
         {
             return !(that < *this);
         }
         template(typename U, index_type M)( //
             requires totally_ordered_with<T, U>) //
-        auto operator>=(span<U, M> const & that) const -> bool
+        bool operator>=(span<U, M> const & that) const
         {
             return !(*this < that);
         }

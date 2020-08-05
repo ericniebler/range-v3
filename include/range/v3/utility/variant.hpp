@@ -80,7 +80,7 @@ namespace ranges
             // \pre Requires distance(r) <= N
             // \pre Requires default_constructible<T> || distance(r) == N
             template(typename R)( //
-                requires input_range<R> AND constructible_from<T, range_reference_t<R>>) //
+                requires input_range<R> AND constructible_from<T, range_reference_t<R>>)
             explicit indexed_datum(R && r)
               : indexed_datum{ranges::begin(r), ranges::end(r)}
             {}

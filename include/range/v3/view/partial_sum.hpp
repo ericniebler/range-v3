@@ -131,8 +131,8 @@ namespace ranges
                 return current_ == ranges::end(parent_->base_);
             }
             CPP_member
-            constexpr bool CPP_fun(equal)(cursor const & that)(
-                const requires equality_comparable<iterator_t<Base>>)
+            constexpr bool CPP_fun(equal)(cursor const & that)(const //
+                requires equality_comparable<iterator_t<Base>>)
             {
                 RANGES_EXPECT(parent_ == that.parent_);
                 return current_ == that.current_;
@@ -145,7 +145,7 @@ namespace ranges
         }
         template(typename CRng = Rng const)( //
             requires detail::partial_sum_view_constraints<CRng, Fun const>) //
-        constexpr auto begin_cursor() const -> cursor<true>
+        constexpr cursor<true> begin_cursor() const
         {
             return cursor<true>{this};
         }
@@ -159,12 +159,14 @@ namespace ranges
           , fun_(std::move(fun))
         {}
         CPP_member
-        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
+        constexpr auto CPP_fun(size)()( //
+            requires sized_range<Rng>)
         {
             return ranges::size(base_);
         }
         CPP_member
-        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        constexpr auto CPP_fun(size)()(const //
+            requires sized_range<Rng const>)
         {
             return ranges::size(base_);
         }
@@ -183,8 +185,8 @@ namespace ranges
         {
             template(typename Rng, typename Fun = plus)( //
                 requires detail::partial_sum_view_constraints<all_t<Rng>, Fun>) //
-            constexpr auto operator()(Rng && rng, Fun fun = {}) const
-                -> partial_sum_view<all_t<Rng>, Fun>
+            constexpr partial_sum_view<all_t<Rng>, Fun> //
+            operator()(Rng && rng, Fun fun = {}) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
@@ -194,9 +196,9 @@ namespace ranges
         {
             using partial_sum_base_fn::operator();
 
-            template<typename Fun>
-            constexpr auto CPP_fun(operator())(Fun && fun)(const //
-                                                           requires (!range<Fun>))
+            template(typename Fun)( //
+                requires (!range<Fun>))
+            constexpr auto operator()(Fun && fun) const
             {
                 return make_view_closure(
                     bind_back(partial_sum_base_fn{}, static_cast<Fun &&>(fun)));

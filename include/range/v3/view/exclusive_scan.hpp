@@ -136,22 +136,24 @@ namespace ranges
           , fun_(std::move(fun))
         {}
         CPP_member
-        auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        auto CPP_fun(size)()(const //
+            requires sized_range<Rng const>)
         {
             return ranges::size(this->base());
         }
         CPP_member
-        auto CPP_fun(size)()(requires sized_range<Rng>)
+        auto CPP_fun(size)()(requires //
+            sized_range<Rng>)
         {
             return ranges::size(this->base());
         }
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    template(typename Rng, typename T,
-                 typename Fun)(requires copy_constructible<T> && copy_constructible<Fun>)
-        exclusive_scan_view(Rng &&, T, Fun)
-            ->exclusive_scan_view<views::all_t<Rng>, T, Fun>;
+    template(typename Rng, typename T, typename Fun)( //
+        requires copy_constructible<T> AND copy_constructible<Fun>)
+    exclusive_scan_view(Rng &&, T, Fun) //
+        -> exclusive_scan_view<views::all_t<Rng>, T, Fun>;
 #endif
 
     namespace views
@@ -160,8 +162,8 @@ namespace ranges
         {
             template(typename Rng, typename T, typename Fun = plus)( //
                 requires exclusive_scan_constraints<Rng, T, Fun>) //
-            constexpr auto operator()(Rng && rng, T init, Fun fun = Fun{}) const
-                -> exclusive_scan_view<all_t<Rng>, T, Fun>
+            constexpr exclusive_scan_view<all_t<Rng>, T, Fun> //
+            operator()(Rng && rng, T init, Fun fun = Fun{}) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(init), std::move(fun)};
             }

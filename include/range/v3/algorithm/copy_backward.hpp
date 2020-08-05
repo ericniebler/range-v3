@@ -42,8 +42,7 @@ namespace ranges
         template(typename I, typename S, typename O)( //
             requires bidirectional_iterator<I> AND sentinel_for<S, I> AND //
             bidirectional_iterator<O> AND indirectly_copyable<I, O>) //
-        auto RANGES_FUNC(copy_backward)(I first, S end_, O out)
-            -> copy_backward_result<I, O>
+        copy_backward_result<I, O> RANGES_FUNC(copy_backward)(I first, S end_, O out)
         {
             I i = ranges::next(first, end_), last = i;
             while(first != i)
@@ -55,8 +54,8 @@ namespace ranges
         template(typename Rng, typename O)( //
             requires bidirectional_range<Rng> AND bidirectional_iterator<O> AND //
             indirectly_copyable<iterator_t<Rng>, O>) //
-        auto RANGES_FUNC(copy_backward)(Rng && rng, O out)
-            -> copy_backward_result<borrowed_iterator_t<Rng>, O>
+        copy_backward_result<borrowed_iterator_t<Rng>, O> //
+        RANGES_FUNC(copy_backward)(Rng && rng, O out)
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }

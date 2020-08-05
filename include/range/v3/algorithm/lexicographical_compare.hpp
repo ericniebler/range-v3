@@ -41,17 +41,16 @@ namespace ranges
                  typename C = less,
                  typename P0 = identity,
                  typename P1 = identity)( //
-            requires input_iterator<I0> && sentinel_for<S0, I0> &&
-                input_iterator<I1> && sentinel_for<S1, I1> &&
+            requires input_iterator<I0> AND sentinel_for<S0, I0> AND
+                input_iterator<I1> AND sentinel_for<S1, I1> AND
                 indirect_strict_weak_order<C, projected<I0, P0>, projected<I1, P1>>) //
-        auto RANGES_FUNC(lexicographical_compare)(I0 begin0,
+        bool RANGES_FUNC(lexicographical_compare)(I0 begin0,
                                                   S0 end0,
                                                   I1 begin1,
                                                   S1 end1,
                                                   C pred = C{},
                                                   P0 proj0 = P0{},
                                                   P1 proj1 = P1{})
-            -> bool
         {
             for(; begin1 != end1; ++begin0, ++begin1)
             {
@@ -70,13 +69,12 @@ namespace ranges
                  typename C = less,
                  typename P0 = identity,
                  typename P1 = identity)( //
-            requires input_range<Rng0> && input_range<Rng1> &&
+            requires input_range<Rng0> AND input_range<Rng1> AND
                 indirect_strict_weak_order<C,
                                            projected<iterator_t<Rng0>, P0>,
                                            projected<iterator_t<Rng1>, P1>>) //
-        auto RANGES_FUNC(lexicographical_compare)(
+        bool RANGES_FUNC(lexicographical_compare)(
             Rng0 && rng0, Rng1 && rng1, C pred = C{}, P0 proj0 = P0{}, P1 proj1 = P1{}) //
-            -> bool
         {
             return (*this)(begin(rng0),
                            end(rng0),

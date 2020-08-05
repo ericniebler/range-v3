@@ -62,8 +62,7 @@ namespace ranges
         template(typename Rng, typename C, typename P = identity)( //
             requires forward_range<Rng> AND permutable<iterator_t<Rng>> AND //
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>) //
-        auto RANGES_FUNC(remove_if)(Rng && rng, C pred, P proj = P{}) //
-            -> borrowed_iterator_t<Rng>
+        borrowed_iterator_t<Rng> RANGES_FUNC(remove_if)(Rng && rng, C pred, P proj = P{})
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

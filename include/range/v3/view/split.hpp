@@ -192,8 +192,10 @@ namespace ranges
         public:
             using iterator_concept = typename Outer::iterator_concept;
             using iterator_category =
-                meta::conditional_t<derived_from<BaseIterCategory, std::forward_iterator_tag>,
-                          std::forward_iterator_tag, std::input_iterator_tag>;
+                meta::conditional_t<
+                    derived_from<BaseIterCategory, std::forward_iterator_tag>,
+                    std::forward_iterator_tag,
+                    std::input_iterator_tag>;
             using value_type = range_value_t<Base>;
             using difference_type = range_difference_t<Base>;
             using reference = range_reference_t<Base>;        // Not to spec
@@ -565,7 +567,7 @@ namespace ranges
             return base_;
         }
 
-        constexpr auto begin() -> outer_iterator<forward_range<V> && simple_view<V>()>
+        constexpr outer_iterator<forward_range<V> && simple_view<V>()> begin()
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(forward_range<V>)
@@ -612,9 +614,9 @@ namespace ranges
     template(typename R, typename P)( //
         requires input_range<R> AND forward_range<P> AND viewable_range<R> AND
             viewable_range<P> AND
-                indirectly_comparable<iterator_t<R>, iterator_t<P>, ranges::equal_to> &&
-        (forward_range<R> || detail::tiny_range<P>)) //
-        split_view(R &&, P &&)
+            indirectly_comparable<iterator_t<R>, iterator_t<P>, ranges::equal_to> AND
+            (forward_range<R> || detail::tiny_range<P>)) //
+    split_view(R &&, P &&)
             ->split_view<views::all_t<R>, views::all_t<P>>;
 
     template(typename R)(    //
@@ -629,23 +631,25 @@ namespace ranges
         {
             template(typename Rng)( //
                 requires viewable_range<Rng> AND input_range<Rng> AND
-                        indirectly_comparable<iterator_t<Rng>, range_value_t<Rng> const *,
-                                              ranges::equal_to>) //
-            constexpr auto operator()(Rng && rng, range_value_t<Rng> val) const
-                -> split_view<all_t<Rng>, single_view<range_value_t<Rng>>>
+                    indirectly_comparable<iterator_t<Rng>,
+                                          range_value_t<Rng> const *,
+                                          ranges::equal_to>) //
+            constexpr split_view<all_t<Rng>, single_view<range_value_t<Rng>>> //
+            operator()(Rng && rng, range_value_t<Rng> val) const
             {
                 return {all(static_cast<Rng &&>(rng)), single(std::move(val))};
             }
 
             template(typename Rng, typename Pattern)( //
                 requires viewable_range<Rng> AND input_range<Rng> AND
-                        viewable_range<Pattern> AND forward_range<Pattern> AND
-                            indirectly_comparable<iterator_t<Rng>,
-                                                  iterator_t<Pattern>,
-                                                  ranges::equal_to> &&
+                    viewable_range<Pattern> AND forward_range<Pattern> AND
+                    indirectly_comparable<
+                        iterator_t<Rng>,
+                        iterator_t<Pattern>,
+                        ranges::equal_to> AND
                     (forward_range<Rng> || detail::tiny_range<Pattern>)) //
-            constexpr auto operator()(Rng && rng, Pattern && pattern) const
-                -> split_view<all_t<Rng>, all_t<Pattern>>
+            constexpr split_view<all_t<Rng>, all_t<Pattern>> //
+            operator()(Rng && rng, Pattern && pattern) const
             {
                 return {all((Rng &&) rng), all((Pattern &&) pattern)};
             }
@@ -675,9 +679,12 @@ namespace ranges
         }
         template(typename Rng, typename Pattern)( //
             requires input_range<Rng> AND forward_range<Pattern> AND view_<Rng> AND
-                view_<Pattern> AND indirectly_comparable<
-                    iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
-            (forward_range<Rng> || ranges::detail::tiny_range<Pattern>)) //
+                view_<Pattern> AND //
+                indirectly_comparable<
+                    iterator_t<Rng>,
+                    iterator_t<Pattern>,
+                    ranges::equal_to> AND
+                (forward_range<Rng> || ranges::detail::tiny_range<Pattern>)) //
         using split_view =
             ranges::split_view<Rng, Pattern>;
     } // namespace cpp20

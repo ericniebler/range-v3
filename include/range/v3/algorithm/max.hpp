@@ -39,9 +39,8 @@ namespace ranges
         /// \brief function template \c max
         template(typename T, typename C = less, typename P = identity)( //
             requires indirect_strict_weak_order<C, projected<T const *, P>>) //
-        constexpr auto RANGES_FUNC(max)(
+        constexpr T const & RANGES_FUNC(max)(
             T const & a, T const & b, C pred = C{}, P proj = P{}) //
-            -> T const &
         {
             return invoke(pred, invoke(proj, b), invoke(proj, a)) ? a : b;
         }
@@ -51,8 +50,8 @@ namespace ranges
             requires input_range<Rng> AND //
             indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>> AND //
             indirectly_copyable_storable<iterator_t<Rng>, range_value_t<Rng> *>) //
-        constexpr auto RANGES_FUNC(max)(Rng && rng, C pred = C{}, P proj = P{}) //
-            -> range_value_t<Rng>
+        constexpr range_value_t<Rng> //
+        RANGES_FUNC(max)(Rng && rng, C pred = C{}, P proj = P{}) //
         {
             auto first = ranges::begin(rng);
             auto last = ranges::end(rng);
@@ -71,9 +70,8 @@ namespace ranges
         template(typename T, typename C = less, typename P = identity)( //
             requires copyable<T> AND
                 indirect_strict_weak_order<C, projected<T const *, P>>) //
-        constexpr auto RANGES_FUNC(max)(
+        constexpr T RANGES_FUNC(max)(
             std::initializer_list<T> const && rng, C pred = C{}, P proj = P{}) //
-            -> T
         {
             return (*this)(rng, std::move(pred), std::move(proj));
         }

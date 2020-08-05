@@ -140,7 +140,7 @@ namespace ranges
             requires Const AND range<meta::const_if_c<Const, Rng>> AND
                 invocable<Fun const &, iterator_t<meta::const_if_c<Const, Rng>>,
                           sentinel_t<meta::const_if_c<Const, Rng>>>) //
-        auto begin_cursor() const -> cursor<Const>
+        cursor<Const> begin_cursor() const
         {
             return {fun_, ranges::begin(rng_), ranges::end(rng_)};
         }
@@ -172,7 +172,7 @@ namespace ranges
 
                 template(typename I, typename S)( //
                     requires sentinel_for<S, I>) //
-                auto operator()(I cur, S last) const -> std::pair<bool, I>
+                std::pair<bool, I> operator()(I cur, S last) const
                 {
                     auto where = ranges::find_if_not(cur, last, std::ref(pred_));
                     return {cur != where, where};
@@ -182,21 +182,22 @@ namespace ranges
         public:
             template(typename Rng, typename Fun)( //
                 requires viewable_range<Rng> AND forward_range<Rng> AND
-                        invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> AND invocable<
-                            Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
-                            copy_constructible<Fun> && convertible_to<
-                                invoke_result_t<Fun &, iterator_t<Rng>, sentinel_t<Rng>>,
-                                std::pair<bool, iterator_t<Rng>>>) //
-            auto operator()(Rng && rng, Fun fun) const        //
-                -> split_when_view<all_t<Rng>, Fun>
+                    invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> AND
+                    invocable<Fun &, iterator_t<Rng>, iterator_t<Rng>> AND
+                    copy_constructible<Fun> AND
+                    convertible_to<
+                        invoke_result_t<Fun &, iterator_t<Rng>, sentinel_t<Rng>>,
+                        std::pair<bool, iterator_t<Rng>>>) //
+            split_when_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const //
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
             template(typename Rng, typename Fun)( //
-                requires viewable_range<Rng> AND forward_range<Rng> AND predicate<
-                        Fun const &, range_reference_t<Rng>> AND copy_constructible<Fun>) //
-            auto operator()(Rng && rng, Fun fun) const
-                -> split_when_view<all_t<Rng>, predicate_pred_<Fun>>
+                requires viewable_range<Rng> AND forward_range<Rng> AND //
+                    predicate<Fun const &, range_reference_t<Rng>> AND
+                    copy_constructible<Fun>) //
+            split_when_view<all_t<Rng>, predicate_pred_<Fun>> //
+            operator()(Rng && rng, Fun fun) const
             {
                 return {all(static_cast<Rng &&>(rng)),
                         predicate_pred_<Fun>{std::move(fun)}};
