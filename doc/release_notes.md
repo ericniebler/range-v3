@@ -1,6 +1,77 @@
 Release Notes           {#release_notes}
 =============
 
+\section v0-11-0 Version 0.11.0 "Thanks, ISO"
+
+_Released:_ August 6, 2020
+
+> **IMPORTANT:** This release removes the heuristic that tries to guess whether a range type
+is a "view" (lightweight, non-owning range), in accordance with the C++20. **This is a
+potentially source-breaking change.** Code that previously used an rvalue range as the
+start of a pipeline could stop compiling if the range library is not explicitly told that
+that range type is a view. To override the new default, please specialize the
+`ranges::enable_view<R>` Boolean variable template.
+
+> **IMPORTANT:** This release removes the implicit conversion from views to containers.
+To construct a container from an arbitrary range, you must now explicitly use
+`ranges::to`. For example, the following code no longer works:
+>
+> ```c++
+> std::vector<int> is = ranges::views::ints(0, 10); // ERROR: no conversion
+> ```
+>
+> Instead, please write this as:
+>
+> ```c++
+> auto is = ranges::views::ints(0, 10) | ranges::to<std::vector>; // OK
+> ```
+>
+> `ranges::to` lives in header `<range/v3/range/conversion.hpp>`
+
+> **IMPORTANT:** This release drops support for llvm-3.9.
+
+Changes:
+* **NEW:** A new concepts portability layer that short-circuits atomic constraints
+  in `requires` clauses for better compile times when emulating concepts.
+* **NEW:** Restored support for MSVC in `/std:c++17` mode, and for MSVC's default preprocessor.
+* Remove the implicit conversion from views to containers.
+* Rename the following entities to be consistent with C++20's `std::ranges` support:
+  * `safe_range<R>` -> `borrowed_range<R>`
+  * `enable_safe_range<R>` -> `enable_borrowed_range<R>`
+  * `safe_iterator_t<R>` -> `borrowed_iterator_t<R>`
+  * `safe_subrange_t<R>` -> `borrowed_subrange_t<R>`
+  * `readable_traits<I>` -> `indirectly_readable_traits<I>`
+  * `readable<I>` -> `indirectly_readable<I>`
+  * `writable<I>` -> `indirectly_writable<I>`
+* Added the following to the `ranges::cpp20` namespace:
+  * Algorithm `for_each_n`
+  * Algorithm `sample`
+  * Class `view_base`
+  * Alias `views::all_t`
+* Type `__int128` is recognized as "integer-like".
+* Adds concepts `three_way_comparable[_with]` when `<=>` is supported.
+* Adds concepts `partially_ordered[_with]`.
+* Better conformance with C++20's use of the _`boolean-testable`_ concept.
+* Support C++20 coroutines.
+* Honor CMake's `CMAKE_CXX_STANDARD` variable.
+* A fix for the cardinality of `views::zip[_with]` (#1486).
+* Add `view_interface::data()` member function.
+* Add necessary specializations for `std::basic_common_reference` and
+  `std::common_type`.
+* Numerous workarounds for MSVC.
+* Various CMake fixes and improvements.
+* `drop_while_view` is not a `sized_range`.
+* Added support for Wind River Systems.
+* Bug fixes to `views::group_by` (#1393).
+* `common_[reference|type]` of `common_[tuple|pair]` now yields a `common_[tuple|pair]`
+  instead of a `std::[tuple|pair]` (#1422).
+* Avoid UB when currying an lvalue in some views and actions (#1320).
+
+**Credits:** I would like to thank the following people who contributed to this release
+(in no particular order): Christopher Di Bella, @marehr, Casey Carter, Dvir Yitzchaki,
+Justin Riddell, Johel Ernesto Guerrero Peña, Barry Revzin, Kamlesh Kumar, and Vincas
+Dargis.
+
 \section v0-10-0 Version 0.10.0 "To Err is Human"
 
 _Released:_ Dec 6, 2019.
