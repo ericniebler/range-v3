@@ -288,7 +288,7 @@ namespace ranges
             return detail::stable_partition_impl(first, last, pred, proj, len, p, bi);
         }
     } // namespace detail
-    /// endcond
+    /// \endcond
 
     RANGES_FUNC_BEGIN(stable_partition)
 

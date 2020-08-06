@@ -32,6 +32,9 @@
 
 namespace ranges
 {
+    /// \addtogroup group-views
+    /// @{
+
     template<typename Rng>
     struct take_view : view_interface<take_view<Rng>, finite>
     {
@@ -307,7 +310,6 @@ namespace ranges
         };
 
         /// \relates take_fn
-        /// \ingroup group-views
         RANGES_INLINE_VARIABLE(take_fn, take)
     } // namespace views
 
@@ -320,7 +322,7 @@ namespace ranges
         template(typename Rng)(
             /// \pre
             requires view_<Rng>)
-            using take_view = ranges::take_view<Rng>;
+        using take_view = ranges::take_view<Rng>;
     } // namespace cpp20
     /// @}
 } // namespace ranges

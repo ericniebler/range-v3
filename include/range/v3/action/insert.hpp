@@ -220,7 +220,7 @@ namespace ranges
             template(typename Rng, typename T)(
                 /// \pre
                 requires range<Rng> AND
-                (!range<T>)&&constructible_from<range_value_t<Rng>, T>)
+                    (!range<T>) AND constructible_from<range_value_t<Rng>, T>)
             insert_result_t<Rng, T> operator()(Rng && rng, T && t) const
             {
                 return insert(static_cast<Rng &&>(rng), static_cast<T &&>(t));
@@ -256,7 +256,7 @@ namespace ranges
             template(typename Rng, typename I, typename T)(
                 /// \pre
                 requires range<Rng> AND input_iterator<I> AND
-                (!range<T>)&&constructible_from<range_value_t<Rng>, T>)
+                    (!range<T>) AND constructible_from<range_value_t<Rng>, T>)
             insert_result_t<Rng, I, T> operator()(Rng && rng, I p, T && t) const
             {
                 return insert(
@@ -286,7 +286,7 @@ namespace ranges
             template(typename Rng, typename I, typename N, typename T)(
                 /// \pre
                 requires range<Rng> AND input_iterator<I> AND integral<N> AND
-                (!range<T>)&&constructible_from<range_value_t<Rng>, T>)
+                    (!range<T>) AND constructible_from<range_value_t<Rng>, T>)
             insert_result_t<Rng, I, N, T> operator()(Rng && rng, I p, N n, T && t) const
             {
                 return insert(

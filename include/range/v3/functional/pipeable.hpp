@@ -101,7 +101,7 @@ namespace ranges
             -> CPP_broken_friend_ret(Arg &)(
                 /// \pre
                 requires (is_pipeable_v<Pipe>) &&
-                (!is_pipeable_v<Arg>)&&invocable<Pipe, Arg &>)
+                    (!is_pipeable_v<Arg>) && invocable<Pipe, Arg &>)
         {
             static_cast<Pipe &&>(pipe)(arg);
             return arg;

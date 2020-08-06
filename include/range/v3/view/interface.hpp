@@ -147,7 +147,7 @@ namespace ranges
         view_interface(view_interface const &) = default;
         view_interface & operator=(view_interface &&) = default;
         view_interface & operator=(view_interface const &) = default;
-        // A few ways of testing whether a range can be empty:
+        /// \brief Test whether a range can be empty:
         CPP_member
         constexpr auto empty() const noexcept //
             -> CPP_ret(bool)(
@@ -160,7 +160,7 @@ namespace ranges
         template(bool True = true)(
             /// \pre
             requires True AND (Cardinality < 0) AND (Cardinality != infinite) AND
-                (!forward_range<D<True>>)&&sized_range<D<True>>)
+                (!forward_range<D<True>>) AND sized_range<D<True>>)
         constexpr bool empty() //
             noexcept(noexcept(bool(ranges::size(std::declval<D<True> &>()) == 0)))
         {
@@ -170,7 +170,7 @@ namespace ranges
         template(bool True = true)(
             /// \pre
             requires True AND (Cardinality < 0) AND (Cardinality != infinite) AND
-                (!forward_range<D<True> const>)&&sized_range<D<True> const>)
+                (!forward_range<D<True> const>) AND sized_range<D<True> const>)
         constexpr bool empty() const //
             noexcept(noexcept(bool(ranges::size(std::declval<D<True> const &>()) == 0)))
         {

@@ -36,6 +36,7 @@ namespace ranges
     /// \cond
     namespace adl_push_back_detail
     {
+        /// \endcond
         template<typename Cont, typename T>
         using push_back_t = decltype(static_cast<void>(
             unwrap_reference(std::declval<Cont &>()).push_back(std::declval<T>())));
@@ -48,7 +49,7 @@ namespace ranges
         template(typename Cont, typename T)(
             /// \pre
             requires lvalue_container_like<Cont> AND
-            (!range<T>)&&constructible_from<range_value_t<Cont>, T>)
+                (!range<T>) AND constructible_from<range_value_t<Cont>, T>)
         push_back_t<Cont, T> push_back(Cont && cont, T && t)
         {
             unwrap_reference(cont).push_back(static_cast<T &&>(t));
@@ -130,6 +131,7 @@ namespace ranges
             }
             /// \endcond
         };
+        /// \cond
     } // namespace adl_push_back_detail
     /// \endcond
 

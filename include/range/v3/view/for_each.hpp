@@ -35,6 +35,9 @@
 
 namespace ranges
 {
+    /// \addtogroup group-views
+    /// @{
+
     namespace views
     {
         /// Lazily applies an unary function to each element in the source
@@ -64,7 +67,6 @@ namespace ranges
         };
 
         /// \relates for_each_fn
-        /// \ingroup group-views
         RANGES_INLINE_VARIABLE(for_each_fn, for_each)
     } // namespace views
 
@@ -80,7 +82,6 @@ namespace ranges
     };
 
     /// \relates yield_fn
-    /// \ingroup group-views
     RANGES_INLINE_VARIABLE(yield_fn, yield)
 
     struct yield_from_fn
@@ -95,7 +96,6 @@ namespace ranges
     };
 
     /// \relates yield_from_fn
-    /// \ingroup group-views
     RANGES_INLINE_VARIABLE(yield_from_fn, yield_from)
 
     struct yield_if_fn
@@ -108,7 +108,6 @@ namespace ranges
     };
 
     /// \relates yield_if_fn
-    /// \ingroup group-views
     RANGES_INLINE_VARIABLE(yield_if_fn, yield_if)
 
     struct lazy_yield_if_fn
@@ -123,7 +122,6 @@ namespace ranges
     };
 
     /// \relates lazy_yield_if_fn
-    /// \ingroup group-views
     RANGES_INLINE_VARIABLE(lazy_yield_if_fn, lazy_yield_if)
     /// @}
 

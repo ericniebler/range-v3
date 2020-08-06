@@ -42,6 +42,9 @@
 
 namespace ranges
 {
+    /// \addtogroup group-views
+    /// @{
+
     /// \cond
     namespace detail
     {
@@ -177,8 +180,8 @@ namespace ranges
             (
                 return *it1_
             )
-                // clang-format on
-                void next()
+            // clang-format on
+            void next()
             {
                 ++it1_;
                 satisfy();
@@ -271,10 +274,8 @@ namespace ranges
         };
 
         /// \relates set_difference_fn
-        /// \ingroup group-views
         RANGES_INLINE_VARIABLE(set_difference_fn, set_difference)
     } // namespace views
-    /// @}
 
     /// \cond
     namespace detail
@@ -356,8 +357,8 @@ namespace ranges
             (
                 return *it1_
             )
-                // clang-format on
-                void next()
+            // clang-format on
+            void next()
             {
                 ++it1_;
                 ++it2_;
@@ -451,10 +452,8 @@ namespace ranges
         };
 
         /// \relates set_intersection_fn
-        /// \ingroup group-views
         RANGES_INLINE_VARIABLE(set_intersection_fn, set_intersection)
     } // namespace views
-    /// @}
 
     /// \cond
     namespace detail
@@ -596,7 +595,6 @@ namespace ranges
                        ? infinite
                        : (c1 == unknown) || (c2 == unknown) ? unknown : finite;
         }
-
     } // namespace detail
     /// \endcond
 
@@ -663,10 +661,8 @@ namespace ranges
         };
 
         /// \relates set_union_fn
-        /// \ingroup group-views
         RANGES_INLINE_VARIABLE(set_union_fn, set_union)
     } // namespace views
-    /// @}
 
     /// \cond
     namespace detail
@@ -766,7 +762,7 @@ namespace ranges
             template(bool Other)(
                 /// \pre
                 requires IsConst && CPP_NOT(Other)) //
-                set_symmetric_difference_cursor(
+            set_symmetric_difference_cursor(
                     set_symmetric_difference_cursor<Other, Rng1, Rng2, C, P1, P2> that)
               : pred_(std::move(that.pred_))
               , proj1_(std::move(that.proj1_))
@@ -901,7 +897,6 @@ namespace ranges
         };
 
         /// \relates set_symmetric_difference_fn
-        /// \ingroup group-views
         RANGES_INLINE_VARIABLE(set_symmetric_difference_fn, set_symmetric_difference)
     } // namespace views
     /// @}

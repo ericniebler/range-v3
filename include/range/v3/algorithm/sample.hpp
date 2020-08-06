@@ -144,9 +144,9 @@ namespace ranges
                 weakly_incrementable<iterator_t<ORng>> AND
                 indirectly_copyable<I, iterator_t<ORng>> AND
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
-                (forward_range<ORng> ||
-                 sized_range<ORng>)&&(random_access_iterator<iterator_t<ORng>> ||
-                                      forward_iterator<I> || sized_sentinel_for<S, I>))
+                (forward_range<ORng> || sized_range<ORng>) AND
+                (random_access_iterator<iterator_t<ORng>> || forward_iterator<I> ||
+                    sized_sentinel_for<S, I>))
         sample_result<I, borrowed_iterator_t<ORng>> RANGES_FUNC(sample)(
             I first,
             S last,
@@ -213,7 +213,8 @@ namespace ranges
                 indirectly_copyable<iterator_t<IRng>, iterator_t<ORng>> AND
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
                 (random_access_iterator<iterator_t<ORng>> || forward_range<IRng> ||
-                 sized_range<IRng>)&&(forward_range<ORng> || sized_range<ORng>))
+                    sized_range<IRng>) AND
+                (forward_range<ORng> || sized_range<ORng>))
         sample_result<borrowed_iterator_t<IRng>, borrowed_iterator_t<ORng>> //
         RANGES_FUNC(sample)(IRng && rng,
                             ORng && out,

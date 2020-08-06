@@ -27,6 +27,9 @@
 
 namespace ranges
 {
+    /// \addtogroup group-views
+    /// @{
+
     namespace views
     {
         struct take_last_base_fn
@@ -55,7 +58,6 @@ namespace ranges
         };
 
         /// \relates take_last_fn
-        /// \ingroup group-views
         RANGES_INLINE_VARIABLE(take_last_fn, take_last)
     } // namespace views
     /// @}
