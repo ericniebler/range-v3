@@ -38,9 +38,10 @@ namespace ranges
     RANGES_FUNC_BEGIN(remove)
 
         /// \brief function template \c remove
-        template(typename I, typename S, typename T, typename P = identity)( //
-            requires permutable<I> AND sentinel_for<S, I> AND //
-            indirect_relation<equal_to, projected<I, P>, T const *>) //
+        template(typename I, typename S, typename T, typename P = identity)(
+            /// \pre
+            requires permutable<I> AND sentinel_for<S, I> AND
+            indirect_relation<equal_to, projected<I, P>, T const *>)
         I RANGES_FUNC(remove)(I first, S last, T const & val, P proj = P{})
         {
             first = find(std::move(first), last, val, std::ref(proj));
@@ -59,9 +60,10 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename T, typename P = identity)( //
-            requires forward_range<Rng> AND permutable<iterator_t<Rng>> AND //
-            indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *>) //
+        template(typename Rng, typename T, typename P = identity)(
+            /// \pre
+            requires forward_range<Rng> AND permutable<iterator_t<Rng>> AND
+            indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *>)
         borrowed_iterator_t<Rng> //
         RANGES_FUNC(remove)(Rng && rng, T const & val, P proj = P{})
         {

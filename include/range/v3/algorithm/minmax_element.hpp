@@ -42,9 +42,10 @@ namespace ranges
     RANGES_FUNC_BEGIN(minmax_element)
 
         /// \brief function template \c minmax_element
-        template(typename I, typename S, typename C = less, typename P = identity)( //
-            requires forward_iterator<I> AND sentinel_for<S, I> AND //
-            indirect_strict_weak_order<C, projected<I, P>>) //
+        template(typename I, typename S, typename C = less, typename P = identity)(
+            /// \pre
+            requires forward_iterator<I> AND sentinel_for<S, I> AND
+            indirect_strict_weak_order<C, projected<I, P>>)
         minmax_element_result<I> //
         RANGES_FUNC(minmax_element)(I first, S last, C pred = C{}, P proj = P{}) //
         {
@@ -88,9 +89,10 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename C = less, typename P = identity)( //
-            requires forward_range<Rng> AND //
-            indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>) //
+        template(typename Rng, typename C = less, typename P = identity)(
+            /// \pre
+            requires forward_range<Rng> AND
+            indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>)
         minmax_element_result<borrowed_iterator_t<Rng>> //
         RANGES_FUNC(minmax_element)(Rng && rng, C pred = C{}, P proj = P{}) //
         {

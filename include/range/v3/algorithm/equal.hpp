@@ -59,7 +59,8 @@ namespace ranges
                      typename I1,
                      typename C = equal_to,
                      typename P0 = identity,
-                     typename P1 = identity)( //
+                     typename P1 = identity)(
+            /// \pre
             requires input_iterator<I0> AND sentinel_for<S0, I0> AND
                 input_iterator<I1> AND indirectly_comparable<I0, I1, C, P0, P1>)
         RANGES_DEPRECATED(
@@ -85,10 +86,11 @@ namespace ranges
                  typename S1,
                  typename C = equal_to,
                  typename P0 = identity,
-                 typename P1 = identity)( //
+                 typename P1 = identity)(
+            /// \pre
             requires input_iterator<I0> AND sentinel_for<S0, I0> AND
                 input_iterator<I1> AND sentinel_for<S1, I1> AND
-                indirectly_comparable<I0, I1, C, P0, P1>) //
+                indirectly_comparable<I0, I1, C, P0, P1>)
         constexpr bool RANGES_FUNC(equal)(I0 begin0,
                                           S0 end0,
                                           I1 begin1,
@@ -115,7 +117,8 @@ namespace ranges
                      typename I1Ref,
                      typename C = equal_to,
                      typename P0 = identity,
-                     typename P1 = identity)( //
+                     typename P1 = identity)(
+            /// \pre
             requires input_range<Rng0> AND input_iterator<uncvref_t<I1Ref>> AND
                 indirectly_comparable<iterator_t<Rng0>, uncvref_t<I1Ref>, C, P0, P1>)
         RANGES_DEPRECATED(
@@ -143,9 +146,10 @@ namespace ranges
                      typename Rng1,
                      typename C = equal_to,
                      typename P0 = identity,
-                     typename P1 = identity)( //
+                     typename P1 = identity)(
+            /// \pre
             requires input_range<Rng0> AND input_range<Rng1> AND
-                indirectly_comparable<iterator_t<Rng0>, iterator_t<Rng1>, C, P0, P1>) //
+                indirectly_comparable<iterator_t<Rng0>, iterator_t<Rng1>, C, P0, P1>)
         constexpr bool RANGES_FUNC(equal)(
             Rng0 && rng0, Rng1 && rng1, C pred = C{}, P0 proj0 = P0{}, P1 proj1 = P1{}) //
         {

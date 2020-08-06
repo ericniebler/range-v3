@@ -33,6 +33,5 @@ RANGES_DIAGNOSTIC_KEYWORD_MACRO
 #define template(...)                                                           \
     CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                            \
     template<__VA_ARGS__ CPP_TEMPLATE_AUX_                                      \
-    /**/
 
 #define AND CPP_and

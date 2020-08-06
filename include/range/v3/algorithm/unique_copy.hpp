@@ -126,7 +126,8 @@ namespace ranges
                  typename S,
                  typename O,
                  typename C = equal_to,
-                 typename P = identity)( //
+                 typename P = identity)(
+            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
                 indirect_relation<C, projected<I, P>> AND weakly_incrementable<O> AND
                 indirectly_copyable<I, O> AND
@@ -146,6 +147,7 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename O, typename C = equal_to, typename P = identity)(
+            /// \pre
             requires input_range<Rng> AND
                 indirect_relation<C, projected<iterator_t<Rng>, P>> AND
                 weakly_incrementable<O> AND indirectly_copyable<iterator_t<Rng>, O> AND

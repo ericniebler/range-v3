@@ -39,9 +39,10 @@ namespace ranges
     RANGES_FUNC_BEGIN(reverse_copy)
 
         /// \brief function template \c reverse_copy
-        template(typename I, typename S, typename O)( //
-            requires bidirectional_iterator<I> AND sentinel_for<S, I> AND //
-            weakly_incrementable<O> AND indirectly_copyable<I, O>) //
+        template(typename I, typename S, typename O)(
+            /// \pre
+            requires bidirectional_iterator<I> AND sentinel_for<S, I> AND
+            weakly_incrementable<O> AND indirectly_copyable<I, O>)
         reverse_copy_result<I, O> RANGES_FUNC(reverse_copy)(I first, S end_, O out) //
         {
             I last = ranges::next(first, end_), res = last;
@@ -51,9 +52,10 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename O)( //
-            requires bidirectional_range<Rng> AND weakly_incrementable<O> AND //
-            indirectly_copyable<iterator_t<Rng>, O>) //
+        template(typename Rng, typename O)(
+            /// \pre
+            requires bidirectional_range<Rng> AND weakly_incrementable<O> AND
+            indirectly_copyable<iterator_t<Rng>, O>)
         reverse_copy_result<borrowed_iterator_t<Rng>, O> //
         RANGES_FUNC(reverse_copy)(Rng && rng, O out)            //
         {

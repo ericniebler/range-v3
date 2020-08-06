@@ -78,7 +78,8 @@ namespace ranges
         friend pipeable_access;
 
         // Evaluate the pipe with an argument
-        template(typename Arg, typename Pipe)( //
+        template(typename Arg, typename Pipe)(
+            /// \pre
             requires (!is_pipeable_v<Arg>) AND is_pipeable_v<Pipe> AND
             invocable<Pipe, Arg>) // clang-format off
         friend constexpr auto operator|(Arg &&arg, Pipe pipe) // clang-format off
@@ -87,7 +88,8 @@ namespace ranges
         }
 
         // Compose two pipes
-        template(typename Pipe0, typename Pipe1)( //
+        template(typename Pipe0, typename Pipe1)(
+            /// \pre
             requires is_pipeable_v<Pipe0> AND is_pipeable_v<Pipe1>) // clang-format off
         friend constexpr auto operator|(Pipe0 pipe0, Pipe1 pipe1) // clang-format on
         {
@@ -96,9 +98,10 @@ namespace ranges
 
         template<typename Arg, typename Pipe>
         friend auto operator|=(Arg & arg, Pipe pipe) //
-            -> CPP_broken_friend_ret(Arg &)(         //
+            -> CPP_broken_friend_ret(Arg &)(
+                /// \pre
                 requires (is_pipeable_v<Pipe>) &&
-                (!is_pipeable_v<Arg>)&&invocable<Pipe, Arg &>)
+                    (!is_pipeable_v<Arg>) && invocable<Pipe, Arg &>)
         {
             static_cast<Pipe &&>(pipe)(arg);
             return arg;

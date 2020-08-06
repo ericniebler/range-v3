@@ -41,10 +41,11 @@ namespace ranges
 
         /// \brief function template \c remove_copy
         template(typename I, typename S, typename O, typename T, typename P = identity)(
+            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
                 weakly_incrementable<O> AND
                 indirect_relation<equal_to, projected<I, P>, T const *> AND
-                indirectly_copyable<I, O>) //
+                indirectly_copyable<I, O>)
         remove_copy_result<I, O> RANGES_FUNC(remove_copy)(
             I first, S last, O out, T const & val, P proj = P{}) //
         {
@@ -61,10 +62,11 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename O, typename T, typename P = identity)( //
-            requires input_range<Rng> AND weakly_incrementable<O> AND //
-            indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *> AND //
-            indirectly_copyable<iterator_t<Rng>, O>) //
+        template(typename Rng, typename O, typename T, typename P = identity)(
+            /// \pre
+            requires input_range<Rng> AND weakly_incrementable<O> AND
+            indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *> AND
+            indirectly_copyable<iterator_t<Rng>, O>)
         remove_copy_result<borrowed_iterator_t<Rng>, O> //
         RANGES_FUNC(remove_copy)(Rng && rng, O out, T const & val, P proj = P{}) //
         {

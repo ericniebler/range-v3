@@ -288,14 +288,15 @@ namespace ranges
             return detail::stable_partition_impl(first, last, pred, proj, len, p, bi);
         }
     } // namespace detail
-    /// endcond
+    /// \endcond
 
     RANGES_FUNC_BEGIN(stable_partition)
 
         /// \brief function template \c stable_partition
-        template(typename I, typename S, typename C, typename P = identity)( //
-            requires bidirectional_iterator<I> AND sentinel_for<S, I> AND //
-            indirect_unary_predicate<C, projected<I, P>> AND permutable<I>) //
+        template(typename I, typename S, typename C, typename P = identity)(
+            /// \pre
+            requires bidirectional_iterator<I> AND sentinel_for<S, I> AND
+            indirect_unary_predicate<C, projected<I, P>> AND permutable<I>)
         I RANGES_FUNC(stable_partition)(I first, S last, C pred, P proj = P{})
         {
             return detail::stable_partition_impl(std::move(first),
@@ -307,10 +308,11 @@ namespace ranges
 
         // BUGBUG Can this be optimized if Rng has O1 size?
         /// \overload
-        template(typename Rng, typename C, typename P = identity)( //
-            requires bidirectional_range<Rng> AND //
-            indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> AND //
-            permutable<iterator_t<Rng>>) //
+        template(typename Rng, typename C, typename P = identity)(
+            /// \pre
+            requires bidirectional_range<Rng> AND
+            indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> AND
+            permutable<iterator_t<Rng>>)
         borrowed_iterator_t<Rng> //
         RANGES_FUNC(stable_partition)(Rng && rng, C pred, P proj = P{}) //
         {

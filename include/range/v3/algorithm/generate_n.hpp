@@ -39,8 +39,9 @@ namespace ranges
     RANGES_FUNC_BEGIN(generate_n)
 
         /// \brief function template \c generate_n
-        template(typename O, typename F)( //
-            requires invocable<F &> AND output_iterator<O, invoke_result_t<F &>>) //
+        template(typename O, typename F)(
+            /// \pre
+            requires invocable<F &> AND output_iterator<O, invoke_result_t<F &>>)
         generate_n_result<O, F> //
         RANGES_FUNC(generate_n)(O first, iter_difference_t<O> n, F fun)
         {

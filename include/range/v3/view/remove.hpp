@@ -43,8 +43,9 @@ namespace ranges
             struct pred_
             {
                 Value value_;
-                template(typename T)( //
-                    requires equality_comparable_with<T, Value const &>) //
+                template(typename T)(
+                    /// \pre
+                    requires equality_comparable_with<T, Value const &>)
                 bool operator()(T && other) const
                 {
                     return static_cast<T &&>(other) == value_;
@@ -52,7 +53,8 @@ namespace ranges
             };
 
         public:
-            template(typename Rng, typename Value)( //
+            template(typename Rng, typename Value)(
+                /// \pre
                 requires move_constructible<Value> AND viewable_range<Rng> AND
                     input_range<Rng> AND
                     indirectly_comparable<iterator_t<Rng>, Value const *, equal_to>)
@@ -62,9 +64,10 @@ namespace ranges
                                  pred_<Value>{std::move(value)});
             }
 
-            template(typename Rng, typename Value, typename Proj)( //
+            template(typename Rng, typename Value, typename Proj)(
+                /// \pre
                 requires move_constructible<Value> AND viewable_range<Rng> AND
-                    input_range<Rng> AND //
+                    input_range<Rng> AND
                     indirectly_comparable<iterator_t<Rng>, Value const *, equal_to, Proj>)
             constexpr auto operator()(Rng && rng, Value value, Proj proj) const
             {
@@ -81,7 +84,8 @@ namespace ranges
             {
                 return make_view_closure(bind_back(remove_base_fn{}, std::move(value)));
             }
-            template(typename Value, typename Proj)( //
+            template(typename Value, typename Proj)(
+                /// \pre
                 requires (!range<Value>)) // TODO: underconstrained
             constexpr auto operator()(Value && value, Proj proj) const
             {

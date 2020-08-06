@@ -81,8 +81,8 @@ namespace ranges
 
         template(typename T)( //
         concept (pair_like_)(T), //
-            is_complete_<std::tuple_size<T>> AND //
-            derived_from<std::tuple_size<T>, meta::size_t<2>> AND //
+            is_complete_<std::tuple_size<T>> AND
+            derived_from<std::tuple_size<T>, meta::size_t<2>> AND
             detail::pair_like_impl_<T>);
 
         template<typename T>
@@ -121,8 +121,9 @@ namespace ranges
             CPP_concept_ref(detail::range_convertible_to_impl_, R, I, S);
         // clang-format on
 
-        template(typename S, typename I)( //
-            requires sentinel_for<S, I>) //
+        template(typename S, typename I)(
+            /// \pre
+            requires sentinel_for<S, I>)
         constexpr bool is_sized_sentinel_() noexcept
         {
             return (bool)sized_sentinel_for<S, I>;
@@ -151,13 +152,15 @@ namespace ranges
         struct adl_hook
         {};
 
-        template(std::size_t N, typename I, typename S, subrange_kind K)( //
+        template(std::size_t N, typename I, typename S, subrange_kind K)(
+            /// \pre
             requires (N == 0)) //
         constexpr I get(subrange<I, S, K> const & r)
         {
             return r.begin();
         }
-        template(std::size_t N, typename I, typename S, subrange_kind K)( //
+        template(std::size_t N, typename I, typename S, subrange_kind K)(
+            /// \pre
             requires (N == 1)) //
         constexpr S get(subrange<I, S, K> const & r)
         {
@@ -185,15 +188,17 @@ namespace ranges
 
         subrange() = default;
 
-        template(typename I2)( //
-            requires detail::convertible_to_not_slicing_<I2, I> AND //
+        template(typename I2)(
+            /// \pre
+            requires detail::convertible_to_not_slicing_<I2, I> AND
             (!detail::store_size_<K, S, I>())) //
         constexpr subrange(I2 && i, S s)
           : data_{static_cast<I2 &&>(i), std::move(s)}
         {}
 
-        template(typename I2)( //
-            requires detail::convertible_to_not_slicing_<I2, I> AND //
+        template(typename I2)(
+            /// \pre
+            requires detail::convertible_to_not_slicing_<I2, I> AND
             (detail::store_size_<K, S, I>())) //
         constexpr subrange(I2 && i, S s, size_type n)
           : data_{static_cast<I2 &&>(i), std::move(s), n}
@@ -205,9 +210,10 @@ namespace ranges
                 RANGES_EXPECT(ranges::next(first_(), (D)n) == last_());
             }
         }
-        template(typename I2)( //
-            requires detail::convertible_to_not_slicing_<I2, I> AND //
-                sized_sentinel_for<S, I>) //
+        template(typename I2)(
+            /// \pre
+            requires detail::convertible_to_not_slicing_<I2, I> AND
+                sized_sentinel_for<S, I>)
         constexpr subrange(I2 && i, S s, size_type n)
           : data_{static_cast<I2 &&>(i), std::move(s)}
         {
@@ -215,25 +221,28 @@ namespace ranges
         }
 
         template(typename R)(
-            requires (!same_as<detail::decay_t<R>, subrange>) AND //
-                detail::range_convertible_to_<R, I, S> AND //
+            /// \pre
+            requires (!same_as<detail::decay_t<R>, subrange>) AND
+                detail::range_convertible_to_<R, I, S> AND
                 (!detail::store_size_<K, S, I>()))
         constexpr subrange(R && r)
           : subrange{ranges::begin(r), ranges::end(r)}
         {}
 
-        template(typename R)( //
-            requires (!same_as<detail::decay_t<R>, subrange>) AND //
-                detail::range_convertible_to_<R, I, S> AND //
-                (detail::store_size_<K, S, I>()) AND //
-                sized_range<R>) //
+        template(typename R)(
+            /// \pre
+            requires (!same_as<detail::decay_t<R>, subrange>) AND
+                detail::range_convertible_to_<R, I, S> AND
+                (detail::store_size_<K, S, I>()) AND
+                sized_range<R>)
         constexpr subrange(R && r)
           : subrange{ranges::begin(r), ranges::end(r), ranges::size(r)}
         {}
 
-        template(typename R)( //
-            requires (K == subrange_kind::sized) AND //
-                detail::range_convertible_to_<R, I, S>) //
+        template(typename R)(
+            /// \pre
+            requires (K == subrange_kind::sized) AND
+                detail::range_convertible_to_<R, I, S>)
         constexpr subrange(R && r, size_type n) //
           : subrange{ranges::begin(r), ranges::end(r), n}
         {
@@ -243,9 +252,10 @@ namespace ranges
             }
         }
 
-        template(typename PairLike)( //
-            requires (!same_as<PairLike, subrange>) AND //
-                detail::pair_like_convertible_from_<PairLike, I const &, S const &>) //
+        template(typename PairLike)(
+            /// \pre
+            requires (!same_as<PairLike, subrange>) AND
+                detail::pair_like_convertible_from_<PairLike, I const &, S const &>)
         constexpr operator PairLike() const
         {
             return PairLike(first_(), last_());
@@ -266,7 +276,8 @@ namespace ranges
 
         CPP_member
         constexpr auto size() const //
-            -> CPP_ret(size_type)( //
+            -> CPP_ret(size_type)(
+                /// \pre
                 requires (K == subrange_kind::sized))
         {
             return get_size_();
@@ -282,7 +293,8 @@ namespace ranges
 
         CPP_member
         RANGES_NODISCARD constexpr auto prev(iter_difference_t<I> n = 1) const
-            -> CPP_ret(subrange)( //
+            -> CPP_ret(subrange)(
+                /// \pre
                 requires bidirectional_iterator<I>)
         {
             auto tmp = *this;
@@ -323,14 +335,16 @@ namespace ranges
         }
         CPP_member
         constexpr auto get_size_() const //
-            -> CPP_ret(size_type)( //
+            -> CPP_ret(size_type)(
+                /// \pre
                 requires sized_sentinel_for<S, I>)
         {
             return static_cast<size_type>(last_() - first_());
         }
         CPP_member
         constexpr auto get_size_() const noexcept //
-            -> CPP_ret(size_type)( //
+            -> CPP_ret(size_type)(
+                /// \pre
                 requires (detail::store_size_<K, S, I>()))
         {
             return std::get<2>(data_);
@@ -339,7 +353,8 @@ namespace ranges
         {}
         CPP_member
         constexpr auto set_size_(size_type n) noexcept //
-            -> CPP_ret(void)( //
+            -> CPP_ret(void)(
+                /// \pre
                 requires (detail::store_size_<K, S, I>()))
         {
             std::get<2>(data_) = n;
@@ -351,13 +366,15 @@ namespace ranges
     subrange(I, S) //
         -> subrange<I, S>;
 
-    template(typename I, typename S)(                           //
-        requires input_or_output_iterator<I> AND sentinel_for<S, I>) //
-    subrange(I, S, detail::iter_size_t<I>) //
+    template(typename I, typename S)(
+        /// \pre
+        requires input_or_output_iterator<I> AND sentinel_for<S, I>)
+    subrange(I, S, detail::iter_size_t<I>)
         -> subrange<I, S, subrange_kind::sized>;
 
-    template(typename R)(   //
-        requires borrowed_range<R>) //
+    template(typename R)(
+        /// \pre
+        requires borrowed_range<R>)
     subrange(R &&) //
         -> subrange<iterator_t<R>, sentinel_t<R>,
                     (sized_range<R> ||
@@ -365,9 +382,10 @@ namespace ranges
                            ? subrange_kind::sized
                            : subrange_kind::unsized>;
 
-    template(typename R)(   //
-        requires borrowed_range<R>) //
-    subrange(R &&, detail::iter_size_t<iterator_t<R>>) //
+    template(typename R)(
+        /// \pre
+        requires borrowed_range<R>)
+    subrange(R &&, detail::iter_size_t<iterator_t<R>>)
         -> subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>;
 #endif
 
@@ -379,15 +397,17 @@ namespace ranges
         {
             return {i, s};
         }
-        template(typename I, typename S)( //
-            requires input_or_output_iterator<I> AND sentinel_for<S, I>) //
+        template(typename I, typename S)(
+            /// \pre
+            requires input_or_output_iterator<I> AND sentinel_for<S, I>)
         constexpr subrange<I, S, subrange_kind::sized> //
         operator()(I i, S s, detail::iter_size_t<I> n) const
         {
             return {i, s, n};
         }
-        template(typename R)( //
-            requires borrowed_range<R>) //
+        template(typename R)(
+            /// \pre
+            requires borrowed_range<R>)
         constexpr auto operator()(R && r) const
             -> subrange<iterator_t<R>, sentinel_t<R>,
                      (sized_range<R> || sized_sentinel_for<sentinel_t<R>, iterator_t<R>>)
@@ -396,8 +416,9 @@ namespace ranges
         {
             return {(R &&) r};
         }
-        template(typename R)( //
-            requires borrowed_range<R>) //
+        template(typename R)(
+            /// \pre
+            requires borrowed_range<R>)
         constexpr subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized> //
         operator()(R && r, detail::iter_size_t<iterator_t<R>> n) const
         {
@@ -420,8 +441,9 @@ namespace ranges
                  typename S = I,                                            //
                  subrange_kind K =                                          //
                  static_cast<subrange_kind>(                                //
-                     detail::is_sized_sentinel_<S, I>()))(                  //
-            requires input_or_output_iterator<I> AND sentinel_for<S, I> AND //
+                     detail::is_sized_sentinel_<S, I>()))(
+            /// \pre
+            requires input_or_output_iterator<I> AND sentinel_for<S, I> AND
                 (K == subrange_kind::sized || !sized_sentinel_for<S, I>))   //
         using subrange = ranges::subrange<I, S, K>;
 

@@ -40,9 +40,10 @@ namespace ranges
     RANGES_FUNC_BEGIN(rotate_copy)
 
         /// \brief function template \c rotate_copy
-        template(typename I, typename S, typename O, typename P = identity)( //
-            requires forward_iterator<I> AND sentinel_for<S, I> AND //
-            weakly_incrementable<O> AND indirectly_copyable<I, O>) //
+        template(typename I, typename S, typename O, typename P = identity)(
+            /// \pre
+            requires forward_iterator<I> AND sentinel_for<S, I> AND
+            weakly_incrementable<O> AND indirectly_copyable<I, O>)
         rotate_copy_result<I, O> //
         RANGES_FUNC(rotate_copy)(I first, I middle, S last, O out) //
         {
@@ -52,9 +53,10 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename O, typename P = identity)( //
-            requires range<Rng> AND weakly_incrementable<O> AND //
-            indirectly_copyable<iterator_t<Rng>, O>) //
+        template(typename Rng, typename O, typename P = identity)(
+            /// \pre
+            requires range<Rng> AND weakly_incrementable<O> AND
+            indirectly_copyable<iterator_t<Rng>, O>)
         rotate_copy_result<borrowed_iterator_t<Rng>, O> //
         RANGES_FUNC(rotate_copy)(Rng && rng, iterator_t<Rng> middle, O out) //
         {

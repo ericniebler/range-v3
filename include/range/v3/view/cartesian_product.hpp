@@ -57,9 +57,10 @@ namespace ranges
 
         struct cartesian_size_fn
         {
-            template(typename Size, typename Rng)( //
-                requires integer_like_<Size> AND sized_range<Rng> AND //
-                    common_with<Size, range_size_t<Rng>>) //
+            template(typename Size, typename Rng)(
+                /// \pre
+                requires integer_like_<Size> AND sized_range<Rng> AND
+                    common_with<Size, range_size_t<Rng>>)
             common_type_t<Size, range_size_t<Rng>> operator()(Size s, Rng && rng) const
             {
                 using S = common_type_t<Size, range_size_t<Rng>>;
@@ -321,7 +322,8 @@ namespace ranges
                     meta::bool_<
                         common_range<meta::at_c<meta::list<constify_if<Views>...>, 0>>>{})
             {}
-            template(bool Other)( //
+            template(bool Other)(
+                /// \pre
                 requires IsConst_ AND CPP_NOT(Other)) //
             cursor(cursor<Other> that)
               : view_(that.view_)
@@ -344,7 +346,8 @@ namespace ranges
                 return equal_(that, meta::size_t<sizeof...(Views)>{});
             }
             CPP_member
-            auto prev() -> CPP_ret(void)( //
+            auto prev() -> CPP_ret(void)(
+                /// \pre
                 requires cartesian_produce_view_can_bidi<IsConst, Views...>)
             {
                 prev_(meta::size_t<sizeof...(Views)>{});
@@ -357,7 +360,8 @@ namespace ranges
             }
             CPP_member
             auto advance(difference_type n) //
-                -> CPP_ret(void)( //
+                -> CPP_ret(void)(
+                    /// \pre
                     requires cartesian_produce_view_can_random<IsConst, Views...>)
             {
                 advance_(meta::size_t<sizeof...(Views)>{}, n);
@@ -369,28 +373,32 @@ namespace ranges
         }
         CPP_member
         auto begin_cursor() const //
-            -> CPP_ret(cursor<true>)( //
+            -> CPP_ret(cursor<true>)(
+                /// \pre
                 requires cartesian_produce_view_can_const<Views...>)
         {
             return cursor<true>{begin_tag{}, this};
         }
         CPP_member
         auto end_cursor() //
-            -> CPP_ret(cursor<false>)( //
+            -> CPP_ret(cursor<false>)(
+                /// \pre
                 requires cartesian_produce_view_can_bidi<std::false_type, Views...>)
         {
             return cursor<false>{end_tag{}, this};
         }
         CPP_member
         auto end_cursor() const //
-            -> CPP_ret(cursor<true>)( //
+            -> CPP_ret(cursor<true>)(
+                /// \pre
                 requires cartesian_produce_view_can_bidi<std::true_type, Views...>)
         {
             return cursor<true>{end_tag{}, this};
         }
         CPP_member
         auto end_cursor() const //
-            -> CPP_ret(default_sentinel_t)( //
+            -> CPP_ret(default_sentinel_t)(
+                /// \pre
                 requires (!cartesian_produce_view_can_bidi<std::true_type, Views...>))
         {
             return {};
@@ -401,7 +409,8 @@ namespace ranges
         constexpr explicit cartesian_product_view(Views... views)
           : views_{detail::move(views)...}
         {}
-        template(int = 42)(            //
+        template(int = 42)(
+            /// \pre
             requires (my_cardinality >= 0)) //
             static constexpr std::size_t size() noexcept
         {
@@ -415,8 +424,10 @@ namespace ranges
             return tuple_foldl(views_, std::uintmax_t{1}, detail::cartesian_size_fn{});
         }
         CPP_member
-        auto CPP_fun(size)()(requires(my_cardinality < 0) &&
-                             cartesian_produce_view_can_size<std::false_type, Views...>)
+        auto CPP_fun(size)()(
+            /// \pre
+            requires (my_cardinality < 0) &&
+                cartesian_produce_view_can_size<std::false_type, Views...>)
         {
             return tuple_foldl(views_, std::uintmax_t{1}, detail::cartesian_size_fn{});
         }
@@ -436,9 +447,10 @@ namespace ranges
             {
                 return {};
             }
-            template(typename... Rngs)( //
-                requires (sizeof...(Rngs) != 0) AND //
-                concepts::and_v<(forward_range<Rngs> && viewable_range<Rngs>)...>) //
+            template(typename... Rngs)(
+                /// \pre
+                requires (sizeof...(Rngs) != 0) AND
+                concepts::and_v<(forward_range<Rngs> && viewable_range<Rngs>)...>)
             constexpr cartesian_product_view<all_t<Rngs>...> operator()(Rngs &&... rngs)
                 const
             {
@@ -446,16 +458,18 @@ namespace ranges
                     all(static_cast<Rngs &&>(rngs))...};
             }
 #if defined(_MSC_VER)
-            template(typename Rng0)( //
-                requires forward_range<Rng0> AND viewable_range<Rng0>) //
+            template(typename Rng0)(
+                /// \pre
+                requires forward_range<Rng0> AND viewable_range<Rng0>)
             constexpr cartesian_product_view<all_t<Rng0>> operator()(Rng0 && rng0) const
             {
                 return cartesian_product_view<all_t<Rng0>>{
                     all(static_cast<Rng0 &&>(rng0))};
             }
-            template(typename Rng0, typename Rng1)( //
-                requires forward_range<Rng0> AND viewable_range<Rng0> AND   //
-                             forward_range<Rng1> AND viewable_range<Rng1>) //
+            template(typename Rng0, typename Rng1)(
+                /// \pre
+                requires forward_range<Rng0> AND viewable_range<Rng0> AND
+                             forward_range<Rng1> AND viewable_range<Rng1>)
             constexpr cartesian_product_view<all_t<Rng0>, all_t<Rng1>> //
             operator()(Rng0 && rng0, Rng1 && rng1) const
             {
@@ -463,10 +477,11 @@ namespace ranges
                     all(static_cast<Rng0 &&>(rng0)), //
                     all(static_cast<Rng1 &&>(rng1))};
             }
-            template(typename Rng0, typename Rng1, typename Rng2)( //
-                requires forward_range<Rng0> AND viewable_range<Rng0> AND //
-                    forward_range<Rng1> AND viewable_range<Rng1> AND //
-                    forward_range<Rng2> AND viewable_range<Rng2>) //
+            template(typename Rng0, typename Rng1, typename Rng2)(
+                /// \pre
+                requires forward_range<Rng0> AND viewable_range<Rng0> AND
+                    forward_range<Rng1> AND viewable_range<Rng1> AND
+                    forward_range<Rng2> AND viewable_range<Rng2>)
             constexpr cartesian_product_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>> //
             operator()(Rng0 && rng0, Rng1 && rng1, Rng2 && rng2) const
             {

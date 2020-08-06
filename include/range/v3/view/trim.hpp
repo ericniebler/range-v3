@@ -104,19 +104,21 @@ namespace ranges
     {
         struct trim_base_fn
         {
-            template(typename Rng, typename Pred)( //
-                requires viewable_range<Rng> AND bidirectional_range<Rng> AND //
-                    indirect_unary_predicate<Pred, iterator_t<Rng>> AND //
-                        common_range<Rng>) //
+            template(typename Rng, typename Pred)(
+                /// \pre
+                requires viewable_range<Rng> AND bidirectional_range<Rng> AND
+                    indirect_unary_predicate<Pred, iterator_t<Rng>> AND
+                        common_range<Rng>)
             constexpr trim_view<all_t<Rng>, Pred> //
             operator()(Rng && rng, Pred pred) const //
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
-            template(typename Rng, typename Pred, typename Proj)( //
-                requires viewable_range<Rng> AND bidirectional_range<Rng> AND //
-                    indirect_unary_predicate<composed<Pred, Proj>, iterator_t<Rng>> AND //
-                    common_range<Rng>) //
+            template(typename Rng, typename Pred, typename Proj)(
+                /// \pre
+                requires viewable_range<Rng> AND bidirectional_range<Rng> AND
+                    indirect_unary_predicate<composed<Pred, Proj>, iterator_t<Rng>> AND
+                    common_range<Rng>)
             constexpr trim_view<all_t<Rng>, composed<Pred, Proj>> //
             operator()(Rng && rng, Pred pred, Proj proj) const
             {
@@ -132,7 +134,8 @@ namespace ranges
             {
                 return make_view_closure(bind_back(trim_base_fn{}, std::move(pred)));
             }
-            template(typename Pred, typename Proj)( //
+            template(typename Pred, typename Proj)(
+                /// \pre
                 requires (!range<Pred>)) // TODO: underconstrained
             constexpr auto operator()(Pred && pred, Proj proj) const
             {

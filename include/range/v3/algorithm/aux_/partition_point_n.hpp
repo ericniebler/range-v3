@@ -29,9 +29,10 @@ namespace ranges
     {
         struct partition_point_n_fn
         {
-            template(typename I, typename C, typename P = identity)( //
+            template(typename I, typename C, typename P = identity)(
+                /// \pre
                 requires forward_iterator<I> AND
-                        indirect_unary_predicate<C, projected<I, P>>) //
+                        indirect_unary_predicate<C, projected<I, P>>)
             I operator()(I first,
                          iter_difference_t<I> d,
                          C pred,

@@ -32,6 +32,9 @@
 
 namespace ranges
 {
+    /// \addtogroup group-views
+    /// @{
+
     template<typename Rng>
     struct take_view : view_interface<take_view<Rng>, finite>
     {
@@ -52,10 +55,11 @@ namespace ranges
             constexpr explicit sentinel(sentinel_t<Base> last)
               : end_(std::move(last))
             {}
-            template(bool Other)( //
+            template(bool Other)(
+                /// \pre
                 requires Const AND CPP_NOT(Other) AND
                 convertible_to<sentinel_t<Rng>,
-                               sentinel_t<Base>>) //
+                               sentinel_t<Base>>)
                 constexpr sentinel(sentinel<Other> that)
               : end_(std::move(that.end_))
             {}
@@ -161,7 +165,8 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto CPP_fun(begin)()( //
+        constexpr auto CPP_fun(begin)()(
+            /// \pre
             requires(!simple_view<Rng>()))
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
@@ -208,7 +213,8 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto CPP_fun(end)()( //
+        constexpr auto CPP_fun(end)()(
+            /// \pre
             requires(!simple_view<Rng>()))
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
@@ -251,7 +257,8 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto CPP_fun(size)()( //
+        constexpr auto CPP_fun(size)()(
+            /// \pre
             requires sized_range<Rng>)
         {
             auto n = ranges::size(base_);
@@ -272,7 +279,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    take_view(Rng &&, range_difference_t<Rng>) //
+    take_view(Rng &&, range_difference_t<Rng>)
         -> take_view<views::all_t<Rng>>;
 #endif
 
@@ -280,8 +287,9 @@ namespace ranges
     {
         struct take_base_fn
         {
-            template(typename Rng)( //
-                requires viewable_range<Rng>) //
+            template(typename Rng)(
+                /// \pre
+                requires viewable_range<Rng>)
             take_view<all_t<Rng>> operator()(Rng && rng, range_difference_t<Rng> n) const
             {
                 return {all(static_cast<Rng &&>(rng)), n};
@@ -292,7 +300,8 @@ namespace ranges
         {
             using take_base_fn::operator();
 
-            template(typename Int)( //
+            template(typename Int)(
+                /// \pre
                 requires detail::integer_like_<Int>)
             constexpr auto operator()(Int n) const
             {
@@ -301,7 +310,6 @@ namespace ranges
         };
 
         /// \relates take_fn
-        /// \ingroup group-views
         RANGES_INLINE_VARIABLE(take_fn, take)
     } // namespace views
 
@@ -311,9 +319,10 @@ namespace ranges
         {
             using ranges::views::take;
         }
-        template(typename Rng)( //
-            requires view_<Rng>)    //
-            using take_view = ranges::take_view<Rng>;
+        template(typename Rng)(
+            /// \pre
+            requires view_<Rng>)
+        using take_view = ranges::take_view<Rng>;
     } // namespace cpp20
     /// @}
 } // namespace ranges

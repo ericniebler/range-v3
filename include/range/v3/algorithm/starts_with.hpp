@@ -48,10 +48,11 @@ namespace ranges
                  typename S2,
                  typename Comp = equal_to,
                  typename Proj1 = identity,
-                 typename Proj2 = identity)( //
+                 typename Proj2 = identity)(
+            /// \pre
             requires input_iterator<I1> AND sentinel_for<S1, I1> AND
                 input_iterator<I2> AND sentinel_for<S2, I2> AND
-                indirectly_comparable<I1, I2, Comp, Proj1, Proj2>) //
+                indirectly_comparable<I1, I2, Comp, Proj1, Proj2>)
         constexpr bool RANGES_FUNC(starts_with)(I1 first1,
                                                 S1 last1,
                                                 I2 first2,
@@ -75,7 +76,8 @@ namespace ranges
                  typename R2,
                  typename Comp = equal_to,
                  typename Proj1 = identity,
-                 typename Proj2 = identity)( //
+                 typename Proj2 = identity)(
+            /// \pre
             requires input_range<R1> AND input_range<R2> AND
                 indirectly_comparable<iterator_t<R1>, iterator_t<R2>, Comp, Proj1, Proj2>)
         constexpr bool RANGES_FUNC(starts_with)(

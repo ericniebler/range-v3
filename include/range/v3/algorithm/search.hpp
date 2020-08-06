@@ -152,10 +152,11 @@ namespace ranges
                  typename S2,
                  typename C = equal_to,
                  typename P1 = identity,
-                 typename P2 = identity)( //
+                 typename P2 = identity)(
+            /// \pre
             requires forward_iterator<I1> AND sentinel_for<S1, I1> AND
                 forward_iterator<I2> AND sentinel_for<S2, I2> AND
-                indirectly_comparable<I1, I2, C, P1, P2>) //
+                indirectly_comparable<I1, I2, C, P1, P2>)
         subrange<I1> RANGES_FUNC(search)(I1 begin1,
                                          S1 end1,
                                          I2 begin2,
@@ -192,9 +193,10 @@ namespace ranges
                  typename Rng2,
                  typename C = equal_to,
                  typename P1 = identity,
-                 typename P2 = identity)( //
+                 typename P2 = identity)(
+            /// \pre
             requires forward_range<Rng1> AND forward_range<Rng2> AND
-                indirectly_comparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>) //
+                indirectly_comparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
         safe_subrange_t<Rng1> RANGES_FUNC(search)(
             Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) //
         {

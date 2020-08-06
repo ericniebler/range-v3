@@ -60,7 +60,8 @@ namespace ranges
     RANGES_FUNC_BEGIN(reverse)
 
         /// \brief function template \c reverse
-        template(typename I, typename S)( //
+        template(typename I, typename S)(
+            /// \pre
             requires bidirectional_iterator<I> AND sentinel_for<S, I> AND permutable<I>)
         I RANGES_FUNC(reverse)(I first, S end_)
         {
@@ -70,8 +71,9 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename I = iterator_t<Rng>)( //
-            requires bidirectional_range<Rng> AND permutable<I>) //
+        template(typename Rng, typename I = iterator_t<Rng>)(
+            /// \pre
+            requires bidirectional_range<Rng> AND permutable<I>)
         borrowed_iterator_t<Rng> RANGES_FUNC(reverse)(Rng && rng) //
         {
             return (*this)(begin(rng), end(rng));

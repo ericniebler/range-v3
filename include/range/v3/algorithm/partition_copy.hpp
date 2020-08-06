@@ -48,11 +48,12 @@ namespace ranges
                  typename O0,
                  typename O1,
                  typename C,
-                 typename P = identity)( //
+                 typename P = identity)(
+            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
                 weakly_incrementable<O0> AND weakly_incrementable<O1> AND
                 indirectly_copyable<I, O0> AND indirectly_copyable<I, O1> AND
-                indirect_unary_predicate<C, projected<I, P>>) //
+                indirect_unary_predicate<C, projected<I, P>>)
         partition_copy_result<I, O0, O1> RANGES_FUNC(partition_copy)(
             I first, S last, O0 o0, O1 o1, C pred, P proj = P{})
         {
@@ -78,11 +79,12 @@ namespace ranges
                  typename O0,
                  typename O1,
                  typename C,
-                 typename P = identity)( //
+                 typename P = identity)(
+            /// \pre
             requires input_range<Rng> AND weakly_incrementable<O0> AND
                 weakly_incrementable<O1> AND indirectly_copyable<iterator_t<Rng>, O0> AND
                 indirectly_copyable<iterator_t<Rng>, O1> AND
-                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>) //
+                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
         partition_copy_result<borrowed_iterator_t<Rng>, O0, O1> //
         RANGES_FUNC(partition_copy)(Rng && rng, O0 o0, O1 o1, C pred, P proj = P{})
         {

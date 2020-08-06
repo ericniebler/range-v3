@@ -86,8 +86,9 @@ namespace ranges
         {
             return begin_(meta::bool_<(bool)common_range<Rng>>{});
         }
-        template(bool Const = true)( //
-            requires Const AND common_range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)(
+            /// \pre
+            requires Const AND common_range<meta::const_if_c<Const, Rng>>)
         constexpr reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>> begin() const
         {
             return make_reverse_iterator(ranges::end(rng_));
@@ -96,14 +97,16 @@ namespace ranges
         {
             return make_reverse_iterator(ranges::begin(rng_));
         }
-        template(bool Const = true)( //
-            requires Const AND common_range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)(
+            /// \pre
+            requires Const AND common_range<meta::const_if_c<Const, Rng>>)
         constexpr reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>> end() const
         {
             return make_reverse_iterator(ranges::begin(rng_));
         }
         CPP_member
-        constexpr auto CPP_fun(size)()( //
+        constexpr auto CPP_fun(size)()(
+            /// \pre
             requires sized_range<Rng>)
         {
             return ranges::size(rng_);
@@ -145,7 +148,7 @@ namespace ranges
         -> reverse_view<views::all_t<Rng>>;
 
     template<typename Rng>
-    reverse_view(reverse_view<Rng>) //
+    reverse_view(reverse_view<Rng>)
         -> reverse_view<reverse_view<Rng>>;
 #endif
 
@@ -153,8 +156,9 @@ namespace ranges
     {
         struct reverse_fn
         {
-            template(typename Rng)( //
-                requires viewable_range<Rng> AND bidirectional_range<Rng>) //
+            template(typename Rng)(
+                /// \pre
+                requires viewable_range<Rng> AND bidirectional_range<Rng>)
             constexpr reverse_view<all_t<Rng>> operator()(Rng && rng) const
             {
                 return reverse_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
@@ -172,8 +176,9 @@ namespace ranges
         {
             using ranges::views::reverse;
         }
-        template(typename Rng)(                          //
-            requires view_<Rng> AND bidirectional_range<Rng>) //
+        template(typename Rng)(
+            /// \pre
+            requires view_<Rng> AND bidirectional_range<Rng>)
         using reverse_view = ranges::reverse_view<Rng>;
     } // namespace cpp20
     /// @}

@@ -338,7 +338,8 @@ namespace ranges
             sized_sentinel_for_cursor<T, T> && //
             CPP_requires_ref(detail::random_access_cursor_, T);
 
-        template(class T)( //
+        template(class T)(
+            /// \pre
             requires std::is_lvalue_reference<T>::value)
         void is_lvalue_reference(T&&);
 

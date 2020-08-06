@@ -48,9 +48,10 @@ namespace ranges
                      typename I2,
                      typename C = equal_to,
                      typename P1 = identity,
-                     typename P2 = identity)( //
-            requires input_iterator<I1> AND sentinel_for<S1, I1> AND //
-                input_iterator<I2> AND //
+                     typename P2 = identity)(
+            /// \pre
+            requires input_iterator<I1> AND sentinel_for<S1, I1> AND
+                input_iterator<I2> AND
                 indirect_relation<C, projected<I1, P1>, projected<I2, P2>>)
         RANGES_DEPRECATED(
             "Use the variant of ranges::mismatch that takes an upper bound for "
@@ -75,10 +76,11 @@ namespace ranges
                      typename S2,
                      typename C = equal_to,
                      typename P1 = identity,
-                     typename P2 = identity)( //
+                     typename P2 = identity)(
+            /// \pre
             requires input_iterator<I1> AND sentinel_for<S1, I1> AND
                 input_iterator<I2> AND sentinel_for<S2, I2> AND
-                indirect_relation<C, projected<I1, P1>, projected<I2, P2>>) //
+                indirect_relation<C, projected<I1, P1>, projected<I2, P2>>)
         mismatch_result<I1, I2> RANGES_FUNC(mismatch)(I1 begin1,
                                                       S1 end1,
                                                       I2 begin2,
@@ -129,11 +131,12 @@ namespace ranges
                      typename Rng2,
                      typename C = equal_to,
                      typename P1 = identity,
-                     typename P2 = identity)( //
+                     typename P2 = identity)(
+            /// \pre
             requires input_range<Rng1> AND input_range<Rng2> AND
                 indirect_relation<C,
                                   projected<iterator_t<Rng1>, P1>,
-                                  projected<iterator_t<Rng2>, P2>>) //
+                                  projected<iterator_t<Rng2>, P2>>)
         mismatch_result<borrowed_iterator_t<Rng1>, borrowed_iterator_t<Rng2>> //
         RANGES_FUNC(mismatch)(Rng1 && rng1,
                               Rng2 && rng2,

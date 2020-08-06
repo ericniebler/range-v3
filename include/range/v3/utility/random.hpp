@@ -118,8 +118,9 @@ namespace ranges
                 return seeds;
             }
 
-            template(typename I)( //
-                requires unsigned_integral<I>) //
+            template(typename I)(
+                /// \pre
+                requires unsigned_integral<I>)
             constexpr I fast_exp(I x, I power, I result = I{1})
             {
                 return power == I{0}
@@ -218,9 +219,10 @@ namespace ranges
 
                 std::array<IntRep, count> mixer_;
 
-                template(typename I, typename S)( //
+                template(typename I, typename S)(
+                    /// \pre
                     requires input_iterator<I> AND sentinel_for<S, I> AND
-                        convertible_to<iter_reference_t<I>, IntRep>) //
+                        convertible_to<iter_reference_t<I>, IntRep>)
                 void mix_entropy(I first, S last)
                 {
                     auto hash_const = INIT_A;
@@ -260,23 +262,26 @@ namespace ranges
                 seed_seq_fe(const seed_seq_fe &) = delete;
                 void operator=(const seed_seq_fe &) = delete;
 
-                template(typename T)( //
-                    requires convertible_to<T const &, IntRep>) //
+                template(typename T)(
+                    /// \pre
+                    requires convertible_to<T const &, IntRep>)
                 seed_seq_fe(std::initializer_list<T> init)
                 {
                     seed(init.begin(), init.end());
                 }
 
-                template(typename I, typename S)( //
-                    requires input_iterator<I> AND sentinel_for<S, I> AND //
-                        convertible_to<iter_reference_t<I>, IntRep>) //
+                template(typename I, typename S)(
+                    /// \pre
+                    requires input_iterator<I> AND sentinel_for<S, I> AND
+                        convertible_to<iter_reference_t<I>, IntRep>)
                 seed_seq_fe(I first, S last)
                 {
                     seed(first, last);
                 }
 
                 // generating functions
-                template(typename I, typename S)( //
+                template(typename I, typename S)(
+                    /// \pre
                     requires random_access_iterator<I> AND sentinel_for<S, I>)
                 RANGES_INTENDED_MODULAR_ARITHMETIC //
                 void generate(I first, S const last) const
@@ -303,9 +308,10 @@ namespace ranges
                     return count;
                 }
 
-                template(typename O)( //
-                    requires weakly_incrementable<O> AND //
-                        indirectly_copyable<decltype(mixer_.begin()), O>) //
+                template(typename O)(
+                    /// \pre
+                    requires weakly_incrementable<O> AND
+                        indirectly_copyable<decltype(mixer_.begin()), O>)
                 RANGES_INTENDED_MODULAR_ARITHMETIC void param(O dest) const
                 {
                     constexpr IntRep INV_A = randutils::fast_exp(MULT_A, IntRep(-1));
@@ -352,9 +358,10 @@ namespace ranges
                     ranges::copy(mixer_copy, dest);
                 }
 
-                template(typename I, typename S)( //
+                template(typename I, typename S)(
+                    /// \pre
                     requires input_iterator<I> AND sentinel_for<S, I> AND
-                        convertible_to<iter_reference_t<I>, IntRep>) //
+                        convertible_to<iter_reference_t<I>, IntRep>)
                 void seed(I first, S last)
                 {
                     mix_entropy(first, last);

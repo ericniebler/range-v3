@@ -93,7 +93,8 @@ namespace ranges
             sentinel(concat_view_t * rng, end_tag)
               : end_(end(std::get<cranges - 1>(rng->rngs_)))
             {}
-            template(bool Other)( //
+            template(bool Other)(
+                /// \pre
                 requires IsConst AND CPP_NOT(Other)) //
             sentinel(sentinel<Other> that)
               : end_(std::move(that.end_))
@@ -130,8 +131,9 @@ namespace ranges
             struct next_fun
             {
                 cursor * pos;
-                template(typename I, std::size_t N)( //
-                    requires input_iterator<I>) //
+                template(typename I, std::size_t N)(
+                    /// \pre
+                    requires input_iterator<I>)
                 void operator()(indexed_element<I, N> it) const
                 {
                     RANGES_ASSERT(it.get() != end(std::get<N>(pos->rng_->rngs_)));
@@ -142,15 +144,17 @@ namespace ranges
             struct prev_fun
             {
                 cursor * pos;
-                template(typename I)( //
-                    requires bidirectional_iterator<I>) //
+                template(typename I)(
+                    /// \pre
+                    requires bidirectional_iterator<I>)
                 void operator()(indexed_element<I, 0> it) const
                 {
                     RANGES_ASSERT(it.get() != begin(std::get<0>(pos->rng_->rngs_)));
                     --it.get();
                 }
-                template(typename I, std::size_t N)( //
-                    requires (N != 0) AND bidirectional_iterator<I>) //
+                template(typename I, std::size_t N)(
+                    /// \pre
+                    requires (N != 0) AND bidirectional_iterator<I>)
                 void operator()(indexed_element<I, N> it) const
                 {
                     if(it.get() == begin(std::get<N>(pos->rng_->rngs_)))
@@ -169,14 +173,16 @@ namespace ranges
             {
                 cursor * pos;
                 difference_type n;
-                template(typename I)( //
-                    requires random_access_iterator<I>) //
+                template(typename I)(
+                    /// \pre
+                    requires random_access_iterator<I>)
                 void operator()(indexed_element<I, cranges - 1> it) const
                 {
                     ranges::advance(it.get(), n);
                 }
-                template(typename I, std::size_t N)( //
-                    requires random_access_iterator<I>) //
+                template(typename I, std::size_t N)(
+                    /// \pre
+                    requires random_access_iterator<I>)
                 void operator()(indexed_element<I, N> it) const
                 {
                     auto last = ranges::end(std::get<N>(pos->rng_->rngs_));
@@ -194,14 +200,16 @@ namespace ranges
             {
                 cursor * pos;
                 difference_type n;
-                template(typename I)( //
-                    requires random_access_iterator<I>) //
+                template(typename I)(
+                    /// \pre
+                    requires random_access_iterator<I>)
                 void operator()(indexed_element<I, 0> it) const
                 {
                     ranges::advance(it.get(), n);
                 }
-                template(typename I, std::size_t N)( //
-                    requires random_access_iterator<I>) //
+                template(typename I, std::size_t N)(
+                    /// \pre
+                    requires random_access_iterator<I>)
                 void operator()(indexed_element<I, N> it) const
                 {
                     auto first = ranges::begin(std::get<N>(pos->rng_->rngs_));
@@ -265,7 +273,8 @@ namespace ranges
               : rng_(rng)
               , its_{emplaced_index<cranges - 1>, end(std::get<cranges - 1>(rng->rngs_))}
             {}
-            template(bool Other)(               //
+            template(bool Other)(
+                /// \pre
                 requires IsConst && CPP_NOT(Other)) //
             cursor(cursor<Other> that)
               : rng_(that.rng_)
@@ -283,7 +292,8 @@ namespace ranges
             }
             CPP_member
             auto equal(cursor const & pos) const //
-                -> CPP_ret(bool)( //
+                -> CPP_ret(bool)(
+                    /// \pre
                     requires //
                         equality_comparable<variant<iterator_t<constify_if<Rngs>>...>>)
             {
@@ -296,14 +306,16 @@ namespace ranges
             }
             CPP_member
             auto prev() //
-                -> CPP_ret(void)( //
+                -> CPP_ret(void)(
+                    /// \pre
                     requires and_v<bidirectional_range<Rngs>...>)
             {
                 its_.visit_i(prev_fun{this});
             }
             CPP_member
             auto advance(difference_type n) //
-                -> CPP_ret(void)( //
+                -> CPP_ret(void)(
+                    /// \pre
                     requires and_v<random_access_range<Rngs>...>)
             {
                 if(n > 0)
@@ -313,7 +325,8 @@ namespace ranges
             }
             CPP_member
             auto distance_to(cursor const & that) const //
-                -> CPP_ret(difference_type)( //
+                -> CPP_ret(difference_type)(
+                    /// \pre
                     requires and_v<sized_sentinel_for<iterator_t<Rngs>,
                                                       iterator_t<Rngs>>...>)
             {
@@ -335,7 +348,8 @@ namespace ranges
         }
         CPP_member
         auto begin_cursor() const //
-            -> CPP_ret(cursor<true>)( //
+            -> CPP_ret(cursor<true>)(
+                /// \pre
                 requires and_v<range<Rngs const>...>)
         {
             return {this, begin_tag{}};
@@ -345,7 +359,8 @@ namespace ranges
             -> CPP_ret(
                 meta::if_<meta::and_c<(bool)common_range<Rngs const>...>, //
                           cursor<true>, //
-                          sentinel<true>>)( //
+                          sentinel<true>>)(
+            /// \pre
             requires and_v<range<Rngs const>...>)
         {
             return {this, end_tag{}};
@@ -358,7 +373,8 @@ namespace ranges
         {}
         CPP_member
         constexpr auto size() const //
-            -> CPP_ret(std::size_t)( //
+            -> CPP_ret(std::size_t)(
+                /// \pre
                 requires (detail::concat_cardinality<Rngs...>::value >= 0))
         {
             return static_cast<std::size_t>(detail::concat_cardinality<Rngs...>::value);
@@ -377,6 +393,7 @@ namespace ranges
         }
         CPP_member
         constexpr auto CPP_fun(size)()(
+            /// \pre
             requires (detail::concat_cardinality<Rngs...>::value < 0) &&
             and_v<sized_range<Rngs>...>)
         {
@@ -399,23 +416,26 @@ namespace ranges
     {
         struct concat_fn
         {
-            template(typename... Rngs)( //
-                requires and_v<(viewable_range<Rngs> && input_range<Rngs>)...>) //
+            template(typename... Rngs)(
+                /// \pre
+                requires and_v<(viewable_range<Rngs> && input_range<Rngs>)...>)
             concat_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
             {
                 return concat_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
             }
-            template(typename Rng)( //
-                requires viewable_range<Rng> AND input_range<Rng>) //
+            template(typename Rng)(
+                /// \pre
+                requires viewable_range<Rng> AND input_range<Rng>)
             all_t<Rng> operator()(Rng && rng) const //
             {
                 return all(static_cast<Rng &&>(rng));
             }
             // MSVC doesn't like variadics in operator() for some reason
 #if defined(_MSC_VER)
-            template(typename Rng0, typename Rng1)( //
-                requires viewable_range<Rng0> AND input_range<Rng0> AND //
-                        viewable_range<Rng1> AND input_range<Rng1>) //
+            template(typename Rng0, typename Rng1)(
+                /// \pre
+                requires viewable_range<Rng0> AND input_range<Rng0> AND
+                        viewable_range<Rng1> AND input_range<Rng1>)
             concat_view<all_t<Rng0>, all_t<Rng1>> operator()(Rng0 && rng0, Rng1 && rng1)
                 const
             {
@@ -423,10 +443,11 @@ namespace ranges
                     all(static_cast<Rng0 &&>(rng0)),
                     all(static_cast<Rng1 &&>(rng1))};
             }
-            template(typename Rng0, typename Rng1, typename Rng2)( //
-                requires viewable_range<Rng0> AND input_range<Rng0> AND //
-                    viewable_range<Rng1> AND input_range<Rng1> AND //
-                    viewable_range<Rng2> AND input_range<Rng2>) //
+            template(typename Rng0, typename Rng1, typename Rng2)(
+                /// \pre
+                requires viewable_range<Rng0> AND input_range<Rng0> AND
+                    viewable_range<Rng1> AND input_range<Rng1> AND
+                    viewable_range<Rng2> AND input_range<Rng2>)
             concat_view<all_t<Rng0>, all_t<Rng1>, all_t<Rng2>> //
             operator()(Rng0 && rng0, Rng1 && rng1, Rng2 && rng2) const
             {

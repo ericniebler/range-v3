@@ -35,7 +35,8 @@ namespace ranges
     {
         struct stable_sort_fn
         {
-            template(typename C, typename P = identity)( //
+            template(typename C, typename P = identity)(
+                /// \pre
                 requires (!range<C>))
             constexpr auto operator()(C pred, P proj = P{}) const
             {
@@ -43,8 +44,9 @@ namespace ranges
                     bind_back(stable_sort_fn{}, std::move(pred), std::move(proj)));
             }
 
-            template(typename Rng, typename C = less, typename P = identity)( //
-                requires forward_range<Rng> AND sortable<iterator_t<Rng>, C, P>) //
+            template(typename Rng, typename C = less, typename P = identity)(
+                /// \pre
+                requires forward_range<Rng> AND sortable<iterator_t<Rng>, C, P>)
             Rng operator()(Rng && rng, C pred = C{}, P proj = P{}) const
             {
                 ranges::stable_sort(rng, std::move(pred), std::move(proj));

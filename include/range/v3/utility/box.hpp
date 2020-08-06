@@ -45,7 +45,8 @@ namespace ranges
         mutable T value;
 
         CPP_member
-        constexpr CPP_ctor(mutable_)()( //
+        constexpr CPP_ctor(mutable_)()(
+            /// \pre
             requires std::is_default_constructible<T>::value)
           : value{}
         {}
@@ -171,7 +172,8 @@ namespace ranges
           : value{}
         {}
 #if defined(__cpp_conditional_explicit) && __cpp_conditional_explicit > 0
-        template(typename E)( //
+        template(typename E)(
+            /// \pre
             requires (!same_as<box, detail::decay_t<E>>) AND
                 constructible_from<Element, E>)
         constexpr explicit(!convertible_to<E, Element>) box(E && e)
@@ -179,7 +181,8 @@ namespace ranges
           : value(static_cast<E &&>(e))
         {}
 #else
-        template(typename E)( //
+        template(typename E)(
+            /// \pre
             requires (!same_as<box, detail::decay_t<E>>) AND
                 constructible_from<Element, E> AND
                 convertible_to<E, Element>)
@@ -187,7 +190,8 @@ namespace ranges
             noexcept(std::is_nothrow_constructible<Element, E>::value)
           : value(static_cast<E &&>(e))
         {}
-        template(typename E)( //
+        template(typename E)(
+            /// \pre
             requires (!same_as<box, detail::decay_t<E>>) AND
                 constructible_from<Element, E> AND
                 (!convertible_to<E, Element>))
@@ -226,7 +230,8 @@ namespace ranges
           : Element{}
         {}
 #if defined(__cpp_conditional_explicit) && __cpp_conditional_explicit > 0
-        template(typename E)( //
+        template(typename E)(
+            /// \pre
             requires (!same_as<box, detail::decay_t<E>>) AND
                 constructible_from<Element, E>)
         constexpr explicit(!convertible_to<E, Element>) box(E && e)
@@ -234,7 +239,8 @@ namespace ranges
           : Element(static_cast<E &&>(e))
         {}
 #else
-        template(typename E)( //
+        template(typename E)(
+            /// \pre
             requires (!same_as<box, detail::decay_t<E>>) AND
                 constructible_from<Element, E> AND
                 convertible_to<E, Element>)
@@ -242,7 +248,8 @@ namespace ranges
             noexcept(std::is_nothrow_constructible<Element, E>::value) //
           : Element(static_cast<E &&>(e))
         {}
-        template(typename E)( //
+        template(typename E)(
+            /// \pre
             requires (!same_as<box, detail::decay_t<E>>) AND
                 constructible_from<Element, E> AND
                 (!convertible_to<E, Element>))
@@ -279,19 +286,22 @@ namespace ranges
         constexpr box() noexcept = default;
 
 #if defined(__cpp_conditional_explicit) && __cpp_conditional_explicit > 0
-        template(typename E)( //
+        template(typename E)(
+            /// \pre
             requires (!same_as<box, detail::decay_t<E>>) AND
                 constructible_from<Element, E>)
         constexpr explicit(!convertible_to<E, Element>) box(E &&) noexcept
         {}
 #else
-        template(typename E)( //
+        template(typename E)(
+            /// \pre
             requires (!same_as<box, detail::decay_t<E>>) AND
                 constructible_from<Element, E> AND
                 convertible_to<E, Element>)
         constexpr box(E &&) noexcept
         {}
-        template(typename E)( //
+        template(typename E)(
+            /// \pre
             requires (!same_as<box, detail::decay_t<E>>) AND
                 constructible_from<Element, E> AND
                 (!convertible_to<E, Element>))

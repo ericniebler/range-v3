@@ -48,10 +48,11 @@ namespace ranges
     {
         struct merge_n_with_buffer_fn
         {
-            template(typename I, typename B, typename C = less, typename P = identity)( //
+            template(typename I, typename B, typename C = less, typename P = identity)(
+                /// \pre
                 requires same_as<iter_common_reference_t<I>,
                                      iter_common_reference_t<B>> AND
-                        indirectly_copyable<I, B> AND mergeable<B, I, I, C, P, P>) //
+                        indirectly_copyable<I, B> AND mergeable<B, I, I, C, P, P>)
             I operator()(I begin0,
                          iter_difference_t<I> n0,
                          I begin1,

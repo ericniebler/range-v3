@@ -45,10 +45,11 @@ namespace ranges
                  typename O,
                  typename T1,
                  typename T2,
-                 typename P = identity)( //
+                 typename P = identity)(
+            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
                 output_iterator<O, T2 const &> AND indirectly_copyable<I, O> AND
-                indirect_relation<equal_to, projected<I, P>, T1 const *>) //
+                indirect_relation<equal_to, projected<I, P>, T1 const *>)
         replace_copy_result<I, O> RANGES_FUNC(replace_copy)(I first,
                                                             S last,
                                                             O out,
@@ -72,10 +73,11 @@ namespace ranges
                  typename O,
                  typename T1,
                  typename T2,
-                 typename P = identity)( //
+                 typename P = identity)(
+            /// \pre
             requires input_range<Rng> AND output_iterator<O, T2 const &> AND
                 indirectly_copyable<iterator_t<Rng>, O> AND
-                indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>) //
+                indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>)
         replace_copy_result<borrowed_iterator_t<Rng>, O> RANGES_FUNC(replace_copy)(
             Rng && rng, O out, T1 const & old_value, T2 const & new_value, P proj = {}) //
         {

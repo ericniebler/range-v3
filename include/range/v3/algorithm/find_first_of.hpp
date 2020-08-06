@@ -48,10 +48,11 @@ namespace ranges
                  typename S1,
                  typename R = equal_to,
                  typename P0 = identity,
-                 typename P1 = identity)( //
+                 typename P1 = identity)(
+            /// \pre
             requires input_iterator<I0> AND sentinel_for<S0, I0> AND
                 forward_iterator<I1> AND sentinel_for<S1, I1> AND
-                indirect_relation<R, projected<I0, P0>, projected<I1, P1>>) //
+                indirect_relation<R, projected<I0, P0>, projected<I1, P1>>)
         constexpr I0 RANGES_FUNC(find_first_of)(I0 begin0,
                                                 S0 end0,
                                                 I1 begin1,
@@ -72,11 +73,12 @@ namespace ranges
                      typename Rng1,
                      typename R = equal_to,
                      typename P0 = identity,
-                     typename P1 = identity)( //
+                     typename P1 = identity)(
+            /// \pre
             requires input_range<Rng0> AND forward_range<Rng1> AND
                 indirect_relation<R,
                                   projected<iterator_t<Rng0>, P0>,
-                                  projected<iterator_t<Rng1>, P1>>) //
+                                  projected<iterator_t<Rng1>, P1>>)
         constexpr borrowed_iterator_t<Rng0> RANGES_FUNC(find_first_of)(
             Rng0 && rng0, Rng1 && rng1, R pred = R{}, P0 proj0 = P0{}, P1 proj1 = P1{}) //
         {

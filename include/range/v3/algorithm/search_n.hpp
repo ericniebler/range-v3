@@ -139,9 +139,10 @@ namespace ranges
                  typename S,
                  typename V,
                  typename C = equal_to,
-                 typename P = identity)( //
+                 typename P = identity)(
+            /// \pre
             requires forward_iterator<I> AND sentinel_for<S, I> AND
-                indirectly_comparable<I, V const *, C, P>) //
+                indirectly_comparable<I, V const *, C, P>)
         subrange<I> RANGES_FUNC(search_n)(I first,
                                           S last,
                                           iter_difference_t<I> cnt,
@@ -166,8 +167,9 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename V, typename C = equal_to, typename P = identity)(
+            /// \pre
             requires forward_range<Rng> AND
-                indirectly_comparable<iterator_t<Rng>, V const *, C, P>) //
+                indirectly_comparable<iterator_t<Rng>, V const *, C, P>)
         safe_subrange_t<Rng> RANGES_FUNC(search_n)(Rng && rng,
                                                    iter_difference_t<iterator_t<Rng>> cnt,
                                                    V const & val,

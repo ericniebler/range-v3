@@ -70,14 +70,16 @@ namespace ranges
             // Clang 3.x have a problem with inheriting constructors
             // that causes the declarations in the preceeding PP block to get
             // instantiated too early.
-            template(typename B = TupleLike)( //
-                requires move_constructible<B>) //
+            template(typename B = TupleLike)(
+                /// \pre
+                requires move_constructible<B>)
                 constexpr forward_tuple_interface(TupleLike && base) noexcept(
                     std::is_nothrow_move_constructible<TupleLike>::value)
               : TupleLike(static_cast<TupleLike &&>(base))
             {}
-            template(typename B = TupleLike)( //
-                requires copy_constructible<B>) //
+            template(typename B = TupleLike)(
+                /// \pre
+                requires copy_constructible<B>)
                 constexpr forward_tuple_interface(TupleLike const & base) noexcept(
                     std::is_nothrow_copy_constructible<TupleLike>::value)
               : TupleLike(base)

@@ -70,7 +70,8 @@ namespace ranges
         {
             using ranges::views::empty;
         }
-        template(typename T)(              //
+        template(typename T)(
+            /// \pre
             requires std::is_object<T>::value) //
             using empty_view = ranges::empty_view<T>;
     } // namespace cpp20

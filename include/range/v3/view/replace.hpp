@@ -88,8 +88,9 @@ namespace ranges
     {
         struct replace_base_fn
         {
-            template(typename Rng, typename Val1, typename Val2)( //
-                requires viewable_range<Rng> AND input_range<Rng> AND //
+            template(typename Rng, typename Val1, typename Val2)(
+                /// \pre
+                requires viewable_range<Rng> AND input_range<Rng> AND
                     same_as<
                         detail::decay_t<unwrap_reference_t<Val1>>,
                         detail::decay_t<unwrap_reference_t<Val2>>> AND
@@ -102,7 +103,7 @@ namespace ranges
                                             range_reference_t<Rng>> AND
                     common_reference_with<
                         unwrap_reference_t<Val2 const &>,
-                        range_rvalue_reference_t<Rng>>) //
+                        range_rvalue_reference_t<Rng>>)
             constexpr replace_view< //
                 all_t<Rng>, //
                 detail::decay_t<Val1>, //
@@ -120,7 +121,8 @@ namespace ranges
         {
             using replace_base_fn::operator();
 
-            template(typename Val1, typename Val2)( //
+            template(typename Val1, typename Val2)(
+                /// \pre
                 requires same_as<detail::decay_t<unwrap_reference_t<Val1>>,
                                  detail::decay_t<unwrap_reference_t<Val2>>>)
             constexpr auto operator()(Val1 old_value, Val2 new_value) const

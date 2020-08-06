@@ -43,7 +43,8 @@ namespace ranges
         struct adaptor : adaptor_base
         {
             adaptor() = default;
-            template(bool Other)( //
+            template(bool Other)(
+                /// \pre
                 requires Const AND CPP_NOT(Other)) //
             constexpr adaptor(adaptor<Other>)
             {}
@@ -68,14 +69,16 @@ namespace ranges
         }
         CPP_member
         auto begin_adaptor() const //
-            -> CPP_ret(adaptor<true>)( //
+            -> CPP_ret(adaptor<true>)(
+                /// \pre
                 requires input_range<Rng const>)
         {
             return {};
         }
         CPP_member
         auto end_adaptor() const //
-            -> CPP_ret(adaptor<true>)( //
+            -> CPP_ret(adaptor<true>)(
+                /// \pre
                 requires input_range<Rng const>)
         {
             return {};
@@ -93,7 +96,8 @@ namespace ranges
             return ranges::size(this->base());
         }
         CPP_member
-        auto CPP_fun(size)()( //
+        auto CPP_fun(size)()(
+            /// \pre
             requires sized_range<Rng>)
         {
             return ranges::size(this->base());
@@ -114,8 +118,9 @@ namespace ranges
     {
         struct move_fn
         {
-            template(typename Rng)( //
-                requires viewable_range<Rng> AND input_range<Rng>) //
+            template(typename Rng)(
+                /// \pre
+                requires viewable_range<Rng> AND input_range<Rng>)
             move_view<all_t<Rng>> operator()(Rng && rng) const
             {
                 return move_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};

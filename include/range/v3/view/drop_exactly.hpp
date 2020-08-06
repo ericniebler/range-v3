@@ -52,8 +52,9 @@ namespace ranges
         difference_type_ n_;
 
         // random_access_range == true
-        template(bool Const = true)( //
-            requires Const AND random_access_range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)(
+            /// \pre
+            requires Const AND random_access_range<meta::const_if_c<Const, Rng>>)
         iterator_t<meta::const_if_c<Const, Rng>> get_begin_(std::true_type) const
         {
             return next(ranges::begin(rng_), n_);
@@ -89,25 +90,31 @@ namespace ranges
         {
             return ranges::end(rng_);
         }
-        template(bool Const = true)( //
-            requires Const AND random_access_range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)(
+            /// \pre
+            requires Const AND random_access_range<meta::const_if_c<Const, Rng>>)
         iterator_t<meta::const_if_c<Const, Rng>> begin() const
         {
             return this->get_begin_(std::true_type{});
         }
-        template(bool Const = true)( //
-            requires Const AND random_access_range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)(
+            /// \pre
+            requires Const AND random_access_range<meta::const_if_c<Const, Rng>>)
         sentinel_t<meta::const_if_c<Const, Rng>> end() const
         {
             return ranges::end(rng_);
         }
         CPP_member
-        auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        auto CPP_fun(size)()(const
+            /// \pre
+            requires sized_range<Rng const>)
         {
             return ranges::size(rng_) - static_cast<range_size_t<Rng const>>(n_);
         }
         CPP_member
-        auto CPP_fun(size)()(requires sized_range<Rng>)
+        auto CPP_fun(size)()(
+            /// \pre
+            requires sized_range<Rng>)
         {
             return ranges::size(rng_) - static_cast<range_size_t<Rng>>(n_);
         }
@@ -138,8 +145,9 @@ namespace ranges
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
-            template(typename Rng)( //
-                requires borrowed_range<Rng>) //
+            template(typename Rng)(
+                /// \pre
+                requires borrowed_range<Rng>)
             static subrange<iterator_t<Rng>, sentinel_t<Rng>> //
             impl_(Rng && rng, range_difference_t<Rng> n, random_access_range_tag)
             {
@@ -147,7 +155,8 @@ namespace ranges
             }
 
         public:
-            template(typename Rng)( //
+            template(typename Rng)(
+                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng>)
             auto operator()(Rng && rng, range_difference_t<Rng> n) const
             {
@@ -160,7 +169,8 @@ namespace ranges
         {
             using drop_exactly_base_fn::operator();
 
-            template(typename Int)( //
+            template(typename Int)(
+                /// \pre
                 requires detail::integer_like_<Int>)
             constexpr auto operator()(Int n) const
             {

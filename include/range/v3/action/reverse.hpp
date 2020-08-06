@@ -34,8 +34,9 @@ namespace ranges
         /// Reversed the source range in-place.
         struct reverse_fn
         {
-            template(typename Rng)( //
-                requires bidirectional_range<Rng> AND permutable<iterator_t<Rng>>) //
+            template(typename Rng)(
+                /// \pre
+                requires bidirectional_range<Rng> AND permutable<iterator_t<Rng>>)
             Rng operator()(Rng && rng) const
             {
                 ranges::reverse(rng);

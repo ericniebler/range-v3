@@ -47,7 +47,8 @@ namespace test_weak_input
         explicit cursor(I i)
           : it_(i)
         {}
-        CPP_template(class J)(                      //
+        CPP_template(class J)(
+            /// \pre
             requires ranges::convertible_to<J, I>)  //
         cursor(cursor<J> that)
           : it_(std::move(that.it_))
@@ -118,7 +119,8 @@ namespace test_random_access
         explicit cursor(I i)
           : it_(i)
         {}
-        CPP_template(class J)(                      //
+        CPP_template(class J)(
+            /// \pre
             requires ranges::convertible_to<J, I>)  //
         cursor(cursor<J> that)
           : it_(std::move(that.it_))
@@ -128,7 +130,8 @@ namespace test_random_access
         {
             return *it_;
         }
-        CPP_template(class J)(                      //
+        CPP_template(class J)(
+            /// \pre
             requires ranges::sentinel_for<J, I>)    //
         bool equal(cursor<J> const & that) const
         {
@@ -146,7 +149,8 @@ namespace test_random_access
         {
             it_ += n;
         }
-        CPP_template(class J)(                          //
+        CPP_template(class J)(
+            /// \pre
             requires ranges::sized_sentinel_for<J, I>)  //
         ranges::iter_difference_t<I> distance_to(cursor<J> const & that) const
         {
@@ -281,7 +285,8 @@ namespace test_random_access
         explicit cursor(I i)
           : it_(i)
         {}
-        CPP_template(class J)(                      //
+        CPP_template(class J)(
+            /// \pre
             requires ranges::convertible_to<J, I>)  //
         cursor(cursor<J> that)
           : it_(std::move(that.it_))
@@ -380,7 +385,8 @@ namespace test_random_access
         explicit zip1_cursor(I i)
           : it_(i)
         {}
-        CPP_template(class J)(                      //
+        CPP_template(class J)(
+            /// \pre
             requires ranges::convertible_to<J, I>)  //
         zip1_cursor(zip1_cursor<J> that)
           : it_(std::move(that.it_))
@@ -462,7 +468,8 @@ namespace test_random_access
         explicit cursor(I i)
           : it_(i)
         {}
-        CPP_template(class J)(                      //
+        CPP_template(class J)(
+            /// \pre
             requires ranges::convertible_to<J, I>)  //
         cursor(cursor<J> that)
           : it_(std::move(that.it_))
@@ -472,7 +479,8 @@ namespace test_random_access
         {
             return *it_;
         }
-        CPP_template(class J)(                      //
+        CPP_template(class J)(
+            /// \pre
             requires ranges::sentinel_for<J, I>)    //
         bool equal(cursor<J> const & that) const
         {
@@ -482,7 +490,8 @@ namespace test_random_access
         {
             ++it_;
         }
-        CPP_template(class J)(                          //
+        CPP_template(class J)(
+            /// \pre
             requires ranges::sized_sentinel_for<J, I>)  //
         ranges::iter_difference_t<I> distance_to(cursor<J> const & that) const
         {

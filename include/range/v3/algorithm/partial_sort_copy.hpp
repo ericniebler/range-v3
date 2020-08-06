@@ -44,11 +44,12 @@ namespace ranges
                  typename SO,
                  typename C = less,
                  typename PI = identity,
-                 typename PO = identity)( //
+                 typename PO = identity)(
+            /// \pre
             requires input_iterator<I> AND sentinel_for<SI, I> AND
                 random_access_iterator<O> AND sentinel_for<SO, O> AND
                 indirectly_copyable<I, O> AND sortable<O, C, PO> AND
-                indirect_strict_weak_order<C, projected<I, PI>, projected<O, PO>>) //
+                indirect_strict_weak_order<C, projected<I, PI>, projected<O, PO>>)
         O RANGES_FUNC(partial_sort_copy)(I first,
                                          SI last,
                                          O out_begin,
@@ -87,13 +88,14 @@ namespace ranges
                  typename OutRng,
                  typename C = less,
                  typename PI = identity,
-                 typename PO = identity)( //
+                 typename PO = identity)(
+            /// \pre
             requires input_range<InRng> AND random_access_range<OutRng> AND
                 indirectly_copyable<iterator_t<InRng>, iterator_t<OutRng>> AND
                 sortable<iterator_t<OutRng>, C, PO> AND
                 indirect_strict_weak_order<C,
                                            projected<iterator_t<InRng>, PI>,
-                                           projected<iterator_t<OutRng>, PO>>) //
+                                           projected<iterator_t<OutRng>, PO>>)
         borrowed_iterator_t<OutRng> RANGES_FUNC(partial_sort_copy)(InRng && in_rng,
                                                                    OutRng && out_rng,
                                                                    C pred = C{},

@@ -65,6 +65,7 @@ EXAMPLE_PATH            = @Range-v3_SOURCE_DIR@/example \
                           @Range-v3_SOURCE_DIR@/test
 EXAMPLE_RECURSIVE       = YES
 IMAGE_PATH              = @Range-v3_BINARY_DIR@/image
+FILTER_PATTERNS         = *.hpp="\"@Range-v3_BINARY_DIR@/doc/preprocess.sh\""
 WARN_IF_UNDOCUMENTED    = NO
 
 SHOW_GROUPED_MEMB_INC   = YES
@@ -85,7 +86,6 @@ INLINE_SIMPLE_STRUCTS   = NO
 # Generated formats
 GENERATE_HTML           = YES
 GENERATE_LATEX          = NO
-
 
 GENERATE_TODOLIST       = YES
 GENERATE_TESTLIST       = YES

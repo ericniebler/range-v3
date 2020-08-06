@@ -36,28 +36,32 @@ namespace ranges
         }
         template<typename Integer>
         friend constexpr auto operator==(Integer, infinity) noexcept
-            -> CPP_broken_friend_ret(bool)( //
+            -> CPP_broken_friend_ret(bool)(
+                /// \pre
                 requires integral<Integer>)
         {
             return false;
         }
         template<typename Integer>
         friend constexpr auto operator==(infinity, Integer) noexcept
-            -> CPP_broken_friend_ret(bool)( //
+            -> CPP_broken_friend_ret(bool)(
+                /// \pre
                 requires integral<Integer>)
         {
             return false;
         }
         template<typename Integer>
         friend constexpr auto operator!=(Integer, infinity) noexcept
-            -> CPP_broken_friend_ret(bool)( //
+            -> CPP_broken_friend_ret(bool)(
+                /// \pre
                 requires integral<Integer>)
         {
             return true;
         }
         template<typename Integer>
         friend constexpr auto operator!=(infinity, Integer) noexcept
-            -> CPP_broken_friend_ret(bool)( //
+            -> CPP_broken_friend_ret(bool)(
+                /// \pre
                 requires integral<Integer>)
         {
             return true;

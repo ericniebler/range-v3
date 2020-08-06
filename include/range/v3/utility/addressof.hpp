@@ -52,14 +52,16 @@ namespace ranges
                                    ignore_t);
         }
 
-        template(typename T)( //
+        template(typename T)(
+            /// \pre
             requires(has_bad_addressof<T>()))
         T * addressof(T & arg) noexcept
         {
             return std::addressof(arg);
         }
 
-        template(typename T)( //
+        template(typename T)(
+            /// \pre
             requires (!has_bad_addressof<T>()))
         constexpr T * addressof(T & arg) noexcept
         {

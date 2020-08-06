@@ -90,9 +90,10 @@ namespace ranges
     struct partial_sum_fn
     {
         template(typename I, typename S1, typename O, typename S2, typename BOp = plus,
-                 typename P = identity)( //
+                 typename P = identity)(
+            /// \pre
             requires sentinel_for<S1, I> AND sentinel_for<S2, O> AND
-                partial_sum_constraints<I, O, BOp, P>) //
+                partial_sum_constraints<I, O, BOp, P>)
         partial_sum_result<I, O> operator()(I first,
                                             S1 last,
                                             O result,
@@ -120,8 +121,9 @@ namespace ranges
         }
 
         template(typename I, typename S, typename O, typename BOp = plus,
-                 typename P = identity)( //
-            requires sentinel_for<S, I> AND partial_sum_constraints<I, O, BOp, P>) //
+                 typename P = identity)(
+            /// \pre
+            requires sentinel_for<S, I> AND partial_sum_constraints<I, O, BOp, P>)
         partial_sum_result<I, O> //
         operator()(I first, S last, O result, BOp bop = BOp{}, P proj = P{}) const
         {
@@ -134,7 +136,8 @@ namespace ranges
         }
 
         template(typename Rng, typename ORef, typename BOp = plus, typename P = identity,
-                 typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>)( //
+                 typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>)(
+            /// \pre
             requires range<Rng> AND partial_sum_constraints<I, O, BOp, P>)
         partial_sum_result<borrowed_iterator_t<Rng>, O> //
         operator()(Rng && rng, ORef && result, BOp bop = BOp{}, P proj = P{}) const
@@ -147,7 +150,8 @@ namespace ranges
         }
 
         template(typename Rng, typename ORng, typename BOp = plus, typename P = identity,
-                 typename I = iterator_t<Rng>, typename O = iterator_t<ORng>)( //
+                 typename I = iterator_t<Rng>, typename O = iterator_t<ORng>)(
+            /// \pre
             requires range<Rng> AND range<ORng> AND partial_sum_constraints<I, O, BOp, P>)
         partial_sum_result<borrowed_iterator_t<Rng>, borrowed_iterator_t<ORng>> //
         operator()(Rng && rng, ORng && result, BOp bop = BOp{}, P proj = P{}) const

@@ -74,7 +74,8 @@ namespace ranges
             constexpr adaptor(Parent * rng) noexcept
               : rng_(rng)
             {}
-            template(bool Other)(       //
+            template(bool Other)(
+                /// \pre
                 requires Const && CPP_NOT(Other)) //
                 constexpr adaptor(adaptor<Other> that)
               : rng_(that.rng_)
@@ -90,7 +91,8 @@ namespace ranges
             }
             CPP_member
             constexpr auto prev(iterator_t<CRng> & it) const //
-                -> CPP_ret(void)( //
+                -> CPP_ret(void)(
+                    /// \pre
                     requires bidirectional_range<CRng>)
             {
                 auto const first = ranges::begin(rng_->base());
@@ -113,7 +115,8 @@ namespace ranges
         }
         CPP_member
         constexpr auto begin_adaptor() const noexcept //
-            -> CPP_ret(adaptor<true>)( //
+            -> CPP_ret(adaptor<true>)(
+                /// \pre
                 requires detail::adjacent_filter_constraints<Rng const, Pred const>)
         {
             return {this};
@@ -124,7 +127,8 @@ namespace ranges
         }
         CPP_member
         constexpr auto end_adaptor() const noexcept //
-            -> CPP_ret(adaptor<true>)( //
+            -> CPP_ret(adaptor<true>)(
+                /// \pre
                 requires detail::adjacent_filter_constraints<Rng const, Pred const>)
         {
             return {this};
@@ -139,7 +143,8 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    template(typename Rng, typename Fun)( //
+    template(typename Rng, typename Fun)(
+        /// \pre
         requires copy_constructible<Rng>)
         adjacent_filter_view(Rng &&, Fun)
             ->adjacent_filter_view<views::all_t<Rng>, Fun>;
@@ -149,8 +154,9 @@ namespace ranges
     {
         struct adjacent_filter_base_fn
         {
-            template(typename Rng, typename Pred)( //
-                requires detail::adjacent_filter_constraints<Rng, Pred>) //
+            template(typename Rng, typename Pred)(
+                /// \pre
+                requires detail::adjacent_filter_constraints<Rng, Pred>)
             constexpr adjacent_filter_view<all_t<Rng>, Pred> //
             operator()(Rng && rng, Pred pred) const
             {

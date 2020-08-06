@@ -44,8 +44,9 @@ namespace ranges
             };
 
         public:
-            template(typename Rng)( //
-                requires viewable_range<Rng> AND input_range<Rng> AND //
+            template(typename Rng)(
+                /// \pre
+                requires viewable_range<Rng> AND input_range<Rng> AND
                     std::is_lvalue_reference<range_reference_t<Rng>>::value) //
             constexpr auto CPP_auto_fun(operator())(Rng && rng)(const) //
             (

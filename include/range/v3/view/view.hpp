@@ -103,9 +103,10 @@ namespace ranges
         {
             // Piping requires viewable_ranges. Pipeing a value into a closure
             // should not yield another closure.
-            template(typename Rng, typename ViewFn)( //
-                requires viewable_range<Rng> AND     //
-                    invocable_view_closure<ViewFn, Rng>) //
+            template(typename Rng, typename ViewFn)(
+                /// \pre
+                requires viewable_range<Rng> AND
+                    invocable_view_closure<ViewFn, Rng>)
             friend constexpr auto operator|(Rng && rng, view_closure<ViewFn> vw)
             {
                 return static_cast<ViewFn &&>(vw)(static_cast<Rng &&>(rng));
@@ -133,6 +134,7 @@ namespace ranges
             template<typename ViewFn, typename Pipeable>
             friend constexpr auto operator|(view_closure<ViewFn> vw, Pipeable pipe)
                 -> CPP_broken_friend_ret(view_closure<composed<Pipeable, ViewFn>>)(
+                    /// \pre
                     requires (is_pipeable_v<Pipeable>))
             {
                 return make_view_closure(
@@ -229,7 +231,8 @@ namespace ranges
             friend pipeable_access;
 
             // Piping requires range arguments or lvalue containers.
-            template(typename Rng, typename Vw)( //
+            template(typename Rng, typename Vw)(
+                /// \pre
                 requires viewable_range<Rng> AND invocable<ViewFn &, Rng>)
             static constexpr auto pipe(Rng && rng, Vw && v)
             {
@@ -245,7 +248,8 @@ namespace ranges
             {}
 
             // Calling directly requires a viewable_range.
-            template(typename Rng, typename... Rest)( //
+            template(typename Rng, typename... Rest)(
+                /// \pre
                 requires viewable_range<Rng> AND invocable<ViewFn const &, Rng, Rest...>)
             constexpr invoke_result_t<ViewFn const &, Rng, Rest...> //
             operator()(Rng && rng, Rest &&... rest) const

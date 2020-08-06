@@ -11,6 +11,7 @@ endif()
 set(CMAKE_FOLDER "doc")
 
 configure_file(Doxyfile.in Doxyfile @ONLY)
+configure_file(preprocess.sh.in preprocess.sh @ONLY)
 add_custom_target(doc.check
     COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile
     COMMENT "Running Doxygen to validate the documentation"

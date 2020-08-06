@@ -36,6 +36,7 @@ namespace ranges
     /// \cond
     namespace adl_push_front_detail
     {
+        /// \endcond
         template<typename Cont, typename T>
         using push_front_t = decltype(static_cast<void>(
             unwrap_reference(std::declval<Cont &>()).push_front(std::declval<T>())));
@@ -45,21 +46,24 @@ namespace ranges
             ranges::insert(std::declval<Cont &>(), std::declval<iterator_t<Cont>>(),
                            std::declval<Rng>())));
 
-        template(typename Cont, typename T)( //
+        template(typename Cont, typename T)(
+            /// \pre
             requires lvalue_container_like<Cont> AND
-            (!range<T>)&&constructible_from<range_value_t<Cont>, T>) //
+                (!range<T>) AND constructible_from<range_value_t<Cont>, T>)
         push_front_t<Cont, T> push_front(Cont && cont, T && t)
         {
             unwrap_reference(cont).push_front(static_cast<T &&>(t));
         }
 
-        template(typename Cont, typename Rng)( //
-            requires lvalue_container_like<Cont> AND range<Rng>) //
+        template(typename Cont, typename Rng)(
+            /// \pre
+            requires lvalue_container_like<Cont> AND range<Rng>)
         insert_t<Cont, Rng> push_front(Cont && cont, Rng && rng)
         {
             ranges::insert(cont, begin(cont), static_cast<Rng &&>(rng));
         }
 
+        /// \cond
         // clang-format off
         template<typename Rng, typename T>
         CPP_requires(can_push_front_frag_,
@@ -71,6 +75,7 @@ namespace ranges
         CPP_concept can_push_front_ =
             CPP_requires_ref(adl_push_front_detail::can_push_front_frag_, Rng, T);
         // clang-format on
+        /// \endcond
 
         struct push_front_fn
         {
@@ -87,7 +92,8 @@ namespace ranges
                 return make_action_closure(bind_back(push_front_fn{}, val));
             }
 
-            template(typename T)( //
+            template(typename T)(
+                /// \pre
                 requires range<T &>)
             constexpr auto operator()(T & t) const
             {
@@ -95,19 +101,21 @@ namespace ranges
                     bind_back(push_front_fn{}, detail::reference_wrapper_<T>(t)));
             }
 
-            template(typename Rng, typename T)( //
-                requires input_range<Rng> AND can_push_front_<Rng, T> AND //
-                (range<T> || constructible_from<range_value_t<Rng>, T>)) //
+            template(typename Rng, typename T)(
+                /// \pre
+                requires input_range<Rng> AND can_push_front_<Rng, T> AND
+                    (range<T> || constructible_from<range_value_t<Rng>, T>)) //
             Rng operator()(Rng && rng, T && t) const //
             {
                 push_front(rng, static_cast<T &&>(t));
                 return static_cast<Rng &&>(rng);
             }
 
-            template(typename Rng, typename T)( //
-                requires input_range<Rng> AND                          //
-                        can_push_front_<Rng, std::initializer_list<T>> AND
-                            constructible_from<range_value_t<Rng>, T const &>) //
+            template(typename Rng, typename T)(
+                /// \pre
+                requires input_range<Rng> AND
+                    can_push_front_<Rng, std::initializer_list<T>> AND
+                    constructible_from<range_value_t<Rng>, T const &>)
             Rng operator()(Rng && rng, std::initializer_list<T> t) const //
             {
                 push_front(rng, t);
@@ -123,6 +131,7 @@ namespace ranges
             }
             /// \endcond
         };
+    /// \cond
     } // namespace adl_push_front_detail
     /// \endcond
 

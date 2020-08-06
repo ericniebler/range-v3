@@ -33,11 +33,11 @@
 #if defined(__clang__) && __cplusplus <= 201703L
 #define CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                                \
     CPP_DIAGNOSTIC_PUSH                                                                 \
-    CPP_DIAGNOSTIC_IGNORE_CPP2A_COMPAT                                                  \
-    /**/
+    CPP_DIAGNOSTIC_IGNORE_CPP2A_COMPAT
+
 #define CPP_PP_IGNORE_CXX2A_COMPAT_END                                                  \
-    CPP_DIAGNOSTIC_POP                                                                  \
-    /**/
+    CPP_DIAGNOSTIC_POP
+
 #else
 #define CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_PP_IGNORE_CXX2A_COMPAT_END
@@ -107,16 +107,15 @@
         40, 39, 38, 37, 36, 35, 34, 33, 32, 31,                                 \
         30, 29, 28, 27, 26, 25, 24, 23, 22, 21,                                 \
         20, 19, 18, 17, 16, 15, 14, 13, 12, 11,                                 \
-        10, 9, 8, 7, 6, 5, 4, 3, 2, 1,))                                        \
-    /**/
+        10, 9, 8, 7, 6, 5, 4, 3, 2, 1,))
+
 #define CPP_PP_COUNT_(                                                          \
     _01, _02, _03, _04, _05, _06, _07, _08, _09, _10,                           \
     _11, _12, _13, _14, _15, _16, _17, _18, _19, _20,                           \
     _21, _22, _23, _24, _25, _26, _27, _28, _29, _30,                           \
     _31, _32, _33, _34, _35, _36, _37, _38, _39, _40,                           \
     _41, _42, _43, _44, _45, _46, _47, _48, _49, _50, N, ...)                   \
-    N                                                                           \
-    /**/
+    N
 
 #define CPP_PP_IIF(BIT) CPP_PP_CAT_(CPP_PP_IIF_, BIT)
 #define CPP_PP_IIF_0(TRUE, ...) __VA_ARGS__
@@ -134,8 +133,7 @@
 #define CPP_PP_LBRACE() {
 #define CPP_PP_RBRACE() }
 #define CPP_PP_COMMA_IIF(X)                                                     \
-    CPP_PP_IIF(X)(CPP_PP_EMPTY, CPP_PP_COMMA)()                                 \
-    /**/
+    CPP_PP_IIF(X)(CPP_PP_EMPTY, CPP_PP_COMMA)()
 
 #define CPP_PP_FOR_EACH(M, ...)                                                 \
     CPP_PP_FOR_EACH_N(CPP_PP_COUNT(__VA_ARGS__), M, __VA_ARGS__)
@@ -159,7 +157,7 @@
     M(_1), M(_2), M(_3), M(_4), M(_5), M(_6), M(_7), M(_8)
 
 #define CPP_PP_PROBE_EMPTY_PROBE_CPP_PP_PROBE_EMPTY                             \
-    CPP_PP_PROBE(~)                                                             \
+    CPP_PP_PROBE(~)
 
 #define CPP_PP_PROBE_EMPTY()
 #define CPP_PP_IS_NOT_EMPTY(...)                                                \
@@ -167,15 +165,14 @@
         CPP_PP_CHECK,                                                           \
         CPP_PP_CAT(                                                             \
             CPP_PP_PROBE_EMPTY_PROBE_,                                          \
-            CPP_PP_PROBE_EMPTY __VA_ARGS__ ()))                                 \
-    /**/
+            CPP_PP_PROBE_EMPTY __VA_ARGS__ ()))
 
 #if defined(_MSC_VER) && !defined(__clang__) && (__cplusplus <= 201703L)
 #define CPP_BOOL(...) ::meta::bool_<__VA_ARGS__>::value
 #define CPP_TRUE_FN                                                             \
     !::concepts::detail::instance_<                                             \
-        decltype(CPP_true_fn(::concepts::detail::xNil{}))>                      \
-    /**/
+        decltype(CPP_true_fn(::concepts::detail::xNil{}))>
+
 #define CPP_NOT(...) (!CPP_BOOL(__VA_ARGS__))
 #else
 #define CPP_BOOL(...) __VA_ARGS__
@@ -185,18 +182,18 @@
 
 #define CPP_assert(...)                                                         \
     static_assert(static_cast<bool>(__VA_ARGS__),                               \
-        "Concept assertion failed : " #__VA_ARGS__)                             \
-    /**/
+        "Concept assertion failed : " #__VA_ARGS__)
+
 #define CPP_assert_msg static_assert
 
 #if CPP_CXX_CONCEPTS || defined(CPP_DOXYGEN_INVOKED)
 #define CPP_concept META_CONCEPT
 #define CPP_and &&
-    /**/
+
 #else
 #define CPP_concept CPP_INLINE_VAR constexpr bool
 #define CPP_and CPP_and_sfinae
-    /**/
+
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -212,41 +209,51 @@
 #define CPP_member
 #define CPP_ctor(TYPE) TYPE CPP_CTOR_IMPL_1_
 
+#if defined(CPP_DOXYGEN_INVOKED) && CPP_DOXYGEN_INVOKED
+/// INTERNAL ONLY
+#define CPP_CTOR_IMPL_1_(...) (__VA_ARGS__) CPP_CTOR_IMPL_2_
+#define CPP_CTOR_IMPL_2_(...) __VA_ARGS__ `
+#else
 /// INTERNAL ONLY
 #define CPP_CTOR_IMPL_1_(...) (__VA_ARGS__) CPP_PP_EXPAND
+#endif
 
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_AUX_(...)                                                  \
     > CPP_PP_CAT(                                                               \
         CPP_TEMPLATE_AUX_,                                                      \
-        CPP_TEMPLATE_AUX_WHICH_(__VA_ARGS__,))(__VA_ARGS__)                     \
-    /**/
+        CPP_TEMPLATE_AUX_WHICH_(__VA_ARGS__,))(__VA_ARGS__)
 
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_AUX_WHICH_(FIRST, ...)                                     \
     CPP_PP_EVAL(                                                                \
         CPP_PP_CHECK,                                                           \
-        CPP_PP_CAT(CPP_TEMPLATE_PROBE_CONCEPT_, FIRST))                         \
-    /**/
+        CPP_PP_CAT(CPP_TEMPLATE_PROBE_CONCEPT_, FIRST))
 
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_PROBE_CONCEPT_concept                                      \
-    CPP_PP_PROBE(~)                                                             \
-    /**/
+    CPP_PP_PROBE(~)
 
+#if defined(CPP_DOXYGEN_INVOKED) && CPP_DOXYGEN_INVOKED
+// A template with a requires clause. Turn the requires clause into
+// a Doxygen precondition block.
+/// INTERNAL ONLY
+#define CPP_TEMPLATE_AUX_0(...) __VA_ARGS__`
+#define requires requires `
+
+#else
 // A template with a requires clause
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_AUX_0(...) __VA_ARGS__
+#endif
 
 // A concept definition
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_AUX_1(DECL, ...)                                           \
-    CPP_concept CPP_CONCEPT_NAME_(DECL) = __VA_ARGS__                           \
-    /**/
+    CPP_concept CPP_CONCEPT_NAME_(DECL) = __VA_ARGS__
 
 #define CPP_concept_ref(NAME, ...)                                              \
-    CPP_PP_CAT(NAME, _concept_)<__VA_ARGS__>                                    \
-    /**/
+    CPP_PP_CAT(NAME, _concept_)<__VA_ARGS__>
 
 #else // ^^^^ with concepts / without concepts vvvv
 
@@ -256,8 +263,7 @@
 #define CPP_ctor CPP_ctor_sfinae
 #define CPP_concept_ref(NAME, ...)                                              \
     (1u == sizeof(CPP_PP_CAT(NAME, _concept_)(                                  \
-        (::concepts::detail::tag<__VA_ARGS__>*)nullptr)))                       \
-    /**/
+        (::concepts::detail::tag<__VA_ARGS__>*)nullptr)))
 
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_AUX_ CPP_TEMPLATE_SFINAE_AUX_
@@ -266,27 +272,23 @@
 
 #define CPP_template_sfinae(...)                                                \
     CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                            \
-    template<__VA_ARGS__ CPP_TEMPLATE_SFINAE_AUX_                               \
-    /**/
+    template<__VA_ARGS__ CPP_TEMPLATE_SFINAE_AUX_
 
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_SFINAE_PROBE_CONCEPT_concept                               \
-    CPP_PP_PROBE(~)                                                             \
-    /**/
+    CPP_PP_PROBE(~)
 
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_SFINAE_AUX_WHICH_(FIRST, ...)                              \
     CPP_PP_EVAL(                                                                \
         CPP_PP_CHECK,                                                           \
-        CPP_PP_CAT(CPP_TEMPLATE_SFINAE_PROBE_CONCEPT_, FIRST))                  \
-    /**/
+        CPP_PP_CAT(CPP_TEMPLATE_SFINAE_PROBE_CONCEPT_, FIRST))
 
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_SFINAE_AUX_(...)                                           \
     CPP_PP_CAT(                                                                 \
         CPP_TEMPLATE_SFINAE_AUX_,                                               \
-        CPP_TEMPLATE_SFINAE_AUX_WHICH_(__VA_ARGS__,))(__VA_ARGS__)              \
-    /**/
+        CPP_TEMPLATE_SFINAE_AUX_WHICH_(__VA_ARGS__,))(__VA_ARGS__)
 
 // A template with a requires clause
 /// INTERNAL ONLY
@@ -296,8 +298,7 @@
         CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) &&                  \
         CPP_BOOL(CPP_true),                                                     \
         int> = 0>                                                               \
-    CPP_PP_IGNORE_CXX2A_COMPAT_END                                              \
-    /**/
+    CPP_PP_IGNORE_CXX2A_COMPAT_END
 
 // A concept definition
 /// INTERNAL ONLY
@@ -308,37 +309,30 @@
         ::concepts::detail::tag<CPP_CONCEPT_PARAMS_(DECL)>*)                    \
         -> char(&)[1];                                                          \
     auto CPP_CONCEPT_NAME_(DECL)(...) -> char(&)[2]                             \
-    CPP_PP_IGNORE_CXX2A_COMPAT_END                                              \
-    /**/
+    CPP_PP_IGNORE_CXX2A_COMPAT_END
 
 /// INTERNAL ONLY
 #define CPP_CONCEPT_NAME_(DECL)                                                 \
     CPP_PP_EVAL(                                                                \
         CPP_PP_CAT,                                                             \
-        CPP_PP_EVAL(CPP_PP_FIRST, CPP_EAT_CONCEPT_(DECL)), _concept_)           \
-    /**/
+        CPP_PP_EVAL(CPP_PP_FIRST, CPP_EAT_CONCEPT_(DECL)), _concept_)
 
 /// INTERNAL ONLY
 #define CPP_CONCEPT_PARAMS_(DECL)                                               \
-    CPP_PP_EVAL(CPP_PP_SECOND, CPP_EAT_CONCEPT_(DECL))                          \
-    /**/
+    CPP_PP_EVAL(CPP_PP_SECOND, CPP_EAT_CONCEPT_(DECL))
 
 /// INTERNAL ONLY
 #define CPP_EAT_CONCEPT_(DECL)                                                  \
-    CPP_PP_CAT(CPP_EAT_CONCEPT_, DECL)                                          \
-    /**/
+    CPP_PP_CAT(CPP_EAT_CONCEPT_, DECL)
 
 /// INTERNAL ONLY
-#define CPP_EAT_CONCEPT_concept                                                 \
-    /**/
+#define CPP_EAT_CONCEPT_concept
 
 #define CPP_and_sfinae                                                          \
-    && CPP_BOOL(CPP_true), int> = 0, std::enable_if_t<                          \
-    /**/
+    && CPP_BOOL(CPP_true), int> = 0, std::enable_if_t<
 
 #define CPP_template_def_sfinae(...)                                            \
-    template<__VA_ARGS__ CPP_TEMPLATE_DEF_SFINAE_AUX_                           \
-    /**/
+    template<__VA_ARGS__ CPP_TEMPLATE_DEF_SFINAE_AUX_
 
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_DEF_SFINAE_AUX_(...) ,                                     \
@@ -346,42 +340,35 @@
     std::enable_if_t<                                                           \
         CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) &&                  \
         CPP_BOOL(CPP_true),                                                     \
-        int>>                                                                   \
-    /**/
+        int>>
 
 #define CPP_and_sfinae_def                                                      \
-    && CPP_BOOL(CPP_true), int>, std::enable_if_t<                              \
-    /**/
+    && CPP_BOOL(CPP_true), int>, std::enable_if_t<
 
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_SFINAE_AUX_3_requires
 
 #define CPP_member_sfinae                                                       \
-    CPP_broken_friend_member                                                    \
-    /**/
+    CPP_broken_friend_member
 
 #define CPP_ctor_sfinae(TYPE)                                                   \
     CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                            \
-    TYPE CPP_CTOR_SFINAE_IMPL_1_                                                \
-    /**/
+    TYPE CPP_CTOR_SFINAE_IMPL_1_
 
 /// INTERNAL ONLY
 #define CPP_CTOR_SFINAE_IMPL_1_(...)                                            \
     (__VA_ARGS__                                                                \
         CPP_PP_COMMA_IIF(                                                       \
             CPP_PP_NOT(CPP_PP_IS_NOT_EMPTY(__VA_ARGS__)))                       \
-    CPP_CTOR_SFINAE_REQUIRES                                                    \
-    /**/
+    CPP_CTOR_SFINAE_REQUIRES
 
 /// INTERNAL ONLY
 #define CPP_CTOR_SFINAE_PROBE_NOEXCEPT_noexcept                                 \
-    CPP_PP_PROBE(~)                                                             \
-    /**/
+    CPP_PP_PROBE(~)
 
 /// INTERNAL ONLY
 #define CPP_CTOR_SFINAE_MAKE_PROBE(FIRST,...)                                   \
-    CPP_PP_CAT(CPP_CTOR_SFINAE_PROBE_NOEXCEPT_, FIRST)                          \
-    /**/
+    CPP_PP_CAT(CPP_CTOR_SFINAE_PROBE_NOEXCEPT_, FIRST)
 
 /// INTERNAL ONLY
 #define CPP_CTOR_SFINAE_REQUIRES(...)                                           \
@@ -389,8 +376,7 @@
         CPP_CTOR_SFINAE_REQUIRES_,                                              \
         CPP_PP_EVAL(                                                            \
             CPP_PP_CHECK,                                                       \
-            CPP_CTOR_SFINAE_MAKE_PROBE(__VA_ARGS__,)))(__VA_ARGS__)             \
-    /**/
+            CPP_CTOR_SFINAE_MAKE_PROBE(__VA_ARGS__,)))(__VA_ARGS__)
 
 // No noexcept-clause:
 /// INTERNAL ONLY
@@ -399,8 +385,7 @@
         CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) && CPP_TRUE_FN,     \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
-    CPP_PP_IGNORE_CXX2A_COMPAT_END                                              \
-    /**/
+    CPP_PP_IGNORE_CXX2A_COMPAT_END
 
 // Yes noexcept-clause:
 /// INTERNAL ONLY
@@ -411,8 +396,7 @@
             CPP_PP_CAT(CPP_CTOR_SFINAE_EAT_NOEXCEPT_, __VA_ARGS__)) && CPP_TRUE_FN,\
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
-    CPP_PP_EXPAND(CPP_PP_CAT(CPP_CTOR_SFINAE_SHOW_NOEXCEPT_, __VA_ARGS__)))     \
-    /**/
+    CPP_PP_EXPAND(CPP_PP_CAT(CPP_CTOR_SFINAE_SHOW_NOEXCEPT_, __VA_ARGS__)))
 
 /// INTERNAL ONLY
 #define CPP_CTOR_SFINAE_EAT_NOEXCEPT_noexcept(...)
@@ -421,82 +405,71 @@
 #define CPP_CTOR_SFINAE_SHOW_NOEXCEPT_noexcept(...)                             \
     noexcept(__VA_ARGS__)                                                       \
     CPP_PP_IGNORE_CXX2A_COMPAT_END                                              \
-    CPP_PP_EAT CPP_PP_LPAREN                                                    \
-    /**/
+    CPP_PP_EAT CPP_PP_LPAREN
 
 #ifdef CPP_DOXYGEN_INVOKED
 #define CPP_broken_friend_ret(...)                                              \
-    __VA_ARGS__ CPP_PP_EXPAND                                                   \
-    /**/
+    __VA_ARGS__ CPP_PP_EXPAND
+
 #else // ^^^ CPP_DOXYGEN_INVOKED / not CPP_DOXYGEN_INVOKED vvv
 #define CPP_broken_friend_ret(...)                                              \
     ::concepts::return_t<                                                       \
         __VA_ARGS__,                                                            \
-        std::enable_if_t<CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_                     \
-    /**/
+        std::enable_if_t<CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_
 
 /// INTERNAL ONLY
 #define CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_(...)                                 \
     CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(CPP_PP_CAT(                            \
-        CPP_TEMPLATE_AUX_2_, __VA_ARGS__))                                      \
-    /**/
+        CPP_TEMPLATE_AUX_2_, __VA_ARGS__))
 
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_AUX_2_requires
 
 /// INTERNAL ONLY
 #define CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(...)                               \
-    __VA_ARGS__ && CPP_TRUE_FN>>                                                   \
-    /**/
+    __VA_ARGS__ && CPP_TRUE_FN>>
 
 #ifdef CPP_WORKAROUND_MSVC_779763
 #define CPP_broken_friend_member                                                \
     template<::concepts::detail::CPP_true_t const &CPP_true_fn =                \
-        ::concepts::detail::CPP_true_fn_>                                       \
-    /**/
+        ::concepts::detail::CPP_true_fn_>
+
 #else // ^^^ workaround / no workaround vvv
 #define CPP_broken_friend_member                                                \
     template<bool (&CPP_true_fn)(::concepts::detail::xNil) =                    \
-        ::concepts::detail::CPP_true_fn>                                        \
-    /**/
+        ::concepts::detail::CPP_true_fn>
+
 #endif // CPP_WORKAROUND_MSVC_779763
 #endif
 
 #if CPP_CXX_CONCEPTS
 #define CPP_requires(NAME, REQS)                                                \
 CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      \
-    CPP_PP_CAT(CPP_REQUIRES_, REQS)                                             \
-    /**/
+    CPP_PP_CAT(CPP_REQUIRES_, REQS)
 
 #define CPP_requires_ref(NAME, ...)                                             \
-    CPP_PP_CAT(NAME, _requires_)<__VA_ARGS__>                                   \
-    /**/
+    CPP_PP_CAT(NAME, _requires_)<__VA_ARGS__>
 
 /// INTERNAL ONLY
 #define CPP_REQUIRES_requires(...)                                              \
-    requires(__VA_ARGS__) CPP_REQUIRES_AUX_                                     \
-    /**/
+    requires(__VA_ARGS__) CPP_REQUIRES_AUX_
 
 /// INTERNAL ONLY
 #define CPP_REQUIRES_AUX_(...)                                                  \
-    { __VA_ARGS__; }                                                            \
-    /**/
+    { __VA_ARGS__; }
 
 #else
 #define CPP_requires(NAME, REQS)                                                \
     auto CPP_PP_CAT(NAME, _requires_test_)                                      \
-    CPP_REQUIRES_AUX_(NAME, CPP_REQUIRES_ ## REQS)                              \
-    /**/
+    CPP_REQUIRES_AUX_(NAME, CPP_REQUIRES_ ## REQS)
 
 #define CPP_requires_ref(NAME, ...)                                             \
     (1u == sizeof(CPP_PP_CAT(NAME, _requires_)(                                 \
-        (::concepts::detail::tag<__VA_ARGS__>*)nullptr)))                       \
-    /**/
+        (::concepts::detail::tag<__VA_ARGS__>*)nullptr)))
 
 /// INTERNAL ONLY
 #define CPP_REQUIRES_requires(...)                                              \
-    (__VA_ARGS__) -> decltype CPP_REQUIRES_RETURN_                              \
-    /**/
+    (__VA_ARGS__) -> decltype CPP_REQUIRES_RETURN_
 
 /// INTERNAL ONLY
 #define CPP_REQUIRES_RETURN_(...) (__VA_ARGS__, void()) {}
@@ -509,28 +482,45 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
         ::concepts::detail::tag<As...> *,                                       \
         decltype(&CPP_PP_CAT(NAME, _requires_test_)<As...>) = nullptr)          \
         -> char(&)[1];                                                          \
-    auto CPP_PP_CAT(NAME, _requires_)(...) -> char(&)[2]                        \
-    /**/
+    auto CPP_PP_CAT(NAME, _requires_)(...) -> char(&)[2]
+
 #endif
 
 #if CPP_CXX_CONCEPTS
+
+#if defined(CPP_DOXYGEN_INVOKED) && CPP_DOXYGEN_INVOKED
 #define CPP_ret(...)                                                            \
-    __VA_ARGS__ CPP_PP_EXPAND                                                   \
-    /**/
+    __VA_ARGS__ CPP_RET_AUX_
+#define CPP_RET_AUX_(...) __VA_ARGS__ `
+#else
+#define CPP_ret(...)                                                            \
+    __VA_ARGS__ CPP_PP_EXPAND
+#endif
+
 #else
 #define CPP_ret                                                                 \
-    CPP_broken_friend_ret                                                       \
-    /**/
+    CPP_broken_friend_ret
+
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // CPP_fun
 #if CPP_CXX_CONCEPTS
+
+#if defined(CPP_DOXYGEN_INVOKED) && CPP_DOXYGEN_INVOKED
 /// INTERNAL ONLY
 #define CPP_FUN_IMPL_1_(...)                                                    \
     (__VA_ARGS__)                                                               \
-    CPP_PP_EXPAND                                                               \
-    /**/
+    CPP_FUN_IMPL_2_
+#define CPP_FUN_IMPL_2_(...)                                                    \
+    __VA_ARGS__ `
+#else
+/// INTERNAL ONLY
+#define CPP_FUN_IMPL_1_(...)                                                    \
+    (__VA_ARGS__)                                                               \
+    CPP_PP_EXPAND
+#endif
+
 #define CPP_fun(X) X CPP_FUN_IMPL_1_
 #else
 /// INTERNAL ONLY
@@ -538,23 +528,20 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
     (__VA_ARGS__                                                                \
         CPP_PP_COMMA_IIF(                                                       \
             CPP_PP_NOT(CPP_PP_IS_NOT_EMPTY(__VA_ARGS__)))                       \
-    CPP_FUN_IMPL_REQUIRES                                                       \
-    /**/
+    CPP_FUN_IMPL_REQUIRES
 
 /// INTERNAL ONLY
 #define CPP_FUN_IMPL_REQUIRES(...)                                              \
     CPP_PP_EVAL2_(                                                              \
         CPP_FUN_IMPL_SELECT_CONST_,                                             \
         (__VA_ARGS__,)                                                          \
-    )(__VA_ARGS__)                                                              \
-    /**/
+    )(__VA_ARGS__)
 
 /// INTERNAL ONLY
 #define CPP_FUN_IMPL_SELECT_CONST_(MAYBE_CONST, ...)                            \
     CPP_PP_CAT(CPP_FUN_IMPL_SELECT_CONST_,                                      \
         CPP_PP_EVAL(CPP_PP_CHECK, CPP_PP_CAT(                                   \
-            CPP_PP_PROBE_CONST_PROBE_, MAYBE_CONST)))                           \
-    /**/
+            CPP_PP_PROBE_CONST_PROBE_, MAYBE_CONST)))
 
 /// INTERNAL ONLY
 #define CPP_PP_PROBE_CONST_PROBE_const CPP_PP_PROBE(~)
@@ -564,15 +551,13 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
     CPP_PP_EVAL(                                                                \
         CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_,                                    \
         CPP_PP_CAT(CPP_FUN_IMPL_EAT_CONST_, __VA_ARGS__),)(                     \
-        CPP_PP_CAT(CPP_FUN_IMPL_EAT_CONST_, __VA_ARGS__))                       \
-    /**/
+        CPP_PP_CAT(CPP_FUN_IMPL_EAT_CONST_, __VA_ARGS__))
 
 /// INTERNAL ONLY
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_(MAYBE_NOEXCEPT, ...)                \
     CPP_PP_CAT(CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_,                             \
         CPP_PP_EVAL2(CPP_PP_CHECK, CPP_PP_CAT(                                  \
-            CPP_PP_PROBE_NOEXCEPT_PROBE_, MAYBE_NOEXCEPT)))                     \
-    /**/
+            CPP_PP_PROBE_NOEXCEPT_PROBE_, MAYBE_NOEXCEPT)))
 
 /// INTERNAL ONLY
 #define CPP_PP_PROBE_NOEXCEPT_PROBE_noexcept CPP_PP_PROBE(~)
@@ -586,8 +571,7 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
             __VA_ARGS__) && CPP_TRUE_FN,                                           \
         ::concepts::detail::Nil                                                 \
     > = {}) const                                                               \
-    CPP_PP_IGNORE_CXX2A_COMPAT_END                                              \
-    /**/
+    CPP_PP_IGNORE_CXX2A_COMPAT_END
 
 /// INTERNAL ONLY
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_1(...)                               \
@@ -598,8 +582,7 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
             CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)) && CPP_TRUE_FN,   \
         ::concepts::detail::Nil                                                 \
     > = {}) const                                                               \
-    CPP_PP_EXPAND(CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))        \
-    /**/
+    CPP_PP_EXPAND(CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))
 
 /// INTERNAL ONLY
 #define CPP_FUN_IMPL_EAT_NOEXCEPT_noexcept(...)
@@ -607,23 +590,20 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
 /// INTERNAL ONLY
 #define CPP_FUN_IMPL_SHOW_NOEXCEPT_noexcept(...)                                \
     noexcept(__VA_ARGS__) CPP_PP_IGNORE_CXX2A_COMPAT_END                        \
-    CPP_PP_EAT CPP_PP_LPAREN                                                    \
-    /**/
+    CPP_PP_EAT CPP_PP_LPAREN
 
 /// INTERNAL ONLY
 #define CPP_FUN_IMPL_SELECT_CONST_0(...)                                        \
     CPP_PP_EVAL_(                                                               \
         CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_,                                 \
         (__VA_ARGS__,)                                                          \
-    )(__VA_ARGS__)                                                              \
-    /**/
+    )(__VA_ARGS__)
 
 /// INTERNAL ONLY
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_(MAYBE_NOEXCEPT, ...)             \
     CPP_PP_CAT(CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_,                          \
           CPP_PP_EVAL2(CPP_PP_CHECK, CPP_PP_CAT(                                \
-            CPP_PP_PROBE_NOEXCEPT_PROBE_, MAYBE_NOEXCEPT)))                     \
-    /**/
+            CPP_PP_PROBE_NOEXCEPT_PROBE_, MAYBE_NOEXCEPT)))
 
 /// INTERNAL ONLY
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_0(...)                            \
@@ -631,8 +611,7 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
         CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__) && CPP_TRUE_FN,        \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
-    CPP_PP_IGNORE_CXX2A_COMPAT_END                                              \
-    /**/
+    CPP_PP_IGNORE_CXX2A_COMPAT_END
 
 /// INTERNAL ONLY
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_1(...)                            \
@@ -644,8 +623,7 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
         ) && CPP_TRUE_FN,                                                          \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
-    CPP_PP_EXPAND(CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))        \
-    /**/
+    CPP_PP_EXPAND(CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))
 
 /// INTERNAL ONLY
 #define CPP_FUN_IMPL_EAT_CONST_const
@@ -684,15 +662,13 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
     CPP_PP_EVAL2_(                                                              \
         CPP_AUTO_FUN_SELECT_RETURNS_,                                           \
         (__VA_ARGS__,)                                                          \
-    )(__VA_ARGS__)                                                              \
-    /**/
+    )(__VA_ARGS__)
 
 /// INTERNAL ONLY
 #define CPP_AUTO_FUN_SELECT_RETURNS_(MAYBE_CONST, ...)                          \
     CPP_PP_CAT(CPP_AUTO_FUN_RETURNS_CONST_,                                     \
         CPP_PP_EVAL(CPP_PP_CHECK, CPP_PP_CAT(                                   \
-            CPP_PP_PROBE_CONST_MUTABLE_PROBE_, MAYBE_CONST)))                   \
-    /**/
+            CPP_PP_PROBE_CONST_MUTABLE_PROBE_, MAYBE_CONST)))
 
 /// INTERNAL ONLY
 #define CPP_PP_PROBE_CONST_MUTABLE_PROBE_const CPP_PP_PROBE_N(~, 1)
@@ -709,14 +685,12 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
 
 /// INTERNAL ONLY
 #define CPP_AUTO_FUN_RETURNS_CONST_1(...)                                       \
-    __VA_ARGS__ CPP_AUTO_FUN_RETURNS_CONST_0                                    \
-    /**/
+    __VA_ARGS__ CPP_AUTO_FUN_RETURNS_CONST_0
 
 /// INTERNAL ONLY
 #define CPP_AUTO_FUN_RETURNS_CONST_0(...)                                       \
     CPP_PP_EVAL(CPP_AUTO_FUN_DECLTYPE_NOEXCEPT_,                                \
-        CPP_PP_CAT(CPP_AUTO_FUN_RETURNS_, __VA_ARGS__))                         \
-    /**/
+        CPP_PP_CAT(CPP_AUTO_FUN_RETURNS_, __VA_ARGS__))
 
 /// INTERNAL ONLY
 #define CPP_AUTO_FUN_RETURNS_return
@@ -725,15 +699,15 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
 /// INTERNAL ONLY
 #define CPP_AUTO_FUN_DECLTYPE_NOEXCEPT_(...)                                    \
     noexcept(noexcept(__VA_ARGS__)) -> decltype(__VA_ARGS__)                    \
-    { return (__VA_ARGS__); }                                                   \
-    /**/
+    { return (__VA_ARGS__); }
+
 #else
 /// INTERNAL ONLY
 #define CPP_AUTO_FUN_DECLTYPE_NOEXCEPT_(...)                                    \
     noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__))) ->                   \
     decltype(__VA_ARGS__)                                                       \
-    { return (__VA_ARGS__); }                                                   \
-    /**/
+    { return (__VA_ARGS__); }
+
 #endif
 
 namespace concepts

@@ -27,11 +27,15 @@
 
 namespace ranges
 {
+    /// \addtogroup group-views
+    /// @{
+
     namespace views
     {
         struct take_last_base_fn
         {
-            template(typename Rng)( //
+            template(typename Rng)(
+                /// \pre
                 requires viewable_range<Rng> AND sized_range<Rng>)
             auto operator()(Rng && rng, range_difference_t<Rng> n) const
             {
@@ -44,7 +48,8 @@ namespace ranges
         {
             using take_last_base_fn::operator();
 
-            template(typename Int)( //
+            template(typename Int)(
+                /// \pre
                 requires detail::integer_like_<Int>)
             constexpr auto operator()(Int n) const
             {
@@ -53,7 +58,6 @@ namespace ranges
         };
 
         /// \relates take_last_fn
-        /// \ingroup group-views
         RANGES_INLINE_VARIABLE(take_last_fn, take_last)
     } // namespace views
     /// @}
