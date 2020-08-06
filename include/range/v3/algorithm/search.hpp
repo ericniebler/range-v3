@@ -197,7 +197,7 @@ namespace ranges
             /// \pre
             requires forward_range<Rng1> AND forward_range<Rng2> AND
                 indirectly_comparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
-        safe_subrange_t<Rng1> RANGES_FUNC(search)(
+        borrowed_subrange_t<Rng1> RANGES_FUNC(search)(
             Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) //
         {
             if(empty(rng2))

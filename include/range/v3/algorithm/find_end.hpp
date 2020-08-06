@@ -217,7 +217,7 @@ namespace ranges
             /// \pre
             requires forward_range<Rng1> AND forward_range<Rng2> AND
                 indirect_relation<R, projected<iterator_t<Rng1>, P>, iterator_t<Rng2>>)
-        safe_subrange_t<Rng1> RANGES_FUNC(find_end)(
+        borrowed_subrange_t<Rng1> RANGES_FUNC(find_end)(
             Rng1 && rng1, Rng2 && rng2, R pred = R{}, P proj = P{}) //
         {
             return (*this)(begin(rng1),

@@ -170,7 +170,7 @@ namespace ranges
             /// \pre
             requires forward_range<Rng> AND
                 indirectly_comparable<iterator_t<Rng>, V const *, C, P>)
-        safe_subrange_t<Rng> RANGES_FUNC(search_n)(Rng && rng,
+        borrowed_subrange_t<Rng> RANGES_FUNC(search_n)(Rng && rng,
                                                    iter_difference_t<iterator_t<Rng>> cnt,
                                                    V const & val,
                                                    C pred = C{},

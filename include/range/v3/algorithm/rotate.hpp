@@ -217,7 +217,7 @@ namespace ranges
         template(typename Rng, typename I = iterator_t<Rng>)(
             /// \pre
             requires range<Rng> AND permutable<I>)
-        safe_subrange_t<Rng> RANGES_FUNC(rotate)(Rng && rng, I middle) //
+        borrowed_subrange_t<Rng> RANGES_FUNC(rotate)(Rng && rng, I middle) //
         {
             return (*this)(begin(rng), std::move(middle), end(rng));
         }
