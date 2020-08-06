@@ -431,7 +431,11 @@ namespace ranges
     RANGES_INLINE_VARIABLE(make_subrange_fn, make_subrange)
 
     template<typename R>
-    using safe_subrange_t = detail::maybe_dangling_<R, subrange<iterator_t<R>>>;
+    using borrowed_subrange_t = detail::maybe_dangling_<R, subrange<iterator_t<R>>>;
+
+    template<typename R>
+    using safe_subrange_t RANGES_DEPRECATED("Use borrowed_subrange_t instead.") =
+        borrowed_subrange_t<R>;
 
     namespace cpp20
     {
@@ -447,7 +451,11 @@ namespace ranges
                 (K == subrange_kind::sized || !sized_sentinel_for<S, I>))   //
         using subrange = ranges::subrange<I, S, K>;
 
-        using ranges::safe_subrange_t;
+        using ranges::borrowed_subrange_t;
+
+        template<typename R>
+        using safe_subrange_t RANGES_DEPRECATED("Use borrowed_subrange_t instead.") =
+            borrowed_subrange_t<R>;
     } // namespace cpp20
     /// @}
 } // namespace ranges

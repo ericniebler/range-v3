@@ -105,7 +105,7 @@ namespace ranges
             /// \pre
             requires forward_range<Rng> AND
                 indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
-        safe_subrange_t<Rng> //
+        borrowed_subrange_t<Rng> //
         RANGES_FUNC(equal_range)(Rng && rng, V const & val, C pred = C{}, P proj = P{}) //
         {
             if(RANGES_CONSTEXPR_IF(sized_range<Rng>))

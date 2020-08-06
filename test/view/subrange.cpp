@@ -21,7 +21,7 @@
 
 CPP_template(class Rng)(
     requires ranges::range<Rng>)
-ranges::safe_subrange_t<Rng> algorithm(Rng &&rng);
+ranges::borrowed_subrange_t<Rng> algorithm(Rng &&rng);
 
 struct Base {};
 struct Derived : Base {};
@@ -33,7 +33,7 @@ int main()
     std::vector<int> vi{1,2,3,4};
 
     ////////////////////////////////////////////////////////////////////////////
-    // safe_subrange_t tests:
+    // borrowed_subrange_t tests:
 
     // lvalues are ReferenceableRanges and do not dangle:
     CPP_assert(same_as<subrange<int*>,
