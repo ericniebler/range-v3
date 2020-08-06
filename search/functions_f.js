@@ -15,6 +15,6 @@ var searchData=
   ['requires_1912',['requires',['../group__trait.html#ga6002f1b54997888e2bb4c4f4444a3761',1,'meta']]],
   ['reverse_1913',['reverse',['../group__group-algorithms.html#ga239c5b656b7d4eb1728146c27c79701a',1,'ranges::reverse(I first, S end_)'],['../group__group-algorithms.html#gab9376808c93a60e83f6e012405a780dc',1,'ranges::reverse(Rng &amp;&amp;rng)']]],
   ['reverse_5fcopy_1914',['reverse_copy',['../group__group-algorithms.html#ga36294489bc4284839d44e5b994c8e668',1,'ranges::reverse_copy(I first, S end_, O out)'],['../group__group-algorithms.html#gad516cf254a226899487ad08609f81128',1,'ranges::reverse_copy(Rng &amp;&amp;rng, O out)']]],
-  ['rotate_1915',['rotate',['../group__group-algorithms.html#ga33a5ef3705f30edd28453a9999cd576d',1,'ranges::rotate(I first, I middle, S last)'],['../group__group-algorithms.html#ga0959d1a7a08ea0e25ded03247d2e0d85',1,'ranges::rotate(Rng &amp;&amp;rng, I middle)']]],
+  ['rotate_1915',['rotate',['../group__group-algorithms.html#ga33a5ef3705f30edd28453a9999cd576d',1,'ranges::rotate(I first, I middle, S last)'],['../group__group-algorithms.html#gae12d6438e495d01fb95843e6b6f8c35b',1,'ranges::rotate(Rng &amp;&amp;rng, I middle)']]],
   ['rotate_5fcopy_1916',['rotate_copy',['../group__group-algorithms.html#gab66377c07c8ec5bfe40e178161a05a88',1,'ranges::rotate_copy(I first, I middle, S last, O out)'],['../group__group-algorithms.html#gac033357be8dd033636408498e7ee5f2f',1,'ranges::rotate_copy(Rng &amp;&amp;rng, iterator_t&lt; Rng &gt; middle, O out)']]]
 ];

@@ -1,5 +1,6 @@
 var NAVTREEINDEX9 =
 {
+"structranges_1_1bind__element_3_01reference__wrapper_3_01_t_01_4_01_4.html#a7a6caef2e0c5829ae329b7ef4fb1723c":[3,7,1,0],
 "structranges_1_1bind__element_3_01std_1_1reference__wrapper_3_01_t_01_4_01_4.html":[3,7,2],
 "structranges_1_1bind__element_3_01std_1_1reference__wrapper_3_01_t_01_4_01_4.html#a666ebccbce9cbe02531b1edcf043cae8":[3,7,2,0],
 "structranges_1_1bitwise__or.html":[3,7,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "structranges_1_1experimental_1_1coroutine__owner.html#a58001ed1b2074b7b88038cbf88daa700":[4,1,2,3,1,3],
 "structranges_1_1experimental_1_1coroutine__owner.html#a839d9d064f39a5e39878ee3122610a18":[4,1,2,3,1,10],
 "structranges_1_1experimental_1_1coroutine__owner.html#a878e7d8be0769e124bbc94e2b5047d74":[4,1,2,3,1,6],
-"structranges_1_1experimental_1_1coroutine__owner.html#ac662765cbeca4ff52518096800341d79":[4,1,2,3,1,9],
-"structranges_1_1experimental_1_1coroutine__owner.html#ae897b895bfbc9d1eb72e30e62974c0e5":[4,1,2,3,1,0]
+"structranges_1_1experimental_1_1coroutine__owner.html#ac662765cbeca4ff52518096800341d79":[4,1,2,3,1,9]
 };

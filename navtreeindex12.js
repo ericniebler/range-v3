@@ -1,5 +1,6 @@
 var NAVTREEINDEX12 =
 {
+"structranges_1_1semiregular__box.html#a0bc1fb205fe4ac10a10b204f23c28baa":[3,6,23,15],
 "structranges_1_1semiregular__box.html#a2558bd8aab8a6c1a98775e72f8cec919":[3,6,23,5],
 "structranges_1_1semiregular__box.html#a4f289d700832ed9f7aff98f760549cf5":[3,6,23,10],
 "structranges_1_1semiregular__box.html#a5113b862683854afaeccf778ab5841c2":[3,6,23,21],
@@ -248,6 +249,5 @@ var NAVTREEINDEX12 =
 "structranges_1_1view__interface.html#a87d7e2ab7aeffe1254254befb5974697":[3,4,79,29],
 "structranges_1_1view__interface.html#a8b15ce343b67d8e64650daf16e846406":[3,4,79,23],
 "structranges_1_1view__interface.html#a8cbe78cde7c5c058a8598ba194376b80":[3,4,79,21],
-"structranges_1_1view__interface.html#a92688f83f757a18f52396150a6322ae8":[3,4,79,13],
-"structranges_1_1view__interface.html#a97261fec512a0a953c755e7ca4791977":[3,4,79,43]
+"structranges_1_1view__interface.html#a92688f83f757a18f52396150a6322ae8":[3,4,79,13]
 };

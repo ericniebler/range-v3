@@ -1,5 +1,7 @@
 var NAVTREEINDEX15 =
 {
+"view_2take_8hpp.html":[4,2,2,0,8,60],
+"view_2take_8hpp.html#a5016cd267123755324f81744cc95ec3b":[4,2,2,0,8,60,2],
 "view_2take_8hpp.html#ga66c584fc2abc385b99ccf32d6047ae64":[4,2,2,0,8,60,4],
 "view_2take_8hpp.html#gace3d126ea492243e7958c1279bec76fc":[4,2,2,0,8,60,3],
 "view_2take__while_8hpp.html":[4,2,2,0,8,63],

@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"structranges_1_1view__interface.html#a97261fec512a0a953c755e7ca4791977":[3,4,79,43],
 "structranges_1_1view__interface.html#a988292a8f52e26d75fe638681ddc9cd0":[3,4,79,40],
 "structranges_1_1view__interface.html#a9be7bb757873bec75c59490961effe27":[3,4,79,34],
 "structranges_1_1view__interface.html#aa31372356ea4ed1dd1be641d889813bd":[3,4,79,16],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "structranges_1_1views_1_1tail__fn.html":[4,1,2,4,100],
 "structranges_1_1views_1_1tail__fn.html#aa472988a6ffa5de52a49e78550022a50":[4,1,2,4,100,1],
 "structranges_1_1views_1_1take__base__fn.html":[4,1,2,4,101],
-"structranges_1_1views_1_1take__base__fn.html#a731c29ef2c305f64578740238948effa":[4,1,2,4,101,0],
-"structranges_1_1views_1_1take__exactly__base__fn.html":[4,1,2,4,102]
+"structranges_1_1views_1_1take__base__fn.html#a731c29ef2c305f64578740238948effa":[4,1,2,4,101,0]
 };

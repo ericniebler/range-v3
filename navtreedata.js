@@ -73,6 +73,7 @@ var NAVTREE =
       ] ]
     ] ],
     [ "Release Notes", "release_notes.html", [
+      [ "Version 0.11.0 \"Thanks, ISO\"", "release_notes.html#v0-11-0", null ],
       [ "Version 0.10.0 \"To Err is Human\"", "release_notes.html#v0-10-0", null ],
       [ "Version 0.9.1", "release_notes.html#v0-9-1", null ],
       [ "Version 0.9.0 \"Std::ranger Things\"", "release_notes.html#v0-9-0", null ],
@@ -111,19 +112,19 @@ var NAVTREEINDEX =
 ".html",
 "classranges_1_1sample__view.html#ab60a7eef1bf38e2406fa9bc05ad3e90f",
 "equal__range_8hpp.html",
-"group__group-algorithms.html#gac0caa54ba4075685b569b33b2073668a",
+"group__group-algorithms.html#gac1663f9fd1985e4095d958b39b0f4f4e",
 "group__group-views.html#gad032e209a7d07f0fa9bad8f7a9677276",
 "identity_8hpp.html",
 "meta_8hpp.html#ga8d0d695134bd6b94698ae4f1c0d2f553",
 "range_2traits_8hpp.html#ga55960f2d90da8a3d53f3a7795a38c138",
-"structmeta_1_1defer.html",
-"structranges_1_1bind__element_3_01std_1_1reference__wrapper_3_01_t_01_4_01_4.html",
-"structranges_1_1experimental_1_1coroutine__owner.html#ae99be435a2bff5c93f0ea2741e0cfa13",
-"structranges_1_1move__iterator.html#a2c9da5a763a9da439c902fe768cb4357",
-"structranges_1_1semiregular__box.html#a2558bd8aab8a6c1a98775e72f8cec919",
-"structranges_1_1view__interface.html#a988292a8f52e26d75fe638681ddc9cd0",
-"structranges_1_1views_1_1take__exactly__base__fn.html#a379908e5d443f74ae17df8d5613dbf2b",
-"view_2take_8hpp.html#ga66c584fc2abc385b99ccf32d6047ae64"
+"structmeta_1_1compose___3_01_fn0_01_4.html#ac65e09e1dde99fdc928922489ac2dc0f",
+"structranges_1_1bind__element_3_01reference__wrapper_3_01_t_01_4_01_4.html#a7a6caef2e0c5829ae329b7ef4fb1723c",
+"structranges_1_1experimental_1_1coroutine__owner.html#ae897b895bfbc9d1eb72e30e62974c0e5",
+"structranges_1_1move__iterator.html#a0550d63ab6fed5cc93a55100941924d0",
+"structranges_1_1semiregular__box.html#a0bc1fb205fe4ac10a10b204f23c28baa",
+"structranges_1_1view__interface.html#a97261fec512a0a953c755e7ca4791977",
+"structranges_1_1views_1_1take__exactly__base__fn.html",
+"view_2take_8hpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

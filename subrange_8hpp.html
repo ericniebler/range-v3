@@ -120,10 +120,14 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:gaba9a9c05a0b1c8cc2e36ce8f95e6b95e"><td class="memTemplParams" colspan="2">
+<tr class="memitem:ga9c2b65bcd2685fe1e87eb2ce1d4d9df9"><td class="memTemplParams" colspan="2">
 template&lt;typename R &gt; </td></tr>
-<tr class="memitem:gaba9a9c05a0b1c8cc2e36ce8f95e6b95e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::safe_subrange_t</b> = detail::maybe_dangling_&lt; R, subrange&lt; iterator_t&lt; R &gt; &gt;&gt;</td></tr>
-<tr class="separator:gaba9a9c05a0b1c8cc2e36ce8f95e6b95e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9c2b65bcd2685fe1e87eb2ce1d4d9df9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::borrowed_subrange_t</b> = detail::maybe_dangling_&lt; R, subrange&lt; iterator_t&lt; R &gt; &gt;&gt;</td></tr>
+<tr class="separator:ga9c2b65bcd2685fe1e87eb2ce1d4d9df9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga335588662faf5866a01b5c96a66e3b26"><td class="memTemplParams" colspan="2">
+template&lt;typename R &gt; </td></tr>
+<tr class="memitem:ga335588662faf5866a01b5c96a66e3b26"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::safe_subrange_t</b> = borrowed_subrange_t&lt; R &gt;</td></tr>
+<tr class="separator:ga335588662faf5866a01b5c96a66e3b26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>

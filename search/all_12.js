@@ -75,7 +75,7 @@ var searchData=
   ['reverse_5fiterator_2ehpp_767',['reverse_iterator.hpp',['../reverse__iterator_8hpp.html',1,'']]],
   ['reverse_5fview_768',['reverse_view',['../structranges_1_1reverse__view.html',1,'ranges::reverse_view&lt; Rng &gt;'],['../view_2reverse_8hpp.html#a7272104454c3a009b76e84e4b181d9ec',1,'ranges::cpp20::reverse_view()']]],
   ['reverse_5fview_3c_20reverse_5fview_3c_20rng_20_3e_20_3e_769',['reverse_view&lt; reverse_view&lt; Rng &gt; &gt;',['../structranges_1_1reverse__view_3_01reverse__view_3_01_rng_01_4_01_4.html',1,'ranges']]],
-  ['rotate_770',['rotate',['../group__group-algorithms.html#ga33a5ef3705f30edd28453a9999cd576d',1,'ranges::rotate(I first, I middle, S last)'],['../group__group-algorithms.html#ga0959d1a7a08ea0e25ded03247d2e0d85',1,'ranges::rotate(Rng &amp;&amp;rng, I middle)']]],
+  ['rotate_770',['rotate',['../group__group-algorithms.html#ga33a5ef3705f30edd28453a9999cd576d',1,'ranges::rotate(I first, I middle, S last)'],['../group__group-algorithms.html#gae12d6438e495d01fb95843e6b6f8c35b',1,'ranges::rotate(Rng &amp;&amp;rng, I middle)']]],
   ['rotate_2ehpp_771',['rotate.hpp',['../rotate_8hpp.html',1,'']]],
   ['rotate_5fcopy_772',['rotate_copy',['../group__group-algorithms.html#gab66377c07c8ec5bfe40e178161a05a88',1,'ranges::rotate_copy(I first, I middle, S last, O out)'],['../group__group-algorithms.html#gac033357be8dd033636408498e7ee5f2f',1,'ranges::rotate_copy(Rng &amp;&amp;rng, iterator_t&lt; Rng &gt; middle, O out)']]],
   ['rotate_5fcopy_2ehpp_773',['rotate_copy.hpp',['../rotate__copy_8hpp.html',1,'']]],

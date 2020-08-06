@@ -96,7 +96,68 @@ $(document).ready(function(){initNavTree('release_notes.html',''); initResizable
 <div class="title">Release Notes </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="v0-10-0"></a>
+<div class="textblock"><h1><a class="anchor" id="v0-11-0"></a>
+Version 0.11.0 "Thanks, ISO"</h1>
+<p><em>Released:</em> August 6, 2020</p>
+<blockquote class="doxtable">
+<p><b>IMPORTANT:</b> This release removes the heuristic that tries to guess whether a range type </p>
+</blockquote>
+<p>is a "view" (lightweight, non-owning range), in accordance with the C++20. <b>This is a potentially source-breaking change.</b> Code that previously used an rvalue range as the start of a pipeline could stop compiling if the range library is not explicitly told that that range type is a view. To override the new default, please specialize the <code>ranges::enable_view&lt;R&gt;</code> Boolean variable template.</p>
+<blockquote class="doxtable">
+<p><b>IMPORTANT:</b> This release removes the implicit conversion from views to containers. </p>
+</blockquote>
+<p>To construct a container from an arbitrary range, you must now explicitly use <code>ranges::to</code>. For example, the following code no longer works: </p><blockquote class="doxtable">
+<p></p>
+<div class="fragment"><div class="line"> {c++}</div>
+<div class="line">std::vector&lt;int&gt; is = ranges::views::ints(0, 10); // ERROR: no conversion</div>
+</div><!-- fragment --><p>Instead, please write this as:</p>
+<div class="fragment"><div class="line"> {c++}</div>
+<div class="line">auto is = ranges::views::ints(0, 10) | ranges::to&lt;std::vector&gt;; // OK</div>
+</div><!-- fragment --><p><code>ranges::to</code> lives in header <code>&lt;<a class="el" href="conversion_8hpp.html">range/v3/range/conversion.hpp</a>&gt;</code> </p>
+</blockquote>
+<blockquote class="doxtable">
+<p><b>IMPORTANT:</b> This release drops support for llvm-3.9. </p>
+</blockquote>
+<p>Changes:</p><ul>
+<li><b>NEW:</b> A new concepts portability layer that short-circuits atomic constraints in <code>requires</code> clauses for better compile times when emulating concepts.</li>
+<li><b>NEW:</b> Restored support for MSVC in <code>/std:c++17</code> mode, and for MSVC's default preprocessor.</li>
+<li>Remove the implicit conversion from views to containers.</li>
+<li>Rename the following entities to be consistent with C++20's <code>std::ranges</code> support:<ul>
+<li><code>safe_range&lt;R&gt;</code> -&gt; <code>borrowed_range&lt;R&gt;</code></li>
+<li><code>enable_safe_range&lt;R&gt;</code> -&gt; <code>enable_borrowed_range&lt;R&gt;</code></li>
+<li><code>safe_iterator_t&lt;R&gt;</code> -&gt; <code>borrowed_iterator_t&lt;R&gt;</code></li>
+<li><code>safe_subrange_t&lt;R&gt;</code> -&gt; <code>borrowed_subrange_t&lt;R&gt;</code></li>
+<li><code>readable_traits&lt;I&gt;</code> -&gt; <code>indirectly_readable_traits&lt;I&gt;</code></li>
+<li><code>readable&lt;I&gt;</code> -&gt; <code>indirectly_readable&lt;I&gt;</code></li>
+<li><code>writable&lt;I&gt;</code> -&gt; <code>indirectly_writable&lt;I&gt;</code></li>
+</ul>
+</li>
+<li>Added the following to the <code>ranges::cpp20</code> namespace:<ul>
+<li>Algorithm <code>for_each_n</code></li>
+<li>Algorithm <code>sample</code></li>
+<li>Class <code>view_base</code></li>
+<li>Alias <code>views::all_t</code></li>
+</ul>
+</li>
+<li>Type <code>__int128</code> is recognized as "integer-like".</li>
+<li>Adds concepts <code>three_way_comparable[_with]</code> when <code>&lt;=&gt;</code> is supported.</li>
+<li>Adds concepts <code>partially_ordered[_with]</code>.</li>
+<li>Better conformance with C++20's use of the _<code>boolean-testable</code>_ concept.</li>
+<li>Support C++20 coroutines.</li>
+<li>Honor CMake's <code>CMAKE_CXX_STANDARD</code> variable.</li>
+<li>A fix for the cardinality of <code>views::zip[_with]</code> (#1486).</li>
+<li>Add <code>view_interface::data()</code> member function.</li>
+<li>Add necessary specializations for <code><a class="el" href="structstd_1_1____1_1_1basic__common__reference.html">std::basic_common_reference</a></code> and <code><a class="el" href="structstd_1_1____1_1_1common__type.html">std::common_type</a></code>.</li>
+<li>Numerous workarounds for MSVC.</li>
+<li>Various CMake fixes and improvements.</li>
+<li><code>drop_while_view</code> is not a <code>sized_range</code>.</li>
+<li>Added support for Wind River Systems.</li>
+<li>Bug fixes to <code>views::group_by</code> (#1393).</li>
+<li><code>common_[reference|type]</code> of <code>common_[tuple|pair]</code> now yields a <code>common_[tuple|pair]</code> instead of a <code>std::[tuple|pair]</code> (#1422).</li>
+<li>Avoid UB when currying an lvalue in some views and actions (#1320).</li>
+</ul>
+<p><b>Credits:</b> I would like to thank the following people who contributed to this release (in no particular order): Christopher Di Bella, @marehr, Casey Carter, Dvir Yitzchaki, Justin Riddell, Johel Ernesto Guerrero Peña, Barry Revzin, Kamlesh Kumar, and Vincas Dargis.</p>
+<h1><a class="anchor" id="v0-10-0"></a>
 Version 0.10.0 "To Err is Human"</h1>
 <p><em>Released:</em> Dec 6, 2019.</p>
 <p><b>IMPORTANT:</b> Before upgrading, please note that several older compiler versions and build configurations are no longer supported! In particular, MSVC now needs <code>/std:c++latest</code>.</p>

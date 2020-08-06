@@ -1,6 +1,5 @@
 var NAVTREEINDEX3 =
 {
-"group__group-algorithms.html#gac0caa54ba4075685b569b33b2073668a":[3,3,20],
 "group__group-algorithms.html#gac1663f9fd1985e4095d958b39b0f4f4e":[3,3,12],
 "group__group-algorithms.html#gac318ca1ff2aac7fbd59c306724654159":[3,3,78],
 "group__group-algorithms.html#gac459d68549e5035017526ea753324127":[3,3,115],
@@ -26,6 +25,7 @@ var NAVTREEINDEX3 =
 "group__group-algorithms.html#gada2992c6d8624aa4e4103cecc5b71d5e":[3,3,8],
 "group__group-algorithms.html#gadac559e70dbb049bbb03be98039e2114":[3,3,71],
 "group__group-algorithms.html#gadc26b2da998f1c2610be46785d691965":[3,3,109],
+"group__group-algorithms.html#gae12d6438e495d01fb95843e6b6f8c35b":[3,3,143],
 "group__group-algorithms.html#gae21556995847a86ff6ce62a5f8ab5a8b":[3,3,40],
 "group__group-algorithms.html#gae3b2b50224f18da2d4c5601c388b86ac":[3,3,166],
 "group__group-algorithms.html#gae3c0d932766db4d6215a3b892349b60a":[3,3,7],
