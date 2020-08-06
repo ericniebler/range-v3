@@ -1,5 +1,6 @@
 var zip_8hpp =
 [
-    [ "zip", "zip_8hpp.html#ga638ff65c54ecc8c3bf5a4d89ef669941", null ],
-    [ "zip_with", "zip_8hpp.html#gaa3f3e59597ee38b544e4d55e0dfc9432", null ]
+    [ "zip_fn", "structranges_1_1views_1_1zip__fn.html", "structranges_1_1views_1_1zip__fn" ],
+    [ "zip_view", "zip_8hpp.html#ga1d9bc5a404e21fc8078eb8dc7772fbbb", null ],
+    [ "enable_borrowed_range< zip_view< Rng... > >", "zip_8hpp.html#ga4a381202ef11b5442c416acb231ae692", null ]
 ];

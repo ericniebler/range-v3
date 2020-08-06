@@ -1,5 +1,5 @@
 var algorithm_2adjacent__remove__if_8hpp =
 [
-    [ "adjacent_remove_if", "algorithm_2adjacent__remove__if_8hpp.html#ga2d08c6a9c28092deaa0a55dfc92fd1cd", null ],
-    [ "adjacent_remove_if", "algorithm_2adjacent__remove__if_8hpp.html#ga7eb3423653bb64e8fec6c9103d0b2fd9", null ]
+    [ "adjacent_remove_if", "algorithm_2adjacent__remove__if_8hpp.html#ga17787a877c8833e0eb458e5a6a3faaca", null ],
+    [ "adjacent_remove_if", "algorithm_2adjacent__remove__if_8hpp.html#ga18c2482a1c31a536469f5aa44a12f35e", null ]
 ];

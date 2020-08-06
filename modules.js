@@ -8,5 +8,6 @@ var modules =
     [ "Actions", "group__group-actions.html", "group__group-actions" ],
     [ "Utility", "group__group-utility.html", "group__group-utility" ],
     [ "Functional", "group__group-functional.html", "group__group-functional" ],
-    [ "Numerics", "group__group-numerics.html", "group__group-numerics" ]
+    [ "Numerics", "group__group-numerics.html", "group__group-numerics" ],
+    [ "Group-view", "group__group-view.html", null ]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['query_2fsearch',['Query/Search',['../group__query.html',1,'']]]
+  ['numerics_2186',['Numerics',['../group__group-numerics.html',1,'']]]
 ];

@@ -1,5 +1,7 @@
 var map_8hpp =
 [
-    [ "keys", "map_8hpp.html#ga748501a63fb2039a065863143f18821f", null ],
-    [ "values", "map_8hpp.html#gab204c824812960d51ec0e83e105d4116", null ]
+    [ "keys_fn", "structranges_1_1views_1_1keys__fn.html", "structranges_1_1views_1_1keys__fn" ],
+    [ "values_fn", "structranges_1_1views_1_1values__fn.html", "structranges_1_1views_1_1values__fn" ],
+    [ "enable_borrowed_range< keys_range_view< Rng > >", "map_8hpp.html#ga7d6fe655039dbd140993cba309ad6056", null ],
+    [ "enable_borrowed_range< values_view< Rng > >", "map_8hpp.html#ga1da178f00fc25baf2129c1baf1e47860", null ]
 ];

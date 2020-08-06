@@ -1,5 +1,5 @@
 var adjacent__find_8hpp =
 [
-    [ "adjacent_find", "adjacent__find_8hpp.html#ga144612fc146861f9979b3e6e25268732", null ],
-    [ "adjacent_find", "adjacent__find_8hpp.html#gac18173d384f683bde768744166ae5907", null ]
+    [ "adjacent_find", "adjacent__find_8hpp.html#ga9f338eb40255d46cf3bc23880bb9e158", null ],
+    [ "adjacent_find", "adjacent__find_8hpp.html#ga8995966d9a73963ceef94a1def806afb", null ]
 ];

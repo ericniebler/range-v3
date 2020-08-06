@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['numerics',['Numerics',['../group__group-numerics.html',1,'']]]
+  ['math_2184',['Math',['../group__math.html',1,'']]],
+  ['meta_2185',['Meta',['../group__meta.html',1,'']]]
 ];

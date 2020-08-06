@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['utility',['Utility',['../group__group-utility.html',1,'']]]
+  ['trait_2191',['Trait',['../group__trait.html',1,'']]],
+  ['transformation_2192',['Transformation',['../group__transformation.html',1,'']]]
 ];

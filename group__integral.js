@@ -1,8 +1,5 @@
 var group__integral =
 [
-    [ "integer_sequence", "structmeta_1_1integer__sequence.html", [
-      [ "value_type", "structmeta_1_1integer__sequence.html#ab9f51bc401aa505796d22d2113e4b932", null ]
-    ] ],
     [ "bool_", "group__integral.html#ga8cd5c79222ce70365f7469f35ece905a", null ],
     [ "char_", "group__integral.html#ga22c6fcac17e490346cbe68750a6a9d2f", null ],
     [ "index_sequence", "group__integral.html#ga45c5b408047346edfbbdac6ad5311d6a", null ],

@@ -1,12 +1,12 @@
-\form#0:$ O(log(N)) $
-\form#1:$ O(log(To - From)) $
-\form#2:$ O(1) $
-\form#3:$ O(N) $
-\form#4:$ O(L) $
-\form#5:$ L $
-\form#6:$ O(log N) $
-\form#7:$ O(N \times M) $
-\form#8:$ N $
-\form#9:$ M $
-\form#10:$ O(N^2) $
-\form#11:$ O(N log N) $
+\_form#0=0x14:$ O(log(N)) $
+\_form#1=0x14:$ O(log(To - From)) $
+\_form#2=0x14:$ O(1) $
+\_form#3=0x14:$ O(N) $
+\_form#4=0x14:$ O(L) $
+\_form#5=0x10:$ L $
+\_form#6=0x14:$ O(log N) $
+\_form#7=0x14:$ O(N \times M) $
+\_form#8=0x10:$ N $
+\_form#9=0x10:$ M $
+\_form#10=0x15:$ O(N^2) $
+\_form#11=0x14:$ O(N log N) $

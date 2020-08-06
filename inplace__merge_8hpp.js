@@ -1,5 +1,5 @@
 var inplace__merge_8hpp =
 [
-    [ "inplace_merge", "inplace__merge_8hpp.html#ga8716e95ad18cb12a55b05e53b5acc6d9", null ],
-    [ "inplace_merge", "inplace__merge_8hpp.html#gafff3693db2a1593b6f7f6997466e5906", null ]
+    [ "inplace_merge", "inplace__merge_8hpp.html#ga69be23f01a954678edc58683dd2b4f7f", null ],
+    [ "inplace_merge", "inplace__merge_8hpp.html#gac5d8910229da062514994ec67724fa90", null ]
 ];

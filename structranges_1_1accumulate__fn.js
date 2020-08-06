@@ -1,5 +1,5 @@
 var structranges_1_1accumulate__fn =
 [
-    [ "operator()", "structranges_1_1accumulate__fn.html#acddfa287aa06fc3a22043b380bf3764e", null ],
-    [ "operator()", "structranges_1_1accumulate__fn.html#a5d6cfe5d21a25b42f365902cc7881a74", null ]
+    [ "operator()", "structranges_1_1accumulate__fn.html#acc7940ccae027746c69e3641c52506aa", null ],
+    [ "operator()", "structranges_1_1accumulate__fn.html#ac08ae6b7d4ff2836bc39999cb5502c03", null ]
 ];

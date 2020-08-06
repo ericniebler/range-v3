@@ -8,7 +8,9 @@ var subrange_8hpp =
       [ "unsized", "subrange_8hpp.html#ggaae644c79c813cbb0df2e077396db71b6ad125f48ecb29c1a12f1cf82e824cbbce", null ],
       [ "sized", "subrange_8hpp.html#ggaae644c79c813cbb0df2e077396db71b6a2804e581d2f052b617b3989ee949b739", null ]
     ] ],
-    [ "enable_safe_range< subrange< I, S, K > >", "subrange_8hpp.html#ga0df38a7cab4a4664ddb43da282332e35", null ],
-    [ "K", "subrange_8hpp.html#a58d5f572526c45231b7fa2cce1c6ba32", null ],
-    [ "S", "subrange_8hpp.html#a6b38df2a61165f6a13ec39e3bf5b2769", null ]
+    [ "subrange", "subrange_8hpp.html#ga5bb6456c0c8391731b8de5a36c84cd30", null ],
+    [ "subrange", "subrange_8hpp.html#ga4d228c46ce833058fe65efe949d7326c", null ],
+    [ "subrange", "subrange_8hpp.html#ga84092dada3c482de86c6a5479014c795", null ],
+    [ "subrange", "subrange_8hpp.html#ga4763c219fcad6451f7571767a6a7bae4", null ],
+    [ "enable_borrowed_range< subrange< I, S, K > >", "subrange_8hpp.html#gad445fa381e1ee8ad50c4fde3149b1fcf", null ]
 ];

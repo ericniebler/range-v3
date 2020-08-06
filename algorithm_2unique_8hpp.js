@@ -1,5 +1,5 @@
 var algorithm_2unique_8hpp =
 [
-    [ "unique", "algorithm_2unique_8hpp.html#gae5e540912bea57a858b704e1b663ea01", null ],
-    [ "unique", "algorithm_2unique_8hpp.html#gade22082168ffc3e0710b7181732cf979", null ]
+    [ "unique", "algorithm_2unique_8hpp.html#gafd30ade930a7ad87d648a1a6d431524c", null ],
+    [ "unique", "algorithm_2unique_8hpp.html#ga8269b2eb3a23ae31e5b8cb357bcd68f8", null ]
 ];
