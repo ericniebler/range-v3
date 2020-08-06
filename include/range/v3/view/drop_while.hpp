@@ -82,7 +82,8 @@ namespace ranges
         enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    template(typename Rng, typename Fun)( //
+    template(typename Rng, typename Fun)(
+        /// \pre
         requires copy_constructible<Fun>)
     drop_while_view(Rng &&, Fun)
         -> drop_while_view<views::all_t<Rng>, Fun>;
@@ -96,17 +97,19 @@ namespace ranges
     {
         struct drop_while_base_fn
         {
-            template(typename Rng, typename Pred)( //
-                requires viewable_range<Rng> AND input_range<Rng> AND //
-                    indirect_unary_predicate<Pred, iterator_t<Rng>>) //
+            template(typename Rng, typename Pred)(
+                /// \pre
+                requires viewable_range<Rng> AND input_range<Rng> AND
+                    indirect_unary_predicate<Pred, iterator_t<Rng>>)
             auto operator()(Rng && rng, Pred pred) const
                 -> drop_while_view<all_t<Rng>, Pred>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
-            template(typename Rng, typename Pred, typename Proj)( //
-                requires viewable_range<Rng> AND input_range<Rng> AND //
-                    indirect_unary_predicate<composed<Pred, Proj>, iterator_t<Rng>>) //
+            template(typename Rng, typename Pred, typename Proj)(
+                /// \pre
+                requires viewable_range<Rng> AND input_range<Rng> AND
+                    indirect_unary_predicate<composed<Pred, Proj>, iterator_t<Rng>>)
             auto operator()(Rng && rng, Pred pred, Proj proj) const
                 -> drop_while_view<all_t<Rng>, composed<Pred, Proj>>
             {
@@ -123,7 +126,8 @@ namespace ranges
                 return make_view_closure(
                     bind_back(drop_while_base_fn{}, std::move(pred)));
             }
-            template(typename Pred, typename Proj)( //
+            template(typename Pred, typename Proj)(
+                /// \pre
                 requires (!range<Pred>)) // TODO: underconstrained
             constexpr auto operator()(Pred && pred, Proj proj) const
             {
@@ -150,9 +154,10 @@ namespace ranges
         {
             using ranges::views::drop_while;
         }
-        template(typename Rng, typename Pred)( //
+        template(typename Rng, typename Pred)(
+            /// \pre
             requires viewable_range<Rng> AND input_range<Rng> AND
-                indirect_unary_predicate<Pred, iterator_t<Rng>>) //
+                indirect_unary_predicate<Pred, iterator_t<Rng>>)
             using drop_while_view = ranges::drop_while_view<Rng, Pred>;
     } // namespace cpp20
     /// @}

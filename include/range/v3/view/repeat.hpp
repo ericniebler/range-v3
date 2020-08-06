@@ -101,8 +101,9 @@ namespace ranges
     {
         struct repeat_fn
         {
-            template(typename Val)( //
-                requires copy_constructible<Val>) //
+            template(typename Val)(
+                /// \pre
+                requires copy_constructible<Val>)
             repeat_view<Val> operator()(Val value) const
             {
                 return repeat_view<Val>{std::move(value)};

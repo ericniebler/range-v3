@@ -108,7 +108,8 @@ namespace ranges
     {
         struct indexed_element_fn;
 
-        template(typename I, typename S, typename O)( //
+        template(typename I, typename S, typename O)(
+            /// \pre
             requires (!sized_sentinel_for<S, I>)) //
         O uninitialized_copy(I first, S last, O out)
         {
@@ -117,8 +118,9 @@ namespace ranges
             return out;
         }
 
-        template(typename I, typename S, typename O)( //
-            requires sized_sentinel_for<S, I>) //
+        template(typename I, typename S, typename O)(
+            /// \pre
+            requires sized_sentinel_for<S, I>)
         O uninitialized_copy(I first, S last, O out)
         {
             return std::uninitialized_copy_n(first, (last - first), out);
@@ -145,14 +147,16 @@ namespace ranges
                     requires default_constructible<T>)
               : datum_{}
             {}
-            template(typename... Ts)(                                      //
+            template(typename... Ts)(
+                /// \pre
                 requires constructible_from<T, Ts...> AND (sizeof...(Ts) != 0)) //
             constexpr indexed_datum(Ts &&... ts) noexcept(
                     std::is_nothrow_constructible<T, Ts...>::value)
               : datum_(static_cast<Ts &&>(ts)...)
             {}
-            template(typename U)( //
-                requires (!same_as<T, U>) AND convertible_to<U, T>) //
+            template(typename U)(
+                /// \pre
+                requires (!same_as<T, U>) AND convertible_to<U, T>)
             constexpr indexed_datum(indexed_datum<U, Index> that) //
                 noexcept(std::is_nothrow_constructible<T, U>::value) //
               : datum_(std::move(that.datum_))
@@ -664,7 +668,8 @@ namespace ranges
           : detail::variant_data<Ts...>{}
           , index_((std::size_t)-1)
         {}
-        template(typename... Args)( //
+        template(typename... Args)(
+            /// \pre
             requires (sizeof...(Args) == sizeof...(Ts))) //
         static constexpr bool all_convertible_to(int) noexcept
         {
@@ -683,16 +688,18 @@ namespace ranges
                 requires default_constructible<datum_t<0>>)
           : variant{emplaced_index<0>}
         {}
-        template(std::size_t N, typename... Args)(        //
-            requires constructible_from<datum_t<N>, Args...>) //
+        template(std::size_t N, typename... Args)(
+            /// \pre
+            requires constructible_from<datum_t<N>, Args...>)
             constexpr variant(emplaced_index_t<N>, Args &&... args) noexcept(
                 std::is_nothrow_constructible<datum_t<N>, Args...>::value)
           : detail::variant_data<Ts...>{meta::size_t<N>{}, static_cast<Args &&>(args)...}
           , index_(N)
         {}
-        template(std::size_t N, typename T, typename... Args)( //
+        template(std::size_t N, typename T, typename... Args)(
+            /// \pre
             requires constructible_from<datum_t<N>, std::initializer_list<T> &,
-                                        Args...>) //
+                                        Args...>)
             constexpr variant(
                 emplaced_index_t<N>, std::initializer_list<T> il,
                 Args &&... args) noexcept(std::
@@ -704,8 +711,9 @@ namespace ranges
                                         static_cast<Args &&>(args)...}
           , index_(N)
         {}
-        template(std::size_t N)( //
-            requires constructible_from<datum_t<N>, meta::nil_>) //
+        template(std::size_t N)(
+            /// \pre
+            requires constructible_from<datum_t<N>, meta::nil_>)
         constexpr variant(emplaced_index_t<N>, meta::nil_)
             noexcept(std::is_nothrow_constructible<datum_t<N>, meta::nil_>::value)
           : detail::variant_data<Ts...>{meta::size_t<N>{}, meta::nil_{}}
@@ -720,8 +728,9 @@ namespace ranges
           : detail::variant_data<Ts...>{}
           , index_(detail::variant_move_copy_(that.index(), data_(), that.data_()))
         {}
-        template(typename... Args)( //
-            requires (!same_as<variant<Args...>, variant>) AND //
+        template(typename... Args)(
+            /// \pre
+            requires (!same_as<variant<Args...>, variant>) AND
             (all_convertible_to<Args...>(0))) //
         variant(variant<Args...> that)
           : detail::variant_data<Ts...>{}
@@ -742,7 +751,8 @@ namespace ranges
             this->assign_(that);
             return *this;
         }
-        template(typename... Args)( //
+        template(typename... Args)(
+            /// \pre
             requires (!same_as<variant<Args...>, variant>) AND
             (all_convertible_to<Args...>(0)))
         variant & operator=(variant<Args...> that)
@@ -756,8 +766,9 @@ namespace ranges
         {
             return sizeof...(Ts);
         }
-        template(std::size_t N, typename... Args)( //
-            requires constructible_from<datum_t<N>, Args...>) //
+        template(std::size_t N, typename... Args)(
+            /// \pre
+            requires constructible_from<datum_t<N>, Args...>)
         void emplace(Args &&... args)
         {
             this->clear_();
@@ -815,8 +826,9 @@ namespace ranges
         }
     };
 
-    template(typename... Ts, typename... Us)( //
-        requires and_v<equality_comparable_with<Ts, Us>...>) //
+    template(typename... Ts, typename... Us)(
+        /// \pre
+        requires and_v<equality_comparable_with<Ts, Us>...>)
     bool operator==(variant<Ts...> const & lhs, variant<Us...> const & rhs)
     {
         return (!lhs.valid() && !rhs.valid()) ||
@@ -826,8 +838,9 @@ namespace ranges
                                        detail::variant_core_access::data(rhs)));
     }
 
-    template(typename... Ts, typename... Us)( //
-        requires and_v<equality_comparable_with<Ts, Us>...>) //
+    template(typename... Ts, typename... Us)(
+        /// \pre
+        requires and_v<equality_comparable_with<Ts, Us>...>)
     bool operator!=(variant<Ts...> const & lhs, variant<Us...> const & rhs)
     {
         return !(lhs == rhs);
@@ -835,8 +848,9 @@ namespace ranges
 
     //////////////////////////////////////////////////////////////////////////////////////
     // emplace
-    template(std::size_t N, typename... Ts, typename... Args)( //
-        requires constructible_from<detail::variant_datum_t<N, Ts...>, Args...>) //
+    template(std::size_t N, typename... Ts, typename... Args)(
+        /// \pre
+        requires constructible_from<detail::variant_datum_t<N, Ts...>, Args...>)
     void emplace(variant<Ts...> & var, Args &&... args)
     {
         var.template emplace<N>(static_cast<Args &&>(args)...);

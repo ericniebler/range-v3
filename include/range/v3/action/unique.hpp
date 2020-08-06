@@ -36,7 +36,8 @@ namespace ranges
     {
         struct unique_fn
         {
-            template(typename C, typename P = identity)( //
+            template(typename C, typename P = identity)(
+                /// \pre
                 requires (!range<C>))
             constexpr auto operator()(C pred, P proj = P{}) const
             {
@@ -44,10 +45,11 @@ namespace ranges
                     bind_back(unique_fn{}, std::move(pred), std::move(proj)));
             }
 
-            template(typename Rng, typename C = equal_to, typename P = identity)( //
-                requires forward_range<Rng> AND //
-                    erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> AND //
-                    sortable<iterator_t<Rng>, C, P>) //
+            template(typename Rng, typename C = equal_to, typename P = identity)(
+                /// \pre
+                requires forward_range<Rng> AND
+                    erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> AND
+                    sortable<iterator_t<Rng>, C, P>)
             Rng operator()(Rng && rng, C pred = C{}, P proj = P{}) const
             {
                 auto it = ranges::unique(rng, std::move(pred), std::move(proj));

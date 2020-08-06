@@ -44,7 +44,8 @@ namespace ranges
                 meta::if_c<(bool)ranges::container<Rng>, //
                            uncvref_t<Rng>, std::vector<range_value_t<Rng>>>;
 
-            template(typename T)( //
+            template(typename T)(
+                /// \pre
                 requires range<T &>)
             constexpr auto operator()(T & t) const
             {
@@ -60,9 +61,10 @@ namespace ranges
 
             // BUGBUG something is not right with the actions. It should be possible
             // to move a container into a split and have elements moved into the result.
-            template(typename Rng)( //
+            template(typename Rng)(
+                /// \pre
                 requires input_range<Rng> AND indirectly_comparable<
-                        iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>) //
+                        iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>)
             std::vector<split_value_t<Rng>> //
             operator()(Rng && rng, range_value_t<Rng> val) const
             {
@@ -70,9 +72,10 @@ namespace ranges
                        to<std::vector<split_value_t<Rng>>>();
             }
 
-            template(typename Rng, typename Pattern)( //
+            template(typename Rng, typename Pattern)(
+                /// \pre
                 requires input_range<Rng> AND viewable_range<Pattern> AND
-                    forward_range<Pattern> AND //
+                    forward_range<Pattern> AND
                     indirectly_comparable<
                         iterator_t<Rng>,
                         iterator_t<Pattern>,

@@ -61,8 +61,9 @@ namespace ranges
         public:
             diffmax_t() = default;
 
-            template(typename T)( //
-                requires integral<T>) //
+            template(typename T)(
+                /// \pre
+                requires integral<T>)
             constexpr diffmax_t(T val) noexcept
               : neg_(0 > val)
               , val_(0 > val ? static_cast<std::uintmax_t>(-val)
@@ -219,63 +220,72 @@ namespace ranges
 
             template<typename T>
             friend constexpr auto operator+=(T & a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T &)( //
+                -> CPP_broken_friend_ret(T &)(
+                    /// \pre
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} + b));
             }
             template<typename T>
             friend constexpr auto operator-=(T & a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T &)( //
+                -> CPP_broken_friend_ret(T &)(
+                    /// \pre
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} - b));
             }
             template<typename T>
             friend constexpr auto operator*=(T & a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T &)( //
+                -> CPP_broken_friend_ret(T &)(
+                    /// \pre
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} * b));
             }
             template<typename T>
             friend constexpr auto operator/=(T & a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T &)( //
+                -> CPP_broken_friend_ret(T &)(
+                    /// \pre
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} / b));
             }
             template<typename T>
             friend constexpr auto operator%=(T & a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T &)( //
+                -> CPP_broken_friend_ret(T &)(
+                    /// \pre
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} % b));
             }
             template<typename T>
             friend constexpr auto operator&=(T & a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T &)( //
+                -> CPP_broken_friend_ret(T &)(
+                    /// \pre
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} & b));
             }
             template<typename T>
             friend constexpr auto operator|=(T & a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T &)( //
+                -> CPP_broken_friend_ret(T &)(
+                    /// \pre
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} | b));
             }
             template<typename T>
             friend constexpr auto operator^=(T & a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T &)( //
+                -> CPP_broken_friend_ret(T &)(
+                    /// \pre
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} ^ b));
             }
             template<typename T>
             friend constexpr auto operator<<=(T & a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T &)( //
+                -> CPP_broken_friend_ret(T &)(
+                    /// \pre
                     requires integral<T>)
             {
                 a = static_cast<T>(diffmax_t{a} << b);
@@ -283,7 +293,8 @@ namespace ranges
             }
             template<typename T>
             friend constexpr auto operator>>=(T & a, diffmax_t b) noexcept
-                -> CPP_broken_friend_ret(T &)( //
+                -> CPP_broken_friend_ret(T &)(
+                    /// \pre
                     requires integral<T>)
             {
                 a = static_cast<T>(diffmax_t{a} >> b);
@@ -313,8 +324,9 @@ namespace ranges
                 return tmp;
             }
 
-            template(typename T)( //
-                requires integral<T>) //
+            template(typename T)(
+                /// \pre
+                requires integral<T>)
                 constexpr explicit
                 operator T() const noexcept
             {
@@ -331,7 +343,8 @@ namespace ranges
 
             template<typename Ostream>
             friend auto operator<<(Ostream & sout, diffmax_t a)
-                -> CPP_broken_friend_ret(std::ostream &)( //
+                -> CPP_broken_friend_ret(std::ostream &)(
+                    /// \pre
                     requires derived_from<
                         Ostream, std::basic_ostream<typename Ostream::char_type,
                                                     typename Ostream::traits_type>>)

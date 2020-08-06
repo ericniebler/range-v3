@@ -34,17 +34,19 @@ namespace ranges
     {
         struct take_while_fn
         {
-            template(typename Fun)( //
+            template(typename Fun)(
+                /// \pre
                 requires (!range<Fun>))
             constexpr auto operator()(Fun fun) const
             {
                 return make_action_closure(bind_back(take_while_fn{}, std::move(fun)));
             }
 
-            template(typename Rng, typename Fun)( //
+            template(typename Rng, typename Fun)(
+                /// \pre
                 requires forward_range<Rng> AND
                     erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> AND
-                    indirect_unary_predicate<Fun, iterator_t<Rng>>) //
+                    indirect_unary_predicate<Fun, iterator_t<Rng>>)
             Rng operator()(Rng && rng, Fun fun) const
             {
                 ranges::actions::erase(

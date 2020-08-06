@@ -52,8 +52,9 @@ namespace ranges
         Rng rng_;
         difference_type_ n_;
 
-        template(bool Const = true)( //
-            requires Const AND range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)(
+            /// \pre
+            requires Const AND range<meta::const_if_c<Const, Rng>>)
         iterator_t<meta::const_if_c<Const, Rng>> //
         get_begin_(std::true_type, std::true_type) const
         {
@@ -93,14 +94,16 @@ namespace ranges
         {
             return ranges::end(rng_);
         }
-        template(bool Const = true)( //
-            requires Const AND random_access_range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)(
+            /// \pre
+            requires Const AND random_access_range<meta::const_if_c<Const, Rng>>)
         iterator_t<meta::const_if_c<Const, Rng>> begin() const
         {
             return this->get_begin_(std::true_type{}, std::true_type{});
         }
-        template(bool Const = true)( //
-            requires Const AND random_access_range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)(
+            /// \pre
+            requires Const AND random_access_range<meta::const_if_c<Const, Rng>>)
         sentinel_t<meta::const_if_c<Const, Rng>> end() const
         {
             return ranges::end(rng_);
@@ -114,7 +117,8 @@ namespace ranges
             return s < n ? 0 : s - n;
         }
         CPP_member
-        auto CPP_fun(size)()( //
+        auto CPP_fun(size)()(
+            /// \pre
             requires sized_range<Rng>)
         {
             auto const s = ranges::size(rng_);
@@ -133,7 +137,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    drop_view(Rng &&, range_difference_t<Rng>) //
+    drop_view(Rng &&, range_difference_t<Rng>)
         -> drop_view<views::all_t<Rng>>;
 #endif
 
@@ -148,8 +152,9 @@ namespace ranges
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
-            template(typename Rng)( //
-                requires borrowed_range<Rng> AND sized_range<Rng>) //
+            template(typename Rng)(
+                /// \pre
+                requires borrowed_range<Rng> AND sized_range<Rng>)
             static subrange<iterator_t<Rng>, sentinel_t<Rng>> //
             impl_(Rng && rng, range_difference_t<Rng> n, random_access_range_tag)
             {
@@ -157,7 +162,8 @@ namespace ranges
             }
 
         public:
-            template(typename Rng)( //
+            template(typename Rng)(
+                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng>)
             auto operator()(Rng && rng, range_difference_t<Rng> n) const
             {
@@ -170,7 +176,8 @@ namespace ranges
         {
             using drop_base_fn::operator();
 
-            template(typename Int)( //
+            template(typename Int)(
+                /// \pre
                 requires detail::integer_like_<Int>)
             constexpr auto operator()(Int n) const
             {
@@ -189,8 +196,9 @@ namespace ranges
         {
             using ranges::views::drop;
         }
-        template(typename Rng)( //
-            requires view_<Rng>)    //
+        template(typename Rng)(
+            /// \pre
+            requires view_<Rng>)
             using drop_view = ranges::drop_view<Rng>;
     } // namespace cpp20
     /// @}

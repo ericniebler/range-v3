@@ -73,9 +73,10 @@ namespace ranges
     {
         template(typename I1, typename S1, typename I2, typename S2, typename T,
                  typename BOp1 = plus, typename BOp2 = multiplies, typename P1 = identity,
-                 typename P2 = identity)( //
+                 typename P2 = identity)(
+            /// \pre
             requires sentinel_for<S1, I1> AND sentinel_for<S2, I2> AND
-                inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>) //
+                inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
         T operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, T init,
                      BOp1 bop1 = BOp1{}, BOp2 bop2 = BOp2{}, P1 proj1 = P1{},
                      P2 proj2 = P2{}) const
@@ -90,9 +91,10 @@ namespace ranges
 
         template(typename I1, typename S1, typename I2, typename T, typename BOp1 = plus,
                  typename BOp2 = multiplies, typename P1 = identity,
-                 typename P2 = identity)( //
+                 typename P2 = identity)(
+            /// \pre
             requires sentinel_for<S1, I1> AND
-                inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>) //
+                inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
         T operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
                      BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
         {
@@ -110,7 +112,8 @@ namespace ranges
         template(typename Rng1, typename I2Ref, typename T, typename BOp1 = plus,
                  typename BOp2 = multiplies, typename P1 = identity,
                  typename P2 = identity, typename I1 = iterator_t<Rng1>,
-                 typename I2 = uncvref_t<I2Ref>)( //
+                 typename I2 = uncvref_t<I2Ref>)(
+            /// \pre
             requires range<Rng1> AND
                 inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
         T operator()(Rng1 && rng1, I2Ref && begin2, T init, BOp1 bop1 = BOp1{},
@@ -129,7 +132,8 @@ namespace ranges
         template(typename Rng1, typename Rng2, typename T, typename BOp1 = plus,
                  typename BOp2 = multiplies, typename P1 = identity,
                  typename P2 = identity, typename I1 = iterator_t<Rng1>,
-                 typename I2 = iterator_t<Rng2>)( //
+                 typename I2 = iterator_t<Rng2>)(
+            /// \pre
             requires range<Rng1> AND range<Rng2> AND
                 inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
         T operator()(Rng1 && rng1, Rng2 && rng2, T init, BOp1 bop1 = BOp1{},

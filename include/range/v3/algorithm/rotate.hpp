@@ -196,8 +196,9 @@ namespace ranges
     RANGES_FUNC_BEGIN(rotate)
 
         /// \brief function template \c rotate
-        template(typename I, typename S)( //
-            requires permutable<I> AND sentinel_for<S, I>) //
+        template(typename I, typename S)(
+            /// \pre
+            requires permutable<I> AND sentinel_for<S, I>)
         subrange<I> RANGES_FUNC(rotate)(I first, I middle, S last) //
         {
             if(first == middle)
@@ -213,8 +214,9 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename I = iterator_t<Rng>)( //
-            requires range<Rng> AND permutable<I>) //
+        template(typename Rng, typename I = iterator_t<Rng>)(
+            /// \pre
+            requires range<Rng> AND permutable<I>)
         safe_subrange_t<Rng> RANGES_FUNC(rotate)(Rng && rng, I middle) //
         {
             return (*this)(begin(rng), std::move(middle), end(rng));

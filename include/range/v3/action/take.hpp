@@ -34,16 +34,18 @@ namespace ranges
     {
         struct take_fn
         {
-            template(typename Int)( //
+            template(typename Int)(
+                /// \pre
                 requires detail::integer_like_<Int>)
             constexpr auto operator()(Int n) const
             {
                 return make_action_closure(bind_back(take_fn{}, n));
             }
 
-            template(typename Rng)( //
-                requires forward_range<Rng> AND //
-                    erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>>) //
+            template(typename Rng)(
+                /// \pre
+                requires forward_range<Rng> AND
+                    erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>>)
             Rng operator()(Rng && rng, range_difference_t<Rng> n) const
             {
                 RANGES_EXPECT(n >= 0);

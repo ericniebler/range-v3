@@ -45,16 +45,18 @@ namespace ranges
             ranges::insert(std::declval<Cont &>(), std::declval<iterator_t<Cont>>(),
                            std::declval<Rng>())));
 
-        template(typename Cont, typename T)( //
+        template(typename Cont, typename T)(
+            /// \pre
             requires lvalue_container_like<Cont> AND
-            (!range<T>)&&constructible_from<range_value_t<Cont>, T>) //
+            (!range<T>)&&constructible_from<range_value_t<Cont>, T>)
         push_front_t<Cont, T> push_front(Cont && cont, T && t)
         {
             unwrap_reference(cont).push_front(static_cast<T &&>(t));
         }
 
-        template(typename Cont, typename Rng)( //
-            requires lvalue_container_like<Cont> AND range<Rng>) //
+        template(typename Cont, typename Rng)(
+            /// \pre
+            requires lvalue_container_like<Cont> AND range<Rng>)
         insert_t<Cont, Rng> push_front(Cont && cont, Rng && rng)
         {
             ranges::insert(cont, begin(cont), static_cast<Rng &&>(rng));
@@ -87,7 +89,8 @@ namespace ranges
                 return make_action_closure(bind_back(push_front_fn{}, val));
             }
 
-            template(typename T)( //
+            template(typename T)(
+                /// \pre
                 requires range<T &>)
             constexpr auto operator()(T & t) const
             {
@@ -95,8 +98,9 @@ namespace ranges
                     bind_back(push_front_fn{}, detail::reference_wrapper_<T>(t)));
             }
 
-            template(typename Rng, typename T)( //
-                requires input_range<Rng> AND can_push_front_<Rng, T> AND //
+            template(typename Rng, typename T)(
+                /// \pre
+                requires input_range<Rng> AND can_push_front_<Rng, T> AND
                 (range<T> || constructible_from<range_value_t<Rng>, T>)) //
             Rng operator()(Rng && rng, T && t) const //
             {
@@ -104,10 +108,11 @@ namespace ranges
                 return static_cast<Rng &&>(rng);
             }
 
-            template(typename Rng, typename T)( //
-                requires input_range<Rng> AND                          //
+            template(typename Rng, typename T)(
+                /// \pre
+                requires input_range<Rng> AND
                         can_push_front_<Rng, std::initializer_list<T>> AND
-                            constructible_from<range_value_t<Rng>, T const &>) //
+                            constructible_from<range_value_t<Rng>, T const &>)
             Rng operator()(Rng && rng, std::initializer_list<T> t) const //
             {
                 push_front(rng, t);

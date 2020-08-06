@@ -43,9 +43,10 @@ namespace ranges
         /// \pre `S` is a model of the `sentinel_for<I>` concept
         /// \pre `P` is a model of the `invocable<iter_common_reference_t<I>>` concept
         /// \pre The ResultType of `P` is equality_comparable with V
-        template(typename I, typename S, typename V, typename P = identity)( //
-            requires input_iterator<I> AND sentinel_for<S, I> AND //
-            indirect_relation<equal_to, projected<I, P>, V const *>) //
+        template(typename I, typename S, typename V, typename P = identity)(
+            /// \pre
+            requires input_iterator<I> AND sentinel_for<S, I> AND
+            indirect_relation<equal_to, projected<I, P>, V const *>)
         constexpr I RANGES_FUNC(find)(I first, S last, V const & val, P proj = P{})
         {
             for(; first != last; ++first)
@@ -55,9 +56,10 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename V, typename P = identity)( //
-            requires input_range<Rng> AND //
-            indirect_relation<equal_to, projected<iterator_t<Rng>, P>, V const *>) //
+        template(typename Rng, typename V, typename P = identity)(
+            /// \pre
+            requires input_range<Rng> AND
+            indirect_relation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
         constexpr borrowed_iterator_t<Rng> //
         RANGES_FUNC(find)(Rng && rng, V const & val, P proj = P{})
         {

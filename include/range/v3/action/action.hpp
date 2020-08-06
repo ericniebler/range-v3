@@ -72,9 +72,10 @@ namespace ranges
         {
             // clang-format off
             // Piping requires things are passed by value.
-            template(typename Rng, typename ActionFn)(                    //
-                requires (!std::is_lvalue_reference<Rng>::value) AND      //
-                range<Rng> AND invocable_action_closure<ActionFn, Rng &>) //
+            template(typename Rng, typename ActionFn)(
+                /// \pre
+                requires (!std::is_lvalue_reference<Rng>::value) AND
+                range<Rng> AND invocable_action_closure<ActionFn, Rng &>)
             friend constexpr auto
             operator|(Rng && rng, action_closure<ActionFn> act)
             {
@@ -96,6 +97,7 @@ namespace ranges
             template<typename ActionFn, typename Pipeable>
             friend constexpr auto operator|(action_closure<ActionFn> act, Pipeable pipe)
                 -> CPP_broken_friend_ret(action_closure<composed<Pipeable, ActionFn>>)(
+                    /// \pre
                     requires (is_pipeable_v<Pipeable>))
             {
                 return make_action_closure(compose(static_cast<Pipeable &&>(pipe),
@@ -104,7 +106,8 @@ namespace ranges
 
             template<typename Rng, typename ActionFn>
             friend constexpr auto operator|=(Rng & rng, action_closure<ActionFn> act) //
-                -> CPP_broken_friend_ret(Rng &)(                                      //
+                -> CPP_broken_friend_ret(Rng &)(
+                    /// \pre
                     requires range<Rng> && invocable<ActionFn, Rng &>)
             {
                 static_cast<ActionFn &&>(act)(rng);
@@ -204,8 +207,9 @@ namespace ranges
             {}
 
             // Calling directly requires things are passed by reference.
-            template(typename Rng, typename... Rest)( //
-                requires range<Rng> AND invocable<Action const &, Rng &, Rest...>) //
+            template(typename Rng, typename... Rest)(
+                /// \pre
+                requires range<Rng> AND invocable<Action const &, Rng &, Rest...>)
             invoke_result_t<Action const &, Rng &, Rest...> //
             operator()(Rng & rng, Rest &&... rest) const
             {
@@ -215,6 +219,7 @@ namespace ranges
             // Currying overload.
             // clang-format off
             template(typename... Rest, typename A = Action)(
+                /// \pre
                 requires (sizeof...(Rest) != 0))
             auto CPP_auto_fun(operator())(Rest &&... rest)(const)
             (

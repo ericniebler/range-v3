@@ -64,9 +64,10 @@ namespace ranges
                  typename O,
                  typename C = less,
                  typename P0 = identity,
-                 typename P1 = identity)( //
+                 typename P1 = identity)(
+            /// \pre
             requires sentinel_for<S0, I0> AND sentinel_for<S1, I1> AND
-                mergeable<I0, I1, O, C, P0, P1>) //
+                mergeable<I0, I1, O, C, P0, P1>)
         merge_result<I0, I1, O> RANGES_FUNC(merge)(I0 begin0,
                                                    S0 end0,
                                                    I1 begin1,
@@ -100,9 +101,10 @@ namespace ranges
                  typename O,
                  typename C = less,
                  typename P0 = identity,
-                 typename P1 = identity)( //
+                 typename P1 = identity)(
+            /// \pre
             requires range<Rng0> AND range<Rng1> AND
-                mergeable<iterator_t<Rng0>, iterator_t<Rng1>, O, C, P0, P1>) //
+                mergeable<iterator_t<Rng0>, iterator_t<Rng1>, O, C, P0, P1>)
         merge_result<borrowed_iterator_t<Rng0>, borrowed_iterator_t<Rng1>, O>
         RANGES_FUNC(merge)(Rng0 && rng0,
                            Rng1 && rng1,

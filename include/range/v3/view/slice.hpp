@@ -144,15 +144,17 @@ namespace ranges
                            rng_, from_, range_tag_of<Rng>{}, is_infinite<Rng>{}) +
                        count_;
             }
-            template(typename BaseRng = Rng)( //
-                requires range<BaseRng const>) //
+            template(typename BaseRng = Rng)(
+                /// \pre
+                requires range<BaseRng const>)
             iterator_t<BaseRng const> begin() const
             {
                 return detail::pos_at_(
                     rng_, from_, range_tag_of<Rng>{}, is_infinite<Rng>{});
             }
-            template(typename BaseRng = Rng)( //
-                requires range<BaseRng const>) //
+            template(typename BaseRng = Rng)(
+                /// \pre
+                requires range<BaseRng const>)
             iterator_t<BaseRng const> end() const
             {
                 return detail::pos_at_(
@@ -202,8 +204,9 @@ namespace ranges
             {
                 return {all(static_cast<Rng &&>(rng)), from, count};
             }
-            template(typename Rng)( //
-                requires borrowed_range<Rng>) //
+            template(typename Rng)(
+                /// \pre
+                requires borrowed_range<Rng>)
             static subrange<iterator_t<Rng>> impl_(Rng && rng,
                                                    range_difference_t<Rng> from,
                                                    range_difference_t<Rng> count,
@@ -217,7 +220,8 @@ namespace ranges
 
         public:
             // slice(rng, 2, 4)
-            template(typename Rng)( //
+            template(typename Rng)(
+                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng>)
             constexpr auto operator()(Rng && rng,
                                       range_difference_t<Rng> from,
@@ -230,7 +234,8 @@ namespace ranges
             // slice(rng, 4, end-2)
             //  TODO Support Forward, non-Sized ranges by returning a range that
             //       doesn't know it's size?
-            template(typename Rng)( //
+            template(typename Rng)(
+                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng> AND sized_range<Rng>)
             auto operator()(Rng && rng,
                             range_difference_t<Rng> from,
@@ -246,7 +251,8 @@ namespace ranges
                                             range_tag_of<Rng>{});
             }
             // slice(rng, end-4, end-2)
-            template(typename Rng)( //
+            template(typename Rng)(
+                /// \pre
                 requires viewable_range<Rng> AND
                     (forward_range<Rng> || (input_range<Rng> && sized_range<Rng>)))
             auto operator()(Rng && rng,
@@ -263,7 +269,8 @@ namespace ranges
                                             common_range_tag_of<Rng>{});
             }
             // slice(rng, 4, end)
-            template(typename Rng)( //
+            template(typename Rng)(
+                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng>)
             auto operator()(Rng && rng, range_difference_t<Rng> from, end_fn) const
             {
@@ -271,7 +278,8 @@ namespace ranges
                 return ranges::views::drop_exactly(static_cast<Rng &&>(rng), from);
             }
             // slice(rng, end-4, end)
-            template(typename Rng)( //
+            template(typename Rng)(
+                /// \pre
                 requires viewable_range<Rng> AND
                     (forward_range<Rng> || (input_range<Rng> && sized_range<Rng>)))
             auto operator()(Rng && rng,
@@ -293,33 +301,38 @@ namespace ranges
             using slice_base_fn::operator();
 
             // Overloads for the pipe syntax: rng | views::slice(from,to)
-            template(typename Int)( //
+            template(typename Int)(
+                /// \pre
                 requires detail::integer_like_<Int>)
             constexpr auto operator()(Int from, Int to) const
             {
                 return make_view_closure(bind_back(slice_base_fn{}, from, to));
             }
-            template(typename Int)( //
+            template(typename Int)(
+                /// \pre
                 requires detail::integer_like_<Int>)
             constexpr auto operator()(Int from, detail::from_end_<Int> to) const
             {
                 return make_view_closure(bind_back(slice_base_fn{}, from, to));
             }
-            template(typename Int)( //
+            template(typename Int)(
+                /// \pre
                 requires detail::integer_like_<Int>)
             constexpr auto operator()(detail::from_end_<Int> from,
                                       detail::from_end_<Int> to) const
             {
                 return make_view_closure(bind_back(slice_base_fn{}, from, to));
             }
-            template(typename Int)( //
+            template(typename Int)(
+                /// \pre
                 requires detail::integer_like_<Int>)
             constexpr auto operator()(Int from, end_fn) const
             {
                 return make_view_closure(
                     bind_back(ranges::views::drop_exactly_base_fn{}, from));
             }
-            template(typename Int)( //
+            template(typename Int)(
+                /// \pre
                 requires detail::integer_like_<Int>)
             constexpr auto operator()(detail::from_end_<Int> from, end_fn to) const
             {

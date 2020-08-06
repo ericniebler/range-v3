@@ -38,9 +38,10 @@ namespace ranges
     RANGES_FUNC_BEGIN(partial_sort)
 
         /// \brief function template \c partial_sort
-        template(typename I, typename S, typename C = less, typename P = identity)( //
+        template(typename I, typename S, typename C = less, typename P = identity)(
+            /// \pre
             requires sortable<I, C, P> AND random_access_iterator<I> AND
-                sentinel_for<S, I>) //
+                sentinel_for<S, I>)
         I RANGES_FUNC(partial_sort)(
             I first, I middle, S last, C pred = C{}, P proj = P{}) //
         {
@@ -61,8 +62,9 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename C = less, typename P = identity)( //
-            requires sortable<iterator_t<Rng>, C, P> AND random_access_range<Rng>) //
+        template(typename Rng, typename C = less, typename P = identity)(
+            /// \pre
+            requires sortable<iterator_t<Rng>, C, P> AND random_access_range<Rng>)
         borrowed_iterator_t<Rng> RANGES_FUNC(partial_sort)(
             Rng && rng, iterator_t<Rng> middle, C pred = C{}, P proj = P{}) //
         {

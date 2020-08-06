@@ -38,8 +38,9 @@ namespace ranges
     struct advance_fn
     {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-        template(typename I)( //
-            requires input_or_output_iterator<I>) //
+        template(typename I)(
+            /// \pre
+            requires input_or_output_iterator<I>)
         constexpr void operator()(I & i, iter_difference_t<I> n) const
         // [[expects: n >= 0 || bidirectional_iterator<I>]]
         {
@@ -58,8 +59,9 @@ namespace ranges
             }
         }
 
-        template(typename I, typename S)( //
-            requires sentinel_for<S, I>) //
+        template(typename I, typename S)(
+            /// \pre
+            requires sentinel_for<S, I>)
         constexpr void operator()(I & i, S bound) const
         // [[expects axiom: reachable(i, bound)]]
         {
@@ -78,8 +80,9 @@ namespace ranges
                     ++i;
         }
 
-        template(typename I, typename S)( //
-            requires sentinel_for<S, I>) //
+        template(typename I, typename S)(
+            /// \pre
+            requires sentinel_for<S, I>)
         constexpr iter_difference_t<I> //
         operator()(I & i, iter_difference_t<I> n, S bound) const
         // [[expects axiom: 0 == n ||
@@ -169,23 +172,26 @@ namespace ranges
 
     public:
         // Advance a certain number of steps:
-        template(typename I)( //
-            requires input_or_output_iterator<I>) //
+        template(typename I)(
+            /// \pre
+            requires input_or_output_iterator<I>)
         constexpr void operator()(I & i, iter_difference_t<I> n) const
         {
             advance_fn::n_(i, n, iterator_tag_of<I>{});
         }
         // Advance to a certain position:
-        template(typename I, typename S)( //
-            requires sentinel_for<S, I>) //
+        template(typename I, typename S)(
+            /// \pre
+            requires sentinel_for<S, I>)
         constexpr void operator()(I & i, S s) const
         {
             advance_fn::to_(
                 i, static_cast<S &&>(s), meta::bool_<assignable_from<I &, S>>());
         }
         // Advance a certain number of times, with a bound:
-        template(typename I, typename S)( //
-            requires sentinel_for<S, I>) //
+        template(typename I, typename S)(
+            /// \pre
+            requires sentinel_for<S, I>)
         constexpr iter_difference_t<I> //
         operator()(I & it, iter_difference_t<I> n, S bound) const
         {
@@ -197,8 +203,9 @@ namespace ranges
         }
 #endif
 
-        template(typename I)( //
-            requires input_or_output_iterator<I>) //
+        template(typename I)(
+            /// \pre
+            requires input_or_output_iterator<I>)
         constexpr void operator()(counted_iterator<I> & i, iter_difference_t<I> n) const;
     };
 
@@ -299,28 +306,32 @@ namespace ranges
 
     struct next_fn
     {
-        template(typename I)( //
-            requires input_or_output_iterator<I>) //
+        template(typename I)(
+            /// \pre
+            requires input_or_output_iterator<I>)
         constexpr I operator()(I it) const
         {
             return ++it;
         }
-        template(typename I)( //
-            requires input_or_output_iterator<I>) //
+        template(typename I)(
+            /// \pre
+            requires input_or_output_iterator<I>)
         constexpr I operator()(I it, iter_difference_t<I> n) const
         {
             advance(it, n);
             return it;
         }
-        template(typename I, typename S)( //
-            requires sentinel_for<S, I>) //
+        template(typename I, typename S)(
+            /// \pre
+            requires sentinel_for<S, I>)
         constexpr I operator()(I it, S s) const
         {
             advance(it, static_cast<S &&>(s));
             return it;
         }
-        template(typename I, typename S)( //
-            requires sentinel_for<S, I>) //
+        template(typename I, typename S)(
+            /// \pre
+            requires sentinel_for<S, I>)
         constexpr I operator()(I it, iter_difference_t<I> n, S bound) const
         {
             advance(it, n, static_cast<S &&>(bound));
@@ -333,21 +344,24 @@ namespace ranges
 
     struct prev_fn
     {
-        template(typename I)( //
-            requires bidirectional_iterator<I>) //
+        template(typename I)(
+            /// \pre
+            requires bidirectional_iterator<I>)
         constexpr I operator()(I it) const
         {
             return --it;
         }
-        template(typename I)( //
-            requires bidirectional_iterator<I>) //
+        template(typename I)(
+            /// \pre
+            requires bidirectional_iterator<I>)
         constexpr I operator()(I it, iter_difference_t<I> n) const
         {
             advance(it, -n);
             return it;
         }
-        template(typename I)( //
-            requires bidirectional_iterator<I>) //
+        template(typename I)(
+            /// \pre
+            requires bidirectional_iterator<I>)
         constexpr I operator()(I it, iter_difference_t<I> n, I bound) const
         {
             advance(it, -n, static_cast<I &&>(bound));
@@ -361,7 +375,8 @@ namespace ranges
     struct iter_enumerate_fn
     {
     private:
-        template(typename I, typename S)( //
+        template(typename I, typename S)(
+            /// \pre
             requires (!sized_sentinel_for<I, I>)) //
         static constexpr std::pair<iter_difference_t<I>, I> //
         impl_i(I first, S last, sentinel_tag)
@@ -371,8 +386,9 @@ namespace ranges
                 ++d;
             return {d, first};
         }
-        template(typename I, typename S)( //
-            requires sized_sentinel_for<I, I>) //
+        template(typename I, typename S)(
+            /// \pre
+            requires sized_sentinel_for<I, I>)
         static constexpr std::pair<iter_difference_t<I>, I> //
         impl_i(I first, S end_, sentinel_tag)
         {
@@ -391,8 +407,9 @@ namespace ranges
         }
 
     public:
-        template(typename I, typename S)( //
-            requires sentinel_for<S, I>) //
+        template(typename I, typename S)(
+            /// \pre
+            requires sentinel_for<S, I>)
         constexpr std::pair<iter_difference_t<I>, I> operator()(I first, S last) const
         {
             return iter_enumerate_fn::impl_i(static_cast<I &&>(first),
@@ -422,8 +439,9 @@ namespace ranges
         }
 
     public:
-        template(typename I, typename S)( //
-            requires input_or_output_iterator<I> AND sentinel_for<S, I>) //
+        template(typename I, typename S)(
+            /// \pre
+            requires input_or_output_iterator<I> AND sentinel_for<S, I>)
         constexpr iter_difference_t<I> operator()(I first, S last) const
         {
             return iter_distance_fn::impl_i(static_cast<I &&>(first),
@@ -463,8 +481,9 @@ namespace ranges
         }
 
     public:
-        template(typename I, typename S)( //
-            requires input_iterator<I> AND sentinel_for<S, I>) //
+        template(typename I, typename S)(
+            /// \pre
+            requires input_iterator<I> AND sentinel_for<S, I>)
         constexpr int operator()(I first, S last, iter_difference_t<I> n) const
         {
             return iter_distance_compare_fn::impl_i(static_cast<I &&>(first),
@@ -480,8 +499,9 @@ namespace ranges
     // Like distance(b,e), but guaranteed to be O(1)
     struct iter_size_fn
     {
-        template(typename I, typename S)( //
-            requires sized_sentinel_for<S, I>) //
+        template(typename I, typename S)(
+            /// \pre
+            requires sized_sentinel_for<S, I>)
         constexpr meta::_t<std::make_unsigned<iter_difference_t<I>>> //
         operator()(I const & first, S last) const
         {
@@ -554,8 +574,9 @@ namespace ranges
     public:
         using iter_enumerate_fn::operator();
 
-        template(typename Rng)( //
-            requires range<Rng>) //
+        template(typename Rng)(
+            /// \pre
+            requires range<Rng>)
         std::pair<range_difference_t<Rng>, iterator_t<Rng>> operator()(Rng && rng) const
         {
             // Better not be trying to compute the distance of an infinite range:
@@ -585,8 +606,9 @@ namespace ranges
     public:
         using iter_distance_fn::operator();
 
-        template(typename Rng)( //
-            requires range<Rng>) //
+        template(typename Rng)(
+            /// \pre
+            requires range<Rng>)
         constexpr range_difference_t<Rng> operator()(Rng && rng) const
         {
             // Better not be trying to compute the distance of an infinite range:
@@ -625,8 +647,9 @@ namespace ranges
     public:
         using iter_distance_compare_fn::operator();
 
-        template(typename Rng)( //
-            requires range<Rng>) //
+        template(typename Rng)(
+            /// \pre
+            requires range<Rng>)
         int operator()(Rng && rng, range_difference_t<Rng> n) const
         {
             return distance_compare_fn::impl_r(rng, n, sized_range_tag_of<Rng>());

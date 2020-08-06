@@ -83,9 +83,10 @@ namespace ranges
         using reference = meta::if_<std::is_reference<T>, T, T &>;
 
         constexpr reference_wrapper() = default;
-        template(typename U)( //
-            requires (!same_as<uncvref_t<U>, reference_wrapper>) AND //
-                constructible_from<base_, U>) //
+        template(typename U)(
+            /// \pre
+            requires (!same_as<uncvref_t<U>, reference_wrapper>) AND
+                constructible_from<base_, U>)
         constexpr reference_wrapper(U && u) noexcept(
             std::is_nothrow_constructible<base_, U>::value)
           : detail::reference_wrapper_<T>{static_cast<U &&>(u)}
@@ -98,7 +99,8 @@ namespace ranges
         {
             return get();
         }
-        template(typename...)(                          //
+        template(typename...)(
+            /// \pre
             requires (!std::is_rvalue_reference<T>::value)) //
         operator std::reference_wrapper<type>() const noexcept
         {
@@ -115,7 +117,8 @@ namespace ranges
 
     struct ref_fn
     {
-        template(typename T)( //
+        template(typename T)(
+            /// \pre
             requires (!is_reference_wrapper_v<T>)) //
         reference_wrapper<T> operator()(T & t) const
         {

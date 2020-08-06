@@ -59,7 +59,9 @@ namespace ranges
             }
 
             CPP_member
-            auto CPP_fun(size)()(const requires sized_range<Rng>)
+            auto CPP_fun(size)()(const
+                /// \pre
+                requires sized_range<Rng>)
             {
                 return ranges::size(*rng_ptr_);
             }
@@ -71,9 +73,10 @@ namespace ranges
         struct RANGES_STRUCT_WITH_ADL_BARRIER(shared_closure_base)
         {
             // Piping requires viewable_ranges.
-            template(typename Rng, typename SharedFn)( //
-                requires range<Rng> AND (!viewable_range<Rng>) AND //
-                    constructible_from<detail::decay_t<Rng>, Rng>) //
+            template(typename Rng, typename SharedFn)(
+                /// \pre
+                requires range<Rng> AND (!viewable_range<Rng>) AND
+                    constructible_from<detail::decay_t<Rng>, Rng>)
             friend constexpr auto operator|(Rng && rng, shared_closure<SharedFn> vw)
             {
                 return static_cast<SharedFn &&>(vw)(static_cast<Rng &&>(rng));
@@ -82,6 +85,7 @@ namespace ranges
             template<typename SharedFn, typename Pipeable>
             friend constexpr auto operator|(shared_closure<SharedFn> sh, Pipeable pipe)
                 -> CPP_broken_friend_ret(shared_closure<composed<Pipeable, SharedFn>>)(
+                    /// \pre
                     requires (is_pipeable_v<Pipeable>))
             {
                 return shared_closure<composed<Pipeable, SharedFn>>{compose(
@@ -104,9 +108,10 @@ namespace ranges
         {
             struct shared_fn
             {
-                template(typename Rng)( //
-                    requires range<Rng> AND (!viewable_range<Rng>)AND //
-                        constructible_from<detail::decay_t<Rng>, Rng>) //
+                template(typename Rng)(
+                    /// \pre
+                    requires range<Rng> AND (!viewable_range<Rng>)AND
+                        constructible_from<detail::decay_t<Rng>, Rng>)
                 shared_view<detail::decay_t<Rng>> operator()(Rng && rng) const
                 {
                     return shared_view<detail::decay_t<Rng>>{static_cast<Rng &&>(rng)};

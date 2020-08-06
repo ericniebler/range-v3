@@ -28,9 +28,10 @@ namespace ranges
     /// \cond
     namespace adl_erase_detail
     {
-        template(typename Cont, typename I, typename S)( //
-            requires lvalue_container_like<Cont> AND forward_iterator<I> AND //
-                sentinel_for<S, I>) //
+        template(typename Cont, typename I, typename S)(
+            /// \pre
+            requires lvalue_container_like<Cont> AND forward_iterator<I> AND
+                sentinel_for<S, I>)
         auto erase(Cont && cont, I first, S last)                            //
             -> decltype(unwrap_reference(cont).erase(first, last))
         {
@@ -39,8 +40,9 @@ namespace ranges
 
         struct erase_fn
         {
-            template(typename Rng, typename I, typename S)( //
-                requires range<Rng> AND forward_iterator<I> AND sentinel_for<S, I>) //
+            template(typename Rng, typename I, typename S)(
+                /// \pre
+                requires range<Rng> AND forward_iterator<I> AND sentinel_for<S, I>)
             auto operator()(Rng && rng, I first, S last) const
                 -> decltype(erase((Rng &&) rng, first, last))
             {

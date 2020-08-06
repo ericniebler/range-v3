@@ -37,9 +37,10 @@ namespace ranges
 
         /// \brief function template \c replace
         template(typename I, typename S, typename T1, typename T2, typename P = identity)(
+            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
                 indirectly_writable<I, T2 const &> AND
-                indirect_relation<equal_to, projected<I, P>, T1 const *>) //
+                indirect_relation<equal_to, projected<I, P>, T1 const *>)
         I RANGES_FUNC(replace)(
             I first, S last, T1 const & old_value, T2 const & new_value, P proj = {}) //
         {
@@ -50,10 +51,11 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename T1, typename T2, typename P = identity)( //
+        template(typename Rng, typename T1, typename T2, typename P = identity)(
+            /// \pre
             requires input_range<Rng> AND
                 indirectly_writable<iterator_t<Rng>, T2 const &> AND
-                indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>) //
+                indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>)
         borrowed_iterator_t<Rng> RANGES_FUNC(replace)(
             Rng && rng, T1 const & old_value, T2 const & new_value, P proj = {}) //
         {

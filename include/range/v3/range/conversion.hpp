@@ -48,7 +48,8 @@ namespace ranges
             template<typename Rng, typename MetaFn>
             friend auto operator|(Rng && rng,
                                   closure<MetaFn, fn<MetaFn>> (*)(to_container))
-                -> CPP_broken_friend_ret(container_t<MetaFn, Rng>)( //
+                -> CPP_broken_friend_ret(container_t<MetaFn, Rng>)(
+                    /// \pre
                     requires invocable<fn<MetaFn>, Rng>)
             {
                 return fn<MetaFn>{}(static_cast<Rng &&>(rng));
@@ -58,7 +59,8 @@ namespace ranges
             friend auto operator|(closure<MetaFn, fn<MetaFn>> (*)(to_container),
                                   Pipeable pipe)
                 -> CPP_broken_friend_ret(
-                    closure<MetaFn, composed<Pipeable, fn<MetaFn>>>)( //
+                    closure<MetaFn, composed<Pipeable, fn<MetaFn>>>)(
+                    /// \pre
                     requires (is_pipeable_v<Pipeable>))
             {
                 return closure<MetaFn, composed<Pipeable, fn<MetaFn>>>{
@@ -117,6 +119,7 @@ namespace ranges
             CPP_member
             auto operator--() //
                 -> CPP_ret(to_container_iterator &)(
+                    /// \pre
                     requires derived_from<iterator_category,
                                           std::bidirectional_iterator_tag>)
             {
@@ -126,6 +129,7 @@ namespace ranges
             CPP_member
             auto operator--(int) //
                 -> CPP_ret(to_container_iterator &)(
+                    /// \pre
                     requires derived_from<iterator_category,
                                           std::bidirectional_iterator_tag>)
             {
@@ -136,6 +140,7 @@ namespace ranges
             CPP_member
             auto operator+=(difference_type n) //
                 -> CPP_ret(to_container_iterator &)(
+                    /// \pre
                     requires derived_from<iterator_category,
                                           std::random_access_iterator_tag>)
             {
@@ -145,6 +150,7 @@ namespace ranges
             CPP_member
             auto operator-=(difference_type n) //
                 -> CPP_ret(to_container_iterator &)(
+                    /// \pre
                     requires derived_from<iterator_category,
                                           std::random_access_iterator_tag>)
             {
@@ -154,6 +160,7 @@ namespace ranges
             CPP_broken_friend_member
             friend auto operator+(to_container_iterator i, difference_type n) //
                 -> CPP_broken_friend_ret(to_container_iterator)(
+                    /// \pre
                     requires derived_from<iterator_category,
                                           std::random_access_iterator_tag>)
             {
@@ -162,6 +169,7 @@ namespace ranges
             CPP_broken_friend_member
             friend auto operator-(to_container_iterator i, difference_type n) //
                 -> CPP_broken_friend_ret(to_container_iterator)(
+                    /// \pre
                     requires derived_from<iterator_category,
                                           std::random_access_iterator_tag>)
             {
@@ -170,6 +178,7 @@ namespace ranges
             CPP_broken_friend_member
             friend auto operator-(difference_type n, to_container_iterator i) //
                 -> CPP_broken_friend_ret(to_container_iterator)(
+                    /// \pre
                     requires derived_from<iterator_category,
                                           std::random_access_iterator_tag>)
             {
@@ -179,6 +188,7 @@ namespace ranges
             friend auto operator-(to_container_iterator const & i,
                                   to_container_iterator const & j) //
                 -> CPP_broken_friend_ret(difference_type)(
+                    /// \pre
                     requires derived_from<iterator_category,
                                           std::random_access_iterator_tag>)
             {
@@ -187,6 +197,7 @@ namespace ranges
             CPP_member
             auto operator[](difference_type n) const //
                 -> CPP_ret(reference)(
+                    /// \pre
                     requires derived_from<iterator_category,
                                           std::random_access_iterator_tag>)
             {
@@ -253,19 +264,21 @@ namespace ranges
         struct RANGES_STRUCT_WITH_ADL_BARRIER(to_container_closure_base)
         {
             // clang-format off
-            template(typename Rng, typename MetaFn, typename Fn)(  //
-                requires input_range<Rng> AND                      //
-                    convertible_to_cont<Rng, container_t<MetaFn, Rng>>) //
+            template(typename Rng, typename MetaFn, typename Fn)(
+                /// \pre
+                requires input_range<Rng> AND
+                    convertible_to_cont<Rng, container_t<MetaFn, Rng>>)
             friend constexpr auto
             operator|(Rng && rng, to_container::closure<MetaFn, Fn> fn)
             {
                 return static_cast<Fn &&>(fn)(static_cast<Rng &&>(rng));
             }
 
-            template(typename Rng, typename MetaFn, typename Fn)(             //
-                requires input_range<Rng> AND                                 //
-                    (!convertible_to_cont<Rng, container_t<MetaFn, Rng>>) AND //
-                    convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>>)  //
+            template(typename Rng, typename MetaFn, typename Fn)(
+                /// \pre
+                requires input_range<Rng> AND
+                    (!convertible_to_cont<Rng, container_t<MetaFn, Rng>>) AND
+                    convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>>)
             friend constexpr auto
             operator|(Rng && rng, to_container::closure<MetaFn, Fn> fn)
             {
@@ -276,7 +289,8 @@ namespace ranges
             friend constexpr auto operator|(to_container::closure<MetaFn, Fn> sh,
                                             Pipeable pipe)
                 -> CPP_broken_friend_ret(
-                    to_container::closure<MetaFn, composed<Pipeable, Fn>>)( //
+                    to_container::closure<MetaFn, composed<Pipeable, Fn>>)(
+                    /// \pre
                     requires is_pipeable_v<Pipeable>)
             {
                 return to_container::closure<MetaFn, composed<Pipeable, Fn>>{
@@ -318,9 +332,10 @@ namespace ranges
             }
 
         public:
-            template(typename Rng)( //
-                requires input_range<Rng> AND                                        //
-                    convertible_to_cont<Rng, container_t<MetaFn, Rng>>) //
+            template(typename Rng)(
+                /// \pre
+                requires input_range<Rng> AND
+                    convertible_to_cont<Rng, container_t<MetaFn, Rng>>)
             container_t<MetaFn, Rng> operator()(Rng && rng) const
             {
                 static_assert(!is_infinite<Rng>::value,
@@ -331,10 +346,11 @@ namespace ranges
                     meta::bool_<(bool)to_container_reserve<cont_t, iter_t, Rng>>;
                 return impl<cont_t, iter_t>(static_cast<Rng &&>(rng), use_reserve_t{});
             }
-            template(typename Rng)(                                           //
-                requires input_range<Rng> AND                                 //
-                    (!convertible_to_cont<Rng, container_t<MetaFn, Rng>>) AND //
-                    convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>>)      //
+            template(typename Rng)(
+                /// \pre
+                requires input_range<Rng> AND
+                    (!convertible_to_cont<Rng, container_t<MetaFn, Rng>>) AND
+                    convertible_to_cont_cont<Rng, container_t<MetaFn, Rng>>)
             container_t<MetaFn, Rng> operator()(Rng && rng) const
             {
                 static_assert(!is_infinite<Rng>::value,
@@ -400,9 +416,10 @@ namespace ranges
         }
 
         /// \overload
-        template(template<typename...> class ContT, typename Rng)( //
+        template(template<typename...> class ContT, typename Rng)(
+            /// \pre
             requires range<Rng> AND
-                detail::convertible_to_cont<Rng, ContT<range_value_t<Rng>>>) //
+                detail::convertible_to_cont<Rng, ContT<range_value_t<Rng>>>)
         auto to(Rng && rng) -> ContT<range_value_t<Rng>>
         {
             return detail::to_container_fn<detail::from_range<ContT>>{}(
@@ -418,8 +435,9 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Cont, typename Rng)( //
-            requires range<Rng> AND detail::convertible_to_cont<Rng, Cont>) //
+        template(typename Cont, typename Rng)(
+            /// \pre
+            requires range<Rng> AND detail::convertible_to_cont<Rng, Cont>)
         auto to(Rng && rng) -> Cont
         {
             return detail::to_container_fn<meta::id<Cont>>{}(static_cast<Rng &&>(rng));
@@ -427,14 +445,16 @@ namespace ranges
 
         /// \cond
         // Slightly odd initializer_list overloads, undocumented for now.
-        template(template<typename...> class ContT, typename T)( //
-            requires detail::convertible_to_cont<std::initializer_list<T>, ContT<T>>) //
+        template(template<typename...> class ContT, typename T)(
+            /// \pre
+            requires detail::convertible_to_cont<std::initializer_list<T>, ContT<T>>)
         auto to(std::initializer_list<T> il) -> ContT<T>
         {
             return detail::to_container_fn<detail::from_range<ContT>>{}(il);
         }
-        template(typename Cont, typename T)( //
-            requires detail::convertible_to_cont<std::initializer_list<T>, Cont>) //
+        template(typename Cont, typename T)(
+            /// \pre
+            requires detail::convertible_to_cont<std::initializer_list<T>, Cont>)
         auto to(std::initializer_list<T> il) -> Cont
         {
             return detail::to_container_fn<meta::id<Cont>>{}(il);
@@ -458,7 +478,8 @@ namespace ranges
         {
             return {};
         }
-        template(template<typename...> class ContT, typename Rng)( //
+        template(template<typename...> class ContT, typename Rng)(
+            /// \pre
             requires range<Rng> AND
                 detail::convertible_to_cont<Rng, ContT<range_value_t<Rng>>>)
         RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
@@ -466,7 +487,8 @@ namespace ranges
         {
             return static_cast<Rng &&>(rng) | ranges::to_<ContT>();
         }
-        template(template<typename...> class ContT, typename T)( //
+        template(template<typename...> class ContT, typename T)(
+            /// \pre
             requires detail::convertible_to_cont<std::initializer_list<T>, ContT<T>>)
         RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
         ContT<T> to_(std::initializer_list<T> il)
@@ -479,14 +501,16 @@ namespace ranges
         {
             return {};
         }
-        template(typename Cont, typename Rng)( //
+        template(typename Cont, typename Rng)(
+            /// \pre
             requires range<Rng> AND detail::convertible_to_cont<Rng, Cont>)
         RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
         Cont to_(Rng && rng)
         {
             return static_cast<Rng &&>(rng) | ranges::to_<Cont>();
         }
-        template(typename Cont, typename T)( //
+        template(typename Cont, typename T)(
+            /// \pre
             requires detail::convertible_to_cont<std::initializer_list<T>, Cont>)
         RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
         Cont to_(std::initializer_list<T> list)

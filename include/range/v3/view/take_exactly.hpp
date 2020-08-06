@@ -68,8 +68,9 @@ namespace ranges
             {
                 return {ranges::begin(rng_), n_};
             }
-            template(typename BaseRng = Rng)( //
-                requires range<BaseRng const>) //
+            template(typename BaseRng = Rng)(
+                /// \pre
+                requires range<BaseRng const>)
             counted_iterator<iterator_t<BaseRng const>> begin() const
             {
                 return {ranges::begin(rng_), n_};
@@ -158,8 +159,9 @@ namespace ranges
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
-            template(typename Rng)( //
-                requires borrowed_range<Rng>) //
+            template(typename Rng)(
+                /// \pre
+                requires borrowed_range<Rng>)
             static constexpr subrange<iterator_t<Rng>> impl_(Rng && rng,
                                                              range_difference_t<Rng> n,
                                                              random_access_range_tag)
@@ -168,7 +170,8 @@ namespace ranges
             }
 
         public:
-            template(typename Rng)( //
+            template(typename Rng)(
+                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng>)
             constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
             {
@@ -181,7 +184,8 @@ namespace ranges
         {
             using take_exactly_base_fn::operator();
 
-            template(typename Int)( //
+            template(typename Int)(
+                /// \pre
                 requires detail::integer_like_<Int>)
             constexpr auto operator()(Int n) const
             {

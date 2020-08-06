@@ -96,8 +96,9 @@ namespace ranges
             }
 
         public:
-            template(typename I, typename C = less, typename P = identity)( //
-                requires bidirectional_iterator<I> AND sortable<I, C, P>) //
+            template(typename I, typename C = less, typename P = identity)(
+                /// \pre
+                requires bidirectional_iterator<I> AND sortable<I, C, P>)
             void operator()(I first, I middle, I last, iter_difference_t<I> len1,
                             iter_difference_t<I> len2, iter_value_t<I> * buf,
                             std::ptrdiff_t buf_size, C pred = C{}, P proj = P{}) const
@@ -220,8 +221,9 @@ namespace ranges
 
         struct inplace_merge_no_buffer_fn
         {
-            template(typename I, typename C = less, typename P = identity)( //
-                requires bidirectional_iterator<I> AND sortable<I, C, P>) //
+            template(typename I, typename C = less, typename P = identity)(
+                /// \pre
+                requires bidirectional_iterator<I> AND sortable<I, C, P>)
             void operator()(I first, I middle, I last, iter_difference_t<I> len1,
                             iter_difference_t<I> len2, C pred = C{}, P proj = P{}) const
             {
@@ -248,8 +250,9 @@ namespace ranges
         // TODO reimplement to only need forward iterators
 
         /// \brief function template \c inplace_merge
-        template(typename I, typename S, typename C = less, typename P = identity)( //
-            requires bidirectional_iterator<I> AND sortable<I, C, P>) //
+        template(typename I, typename S, typename C = less, typename P = identity)(
+            /// \pre
+            requires bidirectional_iterator<I> AND sortable<I, C, P>)
         I RANGES_FUNC(inplace_merge)(
             I first, I middle, S last, C pred = C{}, P proj = P{})
         {
@@ -277,8 +280,9 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename C = less, typename P = identity)( //
-            requires bidirectional_range<Rng> AND sortable<iterator_t<Rng>, C, P>) //
+        template(typename Rng, typename C = less, typename P = identity)(
+            /// \pre
+            requires bidirectional_range<Rng> AND sortable<iterator_t<Rng>, C, P>)
         borrowed_iterator_t<Rng> RANGES_FUNC(inplace_merge)(
             Rng && rng, iterator_t<Rng> middle, C pred = C{}, P proj = P{})
         {

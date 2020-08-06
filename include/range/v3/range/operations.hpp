@@ -35,9 +35,10 @@ namespace ranges
     struct at_fn
     {
         /// \return `begin(rng)[n]`
-        template(typename Rng)( //
-            requires random_access_range<Rng> AND sized_range<Rng> AND //
-                borrowed_range<Rng>) //
+        template(typename Rng)(
+            /// \pre
+            requires random_access_range<Rng> AND sized_range<Rng> AND
+                borrowed_range<Rng>)
         constexpr range_reference_t<Rng> //
         operator()(Rng && rng, range_difference_t<Rng> n) const
         {
@@ -67,7 +68,8 @@ namespace ranges
     struct index_fn
     {
         /// \return `begin(rng)[n]`
-        template(typename Rng, typename Int)( //
+        template(typename Rng, typename Int)(
+            /// \pre
             requires random_access_range<Rng> AND integral<Int> AND borrowed_range<Rng>)
         constexpr range_reference_t<Rng> operator()(Rng && rng, Int n) const //
         {
@@ -89,9 +91,10 @@ namespace ranges
     struct back_fn
     {
         /// \return `*prev(end(rng))`
-        template(typename Rng)(                                   //
-            requires common_range<Rng> AND bidirectional_range<Rng> AND //
-                borrowed_range<Rng>)                                  //
+        template(typename Rng)(
+            /// \pre
+            requires common_range<Rng> AND bidirectional_range<Rng> AND
+                borrowed_range<Rng>)
         constexpr range_reference_t<Rng> operator()(Rng && rng) const
         {
             return *prev(end(rng));
@@ -106,8 +109,9 @@ namespace ranges
     struct front_fn
     {
         /// \return `*begin(rng)`
-        template(typename Rng)( //
-            requires forward_range<Rng> AND borrowed_range<Rng>) //
+        template(typename Rng)(
+            /// \pre
+            requires forward_range<Rng> AND borrowed_range<Rng>)
         constexpr range_reference_t<Rng> operator()(Rng && rng) const
         {
             return *begin(rng);

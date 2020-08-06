@@ -45,9 +45,10 @@ namespace ranges
                  typename S,
                  typename V,
                  typename C = less,
-                 typename P = identity)( //
+                 typename P = identity)(
+            /// \pre
             requires forward_iterator<I> AND sentinel_for<S, I> AND
-                indirect_strict_weak_order<C, V const *, projected<I, P>>) //
+                indirect_strict_weak_order<C, V const *, projected<I, P>>)
         bool RANGES_FUNC(binary_search)(
             I first, S last, V const & val, C pred = C{}, P proj = P{})
         {
@@ -57,7 +58,8 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename V, typename C = less, typename P = identity)( //
+        template(typename Rng, typename V, typename C = less, typename P = identity)(
+            /// \pre
             requires forward_range<Rng> AND
                 indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
         bool RANGES_FUNC(binary_search)(

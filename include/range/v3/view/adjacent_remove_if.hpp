@@ -72,7 +72,8 @@ namespace ranges
             }
             CPP_member
             constexpr auto prev(iterator_t<Rng> & it) const //
-                -> CPP_ret(void)( //
+                -> CPP_ret(void)(
+                    /// \pre
                     requires bidirectional_range<Rng>)
             {
                 rng_->satisfy_reverse(it);
@@ -87,7 +88,8 @@ namespace ranges
         }
         CPP_member
         constexpr auto end_adaptor() //
-            -> CPP_ret(adaptor)( //
+            -> CPP_ret(adaptor)(
+                /// \pre
                 requires common_range<Rng>)
         {
             if(bidirectional_range<Rng>)
@@ -96,7 +98,8 @@ namespace ranges
         }
         CPP_member
         constexpr auto end_adaptor() noexcept //
-            -> CPP_ret(adaptor_base)( //
+            -> CPP_ret(adaptor_base)(
+                /// \pre
                 requires (!common_range<Rng>))
         {
             return {};
@@ -140,7 +143,8 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    template(typename Rng, typename Fun)( //
+    template(typename Rng, typename Fun)(
+        /// \pre
         requires copy_constructible<Rng>)
     adjacent_remove_if_view(Rng &&, Fun)
         -> adjacent_remove_if_view<views::all_t<Rng>, Fun>;
@@ -150,9 +154,10 @@ namespace ranges
     {
         struct adjacent_remove_if_base_fn
         {
-            template(typename Rng, typename Pred)( //
+            template(typename Rng, typename Pred)(
+                /// \pre
                 requires viewable_range<Rng> AND forward_range<Rng> AND
-                    indirect_binary_predicate_<Pred, iterator_t<Rng>, iterator_t<Rng>>) //
+                    indirect_binary_predicate_<Pred, iterator_t<Rng>, iterator_t<Rng>>)
             constexpr adjacent_remove_if_view<all_t<Rng>, Pred> //
             operator()(Rng && rng, Pred pred) const
             {

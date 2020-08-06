@@ -63,8 +63,9 @@ namespace ranges
             }
 
             // Prefer member if it returns integral.
-            template(typename R)( //
-                requires integral<member_size_t<R>> AND //
+            template(typename R)(
+                /// \pre
+                requires integral<member_size_t<R>> AND
                     (!disable_sized_range<uncvref_t<R>>)) //
             static constexpr member_size_t<R> impl_(R && r, int) //
                 noexcept(noexcept(((R &&) r).size()))
@@ -73,8 +74,9 @@ namespace ranges
             }
 
             // Use ADL if it returns integral.
-            template(typename R)( //
-                requires integral<non_member_size_t<R>> AND //
+            template(typename R)(
+                /// \pre
+                requires integral<non_member_size_t<R>> AND
                     (!disable_sized_range<uncvref_t<R>>)) //
             static constexpr non_member_size_t<R> impl_(R && r, long) //
                 noexcept(noexcept(size((R &&) r)))
@@ -82,9 +84,10 @@ namespace ranges
                 return size((R &&) r);
             }
 
-            template(typename R)( //
-                requires forward_iterator<_begin_::_t<R>> AND //
-                    sized_sentinel_for<_end_::_t<R>, _begin_::_t<R>>) //
+            template(typename R)(
+                /// \pre
+                requires forward_iterator<_begin_::_t<R>> AND
+                    sized_sentinel_for<_end_::_t<R>, _begin_::_t<R>>)
             static constexpr auto impl_(R && r, ...)
                 -> detail::iter_size_t<_begin_::_t<R>>
             {
@@ -161,22 +164,25 @@ namespace ranges
             template<typename R>
             using member_data_t = detail::decay_t<decltype(std::declval<R>().data())>;
 
-            template(typename R)( //
+            template(typename R)(
+                /// \pre
                 requires std::is_pointer<member_data_t<R &>>::value) //
             static constexpr member_data_t<R &> impl_(R & r, detail::priority_tag<2>)
                 noexcept(noexcept(r.data())) 
             {
                 return r.data();
             }
-            template(typename R)( //
+            template(typename R)(
+                /// \pre
                 requires std::is_pointer<_begin_::_t<R>>::value) //
             static constexpr _begin_::_t<R> impl_(R && r, detail::priority_tag<1>)
                 noexcept(noexcept(ranges::begin((R &&) r)))
             {
                 return ranges::begin((R &&) r);
             }
-            template(typename R)( //
-                requires contiguous_iterator<_begin_::_t<R>>) //
+            template(typename R)(
+                /// \pre
+                requires contiguous_iterator<_begin_::_t<R>>)
             static constexpr auto impl_(R && r, detail::priority_tag<0>) noexcept(
                 noexcept(ranges::begin((R &&) r) == ranges::end((R &&) r)
                              ? nullptr
@@ -264,8 +270,9 @@ namespace ranges
             }
 
             // Fall further back to begin == end.
-            template(typename R)( //
-                requires forward_iterator<_begin_::_t<R>>) //
+            template(typename R)(
+                /// \pre
+                requires forward_iterator<_begin_::_t<R>>)
             static constexpr auto impl_(R && r, detail::priority_tag<0>) noexcept(
                 noexcept(bool(ranges::begin((R &&) r) == ranges::end((R &&) r))))
                 -> decltype(bool(ranges::begin((R &&) r) ==

@@ -128,46 +128,53 @@ namespace ranges
             return ranges::end(rng.base())
         )
             // clang-format on
-            template(typename I)( //
-                requires equality_comparable<I>) //
+            template(typename I)(
+                /// \pre
+                requires equality_comparable<I>)
             static bool equal(I const & it0, I const & it1)
         {
             return it0 == it1;
         }
-        template(typename I)( //
-            requires input_or_output_iterator<I>) //
+        template(typename I)(
+            /// \pre
+            requires input_or_output_iterator<I>)
         static iter_reference_t<I> read(I const & it,
                                         detail::adaptor_base_current_mem_fn = {})
             noexcept(noexcept(iter_reference_t<I>(*it)))
         {
             return *it;
         }
-        template(typename I)( //
-            requires input_or_output_iterator<I>) //
+        template(typename I)(
+            /// \pre
+            requires input_or_output_iterator<I>)
         static void next(I & it)
         {
             ++it;
         }
-        template(typename I)( //
-            requires bidirectional_iterator<I>) //
+        template(typename I)(
+            /// \pre
+            requires bidirectional_iterator<I>)
         static void prev(I & it)
         {
             --it;
         }
-        template(typename I)( //
-            requires random_access_iterator<I>) //
+        template(typename I)(
+            /// \pre
+            requires random_access_iterator<I>)
         static void advance(I & it, iter_difference_t<I> n)
         {
             it += n;
         }
-        template(typename I)( //
-            requires sized_sentinel_for<I, I>) //
+        template(typename I)(
+            /// \pre
+            requires sized_sentinel_for<I, I>)
         static iter_difference_t<I> distance_to(I const & it0, I const & it1)
         {
             return it1 - it0;
         }
-        template(typename I, typename S)( //
-            requires sentinel_for<S, I>) //
+        template(typename I, typename S)(
+            /// \pre
+            requires sentinel_for<S, I>)
         static constexpr bool empty(I const & it, S const & last)
         {
             return it == last;
@@ -448,10 +455,11 @@ namespace ranges
         adaptor_cursor(BaseIter iter, Adapt adapt)
           : base_t{{std::move(iter), std::move(adapt)}}
         {}
-        template(typename OtherIter, typename OtherAdapt)( //
+        template(typename OtherIter, typename OtherAdapt)(
+            /// \pre
             requires //
                 (!same_as<adaptor_cursor<OtherIter, OtherAdapt>, adaptor_cursor>) AND
-                convertible_to<OtherIter, BaseIter> AND //
+                convertible_to<OtherIter, BaseIter> AND
                 convertible_to<OtherAdapt, Adapt>)
         adaptor_cursor(adaptor_cursor<OtherIter, OtherAdapt> that)
           : base_t{{std::move(that.data_.first()), std::move(that.data_.second())}}
@@ -501,16 +509,18 @@ namespace ranges
             auto pos = adapt.begin(d);
             return {std::move(pos), std::move(adapt)};
         }
-        template(typename D = Derived)( //
-            requires same_as<D, Derived>) //
+        template(typename D = Derived)(
+            /// \pre
+            requires same_as<D, Derived>)
         constexpr auto begin_cursor() noexcept(
             noexcept(view_adaptor::begin_cursor_(std::declval<D &>())))
             -> decltype(view_adaptor::begin_cursor_(std::declval<D &>()))
         {
             return view_adaptor::begin_cursor_(derived());
         }
-        template(typename D = Derived)( //
-            requires same_as<D, Derived> AND range<base_range_t const>) //
+        template(typename D = Derived)(
+            /// \pre
+            requires same_as<D, Derived> AND range<base_range_t const>)
         constexpr auto begin_cursor() const
             noexcept(noexcept(view_adaptor::begin_cursor_(std::declval<D const &>())))
                 -> decltype(view_adaptor::begin_cursor_(std::declval<D const &>()))
@@ -527,16 +537,18 @@ namespace ranges
             auto pos = adapt.end(d);
             return {std::move(pos), std::move(adapt)};
         }
-        template(typename D = Derived)( //
-            requires same_as<D, Derived>) //
+        template(typename D = Derived)(
+            /// \pre
+            requires same_as<D, Derived>)
         constexpr auto end_cursor() noexcept(
             noexcept(view_adaptor::end_cursor_(std::declval<D &>())))
             -> decltype(view_adaptor::end_cursor_(std::declval<D &>()))
         {
             return view_adaptor::end_cursor_(derived());
         }
-        template(typename D = Derived)( //
-            requires same_as<D, Derived> AND range<base_range_t const>) //
+        template(typename D = Derived)(
+            /// \pre
+            requires same_as<D, Derived> AND range<base_range_t const>)
         constexpr auto end_cursor() const noexcept(
             noexcept(view_adaptor::end_cursor_(std::declval<D const &>())))
             -> decltype(view_adaptor::end_cursor_(std::declval<D const &>()))

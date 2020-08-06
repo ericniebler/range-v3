@@ -39,10 +39,11 @@ namespace ranges
 
         /// \brief function template \c shuffle
         template(typename I, typename S, typename Gen = detail::default_random_engine &)(
+            /// \pre
             requires random_access_iterator<I> AND sentinel_for<S, I> AND
                 permutable<I> AND
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
-                convertible_to<invoke_result_t<Gen &>, iter_difference_t<I>>) //
+                convertible_to<invoke_result_t<Gen &>, iter_difference_t<I>>)
         I RANGES_FUNC(shuffle)(I const first,
                                S const last,
                                Gen && gen = detail::get_random_engine()) //
@@ -65,11 +66,12 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename Gen = detail::default_random_engine &)( //
+        template(typename Rng, typename Gen = detail::default_random_engine &)(
+            /// \pre
             requires random_access_range<Rng> AND permutable<iterator_t<Rng>> AND
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
                 convertible_to<invoke_result_t<Gen &>,
-                               iter_difference_t<iterator_t<Rng>>>) //
+                               iter_difference_t<iterator_t<Rng>>>)
         borrowed_iterator_t<Rng> //
         RANGES_FUNC(shuffle)(Rng && rng, Gen && rand = detail::get_random_engine()) //
         {

@@ -84,7 +84,8 @@ CPP_concept both_ranges = ranges::input_range<T> && ranges::input_range<U>;
 
 struct check_equal_fn
 {
-    CPP_template(typename T, typename U)( //
+    CPP_template(typename T, typename U)(
+        /// \pre
         requires(!both_ranges<T, U>))     //
     void operator()(
         T && actual, U && expected,
@@ -93,8 +94,9 @@ struct check_equal_fn
         CHECK_SLOC(sloc, (T &&) actual == (U &&) expected);
     }
 
-    CPP_template(typename Rng1, typename Rng2)( //
-        requires both_ranges<Rng1, Rng2>)       //
+    CPP_template(typename Rng1, typename Rng2)(
+        /// \pre
+        requires both_ranges<Rng1, Rng2>)
     void operator()(
         Rng1 && actual, Rng2 && expected,
         source_location sloc = source_location::current()) const
@@ -109,8 +111,9 @@ struct check_equal_fn
         CHECK_SLOC(sloc, begin1 == end1);
     }
 
-    CPP_template(typename Rng, typename Val)( //
-        requires ranges::input_range<Rng>)    //
+    CPP_template(typename Rng, typename Val)(
+        /// \pre
+        requires ranges::input_range<Rng>)
     void operator()(
         Rng && actual, std::initializer_list<Val> && expected,
         source_location sloc = source_location::current()) const

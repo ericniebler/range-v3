@@ -77,7 +77,8 @@ namespace ranges
         enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    template(typename Rng, typename Val)( //
+    template(typename Rng, typename Val)(
+        /// \pre
         requires copy_constructible<Val>)
     delimit_view(Rng &&, Val)
         -> delimit_view<views::all_t<Rng>, Val>;
@@ -87,19 +88,21 @@ namespace ranges
     {
         struct delimit_base_fn
         {
-            template(typename I_, typename Val, typename I = detail::decay_t<I_>)( //
+            template(typename I_, typename Val, typename I = detail::decay_t<I_>)(
+                /// \pre
                 requires (!range<I_>) AND convertible_to<I_, I> AND input_iterator<I> AND
-                    semiregular<Val> AND //
-                    equality_comparable_with<Val, iter_reference_t<I>>) //
+                    semiregular<Val> AND
+                    equality_comparable_with<Val, iter_reference_t<I>>)
             constexpr auto operator()(I_ && begin_, Val value) const
                 -> delimit_view<subrange<I, unreachable_sentinel_t>, Val>
             {
                 return {{static_cast<I_ &&>(begin_), {}}, std::move(value)};
             }
 
-            template(typename Rng, typename Val)( //
+            template(typename Rng, typename Val)(
+                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng> AND semiregular<
-                        Val> AND equality_comparable_with<Val, range_reference_t<Rng>>) //
+                        Val> AND equality_comparable_with<Val, range_reference_t<Rng>>)
             constexpr auto operator()(Rng && rng, Val value) const //
                 -> delimit_view<all_t<Rng>, Val>
             {

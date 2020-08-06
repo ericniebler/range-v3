@@ -45,11 +45,12 @@ namespace ranges
                  typename O,
                  typename C,
                  typename T,
-                 typename P = identity)( //
+                 typename P = identity)(
+            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
                 output_iterator<O, T const &> AND
                 indirect_unary_predicate<C, projected<I, P>> AND
-                indirectly_copyable<I, O>) //
+                indirectly_copyable<I, O>)
         replace_copy_if_result<I, O> RANGES_FUNC(replace_copy_if)(
             I first, S last, O out, C pred, T const & new_value, P proj = {}) //
         {
@@ -66,9 +67,10 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename O, typename C, typename T, typename P = identity)(
+            /// \pre
             requires input_range<Rng> AND output_iterator<O, T const &> AND
                 indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> AND
-                indirectly_copyable<iterator_t<Rng>, O>) //
+                indirectly_copyable<iterator_t<Rng>, O>)
         replace_copy_if_result<borrowed_iterator_t<Rng>, O> RANGES_FUNC(replace_copy_if)(
             Rng && rng, O out, C pred, T const & new_value, P proj = {}) //
         {

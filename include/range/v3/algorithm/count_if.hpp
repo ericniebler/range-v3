@@ -35,9 +35,10 @@ namespace ranges
     RANGES_FUNC_BEGIN(count_if)
 
         /// \brief function template \c count_if
-        template(typename I, typename S, typename R, typename P = identity)( //
-            requires input_iterator<I> AND sentinel_for<S, I> AND //
-            indirect_unary_predicate<R, projected<I, P>>) //
+        template(typename I, typename S, typename R, typename P = identity)(
+            /// \pre
+            requires input_iterator<I> AND sentinel_for<S, I> AND
+            indirect_unary_predicate<R, projected<I, P>>)
         iter_difference_t<I> RANGES_FUNC(count_if)(I first, S last, R pred, P proj = P{})
         {
             iter_difference_t<I> n = 0;
@@ -48,9 +49,10 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename R, typename P = identity)( //
-            requires input_range<Rng> AND //
-            indirect_unary_predicate<R, projected<iterator_t<Rng>, P>>) //
+        template(typename Rng, typename R, typename P = identity)(
+            /// \pre
+            requires input_range<Rng> AND
+            indirect_unary_predicate<R, projected<iterator_t<Rng>, P>>)
         iter_difference_t<iterator_t<Rng>> //
         RANGES_FUNC(count_if)(Rng && rng, R pred, P proj = P{})
         {

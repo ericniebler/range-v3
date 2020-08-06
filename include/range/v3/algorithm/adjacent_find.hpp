@@ -38,9 +38,10 @@ namespace ranges
         ///
         /// \pre `Rng` is a model of the `range` concept
         /// \pre `C` is a model of the `BinaryPredicate` concept
-        template(typename I, typename S, typename C = equal_to, typename P = identity)( //
-            requires forward_iterator<I> AND sentinel_for<S, I> AND //
-            indirect_relation<C, projected<I, P>>) //
+        template(typename I, typename S, typename C = equal_to, typename P = identity)(
+            /// \pre
+            requires forward_iterator<I> AND sentinel_for<S, I> AND
+            indirect_relation<C, projected<I, P>>)
         I RANGES_FUNC(adjacent_find)(I first, S last, C pred = C{}, P proj = P{})
         {
             if(first == last)
@@ -53,9 +54,10 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename C = equal_to, typename P = identity)( //
-            requires forward_range<Rng> AND //
-            indirect_relation<C, projected<iterator_t<Rng>, P>>) //
+        template(typename Rng, typename C = equal_to, typename P = identity)(
+            /// \pre
+            requires forward_range<Rng> AND
+            indirect_relation<C, projected<iterator_t<Rng>, P>>)
         borrowed_iterator_t<Rng> //
         RANGES_FUNC(adjacent_find)(Rng && rng, C pred = C{}, P proj = P{}) //
         {

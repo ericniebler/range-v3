@@ -36,7 +36,8 @@ namespace ranges
     {
         struct adjacent_remove_if_fn
         {
-            template(typename Pred, typename Proj = identity)( //
+            template(typename Pred, typename Proj = identity)(
+                /// \pre
                 requires (!range<Pred>))
             constexpr auto operator()(Pred pred, Proj proj = {}) const
             {
@@ -44,11 +45,12 @@ namespace ranges
                     bind_back(adjacent_remove_if_fn{}, std::move(pred), std::move(proj)));
             }
 
-            template(typename Rng, typename Pred, typename Proj = identity)( //
+            template(typename Rng, typename Pred, typename Proj = identity)(
+                /// \pre
                 requires forward_range<Rng> AND
                     erasable_range<Rng, iterator_t<Rng>, sentinel_t<Rng>> AND
                     indirect_relation<Pred, projected<iterator_t<Rng>, Proj>> AND
-                    permutable<iterator_t<Rng>>) //
+                    permutable<iterator_t<Rng>>)
             Rng operator()(Rng && rng, Pred pred, Proj proj = {}) const
             {
                 auto i = adjacent_remove_if(rng, std::move(pred), std::move(proj));

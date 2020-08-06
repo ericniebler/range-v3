@@ -138,7 +138,8 @@ namespace ranges
                     rng->size_ = n;
                 advance();
             }
-            template(bool Other)( //
+            template(bool Other)(
+                /// \pre
                 requires IsConst AND CPP_NOT(Other)) //
             cursor(cursor<Other> that)
               : parent_(that.parent_)
@@ -170,7 +171,8 @@ namespace ranges
         {
             return cursor<false>{this};
         }
-        template(bool Const = true)( //
+        template(bool Const = true)(
+            /// \pre
             requires Const AND
             (sized_range<meta::const_if_c<Const, Rng>> ||
              sized_sentinel_for<sentinel_t<meta::const_if_c<Const, Rng>>,
@@ -209,7 +211,8 @@ namespace ranges
         /// Returns a random sample of a range of length `size(range)`.
         struct sample_base_fn
         {
-            template(typename Rng, typename URNG = detail::default_random_engine)( //
+            template(typename Rng, typename URNG = detail::default_random_engine)(
+                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng> AND
                     uniform_random_bit_generator<URNG> AND
                     convertible_to<invoke_result_t<URNG &>, range_difference_t<Rng>> AND
@@ -242,8 +245,9 @@ namespace ranges
         {
             using sample_base_fn::operator();
 
-            template(typename Size, typename URNG = detail::default_random_engine)( //
-                requires integral<Size> AND uniform_random_bit_generator<URNG>) //
+            template(typename Size, typename URNG = detail::default_random_engine)(
+                /// \pre
+                requires integral<Size> AND uniform_random_bit_generator<URNG>)
             constexpr auto operator()(
                 Size n,
                 URNG & urng = detail::get_random_engine()) const //

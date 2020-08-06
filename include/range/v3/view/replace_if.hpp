@@ -61,7 +61,8 @@ namespace ranges
                 RANGES_EXPECT(false);
             }
 
-            template(typename I)( //
+            template(typename I)(
+                /// \pre
                 requires (!invocable<Pred const &, iter_reference_t<I>>))
             common_reference_t<unwrap_reference_t<Val const &>, iter_reference_t<I>> //
             operator()(I const & i)
@@ -71,7 +72,8 @@ namespace ranges
                     return unwrap_reference(second());
                 return (decltype(x) &&)x;
             }
-            template(typename I)( //
+            template(typename I)(
+                /// \pre
                 requires invocable<Pred const &, iter_reference_t<I>>)
             common_reference_t<unwrap_reference_t<Val const &>, iter_reference_t<I>> //
             operator()(I const & i) const
@@ -82,7 +84,8 @@ namespace ranges
                 return (decltype(x) &&)x;
             }
 
-            template(typename I)( //
+            template(typename I)(
+                /// \pre
                 requires (!invocable<Pred const &, iter_rvalue_reference_t<I>>))
             common_reference_t<
                 unwrap_reference_t<Val const &>, //
@@ -94,7 +97,8 @@ namespace ranges
                     return unwrap_reference(second());
                 return (decltype(x) &&)x;
             }
-            template(typename I)( //
+            template(typename I)(
+                /// \pre
                 requires invocable<Pred const &, iter_rvalue_reference_t<I>>)
             common_reference_t< //
                 unwrap_reference_t<Val const &>, //
@@ -116,7 +120,8 @@ namespace ranges
     {
         struct replace_if_base_fn
         {
-            template(typename Rng, typename Pred, typename Val)( //
+            template(typename Rng, typename Pred, typename Val)(
+                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng> AND
                     indirect_unary_predicate<Pred, iterator_t<Rng>> AND
                     common_with<detail::decay_t<unwrap_reference_t<Val const &>>,
@@ -124,7 +129,7 @@ namespace ranges
                     common_reference_with<unwrap_reference_t<Val const &>,
                                           range_reference_t<Rng>> AND
                     common_reference_with<unwrap_reference_t<Val const &>,
-                                          range_rvalue_reference_t<Rng>>) //
+                                          range_rvalue_reference_t<Rng>>)
             constexpr replace_if_view<all_t<Rng>, Pred, Val> //
             operator()(Rng && rng, Pred pred, Val new_value) const
             {

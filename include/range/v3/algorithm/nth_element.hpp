@@ -50,8 +50,9 @@ namespace ranges
     {
         // stable, 2-3 compares, 0-2 swaps
 
-        template(typename I, typename C, typename P)( //
-            requires forward_iterator<I> AND indirect_relation<C, projected<I, P>>) //
+        template(typename I, typename C, typename P)(
+            /// \pre
+            requires forward_iterator<I> AND indirect_relation<C, projected<I, P>>)
         unsigned sort3(I x, I y, I z, C & pred, P & proj)
         {
             unsigned r = 0;
@@ -85,7 +86,8 @@ namespace ranges
             return r;
         } // x <= y && y <= z
 
-        template(typename I, typename C, typename P)( //
+        template(typename I, typename C, typename P)(
+            /// \pre
             requires bidirectional_iterator<I> AND indirect_relation<C, projected<I, P>>)
         void selection_sort(I first, I last, C & pred, P & proj)
         {
@@ -105,8 +107,9 @@ namespace ranges
     RANGES_FUNC_BEGIN(nth_element)
 
         /// \brief function template \c nth_element
-        template(typename I, typename S, typename C = less, typename P = identity)( //
-            requires random_access_iterator<I> AND sortable<I, C, P>) //
+        template(typename I, typename S, typename C = less, typename P = identity)(
+            /// \pre
+            requires random_access_iterator<I> AND sortable<I, C, P>)
         I RANGES_FUNC(nth_element)(
             I first, I nth, S end_, C pred = C{}, P proj = P{}) //
         {
@@ -308,8 +311,9 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename C = less, typename P = identity)( //
-            requires random_access_range<Rng> AND sortable<iterator_t<Rng>, C, P>) //
+        template(typename Rng, typename C = less, typename P = identity)(
+            /// \pre
+            requires random_access_range<Rng> AND sortable<iterator_t<Rng>, C, P>)
         borrowed_iterator_t<Rng> RANGES_FUNC(nth_element)(
             Rng && rng, iterator_t<Rng> nth, C pred = C{}, P proj = P{}) //
         {

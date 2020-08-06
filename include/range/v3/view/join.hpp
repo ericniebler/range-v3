@@ -149,14 +149,16 @@ namespace ranges
         // Not to spec
         CPP_member
         static constexpr auto size() //
-            -> CPP_ret(std::size_t)( //
+            -> CPP_ret(std::size_t)(
+                /// \pre
                 requires (detail::join_cardinality<Rng>() >= 0))
         {
             return static_cast<std::size_t>(detail::join_cardinality<Rng>());
         }
         // Not to spec
         CPP_member
-        constexpr auto CPP_fun(size)()(//
+        constexpr auto CPP_fun(size)()(
+            /// \pre
             requires(detail::join_cardinality<Rng>() < 0) &&
                 (range_cardinality<Rng>::value >= 0) &&
                 forward_range<Rng> &&
@@ -215,11 +217,12 @@ namespace ranges
             {
                 satisfy();
             }
-            template(bool Other)( //
+            template(bool Other)(
+                /// \pre
                 requires Const AND CPP_NOT(Other) AND
                 convertible_to<iterator_t<Rng>, iterator_t<COuter>> AND
                 convertible_to<iterator_t<range_reference_t<Rng>>,
-                               iterator_t<CInner>>) //
+                               iterator_t<CInner>>)
             constexpr cursor(cursor<Other> that)
               : rng_(that.rng_)
               , outer_it_(std::move(that.outer_it_))
@@ -227,7 +230,8 @@ namespace ranges
             {}
             CPP_member
             constexpr auto arrow() //
-                -> CPP_ret(iterator_t<CInner>)( //
+                -> CPP_ret(iterator_t<CInner>)(
+                    /// \pre
                     requires detail::has_arrow_<iterator_t<CInner>>)
             {
                 return inner_it_;
@@ -238,7 +242,8 @@ namespace ranges
             }
             CPP_member
             constexpr auto equal(cursor const & that) const //
-                -> CPP_ret(bool)( //
+                -> CPP_ret(bool)(
+                    /// \pre
                     requires ref_is_glvalue::value && //
                         equality_comparable<iterator_t<COuter>> && //
                         equality_comparable<iterator_t<CInner>>)
@@ -256,7 +261,8 @@ namespace ranges
             }
             CPP_member
             constexpr auto prev() //
-                -> CPP_ret(void)( //
+                -> CPP_ret(void)(
+                    /// \pre
                     requires ref_is_glvalue::value && //
                         bidirectional_range<COuter> && //
                         bidirectional_range<CInner> && //
@@ -311,7 +317,8 @@ namespace ranges
             return {this, ranges::begin};
         }
 
-        template(bool Const = true)( //
+        template(bool Const = true)(
+            /// \pre
             requires Const AND input_range<meta::const_if_c<Const, Rng>> AND
                 std::is_reference<range_reference_t<meta::const_if_c<Const, Rng>>>::value)
         constexpr cursor<Const> begin_cursor() const
@@ -328,7 +335,8 @@ namespace ranges
             return end_cursor_fn{}(this, cond{});
         }
 
-        template(bool Const = true)( //
+        template(bool Const = true)(
+            /// \pre
             requires Const AND input_range<meta::const_if_c<Const, Rng>> AND
                 std::is_reference<range_reference_t<meta::const_if_c<Const, Rng>>>::value)
         constexpr auto end_cursor() const
@@ -364,7 +372,8 @@ namespace ranges
         {}
         CPP_member
         static constexpr auto size() //
-            -> CPP_ret(std::size_t)( //
+            -> CPP_ret(std::size_t)(
+                /// \pre
                 requires (detail::join_cardinality<Rng, ValRng>() >= 0))
         {
             return static_cast<std::size_t>(detail::join_cardinality<Rng, ValRng>());
@@ -532,8 +541,9 @@ namespace ranges
 
         struct cpp20_join_fn
         {
-            template(typename Rng)( //
-                requires joinable_range<Rng>) //
+            template(typename Rng)(
+                /// \pre
+                requires joinable_range<Rng>)
             join_view<all_t<Rng>> operator()(Rng && rng) const
             {
                 return join_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
@@ -548,16 +558,18 @@ namespace ranges
         public:
             using cpp20_join_fn::operator();
 
-            template(typename Rng)( //
-                requires joinable_with_range<Rng, single_view<inner_value_t<Rng>>>) //
+            template(typename Rng)(
+                /// \pre
+                requires joinable_with_range<Rng, single_view<inner_value_t<Rng>>>)
             join_with_view<all_t<Rng>, single_view<inner_value_t<Rng>>> //
             operator()(Rng && rng, inner_value_t<Rng> v) const
             {
                 return {all(static_cast<Rng &&>(rng)), single(std::move(v))};
             }
 
-            template(typename Rng, typename ValRng)( //
-                requires joinable_with_range<Rng, ValRng>) //
+            template(typename Rng, typename ValRng)(
+                /// \pre
+                requires joinable_with_range<Rng, ValRng>)
             join_with_view<all_t<Rng>, all_t<ValRng>> //
             operator()(Rng && rng, ValRng && val) const
             {
@@ -576,13 +588,15 @@ namespace ranges
 
         struct join_bind_fn
         {
-            template(typename T)( //
+            template(typename T)(
+                /// \pre
                 requires (!joinable_range<T>)) // TODO: underconstrained
             constexpr auto operator()(T && t)const
             {
                 return make_view_closure(bind_back(join_base_fn{}, static_cast<T &&>(t)));
             }
-            template(typename T)( //
+            template(typename T)(
+                /// \pre
                 requires (!joinable_range<T &>) AND range<T &>)
             constexpr auto operator()(T & t) const
             {
@@ -605,13 +619,15 @@ namespace ranges
     /// @}
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    template(typename Rng)(              //
-        requires views::joinable_range<Rng>) //
+    template(typename Rng)(
+        /// \pre
+        requires views::joinable_range<Rng>)
         explicit join_view(Rng &&)
             ->join_view<views::all_t<Rng>>;
 
-    template(typename Rng, typename ValRng)(          //
-        requires views::joinable_with_range<Rng, ValRng>) //
+    template(typename Rng, typename ValRng)(
+        /// \pre
+        requires views::joinable_with_range<Rng, ValRng>)
         explicit join_with_view(Rng &&, ValRng &&)
             ->join_with_view<views::all_t<Rng>, views::all_t<ValRng>>;
 #endif
@@ -623,7 +639,8 @@ namespace ranges
             RANGES_INLINE_VARIABLE(
                 ranges::views::view_closure<ranges::views::cpp20_join_fn>, join)
         }
-        template(typename Rng)( //
+        template(typename Rng)(
+            /// \pre
             requires input_range<Rng> AND view_<Rng> AND
                 input_range<iter_reference_t<iterator_t<Rng>>> AND
             (std::is_reference<iter_reference_t<iterator_t<Rng>>>::value ||

@@ -127,8 +127,9 @@ namespace ranges
 
         compressed_pair() = default;
 
-        template(typename U, typename V)( //
-            requires constructible_from<First, U> AND constructible_from<Second, V>) //
+        template(typename U, typename V)(
+            /// \pre
+            requires constructible_from<First, U> AND constructible_from<Second, V>)
         constexpr compressed_pair(U && u, V && v) //
             noexcept(noexcept(First((U &&) u)) && noexcept(Second((V &&) v)))
           : box<First, meta::size_t<0>>{(U &&) u}
@@ -161,9 +162,10 @@ namespace ranges
             return static_cast<Second &&>(this->box<Second, meta::size_t<1>>::get());
         }
 
-        template(typename F, typename S)( //
+        template(typename F, typename S)(
+            /// \pre
             requires convertible_to<First const &, F> AND
-                convertible_to<Second const &, S>) //
+                convertible_to<Second const &, S>)
             constexpr
             operator std::pair<F, S>() const
         {

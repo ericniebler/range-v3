@@ -76,8 +76,9 @@ namespace ranges
         template<typename T>
         void begin(std::initializer_list<T>) = delete;
 
-        template(typename I)( //
-            requires input_or_output_iterator<I>) //
+        template(typename I)(
+            /// \pre
+            requires input_or_output_iterator<I>)
         void is_iterator(I);
 
         // clang-format off
@@ -129,8 +130,9 @@ namespace ranges
                 return array;
             }
 
-            template(typename R)( //
-                requires detail::_borrowed_range<R> AND //
+            template(typename R)(
+                /// \pre
+                requires detail::_borrowed_range<R> AND
                     (has_member_begin<R> || has_non_member_begin<R>))
             constexpr auto operator()(R && r) const //
                 noexcept(noexcept(impl<R>::invoke(r)))
@@ -199,7 +201,8 @@ namespace ranges
         template<typename T>
         void end(std::initializer_list<T>) = delete;
 
-        template(typename I, typename S)( //
+        template(typename I, typename S)(
+            /// \pre
             requires sentinel_for<S, I>)
         void _is_sentinel(S, I);
 
@@ -258,8 +261,9 @@ namespace ranges
                 return array + N;
             }
 
-            template(typename R)( //
-                requires detail::_borrowed_range<R> AND //
+            template(typename R)(
+                /// \pre
+                requires detail::_borrowed_range<R> AND
                     (has_member_end<R> || has_non_member_end<R>))
             constexpr auto operator()(R && r) const //
                 noexcept(noexcept(impl<R>::invoke(r))) //
@@ -289,8 +293,9 @@ namespace ranges
                 return Fn{}(ref.get());
             }
 
-            template(typename Int)( //
-                requires detail::integer_like_<Int>) //
+            template(typename Int)(
+                /// \pre
+                requires detail::integer_like_<Int>)
             auto operator-(Int dist) const
                 -> detail::from_end_<iter_diff_t<Int>>
             {
@@ -437,8 +442,9 @@ namespace ranges
                 impl_<has_member_rbegin<R> ? 0 : has_non_member_rbegin<R> ? 1 : 2>;
 
         public:
-            template(typename R)( //
-                requires detail::_borrowed_range<R> AND //
+            template(typename R)(
+                /// \pre
+                requires detail::_borrowed_range<R> AND
                     (has_member_rbegin<R> ||
                      has_non_member_rbegin<R> ||
                      can_reverse_end<R>)) //
@@ -574,8 +580,9 @@ namespace ranges
             using impl = impl_<has_member_rend<R> ? 0 : has_non_member_rend<R> ? 1 : 2>;
 
         public:
-            template(typename R)( //
-                requires detail::_borrowed_range<R> AND //
+            template(typename R)(
+                /// \pre
+                requires detail::_borrowed_range<R> AND
                     (has_member_rend<R> || //
                      has_non_member_rend<R> || //
                      can_reverse_begin<R>)) //

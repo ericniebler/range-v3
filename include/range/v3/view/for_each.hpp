@@ -42,7 +42,8 @@ namespace ranges
         /// the result.
         struct for_each_base_fn
         {
-            template(typename Rng, typename Fun)( //
+            template(typename Rng, typename Fun)(
+                /// \pre
                 requires viewable_range<Rng> AND transformable_range<Rng, Fun> AND
                     joinable_range<transform_view<all_t<Rng>, Fun>>)
             constexpr auto operator()(Rng && rng, Fun fun) const
@@ -69,8 +70,9 @@ namespace ranges
 
     struct yield_fn
     {
-        template(typename V)( //
-            requires copy_constructible<V>) //
+        template(typename V)(
+            /// \pre
+            requires copy_constructible<V>)
         single_view<V> operator()(V v) const
         {
             return views::single(std::move(v));
@@ -83,8 +85,9 @@ namespace ranges
 
     struct yield_from_fn
     {
-        template(typename Rng)( //
-            requires view_<Rng>) //
+        template(typename Rng)(
+            /// \pre
+            requires view_<Rng>)
         Rng operator()(Rng rng) const
         {
             return rng;
@@ -110,8 +113,9 @@ namespace ranges
 
     struct lazy_yield_if_fn
     {
-        template(typename F)( //
-            requires invocable<F &>) //
+        template(typename F)(
+            /// \pre
+            requires invocable<F &>)
         generate_n_view<F> operator()(bool b, F f) const
         {
             return views::generate_n(std::move(f), b ? 1 : 0);
@@ -124,9 +128,10 @@ namespace ranges
     /// @}
 
     /// \cond
-    template(typename Rng, typename Fun)( //
+    template(typename Rng, typename Fun)(
+        /// \pre
         requires viewable_range<Rng> AND views::transformable_range<Rng, Fun> AND
-            input_range<invoke_result_t<Fun &, range_reference_t<Rng>>>) //
+            input_range<invoke_result_t<Fun &, range_reference_t<Rng>>>)
         auto
         operator>>=(Rng && rng, Fun fun)
     {

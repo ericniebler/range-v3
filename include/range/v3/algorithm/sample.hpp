@@ -79,7 +79,8 @@ namespace ranges
         template(typename I,
                  typename S,
                  typename O,
-                 typename Gen = detail::default_random_engine &)( //
+                 typename Gen = detail::default_random_engine &)(
+            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
                 weakly_incrementable<O> AND indirectly_copyable<I, O> AND
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
@@ -137,7 +138,8 @@ namespace ranges
         template(typename I,
                  typename S,
                  typename ORng,
-                 typename Gen = detail::default_random_engine &)( //
+                 typename Gen = detail::default_random_engine &)(
+            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
                 weakly_incrementable<iterator_t<ORng>> AND
                 indirectly_copyable<I, iterator_t<ORng>> AND
@@ -175,6 +177,7 @@ namespace ranges
         template(typename Rng,
                  typename O,
                  typename Gen = detail::default_random_engine &)(
+            /// \pre
             requires input_range<Rng> AND weakly_incrementable<O> AND
                 indirectly_copyable<iterator_t<Rng>, O> AND
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
@@ -204,7 +207,8 @@ namespace ranges
         /// \overload
         template(typename IRng,
                  typename ORng,
-                 typename Gen = detail::default_random_engine &)( //
+                 typename Gen = detail::default_random_engine &)(
+            /// \pre
             requires input_range<IRng> AND range<ORng> AND
                 indirectly_copyable<iterator_t<IRng>, iterator_t<ORng>> AND
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> AND

@@ -57,9 +57,10 @@ namespace ranges
     {
         struct lower_bound_n_fn
         {
-            template(typename I, typename V, typename C = less, typename P = identity)( //
+            template(typename I, typename V, typename C = less, typename P = identity)(
+                /// \pre
                 requires forward_iterator<I> AND
-                    indirect_strict_weak_order<C, V const *, projected<I, P>>) //
+                    indirect_strict_weak_order<C, V const *, projected<I, P>>)
             I operator()(I first,
                          iter_difference_t<I> d,
                          V const & val,

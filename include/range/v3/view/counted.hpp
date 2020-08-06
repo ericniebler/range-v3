@@ -66,7 +66,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename I>
-    counted_view(I, iter_difference_t<I>) //
+    counted_view(I, iter_difference_t<I>)
         -> counted_view<I>;
 #endif
 
@@ -74,15 +74,17 @@ namespace ranges
     {
         struct cpp20_counted_fn
         {
-            template(typename I)( //
+            template(typename I)(
+                /// \pre
                 requires input_or_output_iterator<I> AND (!random_access_iterator<I>)) //
             subrange<counted_iterator<I>, default_sentinel_t> //
             operator()(I it, iter_difference_t<I> n) const
             {
                 return {make_counted_iterator(std::move(it), n), default_sentinel};
             }
-            template(typename I)( //
-                requires random_access_iterator<I>) //
+            template(typename I)(
+                /// \pre
+                requires random_access_iterator<I>)
             subrange<I> operator()(I it, iter_difference_t<I> n) const
             {
                 return {it, it + n};
@@ -91,14 +93,16 @@ namespace ranges
 
         struct counted_fn
         {
-            template(typename I)( //
+            template(typename I)(
+                /// \pre
                 requires input_or_output_iterator<I> AND (!random_access_iterator<I>)) //
             counted_view<I> operator()(I it, iter_difference_t<I> n) const
             {
                 return {std::move(it), n};
             }
-            template(typename I)( //
-                requires random_access_iterator<I>) //
+            template(typename I)(
+                /// \pre
+                requires random_access_iterator<I>)
             subrange<I> operator()(I it, iter_difference_t<I> n) const
             {
                 return {it, it + n};

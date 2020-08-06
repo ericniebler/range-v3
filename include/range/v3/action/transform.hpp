@@ -34,7 +34,8 @@ namespace ranges
     {
         struct transform_fn
         {
-            template(typename F, typename P = identity)( //
+            template(typename F, typename P = identity)(
+                /// \pre
                 requires (!range<F>))
             constexpr auto operator()(F fun, P proj = P{}) const
             {
@@ -42,11 +43,12 @@ namespace ranges
                     bind_back(transform_fn{}, std::move(fun), std::move(proj)));
             }
 
-            template(typename Rng, typename F, typename P = identity)( //
+            template(typename Rng, typename F, typename P = identity)(
+                /// \pre
                 requires input_range<Rng> AND copy_constructible<F> AND
                     indirectly_writable<
                         iterator_t<Rng>,
-                        indirect_result_t<F &, projected<iterator_t<Rng>, P>>>) //
+                        indirect_result_t<F &, projected<iterator_t<Rng>, P>>>)
             Rng operator()(Rng && rng, F fun, P proj = P{}) const
             {
                 ranges::transform(rng, begin(rng), std::move(fun), std::move(proj));

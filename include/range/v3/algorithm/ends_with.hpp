@@ -41,12 +41,13 @@ namespace ranges
                  typename S1,
                  typename C = equal_to,
                  typename P0 = identity,
-                 typename P1 = identity)( //
+                 typename P1 = identity)(
+            /// \pre
             requires ((forward_iterator<I0> && sentinel_for<S0, I0>) ||
                       (input_iterator<I0> && sized_sentinel_for<S0, I0>)) AND
                 ((forward_iterator<I1> && sentinel_for<S1, I1>) ||
                  (input_iterator<I1> && sized_sentinel_for<S1, I1>)) AND
-                indirectly_comparable<I0, I1, C, P0, P1>) //
+                indirectly_comparable<I0, I1, C, P0, P1>)
         constexpr bool RANGES_FUNC(ends_with)(I0 begin0,
                                               S0 end0,
                                               I1 begin1,
@@ -72,10 +73,11 @@ namespace ranges
                  typename Rng1,
                  typename C = equal_to,
                  typename P0 = identity,
-                 typename P1 = identity)( //
+                 typename P1 = identity)(
+            /// \pre
             requires (forward_range<Rng0> || (input_range<Rng0> && sized_range<Rng0>)) AND
                 (forward_range<Rng1> || (input_range<Rng1> && sized_range<Rng1>)) AND
-                indirectly_comparable<iterator_t<Rng0>, iterator_t<Rng1>, C, P0, P1>) //
+                indirectly_comparable<iterator_t<Rng0>, iterator_t<Rng1>, C, P0, P1>)
         constexpr bool RANGES_FUNC(ends_with)(
             Rng0 && rng0, Rng1 && rng1, C pred = C{}, P0 proj0 = P0{}, P1 proj1 = P1{}) //
         {

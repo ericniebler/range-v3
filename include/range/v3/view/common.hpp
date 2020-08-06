@@ -71,14 +71,16 @@ namespace ranges
         {
             return ranges::begin(rng_) + ranges::distance(rng_);
         }
-        template(bool Const = true)( //
-            requires Const AND range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)(
+            /// \pre
+            requires Const AND range<meta::const_if_c<Const, Rng>>)
         sentinel_t<meta::const_if_c<Const, Rng>> end_(std::false_type) const
         {
             return ranges::end(rng_);
         }
-        template(bool Const = true)( //
-            requires Const AND range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)(
+            /// \pre
+            requires Const AND range<meta::const_if_c<Const, Rng>>)
         iterator_t<meta::const_if_c<Const, Rng>> end_(std::true_type) const
         {
             return ranges::begin(rng_) + ranges::distance(rng_);
@@ -104,21 +106,25 @@ namespace ranges
                 end_(meta::bool_<detail::random_access_and_sized_range<Rng>>{})};
         }
         CPP_member
-        auto CPP_fun(size)()(requires sized_range<Rng>)
+        auto CPP_fun(size)()(
+            /// \pre
+            requires sized_range<Rng>)
         {
             return ranges::size(rng_);
         }
 
-        template(bool Const = true)( //
-            requires range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)(
+            /// \pre
+            requires range<meta::const_if_c<Const, Rng>>)
         auto begin() const
             -> detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>
         {
             return detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>{
                 ranges::begin(rng_)};
         }
-        template(bool Const = true)( //
-            requires range<meta::const_if_c<Const, Rng>>) //
+        template(bool Const = true)(
+            /// \pre
+            requires range<meta::const_if_c<Const, Rng>>)
         auto end() const
             -> detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>
         {
@@ -127,7 +133,9 @@ namespace ranges
                          meta::const_if_c<Const, Rng>>>{})};
         }
         CPP_member
-        auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        auto CPP_fun(size)()(const
+            /// \pre
+            requires sized_range<Rng const>)
         {
             return ranges::size(rng_);
         }
@@ -138,7 +146,8 @@ namespace ranges
         enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    template(typename Rng)(       //
+    template(typename Rng)(
+        /// \pre
         requires (!common_range<Rng>)) //
         common_view(Rng &&)
             ->common_view<views::all_t<Rng>>;
@@ -155,14 +164,16 @@ namespace ranges
     {
         struct cpp20_common_fn
         {
-            template(typename Rng)( //
-                requires viewable_range<Rng> AND common_range<Rng>) //
+            template(typename Rng)(
+                /// \pre
+                requires viewable_range<Rng> AND common_range<Rng>)
             all_t<Rng> operator()(Rng && rng) const
             {
                 return all(static_cast<Rng &&>(rng));
             }
 
-            template(typename Rng)( //
+            template(typename Rng)(
+                /// \pre
                 requires viewable_range<Rng> AND (!common_range<Rng>)) //
             common_view<all_t<Rng>> operator()(Rng && rng) const
             {
@@ -172,8 +183,9 @@ namespace ranges
 
         struct common_fn
         {
-            template(typename Rng)( //
-                requires viewable_range<Rng>) //
+            template(typename Rng)(
+                /// \pre
+                requires viewable_range<Rng>)
             common_view<all_t<Rng>> operator()(Rng && rng) const
             {
                 return common_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
@@ -217,7 +229,8 @@ namespace ranges
             RANGES_INLINE_VARIABLE(
                 ranges::views::view_closure<ranges::views::cpp20_common_fn>, common)
         }
-        template(typename Rng)(                      //
+        template(typename Rng)(
+            /// \pre
             requires view_<Rng> && (!common_range<Rng>)) //
             using common_view = ranges::common_view<Rng>;
     } // namespace cpp20

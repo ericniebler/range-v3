@@ -37,9 +37,10 @@ namespace ranges
     RANGES_FUNC_BEGIN(for_each_n)
 
         /// \brief function template \c for_each_n
-        template(typename I, typename F, typename P = identity)( //
+        template(typename I, typename F, typename P = identity)(
+            /// \pre
             requires input_iterator<I> AND
-                indirectly_unary_invocable<F, projected<I, P>>) //
+                indirectly_unary_invocable<F, projected<I, P>>)
         I RANGES_FUNC(for_each_n)(I first, iter_difference_t<I> n, F fun, P proj = P{})
         {
             RANGES_EXPECT(0 <= n);
@@ -51,9 +52,10 @@ namespace ranges
         }
 
         /// \overload
-        template(typename Rng, typename F, typename P = identity)( //
+        template(typename Rng, typename F, typename P = identity)(
+            /// \pre
             requires input_range<Rng> AND
-                indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>) //
+                indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
         borrowed_iterator_t<Rng> RANGES_FUNC(for_each_n)(
             Rng && rng, range_difference_t<Rng> n, F fun, P proj = P{})
         {

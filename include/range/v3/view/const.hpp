@@ -50,7 +50,8 @@ namespace ranges
             using rvalue_reference_ =
                 common_reference_t<value_ const &&, range_rvalue_reference_t<CRng>>;
             adaptor() = default;
-            template(bool Other)(       //
+            template(bool Other)(
+                /// \pre
                 requires Const && CPP_NOT(Other)) //
                 constexpr adaptor(adaptor<Other>)
             {}
@@ -70,7 +71,8 @@ namespace ranges
         }
         CPP_member
         auto begin_adaptor() const //
-            -> CPP_ret(adaptor<true>)( //
+            -> CPP_ret(adaptor<true>)(
+                /// \pre
                 requires range<Rng const>)
         {
             return {};
@@ -81,7 +83,8 @@ namespace ranges
         }
         CPP_member
         auto end_adaptor() const //
-            -> CPP_ret(adaptor<true>)( //
+            -> CPP_ret(adaptor<true>)(
+                /// \pre
                 requires range<Rng const>)
         {
             return {};
@@ -93,12 +96,16 @@ namespace ranges
           : const_view::view_adaptor{std::move(rng)}
         {}
         CPP_member
-        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
+        constexpr auto CPP_fun(size)()(
+            /// \pre
+            requires sized_range<Rng>)
         {
             return ranges::size(this->base());
         }
         CPP_member
-        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        constexpr auto CPP_fun(size)()(const
+            /// \pre
+            requires sized_range<Rng const>)
         {
             return ranges::size(this->base());
         }
@@ -118,8 +125,9 @@ namespace ranges
     {
         struct const_fn
         {
-            template(typename Rng)( //
-                requires viewable_range<Rng> AND input_range<Rng>) //
+            template(typename Rng)(
+                /// \pre
+                requires viewable_range<Rng> AND input_range<Rng>)
             const_view<all_t<Rng>> operator()(Rng && rng) const
             {
                 return const_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};

@@ -68,8 +68,9 @@ namespace ranges
             meta::const_if_c<simple_view<Rng>(), Rng> & rng = rng_;
             return {ranges::begin(rng), ranges::end(rng), rex_, subs_, flags_};
         }
-        template(bool Const = true)( //
-            requires range<Rng const>) //
+        template(bool Const = true)(
+            /// \pre
+            requires range<Rng const>)
         iterator_t<Const> begin() const
         {
             return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
@@ -78,8 +79,9 @@ namespace ranges
         {
             return {};
         }
-        template(bool Const = true)( //
-            requires range<Rng const>) //
+        template(bool Const = true)(
+            /// \pre
+            requires range<Rng const>)
         iterator_t<Const> end() const
         {
             return {};
@@ -91,7 +93,8 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    template(typename Rng, typename Regex, typename SubMatchRange)( //
+    template(typename Rng, typename Regex, typename SubMatchRange)(
+        /// \pre
         requires copy_constructible<Regex> AND copy_constructible<SubMatchRange>)
         tokenize_view(Rng &&, Regex, SubMatchRange)
             ->tokenize_view<views::all_t<Rng>, Regex, SubMatchRange>;
@@ -101,11 +104,12 @@ namespace ranges
     {
         struct tokenize_base_fn
         {
-            template(typename Rng, typename Regex)( //
-                requires bidirectional_range<Rng> AND common_range<Rng> AND //
+            template(typename Rng, typename Regex)(
+                /// \pre
+                requires bidirectional_range<Rng> AND common_range<Rng> AND
                     same_as< //
                         range_value_t<Rng>, //
-                        typename detail::decay_t<Regex>::value_type>) //
+                        typename detail::decay_t<Regex>::value_type>)
             tokenize_view<all_t<Rng>, detail::decay_t<Regex>, int> //
             operator()(Rng && rng,
                        Regex && rex,
@@ -119,10 +123,11 @@ namespace ranges
                         flags};
             }
 
-            template(typename Rng, typename Regex)( //
-                requires bidirectional_range<Rng> AND common_range<Rng> AND //
+            template(typename Rng, typename Regex)(
+                /// \pre
+                requires bidirectional_range<Rng> AND common_range<Rng> AND
                     same_as<range_value_t<Rng>,
-                            typename detail::decay_t<Regex>::value_type>) //
+                            typename detail::decay_t<Regex>::value_type>)
             tokenize_view<all_t<Rng>, detail::decay_t<Regex>, std::vector<int>> //
             operator()(Rng && rng,
                        Regex && rex,
@@ -136,10 +141,11 @@ namespace ranges
                         flags};
             }
 
-            template(typename Rng, typename Regex)( //
-                requires bidirectional_range<Rng> AND common_range<Rng> AND //
+            template(typename Rng, typename Regex)(
+                /// \pre
+                requires bidirectional_range<Rng> AND common_range<Rng> AND
                     same_as<range_value_t<Rng>,
-                            typename detail::decay_t<Regex>::value_type>) //
+                            typename detail::decay_t<Regex>::value_type>)
             tokenize_view<all_t<Rng>,
                           detail::decay_t<Regex>,
                           std::initializer_list<int>> //

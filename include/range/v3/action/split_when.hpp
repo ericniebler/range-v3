@@ -54,24 +54,26 @@ namespace ranges
 
             // BUGBUG something is not right with the actions. It should be possible
             // to move a container into a split and have elements moved into the result.
-            template(typename Rng, typename Fun)( //
-                requires forward_range<Rng> AND                            //
-                        invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> AND //
+            template(typename Rng, typename Fun)(
+                /// \pre
+                requires forward_range<Rng> AND
+                        invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> AND
                             invocable<Fun &, iterator_t<Rng>, iterator_t<Rng>> AND
                                 copy_constructible<Fun> AND
                                     convertible_to<invoke_result_t<Fun &, iterator_t<Rng>,
                                                                    sentinel_t<Rng>>,
-                                                   std::pair<bool, iterator_t<Rng>>>) //
+                                                   std::pair<bool, iterator_t<Rng>>>)
             std::vector<split_value_t<Rng>> operator()(Rng && rng, Fun fun) const
             {
                 return views::split_when(rng, std::move(fun)) |
                        to<std::vector<split_value_t<Rng>>>();
             }
 
-            template(typename Rng, typename Fun)( //
-                requires forward_range<Rng> AND                        //
-                        predicate<Fun const &, range_reference_t<Rng>> AND //
-                            copy_constructible<Fun>) //
+            template(typename Rng, typename Fun)(
+                /// \pre
+                requires forward_range<Rng> AND
+                        predicate<Fun const &, range_reference_t<Rng>> AND
+                            copy_constructible<Fun>)
             std::vector<split_value_t<Rng>> operator()(Rng && rng, Fun fun) const
             {
                 return views::split_when(rng, std::move(fun)) |

@@ -90,23 +90,26 @@ namespace ranges
     struct invoke_fn
     {
     private:
-        template(typename, typename T1)( //
-            requires detail::dereferenceable_<T1>) //
+        template(typename, typename T1)(
+            /// \pre
+            requires detail::dereferenceable_<T1>)
         static constexpr decltype(auto) coerce(T1 && t1, long)
             noexcept(noexcept(*static_cast<T1 &&>(t1)))
         {
             return *static_cast<T1 &&>(t1);
         }
 
-        template(typename T, typename T1)( //
-            requires derived_from<detail::decay_t<T1>, T>) //
+        template(typename T, typename T1)(
+            /// \pre
+            requires derived_from<detail::decay_t<T1>, T>)
         static constexpr T1 && coerce(T1 && t1, int) noexcept
         {
             return static_cast<T1 &&>(t1);
         }
 
-        template(typename, typename T1)( //
-            requires detail::is_reference_wrapper_v<detail::decay_t<T1>>) //
+        template(typename, typename T1)(
+            /// \pre
+            requires detail::is_reference_wrapper_v<detail::decay_t<T1>>)
         static constexpr decltype(auto) coerce(T1 && t1, int) noexcept
         {
             return static_cast<T1 &&>(t1).get();

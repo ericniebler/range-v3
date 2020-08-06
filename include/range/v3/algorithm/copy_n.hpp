@@ -41,9 +41,10 @@ namespace ranges
     RANGES_FUNC_BEGIN(copy_n)
 
         /// \brief function template \c copy_n
-        template(typename I, typename O, typename P = identity)( //
-            requires input_iterator<I> AND weakly_incrementable<O> AND //
-            indirectly_copyable<I, O>) //
+        template(typename I, typename O, typename P = identity)(
+            /// \pre
+            requires input_iterator<I> AND weakly_incrementable<O> AND
+            indirectly_copyable<I, O>)
         copy_n_result<I, O> RANGES_FUNC(copy_n)(I first, iter_difference_t<I> n, O out)
         {
             RANGES_EXPECT(0 <= n);

@@ -35,7 +35,8 @@ namespace ranges
     {
         struct remove_fn
         {
-            template(typename V, typename P)( //
+            template(typename V, typename P)(
+                /// \pre
                 requires (!range<V>))
             constexpr auto operator()(V && value, P proj) const
             {
@@ -50,11 +51,12 @@ namespace ranges
                     bind_back(remove_fn{}, static_cast<V &&>(value), identity{}));
             }
 
-            template(typename Rng, typename V, typename P = identity)( //
+            template(typename Rng, typename V, typename P = identity)(
+                /// \pre
                 requires forward_range<Rng> AND permutable<iterator_t<Rng>> AND
                         erasable_range<Rng, iterator_t<Rng>, sentinel_t<Rng>> AND
                             indirect_relation<equal_to, projected<iterator_t<Rng>, P>,
-                                              V const *>) //
+                                              V const *>)
             Rng operator()(Rng && rng, V const & value, P proj = {}) const
             {
                 auto it = ranges::remove(rng, value, std::move(proj));
