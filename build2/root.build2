@@ -10,3 +10,10 @@ cxx{*}: extension = cpp
 # The test target for cross-testing (running tests under Wine, etc).
 #
 test.target = $cxx.target
+
+
+if($cxx.class == 'msvc')
+{
+    cxx.poptions =+ /permissive-
+}
+

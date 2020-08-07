@@ -7,7 +7,7 @@ intf_libs = # Interface dependencies.
 impl_libs = # Implementation dependencies.
 #import impl_libs += libhello%lib{hello}
 
-lib{range-v3}: include/{hxx ixx txx}{**} hxx{version} $impl_libs $intf_libs
+./ : lib{range-v3}: include/{hxx ixx txx}{**} hxx{version} $impl_libs $intf_libs
 
 # Include the generated version header into the distribution (so that we don't
 # pick up an installed one) and don't remove it when cleaning in src (so that
@@ -23,7 +23,7 @@ hxx{version}: in{version} $src_root/manifest
   RANGE_V3_PATCHLEVEL = $version.patch
 }
 
-include_dirs_flags = "-I$out_root" "-I$src_root/include" "-I$src_root/include/std"
+include_dirs_flags = "-I$src_root/include" "-I$src_root/include/std" "-I$out_root"
 
 # Build options.
 #
@@ -42,7 +42,7 @@ lib{range-v3}:
 #
 {hxx ixx txx}{*}:
 {
-  install         = include/range-V3/
+  install         = include/range-v3/
   install.subdirs = true
 }
 
