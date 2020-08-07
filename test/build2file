@@ -1,7 +1,11 @@
 
 import rangev3 = range-v3%lib{range-v3}
 
-for test_cpp : {cxx}{** -experimental/**} # TODO: add an option to handle coroutine tests and remove the exception to not build experimental tests
+
+# TODO: add an option to handle coroutine tests and remove the exception to not build experimental tests
+tests_sources = {cxx}{** -multiple* -experimental/**}
+
+for test_cpp : $tests_sources
 {
     dot_path = $regex.replace($directory($test_cpp), '\\', '.')
     test_name = "test.$dot_path$name($test_cpp)"
@@ -9,4 +13,4 @@ for test_cpp : {cxx}{** -experimental/**} # TODO: add an option to handle corout
     ./ : exe{$test_name} : $test_cpp $rangev3
 }
 
-
+exe{test.multiple} : cxx{multiple*} $rangev3
