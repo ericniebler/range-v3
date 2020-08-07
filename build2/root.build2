@@ -1,0 +1,12 @@
+cxx.std = latest
+
+using cxx
+
+hxx{*}: extension = hpp
+ixx{*}: extension = ipp
+txx{*}: extension = tpp
+cxx{*}: extension = cpp
+
+# The test target for cross-testing (running tests under Wine, etc).
+#
+test.target = $cxx.target

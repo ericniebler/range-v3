@@ -1,0 +1,52 @@
+./ : manifest test/
+
+# Documentation
+./ : doc{README.md} doc/doc{**.md}
+
+intf_libs = # Interface dependencies.
+impl_libs = # Implementation dependencies.
+#import impl_libs += libhello%lib{hello}
+
+lib{range-v3}: include/{hxx ixx txx}{**} hxx{version} $impl_libs $intf_libs
+
+# Include the generated version header into the distribution (so that we don't
+# pick up an installed one) and don't remove it when cleaning in src (so that
+# clean results in a state identical to distributed).
+#
+hxx{version}: in{version} $src_root/manifest
+{
+  dist  = true
+  clean = ($src_root != $out_root)
+  in.symbol = '@'
+  RANGE_V3_MAJOR = $version.major
+  RANGE_V3_MINOR = $version.minor
+  RANGE_V3_PATCHLEVEL = $version.patch
+}
+
+include_dirs_flags = "-I$out_root" "-I$src_root/include" "-I$src_root/include/std"
+
+# Build options.
+#
+cxx.poptions =+ $include_dirs_flags
+
+# Export options.
+#
+lib{range-v3}:
+{
+  cxx.export.poptions = $include_dirs_flags
+  cxx.export.libs = $intf_libs
+}
+
+# Install into the range-v3/ subdirectory of, say, /usr/include/
+# recreating subdirectories.
+#
+{hxx ixx txx}{*}:
+{
+  install         = include/range-V3/
+  install.subdirs = true
+}
+
+
+# Don't install tests.
+#
+tests/: install = false

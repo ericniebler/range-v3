@@ -13,3 +13,14 @@
 *.sln -text
 *.vcxproj -text
 *.vcxproj.filters -text
+
+###########
+# build2
+
+# This is a good default: files that are auto-detected by git to be text are
+# converted to the platform-native line ending (LF on Unix, CRLF on Windows)
+# in the working tree and to LF in the repository.
+#
+* text=auto
+
+
