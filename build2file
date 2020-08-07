@@ -14,14 +14,18 @@ impl_libs = # Implementation dependencies.
 # clean results in a state identical to distributed).
 #
 lib{range-v3} : include/range/v3/hxx{version}
-hxx{version}@include/range/v3/: in{version} $src_root/manifest
+include/range/v3/
 {
-  dist  = true
-  clean = ($src_root != $out_root)
-  in.symbol = '@'
-  RANGE_V3_MAJOR = $version.major
-  RANGE_V3_MINOR = $version.minor
-  RANGE_V3_PATCHLEVEL = $version.patch
+  hxx{version}: $src_root/in{version} $src_root/manifest
+  {
+    dist  = true
+    clean = ($src_root != $out_root)
+    in.symbol = '@'
+    RANGE_V3_MAJOR = $version.major
+    RANGE_V3_MINOR = $version.minor
+    RANGE_V3_PATCHLEVEL = $version.patch
+  }
+
 }
 
 
