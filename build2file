@@ -39,16 +39,19 @@ lib{range-v3}:
   cxx.export.libs = $intf_libs
 }
 
-# Install into the range-v3/ subdirectory of, say, /usr/include/
-# recreating subdirectories.
-#
-{hxx ixx txx}{*}:
-{
-  install         = include/range-v3/
-  install.subdirs = true
-}
 
+include/
+{
+  # Install into the range-v3/ subdirectory of, say, /usr/include/
+  # recreating subdirectories.
+  #
+  {hxx ixx txx}{*}:
+  {
+  install         = include/ # Header paths are already containing include/range/...
+  install.subdirs = true
+  }
+}
 
 # Don't install tests.
 #
-tests/: install = false
+test/: install = false
