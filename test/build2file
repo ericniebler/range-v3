@@ -9,6 +9,7 @@ test_headers = {hxx}{**}
 for test_cpp : $tests_sources
 {
     dot_path = $regex.replace($directory($test_cpp), '\\', '.')
+    dot_path = $regex.replace($dot_path, '/', '.')
     test_name = "test.$dot_path$name($test_cpp)"
     # info "-> $test_name"
     ./ : exe{$test_name...} : $test_cpp $rangev3 $test_headers

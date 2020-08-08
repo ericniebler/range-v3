@@ -7,6 +7,7 @@ tests_sources = {cxx}{** -calendar}
 for test_cpp : $tests_sources
 {
     dot_path = $regex.replace($directory($test_cpp), '\\', '.')
+    dot_path = $regex.replace($dot_path, '/', '.')
     test_name = "example.$dot_path$name($test_cpp)$exe_ext"
     # info "-> $test_name"
     ./ : exe{$test_name...} : $test_cpp $rangev3
