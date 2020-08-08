@@ -1,0 +1,10 @@
+
+import rangev3 = range-v3%lib{range-v3}
+
+for test_cpp : cxx{*}
+{
+    test_name = "$name($test_cpp)"
+    # info "-> $test_name"
+    ./ : exe{$test_name} : $test_cpp $rangev3
+}
+
