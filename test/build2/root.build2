@@ -14,3 +14,9 @@ exe{*}: test = true
 # The test target for cross-testing (running tests under Wine, etc).
 #
 test.target = $cxx.target
+
+if($cxx.target.class == "windows")
+{
+    exe_ext = ".exe"
+}
+

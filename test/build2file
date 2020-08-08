@@ -8,9 +8,9 @@ tests_sources = {cxx}{** -multiple* -experimental/**}
 for test_cpp : $tests_sources
 {
     dot_path = $regex.replace($directory($test_cpp), '\\', '.')
-    test_name = "test.$dot_path$name($test_cpp)"
+    test_name = "test.$dot_path$name($test_cpp)$exe_ext"
     # info "-> $test_name"
     ./ : exe{$test_name} : $test_cpp $rangev3
 }
 
-exe{test.multiple} : cxx{multiple*} $rangev3
+exe{test.multiple$exe_ext} : cxx{multiple*} $rangev3
