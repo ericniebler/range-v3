@@ -14,3 +14,6 @@ package-email: mjklaim@gmail.com
 depends: * build2 >= 0.13.0
 depends: * bpkg >= 0.13.0
 
+requires: c++14 | c++17 | c++20
+builds: default experimental ; Only modern compilers are supported.
+
