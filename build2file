@@ -29,7 +29,7 @@ include/range/v3/
 }
 
 
-include_dirs_flags = "-I$src_root/include" "-I$src_root/include/std" "-I$out_root/include"
+include_dirs_flags = "-I$src_root/include/std" "-I$src_root/include"  "-I$out_root/include"
 
 # Build options.
 #
