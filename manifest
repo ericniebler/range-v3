@@ -16,4 +16,4 @@ depends: * bpkg >= 0.13.0
 
 requires: c++14 | c++17 | c++20
 builds: default experimental ; Only modern compilers are supported.
-
+builds: -windows; For this version only msvc-16 with config.cxx.std=experimental will work on Windows.
