@@ -114,6 +114,36 @@ cmake ../
 cmake --build .
 ```
 
+
+Building range-v3 - Using `build2`
+----------------------------------
+
+You can use [`build2`](https://build2.org), a dependency manager and a build-system combined, to work on, or with, `range-v3`:
+
+### Package & Repositories
+
+- The name of the `build2` package: `range-v3`
+- The library target: `lib{range-v3}`
+- Therefore, users familiar with `build2`  will import `range-v3%lib{range-v3}` and add `depends: range-v3 ~0.11.0` to their project's `manifest` to depend on the package.
+
+For `build2` beginners or to get more details, read [the `build2` notes document](./NOTES-build2.md).
+
+Currently this package is available in:
+ - **https://cppget.org/range-v3/** for published versions;
+ - **This git repository** (in branches providing `build2` files), for example: https://github.com/ericniebler/range-v3.git#master
+ - Any fork of that repository which maintains the `build2` packages.
+
+### How to use the `build2` package and library
+
+Depending on what you want to do, there are a varieties of ways to get the package and work with it:
+  - add `range-v3` as dependency to your `build2` project;
+  - develop/modify `range-v3` using `build2`;
+  - build and install `range-v3` with not development purpose, using `build2`;
+  - maintain the `range-v3` package for build2;
+
+You will find how to do these in [the `build2` notes document](./NOTES-build2.md).
+
+
 Say Thanks!
 -----------
 
