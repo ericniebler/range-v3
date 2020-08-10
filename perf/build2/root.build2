@@ -1,4 +1,7 @@
-cxx.std = latest
+using cxx.guess
+
+cxx.std = ($cxx.id == 'msvc' ? experimental : latest) # Use `experimental` by default on msvc as otherwise the project cannot compile.
+
 
 using cxx
 
