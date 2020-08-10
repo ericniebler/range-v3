@@ -44,7 +44,7 @@
 
 namespace ranges
 {
-    /// \addtogroup group-range
+    /// \addtogroup group-range-concepts
     /// @{
 
     ///
