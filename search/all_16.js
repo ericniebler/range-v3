@@ -14,7 +14,7 @@ var searchData=
   ['variant_3c_20iterator_5ft_3c_20valrng_20_3e_2c_20iterator_5ft_3c_20inner_20_3e_20_3e_968',['variant&lt; iterator_t&lt; ValRng &gt;, iterator_t&lt; Inner &gt; &gt;',['../structranges_1_1variant.html',1,'ranges']]],
   ['version_2ehpp_969',['version.hpp',['../version_8hpp.html',1,'']]],
   ['view_2ehpp_970',['view.hpp',['../view_2view_8hpp.html',1,'(Global Namespace)'],['../view_8hpp.html',1,'(Global Namespace)']]],
-  ['view_5f_971',['view_',['../group__group-range.html#ga49f8b37abb6b823373f091f329f32afd',1,'ranges']]],
+  ['view_5f_971',['view_',['../group__group-range-concepts.html#ga49f8b37abb6b823373f091f329f32afd',1,'ranges']]],
   ['view_5fadaptor_972',['view_adaptor',['../structranges_1_1view__adaptor.html',1,'ranges']]],
   ['view_5fadaptor_3c_20chunk_5fview_5f_3c_20rng_2c_20isforwardrange_20_3e_2c_20rng_2c_20is_5ffinite_3c_20rng_20_3e_3a_3avalue_20_3f_20finite_20_3arange_5fcardinality_3c_20rng_20_3e_3a_3avalue_20_3e_973',['view_adaptor&lt; chunk_view_&lt; Rng, IsForwardRange &gt;, Rng, is_finite&lt; Rng &gt;::value ? finite :range_cardinality&lt; Rng &gt;::value &gt;',['../structranges_1_1view__adaptor.html',1,'ranges']]],
   ['view_5fadaptor_3c_20delimit_5fview_3c_20rng_2c_20val_20_3e_2c_20rng_2c_20is_5ffinite_3c_20rng_20_3e_3a_3avalue_20_3f_20finite_20_3aunknown_20_3e_974',['view_adaptor&lt; delimit_view&lt; Rng, Val &gt;, Rng, is_finite&lt; Rng &gt;::value ? finite :unknown &gt;',['../structranges_1_1view__adaptor.html',1,'ranges']]],

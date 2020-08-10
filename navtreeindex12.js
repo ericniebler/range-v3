@@ -41,7 +41,7 @@ var NAVTREEINDEX12 =
 "structranges_1_1single__view.html#ad90e104dfd3dd7baac295a1986165e1f":[3,4,59,8],
 "structranges_1_1single__view.html#ae6151f09832a8b65ba38dd2e381a7d76":[3,4,59,2],
 "structranges_1_1sized__iterator__range.html":[4,1,2,204],
-"structranges_1_1sized__range__tag.html":[3,2,14],
+"structranges_1_1sized__range__tag.html":[3,2,0,7],
 "structranges_1_1sized__sentinel__tag.html":[3,1,0,2],
 "structranges_1_1slice__view.html":[3,4,60],
 "structranges_1_1sliding__view.html":[4,1,2,208],

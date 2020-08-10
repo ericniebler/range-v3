@@ -92,11 +92,440 @@ $(document).ready(function(){initNavTree('group__group-range-concepts.html','');
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">Range Concepts<div class="ingroups"><a class="el" href="group__group-range.html">Range</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
+<a name="details" id="details"></a><h2 class="groupheader">Description</h2>
 <p>Range concepts </p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1bidirectional__range__tag.html">ranges::bidirectional_range_tag</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1common__range__tag.html">ranges::common_range_tag</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1contiguous__range__tag.html">ranges::contiguous_range_tag</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1forward__range__tag.html">ranges::forward_range_tag</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1input__range__tag.html">ranges::input_range_tag</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1random__access__range__tag.html">ranges::random_access_range_tag</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1range__tag.html">ranges::range_tag</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1sized__range__tag.html">ranges::sized_range_tag</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga3f8cf483a73c7128e5fb3f00d2d93687"><td class="memTemplParams" colspan="2"><a id="ga3f8cf483a73c7128e5fb3f00d2d93687"></a>
+template&lt;typename Rng &gt; </td></tr>
+<tr class="memitem:ga3f8cf483a73c7128e5fb3f00d2d93687"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::common_range_tag_of</b> = std::enable_if_t&lt; range&lt; Rng &gt;, <a class="el" href="group__logical.html#ga9fbf879d37e7406c5f3c026e6ed37b59">meta::conditional_t</a>&lt; common_range&lt; Rng &gt;, <a class="el" href="structranges_1_1common__range__tag.html">common_range_tag</a>, <a class="el" href="structranges_1_1range__tag.html">range_tag</a> &gt; &gt;</td></tr>
+<tr class="separator:ga3f8cf483a73c7128e5fb3f00d2d93687"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7d5c0418312f001e5def5e56a8c78ec4"><td class="memTemplParams" colspan="2"><a id="ga7d5c0418312f001e5def5e56a8c78ec4"></a>
+template&lt;typename Rng &gt; </td></tr>
+<tr class="memitem:ga7d5c0418312f001e5def5e56a8c78ec4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::range_tag_of</b> = std::enable_if_t&lt; range&lt; Rng &gt;, <a class="el" href="group__logical.html#ga9fbf879d37e7406c5f3c026e6ed37b59">meta::conditional_t</a>&lt; contiguous_range&lt; Rng &gt;, <a class="el" href="structranges_1_1contiguous__range__tag.html">contiguous_range_tag</a>, <a class="el" href="group__logical.html#ga9fbf879d37e7406c5f3c026e6ed37b59">meta::conditional_t</a>&lt; random_access_range&lt; Rng &gt;, <a class="el" href="structranges_1_1random__access__range__tag.html">random_access_range_tag</a>, <a class="el" href="group__logical.html#ga9fbf879d37e7406c5f3c026e6ed37b59">meta::conditional_t</a>&lt; bidirectional_range&lt; Rng &gt;, <a class="el" href="structranges_1_1bidirectional__range__tag.html">bidirectional_range_tag</a>, <a class="el" href="group__logical.html#ga9fbf879d37e7406c5f3c026e6ed37b59">meta::conditional_t</a>&lt; forward_range&lt; Rng &gt;, <a class="el" href="structranges_1_1forward__range__tag.html">forward_range_tag</a>, <a class="el" href="group__logical.html#ga9fbf879d37e7406c5f3c026e6ed37b59">meta::conditional_t</a>&lt; input_range&lt; Rng &gt;, <a class="el" href="structranges_1_1input__range__tag.html">input_range_tag</a>, <a class="el" href="structranges_1_1range__tag.html">range_tag</a> &gt; &gt;&gt; &gt;&gt; &gt;</td></tr>
+<tr class="separator:ga7d5c0418312f001e5def5e56a8c78ec4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga59e088887889a7e69a73b7763acf0409"><td class="memTemplParams" colspan="2"><a id="ga59e088887889a7e69a73b7763acf0409"></a>
+template&lt;typename Rng &gt; </td></tr>
+<tr class="memitem:ga59e088887889a7e69a73b7763acf0409"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::sized_range_tag_of</b> = std::enable_if_t&lt; range&lt; Rng &gt;, <a class="el" href="group__logical.html#ga9fbf879d37e7406c5f3c026e6ed37b59">meta::conditional_t</a>&lt; sized_range&lt; Rng &gt;, <a class="el" href="structranges_1_1sized__range__tag.html">sized_range_tag</a>, <a class="el" href="structranges_1_1range__tag.html">range_tag</a> &gt; &gt;</td></tr>
+<tr class="separator:ga59e088887889a7e69a73b7763acf0409"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:gaf5a9a2b540e282e1ce22d85479873257"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gaf5a9a2b540e282e1ce22d85479873257"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-range-concepts.html#gaf5a9a2b540e282e1ce22d85479873257">ranges::_range__requires_</a></td></tr>
+<tr class="memdesc:gaf5a9a2b540e282e1ce22d85479873257"><td class="mdescLeft">&#160;</td><td class="mdescRight">Range concepts below.  <a href="group__group-range-concepts.html#gaf5a9a2b540e282e1ce22d85479873257">More...</a><br /></td></tr>
+<tr class="separator:gaf5a9a2b540e282e1ce22d85479873257"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad91f2a99396bc4dfbc732f30236509d6"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gad91f2a99396bc4dfbc732f30236509d6"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::bidirectional_range</b></td></tr>
+<tr class="separator:gad91f2a99396bc4dfbc732f30236509d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa9178dbf74714d823e7be10080e2312b"><td class="memTemplParams" colspan="2"><a id="gaa9178dbf74714d823e7be10080e2312b"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gaa9178dbf74714d823e7be10080e2312b"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::bidirectional_range__concept_</b> = bidirectional_iterator&lt;iterator_t&lt;T&gt;&gt;</td></tr>
+<tr class="separator:gaa9178dbf74714d823e7be10080e2312b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad54c7fbf0b754eed25b5e4c09258067f"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gad54c7fbf0b754eed25b5e4c09258067f"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::borrowed_range</b></td></tr>
+<tr class="separator:gad54c7fbf0b754eed25b5e4c09258067f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3a278b3b7ad748985e861f803edfadb1"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga3a278b3b7ad748985e861f803edfadb1"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::common_range</b></td></tr>
+<tr class="separator:ga3a278b3b7ad748985e861f803edfadb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacdac467814edf9bcf25e6aa81188bcde"><td class="memTemplParams" colspan="2"><a id="gacdac467814edf9bcf25e6aa81188bcde"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gacdac467814edf9bcf25e6aa81188bcde"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::common_range__concept_</b> = same_as&lt;iterator_t&lt;T&gt;, sentinel_t&lt;T&gt;&gt;</td></tr>
+<tr class="separator:gacdac467814edf9bcf25e6aa81188bcde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac3d9211b8d33c69854b0e873c3a9be01"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gac3d9211b8d33c69854b0e873c3a9be01"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::contiguous_range</b></td></tr>
+<tr class="separator:gac3d9211b8d33c69854b0e873c3a9be01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaac462ea214923885c1d8a53d50106dd6"><td class="memTemplParams" colspan="2"><a id="gaac462ea214923885c1d8a53d50106dd6"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gaac462ea214923885c1d8a53d50106dd6"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::contiguous_range__concept_</b> = contiguous_iterator&lt;iterator_t&lt;T&gt;&gt; &amp;&amp; same_as&lt;detail::data_t&lt;T&gt;, std::add_pointer_t&lt;iter_reference_t&lt;iterator_t&lt;T&gt;&gt;&gt;&gt;</td></tr>
+<tr class="separator:gaac462ea214923885c1d8a53d50106dd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga400098e3141e83fc3b9d9cec18ed4ffd"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga400098e3141e83fc3b9d9cec18ed4ffd"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::enable_view</b></td></tr>
+<tr class="separator:ga400098e3141e83fc3b9d9cec18ed4ffd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3148abf36c9146f6f888cc872f78d848"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga3148abf36c9146f6f888cc872f78d848"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::forward_range</b></td></tr>
+<tr class="separator:ga3148abf36c9146f6f888cc872f78d848"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacb5c1d7d546e85751d01028deeb2979d"><td class="memTemplParams" colspan="2"><a id="gacb5c1d7d546e85751d01028deeb2979d"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gacb5c1d7d546e85751d01028deeb2979d"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::forward_range__concept_</b> = forward_iterator&lt;iterator_t&lt;T&gt;&gt;</td></tr>
+<tr class="separator:gacb5c1d7d546e85751d01028deeb2979d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae28e3395097e4c9bf7a3464f6a5e31b1"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gae28e3395097e4c9bf7a3464f6a5e31b1"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::input_range</b></td></tr>
+<tr class="separator:gae28e3395097e4c9bf7a3464f6a5e31b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7f178e5feff7c1a2744d270685bd5aa6"><td class="memTemplParams" colspan="2"><a id="ga7f178e5feff7c1a2744d270685bd5aa6"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga7f178e5feff7c1a2744d270685bd5aa6"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::input_range__concept_</b> = input_iterator&lt;iterator_t&lt;T&gt;&gt;</td></tr>
+<tr class="separator:ga7f178e5feff7c1a2744d270685bd5aa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5e70ba9f08c38ff22067925a0584435b"><td class="memTemplParams" colspan="2">template&lt;typename T , typename V &gt; </td></tr>
+<tr class="memitem:ga5e70ba9f08c38ff22067925a0584435b"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::output_range</b></td></tr>
+<tr class="separator:ga5e70ba9f08c38ff22067925a0584435b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab2742bbeb7a72e60ad7c4d89245ac68"><td class="memTemplParams" colspan="2"><a id="gaab2742bbeb7a72e60ad7c4d89245ac68"></a>
+template&lt;typename T , typename V &gt; </td></tr>
+<tr class="memitem:gaab2742bbeb7a72e60ad7c4d89245ac68"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::output_range__concept_</b> = output_iterator&lt;iterator_t&lt;T&gt;, V&gt;</td></tr>
+<tr class="separator:gaab2742bbeb7a72e60ad7c4d89245ac68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa3fafdda17a0db5933beac0fe882dce0"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gaa3fafdda17a0db5933beac0fe882dce0"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::random_access_range</b></td></tr>
+<tr class="separator:gaa3fafdda17a0db5933beac0fe882dce0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5e069798bfa11a34c358934eb01f5b47"><td class="memTemplParams" colspan="2"><a id="ga5e069798bfa11a34c358934eb01f5b47"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga5e069798bfa11a34c358934eb01f5b47"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::random_access_range__concept_</b> = random_access_iterator&lt;iterator_t&lt;T&gt;&gt;</td></tr>
+<tr class="separator:ga5e069798bfa11a34c358934eb01f5b47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab137351536c70d1ae1953f5f350be86"><td class="memTemplParams" colspan="2"><a id="gaab137351536c70d1ae1953f5f350be86"></a>
+template&lt;typename R &gt; </td></tr>
+<tr class="memitem:gaab137351536c70d1ae1953f5f350be86"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::safe_range</b> = borrowed_range&lt;R&gt;</td></tr>
+<tr class="separator:gaab137351536c70d1ae1953f5f350be86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4b62b45e731f63a99c0b9353a1e86008"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga4b62b45e731f63a99c0b9353a1e86008"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::sized_range</b></td></tr>
+<tr class="separator:ga4b62b45e731f63a99c0b9353a1e86008"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4111bb5a3be8a2de3bd36d6ca0049e28"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga4111bb5a3be8a2de3bd36d6ca0049e28"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::sized_range__requires_</b></td></tr>
+<tr class="separator:ga4111bb5a3be8a2de3bd36d6ca0049e28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga49f8b37abb6b823373f091f329f32afd"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga49f8b37abb6b823373f091f329f32afd"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-range-concepts.html#ga49f8b37abb6b823373f091f329f32afd">ranges::view_</a></td></tr>
+<tr class="memdesc:ga49f8b37abb6b823373f091f329f32afd"><td class="mdescLeft">&#160;</td><td class="mdescRight">View concepts below.  <a href="group__group-range-concepts.html#ga49f8b37abb6b823373f091f329f32afd">More...</a><br /></td></tr>
+<tr class="separator:ga49f8b37abb6b823373f091f329f32afd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac878e504711ac40f2bca312c7f5bb725"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gac878e504711ac40f2bca312c7f5bb725"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::viewable_range</b></td></tr>
+<tr class="separator:gac878e504711ac40f2bca312c7f5bb725"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="gaf5a9a2b540e282e1ce22d85479873257"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf5a9a2b540e282e1ce22d85479873257">&#9670;&nbsp;</a></span>_range__requires_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept ranges::_range__requires_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="range_2v3_2range_2concepts_8hpp.html">range/v3/range/concepts.hpp</a>&gt;</code></p>
+<b>Initial value:</b><div class="fragment"><div class="line">= CPP_REQUIRES_requires `(T &amp; t) </div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line">    template&lt;typename T&gt;</div>
+<div class="line">    concept range =</div>
+<div class="line">        ranges::_range__requires_&lt;T&gt;</div>
+</div><!-- fragment -->
+<p>Range concepts below. </p>
+
+</div>
+</div>
+<a id="gad91f2a99396bc4dfbc732f30236509d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad91f2a99396bc4dfbc732f30236509d6">&#9670;&nbsp;</a></span>bidirectional_range</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept ranges::bidirectional_range</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="range_2v3_2range_2concepts_8hpp.html">range/v3/range/concepts.hpp</a>&gt;</code></p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        forward_range&lt;T&gt; &amp;&amp; ranges::bidirectional_range__concept_&lt;T&gt;</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="gad54c7fbf0b754eed25b5e4c09258067f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad54c7fbf0b754eed25b5e4c09258067f">&#9670;&nbsp;</a></span>borrowed_range</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept ranges::borrowed_range</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="range_2v3_2range_2concepts_8hpp.html">range/v3/range/concepts.hpp</a>&gt;</code></p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        range&lt;T&gt; &amp;&amp; detail::_borrowed_range&lt;T&gt;</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ga3a278b3b7ad748985e861f803edfadb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3a278b3b7ad748985e861f803edfadb1">&#9670;&nbsp;</a></span>common_range</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept ranges::common_range</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="range_2v3_2range_2concepts_8hpp.html">range/v3/range/concepts.hpp</a>&gt;</code></p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        range&lt;T&gt; &amp;&amp; ranges::common_range__concept_&lt;T&gt;</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="gac3d9211b8d33c69854b0e873c3a9be01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac3d9211b8d33c69854b0e873c3a9be01">&#9670;&nbsp;</a></span>contiguous_range</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept ranges::contiguous_range</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="range_2v3_2range_2concepts_8hpp.html">range/v3/range/concepts.hpp</a>&gt;</code></p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        random_access_range&lt;T&gt; &amp;&amp; ranges::contiguous_range__concept_&lt;T&gt;</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ga400098e3141e83fc3b9d9cec18ed4ffd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga400098e3141e83fc3b9d9cec18ed4ffd">&#9670;&nbsp;</a></span>enable_view</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool ranges::enable_view</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="range_2v3_2range_2concepts_8hpp.html">range/v3/range/concepts.hpp</a>&gt;</code></p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        ext::enable_view&lt;T&gt;::value</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ga3148abf36c9146f6f888cc872f78d848"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3148abf36c9146f6f888cc872f78d848">&#9670;&nbsp;</a></span>forward_range</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept ranges::forward_range</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="range_2v3_2range_2concepts_8hpp.html">range/v3/range/concepts.hpp</a>&gt;</code></p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        input_range&lt;T&gt; &amp;&amp; ranges::forward_range__concept_&lt;T&gt;</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="gae28e3395097e4c9bf7a3464f6a5e31b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae28e3395097e4c9bf7a3464f6a5e31b1">&#9670;&nbsp;</a></span>input_range</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept ranges::input_range</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="range_2v3_2range_2concepts_8hpp.html">range/v3/range/concepts.hpp</a>&gt;</code></p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        range&lt;T&gt; &amp;&amp; ranges::input_range__concept_&lt;T&gt;</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ga5e70ba9f08c38ff22067925a0584435b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5e70ba9f08c38ff22067925a0584435b">&#9670;&nbsp;</a></span>output_range</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename V &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept ranges::output_range</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="range_2v3_2range_2concepts_8hpp.html">range/v3/range/concepts.hpp</a>&gt;</code></p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        range&lt;T&gt; &amp;&amp; ranges::output_range__concept_&lt;T, V&gt;</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="gaa3fafdda17a0db5933beac0fe882dce0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa3fafdda17a0db5933beac0fe882dce0">&#9670;&nbsp;</a></span>random_access_range</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept ranges::random_access_range</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="range_2v3_2range_2concepts_8hpp.html">range/v3/range/concepts.hpp</a>&gt;</code></p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        bidirectional_range&lt;T&gt; &amp;&amp; ranges::random_access_range__concept_&lt;T&gt;</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ga4b62b45e731f63a99c0b9353a1e86008"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4b62b45e731f63a99c0b9353a1e86008">&#9670;&nbsp;</a></span>sized_range</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept ranges::sized_range</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="range_2v3_2range_2concepts_8hpp.html">range/v3/range/concepts.hpp</a>&gt;</code></p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        range&lt;T&gt; &amp;&amp;</div>
+<div class="line">        !disable_sized_range&lt;uncvref_t&lt;T&gt;&gt; &amp;&amp;</div>
+<div class="line">        ranges::sized_range__requires_&lt;T&gt; &amp;&amp;</div>
+<div class="line">        ranges::sized_range__concept_&lt;T&gt;</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ga4111bb5a3be8a2de3bd36d6ca0049e28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4111bb5a3be8a2de3bd36d6ca0049e28">&#9670;&nbsp;</a></span>sized_range__requires_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept ranges::sized_range__requires_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="range_2v3_2range_2concepts_8hpp.html">range/v3/range/concepts.hpp</a>&gt;</code></p>
+<b>Initial value:</b><div class="fragment"><div class="line">= CPP_REQUIRES_requires `(T &amp; t) </div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line">    template&lt;typename T &gt; concept sized_range__concept_ = detail::integer_like_&lt;range_size_t&lt;T&gt;&gt;</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ga49f8b37abb6b823373f091f329f32afd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga49f8b37abb6b823373f091f329f32afd">&#9670;&nbsp;</a></span>view_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept ranges::view_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="range_2v3_2range_2concepts_8hpp.html">range/v3/range/concepts.hpp</a>&gt;</code></p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        range&lt;T&gt; &amp;&amp;</div>
+<div class="line">        semiregular&lt;T&gt; &amp;&amp;</div>
+<div class="line">        enable_view&lt;T&gt;</div>
+</div><!-- fragment -->
+<p>View concepts below. </p>
+
+</div>
+</div>
+<a id="gac878e504711ac40f2bca312c7f5bb725"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac878e504711ac40f2bca312c7f5bb725">&#9670;&nbsp;</a></span>viewable_range</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept ranges::viewable_range</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="range_2v3_2range_2concepts_8hpp.html">range/v3/range/concepts.hpp</a>&gt;</code></p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">        range&lt;T&gt; &amp;&amp;</div>
+<div class="line">        (borrowed_range&lt;T&gt; || view_&lt;uncvref_t&lt;T&gt;&gt;)</div>
+</div><!-- fragment -->
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

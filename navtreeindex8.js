@@ -245,7 +245,7 @@ var NAVTREEINDEX8 =
 "structranges_1_1basic__mixin.html#a919cc123794d8df521f37a2ddc6f1d42":[3,1,5,2],
 "structranges_1_1basic__view.html":[4,1,2,25],
 "structranges_1_1begin__tag.html":[4,1,2,26],
-"structranges_1_1bidirectional__range__tag.html":[3,2,3],
+"structranges_1_1bidirectional__range__tag.html":[3,2,0,0],
 "structranges_1_1bind__back__fn.html":[4,1,2,28],
 "structranges_1_1bind__back__fn.html#ae21c774fada9e3a17f3c41e573fa24ee":[4,1,2,28,0],
 "structranges_1_1bind__element.html":[3,7,0],
