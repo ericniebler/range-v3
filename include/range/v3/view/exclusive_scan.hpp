@@ -138,14 +138,14 @@ namespace ranges
           , init_(std::move(init))
           , fun_(std::move(fun))
         {}
-        CPP_member
+        CPP_auto_member
         auto CPP_fun(size)()(const
             /// \pre
             requires sized_range<Rng const>)
         {
             return ranges::size(this->base());
         }
-        CPP_member
+        CPP_auto_member
         auto CPP_fun(size)()(
             /// \pre
             requires sized_range<Rng>)

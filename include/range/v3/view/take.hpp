@@ -164,7 +164,7 @@ namespace ranges
             return base_;
         }
 
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(begin)()(
             /// \pre
             requires(!simple_view<Rng>()))
@@ -192,7 +192,7 @@ namespace ranges
 #endif
         }
 
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(begin)()(const //
             requires range<Rng const>)
         {
@@ -212,7 +212,7 @@ namespace ranges
 #endif
         }
 
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(end)()(
             /// \pre
             requires(!simple_view<Rng>()))
@@ -234,7 +234,7 @@ namespace ranges
 #endif
         }
 
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(end)()(const //
             requires range<Rng const>)
         {
@@ -256,7 +256,7 @@ namespace ranges
 #endif
         }
 
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(
             /// \pre
             requires sized_range<Rng>)
@@ -264,7 +264,7 @@ namespace ranges
             auto n = ranges::size(base_);
             return ranges::min(n, static_cast<decltype(n)>(count_));
         }
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(const //
             requires sized_range<Rng const>)
         {

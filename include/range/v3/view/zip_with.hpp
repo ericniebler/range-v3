@@ -353,7 +353,7 @@ namespace ranges
           : fun_(std::move(fun))
           , rngs_{std::move(rngs)...}
         {}
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(const //
             requires and_v<sized_range<Rngs const>...>)
         {

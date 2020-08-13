@@ -49,14 +49,14 @@ namespace ranges
           : intersperse_view::view_adaptor{detail::move(rng)}
           , val_(detail::move(val))
         {}
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(const //
             requires sized_range<Rng const>)
         {
             auto const n = ranges::size(this->base());
             return n ? n * 2 - 1 : 0;
         }
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(
             /// \pre
             requires sized_range<Rng>)

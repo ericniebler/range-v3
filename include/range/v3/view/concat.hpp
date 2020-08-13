@@ -379,10 +379,10 @@ namespace ranges
         {
             return static_cast<std::size_t>(detail::concat_cardinality<Rngs...>::value);
         }
-        CPP_member
-        constexpr auto CPP_fun(size)()(
-            const requires(detail::concat_cardinality<Rngs...>::value < 0) &&
-            and_v<sized_range<Rngs const>...>)
+        CPP_auto_member
+        constexpr auto CPP_fun(size)()(const //
+            requires(detail::concat_cardinality<Rngs...>::value < 0) &&
+                and_v<sized_range<Rngs const>...>)
         {
             using size_type = common_type_t<range_size_t<Rngs const>...>;
             return tuple_foldl(
@@ -391,11 +391,11 @@ namespace ranges
                 size_type{0},
                 plus{});
         }
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(
             /// \pre
             requires (detail::concat_cardinality<Rngs...>::value < 0) &&
-            and_v<sized_range<Rngs>...>)
+                and_v<sized_range<Rngs>...>)
         {
             using size_type = common_type_t<range_size_t<Rngs>...>;
             return tuple_foldl(

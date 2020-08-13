@@ -68,14 +68,14 @@ namespace ranges
         {
             return ranges::empty(*rng_);
         }
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(const //
             noexcept(noexcept(ranges::size(*rng_))) //
             requires sized_range<Rng>)
         {
             return ranges::size(*rng_);
         }
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(data)()(const //
             noexcept(noexcept(ranges::data(*rng_))) //
             requires contiguous_range<Rng>)

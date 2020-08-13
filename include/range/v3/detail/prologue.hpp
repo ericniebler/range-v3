@@ -35,3 +35,13 @@ RANGES_DIAGNOSTIC_KEYWORD_MACRO
     template<__VA_ARGS__ CPP_TEMPLATE_AUX_                                      \
 
 #define AND CPP_and
+
+/// \cond
+#if defined(__cpp_noexcept_function_type) && __cpp_noexcept_function_type >= 201510
+// noexcept is part of the type system
+#define declval(...) static_cast<__VA_ARGS__(*)() noexcept>(nullptr)()
+#else
+// noexcept is not part of the type system
+#define declval(...) static_cast<__VA_ARGS__(*)()>(nullptr)()
+#endif
+/// \cond

@@ -104,14 +104,14 @@ namespace ranges
         {
             return ranges::end(rng_);
         }
-        CPP_member
+        CPP_auto_member
         auto CPP_fun(size)()(const
             /// \pre
             requires sized_range<Rng const>)
         {
             return ranges::size(rng_) - static_cast<range_size_t<Rng const>>(n_);
         }
-        CPP_member
+        CPP_auto_member
         auto CPP_fun(size)()(
             /// \pre
             requires sized_range<Rng>)

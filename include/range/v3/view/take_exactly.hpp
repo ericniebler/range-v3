@@ -114,13 +114,13 @@ namespace ranges
             {
                 return ranges::begin(rng_) + n_;
             }
-            CPP_member
+            CPP_auto_member
             auto CPP_fun(begin)()(const //
                 requires range<Rng const>)
             {
                 return ranges::begin(rng_);
             }
-            CPP_member
+            CPP_auto_member
             auto CPP_fun(end)()(const //
                 requires range<Rng const>)
             {

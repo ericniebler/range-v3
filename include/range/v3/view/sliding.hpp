@@ -129,7 +129,7 @@ namespace ranges
             {
                 RANGES_ASSERT(0 < n_);
             }
-            CPP_member
+            CPP_auto_member
             auto CPP_fun(size)()(const //
                 requires sized_range<Rng const>)
             {
@@ -137,7 +137,7 @@ namespace ranges
                 auto const n = static_cast<range_size_t<Rng const>>(n_);
                 return count < n ? 0 : count - n + 1;
             }
-            CPP_member
+            CPP_auto_member
             auto CPP_fun(size)()(
                 /// \pre
                 requires sized_range<Rng>)

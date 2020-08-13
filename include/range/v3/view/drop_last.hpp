@@ -175,14 +175,14 @@ namespace ranges
             return detail::drop_last_view::get_end(rng_, n_, 0);
         }
 
-        CPP_member
+        CPP_auto_member
         auto CPP_fun(size)()(
             /// \pre
             requires sized_range<Rng>)
         {
             return detail::drop_last_view::get_size(rng_, n_);
         }
-        CPP_member
+        CPP_auto_member
         auto CPP_fun(size)()(const //
             requires sized_range<Rng const>)
         {
@@ -260,14 +260,14 @@ namespace ranges
             RANGES_EXPECT(n >= 0);
         }
 
-        CPP_member
+        CPP_auto_member
         auto CPP_fun(size)()(
             /// \pre
             requires sized_range<Rng>)
         {
             return detail::drop_last_view::get_size(this->base(), n_);
         }
-        CPP_member
+        CPP_auto_member
         auto CPP_fun(size)()(const //
             requires sized_range<Rng const>)
         {
@@ -316,7 +316,7 @@ namespace ranges
         {
             return detail::drop_last_view::get_size(this->base(), n_);
         }
-        CPP_member
+        CPP_auto_member
         auto CPP_fun(size)()(const //
             requires sized_range<Rng const>)
         {

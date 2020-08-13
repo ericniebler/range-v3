@@ -150,7 +150,8 @@ namespace ranges
             template(typename Diff)(
                 /// \pre
                 requires random_access_range<CRng> AND
-                    detail::integer_like_<Diff>) void advance(Diff n)
+                    detail::integer_like_<Diff>)
+            void advance(Diff n)
             {
                 auto const first = ranges::begin(rng_->rng_);
                 auto const last = this->get_end_(meta::bool_<(bool)common_range<CRng>>{},
@@ -163,9 +164,9 @@ namespace ranges
                 using D = range_difference_t<Rng>;
                 it_ = first + static_cast<D>(off < 0 ? off + dist : off);
             }
-            CPP_member
-            auto CPP_fun(distance_to)(cursor const & that)(
-                const requires sized_sentinel_for<iterator, iterator>)
+            CPP_auto_member
+            auto CPP_fun(distance_to)(cursor const & that)(const //
+                requires sized_sentinel_for<iterator, iterator>)
             {
                 RANGES_EXPECT(that.rng_ == rng_);
                 auto const first = ranges::begin(rng_->rng_);
