@@ -194,9 +194,9 @@ namespace ranges
     RANGES_INLINE_VAR constexpr bool enable_view<std::span<T, N>> = N + 1 < 2;
 #endif
 
-    ///
-    /// View concepts below
-    ///
+    //
+    // View concepts below
+    //
 
     // clang-format off
     template<typename T>
