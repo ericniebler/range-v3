@@ -1158,17 +1158,20 @@ namespace meta
         {
         };
 
-        template <integral If>
+        template <typename If>
+            requires integral<If>
         struct _if_<If> : std::enable_if<_v<If>>
         {
         };
 
-        template <integral If, typename Then>
+        template <typename If, typename Then>
+            requires integral<If>
         struct _if_<If, Then> : std::enable_if<_v<If>, Then>
         {
         };
 
-        template <integral If, typename Then, typename Else>
+        template <typename If, typename Then, typename Else>
+            requires integral<If>
         struct _if_<If, Then, Else> : std::conditional<_v<If>, Then, Else>
         {
         };
@@ -1274,13 +1277,15 @@ namespace meta
         {
         };
 
-        template <integral B, typename... Bs>
-        requires (bool(B::type::value)) struct _and_<B, Bs...> : _and_<Bs...>
+        template <typename B, typename... Bs>
+            requires integral<B> && (bool(B::type::value))
+        struct _and_<B, Bs...> : _and_<Bs...>
         {
         };
 
-        template <integral B, typename... Bs>
-        requires (!bool(B::type::value)) struct _and_<B, Bs...> : std::false_type
+        template <typename B, typename... Bs>
+            requires integral<B> && (!bool(B::type::value))
+        struct _and_<B, Bs...> : std::false_type
         {
         };
 
@@ -1294,13 +1299,15 @@ namespace meta
         {
         };
 
-        template <integral B, typename... Bs>
-        requires (bool(B::type::value)) struct _or_<B, Bs...> : std::true_type
+        template <typename B, typename... Bs>
+            requires integral<B> && (bool(B::type::value))
+        struct _or_<B, Bs...> : std::true_type
         {
         };
 
-        template <integral B, typename... Bs>
-        requires (!bool(B::type::value)) struct _or_<B, Bs...> : _or_<Bs...>
+        template <typename B, typename... Bs>
+            requires integral<B> && (!bool(B::type::value))
+        struct _or_<B, Bs...> : _or_<Bs...>
         {
         };
 #else
@@ -1797,15 +1804,15 @@ namespace meta
         {
         };
 
-        template <typename... Ts, invocable Fn>
-        requires and_v<valid<invoke, Fn, Ts>...>
+        template <typename... Ts, typename Fn>
+            requires invocable<Fn> && and_v<valid<invoke, Fn, Ts>...>
         struct transform_<list<Ts...>, Fn>
         {
             using type = list<invoke<Fn, Ts>...>;
         };
 
-        template <typename... Ts, typename... Us, invocable Fn>
-        requires and_v<valid<invoke, Fn, Ts, Us>...>
+        template <typename... Ts, typename... Us, typename Fn>
+            requires invocable<Fn> && and_v<valid<invoke, Fn, Ts, Us>...>
         struct transform_<list<Ts...>, list<Us...>, Fn>
         {
             using type = list<invoke<Fn, Ts, Us>...>;
@@ -3217,7 +3224,8 @@ namespace meta
         template <META_TYPE_CONSTRAINT(invocable) Fn, typename A, typename B, typename... Ts>
         using part_ = partition<list<B, Ts...>, bind_back<Fn, A>>;
 #ifdef META_CONCEPT
-        template <list_like L, invocable Fn>
+        template <typename L, typename Fn>
+            requires list_like<L> && invocable<Fn>
 #else
         template <typename, typename, typename = void>
 #endif
@@ -3238,8 +3246,8 @@ namespace meta
 
         template <typename A, typename B, typename... Ts, typename Fn>
 #ifdef META_CONCEPT
-        requires trait<sort_<first<part_<Fn, A, B, Ts...>>, Fn>> &&
-            trait<sort_<second<part_<Fn, A, B, Ts...>>, Fn>>
+            requires trait<sort_<first<part_<Fn, A, B, Ts...>>, Fn>> &&
+                trait<sort_<second<part_<Fn, A, B, Ts...>>, Fn>>
         struct sort_<list<A, B, Ts...>, Fn>
 #else
         struct sort_<
