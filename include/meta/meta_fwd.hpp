@@ -148,11 +148,12 @@
 #define META_CONCEPT concept bool
 // TS concepts subsumption barrier for atomic expressions
 #define META_CONCEPT_BARRIER(...) ::meta::detail::barrier<__VA_ARGS__>
+#define META_TYPE_CONSTRAINT(...) typename
 #else
 #define META_CONCEPT concept
 #define META_CONCEPT_BARRIER(...) __VA_ARGS__
-#endif
 #define META_TYPE_CONSTRAINT(...) __VA_ARGS__
+#endif
 #else
 #define META_TYPE_CONSTRAINT(...) typename
 #endif

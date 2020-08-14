@@ -20,6 +20,10 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Export compilation data-base
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+include(ranges_options)
+include(ranges_env)
+include(ranges_flags)
+
 add_library(range-v3-meta INTERFACE)
 add_library(range-v3::meta ALIAS range-v3-meta)
 target_include_directories(range-v3-meta INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
@@ -45,10 +49,6 @@ function(rv3_add_test TESTNAME EXENAME FIRSTSOURCE)
   target_link_libraries(${EXENAME} range-v3)
   add_test(${TESTNAME} ${EXENAME})
 endfunction(rv3_add_test)
-
-include(ranges_options)
-include(ranges_env)
-include(ranges_flags)
 
 if(RANGE_V3_DOCS)
   add_subdirectory(doc)
