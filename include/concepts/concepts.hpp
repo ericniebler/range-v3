@@ -427,7 +427,7 @@
 
 /// INTERNAL ONLY
 #define CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(...)                               \
-    __VA_ARGS__ && CPP_TRUE_FN>>
+    (__VA_ARGS__ && CPP_TRUE_FN)>>
 
 #ifdef CPP_WORKAROUND_MSVC_779763
 #define CPP_broken_friend_member                                                \
