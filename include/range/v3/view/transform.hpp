@@ -177,14 +177,14 @@ namespace ranges
           : iter_transform_view::view_adaptor{std::move(rng)}
           , fun_(std::move(fun))
         {}
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(
             /// \pre
             requires sized_range<Rng>)
         {
             return ranges::size(this->base());
         }
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(const //
             requires sized_range<Rng const>)
         {

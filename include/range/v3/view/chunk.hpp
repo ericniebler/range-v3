@@ -220,14 +220,14 @@ namespace ranges
           : chunk_view_::view_adaptor(detail::move(rng))
           , n_((RANGES_EXPECT(0 < n), n))
         {}
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(const
             /// \pre
             requires sized_range<Rng const>)
         {
             return size_(ranges::size(this->base()));
         }
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(
             /// \pre
             requires sized_range<Rng>)
@@ -316,7 +316,7 @@ namespace ranges
                 constexpr explicit inner_view(chunk_view_ & view) noexcept
                   : rng_{&view}
                 {}
-                CPP_member
+                CPP_auto_member
                 constexpr auto CPP_fun(size)()(
                     /// \pre
                     requires sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>>)
@@ -393,14 +393,14 @@ namespace ranges
           , remainder_(n)
           , it_cache_{nullopt}
         {}
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(const
             /// \pre
             requires sized_range<Rng const>)
         {
             return size_(ranges::size(base_));
         }
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(
             /// \pre
             requires sized_range<Rng>)

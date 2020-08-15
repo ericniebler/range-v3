@@ -352,7 +352,7 @@ namespace ranges
             {
                 prev_(meta::size_t<sizeof...(Views)>{});
             }
-            CPP_member
+            CPP_auto_member
             auto CPP_fun(distance_to)(cursor const & that)(
                 const requires cartesian_produce_view_can_distance<IsConst, Views...>)
             {
@@ -409,21 +409,21 @@ namespace ranges
         constexpr explicit cartesian_product_view(Views... views)
           : views_{detail::move(views)...}
         {}
-        template(int = 42)(
+        template(typename...)(
             /// \pre
             requires (my_cardinality >= 0)) //
-            static constexpr std::size_t size() noexcept
+        static constexpr std::size_t size() noexcept
         {
             return std::size_t{my_cardinality};
         }
-        CPP_member
+        CPP_auto_member
         auto CPP_fun(size)()(const //
-                             requires (my_cardinality < 0) &&
-                             cartesian_produce_view_can_size<std::true_type, Views...>)
+            requires (my_cardinality < 0) &&
+                cartesian_produce_view_can_size<std::true_type, Views...>)
         {
             return tuple_foldl(views_, std::uintmax_t{1}, detail::cartesian_size_fn{});
         }
-        CPP_member
+        CPP_auto_member
         auto CPP_fun(size)()(
             /// \pre
             requires (my_cardinality < 0) &&

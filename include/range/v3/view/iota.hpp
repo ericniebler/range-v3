@@ -430,13 +430,13 @@ namespace ranges
         {
             return cursor{from_};
         }
-        CPP_member
+        CPP_auto_member
         auto CPP_fun(end_cursor)()(const //
             requires(same_as<To, unreachable_sentinel_t>))
         {
             return unreachable;
         }
-        CPP_member
+        CPP_auto_member
         auto CPP_fun(end_cursor)()(const //
             requires(!same_as<To, unreachable_sentinel_t>))
         {

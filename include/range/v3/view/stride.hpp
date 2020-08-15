@@ -282,7 +282,7 @@ namespace ranges
         constexpr stride_view(Rng rng, range_difference_t<Rng> const stride)
           : detail::stride_view_base<Rng>{std::move(rng), stride}
         {}
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(
             /// \pre
             requires sized_range<Rng>)
@@ -292,7 +292,7 @@ namespace ranges
             return (n + static_cast<size_type>(this->stride_) - 1) /
                    static_cast<size_type>(this->stride_);
         }
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(const //
             requires sized_range<Rng const>)
         {

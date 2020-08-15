@@ -159,7 +159,7 @@ namespace ranges
         constexpr explicit cache1_view(Rng rng)
           : rng_{std::move(rng)}
         {}
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(
             /// \pre
             requires sized_range<Rng>)

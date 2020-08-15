@@ -59,6 +59,9 @@ namespace ranges
 
         template<typename T>
         RANGES_INLINE_VAR constexpr bool _borrowed_range<T &> = true;
+
+        template<typename T>
+        T _decay_copy(T) noexcept;
     } // namespace detail
 
     /// \cond
@@ -106,19 +109,25 @@ namespace ranges
         struct fn
         {
         private:
-            template<bool>
-            struct impl_
+            struct _member_result_
             {
-                // has_member_begin == true
                 template<typename R>
-                static constexpr auto invoke(R && r) noexcept(noexcept(r.begin()))
-                {
-                    return r.begin();
-                }
+                using invoke = decltype(detail::_decay_copy(declval(R &).begin()));
+            };
+            struct _non_member_result_
+            {
+                template<typename R>
+                using invoke = decltype(detail::_decay_copy(begin(declval(R &))));
             };
 
             template<typename R>
-            using impl = impl_<has_member_begin<R>>;
+            using _result_t =
+                meta::invoke<
+                    meta::conditional_t<
+                        has_member_begin<R>,
+                        _member_result_,
+                        _non_member_result_>,
+                    R>;
 
         public:
             template<typename R, std::size_t N>
@@ -132,50 +141,26 @@ namespace ranges
 
             template(typename R)(
                 /// \pre
-                requires detail::_borrowed_range<R> AND
-                    (has_member_begin<R> || has_non_member_begin<R>))
-            constexpr auto operator()(R && r) const //
-                noexcept(noexcept(impl<R>::invoke(r)))
+                requires detail::_borrowed_range<R> AND has_member_begin<R>)
+            constexpr _result_t<R> operator()(R && r) const //
+                noexcept(noexcept(r.begin()))
             {
-                return impl<R>::invoke(r);
+                return r.begin();
             }
 
-            template<typename T, typename Fn = fn>
-            RANGES_DEPRECATED(
-                "Using a reference_wrapper as a range is deprecated. Use views::ref "
-                "instead.")
-            constexpr auto
-            operator()(std::reference_wrapper<T> ref) const
-                noexcept(noexcept(Fn{}(ref.get()))) -> decltype(Fn{}(ref.get()))
-            {
-                return Fn{}(ref.get());
-            }
-
-            template<typename T, typename Fn = fn>
-            RANGES_DEPRECATED(
-                "Using a reference_wrapper as a range is deprecated. Use views::ref "
-                "instead.")
-            constexpr auto
-            operator()(ranges::reference_wrapper<T> ref) const
-                noexcept(noexcept(Fn{}(ref.get()))) -> decltype(Fn{}(ref.get()))
-            {
-                return Fn{}(ref.get());
-            }
-        };
-
-        template<>
-        struct fn::impl_<false>
-        {
-            // has_member_begin == false
-            template<typename R>
-            static constexpr auto invoke(R && r) noexcept(noexcept(begin(r)))
+            template(typename R)(
+                /// \pre
+                requires detail::_borrowed_range<R> AND (!has_member_begin<R>) AND
+                    has_non_member_begin<R>)
+            constexpr _result_t<R> operator()(R && r) const //
+                noexcept(noexcept(begin(r)))
             {
                 return begin(r);
             }
         };
 
         template<typename R>
-        using _t = decltype(fn{}(std::declval<R>()));
+        using _t = decltype(fn{}(declval(R &&)));
     } // namespace _begin_
     /// \endcond
 
@@ -231,25 +216,31 @@ namespace ranges
         struct fn
         {
         private:
-            template<bool>
-            struct impl_
+            struct _member_result_
             {
-                // has_member_end == true
                 template<typename R>
-                static constexpr auto invoke(R && r) noexcept(noexcept(r.end()))
-                {
-                    return r.end();
-                }
+                using invoke = decltype(detail::_decay_copy(declval(R &).end()));
             };
+            struct _non_member_result_
+            {
+                template<typename R>
+                using invoke = decltype(detail::_decay_copy(end(declval(R &))));
+            };
+
+            template<typename R>
+            using _result_t =
+                meta::invoke<
+                    meta::conditional_t<
+                        has_member_end<R>,
+                        _member_result_,
+                        _non_member_result_>,
+                    R>;
 
             template<typename Int>
             using iter_diff_t =
                 meta::_t<meta::conditional_t<std::is_integral<Int>::value,
                                              std::make_signed<Int>, //
                                              meta::id<Int>>>;
-
-            template<typename R>
-            using impl = impl_<has_member_end<R>>;
 
         public:
             template<typename R, std::size_t N>
@@ -263,34 +254,21 @@ namespace ranges
 
             template(typename R)(
                 /// \pre
-                requires detail::_borrowed_range<R> AND
-                    (has_member_end<R> || has_non_member_end<R>))
-            constexpr auto operator()(R && r) const //
-                noexcept(noexcept(impl<R>::invoke(r))) //
+                requires detail::_borrowed_range<R> AND has_member_end<R>)
+            constexpr _result_t<R> operator()(R && r) const //
+                noexcept(noexcept(r.end()))
             {
-                return impl<R>::invoke(r);
+                return r.end();
             }
 
-            template<typename T, typename Fn = fn>
-            RANGES_DEPRECATED(
-                "Using a reference_wrapper as a range is deprecated. Use views::ref "
-                "instead.")
-            constexpr auto
-            operator()(std::reference_wrapper<T> ref) const
-                noexcept(noexcept(Fn{}(ref.get()))) -> decltype(Fn{}(ref.get()))
+            template(typename R)(
+                /// \pre
+                requires detail::_borrowed_range<R> AND (!has_member_end<R>) AND
+                    has_non_member_end<R>)
+            constexpr _result_t<R> operator()(R && r) const //
+                noexcept(noexcept(end(r)))
             {
-                return Fn{}(ref.get());
-            }
-
-            template<typename T, typename Fn = fn>
-            RANGES_DEPRECATED(
-                "Using a reference_wrapper as a range is deprecated. Use views::ref "
-                "instead.")
-            constexpr auto
-            operator()(ranges::reference_wrapper<T> ref) const
-                noexcept(noexcept(Fn{}(ref.get()))) -> decltype(Fn{}(ref.get()))
-            {
-                return Fn{}(ref.get());
+                return end(r);
             }
 
             template(typename Int)(
@@ -307,19 +285,8 @@ namespace ranges
             }
         };
 
-        // has_member_end == false
-        template<>
-        struct fn::impl_<false>
-        {
-            template<typename R>
-            static constexpr auto invoke(R && r) noexcept(noexcept(end(r)))
-            {
-                return end(r);
-            }
-        };
-
         template<typename R>
-        using _t = decltype(fn{}(std::declval<R>()));
+        using _t = decltype(fn{}(declval(R &&)));
     } // namespace _end_
     /// \endcond
 
@@ -336,6 +303,9 @@ namespace ranges
     {
         struct fn
         {
+            template<typename T, std::size_t N>
+            void operator()(T(&&)[N]) const = delete;
+
             template<typename R>
             constexpr _begin_::_t<detail::as_const_t<R>> operator()(R && r) const
                 noexcept(noexcept(ranges::begin(detail::as_const(r))))
@@ -357,6 +327,9 @@ namespace ranges
     {
         struct fn
         {
+            template<typename T, std::size_t N>
+            void operator()(T(&&)[N]) const = delete;
+
             template<typename R>
             constexpr _end_::_t<detail::as_const_t<R>> operator()(R && r) const
                 noexcept(noexcept(ranges::end(detail::as_const(r))))
@@ -426,75 +399,68 @@ namespace ranges
         struct fn
         {
         private:
-            // has_member_rbegin == true
-            template<int>
-            struct impl_
+            struct _member_result_
             {
                 template<typename R>
-                static constexpr auto invoke(R && r) noexcept(noexcept(r.rbegin()))
-                {
-                    return r.rbegin();
-                }
+                using invoke = decltype(detail::_decay_copy(declval(R &).rbegin()));
+            };
+            struct _non_member_result_
+            {
+                template<typename R>
+                using invoke = decltype(detail::_decay_copy(rbegin(declval(R &))));
+            };
+            struct _reverse_result_
+            {
+                template<typename R>
+                using invoke =
+                    decltype(ranges::make_reverse_iterator(ranges::end(declval(R &))));
+            };
+            struct _other_result_
+            {
+                template<typename R>
+                using invoke =
+                    meta::invoke<
+                        meta::conditional_t<
+                            has_non_member_rbegin<R>,
+                            _non_member_result_,
+                            _reverse_result_>,
+                        R>;
             };
 
             template<typename R>
-            using impl =
-                impl_<has_member_rbegin<R> ? 0 : has_non_member_rbegin<R> ? 1 : 2>;
+            using _result_t =
+                meta::invoke<
+                    meta::conditional_t<
+                        has_member_rbegin<R>,
+                        _member_result_,
+                        _other_result_>,
+                    R>;
 
         public:
             template(typename R)(
                 /// \pre
-                requires detail::_borrowed_range<R> AND
-                    (has_member_rbegin<R> ||
-                     has_non_member_rbegin<R> ||
-                     can_reverse_end<R>)) //
+                requires detail::_borrowed_range<R> AND has_member_rbegin<R>)
             constexpr auto operator()(R && r) const //
-                noexcept(noexcept(impl<R>::invoke(r))) //
+                noexcept(noexcept(r.rbegin())) //
             {
-                return impl<R>::invoke(r);
+                return r.rbegin();
             }
 
-            template<typename T, typename Fn = fn>
-            RANGES_DEPRECATED(
-                "Using a reference_wrapper as a range is deprecated. Use views::ref "
-                "instead.")
-            constexpr auto operator()(std::reference_wrapper<T> ref) const //
-                noexcept(noexcept(Fn{}(ref.get()))) //
-                -> decltype(Fn{}(ref.get()))
-            {
-                return Fn{}(ref.get());
-            }
-
-            template<typename T, typename Fn = fn>
-            RANGES_DEPRECATED(
-                "Using a reference_wrapper as a range is deprecated. Use views::ref "
-                "instead.")
-            constexpr auto
-            operator()(ranges::reference_wrapper<T> ref) const
-                noexcept(noexcept(Fn{}(ref.get()))) //
-                -> decltype(Fn{}(ref.get()))
-            {
-                return Fn{}(ref.get());
-            }
-        };
-
-        // has_non_member_rbegin == true
-        template<>
-        struct fn::impl_<1>
-        {
-            template<typename R>
-            static constexpr auto invoke(R && r) noexcept(noexcept(rbegin(r)))
+            template(typename R)(
+                /// \pre
+                requires detail::_borrowed_range<R> AND (!has_member_rbegin<R>) AND
+                    has_non_member_rbegin<R>)
+            constexpr auto operator()(R && r) const //
+                noexcept(noexcept(rbegin(r))) //
             {
                 return rbegin(r);
             }
-        };
 
-        // can_reverse_end
-        template<>
-        struct fn::impl_<2>
-        {
-            template<typename R>
-            static constexpr auto invoke(R && r)
+            template(typename R)(
+                /// \pre
+                requires detail::_borrowed_range<R> AND (!has_member_rbegin<R>) AND
+                    (!has_non_member_rbegin<R>) AND can_reverse_end<R>)
+            constexpr auto operator()(R && r) const //
                 noexcept(noexcept(ranges::make_reverse_iterator(ranges::end(r))))
             {
                 return ranges::make_reverse_iterator(ranges::end(r));
@@ -502,7 +468,7 @@ namespace ranges
         };
 
         template<typename R>
-        using _t = decltype(fn{}(std::declval<R>()));
+        using _t = decltype(fn{}(declval(R &&)));
     } // namespace _rbegin_
     /// \endcond
 
@@ -565,73 +531,68 @@ namespace ranges
         struct fn
         {
         private:
-            // has_member_rbegin == true
-            template<int>
-            struct impl_
+            struct _member_result_
             {
                 template<typename R>
-                static constexpr auto invoke(R && r) noexcept(noexcept(r.rend()))
-                {
-                    return r.rend();
-                }
+                using invoke = decltype(detail::_decay_copy(declval(R &).rend()));
+            };
+            struct _non_member_result_
+            {
+                template<typename R>
+                using invoke = decltype(detail::_decay_copy(rend(declval(R &))));
+            };
+            struct _reverse_result_
+            {
+                template<typename R>
+                using invoke =
+                    decltype(ranges::make_reverse_iterator(ranges::begin(declval(R &))));
+            };
+            struct _other_result_
+            {
+                template<typename R>
+                using invoke =
+                    meta::invoke<
+                        meta::conditional_t<
+                            has_non_member_rend<R>,
+                            _non_member_result_,
+                            _reverse_result_>,
+                        R>;
             };
 
             template<typename R>
-            using impl = impl_<has_member_rend<R> ? 0 : has_non_member_rend<R> ? 1 : 2>;
+            using _result_t =
+                meta::invoke<
+                    meta::conditional_t<
+                        has_member_rend<R>,
+                        _member_result_,
+                        _other_result_>,
+                    R>;
 
         public:
             template(typename R)(
                 /// \pre
-                requires detail::_borrowed_range<R> AND
-                    (has_member_rend<R> || //
-                     has_non_member_rend<R> || //
-                     can_reverse_begin<R>)) //
-            constexpr auto operator()(R && r) const
-                noexcept(noexcept(impl<R>::invoke(r))) //
+                requires detail::_borrowed_range<R> AND has_member_rend<R>)
+            constexpr auto operator()(R && r) const //
+                noexcept(noexcept(r.rend())) //
             {
-                return impl<R>::invoke(r);
+                return r.rend();
             }
 
-            template<typename T, typename Fn = fn>
-            RANGES_DEPRECATED(
-                "Using a reference_wrapper as a range is deprecated. Use views::ref "
-                "instead.")
-            constexpr auto operator()(std::reference_wrapper<T> ref) const
-                noexcept(noexcept(Fn{}(ref.get()))) //
-                -> decltype(Fn{}(ref.get()))
-            {
-                return Fn{}(ref.get());
-            }
-
-            template<typename T, typename Fn = fn>
-            RANGES_DEPRECATED(
-                "Using a reference_wrapper as a range is deprecated. Use views::ref "
-                "instead.")
-            constexpr auto operator()(ranges::reference_wrapper<T> ref) const
-                noexcept(noexcept(Fn{}(ref.get()))) //
-                -> decltype(Fn{}(ref.get()))
-            {
-                return Fn{}(ref.get());
-            }
-        };
-
-        // has_non_member_rend == true
-        template<>
-        struct fn::impl_<1>
-        {
-            template<typename R>
-            static constexpr auto invoke(R && r) noexcept(noexcept(rend(r)))
+            template(typename R)(
+                /// \pre
+                requires detail::_borrowed_range<R> AND (!has_member_rend<R>) AND
+                    has_non_member_rend<R>)
+            constexpr auto operator()(R && r) const //
+                noexcept(noexcept(rend(r))) //
             {
                 return rend(r);
             }
-        };
 
-        // can_reverse_begin
-        template<>
-        struct fn::impl_<2>
-        {
-            template<typename R>
-            static constexpr auto invoke(R && r)
+            template(typename R)(
+                /// \pre
+                requires detail::_borrowed_range<R> AND (!has_member_rend<R>) AND
+                    (!has_non_member_rend<R>) AND can_reverse_begin<R>)
+            constexpr auto operator()(R && r) const //
                 noexcept(noexcept(ranges::make_reverse_iterator(ranges::begin(r))))
             {
                 return ranges::make_reverse_iterator(ranges::begin(r));
@@ -639,7 +600,7 @@ namespace ranges
         };
 
         template<typename R>
-        using _t = decltype(fn{}(std::declval<R>()));
+        using _t = decltype(fn{}(declval(R &&)));
     } // namespace _rend_
     /// \endcond
 
@@ -658,6 +619,9 @@ namespace ranges
     {
         struct fn
         {
+            template<typename T, std::size_t N>
+            void operator()(T(&&)[N]) const = delete;
+
             template<typename R>
             constexpr _rbegin_::_t<detail::as_const_t<R>> operator()(R && r) const
                 noexcept(noexcept(ranges::rbegin(detail::as_const(r))))
@@ -679,6 +643,9 @@ namespace ranges
     {
         struct fn
         {
+            template<typename T, std::size_t N>
+            void operator()(T(&&)[N]) const = delete;
+
             template<typename R>
             constexpr _rend_::_t<detail::as_const_t<R>> operator()(R && r) const
                 noexcept(noexcept(ranges::rend(detail::as_const(r))))
@@ -696,10 +663,10 @@ namespace ranges
     RANGES_INLINE_VARIABLE(_crend_::fn, crend)
 
     template<typename Rng>
-    using iterator_t = decltype(begin(std::declval<Rng &>()));
+    using iterator_t = decltype(begin(declval(Rng &)));
 
     template<typename Rng>
-    using sentinel_t = decltype(end(std::declval<Rng &>()));
+    using sentinel_t = decltype(end(declval(Rng &)));
 
     namespace cpp20
     {

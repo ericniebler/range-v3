@@ -156,7 +156,7 @@ namespace ranges
             return static_cast<std::size_t>(detail::join_cardinality<Rng>());
         }
         // Not to spec
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(
             /// \pre
             requires(detail::join_cardinality<Rng>() < 0) &&
@@ -378,7 +378,7 @@ namespace ranges
         {
             return static_cast<std::size_t>(detail::join_cardinality<Rng, ValRng>());
         }
-        CPP_member
+        CPP_auto_member
         auto CPP_fun(size)()(const //
             requires(detail::join_cardinality<Rng, ValRng>() < 0) &&
                 (range_cardinality<Rng>::value >= 0) && forward_range<Rng> &&

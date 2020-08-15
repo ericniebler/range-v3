@@ -17,5 +17,6 @@
 
 #undef template
 #undef AND
+#undef declval
 
 RANGES_DIAGNOSTIC_POP

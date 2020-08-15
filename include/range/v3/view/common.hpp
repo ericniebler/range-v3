@@ -105,7 +105,7 @@ namespace ranges
             return detail::common_view_iterator_t<Rng>{
                 end_(meta::bool_<detail::random_access_and_sized_range<Rng>>{})};
         }
-        CPP_member
+        CPP_auto_member
         auto CPP_fun(size)()(
             /// \pre
             requires sized_range<Rng>)
@@ -132,7 +132,7 @@ namespace ranges
                 end_(meta::bool_<detail::random_access_and_sized_range<
                          meta::const_if_c<Const, Rng>>>{})};
         }
-        CPP_member
+        CPP_auto_member
         auto CPP_fun(size)()(const
             /// \pre
             requires sized_range<Rng const>)

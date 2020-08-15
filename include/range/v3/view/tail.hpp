@@ -84,7 +84,7 @@ namespace ranges
             return ranges::end(rng_);
         }
         // Strange cast to bool in the requires clause is to work around gcc bug.
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(
             /// \pre
             requires(bool(sized_range<Rng>)))
@@ -94,7 +94,7 @@ namespace ranges
                        ? detail::prev_or_zero_((size_type)range_cardinality<Rng>::value)
                        : detail::prev_or_zero_(ranges::size(rng_));
         }
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(const //
             requires(bool(sized_range<Rng const>)))
         {

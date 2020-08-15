@@ -38,7 +38,7 @@ private:
 public:
     using view_non_const_only::view_adaptor::view_adaptor;
 
-    CPP_member
+    CPP_auto_member
     auto CPP_fun(size)() (
         requires sized_range<Rng>)
     {

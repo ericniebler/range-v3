@@ -34,6 +34,7 @@
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_INCONSISTENT_OVERRIDE
+RANGES_DIAGNOSTIC_SUGGEST_OVERRIDE
 
 namespace ranges
 {
@@ -146,7 +147,7 @@ namespace ranges
         struct cloneable : Base
         {
             using Base::Base;
-            virtual ~cloneable() = default;
+            virtual ~cloneable() override = default;
             cloneable() = default;
             cloneable(cloneable const &) = delete;
             cloneable & operator=(cloneable const &) = delete;

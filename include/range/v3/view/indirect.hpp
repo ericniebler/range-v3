@@ -105,13 +105,13 @@ namespace ranges
         constexpr explicit indirect_view(Rng rng)
           : indirect_view::view_adaptor{detail::move(rng)}
         {}
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(const //
             requires sized_range<Rng const>)
         {
             return ranges::size(this->base());
         }
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(
             /// \pre
             requires sized_range<Rng>)

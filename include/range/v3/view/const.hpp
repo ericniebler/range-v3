@@ -95,14 +95,14 @@ namespace ranges
         explicit const_view(Rng rng)
           : const_view::view_adaptor{std::move(rng)}
         {}
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(
             /// \pre
             requires sized_range<Rng>)
         {
             return ranges::size(this->base());
         }
-        CPP_member
+        CPP_auto_member
         constexpr auto CPP_fun(size)()(const
             /// \pre
             requires sized_range<Rng const>)

@@ -208,6 +208,11 @@
 #define CPP_template_def CPP_template
 #define CPP_member
 #define CPP_ctor(TYPE) TYPE CPP_CTOR_IMPL_1_
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 10
+#define CPP_auto_member template<typename...>
+#else
+#define CPP_auto_member
+#endif
 
 #if defined(CPP_DOXYGEN_INVOKED) && CPP_DOXYGEN_INVOKED
 /// INTERNAL ONLY
@@ -260,6 +265,7 @@
 #define CPP_template CPP_template_sfinae
 #define CPP_template_def CPP_template_def_sfinae
 #define CPP_member CPP_member_sfinae
+#define CPP_auto_member CPP_member_sfinae
 #define CPP_ctor CPP_ctor_sfinae
 #define CPP_concept_ref(NAME, ...)                                              \
     (1u == sizeof(CPP_PP_CAT(NAME, _concept_)(                                  \
