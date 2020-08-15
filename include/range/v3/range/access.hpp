@@ -303,6 +303,9 @@ namespace ranges
     {
         struct fn
         {
+            template<typename T, std::size_t N>
+            void operator()(T(&&)[N]) const = delete;
+
             template<typename R>
             constexpr _begin_::_t<detail::as_const_t<R>> operator()(R && r) const
                 noexcept(noexcept(ranges::begin(detail::as_const(r))))
@@ -324,6 +327,9 @@ namespace ranges
     {
         struct fn
         {
+            template<typename T, std::size_t N>
+            void operator()(T(&&)[N]) const = delete;
+
             template<typename R>
             constexpr _end_::_t<detail::as_const_t<R>> operator()(R && r) const
                 noexcept(noexcept(ranges::end(detail::as_const(r))))
@@ -613,6 +619,9 @@ namespace ranges
     {
         struct fn
         {
+            template<typename T, std::size_t N>
+            void operator()(T(&&)[N]) const = delete;
+
             template<typename R>
             constexpr _rbegin_::_t<detail::as_const_t<R>> operator()(R && r) const
                 noexcept(noexcept(ranges::rbegin(detail::as_const(r))))
@@ -634,6 +643,9 @@ namespace ranges
     {
         struct fn
         {
+            template<typename T, std::size_t N>
+            void operator()(T(&&)[N]) const = delete;
+
             template<typename R>
             constexpr _rend_::_t<detail::as_const_t<R>> operator()(R && r) const
                 noexcept(noexcept(ranges::rend(detail::as_const(r))))
