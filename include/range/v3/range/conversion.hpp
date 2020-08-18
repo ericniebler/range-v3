@@ -443,6 +443,17 @@ namespace ranges
             return detail::to_container_fn<meta::id<Cont>>{}(static_cast<Rng &&>(rng));
         }
 
+        /// \overload
+        template(typename Cont, typename Rng)(
+            /// \pre
+            requires input_range<Rng> AND
+                (!detail::convertible_to_cont<Rng, Cont>) AND
+                detail::convertible_to_cont_cont<Rng, Cont>)
+        auto to(Rng && rng) -> Cont
+        {
+            return detail::to_container_fn<meta::id<Cont>>{}(static_cast<Rng &&>(rng));
+        }
+
         /// \cond
         // Slightly odd initializer_list overloads, undocumented for now.
         template(template<typename...> class ContT, typename T)(
