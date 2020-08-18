@@ -136,9 +136,9 @@ This is for the owners/maintainers of this project.
 Note: you must have write-acccess to the repository to be allowed to complete the publication submission.
 
 0. Before submitting the package, make sure the information of the package are up to date:
-    - Update the `version` field in `./manifest` (and commitit);
+    - Update the `version` field in `./manifest` (and commit);
     - Make sure you are at the right git revision and make sure it's available publicly online.
-    - Make sure there is a version tag pointing at the commit to publish.
+    - Ideally (this is optional but helps tooling), make sure there is a version tag pointing at the commit to publish.
 
     Note: these could be done automatically using [`bdep release`](https://build2.org/bdep/doc/bdep-release.xhtml) but this project is not maintained using `build2` so it's probably better to update the manifest manually.
 
