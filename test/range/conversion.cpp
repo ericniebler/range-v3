@@ -213,5 +213,13 @@ int main()
 
     test_zip_to_map(views::zip(views::ints, views::iota(0, 10)), 0);
 
+    // https://github.com/ericniebler/range-v3/issues/1544
+    {
+        std::vector<std::vector<int>> d;
+        auto m = views::transform(d, views::all);
+        auto v = ranges::to<std::vector<std::vector<int>>>(m);
+        check_equal(d, v);
+    }
+
     return ::test_result();
 }
