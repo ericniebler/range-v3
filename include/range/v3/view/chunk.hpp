@@ -313,8 +313,8 @@ namespace ranges
 
             public:
                 inner_view() = default;
-                constexpr explicit inner_view(chunk_view_ & view) noexcept
-                  : rng_{&view}
+                constexpr explicit inner_view(chunk_view_ * view) noexcept
+                  : rng_{view}
                 {}
                 CPP_auto_member
                 constexpr auto CPP_fun(size)()(
@@ -338,7 +338,7 @@ namespace ranges
             constexpr inner_view read() const
             {
                 RANGES_EXPECT(!done());
-                return inner_view{*rng_};
+                return inner_view{rng_};
             }
             constexpr bool done() const
             {

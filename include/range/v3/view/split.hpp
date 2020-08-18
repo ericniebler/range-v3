@@ -389,19 +389,19 @@ namespace ranges
             split_outer_iterator() = default;
 
             CPP_member
-            constexpr explicit CPP_ctor(split_outer_iterator)(Parent & parent)(
+            constexpr explicit CPP_ctor(split_outer_iterator)(Parent * parent)(
                 /// \pre
                 requires (!forward_range<Base>))
-              : parent_(&parent)
+              : parent_(parent)
             {}
 
             CPP_member
-            constexpr CPP_ctor(split_outer_iterator)(Parent & parent,
+            constexpr CPP_ctor(split_outer_iterator)(Parent * parent,
                                                      iterator_t<Base> current)(
                 /// \pre
                 requires forward_range<Base>)
               : Current{std::move(current)}
-              , parent_(&parent)
+              , parent_(parent)
             {}
 
             template(bool Other)(
@@ -519,7 +519,7 @@ namespace ranges
                                               ranges::equal_to> &&
         (forward_range<V> || detail::tiny_range<Pattern>)
 #endif
-            struct RANGES_EMPTY_BASES split_view
+    struct RANGES_EMPTY_BASES split_view
       : view_interface<split_view<V, Pattern>, is_finite<V>::value ? finite : unknown>
       , private detail::split_view_base<iterator_t<V>>
     {
@@ -537,17 +537,17 @@ namespace ranges
 #if RANGES_CXX_IF_CONSTEXPR < RANGES_CXX_IF_CONSTEXPR_17
         outer_iterator<simple_view<V>()> begin_(std::true_type)
         {
-            return outer_iterator<simple_view<V>()>{*this, ranges::begin(base_)};
+            return outer_iterator<simple_view<V>()>{this, ranges::begin(base_)};
         }
         outer_iterator<false> begin_(std::false_type)
         {
             this->curr_ = ranges::begin(base_);
-            return outer_iterator<false>{*this};
+            return outer_iterator<false>{this};
         }
 
         outer_iterator<simple_view<V>()> end_(std::true_type) const
         {
-            return outer_iterator<true>{*this, ranges::end(base_)};
+            return outer_iterator<true>{this, ranges::end(base_)};
         }
         default_sentinel_t end_(std::false_type) const
         {
@@ -580,11 +580,11 @@ namespace ranges
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(forward_range<V>)
-                return outer_iterator<simple_view<V>()>{*this, ranges::begin(base_)};
+                return outer_iterator<simple_view<V>()>{this, ranges::begin(base_)};
             else
             {
                 this->curr_ = ranges::begin(base_);
-                return outer_iterator<false>{*this};
+                return outer_iterator<false>{this};
             }
 #else
             return begin_(meta::bool_<forward_range<V>>{});
@@ -596,7 +596,7 @@ namespace ranges
                 /// \pre
                 requires forward_range<V> && forward_range<const V>)
         {
-            return {*this, ranges::begin(base_)};
+            return {this, ranges::begin(base_)};
         }
         CPP_member
         constexpr auto end() //
@@ -604,14 +604,14 @@ namespace ranges
                 /// \pre
                 requires forward_range<V> && common_range<V>)
         {
-            return outer_iterator<simple_view<V>()>{*this, ranges::end(base_)};
+            return outer_iterator<simple_view<V>()>{this, ranges::end(base_)};
         }
         constexpr auto end() const
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(forward_range<V> && forward_range<const V> &&
                          common_range<const V>)
-                return outer_iterator<true>{*this, ranges::end(base_)};
+                return outer_iterator<true>{this, ranges::end(base_)};
             else
                 return default_sentinel;
 #else
