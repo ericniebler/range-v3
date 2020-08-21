@@ -46,8 +46,8 @@ target_link_libraries(range-v3 INTERFACE range-v3::concepts range-v3::meta)
 
 function(rv3_add_test TESTNAME EXENAME FIRSTSOURCE)
   add_executable(range.v3.${EXENAME} ${FIRSTSOURCE} ${ARGN})
-  target_link_libraries(${EXENAME} range-v3)
-  add_test(range.v3.${TESTNAME} ${EXENAME})
+  target_link_libraries(range.v3.${EXENAME} range-v3)
+  add_test(range.v3.${TESTNAME} range.v3.${EXENAME})
 endfunction(rv3_add_test)
 
 if(RANGE_V3_DOCS)

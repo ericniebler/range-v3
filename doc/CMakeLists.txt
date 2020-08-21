@@ -33,7 +33,7 @@ set_target_properties(range.v3.doc.check
 add_custom_target(range-v3-doc
     COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile
     COMMENT "Generating API documentation with Doxygen"
-#     DEPENDS benchmarks
+#     DEPENDS range-v3-benchmarks
     VERBATIM
 )
 set_target_properties(range-v3-doc
@@ -62,7 +62,7 @@ add_custom_target(range-v3-gh-pages.copy
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/html ${CMAKE_CURRENT_LIST_DIR}/gh-pages
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/gh-pages
     COMMENT "Copying the documentation from ${CMAKE_CURRENT_BINARY_DIR}/html to doc/gh-pages"
-    DEPENDS doc gh-pages.clean
+    DEPENDS range-v3-doc range-v3-gh-pages.clean
     VERBATIM
 )
 set_target_properties(range-v3-gh-pages.copy
@@ -80,7 +80,7 @@ add_custom_target(range-v3-gh-pages.update
     COMMAND ${GIT_EXECUTABLE} commit -m "Update to ${RANGE_V3_GIT_SHORT_SHA}"
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/gh-pages
     COMMENT "Updating the gh-pages branch with freshly built documentation"
-    DEPENDS gh-pages.copy
+    DEPENDS range-v3-gh-pages.copy
     VERBATIM
 )
 set_target_properties(range-v3-gh-pages.update
