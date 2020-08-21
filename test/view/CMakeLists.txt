@@ -66,4 +66,4 @@ rv3_add_test(test.view.unique view.unique unique.cpp)
 rv3_add_test(test.view.view view.view view.cpp)
 rv3_add_test(test.view.zip view.zip zip.cpp)
 
-target_compile_definitions(view.iterator_range PRIVATE RANGES_DISABLE_DEPRECATED_WARNINGS)
+target_compile_definitions(range.v3.view.iterator_range PRIVATE RANGES_DISABLE_DEPRECATED_WARNINGS)
