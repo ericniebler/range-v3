@@ -53,7 +53,7 @@ namespace ranges
             /// \pre
             requires same_as<I, __gnu_debug::_Safe_iterator<T *, Seq>>)
         auto iter_concept_(__gnu_debug::_Safe_iterator<T *, Seq>, priority_tag<3>)
-            -> ranges::contiguous_iterator_tag
+            -> ranges::contiguous_iterator_tag;
 #endif
 #if defined(__GLIBCXX__)
         template(typename I, typename T, typename Seq)(
