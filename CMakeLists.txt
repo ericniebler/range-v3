@@ -45,9 +45,9 @@ target_compile_options(range-v3 INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive-
 target_link_libraries(range-v3 INTERFACE range-v3::concepts range-v3::meta)
 
 function(rv3_add_test TESTNAME EXENAME FIRSTSOURCE)
-  add_executable(${EXENAME} ${FIRSTSOURCE} ${ARGN})
+  add_executable(range.v3.${EXENAME} ${FIRSTSOURCE} ${ARGN})
   target_link_libraries(${EXENAME} range-v3)
-  add_test(${TESTNAME} ${EXENAME})
+  add_test(range.v3.${TESTNAME} ${EXENAME})
 endfunction(rv3_add_test)
 
 if(RANGE_V3_DOCS)
@@ -72,8 +72,8 @@ endif()
 # Add header files as sources to fix MSVS 2017 not finding source during debugging
 file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS_ABSOLUTE
                   "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
-add_custom_target(headers SOURCES ${RANGE_V3_PUBLIC_HEADERS_ABSOLUTE})
-set_target_properties(headers PROPERTIES FOLDER "header")
+add_custom_target(range.v3.headers SOURCES ${RANGE_V3_PUBLIC_HEADERS_ABSOLUTE})
+set_target_properties(range.v3.headers PROPERTIES FOLDER "header")
 
 # Test all headers
 if(RANGE_V3_HEADER_CHECKS)
