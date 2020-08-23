@@ -339,7 +339,7 @@ namespace ranges
 #define RANGES_WORKAROUND_CLANG_23135 // constexpr leads to premature instantiation on
                                       // clang-3.x
 #endif
-#if __clang_major__ >= 7 && __clang_major__ <= 9
+#if (__clang_major__ >= 7 && __clang_major__ <= 9) || defined(__apple_build_version__)
 #define RANGES_WORKAROUND_CLANG_43400 // template friend is redefinition of itself
 #endif
 #else                                 // __GNUC__
