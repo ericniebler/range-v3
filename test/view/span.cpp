@@ -286,18 +286,18 @@ void test_case_from_std_array_constructor()
 
     {
         span<int> s{arr};
-        CHECK((s.size() == narrow_cast<std::ptrdiff_t>(arr.size()) && s.data() == arr.data()));
+        CHECK((s.size() == arr.size() && s.data() == arr.data()));
 
         span<const int> cs{arr};
-        CHECK((cs.size() == narrow_cast<std::ptrdiff_t>(arr.size()) && cs.data() == arr.data()));
+        CHECK((cs.size() == arr.size() && cs.data() == arr.data()));
     }
 
     {
         span<int, 4> s{arr};
-        CHECK((s.size() == narrow_cast<std::ptrdiff_t>(arr.size()) && s.data() == arr.data()));
+        CHECK((s.size() == arr.size() && s.data() == arr.data()));
 
         span<const int, 4> cs{arr};
-        CHECK((cs.size() == narrow_cast<std::ptrdiff_t>(arr.size()) && cs.data() == arr.data()));
+        CHECK((cs.size() == arr.size() && cs.data() == arr.data()));
     }
 
     CPP_assert(!std::is_constructible<span<int, 2>, decltype((arr))>::value);
@@ -320,7 +320,7 @@ void test_case_from_std_array_constructor()
 
     {
         auto s = make_span(arr);
-        CHECK((s.size() == narrow_cast<std::ptrdiff_t>(arr.size()) && s.data() == arr.data()));
+        CHECK((s.size() == arr.size() && s.data() == arr.data()));
     }
 }
 
@@ -330,12 +330,12 @@ void test_case_from_const_std_array_constructor()
 
     {
         span<const int> s{arr};
-        CHECK((s.size() == narrow_cast<std::ptrdiff_t>(arr.size()) && s.data() == arr.data()));
+        CHECK((s.size() == arr.size() && s.data() == arr.data()));
     }
 
     {
         span<const int, 4> s{arr};
-        CHECK((s.size() == narrow_cast<std::ptrdiff_t>(arr.size()) && s.data() == arr.data()));
+        CHECK((s.size() == arr.size() && s.data() == arr.data()));
     }
 
     CPP_assert(!std::is_constructible<span<const int, 2>, decltype((arr))>::value);
@@ -350,7 +350,7 @@ void test_case_from_const_std_array_constructor()
 
     {
         auto s = make_span(arr);
-        CHECK((s.size() == narrow_cast<std::ptrdiff_t>(arr.size()) && s.data() == arr.data()));
+        CHECK((s.size() == arr.size() && s.data() == arr.data()));
     }
 }
 
@@ -360,12 +360,12 @@ void test_case_from_std_array_const_constructor()
 
     {
         span<const int> s{arr};
-        CHECK((s.size() == narrow_cast<std::ptrdiff_t>(arr.size()) && s.data() == arr.data()));
+        CHECK((s.size() == arr.size() && s.data() == arr.data()));
     }
 
     {
         span<const int, 4> s{arr};
-        CHECK((s.size() == narrow_cast<std::ptrdiff_t>(arr.size()) && s.data() == arr.data()));
+        CHECK((s.size() == arr.size() && s.data() == arr.data()));
     }
 
     CPP_assert(!std::is_constructible<span<const int, 2>, decltype((arr))>::value);
@@ -375,7 +375,7 @@ void test_case_from_std_array_const_constructor()
 
     {
         auto s = make_span(arr);
-        CHECK((s.size() == narrow_cast<std::ptrdiff_t>(arr.size()) && s.data() == arr.data()));
+        CHECK((s.size() == arr.size() && s.data() == arr.data()));
     }
 }
 
@@ -386,10 +386,10 @@ void test_case_from_container_constructor()
 
     {
         span<int> s{v};
-        CHECK((s.size() == narrow_cast<std::ptrdiff_t>(v.size()) && s.data() == v.data()));
+        CHECK((s.size() == v.size() && s.data() == v.data()));
 
         span<const int> cs{v};
-        CHECK((cs.size() == narrow_cast<std::ptrdiff_t>(v.size()) && cs.data() == v.data()));
+        CHECK((cs.size() == v.size() && cs.data() == v.data()));
     }
 
     std::string str = "hello";
@@ -397,7 +397,7 @@ void test_case_from_container_constructor()
 
     {
         span<char> s{str};
-        CHECK((s.size() == narrow_cast<std::ptrdiff_t>(str.size()) && s.data() == str.data()));
+        CHECK((s.size() == str.size() && s.data() == str.data()));
     }
 
     {
@@ -408,7 +408,7 @@ void test_case_from_container_constructor()
 
     {
         span<const char> cs{str};
-        CHECK((cs.size() == narrow_cast<std::ptrdiff_t>(str.size()) && cs.data() == str.data()));
+        CHECK((cs.size() == str.size() && cs.data() == str.data()));
     }
 
     {
@@ -420,7 +420,7 @@ void test_case_from_container_constructor()
     {
         CPP_assert(!std::is_constructible<span<char>, decltype((cstr))>::value);
         span<const char> cs{cstr};
-        CHECK((cs.size() == narrow_cast<std::ptrdiff_t>(cstr.size()) &&
+        CHECK((cs.size() == cstr.size() &&
               cs.data() == cstr.data()));
     }
 
@@ -448,10 +448,10 @@ void test_case_from_container_constructor()
 
     {
         auto s = make_span(v);
-        CHECK((s.size() == narrow_cast<std::ptrdiff_t>(v.size()) && s.data() == v.data()));
+        CHECK((s.size() == v.size() && s.data() == v.data()));
 
         auto cs = make_span(cv);
-        CHECK((cs.size() == narrow_cast<std::ptrdiff_t>(cv.size()) && cs.data() == cv.data()));
+        CHECK((cs.size() == cv.size() && cs.data() == cv.data()));
     }
 }
 
@@ -540,26 +540,26 @@ void test_case_first()
 
     {
         span<int, 5> av = arr;
-        CHECK(av.first<2>().size() == 2);
-        CHECK(av.first(2).size() == 2);
+        CHECK(av.first<2>().size() == std::size_t{2});
+        CHECK(av.first(2).size() == std::size_t{2});
     }
 
     {
         span<int, 5> av = arr;
-        CHECK(av.first<0>().size() == 0);
-        CHECK(av.first(0).size() == 0);
+        CHECK(av.first<0>().size() == std::size_t{0});
+        CHECK(av.first(0).size() == std::size_t{0});
     }
 
     {
         span<int, 5> av = arr;
-        CHECK(av.first<5>().size() == 5);
-        CHECK(av.first(5).size() == 5);
+        CHECK(av.first<5>().size() == std::size_t{5});
+        CHECK(av.first(5).size() == std::size_t{5});
     }
 
     {
         span<int> av;
-        CHECK(av.first<0>().size() == 0);
-        CHECK(av.first(0).size() == 0);
+        CHECK(av.first<0>().size() == std::size_t{0});
+        CHECK(av.first(0).size() == std::size_t{0});
     }
 }
 
@@ -569,26 +569,26 @@ void test_case_last()
 
     {
         span<int, 5> av = arr;
-        CHECK(av.last<2>().size() == 2);
-        CHECK(av.last(2).size() == 2);
+        CHECK(av.last<2>().size() == std::size_t{2});
+        CHECK(av.last(2).size() == std::size_t{2});
     }
 
     {
         span<int, 5> av = arr;
-        CHECK(av.last<0>().size() == 0);
-        CHECK(av.last(0).size() == 0);
+        CHECK(av.last<0>().size() == std::size_t{0});
+        CHECK(av.last(0).size() == std::size_t{0});
     }
 
     {
         span<int, 5> av = arr;
-        CHECK(av.last<5>().size() == 5);
-        CHECK(av.last(5).size() == 5);
+        CHECK(av.last<5>().size() == std::size_t{5});
+        CHECK(av.last(5).size() == std::size_t{5});
     }
 
     {
         span<int> av;
-        CHECK(av.last<0>().size() == 0);
-        CHECK(av.last(0).size() == 0);
+        CHECK(av.last<0>().size() == std::size_t{0});
+        CHECK(av.last(0).size() == std::size_t{0});
     }
 }
 
@@ -598,91 +598,91 @@ void test_case_subspan()
 
     {
         span<int, 5> av = arr;
-        CHECK((av.subspan<2, 2>().size() == 2));
-        CHECK(av.subspan(2, 2).size() == 2);
-        CHECK(av.subspan(2, 3).size() == 3);
+        CHECK((av.subspan<2, 2>().size() == std::size_t{2}));
+        CHECK(av.subspan(2, 2).size() == std::size_t{2});
+        CHECK(av.subspan(2, 3).size() == std::size_t{3});
     }
 
     {
         span<int, 5> av = arr;
-        CHECK((av.subspan<0, 0>().size() == 0));
-        CHECK(av.subspan(0, 0).size() == 0);
+        CHECK((av.subspan<0, 0>().size() == std::size_t{0}));
+        CHECK(av.subspan(0, 0).size() == std::size_t{0});
     }
 
     {
         span<int, 5> av = arr;
-        CHECK((av.subspan<0, 5>().size() == 5));
-        CHECK(av.subspan(0, 5).size() == 5);
+        CHECK((av.subspan<0, 5>().size() == std::size_t{5}));
+        CHECK(av.subspan(0, 5).size() == std::size_t{5});
     }
 
     {
         span<int, 5> av = arr;
-        CHECK((av.subspan<4, 0>().size() == 0));
-        CHECK(av.subspan(4, 0).size() == 0);
-        CHECK(av.subspan(5, 0).size() == 0);
+        CHECK((av.subspan<4, 0>().size() == std::size_t{0}));
+        CHECK(av.subspan(4, 0).size() == std::size_t{0});
+        CHECK(av.subspan(5, 0).size() == std::size_t{0});
     }
 
     {
         span<int> av;
-        CHECK((av.subspan<0, 0>().size() == 0));
-        CHECK(av.subspan(0, 0).size() == 0);
+        CHECK((av.subspan<0, 0>().size() == std::size_t{0}));
+        CHECK(av.subspan(0, 0).size() == std::size_t{0});
     }
 
     {
         span<int> av;
-        CHECK(av.subspan(0).size() == 0);
+        CHECK(av.subspan(0).size() == std::size_t{0});
     }
 
     {
         span<int> av = arr;
-        CHECK(av.subspan(0).size() == 5);
-        CHECK(av.subspan(1).size() == 4);
-        CHECK(av.subspan(4).size() == 1);
-        CHECK(av.subspan(5).size() == 0);
+        CHECK(av.subspan(0).size() == std::size_t{5});
+        CHECK(av.subspan(1).size() == std::size_t{4});
+        CHECK(av.subspan(4).size() == std::size_t{1});
+        CHECK(av.subspan(5).size() == std::size_t{0});
         const auto av2 = av.subspan(1);
-        for (int i = 0; i < 4; ++i) CHECK(av2[i] == i + 2);
+        for (int i = 0; i < 4; ++i) CHECK(av2[static_cast<std::size_t>(i)] == i + 2);
     }
 
     {
         span<int, 5> av = arr;
-        CHECK(av.subspan(0).size() == 5);
-        CHECK(av.subspan(1).size() == 4);
-        CHECK(av.subspan(4).size() == 1);
-        CHECK(av.subspan(5).size() == 0);
+        CHECK(av.subspan(0).size() == std::size_t{5});
+        CHECK(av.subspan(1).size() == std::size_t{4});
+        CHECK(av.subspan(4).size() == std::size_t{1});
+        CHECK(av.subspan(5).size() == std::size_t{0});
         const auto av2 = av.subspan(1);
-        for (int i = 0; i < 4; ++i) CHECK(av2[i] == i + 2);
+        for (int i = 0; i < 4; ++i) CHECK(av2[static_cast<std::size_t>(i)] == i + 2);
     }
 
     {
         span<int, 5> av = arr;
-        CHECK(decltype(av.subspan<0, dynamic_extent>())::extent == 5);
+        CHECK(decltype(av.subspan<0, dynamic_extent>())::extent == std::size_t{5});
         CHECK((av.subspan<0, dynamic_extent>().size() == 5));
-        CHECK(decltype(av.subspan<1, dynamic_extent>())::extent == 4);
+        CHECK(decltype(av.subspan<1, dynamic_extent>())::extent == std::size_t{4});
         CHECK((av.subspan<1, dynamic_extent>().size() == 4));
-        CHECK(decltype(av.subspan<2, dynamic_extent>())::extent == 3);
+        CHECK(decltype(av.subspan<2, dynamic_extent>())::extent == std::size_t{3});
         CHECK((av.subspan<2, dynamic_extent>().size() == 3));
-        CHECK(decltype(av.subspan<3, dynamic_extent>())::extent == 2);
+        CHECK(decltype(av.subspan<3, dynamic_extent>())::extent == std::size_t{2});
         CHECK((av.subspan<3, dynamic_extent>().size() == 2));
-        CHECK(decltype(av.subspan<4, dynamic_extent>())::extent == 1);
+        CHECK(decltype(av.subspan<4, dynamic_extent>())::extent == std::size_t{1});
         CHECK((av.subspan<4, dynamic_extent>().size() == 1));
-        CHECK(decltype(av.subspan<5, dynamic_extent>())::extent == 0);
+        CHECK(decltype(av.subspan<5, dynamic_extent>())::extent == std::size_t{0});
         CHECK((av.subspan<5, dynamic_extent>().size() == 0));
     }
 
     {
         span<int> av = arr;
         CHECK(decltype(av.subspan<0, dynamic_extent>())::extent == dynamic_extent);
-        CHECK((av.subspan<0, dynamic_extent>().size() == 5));
+        CHECK((av.subspan<0, dynamic_extent>().size() == std::size_t{5}));
         CHECK(decltype(av.subspan<1, dynamic_extent>())::extent == dynamic_extent);
-        CHECK((av.subspan<1, dynamic_extent>().size() == 4));
+        CHECK((av.subspan<1, dynamic_extent>().size() == std::size_t{4}));
         CHECK(decltype(av.subspan<2, dynamic_extent>())::extent == dynamic_extent);
-        CHECK((av.subspan<2, dynamic_extent>().size() == 3));
+        CHECK((av.subspan<2, dynamic_extent>().size() == std::size_t{3}));
         CHECK(decltype(av.subspan<3, dynamic_extent>())::extent == dynamic_extent);
-        CHECK((av.subspan<3, dynamic_extent>().size() == 2));
+        CHECK((av.subspan<3, dynamic_extent>().size() == std::size_t{2}));
         CHECK(decltype(av.subspan<4, dynamic_extent>())::extent == dynamic_extent);
-        CHECK((av.subspan<4, dynamic_extent>().size() == 1));
+        CHECK((av.subspan<4, dynamic_extent>().size() == std::size_t{1}));
         CHECK(decltype(av.subspan<5, dynamic_extent>())::extent == dynamic_extent);
-        CHECK((av.subspan<5, dynamic_extent>().size() == 0));
+        CHECK((av.subspan<5, dynamic_extent>().size() == std::size_t{0}));
     }
 }
 
@@ -942,7 +942,7 @@ void test_case_as_bytes()
 
     {
         const span<const int> s = a;
-        CHECK(s.size() == 4);
+        CHECK(s.size() == std::size_t{4});
         const auto bs = as_bytes(s);
         CHECK(static_cast<const void*>(bs.data()) == static_cast<const void*>(s.data()));
         CHECK(bs.size() == s.size_bytes());
@@ -952,8 +952,8 @@ void test_case_as_bytes()
         span<int> s;
         const auto bs = as_bytes(s);
         CHECK(bs.size() == s.size());
-        CHECK(bs.size() == 0);
-        CHECK(bs.size_bytes() == 0);
+        CHECK(bs.size() == std::size_t{0});
+        CHECK(bs.size_bytes() == std::size_t{0});
         CHECK(static_cast<const void*>(bs.data()) == static_cast<const void*>(s.data()));
         CHECK(bs.data() == nullptr);
     }
@@ -974,8 +974,8 @@ void test_case_as_writeable_bytes()
         span<int> s;
         const auto bs = as_writeable_bytes(s);
         CHECK(bs.size() == s.size());
-        CHECK(bs.size() == 0);
-        CHECK(bs.size_bytes() == 0);
+        CHECK(bs.size() == std::size_t{0});
+        CHECK(bs.size_bytes() == std::size_t{0});
         CHECK(static_cast<void*>(bs.data()) == static_cast<void*>(s.data()));
         CHECK(bs.data() == nullptr);
     }
@@ -994,7 +994,7 @@ void test_case_fixed_size_conversions()
 
     // converting to an span from an equal size array is ok
     span<int, 4> s4 = arr;
-    CHECK(s4.size() == 4);
+    CHECK(s4.size() == std::size_t{4});
 
     // converting to dynamic_range is always ok
     {

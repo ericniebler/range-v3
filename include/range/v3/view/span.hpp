@@ -39,11 +39,11 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        using span_index_t = std::ptrdiff_t;
+        using span_index_t = std::size_t;
     } // namespace detail
     /// \endcond
 
-    constexpr detail::span_index_t dynamic_extent = -1;
+    constexpr detail::span_index_t dynamic_extent = SIZE_MAX;
 
     /// \cond
     namespace detail
@@ -64,9 +64,7 @@ namespace ranges
         constexpr span_index_t byte_size(span_index_t n) noexcept
         {
             return n == dynamic_extent ? dynamic_extent
-                                       : (RANGES_EXPECT(n >= 0),
-                                          RANGES_EXPECT(narrow_cast<std::size_t>(n) <=
-                                                        PTRDIFF_MAX / sizeof(T)),
+                                       : (RANGES_EXPECT(n <= SIZE_MAX / sizeof(T)),
                                           n * narrow_cast<span_index_t>(sizeof(T)));
         }
 
@@ -98,7 +96,7 @@ namespace ranges
         {
             span_extent() = default;
             constexpr span_extent(span_index_t size) noexcept
-              : size_{((void)RANGES_EXPECT(size >= 0), size)}
+              : size_{size}
             {}
             constexpr span_index_t size() const noexcept
             {
@@ -130,11 +128,11 @@ namespace ranges
     template<typename Rng, detail::span_index_t N>
     CPP_concept span_dynamic_conversion =
         N == dynamic_extent ||
-            range_cardinality<Rng>::value < cardinality();
+            static_cast<detail::span_size_t>(range_cardinality<Rng>::value) < cardinality();
 
     template<typename Rng, detail::span_index_t N>
     CPP_concept span_static_conversion =
-        N != dynamic_extent && range_cardinality<Rng>::value == N;
+        N != dynamic_extent && static_cast<detail::span_size_t>(range_cardinality<Rng>::value) == N;
     // clang-format on
     /// \endcond
 
@@ -149,7 +147,7 @@ namespace ranges
         using element_type = T;
         using value_type = meta::_t<std::remove_cv<T>>;
         using index_type = detail::span_index_t;
-        using difference_type = index_type;
+        using difference_type = std::ptrdiff_t;
         using pointer = T *;
         using reference = T &;
         using iterator = T *;
@@ -159,13 +157,14 @@ namespace ranges
 
         constexpr span() noexcept = default;
         constexpr span(pointer ptr, index_type cnt) noexcept
-          : detail::span_extent<N>{(RANGES_EXPECT(cnt >= 0), cnt)}
+          : detail::span_extent<N>{cnt}
           , data_{(RANGES_EXPECT(0 == cnt || ptr != nullptr), ptr)}
         {}
         template<typename = void> // Artificially templatize so that the other
                                   // constructor is preferred for {ptr, 0}
         constexpr span(pointer first, pointer last) noexcept
-          : span{first, last - first}
+          : span{first, (RANGES_EXPECT(static_cast<index_type>(last - first) >= 0),
+                         static_cast<index_type>(last - first))}
         {}
 
         template(typename Rng)(
@@ -200,14 +199,13 @@ namespace ranges
         }
         constexpr span<T> first(index_type cnt) const noexcept
         {
-            return RANGES_EXPECT(cnt >= 0 && cnt <= size()),
+            return RANGES_EXPECT(cnt <= size()),
                    RANGES_EXPECT(cnt == 0 || data_ != nullptr), span<T>{data_, cnt};
         }
 
         template<index_type Count>
         constexpr span<T, Count> last() const noexcept
         {
-            static_assert(Count >= 0, "Count of elements to extract cannot be negative.");
             static_assert(
                 N == dynamic_extent || Count <= N,
                 "Count of elements to extract must be less than the static span extent.");
@@ -217,7 +215,7 @@ namespace ranges
         }
         constexpr span<T> last(index_type cnt) const noexcept
         {
-            return RANGES_EXPECT(cnt >= 0 && cnt <= size()),
+            return RANGES_EXPECT(cnt <= size()),
                    RANGES_EXPECT((cnt == 0 && size() == 0) || data_ != nullptr),
                    span<T>{data_ + size() - cnt, cnt};
         }
@@ -226,17 +224,13 @@ namespace ranges
         constexpr span<T, detail::subspan_extent(N, Offset, Count)> subspan() const
             noexcept
         {
-            static_assert(Offset >= 0,
-                          "Offset of first element to extract cannot be negative.");
-            static_assert(Count >= dynamic_extent,
-                          "Count of elements to extract cannot be negative.");
             static_assert(
                 N == dynamic_extent ||
                     N >= Offset + (Count == dynamic_extent ? 0 : Count),
                 "Sequence of elements to extract must be within the static span extent.");
             return RANGES_EXPECT(size() >=
                                  Offset + (Count == dynamic_extent ? 0 : Count)),
-                   RANGES_EXPECT((Offset == 0 && Count <= 0) || data_ != nullptr),
+                   RANGES_EXPECT((Offset == 0 && Count == 0) || data_ != nullptr),
                    span<T, detail::subspan_extent(N, Offset, Count)>{
                        data_ + Offset, Count == dynamic_extent ? size() - Offset : Count};
         }
@@ -244,8 +238,6 @@ namespace ranges
         constexpr span<T, (N >= Offset ? N - Offset : dynamic_extent)> subspan() const
             noexcept
         {
-            static_assert(Offset >= 0,
-                          "Offset of first element to extract cannot be negative.");
             static_assert(N == dynamic_extent || N >= Offset,
                           "Offset of first element to extract must be within the static "
                           "span extent.");
@@ -257,15 +249,14 @@ namespace ranges
         }
         constexpr span<T, dynamic_extent> subspan(index_type offset) const noexcept
         {
-            return RANGES_EXPECT(offset >= 0), RANGES_EXPECT(size() >= offset),
+            return RANGES_EXPECT(size() >= offset),
                    RANGES_EXPECT((offset == 0 && size() == 0) || data_ != nullptr),
                    span<T, dynamic_extent>{data_ + offset, size() - offset};
         }
         constexpr span<T, dynamic_extent> subspan(index_type offset, index_type cnt) const
             noexcept
         {
-            return RANGES_EXPECT(offset >= 0), RANGES_EXPECT(cnt >= 0),
-                   RANGES_EXPECT(size() >= offset + cnt),
+            return RANGES_EXPECT(size() >= offset + cnt),
                    RANGES_EXPECT((offset == 0 && cnt == 0) || data_ != nullptr),
                    span<T, dynamic_extent>{data_ + offset, cnt};
         }
@@ -286,7 +277,7 @@ namespace ranges
 
         constexpr reference operator[](index_type idx) const noexcept
         {
-            return RANGES_EXPECT(idx >= 0), RANGES_EXPECT(idx < size()),
+            return RANGES_EXPECT(idx < size()),
                    RANGES_EXPECT(data_), data_[idx];
         }
 
@@ -370,9 +361,9 @@ namespace ranges
         /// \pre
         requires contiguous_range<Rng>)
         span(Rng && rng)
-            ->span<detail::element_t<Rng>, (range_cardinality<Rng>::value < cardinality()
+            ->span<detail::element_t<Rng>, (static_cast<detail::span_size_t>(range_cardinality<Rng>::value) < cardinality()
                                                 ? dynamic_extent
-                                                : static_cast<detail::span_index_t>(
+                                                : static_cast<detail::span_size_t>(
                                                       range_cardinality<Rng>::value))>;
 #endif
 
@@ -402,7 +393,7 @@ namespace ranges
     template(typename Rng)(
         /// \pre
         requires contiguous_range<Rng> AND
-        (range_cardinality<Rng>::value < cardinality())) //
+        (static_cast<detail::span_size_t>(range_cardinality<Rng>::value) < cardinality())) //
         constexpr span<detail::element_t<Rng>> make_span(Rng && rng) noexcept(
             noexcept(ranges::data(rng), ranges::size(rng)))
     {
@@ -412,14 +403,14 @@ namespace ranges
     template(typename Rng)(
         /// \pre
         requires contiguous_range<Rng> AND
-        (range_cardinality<Rng>::value >= cardinality())) //
+        (static_cast<detail::span_size_t>(range_cardinality<Rng>::value) >= cardinality())) //
         constexpr span<
             detail::element_t<Rng>,
-            static_cast<detail::span_index_t>(
+            static_cast<detail::span_size_t>(
                 range_cardinality<Rng>::
                     value)> make_span(Rng && rng) noexcept(noexcept(ranges::data(rng)))
     {
-        return {ranges::data(rng), range_cardinality<Rng>::value};
+        return {ranges::data(rng), static_cast<detail::span_size_t>(range_cardinality<Rng>::value)};
     }
 
     /// @}
