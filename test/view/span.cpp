@@ -101,26 +101,26 @@ void test_case_from_nullptr_constructor()
 void test_case_from_nullptr_size_constructor()
 {
     {
-        span<int> s{nullptr, static_cast<span<int>::index_type>(0)};
+        span<int> s{nullptr, static_cast<span<int>::size_type>(0)};
         CHECK((s.size() == 0 && s.data() == nullptr));
 
-        span<const int> cs{nullptr, static_cast<span<int>::index_type>(0)};
+        span<const int> cs{nullptr, static_cast<span<int>::size_type>(0)};
         CHECK((cs.size() == 0 && cs.data() == nullptr));
     }
 
     {
-        span<int, 0> s{nullptr, static_cast<span<int>::index_type>(0)};
+        span<int, 0> s{nullptr, static_cast<span<int>::size_type>(0)};
         CHECK((s.size() == 0 && s.data() == nullptr));
 
-        span<const int, 0> cs{nullptr, static_cast<span<int>::index_type>(0)};
+        span<const int, 0> cs{nullptr, static_cast<span<int>::size_type>(0)};
         CHECK((cs.size() == 0 && cs.data() == nullptr));
     }
 
     {
-        span<int*> s{nullptr, static_cast<span<int>::index_type>(0)};
+        span<int*> s{nullptr, static_cast<span<int>::size_type>(0)};
         CHECK((s.size() == 0 && s.data() == nullptr));
 
-        span<const int*> cs{nullptr, static_cast<span<int>::index_type>(0)};
+        span<const int*> cs{nullptr, static_cast<span<int>::size_type>(0)};
         CHECK((cs.size() == 0 && cs.data() == nullptr));
     }
 }
@@ -143,7 +143,7 @@ void test_case_from_pointer_size_constructor()
 
     {
         int* p = nullptr;
-        span<int> s{p, static_cast<span<int>::index_type>(0)};
+        span<int> s{p, static_cast<span<int>::size_type>(0)};
         CHECK((s.size() == 0 && s.data() == nullptr));
     }
 
@@ -155,7 +155,7 @@ void test_case_from_pointer_size_constructor()
 
     {
         int* p = nullptr;
-        auto s = make_span(p, static_cast<span<int>::index_type>(0));
+        auto s = make_span(p, static_cast<span<int>::size_type>(0));
         CHECK((s.size() == 0 && s.data() == nullptr));
     }
 
