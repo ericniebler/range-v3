@@ -14,6 +14,8 @@
 #ifndef RANGES_V3_RANGE_ACCESS_HPP
 #define RANGES_V3_RANGE_ACCESS_HPP
 
+#include <range/v3/detail/config.hpp>
+
 #include <functional> // for reference_wrapper (whose use with begin/end is deprecated)
 #include <initializer_list>
 #include <iterator>
@@ -21,7 +23,7 @@
 #include <utility>
 
 #ifdef __has_include
-#if __has_include(<span>)
+#if __has_include(<span>) && !defined(RANGES_WORKAROUND_MSVC_UNUSABLE_SPAN)
 #include <span>
 #endif
 #if __has_include(<string_view>)

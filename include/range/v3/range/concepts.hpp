@@ -14,12 +14,14 @@
 #ifndef RANGES_V3_RANGE_CONCEPTS_HPP
 #define RANGES_V3_RANGE_CONCEPTS_HPP
 
+#include <range/v3/detail/config.hpp>
+
 #include <initializer_list>
 #include <type_traits>
 #include <utility>
 
 #ifdef __has_include
-#if __has_include(<span>)
+#if __has_include(<span>) && !defined(RANGES_WORKAROUND_MSVC_UNUSABLE_SPAN)
 #include <span>
 #endif
 #if __has_include(<string_view>)
