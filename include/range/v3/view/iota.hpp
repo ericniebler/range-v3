@@ -523,6 +523,34 @@ namespace ranges
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(closed_iota_fn, closed_iota)
 
+        /// # ranges::views::ints
+        /// The ints view returns a range of monotonically increasing ints.
+        ///
+        /// ## Example
+        /// \snippet example/view/ints.cpp ints example
+        ///
+        /// ### Output
+        /// \include example/view/ints_golden.txt
+        ///
+        /// ## Syntax
+        /// ```cpp
+        /// auto output_range = ranges::views::ints(lower_bound, upper_bound);
+        /// ```
+        ///
+        /// ## Parameters
+        /// <pre><b>lower_bound</b></pre>
+        ///   - Optional lower bound
+        ///
+        /// <pre><b>upper_bound</b></pre>
+        ///   - Exclusive upper bound
+        ///   - Required when `lower_bound` is specified
+        ///     - To create an infinite range with a `lower_bound`, use
+        ///     `ranges::unreachable` as the `upper_bound`
+        ///
+        /// <pre><b>output_range</b></pre>
+        ///   - Range of monotonically increasing ints
+        ///   - When an `upper_bound` is not specified, the range is quasi-infinite
+        ///
         struct ints_fn : iota_view<int>
         {
             ints_fn() = default;

@@ -97,6 +97,38 @@ namespace ranges
             }
         };
 
+        /// # ranges::views::filter
+        /// The filter view takes in a predicate function `T -> bool` and converts an
+        /// input range of `T` into an output range of `T` by keeping all elements for
+        /// which the predicate returns true.
+        ///
+        /// ## Example
+        /// \snippet example/view/filter.cpp filter example
+        ///
+        /// ### Output
+        /// \include example/view/filter_golden.txt
+        ///
+        /// ## Syntax
+        /// ```cpp
+        /// auto output_range = input_range | ranges::views::filter(filter_func);
+        /// ```
+        ///
+        /// ## Parameters
+        /// <pre><b>filter_func</b></pre>
+        ///   - Called once for each element of the input range
+        ///   - Returns true for elements that should present in the output range
+        ///
+        /// <pre><b>input_range</b></pre>
+        ///   - The range of elements to filter
+        ///   - Reference type: `T`
+        ///
+        /// <pre><b>output_range</b></pre>
+        ///   - The range of filtered values
+        ///     - Is either a `forward_range` or the concept satisfied by the input
+        ///     - Is a `common_range` if the input is a `common_range`
+        ///     - Is not a `sized_range` or `borrowed_range`
+        ///   - Reference type: `T`
+        ///
         struct filter_fn : filter_base_fn
         {
             using filter_base_fn::operator();
