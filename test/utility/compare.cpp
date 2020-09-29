@@ -14,7 +14,8 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 //
-#if __cplusplus > 201703L && defined(__cpp_impl_three_way_comparison) && __has_include(<compare>)
+#if __cplusplus > 201703L && __has_include(<compare>) && \
+    defined(__cpp_concepts) && defined(__cpp_impl_three_way_comparison)
 
 #include <compare>
 #include <range/v3/compare.hpp>
