@@ -85,7 +85,13 @@ namespace ranges
         public:
             index_view() = default;
         };
+
     } // namespace detail
+
+    template<typename Size, typename Diff>
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<detail::index_view<Size, Diff>> =
+        true;
+
     /// \endcond
     /// \addtogroup group-views
     /// @{
