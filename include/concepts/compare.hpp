@@ -17,7 +17,8 @@
 #ifndef CPP_COMPARE_HPP
 #define CPP_COMPARE_HPP
 
-#if __cplusplus > 201703L && defined(__cpp_impl_three_way_comparison) && __has_include(<compare>)
+#if __cplusplus > 201703L && __has_include(<compare>) && \
+    defined(__cpp_concepts) && defined(__cpp_impl_three_way_comparison)
 
 #include <compare>
 #include <concepts/concepts.hpp>
