@@ -131,6 +131,9 @@ int main()
         std::vector<std::string> expected;
         copy(rng, ranges::back_inserter(expected));
         ::check_equal(expected, {"ax","by","cz"});
+
+        auto rng2 = views::zip_with([] { return 42; });
+        static_assert(std::is_same<range_value_t<decltype(rng2)>, int>::value, "");
     }
 
     // Move from a zip view

@@ -410,8 +410,9 @@ namespace ranges
 
             template(typename Fun)(
                 /// \pre
-                requires zippable_with<Fun>)
-            constexpr empty_view<std::tuple<>> operator()(Fun) const noexcept
+                requires zippable_with<
+                    Fun>) constexpr empty_view<detail::decay_t<invoke_result_t<Fun &>>>
+            operator()(Fun) const noexcept
             {
                 return {};
             }
@@ -437,8 +438,9 @@ namespace ranges
 
             template(typename Fun)(
                 /// \pre
-                requires copy_constructible<Fun> AND invocable<Fun &>)
-            constexpr empty_view<std::tuple<>> operator()(Fun) const noexcept
+                requires copy_constructible<Fun> AND invocable<
+                    Fun &>) constexpr empty_view<detail::decay_t<invoke_result_t<Fun &>>>
+            operator()(Fun) const noexcept
             {
                 return {};
             }
