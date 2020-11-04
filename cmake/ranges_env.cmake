@@ -79,18 +79,5 @@ else()
   set(RANGES_RELEASE_BUILD TRUE)
 endif()
 
-# Find Valgrind
-find_program(MEMORYCHECK_COMMAND valgrind)
-if(MEMORYCHECK_COMMAND)
-  set(MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --leak-check=full")
-  if (RANGES_VERBOSE_BUILD)
-    message(STATUS "[range-v3]: valgrind found at path: ${MEMORYCHECK_COMMAND}")
-  endif()
-else()
-  if (RANGES_VERBOSE_BUILD)
-    message(WARNING "[range-v3 warning]: valgrind not found!")
-  endif()
-endif()
-
 find_package(Doxygen)
 find_package(Git)
