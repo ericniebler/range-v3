@@ -88,7 +88,9 @@ else()
   # Enable "normal" warnings and make them errors:
   ranges_append_flag(RANGES_HAS_WALL -Wall)
   ranges_append_flag(RANGES_HAS_WEXTRA -Wextra)
-  ranges_append_flag(RANGES_HAS_WERROR -Werror)
+  if (RANGES_ENABLE_WERROR)
+    ranges_append_flag(RANGES_HAS_WERROR -Werror)
+  endif()
 endif()
 
 if (RANGES_ENV_LINUX AND RANGES_CXX_COMPILER_CLANG)

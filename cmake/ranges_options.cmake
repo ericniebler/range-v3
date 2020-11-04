@@ -16,6 +16,9 @@ option(RANGES_MODULES "Enables use of Clang modules (experimental)." OFF)
 option(RANGES_NATIVE "Enables -march/-mtune=native." ON)
 option(RANGES_VERBOSE_BUILD "Enables debug output from CMake." OFF)
 option(RANGES_LLVM_POLLY "Enables LLVM Polly." OFF)
+option(RANGES_ENABLE_WERROR
+  "Enables -Werror. Only effective if compiler is not clang-cl or MSVC. ON by default"
+  ON)
 option(RANGES_PREFER_REAL_CONCEPTS
   "Use real concepts instead of emulation if the compiler supports it"
   ON)
