@@ -41,6 +41,12 @@
 
 #include <range/v3/detail/prologue.hpp>
 
+#if defined(__cpp_lib_span) && __cpp_lib_span >= 202002L
+#include <span>
+template<class T, std::size_t N>
+void foo(std::span<T, N>);
+#endif
+
 namespace ranges
 {
 #if defined(__cpp_lib_string_view) && __cpp_lib_string_view >= 201606L
