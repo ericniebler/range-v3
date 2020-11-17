@@ -23,7 +23,7 @@
 #include <utility>
 
 #ifdef __has_include
-#if __has_include(<span>) && !defined(RANGES_WORKAROUND_MSVC_UNUSABLE_SPAN)
+#if __has_include(<span>) //&& !defined(RANGES_WORKAROUND_MSVC_UNUSABLE_SPAN)
 #include <span>
 #endif
 #if __has_include(<string_view>)
