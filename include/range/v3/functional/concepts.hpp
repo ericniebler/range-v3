@@ -27,7 +27,7 @@ namespace ranges
 
     // clang-format off
     // WORKAROUND mysterious msvc bug
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && !defined(__clang__)
     template<typename Fun, typename... Args>
     CPP_concept invocable =
         std::is_invocable_v<Fun, Args...>;
