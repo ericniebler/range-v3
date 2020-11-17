@@ -185,13 +185,13 @@ namespace ranges
     RANGES_INLINE_VAR constexpr bool enable_view =
         ext::enable_view<T>::value;
 
-#if defined(__cpp_lib_string_view) && __cpp_lib_string_view > 0
+#if defined(__cpp_lib_string_view) && __cpp_lib_string_view >= 201606L
     template<typename Char, typename Traits>
     RANGES_INLINE_VAR constexpr bool enable_view<std::basic_string_view<Char, Traits>> =
         true;
 #endif
 
-#if defined(__cpp_lib_span) && __cpp_lib_span > 0
+#if defined(__cpp_lib_span) && __cpp_lib_span >= 202002L
     template<typename T, std::size_t N>
     RANGES_INLINE_VAR constexpr bool enable_view<std::span<T, N>> = N + 1 < 2;
 #endif

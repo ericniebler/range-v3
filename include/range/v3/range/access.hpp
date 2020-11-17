@@ -43,13 +43,13 @@
 
 namespace ranges
 {
-#if defined(__cpp_lib_string_view) && __cpp_lib_string_view > 0
+#if defined(__cpp_lib_string_view) && __cpp_lib_string_view >= 201606L
     template<class CharT, class Traits>
     RANGES_INLINE_VAR constexpr bool
         enable_borrowed_range<std::basic_string_view<CharT, Traits>> = true;
 #endif
 
-#if defined(__cpp_lib_span) && __cpp_lib_span > 0
+#if defined(__cpp_lib_span) && __cpp_lib_span >= 202002L
 static_assert(RANGES_SPAN_INCLUDED, "span included");
     template<class T, std::size_t N>
     RANGES_INLINE_VAR constexpr bool enable_borrowed_range<std::span<T, N>> = true;
