@@ -21,7 +21,7 @@
 #include <utility>
 
 #ifdef __has_include
-#if __has_include(<span>) //&& !defined(RANGES_WORKAROUND_MSVC_UNUSABLE_SPAN)
+#if __has_include(<span>) && !defined(RANGES_WORKAROUND_MSVC_UNUSABLE_SPAN)
 #include <span>
 #endif
 #if __has_include(<string_view>)
@@ -191,7 +191,10 @@ namespace ranges
         true;
 #endif
 
-#if defined(__cpp_lib_span) && __cpp_lib_span >= 202002L
+// libstdc++'s <span> header only defines std::span when concepts
+// are also enabled. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=97869
+#if defined(__cpp_lib_span) && __cpp_lib_span >= 202002L && \
+    (!defined(__GLIBCXX__) || defined(__cpp_lib_concepts))
     template<typename T, std::size_t N>
     RANGES_INLINE_VAR constexpr bool enable_view<std::span<T, N>> = N + 1 < 2;
 #endif

@@ -280,10 +280,10 @@ namespace ranges
 #define RANGES_WORKAROUND_MSVC_OLD_LAMBDA
 #endif
 
-// #if _MSVC_LANG <= 201703L
-// #define RANGES_WORKAROUND_MSVC_UNUSABLE_SPAN // MSVC provides a <span> header that is
-//                                              // guarded against use with std <= 17
-// #endif
+#if _MSVC_LANG <= 201703L
+#define RANGES_WORKAROUND_MSVC_UNUSABLE_SPAN // MSVC provides a <span> header that is
+                                             // guarded against use with std <= 17
+#endif
 
 #elif defined(__GNUC__) || defined(__clang__)
 #define RANGES_PRAGMA(X) _Pragma(#X)
