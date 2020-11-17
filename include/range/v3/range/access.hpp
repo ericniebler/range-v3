@@ -25,6 +25,7 @@
 #ifdef __has_include
 #if __has_include(<span>) //&& !defined(RANGES_WORKAROUND_MSVC_UNUSABLE_SPAN)
 #include <span>
+#define RANGES_SPAN_INCLUDED 1
 #endif
 #if __has_include(<string_view>)
 #include <string_view>
@@ -49,6 +50,7 @@ namespace ranges
 #endif
 
 #if defined(__cpp_lib_span) && __cpp_lib_span > 0
+static_assert(RANGES_SPAN_INCLUDED, "span included");
     template<class T, std::size_t N>
     RANGES_INLINE_VAR constexpr bool enable_borrowed_range<std::span<T, N>> = true;
 #endif
