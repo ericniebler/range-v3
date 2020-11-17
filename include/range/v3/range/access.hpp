@@ -42,13 +42,16 @@
 
 namespace ranges
 {
-#if defined(__cpp_lib_string_view) && __cpp_lib_string_view > 0
+#if defined(__cpp_lib_string_view) && __cpp_lib_string_view >= 201606L
     template<class CharT, class Traits>
     RANGES_INLINE_VAR constexpr bool
         enable_borrowed_range<std::basic_string_view<CharT, Traits>> = true;
 #endif
 
-#if defined(__cpp_lib_span) && __cpp_lib_span > 0
+// libstdc++'s <span> header only defines std::span when concepts
+// are also enabled. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=97869
+#if defined(__cpp_lib_span) && __cpp_lib_span >= 202002L && \
+    (!defined(__GLIBCXX__) || defined(__cpp_lib_concepts))
     template<class T, std::size_t N>
     RANGES_INLINE_VAR constexpr bool enable_borrowed_range<std::span<T, N>> = true;
 #endif
