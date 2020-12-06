@@ -2,6 +2,7 @@
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014-present
+//  Copyright Google LLC 2020-present
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -199,6 +200,52 @@ namespace ranges
 
         using ranges::ostreambuf_iterator;
     } // namespace cpp20
+
+    /// \brief Writes to an ostream object using the unformatted
+    /// `std::basic_ostream::write` operation. This means that `32` will be encoded as
+    /// `100000` as opposed to the string "32".
+    ///
+    template<typename CharT = char, typename Traits = std::char_traits<CharT>>
+    class unformatted_ostream_iterator final
+    {
+    public:
+        using iterator_category = std::output_iterator_tag;
+        using difference_type = std::ptrdiff_t;
+        using char_type = CharT;
+        using traits_type = Traits;
+        using ostream_type = std::basic_ostream<CharT, Traits>;
+
+        unformatted_ostream_iterator() = default;
+
+        explicit unformatted_ostream_iterator(ostream_type & out) noexcept
+          : out_(&out)
+        {}
+
+        template<typename T>
+        // requires stream_insertible<T, ostream_type>
+        unformatted_ostream_iterator & operator=(T const & t)
+        {
+            RANGES_EXPECT(out_);
+            out_->write(reinterpret_cast<char const *>(std::addressof(t)), sizeof(T));
+            return *this;
+        }
+
+        unformatted_ostream_iterator & operator*() noexcept
+        {
+            return *this;
+        }
+        unformatted_ostream_iterator & operator++() noexcept
+        {
+            return *this;
+        }
+        unformatted_ostream_iterator & operator++(int) noexcept
+        {
+            return *this;
+        }
+
+    private:
+        ostream_type * out_ = nullptr;
+    };
     /// @}
 } // namespace ranges
 
