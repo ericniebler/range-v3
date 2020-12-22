@@ -27,7 +27,7 @@
 #include <range/v3/view/subrange.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -55,7 +55,7 @@ namespace ranges
                 return ranges::views::ref(t);
             }
 
-            /// Not a view and not an lvalue? If it's a safe_range, then
+            /// Not a view and not an lvalue? If it's a borrowed_range, then
             /// return a subrange holding the range's begin/end.
             template<typename T>
             static constexpr auto from_range_(T && t, std::false_type, std::false_type,
@@ -65,20 +65,20 @@ namespace ranges
             }
 
         public:
-            template<typename T>
-            constexpr auto CPP_fun(operator())(T && t)(const requires viewable_range<T>)
+            template(typename T)(
+                /// \pre
+                requires range<T &> AND viewable_range<T>)
+            constexpr auto operator()(T && t) const
             {
                 return all_fn::from_range_(static_cast<T &&>(t),
                                            meta::bool_<view_<uncvref_t<T>>>{},
                                            std::is_lvalue_reference<T>{},
-                                           meta::bool_<safe_range<T>>{});
+                                           meta::bool_<borrowed_range<T>>{});
             }
 
             template<typename T>
             RANGES_DEPRECATED("Passing a reference_wrapper to views::all is deprecated.")
-            constexpr auto operator()(std::reference_wrapper<T> r) const
-                -> CPP_ret(ref_view<T>)( //
-                    requires range<T &>)
+            constexpr ref_view<T> operator()(std::reference_wrapper<T> r) const
             {
                 return ranges::views::ref(r.get());
             }
@@ -111,14 +111,18 @@ namespace ranges
         namespace views
         {
             using ranges::views::all;
+            using ranges::views::all_t;
         }
-        CPP_template(typename Rng)(       //
-            requires viewable_range<Rng>) //
-            using all_view = ranges::views::all_t<Rng>;
+        template(typename Rng)(
+            /// \pre
+            requires viewable_range<Rng>)
+        using all_view RANGES_DEPRECATED(
+            "Please use ranges::cpp20::views::all_t instead.") =
+                ranges::views::all_t<Rng>;
     } // namespace cpp20
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

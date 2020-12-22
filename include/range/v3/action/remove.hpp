@@ -25,7 +25,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -35,9 +35,10 @@ namespace ranges
     {
         struct remove_fn
         {
-            template<typename V, typename P>
-            constexpr auto CPP_fun(operator())(V && value, P proj)(const //
-                                                                   requires(!range<V>))
+            template(typename V, typename P)(
+                /// \pre
+                requires (!range<V>))
+            constexpr auto operator()(V && value, P proj) const
             {
                 return make_action_closure(
                     bind_back(remove_fn{}, static_cast<V &&>(value), std::move(proj)));
@@ -50,13 +51,13 @@ namespace ranges
                     bind_back(remove_fn{}, static_cast<V &&>(value), identity{}));
             }
 
-            template<typename Rng, typename V, typename P = identity>
-            auto operator()(Rng && rng, V const & value, P proj = {}) const
-                -> CPP_ret(Rng)( //
-                    requires forward_range<Rng> && permutable<iterator_t<Rng>> &&
-                        erasable_range<Rng, iterator_t<Rng>, sentinel_t<Rng>> &&
+            template(typename Rng, typename V, typename P = identity)(
+                /// \pre
+                requires forward_range<Rng> AND permutable<iterator_t<Rng>> AND
+                        erasable_range<Rng, iterator_t<Rng>, sentinel_t<Rng>> AND
                             indirect_relation<equal_to, projected<iterator_t<Rng>, P>,
                                               V const *>)
+            Rng operator()(Rng && rng, V const & value, P proj = {}) const
             {
                 auto it = ranges::remove(rng, value, std::move(proj));
                 ranges::erase(rng, it, ranges::end(rng));
@@ -70,6 +71,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

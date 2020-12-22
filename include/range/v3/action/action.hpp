@@ -30,7 +30,7 @@
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -56,33 +56,28 @@ namespace ranges
     }
     /// \endcond
 
-    template<typename ActionFn, typename Rng>
-    CPP_concept_fragment(invocable_action_closure_, requires()(0) &&
+    template(typename ActionFn, typename Rng)(
+    concept (invocable_action_closure_)(ActionFn, Rng),
         !derived_from<invoke_result_t<ActionFn, Rng>, detail::action_closure_base_>
     );
     template<typename ActionFn, typename Rng>
-    CPP_concept_bool invocable_action_closure =
+    CPP_concept invocable_action_closure =
         invocable<ActionFn, Rng> &&
-        CPP_fragment(ranges::invocable_action_closure_, ActionFn, Rng);
-
-    namespace defer
-    {
-        template<typename ActionFn, typename Rng>
-        CPP_concept invocable_action_closure =
-            CPP_defer(ranges::invocable_action_closure, ActionFn, Rng);
-    }
+        CPP_concept_ref(ranges::invocable_action_closure_, ActionFn, Rng);
 
     namespace actions
     {
         struct RANGES_STRUCT_WITH_ADL_BARRIER(action_closure_base)
           : detail::action_closure_base_
         {
+            // clang-format off
             // Piping requires things are passed by value.
-            CPP_template(typename Rng, typename ActionFn)(                             //
-                requires(!defer::is_true<std::is_lvalue_reference<Rng>::value>) &&     //
-                defer::range<Rng> && defer::invocable_action_closure<ActionFn, Rng &>) //
-                friend constexpr auto
-                operator|(Rng && rng, action_closure<ActionFn> act)
+            template(typename Rng, typename ActionFn)(
+                /// \pre
+                requires (!std::is_lvalue_reference<Rng>::value) AND
+                range<Rng> AND invocable_action_closure<ActionFn, Rng &>)
+            friend constexpr auto
+            operator|(Rng && rng, action_closure<ActionFn> act)
             {
                 return aux::move(static_cast<ActionFn &&>(act)(rng));
             }
@@ -102,7 +97,8 @@ namespace ranges
             template<typename ActionFn, typename Pipeable>
             friend constexpr auto operator|(action_closure<ActionFn> act, Pipeable pipe)
                 -> CPP_broken_friend_ret(action_closure<composed<Pipeable, ActionFn>>)(
-                    requires(is_pipeable_v<Pipeable>))
+                    /// \pre
+                    requires (is_pipeable_v<Pipeable>))
             {
                 return make_action_closure(compose(static_cast<Pipeable &&>(pipe),
                                                    static_cast<ActionFn &&>(act)));
@@ -110,27 +106,31 @@ namespace ranges
 
             template<typename Rng, typename ActionFn>
             friend constexpr auto operator|=(Rng & rng, action_closure<ActionFn> act) //
-                -> CPP_broken_friend_ret(Rng &)(                                      //
+                -> CPP_broken_friend_ret(Rng &)(
+                    /// \pre
                     requires range<Rng> && invocable<ActionFn, Rng &>)
             {
                 static_cast<ActionFn &&>(act)(rng);
                 return rng;
             }
+            // clang-format on
         };
 
 #ifdef RANGES_WORKAROUND_CLANG_43400
+        // clang-format off
         namespace RANGES_ADL_BARRIER_FOR(action_closure_base)
         {
-            template<typename Rng, typename ActionFn>   // ******************************
-            constexpr auto                              // ******************************
-            operator|(Rng &,                            // ********* READ THIS **********
-                      action_closure<ActionFn> const &) // ****** IF YOUR COMPILE *******
-                ->CPP_ret(Rng)(                         // ******** BREAKS HERE *********
-                    requires range<Rng>) = delete;      // ******************************
-            // **************************************************************************
-            // *    When piping a range into an action, the range must be moved in.     *
-            // **************************************************************************
-        } // namespace )
+            template(typename Rng, typename ActionFn)(  // *******************************
+                requires range<Rng>)                    // *******************************
+            constexpr Rng                               // ********** READ THIS **********
+            operator|(Rng &,                            // ******* IF YOUR COMPILE *******
+                      action_closure<ActionFn> const &) // ********* BREAKS HERE *********
+                = delete;                               // *******************************
+            // ***************************************************************************
+            // *    When piping a range into an action, the range must be moved in.      *
+            // ***************************************************************************
+        } // namespace RANGES_ADL_BARRIER_FOR(action_closure_base)
+        // clang-format on
 #endif    // RANGES_WORKAROUND_CLANG_43400
 
         template<typename ActionFn>
@@ -207,18 +207,20 @@ namespace ranges
             {}
 
             // Calling directly requires things are passed by reference.
-            template<typename Rng, typename... Rest>
-            auto operator()(Rng & rng, Rest &&... rest) const
-                -> CPP_ret(invoke_result_t<Action const &, Rng &, Rest...>)( //
-                    requires range<Rng> && invocable<Action const &, Rng &, Rest...>)
+            template(typename Rng, typename... Rest)(
+                /// \pre
+                requires range<Rng> AND invocable<Action const &, Rng &, Rest...>)
+            invoke_result_t<Action const &, Rng &, Rest...> //
+            operator()(Rng & rng, Rest &&... rest) const
             {
                 return invoke(act_, rng, static_cast<Rest &&>(rest)...);
             }
 
             // Currying overload.
             // clang-format off
-            CPP_template(typename... Rest, typename A = Action)(
-                requires(sizeof...(Rest) != 0))
+            template(typename... Rest, typename A = Action)(
+                /// \pre
+                requires (sizeof...(Rest) != 0))
             auto CPP_auto_fun(operator())(Rest &&... rest)(const)
             (
                 return make_action_fn_{}(
@@ -241,6 +243,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

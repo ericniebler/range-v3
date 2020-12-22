@@ -27,7 +27,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -39,10 +39,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(generate_n)
 
         /// \brief function template \c generate_n
-        template<typename O, typename F>
-        auto RANGES_FUNC(generate_n)(O first, iter_difference_t<O> n, F fun)
-            ->CPP_ret(generate_n_result<O, F>)( //
-                requires invocable<F &> && output_iterator<O, invoke_result_t<F &>>)
+        template(typename O, typename F)(
+            /// \pre
+            requires invocable<F &> AND output_iterator<O, invoke_result_t<F &>>)
+        generate_n_result<O, F> //
+        RANGES_FUNC(generate_n)(O first, iter_difference_t<O> n, F fun)
         {
             RANGES_EXPECT(n >= 0);
             auto norig = n;
@@ -62,6 +63,6 @@ namespace ranges
     // @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

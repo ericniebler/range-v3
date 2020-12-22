@@ -26,7 +26,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -35,11 +35,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(all_of)
 
         /// \brief function template \c all_of
-        template<typename I, typename S, typename F, typename P = identity>
-        auto RANGES_FUNC(all_of)(I first, S last, F pred, P proj = P{}) //
-            ->CPP_ret(bool)(                                            //
-                requires input_iterator<I> && sentinel_for<S, I> &&
-                indirect_unary_predicate<F, projected<I, P>>)
+        template(typename I, typename S, typename F, typename P = identity)(
+            /// \pre
+            requires input_iterator<I> AND sentinel_for<S, I> AND
+            indirect_unary_predicate<F, projected<I, P>>)
+        bool RANGES_FUNC(all_of)(I first, S last, F pred, P proj = P{}) //
         {
             for(; first != last; ++first)
                 if(!invoke(pred, invoke(proj, *first)))
@@ -48,11 +48,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename F, typename P = identity>
-        auto RANGES_FUNC(all_of)(Rng && rng, F pred, P proj = P{}) //
-            ->CPP_ret(bool)(                                       //
-                requires input_range<Rng> &&
-                indirect_unary_predicate<F, projected<iterator_t<Rng>, P>>)
+        template(typename Rng, typename F, typename P = identity)(
+            /// \pre
+            requires input_range<Rng> AND
+            indirect_unary_predicate<F, projected<iterator_t<Rng>, P>>)
+        bool RANGES_FUNC(all_of)(Rng && rng, F pred, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
@@ -66,6 +66,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -32,7 +32,7 @@
 #include <range/v3/view/subrange.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -68,9 +68,10 @@ namespace ranges
             {
                 return {ranges::begin(rng_), n_};
             }
-            template<typename BaseRng = Rng>
-            auto begin() const -> CPP_ret(counted_iterator<iterator_t<BaseRng const>>)( //
+            template(typename BaseRng = Rng)(
+                /// \pre
                 requires range<BaseRng const>)
+            counted_iterator<iterator_t<BaseRng const>> begin() const
             {
                 return {ranges::begin(rng_), n_};
             }
@@ -113,13 +114,15 @@ namespace ranges
             {
                 return ranges::begin(rng_) + n_;
             }
-            CPP_member
-            auto CPP_fun(begin)()(const requires range<Rng const>)
+            CPP_auto_member
+            auto CPP_fun(begin)()(const //
+                requires range<Rng const>)
             {
                 return ranges::begin(rng_);
             }
-            CPP_member
-            auto CPP_fun(end)()(const requires range<Rng const>)
+            CPP_auto_member
+            auto CPP_fun(end)()(const //
+                requires range<Rng const>)
             {
                 return ranges::begin(rng_) + n_;
             }
@@ -141,7 +144,9 @@ namespace ranges
     using take_exactly_view = detail::take_exactly_view_<Rng>;
 
     template<typename Rng, bool B>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<detail::take_exactly_view_<Rng, B>> = enable_safe_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool //
+        enable_borrowed_range<detail::take_exactly_view_<Rng, B>> = //
+            enable_borrowed_range<Rng>;
 
     namespace views
     {
@@ -154,20 +159,21 @@ namespace ranges
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
-            template<typename Rng>
-            static constexpr auto impl_(Rng && rng, range_difference_t<Rng> n,
-                                        random_access_range_tag)
-                -> CPP_ret(subrange<iterator_t<Rng>>)( //
-                    requires safe_range<Rng>)
+            template(typename Rng)(
+                /// \pre
+                requires borrowed_range<Rng>)
+            static constexpr subrange<iterator_t<Rng>> impl_(Rng && rng,
+                                                             range_difference_t<Rng> n,
+                                                             random_access_range_tag)
             {
                 return {begin(rng), next(begin(rng), n)};
             }
 
         public:
-            template<typename Rng>
-            constexpr auto CPP_fun(operator())(Rng && rng, range_difference_t<Rng> n)(
-                const //
-                requires viewable_range<Rng> && input_range<Rng>)
+            template(typename Rng)(
+                /// \pre
+                requires viewable_range<Rng> AND input_range<Rng>)
+            constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
             {
                 return take_exactly_base_fn::impl_(
                     static_cast<Rng &&>(rng), n, range_tag_of<Rng>{});
@@ -178,9 +184,10 @@ namespace ranges
         {
             using take_exactly_base_fn::operator();
 
-            template<typename Int>
-            constexpr auto CPP_fun(operator())(Int n)(const //
-                                                      requires detail::integer_like_<Int>)
+            template(typename Int)(
+                /// \pre
+                requires detail::integer_like_<Int>)
+            constexpr auto operator()(Int n) const
             {
                 return make_view_closure(bind_back(take_exactly_base_fn{}, n));
             }
@@ -193,7 +200,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::detail::take_exactly_view_)
 

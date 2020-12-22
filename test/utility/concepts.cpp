@@ -1,6 +1,7 @@
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014-present
+//  Copyright Google LLC 2020-present
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -275,6 +276,25 @@ static_assert(ranges::equality_comparable<int>, "");
 static_assert(ranges::equality_comparable_with<int, int>, "");
 static_assert(ranges::equality_comparable_with<int, IntComparable>, "");
 static_assert(ranges::equality_comparable_with<int &, IntComparable &>, "");
+
+#if __cplusplus > 201703L && __has_include(<compare>) && \
+    defined(__cpp_concepts) && defined(__cpp_impl_three_way_comparison)
+#include <compare>
+
+static_assert(ranges::three_way_comparable<int>);
+static_assert(ranges::three_way_comparable<int, std::partial_ordering>);
+static_assert(ranges::three_way_comparable<int, std::weak_ordering>);
+static_assert(ranges::three_way_comparable<int, std::strong_ordering>);
+
+static_assert(ranges::three_way_comparable_with<int, IntComparable>);
+static_assert(ranges::three_way_comparable_with<int, IntComparable, std::partial_ordering>);
+static_assert(ranges::three_way_comparable_with<int, IntComparable, std::weak_ordering>);
+static_assert(ranges::three_way_comparable_with<int, IntComparable, std::strong_ordering>);
+static_assert(ranges::three_way_comparable_with<IntComparable, int>);
+static_assert(ranges::three_way_comparable_with<IntComparable, int, std::partial_ordering>);
+static_assert(ranges::three_way_comparable_with<IntComparable, int, std::weak_ordering>);
+static_assert(ranges::three_way_comparable_with<IntComparable, int, std::strong_ordering>);
+#endif // supports spaceship
 
 static_assert(
     std::is_same<

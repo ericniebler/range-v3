@@ -28,7 +28,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -40,22 +40,22 @@ namespace ranges
     RANGES_FUNC_BEGIN(replace_copy)
 
         /// \brief function template \c replace_copy
-        template<typename I,
+        template(typename I,
                  typename S,
                  typename O,
                  typename T1,
                  typename T2,
-                 typename P = identity>
-        auto RANGES_FUNC(replace_copy)(I first,
-                                       S last,
-                                       O out,
-                                       T1 const & old_value,
-                                       T2 const & new_value,
-                                       P proj = {}) //
-            ->CPP_ret(replace_copy_result<I, O>)(   //
-                requires input_iterator<I> && sentinel_for<S, I> &&
-                output_iterator<O, T2 const &> && indirectly_copyable<I, O> &&
+                 typename P = identity)(
+            /// \pre
+            requires input_iterator<I> AND sentinel_for<S, I> AND
+                output_iterator<O, T2 const &> AND indirectly_copyable<I, O> AND
                 indirect_relation<equal_to, projected<I, P>, T1 const *>)
+        replace_copy_result<I, O> RANGES_FUNC(replace_copy)(I first,
+                                                            S last,
+                                                            O out,
+                                                            T1 const & old_value,
+                                                            T2 const & new_value,
+                                                            P proj = {}) //
         {
             for(; first != last; ++first, ++out)
             {
@@ -69,17 +69,17 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng,
+        template(typename Rng,
                  typename O,
                  typename T1,
                  typename T2,
-                 typename P = identity>
-        auto RANGES_FUNC(replace_copy)(
-            Rng && rng, O out, T1 const & old_value, T2 const & new_value, P proj = {}) //
-            ->CPP_ret(replace_copy_result<safe_iterator_t<Rng>, O>)(                    //
-                requires input_range<Rng> && output_iterator<O, T2 const &> &&
-                indirectly_copyable<iterator_t<Rng>, O> &&
+                 typename P = identity)(
+            /// \pre
+            requires input_range<Rng> AND output_iterator<O, T2 const &> AND
+                indirectly_copyable<iterator_t<Rng>, O> AND
                 indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>)
+        replace_copy_result<borrowed_iterator_t<Rng>, O> RANGES_FUNC(replace_copy)(
+            Rng && rng, O out, T1 const & old_value, T2 const & new_value, P proj = {}) //
         {
             return (*this)(begin(rng),
                            end(rng),
@@ -99,6 +99,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

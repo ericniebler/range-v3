@@ -2,6 +2,7 @@
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014-present
+//  Copyright Google LLC 2020-present
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -24,7 +25,7 @@
 
 #include <range/v3/iterator/concepts.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -49,9 +50,10 @@ namespace ranges
           : sout_(&s)
           , delim_(d)
         {}
-        template<typename U>
-        auto operator=(U && value) -> CPP_ret(ostream_iterator &)( //
+        template(typename U)(
+            /// \pre
             requires convertible_to<U, value_t<U> const &>)
+        ostream_iterator & operator=(U && value)
         {
             RANGES_EXPECT(sout_);
             *sout_ << static_cast<value_t<U> const &>(static_cast<U &&>(value));
@@ -129,10 +131,11 @@ namespace ranges
 
     struct make_ostream_joiner_fn
     {
-        template<typename Delim, typename Char, typename Traits>
-        auto operator()(std::basic_ostream<Char, Traits> & s, Delim && d) const
-            -> CPP_ret(ostream_joiner<detail::decay_t<Delim>, Char, Traits>)( //
-                requires semiregular<detail::decay_t<Delim>>)
+        template(typename Delim, typename Char, typename Traits)(
+            /// \pre
+            requires semiregular<detail::decay_t<Delim>>)
+        ostream_joiner<detail::decay_t<Delim>, Char, Traits> //
+        operator()(std::basic_ostream<Char, Traits> & s, Delim && d) const
         {
             return {s, std::forward<Delim>(d)};
         }
@@ -197,6 +200,52 @@ namespace ranges
 
         using ranges::ostreambuf_iterator;
     } // namespace cpp20
+
+    /// \brief Writes to an ostream object using the unformatted
+    /// `std::basic_ostream::write` operation. This means that `32` will be encoded as
+    /// `100000` as opposed to the string "32".
+    ///
+    template<typename CharT = char, typename Traits = std::char_traits<CharT>>
+    class unformatted_ostream_iterator final
+    {
+    public:
+        using iterator_category = std::output_iterator_tag;
+        using difference_type = std::ptrdiff_t;
+        using char_type = CharT;
+        using traits_type = Traits;
+        using ostream_type = std::basic_ostream<CharT, Traits>;
+
+        unformatted_ostream_iterator() = default;
+
+        explicit unformatted_ostream_iterator(ostream_type & out) noexcept
+          : out_(&out)
+        {}
+
+        template<typename T>
+        // requires stream_insertible<T, ostream_type>
+        unformatted_ostream_iterator & operator=(T const & t)
+        {
+            RANGES_EXPECT(out_);
+            out_->write(reinterpret_cast<char const *>(std::addressof(t)), sizeof(T));
+            return *this;
+        }
+
+        unformatted_ostream_iterator & operator*() noexcept
+        {
+            return *this;
+        }
+        unformatted_ostream_iterator & operator++() noexcept
+        {
+            return *this;
+        }
+        unformatted_ostream_iterator & operator++(int) noexcept
+        {
+            return *this;
+        }
+
+    private:
+        ostream_type * out_ = nullptr;
+    };
     /// @}
 } // namespace ranges
 
@@ -220,6 +269,6 @@ namespace std
 RANGES_DIAGNOSTIC_POP
 /// \endcond
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_ITERATOR_STREAM_ITERATORS_HPP

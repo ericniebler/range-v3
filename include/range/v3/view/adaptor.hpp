@@ -28,7 +28,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/facade.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -60,15 +60,15 @@ namespace ranges
             return 0;
         }
         template<typename BaseIter, typename Adapt>
-        constexpr auto which_adaptor_value_(priority_tag<1>)
-            -> always_<int, decltype(Adapt::read(std::declval<BaseIter const &>(),
-                                                 adaptor_base_current_mem_fn{}))>
+        constexpr always_<int, decltype(Adapt::read(std::declval<BaseIter const &>(),
+                                                    adaptor_base_current_mem_fn{}))> //
+        which_adaptor_value_(priority_tag<1>)
         {
             return 1;
         }
         template<typename BaseIter, typename Adapt>
-        constexpr auto which_adaptor_value_(priority_tag<2>)
-            -> always_<int, typename Adapt::value_type>
+        constexpr always_<int, typename Adapt::value_type> //
+        which_adaptor_value_(priority_tag<2>)
         {
             return 2;
         }
@@ -89,7 +89,7 @@ namespace ranges
         struct adaptor_value_type_<BaseIter, Adapt, 2>
         {
 #ifdef RANGES_WORKAROUND_MSVC_688606
-            using value_type = typename readable_traits<Adapt>::value_type;
+            using value_type = typename indirectly_readable_traits<Adapt>::value_type;
 #else  // ^^^ workaround ^^^ / vvv no workaround vvv
             using value_type = typename Adapt::value_type;
 #endif // RANGES_WORKAROUND_MSVC_688606
@@ -128,47 +128,54 @@ namespace ranges
             return ranges::end(rng.base())
         )
             // clang-format on
-            template<typename I>
-            static auto equal(I const & it0, I const & it1) -> CPP_ret(bool)( //
+            template(typename I)(
+                /// \pre
                 requires equality_comparable<I>)
+            static bool equal(I const & it0, I const & it1)
         {
             return it0 == it1;
         }
-        template<typename I>
-        static auto read(I const & it, detail::adaptor_base_current_mem_fn = {}) noexcept(
-            noexcept(iter_reference_t<I>(*it))) -> CPP_ret(iter_reference_t<I>)( //
+        template(typename I)(
+            /// \pre
             requires input_or_output_iterator<I>)
+        static iter_reference_t<I> read(I const & it,
+                                        detail::adaptor_base_current_mem_fn = {})
+            noexcept(noexcept(iter_reference_t<I>(*it)))
         {
             return *it;
         }
-        template<typename I>
-        static auto next(I & it) -> CPP_ret(void)( //
+        template(typename I)(
+            /// \pre
             requires input_or_output_iterator<I>)
+        static void next(I & it)
         {
             ++it;
         }
-        template<typename I>
-        static auto prev(I & it) -> CPP_ret(void)( //
+        template(typename I)(
+            /// \pre
             requires bidirectional_iterator<I>)
+        static void prev(I & it)
         {
             --it;
         }
-        template<typename I>
-        static auto advance(I & it, iter_difference_t<I> n) -> CPP_ret(void)( //
+        template(typename I)(
+            /// \pre
             requires random_access_iterator<I>)
+        static void advance(I & it, iter_difference_t<I> n)
         {
             it += n;
         }
-        template<typename I>
-        static auto distance_to(I const & it0, I const & it1)
-            -> CPP_ret(iter_difference_t<I>)( //
-                requires sized_sentinel_for<I, I>)
+        template(typename I)(
+            /// \pre
+            requires sized_sentinel_for<I, I>)
+        static iter_difference_t<I> distance_to(I const & it0, I const & it1)
         {
             return it1 - it0;
         }
-        template<typename I, typename S>
-        static constexpr auto empty(I const & it, S const & last) -> CPP_ret(bool)( //
+        template(typename I, typename S)(
+            /// \pre
             requires sentinel_for<S, I>)
+        static constexpr bool empty(I const & it, S const & last)
         {
             return it == last;
         }
@@ -254,10 +261,10 @@ namespace ranges
             #ifndef _MSC_VER
             using basic_mixin<adaptor_cursor>::basic_mixin;
             #else
-            explicit constexpr basic_adaptor_mixin(adaptor_cursor && cur)
+            constexpr explicit basic_adaptor_mixin(adaptor_cursor && cur)
               : basic_mixin<adaptor_cursor>(static_cast<adaptor_cursor &&>(cur))
             {}
-            explicit constexpr basic_adaptor_mixin(adaptor_cursor const & cur)
+            constexpr explicit basic_adaptor_mixin(adaptor_cursor const & cur)
               : basic_mixin<adaptor_cursor>(cur)
             {}
             #endif
@@ -448,12 +455,13 @@ namespace ranges
         adaptor_cursor(BaseIter iter, Adapt adapt)
           : base_t{{std::move(iter), std::move(adapt)}}
         {}
-        template<typename OtherIter, typename OtherAdapt>
-        CPP_ctor(adaptor_cursor)(adaptor_cursor<OtherIter, OtherAdapt> that)(
-            requires defer::not_same_as_<adaptor_cursor<OtherIter, OtherAdapt>,
-                                         adaptor_cursor> &&
-                defer::convertible_to<OtherIter, BaseIter> &&
-                    defer::convertible_to<OtherAdapt, Adapt>)
+        template(typename OtherIter, typename OtherAdapt)(
+            /// \pre
+            requires //
+                (!same_as<adaptor_cursor<OtherIter, OtherAdapt>, adaptor_cursor>) AND
+                convertible_to<OtherIter, BaseIter> AND
+                convertible_to<OtherAdapt, Adapt>)
+        adaptor_cursor(adaptor_cursor<OtherIter, OtherAdapt> that)
           : base_t{{std::move(that.data_.first()), std::move(that.data_.second())}}
         {}
     };
@@ -501,20 +509,21 @@ namespace ranges
             auto pos = adapt.begin(d);
             return {std::move(pos), std::move(adapt)};
         }
-        template<typename D = Derived>
+        template(typename D = Derived)(
+            /// \pre
+            requires same_as<D, Derived>)
         constexpr auto begin_cursor() noexcept(
             noexcept(view_adaptor::begin_cursor_(std::declval<D &>())))
-            -> CPP_ret(decltype(view_adaptor::begin_cursor_(std::declval<D &>())))( //
-                requires same_as<D, Derived>)
+            -> decltype(view_adaptor::begin_cursor_(std::declval<D &>()))
         {
             return view_adaptor::begin_cursor_(derived());
         }
-        template<typename D = Derived>
+        template(typename D = Derived)(
+            /// \pre
+            requires same_as<D, Derived> AND range<base_range_t const>)
         constexpr auto begin_cursor() const
             noexcept(noexcept(view_adaptor::begin_cursor_(std::declval<D const &>())))
-                -> CPP_ret(
-                    decltype(view_adaptor::begin_cursor_(std::declval<D const &>())))( //
-                    requires same_as<D, Derived> && range<base_range_t const>)
+                -> decltype(view_adaptor::begin_cursor_(std::declval<D const &>()))
         {
             return view_adaptor::begin_cursor_(derived());
         }
@@ -528,19 +537,21 @@ namespace ranges
             auto pos = adapt.end(d);
             return {std::move(pos), std::move(adapt)};
         }
-        template<typename D = Derived>
+        template(typename D = Derived)(
+            /// \pre
+            requires same_as<D, Derived>)
         constexpr auto end_cursor() noexcept(
             noexcept(view_adaptor::end_cursor_(std::declval<D &>())))
-            -> CPP_ret(decltype(view_adaptor::end_cursor_(std::declval<D &>())))( //
-                requires same_as<D, Derived>)
+            -> decltype(view_adaptor::end_cursor_(std::declval<D &>()))
         {
             return view_adaptor::end_cursor_(derived());
         }
-        template<typename D = Derived>
+        template(typename D = Derived)(
+            /// \pre
+            requires same_as<D, Derived> AND range<base_range_t const>)
         constexpr auto end_cursor() const noexcept(
             noexcept(view_adaptor::end_cursor_(std::declval<D const &>())))
-            -> CPP_ret(decltype(view_adaptor::end_cursor_(std::declval<D const &>())))( //
-                requires same_as<D, Derived> && range<base_range_t const>)
+            -> decltype(view_adaptor::end_cursor_(std::declval<D const &>()))
         {
             return view_adaptor::end_cursor_(derived());
         }
@@ -554,7 +565,7 @@ namespace ranges
         view_adaptor(view_adaptor const &) = default;
         view_adaptor & operator=(view_adaptor &&) = default;
         view_adaptor & operator=(view_adaptor const &) = default;
-        explicit constexpr view_adaptor(BaseRng && rng)
+        constexpr explicit view_adaptor(BaseRng && rng)
           : rng_(views::all(static_cast<BaseRng &&>(rng)))
         {}
         constexpr base_range_t & base() noexcept
@@ -571,6 +582,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

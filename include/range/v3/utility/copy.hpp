@@ -20,7 +20,7 @@
 
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -30,9 +30,10 @@ namespace ranges
     {
         struct copy_fn : copy_tag
         {
-            template<typename T>
-            constexpr auto operator()(T && t) const -> CPP_ret(detail::decay_t<T>)( //
+            template(typename T)(
+                /// \pre
                 requires constructible_from<detail::decay_t<T>, T>)
+            constexpr auto operator()(T && t) const -> detail::decay_t<T>
             {
                 return static_cast<T &&>(t);
             }
@@ -41,7 +42,8 @@ namespace ranges
             /// \sa `copy_fn`
             template<typename T>
             friend constexpr auto operator|(T && t, copy_fn)
-                -> CPP_broken_friend_ret(detail::decay_t<T>)( //
+                -> CPP_broken_friend_ret(detail::decay_t<T>)(
+                    /// \pre
                     requires constructible_from<detail::decay_t<T>, T>)
             {
                 return static_cast<T &&>(t);
@@ -55,6 +57,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -16,8 +16,8 @@ cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-add_executable(example example.cpp)
+add_executable(range-v3-example example.cpp)
 
-target_link_libraries(example ${CONAN_LIBS})
+target_link_libraries(range-v3-example ${CONAN_LIBS})
 
-set_property(TARGET example PROPERTY CXX_STANDARD 17)
+set_property(TARGET range-v3-example PROPERTY CXX_STANDARD 17)

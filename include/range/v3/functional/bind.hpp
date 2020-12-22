@@ -25,7 +25,7 @@
 
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -97,16 +97,18 @@ namespace ranges
 
     struct protect_fn
     {
-        template<typename F>
-        auto operator()(F && f) const -> CPP_ret(protector<uncvref_t<F>>)( //
-            requires std::is_bind_expression<uncvref_t<F>>::value)
+        template(typename F)(
+            /// \pre
+            requires std::is_bind_expression<uncvref_t<F>>::value) //
+        protector<uncvref_t<F>> operator()(F && f) const
         {
             return {static_cast<F &&>(f)};
         }
         /// \overload
-        template<typename F>
-        auto operator()(F && f) const -> CPP_ret(F)( //
-            requires(!std::is_bind_expression<uncvref_t<F>>::value))
+        template(typename F)(
+            /// \pre
+            requires (!std::is_bind_expression<uncvref_t<F>>::value)) //
+        F operator()(F && f) const
         {
             return static_cast<F &&>(f);
         }
@@ -120,6 +122,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

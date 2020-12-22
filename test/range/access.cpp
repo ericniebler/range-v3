@@ -81,24 +81,24 @@ void test_array(std::integer_sequence<T, Is...>)
 namespace begin_testing
 {
     template<class R>
-    CPP_concept_fragment(can_begin_,
+    CPP_requires(can_begin_,
         requires(R&& r) //
         (
             ranges::begin((R &&) r)
         ));
     template<class R>
-    CPP_concept_bool can_begin =
-        CPP_fragment(can_begin_, R);
+    CPP_concept can_begin =
+        CPP_requires_ref(can_begin_, R);
 
     template<class R>
-    CPP_concept_fragment(can_cbegin_,
+    CPP_requires(can_cbegin_,
         requires(R&& r) //
         (
             ranges::cbegin((R &&) r)
         ));
     template<class R>
-    CPP_concept_bool can_cbegin =
-        CPP_fragment(can_cbegin_, R);
+    CPP_concept can_cbegin =
+        CPP_requires_ref(can_cbegin_, R);
 
     struct A
     {
@@ -238,7 +238,7 @@ using CI = int const *;
 CPP_assert(ranges::input_or_output_iterator<I>);
 CPP_assert(ranges::input_or_output_iterator<CI>);
 
-#if defined(__cpp_lib_string_view) && __cpp_lib_string_view > 0
+#if defined(__cpp_lib_string_view) && __cpp_lib_string_view >= 201606L
 void test_string_view_p0970()
 {
     // basic_string_views are non-dangling
@@ -308,7 +308,7 @@ int main()
     test_array<int const>(std::make_integer_sequence<int, 3>{});
     begin_testing::test();
 
-#if defined(__cpp_lib_string_view) && __cpp_lib_string_view > 0
+#if defined(__cpp_lib_string_view) && __cpp_lib_string_view >= 201606L
     test_string_view_p0970();
 #endif
 

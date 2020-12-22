@@ -23,7 +23,7 @@
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -39,9 +39,9 @@ namespace ranges
             tuple_t fn_args_;
 
             template<typename... CallArgs>
-                constexpr auto operator()(CallArgs &&... cargs) &&
+            constexpr invoke_result_t<Fn, CallArgs..., Args...> //
+            operator()(CallArgs &&... cargs) &&
                 noexcept(is_nothrow_invocable_v<Fn, CallArgs..., Args...>)
-                    -> invoke_result_t<Fn, CallArgs..., Args...>
             {
                 return tuple_apply(
                     [&](auto && fn, auto &&... args) -> decltype(auto) {
@@ -54,9 +54,9 @@ namespace ranges
 
             /// \overload
             template<typename... CallArgs>
-                constexpr auto operator()(CallArgs &&... cargs) &
+            constexpr invoke_result_t<Fn &, CallArgs..., Args &...>
+            operator()(CallArgs &&... cargs) &
                 noexcept(is_nothrow_invocable_v<Fn &, CallArgs..., Args &...>)
-                    -> invoke_result_t<Fn &, CallArgs..., Args &...>
             {
                 return tuple_apply(
                     [&](auto & fn, auto &... args) -> decltype(auto) {
@@ -67,9 +67,9 @@ namespace ranges
 
             /// \overload
             template<typename... CallArgs>
-            constexpr auto operator()(CallArgs &&... cargs) const & noexcept(
-                is_nothrow_invocable_v<Fn const &, CallArgs..., Args const &...>)
-                -> invoke_result_t<Fn const &, CallArgs..., Args const &...>
+            constexpr invoke_result_t<Fn const &, CallArgs..., Args const &...>
+            operator()(CallArgs &&... cargs) const & //
+                noexcept(is_nothrow_invocable_v<Fn const &, CallArgs..., Args const &...>)
             {
                 return tuple_apply(
                     [&](auto & fn, auto &... args) -> decltype(auto) {
@@ -92,26 +92,26 @@ namespace ranges
             tuple_t fn_args_;
 
             template<typename... CallArgs>
-                constexpr auto operator()(CallArgs &&... cargs) &&
+            constexpr invoke_result_t<Fn, CallArgs..., Arg> //
+            operator()(CallArgs &&... cargs) && //
                 noexcept(is_nothrow_invocable_v<Fn, CallArgs..., Arg>)
-                    -> invoke_result_t<Fn, CallArgs..., Arg>
             {
                 return invoke(
                     (Fn &&) fn_args_.fn_, (CallArgs &&) cargs..., (Arg &&) fn_args_.arg_);
             }
 
             template<typename... CallArgs>
-                constexpr auto operator()(CallArgs &&... cargs) &
+            constexpr invoke_result_t<Fn &, CallArgs..., Arg &> //
+            operator()(CallArgs &&... cargs) & //
                 noexcept(is_nothrow_invocable_v<Fn &, CallArgs..., Arg &>)
-                    -> invoke_result_t<Fn &, CallArgs..., Arg &>
             {
                 return invoke(fn_args_.fn_, (CallArgs &&) cargs..., fn_args_.arg_);
             }
 
             template<typename... CallArgs>
-            constexpr auto operator()(CallArgs &&... cargs) const & noexcept(
-                is_nothrow_invocable_v<Fn const &, CallArgs..., Arg const &>)
-                -> invoke_result_t<Fn const &, CallArgs..., Arg const &>
+            constexpr invoke_result_t<Fn const &, CallArgs..., Arg const &> //
+            operator()(CallArgs &&... cargs) const & //
+                noexcept(is_nothrow_invocable_v<Fn const &, CallArgs..., Arg const &>)
             {
                 return invoke(fn_args_.fn_, (CallArgs &&) cargs..., fn_args_.arg_);
             }
@@ -129,9 +129,9 @@ namespace ranges
             tuple_t fn_args_;
 
             template<typename... CallArgs>
-                constexpr auto operator()(CallArgs &&... cargs) &&
+            constexpr invoke_result_t<Fn, CallArgs..., Arg0, Arg1> //
+            operator()(CallArgs &&... cargs) && //
                 noexcept(is_nothrow_invocable_v<Fn, CallArgs..., Arg0, Arg1>)
-                    -> invoke_result_t<Fn, CallArgs..., Arg0, Arg1>
             {
                 return invoke((Fn &&) fn_args_.fn_,
                               (CallArgs &&) cargs...,
@@ -140,19 +140,21 @@ namespace ranges
             }
 
             template<typename... CallArgs>
-                constexpr auto operator()(CallArgs &&... cargs) &
+            constexpr invoke_result_t<Fn &, CallArgs..., Arg0 &, Arg1 &> //
+            operator()(CallArgs &&... cargs) & //
                 noexcept(is_nothrow_invocable_v<Fn &, CallArgs..., Arg0 &, Arg1 &>)
-                    -> invoke_result_t<Fn &, CallArgs..., Arg0 &, Arg1 &>
             {
                 return invoke(
                     fn_args_.fn_, (CallArgs &&) cargs..., fn_args_.arg0_, fn_args_.arg1_);
             }
 
             template<typename... CallArgs>
-            constexpr auto operator()(CallArgs &&... cargs) const & noexcept(
-                is_nothrow_invocable_v<Fn const &, CallArgs..., Arg0 const &,
-                                       Arg1 const &>)
-                -> invoke_result_t<Fn const &, CallArgs..., Arg0 const &, Arg1 const &>
+            constexpr invoke_result_t<Fn const &, CallArgs..., Arg0 const &, Arg1 const &>
+            operator()(CallArgs &&... cargs) const & 
+                noexcept(is_nothrow_invocable_v<Fn const &,
+                                                CallArgs...,
+                                                Arg0 const &,
+                                                Arg1 const &>)
             {
                 return invoke(
                     fn_args_.fn_, (CallArgs &&) cargs..., fn_args_.arg0_, fn_args_.arg1_);
@@ -167,8 +169,8 @@ namespace ranges
     struct bind_back_fn
     {
         template<typename Fn, typename Arg1, typename... Args>
-        constexpr auto operator()(Fn && fn, Arg1 && arg1, Args &&... args) const
-            -> detail::bind_back_fn<Fn, Arg1, Args...>
+        constexpr detail::bind_back_fn<Fn, Arg1, Args...> //
+        operator()(Fn && fn, Arg1 && arg1, Args &&... args) const
         {
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ <= 5
             using T = typename detail::bind_back_fn<Fn, Arg1, Args...>::tuple_t;
@@ -185,6 +187,6 @@ namespace ranges
 
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_DETAIL_BIND_BACK_HPP

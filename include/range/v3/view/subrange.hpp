@@ -31,7 +31,7 @@
 #include <range/v3/utility/get.hpp>
 #include <range/v3/view/interface.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -46,12 +46,9 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        template<std::size_t N, typename T>
-        using tuple_element_fun_t = void (*)(meta::_t<std::tuple_element<N, T>> const &);
-
         // clang-format off
         template<typename From, typename To>
-        CPP_concept_bool convertible_to_not_slicing_ =
+        CPP_concept convertible_to_not_slicing_ =
             convertible_to<From, To> &&
             // A conversion is a slicing conversion if the source and the destination
             // are both pointers, and if the pointed-to types differ after removing
@@ -61,125 +58,73 @@ namespace ranges
                 not_same_as_<std::remove_pointer_t<decay_t<From>>,
                              std::remove_pointer_t<decay_t<To>>>));
 
+        template<std::size_t N, typename T>
+        using tuple_element_fun_t = void (*)(meta::_t<std::tuple_element<N, T>> const &);
+
         template<typename T>
-        CPP_concept_fragment(pair_like_gcc_bugs_3_,
-            requires(T t, tuple_element_fun_t<0, T> p0, tuple_element_fun_t<1, T> p1)
+        CPP_requires(pair_like_impl_, //
+            requires(T t, tuple_element_fun_t<0, T> p0, tuple_element_fun_t<1, T> p1) //
             (
                 p0( get<0>(t) ),
                 p1( get<1>(t) )
             ));
+        template<typename T>
+        CPP_concept pair_like_impl_ = CPP_requires_ref(detail::pair_like_impl_, T);
+
+        template(typename T)(
+        concept (is_complete_)(T),
+            0 != sizeof(T));
 
         template<typename T>
-        CPP_concept_bool pair_like_gcc_bugs_2_ =
-            derived_from<std::tuple_size<T>, meta::size_t<2>> &&
-            CPP_fragment(detail::pair_like_gcc_bugs_3_, T);
+        CPP_concept is_complete_ = //
+            CPP_concept_ref(is_complete_, T);
 
-        namespace defer
-        {
-            template<typename T>
-            CPP_concept pair_like_gcc_bugs_2_ =
-                CPP_defer(detail::pair_like_gcc_bugs_2_, T);
-        }
+        template(typename T)( //
+        concept (pair_like_)(T), //
+            is_complete_<std::tuple_size<T>> AND
+            derived_from<std::tuple_size<T>, meta::size_t<2>> AND
+            detail::pair_like_impl_<T>);
 
         template<typename T>
-        CPP_concept_fragment(pair_like_gcc_bugs_frag_,
-            requires()(sizeof(std::tuple_size<T>)) &&
-            ranges::defer::type<meta::_t<std::tuple_size<T>>> &&
-            defer::pair_like_gcc_bugs_2_<T>
-        );
-
-        template<typename T>
-        CPP_concept_bool pair_like_gcc_bugs_ =
-            CPP_fragment(detail::pair_like_gcc_bugs_frag_, T);
-
-        namespace defer
-        {
-            template<typename T>
-            CPP_concept pair_like_gcc_bugs_ =
-                CPP_defer(detail::pair_like_gcc_bugs_, T);
-        }
-
-        template<typename T>
-        CPP_concept_fragment(_get_first_and_second_,
-            requires(T & t) //
-            (
-                get<0>(t),
-                get<1>(t)
-            ));
-        template<typename T>
-        CPP_concept_bool get_first_and_second_ =
-            CPP_fragment(detail::_get_first_and_second_, T);
-
-        namespace defer
-        {
-            template<typename T>
-            CPP_concept get_first_and_second_ =
-                CPP_defer(detail::get_first_and_second_, T);
-        }
-
-        template<typename T>
-        CPP_concept_bool pair_like_ =
-            (!std::is_reference<T>::value) &&
-            bool(defer::get_first_and_second_<T> &&
-                 defer::pair_like_gcc_bugs_<T>);
-        // clang-format on
-
-        // Short-circuit the PairLike concept for things known to be pairs:
-        template<typename T>
-        RANGES_INLINE_VAR constexpr bool pair_like = pair_like_<T>;
-        template<typename F, typename S>
-        RANGES_INLINE_VAR constexpr bool pair_like<std::pair<F, S>> = true;
-        template<typename... Ts>
-        RANGES_INLINE_VAR constexpr bool pair_like<std::tuple<Ts...>> = (sizeof...(Ts) ==
-                                                                         2u);
+        CPP_concept pair_like = //
+            CPP_concept_ref(detail::pair_like_, T);
 
         // clang-format off
-        template<typename T, typename U, typename V>
-        CPP_concept_fragment(pair_like_convertible_from_gcc_bugs_frag_, requires()(0) &&
-            convertible_to_not_slicing_<U, meta::_t<std::tuple_element<0, T>>> &&
-            convertible_to<V, meta::_t<std::tuple_element<1, T>>>
-        );
-        template<typename T, typename U, typename V>
-        CPP_concept_bool pair_like_convertible_from_gcc_bugs_ =
-            CPP_fragment(detail::pair_like_convertible_from_gcc_bugs_frag_, T, U, V);
-        namespace defer
-        {
-            template<typename T, typename U, typename V>
-            CPP_concept pair_like_convertible_from_gcc_bugs_ =
-                CPP_defer(detail::pair_like_convertible_from_gcc_bugs_, T, U, V);
-        }
+        template(typename T, typename U, typename V)( //
+        concept (pair_like_convertible_from_helper_)(T, U, V), //
+            convertible_to_not_slicing_<U, meta::_t<std::tuple_element<0, T>>> AND
+            convertible_to<V, meta::_t<std::tuple_element<1, T>>>);
 
         template<typename T, typename U, typename V>
-        CPP_concept_bool pair_like_convertible_from_ =
-            (!range<T>) && constructible_from<T, U, V> &&
-            bool(ranges::defer::is_true<pair_like<uncvref_t<T>>> &&
-                 defer::pair_like_convertible_from_gcc_bugs_<T, U, V>);
+        CPP_concept pair_like_convertible_from_helper_ = //
+            CPP_concept_ref(pair_like_convertible_from_helper_, T, U, V);
+
+        template(typename T, typename U, typename V)( //
+        concept (pair_like_convertible_from_impl_)(T, U, V),
+            (!range<T>) AND
+            constructible_from<T, U, V> AND
+            pair_like<uncvref_t<T>> AND
+            pair_like_convertible_from_helper_<T, U, V>);
+
+        template<typename T, typename U, typename V>
+        CPP_concept pair_like_convertible_from_ =
+            CPP_concept_ref(detail::pair_like_convertible_from_impl_, T, U, V);
+
+        template(typename R, typename I, typename S)(
+        concept (range_convertible_to_impl_)(R, I, S),
+            convertible_to_not_slicing_<iterator_t<R>, I> AND
+            convertible_to<sentinel_t<R>, S>);
 
         template<typename R, typename I, typename S>
-        CPP_concept_fragment(range_convertible_to_frag_, requires()(0) &&
-            convertible_to_not_slicing_<iterator_t<R>, I> &&
-            convertible_to<sentinel_t<R>, S>
-        );
-        template<typename R, typename I, typename S>
-        CPP_concept_bool range_convertible_to_ =
-            safe_range<R> &&
-            CPP_fragment(detail::range_convertible_to_frag_, R, I, S);
-
-        namespace defer
-        {
-            template<typename T, typename U, typename V>
-            CPP_concept pair_like_convertible_from_ =
-                CPP_defer(detail::pair_like_convertible_from_, T, U, V);
-
-            template<typename R, typename I, typename S>
-            CPP_concept range_convertible_to_ =
-                CPP_defer(detail::range_convertible_to_, R, I, S);
-        }
+        CPP_concept range_convertible_to_ =
+            borrowed_range<R> &&
+            CPP_concept_ref(detail::range_convertible_to_impl_, R, I, S);
         // clang-format on
 
-        template<typename S, typename I>
-        constexpr auto is_sized_sentinel_() noexcept -> CPP_ret(bool)( //
+        template(typename S, typename I)(
+            /// \pre
             requires sentinel_for<S, I>)
+        constexpr bool is_sized_sentinel_() noexcept
         {
             return (bool)sized_sentinel_for<S, I>;
         }
@@ -192,13 +137,14 @@ namespace ranges
     } // namespace detail
     /// \endcond
 
-    template<typename I, typename S = I,
-             subrange_kind K =
-                 static_cast<subrange_kind>(detail::is_sized_sentinel_<S, I>())>
+    template< //
+        typename I, //
+        typename S = I, //
+        subrange_kind K = static_cast<subrange_kind>(detail::is_sized_sentinel_<S, I>())>
     struct subrange;
 
     template<typename I, typename S, subrange_kind K>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<subrange<I, S, K>> = true;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<subrange<I, S, K>> = true;
 
     /// \cond
     namespace _subrange_
@@ -206,15 +152,17 @@ namespace ranges
         struct adl_hook
         {};
 
-        template<std::size_t N, typename I, typename S, subrange_kind K>
-        constexpr auto get(subrange<I, S, K> const & r) -> CPP_ret(I)( //
-            requires(N == 0))
+        template(std::size_t N, typename I, typename S, subrange_kind K)(
+            /// \pre
+            requires (N == 0)) //
+        constexpr I get(subrange<I, S, K> const & r)
         {
             return r.begin();
         }
-        template<std::size_t N, typename I, typename S, subrange_kind K>
-        constexpr auto get(subrange<I, S, K> const & r) -> CPP_ret(S)( //
-            requires(N == 1))
+        template(std::size_t N, typename I, typename S, subrange_kind K)(
+            /// \pre
+            requires (N == 1)) //
+        constexpr S get(subrange<I, S, K> const & r)
         {
             return r.end();
         }
@@ -240,17 +188,19 @@ namespace ranges
 
         subrange() = default;
 
-        template<typename I2>
-        constexpr CPP_ctor(subrange)(I2 && i, S s)( //
-            requires detail::convertible_to_not_slicing_<I2, I> &&
-            (!detail::store_size_<K, S, I>()))
+        template(typename I2)(
+            /// \pre
+            requires detail::convertible_to_not_slicing_<I2, I> AND
+            (!detail::store_size_<K, S, I>())) //
+        constexpr subrange(I2 && i, S s)
           : data_{static_cast<I2 &&>(i), std::move(s)}
         {}
 
-        template<typename I2>
-        constexpr CPP_ctor(subrange)(I2 && i, S s, size_type n)( //
-            requires detail::convertible_to_not_slicing_<I2, I> &&
-            (detail::store_size_<K, S, I>()))
+        template(typename I2)(
+            /// \pre
+            requires detail::convertible_to_not_slicing_<I2, I> AND
+            (detail::store_size_<K, S, I>())) //
+        constexpr subrange(I2 && i, S s, size_type n)
           : data_{static_cast<I2 &&>(i), std::move(s), n}
         {
             if(RANGES_CONSTEXPR_IF((bool)random_access_iterator<I>))
@@ -260,35 +210,40 @@ namespace ranges
                 RANGES_EXPECT(ranges::next(first_(), (D)n) == last_());
             }
         }
-        template<typename I2>
-        constexpr CPP_ctor(subrange)(I2 && i, S s, size_type n)( //
-            requires detail::convertible_to_not_slicing_<I2, I> &&
+        template(typename I2)(
+            /// \pre
+            requires detail::convertible_to_not_slicing_<I2, I> AND
                 sized_sentinel_for<S, I>)
+        constexpr subrange(I2 && i, S s, size_type n)
           : data_{static_cast<I2 &&>(i), std::move(s)}
         {
             RANGES_EXPECT(static_cast<size_type>(last_() - first_()) == n);
         }
 
-        template<typename R>
-        constexpr CPP_ctor(subrange)(R && r)(
-            requires defer::not_same_as_<R, subrange> &&
-                detail::defer::range_convertible_to_<R, I, S> &&
-                    defer::is_true<!detail::store_size_<K, S, I>()>)
+        template(typename R)(
+            /// \pre
+            requires (!same_as<detail::decay_t<R>, subrange>) AND
+                detail::range_convertible_to_<R, I, S> AND
+                (!detail::store_size_<K, S, I>()))
+        constexpr subrange(R && r)
           : subrange{ranges::begin(r), ranges::end(r)}
         {}
 
-        template<typename R>
-        constexpr CPP_ctor(subrange)(R && r)(
-            requires defer::not_same_as_<R, subrange> &&
-                detail::defer::range_convertible_to_<R, I, S> && defer::is_true<
-                    detail::store_size_<K, S, I>()> && defer::sized_range<R>)
+        template(typename R)(
+            /// \pre
+            requires (!same_as<detail::decay_t<R>, subrange>) AND
+                detail::range_convertible_to_<R, I, S> AND
+                (detail::store_size_<K, S, I>()) AND
+                sized_range<R>)
+        constexpr subrange(R && r)
           : subrange{ranges::begin(r), ranges::end(r), ranges::size(r)}
         {}
 
-        template<typename R>
-        constexpr CPP_ctor(subrange)(R && r, size_type n)(
-            requires detail::range_convertible_to_<R, I, S> &&
-            (K == subrange_kind::sized))
+        template(typename R)(
+            /// \pre
+            requires (K == subrange_kind::sized) AND
+                detail::range_convertible_to_<R, I, S>)
+        constexpr subrange(R && r, size_type n) //
           : subrange{ranges::begin(r), ranges::end(r), n}
         {
             if(RANGES_CONSTEXPR_IF((bool)sized_range<R>))
@@ -297,12 +252,11 @@ namespace ranges
             }
         }
 
-        CPP_template(typename PairLike)( //
-            requires defer::not_same_as_<PairLike, subrange> &&
-                detail::defer::pair_like_convertible_from_<PairLike, const I &,
-                                                           const S &>) //
-            constexpr
-            operator PairLike() const
+        template(typename PairLike)(
+            /// \pre
+            requires (!same_as<PairLike, subrange>) AND
+                detail::pair_like_convertible_from_<PairLike, I const &, S const &>)
+        constexpr operator PairLike() const
         {
             return PairLike(first_(), last_());
         }
@@ -321,8 +275,10 @@ namespace ranges
         }
 
         CPP_member
-        constexpr auto size() const -> CPP_ret(size_type)( //
-            requires(K == subrange_kind::sized))
+        constexpr auto size() const //
+            -> CPP_ret(size_type)(
+                /// \pre
+                requires (K == subrange_kind::sized))
         {
             return get_size_();
         }
@@ -337,7 +293,8 @@ namespace ranges
 
         CPP_member
         RANGES_NODISCARD constexpr auto prev(iter_difference_t<I> n = 1) const
-            -> CPP_ret(subrange)( //
+            -> CPP_ret(subrange)(
+                /// \pre
                 requires bidirectional_iterator<I>)
         {
             auto tmp = *this;
@@ -353,9 +310,12 @@ namespace ranges
         }
 
     private:
-        detail::if_then_t<detail::store_size_<K, S, I>(), std::tuple<I, S, size_type>,
-                          std::tuple<I, S>>
-            data_;
+        using data_t =
+            meta::conditional_t< //
+                detail::store_size_<K, S, I>(), //
+                std::tuple<I, S, size_type>, //
+                std::tuple<I, S>>;
+        data_t data_;
 
         constexpr I & first_() noexcept
         {
@@ -374,22 +334,28 @@ namespace ranges
             return std::get<1>(data_);
         }
         CPP_member
-        constexpr auto get_size_() const -> CPP_ret(size_type)( //
-            requires sized_sentinel_for<S, I>)
+        constexpr auto get_size_() const //
+            -> CPP_ret(size_type)(
+                /// \pre
+                requires sized_sentinel_for<S, I>)
         {
             return static_cast<size_type>(last_() - first_());
         }
         CPP_member
-        constexpr auto get_size_() const noexcept -> CPP_ret(size_type)( //
-            requires(detail::store_size_<K, S, I>()))
+        constexpr auto get_size_() const noexcept //
+            -> CPP_ret(size_type)(
+                /// \pre
+                requires (detail::store_size_<K, S, I>()))
         {
             return std::get<2>(data_);
         }
         static constexpr void set_size_(...) noexcept
         {}
         CPP_member
-        constexpr auto set_size_(size_type n) noexcept -> CPP_ret(void)( //
-            requires(detail::store_size_<K, S, I>()))
+        constexpr auto set_size_(size_type n) noexcept //
+            -> CPP_ret(void)(
+                /// \pre
+                requires (detail::store_size_<K, S, I>()))
         {
             std::get<2>(data_) = n;
         }
@@ -397,57 +363,64 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename I, typename S>
-    subrange(I, S)->subrange<I, S>;
+    subrange(I, S) //
+        -> subrange<I, S>;
 
-    CPP_template(typename I, typename S)(                           //
-        requires input_or_output_iterator<I> && sentinel_for<S, I>) //
-        subrange(I, S, detail::iter_size_t<I>)
-            ->subrange<I, S, subrange_kind::sized>;
+    template(typename I, typename S)(
+        /// \pre
+        requires input_or_output_iterator<I> AND sentinel_for<S, I>)
+    subrange(I, S, detail::iter_size_t<I>)
+        -> subrange<I, S, subrange_kind::sized>;
 
-    CPP_template(typename R)(   //
-        requires safe_range<R>) //
-        subrange(R &&)
-            ->subrange<iterator_t<R>, sentinel_t<R>,
-                       (sized_range<R> ||
+    template(typename R)(
+        /// \pre
+        requires borrowed_range<R>)
+    subrange(R &&) //
+        -> subrange<iterator_t<R>, sentinel_t<R>,
+                    (sized_range<R> ||
                         sized_sentinel_for<sentinel_t<R>, iterator_t<R>>)
                            ? subrange_kind::sized
                            : subrange_kind::unsized>;
 
-    CPP_template(typename R)(   //
-        requires safe_range<R>) //
-        subrange(R &&, detail::iter_size_t<iterator_t<R>>)
-            ->subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>;
+    template(typename R)(
+        /// \pre
+        requires borrowed_range<R>)
+    subrange(R &&, detail::iter_size_t<iterator_t<R>>)
+        -> subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>;
 #endif
 
     // in lieu of deduction guides, use make_subrange
     struct make_subrange_fn
     {
         template<typename I, typename S>
-        constexpr auto operator()(I i, S s) const -> subrange<I, S>
+        constexpr subrange<I, S> operator()(I i, S s) const
         {
             return {i, s};
         }
-        template<typename I, typename S>
-        constexpr auto operator()(I i, S s, detail::iter_size_t<I> n) const
-            -> CPP_ret(subrange<I, S, subrange_kind::sized>)( //
-                requires input_or_output_iterator<I> && sentinel_for<S, I>)
+        template(typename I, typename S)(
+            /// \pre
+            requires input_or_output_iterator<I> AND sentinel_for<S, I>)
+        constexpr subrange<I, S, subrange_kind::sized> //
+        operator()(I i, S s, detail::iter_size_t<I> n) const
         {
             return {i, s, n};
         }
-        template<typename R>
-        constexpr auto operator()(R && r) const -> CPP_ret(
-            subrange<iterator_t<R>, sentinel_t<R>,
+        template(typename R)(
+            /// \pre
+            requires borrowed_range<R>)
+        constexpr auto operator()(R && r) const
+            -> subrange<iterator_t<R>, sentinel_t<R>,
                      (sized_range<R> || sized_sentinel_for<sentinel_t<R>, iterator_t<R>>)
                          ? subrange_kind::sized
-                         : subrange_kind::unsized>)( //
-            requires safe_range<R>)
+                         : subrange_kind::unsized>
         {
             return {(R &&) r};
         }
-        template<typename R>
-        constexpr auto operator()(R && r, detail::iter_size_t<iterator_t<R>> n) const
-            -> CPP_ret(subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>)( //
-                requires safe_range<R>)
+        template(typename R)(
+            /// \pre
+            requires borrowed_range<R>)
+        constexpr subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized> //
+        operator()(R && r, detail::iter_size_t<iterator_t<R>> n) const
         {
             return {(R &&) r, n};
         }
@@ -458,22 +431,31 @@ namespace ranges
     RANGES_INLINE_VARIABLE(make_subrange_fn, make_subrange)
 
     template<typename R>
-    using safe_subrange_t = detail::maybe_dangling_<R, subrange<iterator_t<R>>>;
+    using borrowed_subrange_t = detail::maybe_dangling_<R, subrange<iterator_t<R>>>;
+
+    template<typename R>
+    using safe_subrange_t RANGES_DEPRECATED("Use borrowed_subrange_t instead.") =
+        borrowed_subrange_t<R>;
 
     namespace cpp20
     {
         using ranges::subrange_kind;
 
-        CPP_template(typename I,                                          //
-                     typename S = I,                                      //
-                     subrange_kind K =                                    //
-                     static_cast<subrange_kind>(                          //
-                         detail::is_sized_sentinel_<S, I>()))(            //
-            requires input_or_output_iterator<I> && sentinel_for<S, I> && //
-            (K == subrange_kind::sized || !sized_sentinel_for<S, I>))     //
-            using subrange = ranges::subrange<I, S, K>;
+        template(typename I,                                                //
+                 typename S = I,                                            //
+                 subrange_kind K =                                          //
+                 static_cast<subrange_kind>(                                //
+                     detail::is_sized_sentinel_<S, I>()))(
+            /// \pre
+            requires input_or_output_iterator<I> AND sentinel_for<S, I> AND
+                (K == subrange_kind::sized || !sized_sentinel_for<S, I>))   //
+        using subrange = ranges::subrange<I, S, K>;
 
-        using ranges::safe_subrange_t;
+        using ranges::borrowed_subrange_t;
+
+        template<typename R>
+        using safe_subrange_t RANGES_DEPRECATED("Use borrowed_subrange_t instead.") =
+            borrowed_subrange_t<R>;
     } // namespace cpp20
     /// @}
 } // namespace ranges
@@ -500,6 +482,6 @@ namespace std
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

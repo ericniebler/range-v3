@@ -34,7 +34,7 @@
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -85,7 +85,10 @@ namespace ranges
                 ++it_;
             }
             CPP_member
-            auto prev() -> CPP_ret(void)(requires bidirectional_range<Rng>)
+            auto prev() //
+                -> CPP_ret(void)(
+                    /// \pre
+                    requires bidirectional_range<Rng>)
             {
                 --it_;
             }
@@ -126,15 +129,18 @@ namespace ranges
             {
                 RANGES_ASSERT(0 < n_);
             }
-            CPP_member
-            auto CPP_fun(size)()(const requires sized_range<Rng const>)
+            CPP_auto_member
+            auto CPP_fun(size)()(const //
+                requires sized_range<Rng const>)
             {
                 auto const count = ranges::size(this->base());
                 auto const n = static_cast<range_size_t<Rng const>>(n_);
                 return count < n ? 0 : count - n + 1;
             }
-            CPP_member
-            auto CPP_fun(size)()(requires sized_range<Rng>)
+            CPP_auto_member
+            auto CPP_fun(size)()(
+                /// \pre
+                requires sized_range<Rng>)
             {
                 auto const count = ranges::size(this->base());
                 auto const n = static_cast<range_size_t<Rng>>(n_);
@@ -208,15 +214,18 @@ namespace ranges
                 base_t::next();
             }
             CPP_member
-            auto prev(iterator_t<Rng> & it) -> CPP_ret(void)( //
-                requires bidirectional_range<Rng>)
+            auto prev(iterator_t<Rng> & it) //
+                -> CPP_ret(void)(
+                    /// \pre
+                    requires bidirectional_range<Rng>)
             {
                 base_t::prev();
                 --it;
             }
             CPP_member
             auto advance(iterator_t<Rng> & it, range_difference_t<Rng> n)
-                -> CPP_ret(void)( //
+                -> CPP_ret(void)(
+                    /// \pre
                     requires random_access_range<Rng>)
             {
                 it += n;
@@ -308,9 +317,10 @@ namespace ranges
             adaptor(range_difference_t<Rng> n)
               : n_(n)
             {}
-            template<bool Other>
-            CPP_ctor(adaptor)(adaptor<Other> that)( //
-                requires Const && (!Other))
+            template(bool Other)(
+                /// \pre
+                requires Const AND CPP_NOT(Other)) //
+            adaptor(adaptor<Other> that)
               : n_(that.n_)
             {}
             iterator_t<CRng> end(meta::const_if_c<Const, sliding_view> & v) const
@@ -331,8 +341,10 @@ namespace ranges
             return {this->n_};
         }
         CPP_member
-        auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires range<Rng const>)
+        auto begin_adaptor() const //
+            -> CPP_ret(adaptor<true>)(
+                /// \pre
+                requires range<Rng const>)
         {
             return {this->n_};
         }
@@ -341,8 +353,10 @@ namespace ranges
             return {this->n_};
         }
         CPP_member
-        auto end_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires range<Rng const>)
+        auto end_adaptor() const //
+            -> CPP_ret(adaptor<true>)(
+                /// \pre
+                requires range<Rng const>)
         {
             return {this->n_};
         }
@@ -352,11 +366,13 @@ namespace ranges
     };
 
     template<typename Rng>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<sliding_view<Rng>> = enable_safe_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<sliding_view<Rng>> = //
+        enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    sliding_view(Rng &&, range_difference_t<Rng>)->sliding_view<views::all_t<Rng>>;
+    sliding_view(Rng &&, range_difference_t<Rng>)
+        -> sliding_view<views::all_t<Rng>>;
 #endif
 
     namespace views
@@ -365,10 +381,11 @@ namespace ranges
         // Out: range<range<T>>, where each inner range has $n$ elements.
         struct sliding_base_fn
         {
-            template<typename Rng>
-            constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
-                -> CPP_ret(sliding_view<all_t<Rng>>)( //
-                    requires viewable_range<Rng> && forward_range<Rng>)
+            template(typename Rng)(
+                /// \pre
+                requires viewable_range<Rng> AND forward_range<Rng>)
+            constexpr sliding_view<all_t<Rng>> //
+            operator()(Rng && rng, range_difference_t<Rng> n) const
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
@@ -393,6 +410,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -24,7 +24,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -34,18 +34,19 @@ namespace ranges
     {
         struct take_fn
         {
-            template<typename Int>
-            constexpr auto CPP_fun(operator())(Int n)(const //
-                                                      requires detail::integer_like_<Int>)
+            template(typename Int)(
+                /// \pre
+                requires detail::integer_like_<Int>)
+            constexpr auto operator()(Int n) const
             {
                 return make_action_closure(bind_back(take_fn{}, n));
             }
 
-            template<typename Rng>
-            auto operator()(Rng && rng, range_difference_t<Rng> n) const
-                -> CPP_ret(Rng)( //
-                    requires forward_range<Rng> &&
-                        erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>>)
+            template(typename Rng)(
+                /// \pre
+                requires forward_range<Rng> AND
+                    erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>>)
+            Rng operator()(Rng && rng, range_difference_t<Rng> n) const
             {
                 RANGES_EXPECT(n >= 0);
                 ranges::actions::erase(
@@ -60,6 +61,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

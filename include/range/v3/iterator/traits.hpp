@@ -26,7 +26,7 @@
 #include <range/v3/iterator/access.hpp> // for iter_move, iter_swap
 #include <range/v3/utility/common_type.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -71,7 +71,7 @@ namespace ranges
     !defined(RANGES_DOXYGEN_INVOKED)
     template<typename T>
     using iter_difference_t =
-        typename detail::if_then_t<detail::is_std_iterator_traits_specialized_v<T>,
+        typename meta::conditional_t<detail::is_std_iterator_traits_specialized_v<T>,
                                    std::iterator_traits<uncvref_t<T>>,
                                    incrementable_traits<uncvref_t<T>>>::difference_type;
 #else
@@ -97,7 +97,7 @@ namespace ranges
     {
         template<typename I>
         using iter_size_t =
-            meta::_t<if_then_t<std::is_integral<iter_difference_t<I>>::value,
+            meta::_t<meta::conditional_t<std::is_integral<iter_difference_t<I>>::value,
                                std::make_unsigned<iter_difference_t<I>>,
                                meta::id<iter_difference_t<I>>>>;
 
@@ -106,9 +106,10 @@ namespace ranges
 
         template<typename I>
         using iter_pointer_t =
-            meta::_t<if_then_t<meta::is_trait<meta::defer<iter_arrow_t, I>>::value,
-                               meta::defer<iter_arrow_t, I>,
-                               std::add_pointer<iter_reference_t<I>>>>;
+            meta::_t<meta::conditional_t<
+                        meta::is_trait<meta::defer<iter_arrow_t, I>>::value,
+                        meta::defer<iter_arrow_t, I>,
+                        std::add_pointer<iter_reference_t<I>>>>;
 
         template<typename T>
         struct difference_type_ : meta::defer<iter_difference_t, T>
@@ -167,11 +168,11 @@ namespace ranges
         template<typename T>
         using incrementable_traits = ranges::incrementable_traits<T>;
         template<typename T>
-        using readable_traits = ranges::readable_traits<T>;
+        using indirectly_readable_traits = ranges::indirectly_readable_traits<T>;
     } // namespace cpp20
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_ITERATOR_TRAITS_HPP

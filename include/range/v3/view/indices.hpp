@@ -23,7 +23,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/iota.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -34,15 +34,17 @@ namespace ranges
         {
             indices_fn() = default;
 
-            template<typename Val>
-            auto operator()(Val to) const -> CPP_ret(iota_view<Val, Val>)( //
+            template(typename Val)(
+                /// \pre
                 requires integral<Val>)
+            iota_view<Val, Val> operator()(Val to) const
             {
                 return {Val(), to};
             }
-            template<typename Val>
-            auto operator()(Val from, Val to) const -> CPP_ret(iota_view<Val, Val>)( //
+            template(typename Val)(
+                /// \pre
                 requires integral<Val>)
+            iota_view<Val, Val> operator()(Val from, Val to) const
             {
                 return {from, to};
             }
@@ -51,15 +53,17 @@ namespace ranges
         /// Inclusive range of indices: [from, to].
         struct closed_indices_fn
         {
-            template<typename Val>
-            auto operator()(Val to) const -> CPP_ret(closed_iota_view<Val>)( //
+            template(typename Val)(
+                /// \pre
                 requires integral<Val>)
+            closed_iota_view<Val> operator()(Val to) const
             {
                 return {Val(), to};
             }
-            template<typename Val>
-            auto operator()(Val from, Val to) const -> CPP_ret(closed_iota_view<Val>)( //
+            template(typename Val)(
+                /// \pre
                 requires integral<Val>)
+            closed_iota_view<Val> operator()(Val from, Val to) const
             {
                 return {from, to};
             }
@@ -75,6 +79,6 @@ namespace ranges
     } // namespace views
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_VIEW_INDICES_HPP

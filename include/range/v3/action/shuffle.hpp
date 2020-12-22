@@ -25,7 +25,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -35,29 +35,30 @@ namespace ranges
     {
         struct shuffle_fn
         {
-            template<typename Gen>
-            constexpr auto CPP_fun(operator())(Gen & gen)(
-                const //
+            template(typename Gen)(
+                /// \pre
                 requires uniform_random_bit_generator<Gen>)
+            constexpr auto operator()(Gen & gen) const
             {
                 return make_action_closure(
                     bind_back(shuffle_fn{}, detail::reference_wrapper_<Gen>(gen)));
             }
 
-            template<typename Gen>
-            constexpr auto CPP_fun(operator())(Gen && gen)(
-                const //
+            template(typename Gen)(
+                /// \pre
                 requires uniform_random_bit_generator<Gen>)
+            constexpr auto operator()(Gen && gen) const
             {
                 return make_action_closure(
                     bind_back(shuffle_fn{}, static_cast<Gen &&>(gen)));
             }
 
-            template<typename Rng, typename Gen>
-            auto operator()(Rng && rng, Gen && gen) const -> CPP_ret(Rng)( //
-                requires random_access_range<Rng> && permutable<iterator_t<Rng>> &&
-                    uniform_random_bit_generator<std::remove_reference_t<Gen>> &&
-                        convertible_to<invoke_result_t<Gen &>, range_difference_t<Rng>>)
+            template(typename Rng, typename Gen)(
+                /// \pre
+                requires random_access_range<Rng> AND permutable<iterator_t<Rng>> AND
+                    uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
+                    convertible_to<invoke_result_t<Gen &>, range_difference_t<Rng>>)
+            Rng operator()(Rng && rng, Gen && gen) const
             {
                 ranges::shuffle(rng, static_cast<Gen &&>(gen));
                 return static_cast<Rng &&>(rng);
@@ -65,8 +66,8 @@ namespace ranges
 
             /// \cond
             template<typename Rng, typename T>
-            auto operator()(Rng && rng, detail::reference_wrapper_<T> r) const
-                -> invoke_result_t<shuffle_fn, Rng, T &>
+            invoke_result_t<shuffle_fn, Rng, T &> //
+            operator()(Rng && rng, detail::reference_wrapper_<T> r) const
             {
                 return (*this)(static_cast<Rng &&>(rng), r.get());
             }
@@ -80,6 +81,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

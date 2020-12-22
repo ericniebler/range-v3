@@ -20,7 +20,7 @@ struct present
 
         present get_return_object() { return {*this}; }
         std_coro::suspend_never initial_suspend() { return {}; }
-        std_coro::suspend_never final_suspend() { return {}; }
+        std_coro::suspend_never final_suspend() noexcept { return {}; }
         void return_value(int i) { result = i; }
         void unhandled_exception() {}
     };

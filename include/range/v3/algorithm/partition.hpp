@@ -37,7 +37,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -98,11 +98,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(partition)
 
         /// \brief function template \c partition
-        template<typename I, typename S, typename C, typename P = identity>
-        auto RANGES_FUNC(partition)(I first, S last, C pred, P proj = P{}) //
-            ->CPP_ret(I)(                                                  //
-                requires permutable<I> && sentinel_for<S, I> &&
-                indirect_unary_predicate<C, projected<I, P>>)
+        template(typename I, typename S, typename C, typename P = identity)(
+            /// \pre
+            requires permutable<I> AND sentinel_for<S, I> AND
+            indirect_unary_predicate<C, projected<I, P>>)
+        I RANGES_FUNC(partition)(I first, S last, C pred, P proj = P{})
         {
             return detail::partition_impl(std::move(first),
                                           std::move(last),
@@ -112,11 +112,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C, typename P = identity>
-        auto RANGES_FUNC(partition)(Rng && rng, C pred, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                          //
-                requires forward_range<Rng> && permutable<iterator_t<Rng>> &&
-                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
+        template(typename Rng, typename C, typename P = identity)(
+            /// \pre
+            requires forward_range<Rng> AND permutable<iterator_t<Rng>> AND
+            indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
+        borrowed_iterator_t<Rng> RANGES_FUNC(partition)(Rng && rng, C pred, P proj = P{})
         {
             return detail::partition_impl(begin(rng),
                                           end(rng),
@@ -134,6 +134,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

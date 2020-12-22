@@ -80,6 +80,78 @@ You can download and install range-v3 using the [vcpkg](https://github.com/Micro
 
 The range-v3 port in vcpkg is kept up to date by Microsoft team members and community contributors. If the version is out of date, please [create an issue or pull request](https://github.com/Microsoft/vcpkg) on the vcpkg repository.
 
+Building range-v3 - Using Conan
+-------------------------------
+
+You can download and install range-v3 using the [Conan](https://github.com/conan-io/conan) dependency manager.
+
+Setup your CMakeLists.txt (see [Conan documentation](https://docs.conan.io/en/latest/integrations/build_system.html) on how to use MSBuild, Meson and others):
+```
+project(myproject CXX)
+
+add_executable(${PROJECT_NAME} main.cpp)
+
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake) # Include Conan-generated file
+conan_basic_setup(TARGETS) # Introduce Conan-generated targets
+
+target_link_libraries(${PROJECT_NAME} CONAN_PKG::range-v3)
+```
+Create `conanfile.txt` in your source dir:
+```
+[requires]
+range-v3/0.10.0
+
+[generators]
+cmake
+```
+Install and run `conan`, then build your project as always:
+```
+pip install conan
+mkdir build
+cd build
+conan install ../ --build=missing
+cmake ../
+cmake --build .
+```
+
+Building range-v3 - Using `build2`
+----------------------------------
+
+You can use [`build2`](https://build2.org), a dependency manager and a build-system combined, to use `range-v3` (or work on it):
+
+Currently this package is available in these package repositories:
+ - **https://cppget.org/range-v3/** for released and published versions.
+ - [**The git repository with the sources of the `build2` package of `range-v3`**](https://github.com/build2-packaging/range-v3.git) for unreleased or custom revisions of `range-v3`, or for working on it with `build2`.
+
+### Usage:
+
+ - `build2` package name: `range-v3`
+ - Library target name : `lib{range-v3}`
+ - [Detailed use cases and instructions in this document](https://github.com/build2-packaging/range-v3/NOTES-build2.md).
+
+For example, to make your `build2` project depend on `range-v3`:
+  - Add one of the repositories to your configurations, or in your `repositories.manifest`, if not already there; for example:
+    ```
+    :
+    role: prerequisite
+    location: https://pkg.cppget.org/1/alpha # v0.11.0 is there.
+    ```
+  - Add this package as a dependency to your `manifest` file (example for `v0.11.x`):
+    ```
+    depends: range-v3 ~0.11.0
+    ```
+  - Import the target and use it as a prerequisite to your own target using `range-v3` in the appropriate `buildfile`:
+    ```
+    import range_v3 = range-v3%lib{range-v3}
+
+    lib{mylib} : cxx{**} ... $range_v3
+    ```
+
+Then just build your project as usual (with `b` or `bdep update`), `build2` will figure out the rest.
+
+For `build2` newcomers or to get more details and use cases, you can read [this document](https://github.com/build2-packaging/range-v3/NOTES-build2.md) and the [`build2` toolchain introduction](https://build2.org/build2-toolchain/doc/build2-toolchain-intro.xhtml).
+
+
 Say Thanks!
 -----------
 

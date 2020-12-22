@@ -28,7 +28,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -42,24 +42,24 @@ namespace ranges
         // end position.
 
         /// \brief function template \c find_first_of
-        template<typename I0,
+        template(typename I0,
                  typename S0,
                  typename I1,
                  typename S1,
                  typename R = equal_to,
                  typename P0 = identity,
-                 typename P1 = identity>
-        constexpr auto RANGES_FUNC(find_first_of)(I0 begin0,
-                                                  S0 end0,
-                                                  I1 begin1,
-                                                  S1 end1,
-                                                  R pred = R{},
-                                                  P0 proj0 = P0{},
-                                                  P1 proj1 = P1{}) //
-            ->CPP_ret(I0)(                                         //
-                requires input_iterator<I0> && sentinel_for<S0, I0> &&
-                forward_iterator<I1> && sentinel_for<S1, I1> &&
+                 typename P1 = identity)(
+            /// \pre
+            requires input_iterator<I0> AND sentinel_for<S0, I0> AND
+                forward_iterator<I1> AND sentinel_for<S1, I1> AND
                 indirect_relation<R, projected<I0, P0>, projected<I1, P1>>)
+        constexpr I0 RANGES_FUNC(find_first_of)(I0 begin0,
+                                                S0 end0,
+                                                I1 begin1,
+                                                S1 end1,
+                                                R pred = R{},
+                                                P0 proj0 = P0{},
+                                                P1 proj1 = P1{}) //
         {
             for(; begin0 != end0; ++begin0)
                 for(auto tmp = begin1; tmp != end1; ++tmp)
@@ -69,18 +69,18 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng0,
-                 typename Rng1,
-                 typename R = equal_to,
-                 typename P0 = identity,
-                 typename P1 = identity>
-        constexpr auto RANGES_FUNC(find_first_of)(
-            Rng0 && rng0, Rng1 && rng1, R pred = R{}, P0 proj0 = P0{}, P1 proj1 = P1{}) //
-            ->CPP_ret(safe_iterator_t<Rng0>)(                                           //
-                requires input_range<Rng0> && forward_range<Rng1> &&
+        template(typename Rng0,
+                     typename Rng1,
+                     typename R = equal_to,
+                     typename P0 = identity,
+                     typename P1 = identity)(
+            /// \pre
+            requires input_range<Rng0> AND forward_range<Rng1> AND
                 indirect_relation<R,
                                   projected<iterator_t<Rng0>, P0>,
                                   projected<iterator_t<Rng1>, P1>>)
+        constexpr borrowed_iterator_t<Rng0> RANGES_FUNC(find_first_of)(
+            Rng0 && rng0, Rng1 && rng1, R pred = R{}, P0 proj0 = P0{}, P1 proj1 = P1{}) //
         {
             return (*this)(begin(rng0),
                            end(rng0),
@@ -100,6 +100,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

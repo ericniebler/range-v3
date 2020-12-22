@@ -18,7 +18,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/interface.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -46,15 +46,16 @@ namespace ranges
     };
 
     template<typename I>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<unbounded_view<I>> = true;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<unbounded_view<I>> = true;
 
     namespace views
     {
         struct unbounded_fn
         {
-            template<typename I>
-            constexpr auto operator()(I it) const -> CPP_ret(unbounded_view<I>)( //
+            template(typename I)(
+                /// \pre
                 requires input_iterator<I>)
+            constexpr unbounded_view<I> operator()(I it) const
             {
                 return unbounded_view<I>{detail::move(it)};
             }
@@ -67,7 +68,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::unbounded_view)
 

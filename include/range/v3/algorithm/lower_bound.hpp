@@ -28,7 +28,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -37,16 +37,16 @@ namespace ranges
     RANGES_FUNC_BEGIN(lower_bound)
 
         /// \brief function template \c lower_bound
-        template<typename I,
+        template(typename I,
                  typename S,
                  typename V,
                  typename C = less,
-                 typename P = identity>
-        auto RANGES_FUNC(lower_bound)(
-            I first, S last, V const & val, C pred = C{}, P proj = P{})
-            ->CPP_ret(I)( //
-                requires forward_iterator<I> && sentinel_for<S, I> &&
+                 typename P = identity)(
+            /// \pre
+            requires forward_iterator<I> AND sentinel_for<S, I> AND
                 indirect_strict_weak_order<C, V const *, projected<I, P>>)
+        I RANGES_FUNC(lower_bound)(
+            I first, S last, V const & val, C pred = C{}, P proj = P{})
         {
             return partition_point(std::move(first),
                                    std::move(last),
@@ -55,12 +55,12 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename V, typename C = less, typename P = identity>
-        auto RANGES_FUNC(lower_bound)(
-            Rng && rng, V const & val, C pred = C{}, P proj = P{})
-            ->CPP_ret(safe_iterator_t<Rng>)( //
-                requires forward_range<Rng> &&
+        template(typename Rng, typename V, typename C = less, typename P = identity)(
+            /// \pre
+            requires forward_range<Rng> AND
                 indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
+        borrowed_iterator_t<Rng> //
+        RANGES_FUNC(lower_bound)(Rng && rng, V const & val, C pred = C{}, P proj = P{})
         {
             return partition_point(
                 rng, detail::make_lower_bound_predicate(pred, val), std::move(proj));
@@ -75,6 +75,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -24,7 +24,7 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -35,23 +35,30 @@ namespace ranges
     {
         dangling() = default;
         /// Implicit converting constructor; ignores argument
-        template<typename T>
-        constexpr CPP_ctor(dangling)(T &&)( //
+        template(typename T)(
+            /// \pre
             requires not_same_as_<T, dangling>)
+        constexpr dangling(T &&)
         {}
     };
 
     /// \cond
     namespace detail
     {
-        CPP_template(class R, class U)( //
-            requires range<R>)          //
-            using maybe_dangling_ = if_then_t<detail::_safe_range<R>, U, dangling>;
+        template(class R, class U)(
+            /// \pre
+            requires range<R>)
+            using maybe_dangling_ =     //
+                meta::conditional_t<detail::_borrowed_range<R>, U, dangling>;
     }
     /// \endcond
 
     template<typename Rng>
-    using safe_iterator_t = detail::maybe_dangling_<Rng, iterator_t<Rng>>;
+    using borrowed_iterator_t = detail::maybe_dangling_<Rng, iterator_t<Rng>>;
+
+    template<typename Rng>
+    using safe_iterator_t RANGES_DEPRECATED(
+        "Please use ranges::borrowed_iterator_t instead.") = borrowed_iterator_t<Rng>;
 
     /// \cond
     struct _sanitize_fn
@@ -76,10 +83,14 @@ namespace ranges
     namespace cpp20
     {
         using ranges::dangling;
-        using ranges::safe_iterator_t;
+        using ranges::borrowed_iterator_t;
+
+        template<typename Rng>
+        using safe_iterator_t RANGES_DEPRECATED(
+            "Please use ranges::borrowed_iterator_t instead.") = borrowed_iterator_t<Rng>;
     } // namespace cpp20
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

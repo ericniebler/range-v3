@@ -38,7 +38,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -47,24 +47,24 @@ namespace ranges
     RANGES_FUNC_BEGIN(includes)
 
         /// \brief function template \c includes
-        template<typename I1,
+        template(typename I1,
                  typename S1,
                  typename I2,
                  typename S2,
                  typename C = less,
                  typename P1 = identity,
-                 typename P2 = identity>
-        auto RANGES_FUNC(includes)(I1 begin1,
+                 typename P2 = identity)(
+            /// \pre
+            requires input_iterator<I1> AND sentinel_for<S1, I1> AND
+                input_iterator<I2> AND sentinel_for<S2, I2> AND
+                indirect_strict_weak_order<C, projected<I1, P1>, projected<I2, P2>>)
+        bool RANGES_FUNC(includes)(I1 begin1,
                                    S1 end1,
                                    I2 begin2,
                                    S2 end2,
                                    C pred = C{},
                                    P1 proj1 = P1{},
                                    P2 proj2 = P2{}) //
-            ->CPP_ret(bool)(                        //
-                requires input_iterator<I1> && sentinel_for<S1, I1> &&
-                input_iterator<I2> && sentinel_for<S2, I2> &&
-                indirect_strict_weak_order<C, projected<I1, P1>, projected<I2, P2>>)
         {
             for(; begin2 != end2; ++begin1)
             {
@@ -78,18 +78,18 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng1,
+        template(typename Rng1,
                  typename Rng2,
                  typename C = less,
                  typename P1 = identity,
-                 typename P2 = identity>
-        auto RANGES_FUNC(includes)(
-            Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) //
-            ->CPP_ret(bool)(                                                            //
-                requires input_range<Rng1> && input_range<Rng2> &&
+                 typename P2 = identity)(
+            /// \pre
+            requires input_range<Rng1> AND input_range<Rng2> AND
                 indirect_strict_weak_order<C,
                                            projected<iterator_t<Rng1>, P1>,
                                            projected<iterator_t<Rng2>, P2>>)
+        bool RANGES_FUNC(includes)(
+            Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) //
         {
             return (*this)(begin(rng1),
                            end(rng1),
@@ -113,25 +113,25 @@ namespace ranges
     RANGES_FUNC_BEGIN(set_union)
 
         /// \brief function template \c set_union
-        template<typename I1,
+        template(typename I1,
                  typename S1,
                  typename I2,
                  typename S2,
                  typename O,
                  typename C = less,
                  typename P1 = identity,
-                 typename P2 = identity>
-        auto RANGES_FUNC(set_union)(I1 begin1,
-                                    S1 end1,
-                                    I2 begin2,
-                                    S2 end2,
-                                    O out,
-                                    C pred = C{},
-                                    P1 proj1 = P1{},
-                                    P2 proj2 = P2{}) //
-            ->CPP_ret(set_union_result<I1, I2, O>)(  //
-                requires sentinel_for<S1, I1> && sentinel_for<S2, I2> &&
+                 typename P2 = identity)(
+            /// \pre
+            requires sentinel_for<S1, I1> AND sentinel_for<S2, I2> AND
                 mergeable<I1, I2, O, C, P1, P2>)
+        set_union_result<I1, I2, O> RANGES_FUNC(set_union)(I1 begin1,
+                                                           S1 end1,
+                                                           I2 begin2,
+                                                           S2 end2,
+                                                           O out,
+                                                           C pred = C{},
+                                                           P1 proj1 = P1{},
+                                                           P2 proj2 = P2{}) //
         {
             for(; begin1 != end1; ++out)
             {
@@ -158,22 +158,22 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng1,
+        template(typename Rng1,
                  typename Rng2,
                  typename O,
                  typename C = less,
                  typename P1 = identity,
-                 typename P2 = identity>
-        auto RANGES_FUNC(set_union)(Rng1 && rng1,
-                                    Rng2 && rng2,
-                                    O out,
-                                    C pred = C{},
-                                    P1 proj1 = P1{},
-                                    P2 proj2 = P2{}) //
-            ->CPP_ret(
-                set_union_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>, O>)( //
-                requires range<Rng1> && range<Rng2> &&
+                 typename P2 = identity)(
+            /// \pre
+            requires range<Rng1> AND range<Rng2> AND
                 mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
+        set_union_result<borrowed_iterator_t<Rng1>, borrowed_iterator_t<Rng2>, O> //
+        RANGES_FUNC(set_union)(Rng1 && rng1,
+                               Rng2 && rng2,
+                               O out,
+                               C pred = C{},
+                               P1 proj1 = P1{},
+                               P2 proj2 = P2{}) //
         {
             return (*this)(begin(rng1),
                            end(rng1),
@@ -196,25 +196,25 @@ namespace ranges
     RANGES_FUNC_BEGIN(set_intersection)
 
         /// \brief function template \c set_intersection
-        template<typename I1,
+        template(typename I1,
                  typename S1,
                  typename I2,
                  typename S2,
                  typename O,
                  typename C = less,
                  typename P1 = identity,
-                 typename P2 = identity>
-        auto RANGES_FUNC(set_intersection)(I1 begin1,
-                                           S1 end1,
-                                           I2 begin2,
-                                           S2 end2,
-                                           O out,
-                                           C pred = C{},
-                                           P1 proj1 = P1{},
-                                           P2 proj2 = P2{}) //
-            ->CPP_ret(O)(                                   //
-                requires sentinel_for<S1, I1> && sentinel_for<S2, I2> &&
+                 typename P2 = identity)(
+            /// \pre
+            requires sentinel_for<S1, I1> AND sentinel_for<S2, I2> AND
                 mergeable<I1, I2, O, C, P1, P2>)
+        O RANGES_FUNC(set_intersection)(I1 begin1,
+                                        S1 end1,
+                                        I2 begin2,
+                                        S2 end2,
+                                        O out,
+                                        C pred = C{},
+                                        P1 proj1 = P1{},
+                                        P2 proj2 = P2{}) //
         {
             while(begin1 != end1 && begin2 != end2)
             {
@@ -235,21 +235,21 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng1,
+        template(typename Rng1,
                  typename Rng2,
                  typename O,
                  typename C = less,
                  typename P1 = identity,
-                 typename P2 = identity>
-        auto RANGES_FUNC(set_intersection)(Rng1 && rng1,
-                                           Rng2 && rng2,
-                                           O out,
-                                           C pred = C{},
-                                           P1 proj1 = P1{},
-                                           P2 proj2 = P2{}) //
-            ->CPP_ret(O)(                                   //
-                requires range<Rng1> && range<Rng2> &&
+                 typename P2 = identity)(
+            /// \pre
+            requires range<Rng1> AND range<Rng2> AND
                 mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
+        O RANGES_FUNC(set_intersection)(Rng1 && rng1,
+                                        Rng2 && rng2,
+                                        O out,
+                                        C pred = C{},
+                                        P1 proj1 = P1{},
+                                        P2 proj2 = P2{}) //
         {
             return (*this)(begin(rng1),
                            end(rng1),
@@ -274,25 +274,25 @@ namespace ranges
     RANGES_FUNC_BEGIN(set_difference)
 
         /// \brief function template \c set_difference
-        template<typename I1,
+        template(typename I1,
                  typename S1,
                  typename I2,
                  typename S2,
                  typename O,
                  typename C = less,
                  typename P1 = identity,
-                 typename P2 = identity>
-        auto RANGES_FUNC(set_difference)(I1 begin1,
-                                         S1 end1,
-                                         I2 begin2,
-                                         S2 end2,
-                                         O out,
-                                         C pred = C{},
-                                         P1 proj1 = P1{},
-                                         P2 proj2 = P2{}) //
-            ->CPP_ret(set_difference_result<I1, O>)(      //
-                requires sentinel_for<S1, I1> && sentinel_for<S2, I2> &&
+                 typename P2 = identity)(
+            /// \pre
+            requires sentinel_for<S1, I1> AND sentinel_for<S2, I2> AND
                 mergeable<I1, I2, O, C, P1, P2>)
+        set_difference_result<I1, O> RANGES_FUNC(set_difference)(I1 begin1,
+                                                                 S1 end1,
+                                                                 I2 begin2,
+                                                                 S2 end2,
+                                                                 O out,
+                                                                 C pred = C{},
+                                                                 P1 proj1 = P1{},
+                                                                 P2 proj2 = P2{}) //
         {
             while(begin1 != end1)
             {
@@ -318,21 +318,22 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng1,
+        template(typename Rng1,
                  typename Rng2,
                  typename O,
                  typename C = less,
                  typename P1 = identity,
-                 typename P2 = identity>
-        auto RANGES_FUNC(set_difference)(Rng1 && rng1,
-                                         Rng2 && rng2,
-                                         O out,
-                                         C pred = C{},
-                                         P1 proj1 = P1{},
-                                         P2 proj2 = P2{})               //
-            ->CPP_ret(set_difference_result<safe_iterator_t<Rng1>, O>)( //
-                requires range<Rng1> && range<Rng2> &&
+                 typename P2 = identity)(
+            /// \pre
+            requires range<Rng1> AND range<Rng2> AND
                 mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
+        set_difference_result<borrowed_iterator_t<Rng1>, O> //
+        RANGES_FUNC(set_difference)(Rng1 && rng1,
+                                    Rng2 && rng2,
+                                    O out,
+                                    C pred = C{},
+                                    P1 proj1 = P1{},
+                                    P2 proj2 = P2{}) //
         {
             return (*this)(begin(rng1),
                            end(rng1),
@@ -358,25 +359,26 @@ namespace ranges
     RANGES_FUNC_BEGIN(set_symmetric_difference)
 
         /// \brief function template \c set_symmetric_difference
-        template<typename I1,
+        template(typename I1,
                  typename S1,
                  typename I2,
                  typename S2,
                  typename O,
                  typename C = less,
                  typename P1 = identity,
-                 typename P2 = identity>
-        auto RANGES_FUNC(set_symmetric_difference)(I1 begin1,
-                                                   S1 end1,
-                                                   I2 begin2,
-                                                   S2 end2,
-                                                   O out,
-                                                   C pred = C{},
-                                                   P1 proj1 = P1{},
-                                                   P2 proj2 = P2{}) //
-            ->CPP_ret(set_symmetric_difference_result<I1, I2, O>)(  //
-                requires sentinel_for<S1, I1> && sentinel_for<S2, I2> &&
+                 typename P2 = identity)(
+            /// \pre
+            requires sentinel_for<S1, I1> AND sentinel_for<S2, I2> AND
                 mergeable<I1, I2, O, C, P1, P2>)
+        set_symmetric_difference_result<I1, I2, O> //
+        RANGES_FUNC(set_symmetric_difference)(I1 begin1,
+                                              S1 end1,
+                                              I2 begin2,
+                                              S2 end2,
+                                              O out,
+                                              C pred = C{},
+                                              P1 proj1 = P1{},
+                                              P2 proj2 = P2{}) //
         {
             while(begin1 != end1)
             {
@@ -408,23 +410,24 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng1,
+        template(typename Rng1,
                  typename Rng2,
                  typename O,
                  typename C = less,
                  typename P1 = identity,
-                 typename P2 = identity>
-        auto RANGES_FUNC(set_symmetric_difference)(Rng1 && rng1,
-                                                   Rng2 && rng2,
-                                                   O out,
-                                                   C pred = C{},
-                                                   P1 proj1 = P1{},
-                                                   P2 proj2 = P2{}) //
-            ->CPP_ret(set_symmetric_difference_result<safe_iterator_t<Rng1>,
-                                                      safe_iterator_t<Rng2>,
-                                                      O>)( //
-                requires range<Rng1> && range<Rng2> &&
+                 typename P2 = identity)(
+            /// \pre
+            requires range<Rng1> AND range<Rng2> AND
                 mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
+        set_symmetric_difference_result<borrowed_iterator_t<Rng1>,
+                                        borrowed_iterator_t<Rng2>,
+                                        O>
+        RANGES_FUNC(set_symmetric_difference)(Rng1 && rng1,
+                                              Rng2 && rng2,
+                                              O out,
+                                              C pred = C{},
+                                              P1 proj1 = P1{},
+                                              P2 proj2 = P2{}) //
         {
             return (*this)(begin(rng1),
                            end(rng1),
@@ -446,6 +449,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

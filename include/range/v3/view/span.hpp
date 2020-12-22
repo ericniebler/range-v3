@@ -29,7 +29,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/view/interface.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -48,9 +48,10 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        template<typename To, typename From>
-        constexpr auto narrow_cast(From from) noexcept -> CPP_ret(To)( //
-            requires integral<To> && integral<From>)
+        template(typename To, typename From)(
+            /// \pre
+            requires integral<To> AND integral<From>)
+        constexpr To narrow_cast(From from) noexcept
         {
             using C = common_type_t<To, From>;
             return RANGES_EXPECT((from > 0) == (static_cast<To>(from) > 0)),
@@ -117,38 +118,23 @@ namespace ranges
     } // namespace detail
 
     // clang-format off
-    template<typename Rng, typename T>
-    CPP_concept_fragment(span_compatible_range_, requires()(0) &&
+    template(typename Rng, typename T)(
+    concept (span_compatible_range_)(Rng, T),
         detail::is_convertible<detail::element_t<Rng>(*)[], T(*)[]>::value
     );
     template<typename Rng, typename T>
-    CPP_concept_bool span_compatible_range =
+    CPP_concept span_compatible_range =
         sized_range<Rng> && contiguous_range<Rng> &&
-        CPP_fragment(ranges::span_compatible_range_, Rng, T);
+        CPP_concept_ref(ranges::span_compatible_range_, Rng, T);
 
     template<typename Rng, detail::span_index_t N>
-    CPP_concept_bool span_dynamic_conversion =
+    CPP_concept span_dynamic_conversion =
         N == dynamic_extent ||
             range_cardinality<Rng>::value < cardinality();
 
     template<typename Rng, detail::span_index_t N>
-    CPP_concept_bool span_static_conversion =
+    CPP_concept span_static_conversion =
         N != dynamic_extent && range_cardinality<Rng>::value == N;
-
-    namespace defer
-    {
-        template<typename Rng, typename T>
-        CPP_concept span_compatible_range =
-            CPP_defer(ranges::span_compatible_range, Rng, T);
-
-        template<typename Rng, detail::span_index_t N>
-        CPP_concept span_dynamic_conversion =
-            CPP_defer_(ranges::span_dynamic_conversion, CPP_type(Rng), N);
-
-        template<typename Rng, detail::span_index_t N>
-        CPP_concept span_static_conversion =
-            CPP_defer_(ranges::span_static_conversion, CPP_type(Rng), N);
-    }
     // clang-format on
     /// \endcond
 
@@ -182,20 +168,22 @@ namespace ranges
           : span{first, last - first}
         {}
 
-        CPP_template(typename Rng)( //
-            requires(!defer::same_as<span, uncvref_t<Rng>>) &&
-            defer::span_compatible_range<Rng, T> &&
-            defer::span_dynamic_conversion<Rng, N>) //
-            constexpr span(Rng && rng) noexcept(noexcept(ranges::data(rng),
-                                                         ranges::size(rng)))
+        template(typename Rng)(
+            /// \pre
+            requires (!same_as<span, uncvref_t<Rng>>) AND
+                span_compatible_range<Rng, T> AND
+                span_dynamic_conversion<Rng, N>)
+        constexpr span(Rng && rng) noexcept(noexcept(ranges::data(rng),
+                                                        ranges::size(rng)))
           : span{ranges::data(rng), detail::narrow_cast<index_type>(ranges::size(rng))}
         {}
 
-        CPP_template(typename Rng)( //
-            requires(!defer::same_as<span, uncvref_t<Rng>>) &&
-            defer::span_compatible_range<Rng, T> &&
-            defer::span_static_conversion<Rng, N>) //
-            constexpr span(Rng && rng) noexcept(noexcept(ranges::data(rng)))
+        template(typename Rng)(
+            /// \pre
+            requires (!same_as<span, uncvref_t<Rng>>) AND
+                span_compatible_range<Rng, T> AND
+                span_static_conversion<Rng, N>)
+        constexpr span(Rng && rng) noexcept(noexcept(ranges::data(rng)))
           : span{ranges::data(rng), N}
         {}
 
@@ -319,44 +307,50 @@ namespace ranges
             return reverse_iterator{begin()};
         }
 
-        template<typename U, index_type M>
-        auto operator==(span<U, M> const & that) const -> CPP_ret(bool)( //
+        template(typename U, index_type M)(
+            /// \pre
             requires equality_comparable_with<T, U>)
+        bool operator==(span<U, M> const & that) const
         {
             RANGES_EXPECT(!size() || data());
             RANGES_EXPECT(!that.size() || that.data());
             return ranges::equal(*this, that);
         }
-        template<typename U, index_type M>
-        auto operator!=(span<U, M> const & that) const -> CPP_ret(bool)( //
+        template(typename U, index_type M)(
+            /// \pre
             requires equality_comparable_with<T, U>)
+        bool operator!=(span<U, M> const & that) const
         {
             return !(*this == that);
         }
 
-        template<typename U, index_type M>
-        auto operator<(span<U, M> const & that) const -> CPP_ret(bool)( //
+        template(typename U, index_type M)(
+            /// \pre
             requires totally_ordered_with<T, U>)
+        bool operator<(span<U, M> const & that) const
         {
             RANGES_EXPECT(!size() || data());
             RANGES_EXPECT(!that.size() || that.data());
             return ranges::lexicographical_compare(*this, that);
         }
-        template<typename U, index_type M>
-        auto operator>(span<U, M> const & that) const -> CPP_ret(bool)( //
+        template(typename U, index_type M)(
+            /// \pre
             requires totally_ordered_with<T, U>)
+        bool operator>(span<U, M> const & that) const
         {
             return that < *this;
         }
-        template<typename U, index_type M>
-        auto operator<=(span<U, M> const & that) const -> CPP_ret(bool)( //
+        template(typename U, index_type M)(
+            /// \pre
             requires totally_ordered_with<T, U>)
+        bool operator<=(span<U, M> const & that) const
         {
             return !(that < *this);
         }
-        template<typename U, index_type M>
-        auto operator>=(span<U, M> const & that) const -> CPP_ret(bool)( //
+        template(typename U, index_type M)(
+            /// \pre
             requires totally_ordered_with<T, U>)
+        bool operator>=(span<U, M> const & that) const
         {
             return !(*this < that);
         }
@@ -366,14 +360,15 @@ namespace ranges
     };
 
     template<typename T, detail::span_index_t N>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<span<T, N>> = true;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<span<T, N>> = true;
 
     template<typename T, detail::span_index_t N>
     constexpr detail::span_index_t span<T, N>::extent;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng)(         //
-        requires contiguous_range<Rng>) //
+    template(typename Rng)(
+        /// \pre
+        requires contiguous_range<Rng>)
         span(Rng && rng)
             ->span<detail::element_t<Rng>, (range_cardinality<Rng>::value < cardinality()
                                                 ? dynamic_extent
@@ -404,8 +399,9 @@ namespace ranges
     {
         return span<ElementType>{first, last};
     }
-    CPP_template(typename Rng)( //
-        requires contiguous_range<Rng> &&
+    template(typename Rng)(
+        /// \pre
+        requires contiguous_range<Rng> AND
         (range_cardinality<Rng>::value < cardinality())) //
         constexpr span<detail::element_t<Rng>> make_span(Rng && rng) noexcept(
             noexcept(ranges::data(rng), ranges::size(rng)))
@@ -413,8 +409,9 @@ namespace ranges
         return {ranges::data(rng),
                 detail::narrow_cast<detail::span_index_t>(ranges::size(rng))};
     }
-    CPP_template(typename Rng)( //
-        requires contiguous_range<Rng> &&
+    template(typename Rng)(
+        /// \pre
+        requires contiguous_range<Rng> AND
         (range_cardinality<Rng>::value >= cardinality())) //
         constexpr span<
             detail::element_t<Rng>,
@@ -428,6 +425,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_VIEW_SPAN_HPP

@@ -27,7 +27,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -39,11 +39,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(generate)
 
         /// \brief function template \c generate_n
-        template<typename O, typename S, typename F>
-        auto RANGES_FUNC(generate)(O first, S last, F fun) //
-            ->CPP_ret(generate_result<O, F>)(              //
-                requires invocable<F &> && output_iterator<O, invoke_result_t<F &>> &&
-                sentinel_for<S, O>)
+        template(typename O, typename S, typename F)(
+            /// \pre
+            requires invocable<F &> AND output_iterator<O, invoke_result_t<F &>> AND
+            sentinel_for<S, O>)
+        generate_result<O, F> RANGES_FUNC(generate)(O first, S last, F fun) //
         {
             for(; first != last; ++first)
                 *first = invoke(fun);
@@ -51,10 +51,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename F>
-        auto RANGES_FUNC(generate)(Rng && rng, F fun)
-            ->CPP_ret(generate_result<safe_iterator_t<Rng>, F>)( //
-                requires invocable<F &> && output_range<Rng, invoke_result_t<F &>>)
+        template(typename Rng, typename F)(
+            /// \pre
+            requires invocable<F &> AND output_range<Rng, invoke_result_t<F &>>)
+        generate_result<borrowed_iterator_t<Rng>, F> //
+        RANGES_FUNC(generate)(Rng && rng, F fun)
         {
             return {(*this)(begin(rng), end(rng), ref(fun)).out, detail::move(fun)};
         }
@@ -69,6 +70,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -29,7 +29,7 @@
 #include <range/v3/view/interface.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -65,9 +65,10 @@ namespace ranges
         {
             return next(ranges::begin(rng_), 1, ranges::end(rng_));
         }
-        template<bool Const = true>
-        auto begin() const -> CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)( //
-            requires Const && range<meta::const_if_c<Const, Rng>>)
+        template(bool Const = true)(
+            /// \pre
+            requires Const AND range<meta::const_if_c<Const, Rng>>)
+        iterator_t<meta::const_if_c<Const, Rng>> begin() const
         {
             return next(ranges::begin(rng_), 1, ranges::end(rng_));
         }
@@ -75,23 +76,27 @@ namespace ranges
         {
             return ranges::end(rng_);
         }
-        template<bool Const = true>
-        auto end() const -> CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)( //
-            requires Const && range<meta::const_if_c<Const, Rng>>)
+        template(bool Const = true)(
+            /// \pre
+            requires Const AND range<meta::const_if_c<Const, Rng>>)
+        sentinel_t<meta::const_if_c<Const, Rng>> end() const
         {
             return ranges::end(rng_);
         }
         // Strange cast to bool in the requires clause is to work around gcc bug.
-        CPP_member
-        constexpr auto CPP_fun(size)()(requires(bool(sized_range<Rng>)))
+        CPP_auto_member
+        constexpr auto CPP_fun(size)()(
+            /// \pre
+            requires(bool(sized_range<Rng>)))
         {
             using size_type = range_size_t<Rng>;
             return range_cardinality<Rng>::value >= 0
                        ? detail::prev_or_zero_((size_type)range_cardinality<Rng>::value)
                        : detail::prev_or_zero_(ranges::size(rng_));
         }
-        CPP_member
-        constexpr auto CPP_fun(size)()(const requires(bool(sized_range<Rng const>)))
+        CPP_auto_member
+        constexpr auto CPP_fun(size)()(const //
+            requires(bool(sized_range<Rng const>)))
         {
             using size_type = range_size_t<Rng>;
             return range_cardinality<Rng>::value >= 0
@@ -105,11 +110,13 @@ namespace ranges
     };
 
     template<typename Rng>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<tail_view<Rng>> = enable_safe_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<tail_view<Rng>> = //
+        enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng)(       //
-        requires viewable_range<Rng>) //
+    template(typename Rng)(
+        /// \pre
+        requires viewable_range<Rng>)
         tail_view(Rng &&)
             ->tail_view<views::all_t<Rng>>;
 #endif
@@ -118,11 +125,13 @@ namespace ranges
     {
         struct tail_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const
-                -> CPP_ret(meta::if_c<range_cardinality<Rng>::value == 0, all_t<Rng>,
-                                      tail_view<all_t<Rng>>>)( //
-                    requires viewable_range<Rng> && input_range<Rng>)
+            template(typename Rng)(
+                /// \pre
+                requires viewable_range<Rng> AND input_range<Rng>)
+            meta::if_c<range_cardinality<Rng>::value == 0,
+                       all_t<Rng>,
+                       tail_view<all_t<Rng>>> //
+            operator()(Rng && rng) const
             {
                 return all(static_cast<Rng &&>(rng));
             }
@@ -135,7 +144,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::tail_view)
 

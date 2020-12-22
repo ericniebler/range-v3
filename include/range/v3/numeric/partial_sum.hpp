@@ -30,7 +30,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -56,32 +56,32 @@ namespace ranges
 
     // axiom: BOp is associative over values of I.
     // clang-format off
-    template<typename I, typename BOp>
-    CPP_concept_fragment(indirect_semigroup_, requires()(0) &&
-        copyable<iter_value_t<I>> &&
+    template(typename I, typename BOp)(
+    concept (indirect_semigroup_)(I, BOp),
+        copyable<iter_value_t<I>> AND
         indirectly_regular_binary_invocable_<
             composed<coerce<iter_value_t<I>>, BOp>,
             iter_value_t<I>*, I>
     );
     template<typename I, typename BOp>
-    CPP_concept_bool indirect_semigroup =
-        readable<I> &&
-        CPP_fragment(ranges::indirect_semigroup_, I, BOp);
+    CPP_concept indirect_semigroup =
+        indirectly_readable<I> &&
+        CPP_concept_ref(ranges::indirect_semigroup_, I, BOp);
 
-    template<typename I, typename O, typename BOp = plus, typename P = identity>
-    CPP_concept_fragment(partial_sum_constraints_, requires()(0) &&
+    template(typename I, typename O, typename BOp, typename P)(
+    concept (partial_sum_constraints_)(I, O, BOp, P),
         indirect_semigroup<
             projected<projected<I, detail::as_value_type_t<I>>, P>,
-            BOp> &&
+            BOp> AND
         output_iterator<
             O,
             iter_value_t<
                 projected<projected<I, detail::as_value_type_t<I>>, P>> const &>
     );
     template<typename I, typename O, typename BOp = plus, typename P = identity>
-    CPP_concept_bool partial_sum_constraints =
+    CPP_concept partial_sum_constraints =
         input_iterator<I> &&
-        CPP_fragment(ranges::partial_sum_constraints_, I, O, BOp, P);
+        CPP_concept_ref(ranges::partial_sum_constraints_, I, O, BOp, P);
     // clang-format on
 
     template<typename I, typename O>
@@ -89,12 +89,17 @@ namespace ranges
 
     struct partial_sum_fn
     {
-        template<typename I, typename S1, typename O, typename S2, typename BOp = plus,
-                 typename P = identity>
-        auto operator()(I first, S1 last, O result, S2 end_result, BOp bop = BOp{},
-                        P proj = P{}) const -> CPP_ret(partial_sum_result<I, O>)( //
-            requires sentinel_for<S1, I> && sentinel_for<S2, O> &&
+        template(typename I, typename S1, typename O, typename S2, typename BOp = plus,
+                 typename P = identity)(
+            /// \pre
+            requires sentinel_for<S1, I> AND sentinel_for<S2, O> AND
                 partial_sum_constraints<I, O, BOp, P>)
+        partial_sum_result<I, O> operator()(I first,
+                                            S1 last,
+                                            O result,
+                                            S2 end_result,
+                                            BOp bop = BOp{},
+                                            P proj = P{}) const
         {
             using X = projected<projected<I, detail::as_value_type_t<I>>, P>;
             coerce<iter_value_t<I>> val_i;
@@ -115,11 +120,12 @@ namespace ranges
             return {first, result};
         }
 
-        template<typename I, typename S, typename O, typename BOp = plus,
-                 typename P = identity>
-        auto operator()(I first, S last, O result, BOp bop = BOp{}, P proj = P{}) const
-            -> CPP_ret(partial_sum_result<I, O>)( //
-                requires sentinel_for<S, I> && partial_sum_constraints<I, O, BOp, P>)
+        template(typename I, typename S, typename O, typename BOp = plus,
+                 typename P = identity)(
+            /// \pre
+            requires sentinel_for<S, I> AND partial_sum_constraints<I, O, BOp, P>)
+        partial_sum_result<I, O> //
+        operator()(I first, S last, O result, BOp bop = BOp{}, P proj = P{}) const
         {
             return (*this)(std::move(first),
                            std::move(last),
@@ -129,11 +135,12 @@ namespace ranges
                            std::move(proj));
         }
 
-        template<typename Rng, typename ORef, typename BOp = plus, typename P = identity,
-                 typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>>
-        auto operator()(Rng && rng, ORef && result, BOp bop = BOp{}, P proj = P{}) const
-            -> CPP_ret(partial_sum_result<safe_iterator_t<Rng>, O>)( //
-                requires range<Rng> && partial_sum_constraints<I, O, BOp, P>)
+        template(typename Rng, typename ORef, typename BOp = plus, typename P = identity,
+                 typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>)(
+            /// \pre
+            requires range<Rng> AND partial_sum_constraints<I, O, BOp, P>)
+        partial_sum_result<borrowed_iterator_t<Rng>, O> //
+        operator()(Rng && rng, ORef && result, BOp bop = BOp{}, P proj = P{}) const
         {
             return (*this)(begin(rng),
                            end(rng),
@@ -142,13 +149,12 @@ namespace ranges
                            std::move(proj));
         }
 
-        template<typename Rng, typename ORng, typename BOp = plus, typename P = identity,
-                 typename I = iterator_t<Rng>, typename O = iterator_t<ORng>>
-        auto operator()(Rng && rng, ORng && result, BOp bop = BOp{}, P proj = P{}) const
-            -> CPP_ret(
-                partial_sum_result<safe_iterator_t<Rng>, safe_iterator_t<ORng>>)( //
-                requires range<Rng> && range<ORng> &&
-                    partial_sum_constraints<I, O, BOp, P>)
+        template(typename Rng, typename ORng, typename BOp = plus, typename P = identity,
+                 typename I = iterator_t<Rng>, typename O = iterator_t<ORng>)(
+            /// \pre
+            requires range<Rng> AND range<ORng> AND partial_sum_constraints<I, O, BOp, P>)
+        partial_sum_result<borrowed_iterator_t<Rng>, borrowed_iterator_t<ORng>> //
+        operator()(Rng && rng, ORng && result, BOp bop = BOp{}, P proj = P{}) const
         {
             return (*this)(begin(rng),
                            end(rng),
@@ -163,6 +169,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

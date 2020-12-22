@@ -19,7 +19,7 @@
 RANGES_DEPRECATED_HEADER(
     "This header is deprecated and will be removed from a future version of range-v3.")
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -36,28 +36,32 @@ namespace ranges
         }
         template<typename Integer>
         friend constexpr auto operator==(Integer, infinity) noexcept
-            -> CPP_broken_friend_ret(bool)( //
+            -> CPP_broken_friend_ret(bool)(
+                /// \pre
                 requires integral<Integer>)
         {
             return false;
         }
         template<typename Integer>
         friend constexpr auto operator==(infinity, Integer) noexcept
-            -> CPP_broken_friend_ret(bool)( //
+            -> CPP_broken_friend_ret(bool)(
+                /// \pre
                 requires integral<Integer>)
         {
             return false;
         }
         template<typename Integer>
         friend constexpr auto operator!=(Integer, infinity) noexcept
-            -> CPP_broken_friend_ret(bool)( //
+            -> CPP_broken_friend_ret(bool)(
+                /// \pre
                 requires integral<Integer>)
         {
             return true;
         }
         template<typename Integer>
         friend constexpr auto operator!=(infinity, Integer) noexcept
-            -> CPP_broken_friend_ret(bool)( //
+            -> CPP_broken_friend_ret(bool)(
+                /// \pre
                 requires integral<Integer>)
         {
             return true;
@@ -66,6 +70,6 @@ namespace ranges
     /// \endcond
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

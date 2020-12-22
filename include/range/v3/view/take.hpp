@@ -28,10 +28,13 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
+    /// \addtogroup group-views
+    /// @{
+
     template<typename Rng>
     struct take_view : view_interface<take_view<Rng>, finite>
     {
@@ -43,7 +46,7 @@ namespace ranges
         struct sentinel
         {
         private:
-            using Base = detail::if_then_t<Const, Rng const, Rng>;
+            using Base = meta::conditional_t<Const, Rng const, Rng>;
             using CI = counted_iterator<iterator_t<Base>>;
             sentinel_t<Base> end_ = sentinel_t<Base>();
 
@@ -52,10 +55,11 @@ namespace ranges
             constexpr explicit sentinel(sentinel_t<Base> last)
               : end_(std::move(last))
             {}
-            CPP_template(bool Other)( //
-                requires Const && (!Other) &&
+            template(bool Other)(
+                /// \pre
+                requires Const AND CPP_NOT(Other) AND
                 convertible_to<sentinel_t<Rng>,
-                               sentinel_t<Base>>) //
+                               sentinel_t<Base>>)
                 constexpr sentinel(sentinel<Other> that)
               : end_(std::move(that.end_))
             {}
@@ -160,8 +164,10 @@ namespace ranges
             return base_;
         }
 
-        CPP_member
-        constexpr auto CPP_fun(begin)()(requires(!simple_view<Rng>()))
+        CPP_auto_member
+        constexpr auto CPP_fun(begin)()(
+            /// \pre
+            requires(!simple_view<Rng>()))
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(sized_range<Rng>)
@@ -186,8 +192,9 @@ namespace ranges
 #endif
         }
 
-        CPP_member
-        constexpr auto CPP_fun(begin)()(const requires range<Rng const>)
+        CPP_auto_member
+        constexpr auto CPP_fun(begin)()(const //
+            requires range<Rng const>)
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(sized_range<Rng const>)
@@ -205,8 +212,10 @@ namespace ranges
 #endif
         }
 
-        CPP_member
-        constexpr auto CPP_fun(end)()(requires(!simple_view<Rng>()))
+        CPP_auto_member
+        constexpr auto CPP_fun(end)()(
+            /// \pre
+            requires(!simple_view<Rng>()))
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(sized_range<Rng>)
@@ -225,8 +234,9 @@ namespace ranges
 #endif
         }
 
-        CPP_member
-        constexpr auto CPP_fun(end)()(const requires range<Rng const>)
+        CPP_auto_member
+        constexpr auto CPP_fun(end)()(const //
+            requires range<Rng const>)
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
             if constexpr(sized_range<Rng const>)
@@ -246,14 +256,17 @@ namespace ranges
 #endif
         }
 
-        CPP_member
-        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
+        CPP_auto_member
+        constexpr auto CPP_fun(size)()(
+            /// \pre
+            requires sized_range<Rng>)
         {
             auto n = ranges::size(base_);
             return ranges::min(n, static_cast<decltype(n)>(count_));
         }
-        CPP_member
-        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        CPP_auto_member
+        constexpr auto CPP_fun(size)()(const //
+            requires sized_range<Rng const>)
         {
             auto n = ranges::size(base_);
             return ranges::min(n, static_cast<decltype(n)>(count_));
@@ -261,21 +274,23 @@ namespace ranges
     };
 
     template<typename Rng>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<take_view<Rng>> = enable_safe_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<take_view<Rng>> = //
+        enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    take_view(Rng &&, range_difference_t<Rng>)->take_view<views::all_t<Rng>>;
+    take_view(Rng &&, range_difference_t<Rng>)
+        -> take_view<views::all_t<Rng>>;
 #endif
 
     namespace views
     {
         struct take_base_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng, range_difference_t<Rng> n) const
-                -> CPP_ret(take_view<all_t<Rng>>)( //
-                    requires viewable_range<Rng>)
+            template(typename Rng)(
+                /// \pre
+                requires viewable_range<Rng>)
+            take_view<all_t<Rng>> operator()(Rng && rng, range_difference_t<Rng> n) const
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
@@ -285,16 +300,16 @@ namespace ranges
         {
             using take_base_fn::operator();
 
-            template<typename Int>
-            constexpr auto CPP_fun(operator())(Int n)(const //
-                                                      requires detail::integer_like_<Int>)
+            template(typename Int)(
+                /// \pre
+                requires detail::integer_like_<Int>)
+            constexpr auto operator()(Int n) const
             {
                 return make_view_closure(bind_back(take_base_fn{}, n));
             }
         };
 
         /// \relates take_fn
-        /// \ingroup group-views
         RANGES_INLINE_VARIABLE(take_fn, take)
     } // namespace views
 
@@ -304,14 +319,15 @@ namespace ranges
         {
             using ranges::views::take;
         }
-        CPP_template(typename Rng)( //
-            requires view_<Rng>)    //
-            using take_view = ranges::take_view<Rng>;
+        template(typename Rng)(
+            /// \pre
+            requires view_<Rng>)
+        using take_view = ranges::take_view<Rng>;
     } // namespace cpp20
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::take_view)
 

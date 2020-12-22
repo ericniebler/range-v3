@@ -1,5 +1,7 @@
 set(CMAKE_FOLDER "example")
 
+add_subdirectory(view)
+
 # examples use a less draconian set of compiler warnings
 ranges_append_flag(RANGES_HAS_WNO_MISSING_BRACES -Wno-missing-braces)
 ranges_append_flag(RANGES_HAS_WNO_SHORTEN_64_TO_32 -Wno-shorten-64-to-32)
@@ -27,11 +29,11 @@ if(RANGES_BUILD_CALENDAR_EXAMPLE)
     find_package(Boost 1.59.0 COMPONENTS date_time program_options)
 
     if (Boost_FOUND)
-        add_executable(calendar calendar.cpp)
-        target_include_directories(calendar SYSTEM PRIVATE ${Boost_INCLUDE_DIRS})
-        target_link_libraries(calendar PRIVATE range-v3 Boost::date_time Boost::program_options)
+        add_executable(range.v3.calendar calendar.cpp)
+        target_include_directories(range.v3.calendar SYSTEM PRIVATE ${Boost_INCLUDE_DIRS})
+        target_link_libraries(range.v3.calendar PRIVATE range-v3 Boost::date_time Boost::program_options)
         message(STATUS "boost: ${Boost_LIBRARY_DIRS}")
-        target_compile_definitions(calendar PRIVATE BOOST_NO_AUTO_PTR)
-        target_compile_options(calendar PRIVATE -std=gnu++14)
+        target_compile_definitions(range.v3.calendar PRIVATE BOOST_NO_AUTO_PTR)
+        target_compile_options(range.v3.calendar PRIVATE -std=gnu++14)
     endif()
 endif()

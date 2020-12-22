@@ -27,7 +27,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -39,11 +39,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(reverse_copy)
 
         /// \brief function template \c reverse_copy
-        template<typename I, typename S, typename O>
-        auto RANGES_FUNC(reverse_copy)(I first, S end_, O out) //
-            ->CPP_ret(reverse_copy_result<I, O>)(              //
-                requires bidirectional_iterator<I> && sentinel_for<S, I> &&
-                weakly_incrementable<O> && indirectly_copyable<I, O>)
+        template(typename I, typename S, typename O)(
+            /// \pre
+            requires bidirectional_iterator<I> AND sentinel_for<S, I> AND
+            weakly_incrementable<O> AND indirectly_copyable<I, O>)
+        reverse_copy_result<I, O> RANGES_FUNC(reverse_copy)(I first, S end_, O out) //
         {
             I last = ranges::next(first, end_), res = last;
             for(; first != last; ++out)
@@ -52,11 +52,12 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename O>
-        auto RANGES_FUNC(reverse_copy)(Rng && rng, O out)            //
-            ->CPP_ret(reverse_copy_result<safe_iterator_t<Rng>, O>)( //
-                requires bidirectional_range<Rng> && weakly_incrementable<O> &&
-                indirectly_copyable<iterator_t<Rng>, O>)
+        template(typename Rng, typename O)(
+            /// \pre
+            requires bidirectional_range<Rng> AND weakly_incrementable<O> AND
+            indirectly_copyable<iterator_t<Rng>, O>)
+        reverse_copy_result<borrowed_iterator_t<Rng>, O> //
+        RANGES_FUNC(reverse_copy)(Rng && rng, O out)            //
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }
@@ -71,6 +72,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

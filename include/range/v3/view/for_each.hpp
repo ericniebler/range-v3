@@ -31,10 +31,13 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
+    /// \addtogroup group-views
+    /// @{
+
     namespace views
     {
         /// Lazily applies an unary function to each element in the source
@@ -42,10 +45,11 @@ namespace ranges
         /// the result.
         struct for_each_base_fn
         {
-            template<typename Rng, typename Fun>
-            constexpr auto CPP_fun(operator())(Rng && rng, Fun fun)(
-                const requires viewable_range<Rng> && transformable_range<Rng, Fun> &&
+            template(typename Rng, typename Fun)(
+                /// \pre
+                requires viewable_range<Rng> AND transformable_range<Rng, Fun> AND
                     joinable_range<transform_view<all_t<Rng>, Fun>>)
+            constexpr auto operator()(Rng && rng, Fun fun) const
             {
                 return join(transform(static_cast<Rng &&>(rng), std::move(fun)));
             }
@@ -63,36 +67,35 @@ namespace ranges
         };
 
         /// \relates for_each_fn
-        /// \ingroup group-views
         RANGES_INLINE_VARIABLE(for_each_fn, for_each)
     } // namespace views
 
     struct yield_fn
     {
-        template<typename V>
-        auto operator()(V v) const -> CPP_ret(single_view<V>)( //
+        template(typename V)(
+            /// \pre
             requires copy_constructible<V>)
+        single_view<V> operator()(V v) const
         {
             return views::single(std::move(v));
         }
     };
 
     /// \relates yield_fn
-    /// \ingroup group-views
     RANGES_INLINE_VARIABLE(yield_fn, yield)
 
     struct yield_from_fn
     {
-        template<typename Rng>
-        auto operator()(Rng rng) const -> CPP_ret(Rng)( //
+        template(typename Rng)(
+            /// \pre
             requires view_<Rng>)
+        Rng operator()(Rng rng) const
         {
             return rng;
         }
     };
 
     /// \relates yield_from_fn
-    /// \ingroup group-views
     RANGES_INLINE_VARIABLE(yield_from_fn, yield_from)
 
     struct yield_if_fn
@@ -105,28 +108,28 @@ namespace ranges
     };
 
     /// \relates yield_if_fn
-    /// \ingroup group-views
     RANGES_INLINE_VARIABLE(yield_if_fn, yield_if)
 
     struct lazy_yield_if_fn
     {
-        template<typename F>
-        auto operator()(bool b, F f) const -> CPP_ret(generate_n_view<F>)( //
+        template(typename F)(
+            /// \pre
             requires invocable<F &>)
+        generate_n_view<F> operator()(bool b, F f) const
         {
             return views::generate_n(std::move(f), b ? 1 : 0);
         }
     };
 
     /// \relates lazy_yield_if_fn
-    /// \ingroup group-views
     RANGES_INLINE_VARIABLE(lazy_yield_if_fn, lazy_yield_if)
     /// @}
 
     /// \cond
-    CPP_template(typename Rng, typename Fun)( //
-        requires viewable_range<Rng> && views::transformable_range<Rng, Fun> &&
-            input_range<invoke_result_t<Fun &, range_reference_t<Rng>>>) //
+    template(typename Rng, typename Fun)(
+        /// \pre
+        requires viewable_range<Rng> AND views::transformable_range<Rng, Fun> AND
+            input_range<invoke_result_t<Fun &, range_reference_t<Rng>>>)
         auto
         operator>>=(Rng && rng, Fun fun)
     {
@@ -135,6 +138,6 @@ namespace ranges
     /// \endcond
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -66,7 +66,7 @@
 #include <mutex>
 #endif
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
@@ -77,20 +77,23 @@ namespace ranges
     /// @{
     // clang-format off
     template<typename Gen>
-    CPP_concept_fragment(uniform_random_bit_generator_,
+    CPP_requires(uniform_random_bit_generator_,
         requires() //
         (
             Gen::min(),
             Gen::max()
-        ) &&
-        unsigned_integral<invoke_result_t<Gen &>> &&
-        same_as<invoke_result_t<Gen &>, decltype(Gen::min())> &&
-        same_as<invoke_result_t<Gen &>, decltype(Gen::max())>
-    );
+        ));
+    template(typename Gen)(
+    concept (uniform_random_bit_generator_)(Gen),
+        unsigned_integral<invoke_result_t<Gen &>> AND
+        same_as<invoke_result_t<Gen &>, decltype(Gen::min())> AND
+        same_as<invoke_result_t<Gen &>, decltype(Gen::max())>);
+
     template<typename Gen>
-    CPP_concept_bool uniform_random_bit_generator =
+    CPP_concept uniform_random_bit_generator =
         invocable<Gen &> &&
-        CPP_fragment(ranges::uniform_random_bit_generator_, Gen);
+        CPP_requires_ref(ranges::uniform_random_bit_generator_, Gen) &&
+        CPP_concept_ref(ranges::uniform_random_bit_generator_, Gen);
     // clang-format on
     /// @}
 
@@ -115,9 +118,10 @@ namespace ranges
                 return seeds;
             }
 
-            template<typename I>
-            constexpr auto fast_exp(I x, I power, I result = I{1}) -> CPP_ret(I)( //
+            template(typename I)(
+                /// \pre
                 requires unsigned_integral<I>)
+            constexpr I fast_exp(I x, I power, I result = I{1})
             {
                 return power == I{0}
                            ? result
@@ -215,10 +219,11 @@ namespace ranges
 
                 std::array<IntRep, count> mixer_;
 
-                template<typename I, typename S>
-                auto mix_entropy(I first, S last) -> CPP_ret(void)( //
-                    requires input_iterator<I> && sentinel_for<S, I> &&
+                template(typename I, typename S)(
+                    /// \pre
+                    requires input_iterator<I> AND sentinel_for<S, I> AND
                         convertible_to<iter_reference_t<I>, IntRep>)
+                void mix_entropy(I first, S last)
                 {
                     auto hash_const = INIT_A;
                     auto hash = [&](IntRep value) RANGES_INTENDED_MODULAR_ARITHMETIC {
@@ -257,27 +262,29 @@ namespace ranges
                 seed_seq_fe(const seed_seq_fe &) = delete;
                 void operator=(const seed_seq_fe &) = delete;
 
-                template<typename T>
-                CPP_ctor(seed_seq_fe)(std::initializer_list<T> init)( //
+                template(typename T)(
+                    /// \pre
                     requires convertible_to<T const &, IntRep>)
+                seed_seq_fe(std::initializer_list<T> init)
                 {
                     seed(init.begin(), init.end());
                 }
 
-                template<typename I, typename S>
-                CPP_ctor(seed_seq_fe)(I first, S last)( //
-                    requires input_iterator<I> && sentinel_for<S, I> &&
+                template(typename I, typename S)(
+                    /// \pre
+                    requires input_iterator<I> AND sentinel_for<S, I> AND
                         convertible_to<iter_reference_t<I>, IntRep>)
+                seed_seq_fe(I first, S last)
                 {
                     seed(first, last);
                 }
 
                 // generating functions
-                template<typename I, typename S>
-                RANGES_INTENDED_MODULAR_ARITHMETIC auto generate(I first,
-                                                                 S const last) const
-                    -> CPP_ret(void)( //
-                        requires random_access_iterator<I> && sentinel_for<S, I>)
+                template(typename I, typename S)(
+                    /// \pre
+                    requires random_access_iterator<I> AND sentinel_for<S, I>)
+                RANGES_INTENDED_MODULAR_ARITHMETIC //
+                void generate(I first, S const last) const
                 {
                     auto src_begin = mixer_.begin();
                     auto src_end = mixer_.end();
@@ -301,11 +308,11 @@ namespace ranges
                     return count;
                 }
 
-                template<typename O>
-                RANGES_INTENDED_MODULAR_ARITHMETIC auto param(O dest) const
-                    -> CPP_ret(void)( //
-                        requires weakly_incrementable<O> &&
-                            indirectly_copyable<decltype(mixer_.begin()), O>)
+                template(typename O)(
+                    /// \pre
+                    requires weakly_incrementable<O> AND
+                        indirectly_copyable<decltype(mixer_.begin()), O>)
+                RANGES_INTENDED_MODULAR_ARITHMETIC void param(O dest) const
                 {
                     constexpr IntRep INV_A = randutils::fast_exp(MULT_A, IntRep(-1));
                     constexpr IntRep MIX_INV_L =
@@ -351,10 +358,11 @@ namespace ranges
                     ranges::copy(mixer_copy, dest);
                 }
 
-                template<typename I, typename S>
-                auto seed(I first, S last) -> CPP_ret(void)( //
-                    requires input_iterator<I> && sentinel_for<S, I> &&
+                template(typename I, typename S)(
+                    /// \pre
+                    requires input_iterator<I> AND sentinel_for<S, I> AND
                         convertible_to<iter_reference_t<I>, IntRep>)
+                void seed(I first, S last)
                 {
                     mix_entropy(first, last);
                     // For very small sizes, we do some additional mixing.  For normal
@@ -485,6 +493,6 @@ namespace ranges
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

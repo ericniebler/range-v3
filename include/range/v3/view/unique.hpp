@@ -27,7 +27,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -37,11 +37,12 @@ namespace ranges
     {
         struct unique_base_fn
         {
-            template<typename Rng, typename C = equal_to>
-            constexpr auto operator()(Rng && rng, C pred = {}) const
-                -> CPP_ret(adjacent_filter_view<all_t<Rng>, logical_negate<C>>)( //
-                    requires viewable_range<Rng> && forward_range<Rng> &&
-                        indirect_relation<C, iterator_t<Rng>>)
+            template(typename Rng, typename C = equal_to)(
+                /// \pre
+                requires viewable_range<Rng> AND forward_range<Rng> AND
+                    indirect_relation<C, iterator_t<Rng>>)
+            constexpr adjacent_filter_view<all_t<Rng>, logical_negate<C>> //
+            operator()(Rng && rng, C pred = {}) const
             {
                 return {all(static_cast<Rng &&>(rng)), not_fn(pred)};
             }
@@ -51,9 +52,10 @@ namespace ranges
         {
             using unique_base_fn::operator();
 
-            template<typename C>
-            constexpr auto CPP_fun(operator())(C && pred)(const //
-                                                          requires(!range<C>))
+            template(typename C)(
+                /// \pre
+                requires (!range<C>))
+            constexpr auto operator()(C && pred) const
             {
                 return make_view_closure(
                     bind_back(unique_base_fn{}, static_cast<C &&>(pred)));
@@ -67,6 +69,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -29,7 +29,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -41,11 +41,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(copy_n)
 
         /// \brief function template \c copy_n
-        template<typename I, typename O, typename P = identity>
-        auto RANGES_FUNC(copy_n)(I first, iter_difference_t<I> n, O out)
-            ->CPP_ret(copy_n_result<I, O>)( //
-                requires input_iterator<I> && weakly_incrementable<O> &&
-                indirectly_copyable<I, O>)
+        template(typename I, typename O, typename P = identity)(
+            /// \pre
+            requires input_iterator<I> AND weakly_incrementable<O> AND
+            indirectly_copyable<I, O>)
+        copy_n_result<I, O> RANGES_FUNC(copy_n)(I first, iter_difference_t<I> n, O out)
         {
             RANGES_EXPECT(0 <= n);
             auto norig = n;
@@ -65,6 +65,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

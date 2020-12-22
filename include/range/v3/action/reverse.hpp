@@ -23,7 +23,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -34,9 +34,10 @@ namespace ranges
         /// Reversed the source range in-place.
         struct reverse_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(Rng)( //
-                requires bidirectional_range<Rng> && permutable<iterator_t<Rng>>)
+            template(typename Rng)(
+                /// \pre
+                requires bidirectional_range<Rng> AND permutable<iterator_t<Rng>>)
+            Rng operator()(Rng && rng) const
             {
                 ranges::reverse(rng);
                 return static_cast<Rng &&>(rng);
@@ -50,6 +51,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

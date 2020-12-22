@@ -25,7 +25,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -35,18 +35,19 @@ namespace ranges
     {
         struct stable_sort_fn
         {
-            template<typename C, typename P = identity>
-            constexpr auto CPP_fun(operator())(C pred, P proj = P{})(const //
-                                                                     requires(!range<C>))
+            template(typename C, typename P = identity)(
+                /// \pre
+                requires (!range<C>))
+            constexpr auto operator()(C pred, P proj = P{}) const
             {
                 return make_action_closure(
                     bind_back(stable_sort_fn{}, std::move(pred), std::move(proj)));
             }
 
-            template<typename Rng, typename C = less, typename P = identity>
-            auto operator()(Rng && rng, C pred = C{}, P proj = P{}) const
-                -> CPP_ret(Rng)( //
-                    requires forward_range<Rng> && sortable<iterator_t<Rng>, C, P>)
+            template(typename Rng, typename C = less, typename P = identity)(
+                /// \pre
+                requires forward_range<Rng> AND sortable<iterator_t<Rng>, C, P>)
+            Rng operator()(Rng && rng, C pred = C{}, P proj = P{}) const
             {
                 ranges::stable_sort(rng, std::move(pred), std::move(proj));
                 return static_cast<Rng &&>(rng);
@@ -60,6 +61,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

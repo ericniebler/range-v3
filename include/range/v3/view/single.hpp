@@ -30,7 +30,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -61,8 +61,9 @@ namespace ranges
         constexpr explicit single_view(T && t)
           : value_(std::move(t))
         {}
-        CPP_template(class... Args)(                 //
-            requires constructible_from<T, Args...>) //
+        template(class... Args)(
+            /// \pre
+            requires constructible_from<T, Args...>)
             constexpr single_view(in_place_t, Args &&... args)
           : single_view{in_place,
                         meta::bool_<(bool)semiregular<T>>{},
@@ -100,16 +101,18 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<class T>
-    explicit single_view(T &&)->single_view<detail::decay_t<T>>;
+    explicit single_view(T &&) //
+        -> single_view<detail::decay_t<T>>;
 #endif
 
     namespace views
     {
         struct single_fn
         {
-            template<typename Val>
-            auto operator()(Val value) const -> CPP_ret(single_view<Val>)( //
+            template(typename Val)(
+                /// \pre
                 requires copy_constructible<Val>)
+            single_view<Val> operator()(Val value) const
             {
                 return single_view<Val>{std::move(value)};
             }
@@ -126,14 +129,15 @@ namespace ranges
         {
             using ranges::views::single;
         }
-        CPP_template(typename T)(              //
+        template(typename T)(
+            /// \pre
             requires std::is_object<T>::value) //
             using single_view = ranges::single_view<T>;
     } // namespace cpp20
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::single_view)
 

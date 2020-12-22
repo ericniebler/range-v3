@@ -31,7 +31,7 @@
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -44,11 +44,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(unstable_remove_if)
 
         /// \brief function template \c unstable_remove_if
-        template<typename I, typename C, typename P = identity>
-        auto RANGES_FUNC(unstable_remove_if)(I first, I last, C pred, P proj = {}) //
-            ->CPP_ret(I)(                                                          //
-                requires bidirectional_iterator<I> && permutable<I> &&
-                indirect_unary_predicate<C, projected<I, P>>)
+        template(typename I, typename C, typename P = identity)(
+            /// \pre
+            requires bidirectional_iterator<I> AND permutable<I> AND
+            indirect_unary_predicate<C, projected<I, P>>)
+        I RANGES_FUNC(unstable_remove_if)(I first, I last, C pred, P proj = {})
         {
             while(true)
             {
@@ -68,12 +68,13 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C, typename P = identity>
-        auto RANGES_FUNC(unstable_remove_if)(Rng && rng, C pred, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                   //
-                requires bidirectional_range<Rng> && common_range<Rng> &&
-                permutable<iterator_t<Rng>> &&
-                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
+        template(typename Rng, typename C, typename P = identity)(
+            /// \pre
+            requires bidirectional_range<Rng> AND common_range<Rng> AND
+            permutable<iterator_t<Rng>> AND
+            indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
+        borrowed_iterator_t<Rng> //
+        RANGES_FUNC(unstable_remove_if)(Rng && rng, C pred, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
@@ -82,6 +83,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_ALGORITHM_UNSTABLE_REMOVE_IF_HPP

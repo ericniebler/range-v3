@@ -26,7 +26,7 @@
 
 #include <range/v3/utility/swap.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
@@ -122,9 +122,10 @@ namespace ranges
 
     public:
         any() noexcept = default;
-        template<typename TRef, typename T = detail::decay_t<TRef>>
-        CPP_ctor(any)(TRef && t)( //
-            requires copyable<T> && (!same_as<T, any>))
+        template(typename TRef, typename T = detail::decay_t<TRef>)(
+            /// \pre
+            requires copyable<T> AND (!same_as<T, any>)) //
+        any(TRef && t)
           : ptr_(new impl<T>(static_cast<TRef &&>(t)))
         {}
         any(any &&) noexcept = default;
@@ -137,9 +138,10 @@ namespace ranges
             ptr_.reset(that.ptr_ ? that.ptr_->clone() : nullptr);
             return *this;
         }
-        template<typename TRef, typename T = detail::decay_t<TRef>>
-        auto operator=(TRef && t) -> CPP_ret(any &)( //
-            requires copyable<T> && (!same_as<T, any>))
+        template(typename TRef, typename T = detail::decay_t<TRef>)(
+            /// \pre
+            requires copyable<T> AND (!same_as<T, any>)) //
+        any & operator=(TRef && t)
         {
             any{static_cast<TRef &&>(t)}.swap(*this);
             return *this;
@@ -229,6 +231,6 @@ namespace ranges
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -34,7 +34,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/get.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -108,18 +108,20 @@ namespace ranges
     {
         struct indexed_element_fn;
 
-        template<typename I, typename S, typename O>
-        auto uninitialized_copy(I first, S last, O out) -> CPP_ret(O)( //
-            requires(!sized_sentinel_for<S, I>))
+        template(typename I, typename S, typename O)(
+            /// \pre
+            requires (!sized_sentinel_for<S, I>)) //
+        O uninitialized_copy(I first, S last, O out)
         {
             for(; first != last; ++first, ++out)
                 ::new((void *)std::addressof(*out)) iter_value_t<O>(*first);
             return out;
         }
 
-        template<typename I, typename S, typename O>
-        auto uninitialized_copy(I first, S last, O out) -> CPP_ret(O)( //
+        template(typename I, typename S, typename O)(
+            /// \pre
             requires sized_sentinel_for<S, I>)
+        O uninitialized_copy(I first, S last, O out)
         {
             return std::uninitialized_copy_n(first, (last - first), out);
         }
@@ -142,20 +144,21 @@ namespace ranges
             CPP_member
             constexpr CPP_ctor(indexed_datum)()(                          //
                 noexcept(std::is_nothrow_default_constructible<T>::value) //
-                requires default_constructible<T>)
+                    requires default_constructible<T>)
               : datum_{}
             {}
-            CPP_template(typename... Ts)(                                      //
-                requires constructible_from<T, Ts...> && (sizeof...(Ts) != 0)) //
-                constexpr indexed_datum(Ts &&... ts) noexcept(
+            template(typename... Ts)(
+                /// \pre
+                requires constructible_from<T, Ts...> AND (sizeof...(Ts) != 0)) //
+            constexpr indexed_datum(Ts &&... ts) noexcept(
                     std::is_nothrow_constructible<T, Ts...>::value)
               : datum_(static_cast<Ts &&>(ts)...)
             {}
-            template<typename U>
-            constexpr CPP_ctor(indexed_datum)(indexed_datum<U, Index> that)( //
-                noexcept(std::is_nothrow_constructible<T, U>::value)         //
-                requires(!same_as<T, U>) &&
-                convertible_to<U, T>)
+            template(typename U)(
+                /// \pre
+                requires (!same_as<T, U>) AND convertible_to<U, T>)
+            constexpr indexed_datum(indexed_datum<U, Index> that) //
+                noexcept(std::is_nothrow_constructible<T, U>::value) //
               : datum_(std::move(that.datum_))
             {}
             constexpr auto ref() noexcept
@@ -537,7 +540,7 @@ namespace ranges
         template<typename Variant>
         struct variant_get
         {
-            ////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////
             // get
             template<std::size_t N>
             friend meta::_t<
@@ -665,9 +668,10 @@ namespace ranges
           : detail::variant_data<Ts...>{}
           , index_((std::size_t)-1)
         {}
-        template<typename... Args>
-        static constexpr auto all_convertible_to(int) noexcept -> CPP_ret(bool)( //
-            requires(sizeof...(Args) == sizeof...(Ts)))
+        template(typename... Args)(
+            /// \pre
+            requires (sizeof...(Args) == sizeof...(Ts))) //
+        static constexpr bool all_convertible_to(int) noexcept
         {
             return and_v<convertible_to<Args, Ts>...>;
         }
@@ -681,19 +685,21 @@ namespace ranges
         CPP_member
         constexpr CPP_ctor(variant)()(                                         //
             noexcept(std::is_nothrow_default_constructible<datum_t<0>>::value) //
-            requires default_constructible<datum_t<0>>)
+                requires default_constructible<datum_t<0>>)
           : variant{emplaced_index<0>}
         {}
-        CPP_template(std::size_t N, typename... Args)(        //
-            requires constructible_from<datum_t<N>, Args...>) //
+        template(std::size_t N, typename... Args)(
+            /// \pre
+            requires constructible_from<datum_t<N>, Args...>)
             constexpr variant(emplaced_index_t<N>, Args &&... args) noexcept(
                 std::is_nothrow_constructible<datum_t<N>, Args...>::value)
           : detail::variant_data<Ts...>{meta::size_t<N>{}, static_cast<Args &&>(args)...}
           , index_(N)
         {}
-        CPP_template(std::size_t N, typename T, typename... Args)( //
+        template(std::size_t N, typename T, typename... Args)(
+            /// \pre
             requires constructible_from<datum_t<N>, std::initializer_list<T> &,
-                                        Args...>) //
+                                        Args...>)
             constexpr variant(
                 emplaced_index_t<N>, std::initializer_list<T> il,
                 Args &&... args) noexcept(std::
@@ -705,10 +711,11 @@ namespace ranges
                                         static_cast<Args &&>(args)...}
           , index_(N)
         {}
-        template<std::size_t N>
-        constexpr CPP_ctor(variant)(emplaced_index_t<N>, meta::nil_)(              //
-            noexcept(std::is_nothrow_constructible<datum_t<N>, meta::nil_>::value) //
+        template(std::size_t N)(
+            /// \pre
             requires constructible_from<datum_t<N>, meta::nil_>)
+        constexpr variant(emplaced_index_t<N>, meta::nil_)
+            noexcept(std::is_nothrow_constructible<datum_t<N>, meta::nil_>::value)
           : detail::variant_data<Ts...>{meta::size_t<N>{}, meta::nil_{}}
           , index_(N)
         {}
@@ -721,10 +728,11 @@ namespace ranges
           : detail::variant_data<Ts...>{}
           , index_(detail::variant_move_copy_(that.index(), data_(), that.data_()))
         {}
-        template<typename... Args>
-        CPP_ctor(variant)(variant<Args...> that)( //
-            requires(!same_as<variant<Args...>, variant>) &&
-            (all_convertible_to<Args...>(0)))
+        template(typename... Args)(
+            /// \pre
+            requires (!same_as<variant<Args...>, variant>) AND
+            (all_convertible_to<Args...>(0))) //
+        variant(variant<Args...> that)
           : detail::variant_data<Ts...>{}
           , index_(detail::variant_move_copy_(that.index(), data_(),
                                               std::move(that.data_())))
@@ -743,12 +751,13 @@ namespace ranges
             this->assign_(that);
             return *this;
         }
-        template<typename... Args>
-        auto operator=(variant<Args...> that) -> CPP_ret(variant &)( //
-            requires(!same_as<variant<Args...>, variant>) &&
+        template(typename... Args)(
+            /// \pre
+            requires (!same_as<variant<Args...>, variant>) AND
             (all_convertible_to<Args...>(0)))
+        variant & operator=(variant<Args...> that)
         {
-            // TODO do a simple copy assign when index()==that.index()
+            // TODO do a simple copy assign when index()==that.index() //
             this->clear_();
             this->assign_(that);
             return *this;
@@ -757,9 +766,10 @@ namespace ranges
         {
             return sizeof...(Ts);
         }
-        template<std::size_t N, typename... Args>
-        auto emplace(Args &&... args) -> CPP_ret(void)( //
+        template(std::size_t N, typename... Args)(
+            /// \pre
             requires constructible_from<datum_t<N>, Args...>)
+        void emplace(Args &&... args)
         {
             this->clear_();
             detail::construct_fn<N, Args &&...> fn{static_cast<Args &&>(args)...};
@@ -816,10 +826,10 @@ namespace ranges
         }
     };
 
-    template<typename... Ts, typename... Us>
-    auto operator==(variant<Ts...> const & lhs, variant<Us...> const & rhs)
-        -> CPP_ret(bool)( //
-            requires and_v<equality_comparable_with<Ts, Us>...>)
+    template(typename... Ts, typename... Us)(
+        /// \pre
+        requires and_v<equality_comparable_with<Ts, Us>...>)
+    bool operator==(variant<Ts...> const & lhs, variant<Us...> const & rhs)
     {
         return (!lhs.valid() && !rhs.valid()) ||
                (lhs.index() == rhs.index() &&
@@ -828,24 +838,25 @@ namespace ranges
                                        detail::variant_core_access::data(rhs)));
     }
 
-    template<typename... Ts, typename... Us>
-    auto operator!=(variant<Ts...> const & lhs, variant<Us...> const & rhs)
-        -> CPP_ret(bool)( //
-            requires and_v<equality_comparable_with<Ts, Us>...>)
+    template(typename... Ts, typename... Us)(
+        /// \pre
+        requires and_v<equality_comparable_with<Ts, Us>...>)
+    bool operator!=(variant<Ts...> const & lhs, variant<Us...> const & rhs)
     {
         return !(lhs == rhs);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////
     // emplace
-    template<std::size_t N, typename... Ts, typename... Args>
-    auto emplace(variant<Ts...> & var, Args &&... args) -> CPP_ret(void)(//
+    template(std::size_t N, typename... Ts, typename... Args)(
+        /// \pre
         requires constructible_from<detail::variant_datum_t<N, Ts...>, Args...>)
+    void emplace(variant<Ts...> & var, Args &&... args)
     {
         var.template emplace<N>(static_cast<Args &&>(args)...);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////
     // variant_unique
     template<typename Var>
     struct variant_unique
@@ -860,7 +871,7 @@ namespace ranges
     template<typename Var>
     using variant_unique_t = meta::_t<variant_unique<Var>>;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////
     // unique_variant
     template<typename... Ts>
     variant_unique_t<variant<Ts...>> unique_variant(variant<Ts...> const & var)
@@ -891,6 +902,6 @@ namespace std
 
 RANGES_DIAGNOSTIC_POP
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

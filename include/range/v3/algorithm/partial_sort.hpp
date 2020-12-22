@@ -29,7 +29,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -38,12 +38,12 @@ namespace ranges
     RANGES_FUNC_BEGIN(partial_sort)
 
         /// \brief function template \c partial_sort
-        template<typename I, typename S, typename C = less, typename P = identity>
-        auto RANGES_FUNC(partial_sort)(
-            I first, I middle, S last, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(I)(                                          //
-                requires sortable<I, C, P> && random_access_iterator<I> &&
+        template(typename I, typename S, typename C = less, typename P = identity)(
+            /// \pre
+            requires sortable<I, C, P> AND random_access_iterator<I> AND
                 sentinel_for<S, I>)
+        I RANGES_FUNC(partial_sort)(
+            I first, I middle, S last, C pred = C{}, P proj = P{}) //
         {
             make_heap(first, middle, std::ref(pred), std::ref(proj));
             auto const len = middle - first;
@@ -62,11 +62,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C = less, typename P = identity>
-        auto RANGES_FUNC(partial_sort)(
+        template(typename Rng, typename C = less, typename P = identity)(
+            /// \pre
+            requires sortable<iterator_t<Rng>, C, P> AND random_access_range<Rng>)
+        borrowed_iterator_t<Rng> RANGES_FUNC(partial_sort)(
             Rng && rng, iterator_t<Rng> middle, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                //
-                requires sortable<iterator_t<Rng>, C, P> && random_access_range<Rng>)
         {
             return (*this)(begin(rng),
                            std::move(middle),
@@ -84,6 +84,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

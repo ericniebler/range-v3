@@ -31,7 +31,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -66,7 +66,7 @@ namespace ranges
                 if(view_->val_)
                     view_->val_.reset();
                 else
-                    view_->gen_();
+                    static_cast<void>(view_->gen_());
             }
         };
         cursor begin_cursor()
@@ -93,14 +93,15 @@ namespace ranges
     {
         struct generate_fn
         {
-            template<typename G>
-            auto operator()(G g) const -> CPP_ret(generate_view<G>)( //
-                requires invocable<G &> && copy_constructible<G> &&
-                    std::is_object<detail::decay_t<invoke_result_t<G &>>>::value &&
-                        constructible_from<detail::decay_t<invoke_result_t<G &>>,
-                                           invoke_result_t<G &>> &&
-                            assignable_from<detail::decay_t<invoke_result_t<G &>> &,
-                                            invoke_result_t<G &>>)
+            template(typename G)(
+                /// \pre
+                requires invocable<G &> AND copy_constructible<G> AND
+                    std::is_object<detail::decay_t<invoke_result_t<G &>>>::value AND
+                    constructible_from<detail::decay_t<invoke_result_t<G &>>,
+                                       invoke_result_t<G &>> AND
+                    assignable_from<detail::decay_t<invoke_result_t<G &>> &,
+                                    invoke_result_t<G &>>)
+            generate_view<G> operator()(G g) const
             {
                 return generate_view<G>{std::move(g)};
             }
@@ -113,7 +114,7 @@ namespace ranges
     /// \@}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::generate_view)
 

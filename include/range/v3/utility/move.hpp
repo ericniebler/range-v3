@@ -22,7 +22,7 @@
 
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -32,8 +32,8 @@ namespace ranges
         struct move_fn : move_tag
         {
             template<typename T>
-            constexpr auto operator()(T && t) const noexcept
-                -> meta::_t<std::remove_reference<T>> &&
+            constexpr meta::_t<std::remove_reference<T>> && operator()(T && t) const //
+                noexcept
             {
                 return static_cast<meta::_t<std::remove_reference<T>> &&>(t);
             }
@@ -60,6 +60,6 @@ namespace ranges
     } // namespace aux
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

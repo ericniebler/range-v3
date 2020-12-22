@@ -92,7 +92,13 @@
         "codecvt": "cpp",
         "valarray": "cpp",
         "version": "cpp",
-        "source_location": "cpp"
+        "source_location": "cpp",
+        "span": "cpp",
+        "ranges": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "stop_token": "cpp",
+        "cfenv": "cpp"
     },
     "C_Cpp.configurationWarnings": "Disabled",
     "cmake.configureOnOpen": true

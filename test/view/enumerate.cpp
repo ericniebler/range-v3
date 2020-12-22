@@ -28,6 +28,7 @@ template<class RangeT>
 void test_enumerate_with(RangeT &&range)
 {
     auto enumerated_range = ranges::views::enumerate(range);
+    CPP_assert(ranges::borrowed_range<decltype(enumerated_range)>);
 
     std::size_t idx_ref = 0;
     auto it_ref = begin( range );

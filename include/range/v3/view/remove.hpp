@@ -28,7 +28,7 @@
 #include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -43,30 +43,33 @@ namespace ranges
             struct pred_
             {
                 Value value_;
-                template<typename T>
-                auto operator()(T && other) const -> CPP_ret(bool)( //
+                template(typename T)(
+                    /// \pre
                     requires equality_comparable_with<T, Value const &>)
+                bool operator()(T && other) const
                 {
                     return static_cast<T &&>(other) == value_;
                 }
             };
 
         public:
-            template<typename Rng, typename Value>
-            constexpr auto CPP_fun(operator())(Rng && rng, Value value)(
-                const requires move_constructible<Value> && viewable_range<Rng> &&
-                    input_range<Rng> &&
-                        indirectly_comparable<iterator_t<Rng>, Value const *, equal_to>)
+            template(typename Rng, typename Value)(
+                /// \pre
+                requires move_constructible<Value> AND viewable_range<Rng> AND
+                    input_range<Rng> AND
+                    indirectly_comparable<iterator_t<Rng>, Value const *, equal_to>)
+            constexpr auto operator()(Rng && rng, Value value) const
             {
                 return remove_if(static_cast<Rng &&>(rng),
                                  pred_<Value>{std::move(value)});
             }
 
-            template<typename Rng, typename Value, typename Proj>
-            constexpr auto CPP_fun(operator())(Rng && rng, Value value, Proj proj)(
-                const requires move_constructible<Value> && viewable_range<Rng> &&
-                    input_range<Rng> && indirectly_comparable<
-                        iterator_t<Rng>, Value const *, equal_to, Proj>)
+            template(typename Rng, typename Value, typename Proj)(
+                /// \pre
+                requires move_constructible<Value> AND viewable_range<Rng> AND
+                    input_range<Rng> AND
+                    indirectly_comparable<iterator_t<Rng>, Value const *, equal_to, Proj>)
+            constexpr auto operator()(Rng && rng, Value value, Proj proj) const
             {
                 return remove_if(static_cast<Rng &&>(rng),
                                  pred_<Value>{std::move(value)},
@@ -81,10 +84,10 @@ namespace ranges
             {
                 return make_view_closure(bind_back(remove_base_fn{}, std::move(value)));
             }
-            template<typename Value, typename Proj>
-            constexpr auto CPP_fun(operator())(Value && value,
-                                               Proj proj)(const //
-                                                          requires(!range<Value>)) // TODO: underconstrained
+            template(typename Value, typename Proj)(
+                /// \pre
+                requires (!range<Value>)) // TODO: underconstrained
+            constexpr auto operator()(Value && value, Proj proj) const
             {
                 return make_view_closure(bind_back(
                     remove_base_fn{}, static_cast<Value &&>(value), std::move(proj)));
@@ -105,6 +108,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_VIEW_REMOVE_HPP

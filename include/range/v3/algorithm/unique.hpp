@@ -30,7 +30,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -47,10 +47,10 @@ namespace ranges
         /// \pre `S` is a model of the `sentinel_for` concept
         /// \pre `C` is a model of the `relation` concept
         ///
-        template<typename I, typename S, typename C = equal_to, typename P = identity>
-        auto RANGES_FUNC(unique)(I first, S last, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(I)(                                                     //
-                requires sortable<I, C, P> && sentinel_for<S, I>)
+        template(typename I, typename S, typename C = equal_to, typename P = identity)(
+            /// \pre
+            requires sortable<I, C, P> AND sentinel_for<S, I>)
+        I RANGES_FUNC(unique)(I first, S last, C pred = C{}, P proj = P{})
         {
             first = adjacent_find(std::move(first), last, std::ref(pred), std::ref(proj));
 
@@ -65,10 +65,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C = equal_to, typename P = identity>
-        auto RANGES_FUNC(unique)(Rng && rng, C pred = C{}, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                             //
-                requires sortable<iterator_t<Rng>, C, P> && range<Rng>)
+        template(typename Rng, typename C = equal_to, typename P = identity)(
+            /// \pre
+            requires sortable<iterator_t<Rng>, C, P> AND range<Rng>)
+        borrowed_iterator_t<Rng> //
+        RANGES_FUNC(unique)(Rng && rng, C pred = C{}, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
@@ -82,6 +83,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

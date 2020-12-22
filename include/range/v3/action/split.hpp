@@ -29,7 +29,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/split.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -44,9 +44,10 @@ namespace ranges
                 meta::if_c<(bool)ranges::container<Rng>, //
                            uncvref_t<Rng>, std::vector<range_value_t<Rng>>>;
 
-            template<typename T>
-            constexpr auto CPP_fun(operator())(T & t)(const //
+            template(typename T)(
+                /// \pre
                 requires range<T &>)
+            constexpr auto operator()(T & t) const
             {
                 return make_action_closure(
                     bind_back(split_fn{}, detail::reference_wrapper_<T>(t)));
@@ -60,23 +61,28 @@ namespace ranges
 
             // BUGBUG something is not right with the actions. It should be possible
             // to move a container into a split and have elements moved into the result.
-            template<typename Rng>
-            auto operator()(Rng && rng, range_value_t<Rng> val) const
-                -> CPP_ret(std::vector<split_value_t<Rng>>)( //
-                    requires input_range<Rng> && indirectly_comparable<
+            template(typename Rng)(
+                /// \pre
+                requires input_range<Rng> AND indirectly_comparable<
                         iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>)
+            std::vector<split_value_t<Rng>> //
+            operator()(Rng && rng, range_value_t<Rng> val) const
             {
                 return views::split(rng, std::move(val)) |
                        to<std::vector<split_value_t<Rng>>>();
             }
 
-            template<typename Rng, typename Pattern>
-            auto operator()(Rng && rng, Pattern && pattern) const
-                -> CPP_ret(std::vector<split_value_t<Rng>>)( //
-                    requires input_range<Rng> && viewable_range<Pattern> &&
-                        forward_range<Pattern> && indirectly_comparable<
-                            iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
-                    (forward_range<Rng> || detail::tiny_range<Pattern>))
+            template(typename Rng, typename Pattern)(
+                /// \pre
+                requires input_range<Rng> AND viewable_range<Pattern> AND
+                    forward_range<Pattern> AND
+                    indirectly_comparable<
+                        iterator_t<Rng>,
+                        iterator_t<Pattern>,
+                        ranges::equal_to> AND
+                    (forward_range<Rng> || detail::tiny_range<Pattern>)) //
+            std::vector<split_value_t<Rng>> operator()(Rng && rng, Pattern && pattern)
+                const
             {
                 return views::split(rng, static_cast<Pattern &&>(pattern)) |
                        to<std::vector<split_value_t<Rng>>>();
@@ -84,8 +90,8 @@ namespace ranges
 
             /// \cond
             template<typename Rng, typename T>
-            auto operator()(Rng && rng, detail::reference_wrapper_<T> r) const
-                -> invoke_result_t<split_fn, Rng, T &>
+            invoke_result_t<split_fn, Rng, T &> //
+            operator()(Rng && rng, detail::reference_wrapper_<T> r) const
             {
                 return (*this)(static_cast<Rng &&>(rng), r.get());
             }
@@ -98,6 +104,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

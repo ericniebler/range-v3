@@ -28,7 +28,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -40,11 +40,11 @@ namespace ranges
     RANGES_FUNC_BEGIN(for_each)
 
         /// \brief function template \c for_each
-        template<typename I, typename S, typename F, typename P = identity>
-        auto RANGES_FUNC(for_each)(I first, S last, F fun, P proj = P{})
-            ->CPP_ret(for_each_result<I, F>)( //
-                requires input_iterator<I> && sentinel_for<S, I> &&
-                indirectly_unary_invocable<F, projected<I, P>>)
+        template(typename I, typename S, typename F, typename P = identity)(
+            /// \pre
+            requires input_iterator<I> AND sentinel_for<S, I> AND
+            indirectly_unary_invocable<F, projected<I, P>>)
+        for_each_result<I, F> RANGES_FUNC(for_each)(I first, S last, F fun, P proj = P{})
         {
             for(; first != last; ++first)
             {
@@ -54,11 +54,12 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename F, typename P = identity>
-        auto RANGES_FUNC(for_each)(Rng && rng, F fun, P proj = P{})
-            ->CPP_ret(for_each_result<safe_iterator_t<Rng>, F>)( //
-                requires input_range<Rng> &&
-                indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
+        template(typename Rng, typename F, typename P = identity)(
+            /// \pre
+            requires input_range<Rng> AND
+            indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
+        for_each_result<borrowed_iterator_t<Rng>, F> //
+        RANGES_FUNC(for_each)(Rng && rng, F fun, P proj = P{})
         {
             return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in,
                     detail::move(fun)};
@@ -74,6 +75,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

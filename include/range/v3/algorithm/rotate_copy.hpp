@@ -28,7 +28,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -40,11 +40,12 @@ namespace ranges
     RANGES_FUNC_BEGIN(rotate_copy)
 
         /// \brief function template \c rotate_copy
-        template<typename I, typename S, typename O, typename P = identity>
-        auto RANGES_FUNC(rotate_copy)(I first, I middle, S last, O out) //
-            ->CPP_ret(rotate_copy_result<I, O>)(                        //
-                requires forward_iterator<I> && sentinel_for<S, I> &&
-                weakly_incrementable<O> && indirectly_copyable<I, O>)
+        template(typename I, typename S, typename O, typename P = identity)(
+            /// \pre
+            requires forward_iterator<I> AND sentinel_for<S, I> AND
+            weakly_incrementable<O> AND indirectly_copyable<I, O>)
+        rotate_copy_result<I, O> //
+        RANGES_FUNC(rotate_copy)(I first, I middle, S last, O out) //
         {
             auto res = ranges::copy(middle, std::move(last), std::move(out));
             return {std::move(res.in),
@@ -52,11 +53,12 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename O, typename P = identity>
-        auto RANGES_FUNC(rotate_copy)(Rng && rng, iterator_t<Rng> middle, O out) //
-            ->CPP_ret(rotate_copy_result<safe_iterator_t<Rng>, O>)(              //
-                requires range<Rng> && weakly_incrementable<O> &&
-                indirectly_copyable<iterator_t<Rng>, O>)
+        template(typename Rng, typename O, typename P = identity)(
+            /// \pre
+            requires range<Rng> AND weakly_incrementable<O> AND
+            indirectly_copyable<iterator_t<Rng>, O>)
+        rotate_copy_result<borrowed_iterator_t<Rng>, O> //
+        RANGES_FUNC(rotate_copy)(Rng && rng, iterator_t<Rng> middle, O out) //
         {
             return (*this)(begin(rng), std::move(middle), end(rng), std::move(out));
         }
@@ -71,6 +73,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

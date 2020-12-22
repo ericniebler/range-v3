@@ -46,7 +46,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -288,16 +288,16 @@ namespace ranges
             return detail::stable_partition_impl(first, last, pred, proj, len, p, bi);
         }
     } // namespace detail
-    /// endcond
+    /// \endcond
 
     RANGES_FUNC_BEGIN(stable_partition)
 
         /// \brief function template \c stable_partition
-        template<typename I, typename S, typename C, typename P = identity>
-        auto RANGES_FUNC(stable_partition)(I first, S last, C pred, P proj = P{}) //
-            ->CPP_ret(I)(                                                         //
-                requires bidirectional_iterator<I> && sentinel_for<S, I> &&
-                indirect_unary_predicate<C, projected<I, P>> && permutable<I>)
+        template(typename I, typename S, typename C, typename P = identity)(
+            /// \pre
+            requires bidirectional_iterator<I> AND sentinel_for<S, I> AND
+            indirect_unary_predicate<C, projected<I, P>> AND permutable<I>)
+        I RANGES_FUNC(stable_partition)(I first, S last, C pred, P proj = P{})
         {
             return detail::stable_partition_impl(std::move(first),
                                                  std::move(last),
@@ -308,12 +308,13 @@ namespace ranges
 
         // BUGBUG Can this be optimized if Rng has O1 size?
         /// \overload
-        template<typename Rng, typename C, typename P = identity>
-        auto RANGES_FUNC(stable_partition)(Rng && rng, C pred, P proj = P{}) //
-            ->CPP_ret(safe_iterator_t<Rng>)(                                 //
-                requires bidirectional_range<Rng> &&
-                indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> &&
-                permutable<iterator_t<Rng>>)
+        template(typename Rng, typename C, typename P = identity)(
+            /// \pre
+            requires bidirectional_range<Rng> AND
+            indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> AND
+            permutable<iterator_t<Rng>>)
+        borrowed_iterator_t<Rng> //
+        RANGES_FUNC(stable_partition)(Rng && rng, C pred, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }
@@ -327,6 +328,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -28,7 +28,7 @@
 #include <range/v3/view/subrange.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -70,36 +70,41 @@ namespace ranges
         {}
     };
 
-    // the begin iterator will be an iterator into the underlying view (conditionally safe)
-    // and the end iterator owns the value to be compared against (safe)
+    // the begin iterator will be an iterator into the underlying view (conditionally
+    // borrowed) and the end iterator owns the value to be compared against (borrowed)
     template<typename Rng, typename Val>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<delimit_view<Rng, Val>> = enable_safe_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<delimit_view<Rng, Val>> = //
+        enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Val)(requires copy_constructible<Val>)
-        delimit_view(Rng &&, Val)
-            ->delimit_view<views::all_t<Rng>, Val>;
+    template(typename Rng, typename Val)(
+        /// \pre
+        requires copy_constructible<Val>)
+    delimit_view(Rng &&, Val)
+        -> delimit_view<views::all_t<Rng>, Val>;
 #endif
 
     namespace views
     {
         struct delimit_base_fn
         {
-            template<typename I_, typename Val, typename I = detail::decay_t<I_>>
+            template(typename I_, typename Val, typename I = detail::decay_t<I_>)(
+                /// \pre
+                requires (!range<I_>) AND convertible_to<I_, I> AND input_iterator<I> AND
+                    semiregular<Val> AND
+                    equality_comparable_with<Val, iter_reference_t<I>>)
             constexpr auto operator()(I_ && begin_, Val value) const
-                -> CPP_ret(delimit_view<subrange<I, unreachable_sentinel_t>, Val>)( //
-                    requires(!range<I_> && convertible_to<I_, I> && input_iterator<I> &&
-                             semiregular<Val> &&
-                             equality_comparable_with<Val, iter_reference_t<I>>))
+                -> delimit_view<subrange<I, unreachable_sentinel_t>, Val>
             {
                 return {{static_cast<I_ &&>(begin_), {}}, std::move(value)};
             }
 
-            template<typename Rng, typename Val>
+            template(typename Rng, typename Val)(
+                /// \pre
+                requires viewable_range<Rng> AND input_range<Rng> AND semiregular<
+                        Val> AND equality_comparable_with<Val, range_reference_t<Rng>>)
             constexpr auto operator()(Rng && rng, Val value) const //
-                -> CPP_ret(delimit_view<all_t<Rng>, Val>)(         //
-                    requires viewable_range<Rng> && input_range<Rng> && semiregular<
-                        Val> && equality_comparable_with<Val, range_reference_t<Rng>>)
+                -> delimit_view<all_t<Rng>, Val>
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(value)};
             }
@@ -123,7 +128,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::delimit_view)
 

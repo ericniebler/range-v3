@@ -215,6 +215,8 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_MULTIPLE_ASSIGNMENT_OPERATORS \
     RANGES_DIAGNOSTIC_IGNORE(4522)
 #define RANGES_DIAGNOSTIC_IGNORE_VOID_PTR_DEREFERENCE
+#define RANGES_DIAGNOSTIC_KEYWORD_MACRO
+#define RANGES_DIAGNOSTIC_SUGGEST_OVERRIDE
 
 #define RANGES_CXX_VER _MSVC_LANG
 
@@ -278,6 +280,11 @@ namespace ranges
 #define RANGES_WORKAROUND_MSVC_OLD_LAMBDA
 #endif
 
+#if _MSVC_LANG <= 201703L
+#define RANGES_WORKAROUND_MSVC_UNUSABLE_SPAN // MSVC provides a <span> header that is
+                                             // guarded against use with std <= 17
+#endif
+
 #elif defined(__GNUC__) || defined(__clang__)
 #define RANGES_PRAGMA(X) _Pragma(#X)
 #define RANGES_DIAGNOSTIC_PUSH RANGES_PRAGMA(GCC diagnostic push)
@@ -328,6 +335,8 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_MULTIPLE_ASSIGNMENT_OPERATORS
 #define RANGES_DIAGNOSTIC_IGNORE_VOID_PTR_DEREFERENCE \
     RANGES_DIAGNOSTIC_IGNORE("-Wvoid-ptr-dereference")
+#define RANGES_DIAGNOSTIC_KEYWORD_MACRO RANGES_DIAGNOSTIC_IGNORE("-Wkeyword-macro")
+#define RANGES_DIAGNOSTIC_SUGGEST_OVERRIDE RANGES_DIAGNOSTIC_IGNORE("-Wsuggest-override")
 
 #define RANGES_WORKAROUND_CWG_1554
 #ifdef __clang__
@@ -335,7 +344,9 @@ namespace ranges
 #define RANGES_WORKAROUND_CLANG_23135 // constexpr leads to premature instantiation on
                                       // clang-3.x
 #endif
+#if (__clang_major__ >= 7 && __clang_major__ <= 9) || defined(__apple_build_version__)
 #define RANGES_WORKAROUND_CLANG_43400 // template friend is redefinition of itself
+#endif
 #else                                 // __GNUC__
 #if __GNUC__ < 6
 #define RANGES_WORKAROUND_GCC_UNFILED0 /* Workaround old GCC name lookup bug */
@@ -344,9 +355,6 @@ namespace ranges
 #define RANGES_WORKAROUND_GCC_91525 /* Workaround strange GCC ICE */
 #endif
 #if __GNUC__ >= 9
-#ifdef __cpp_concepts
-#define RANGES_WORKAROUND_GCC_89953 // ICE in nothrow_spec_p, at cp/except.c:1244
-#endif
 #if __GNUC__ == 9 && __GNUC_MINOR__ < 3 && __cplusplus == RANGES_CXX_STD_17
 #define RANGES_WORKAROUND_GCC_91923 // Failure-to-SFINAE with class type NTTP in C++17
 #endif
@@ -380,6 +388,8 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_TRUNCATION
 #define RANGES_DIAGNOSTIC_IGNORE_MULTIPLE_ASSIGNMENT_OPERATORS
 #define RANGES_DIAGNOSTIC_IGNORE_VOID_PTR_DEREFERENCE
+#define RANGES_DIAGNOSTIC_KEYWORD_MACRO
+#define RANGES_DIAGNOSTIC_SUGGEST_OVERRIDE
 #endif
 
 // Configuration via feature-test macros, with fallback to __cplusplus

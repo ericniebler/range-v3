@@ -23,7 +23,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/facade.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -99,9 +99,10 @@ namespace ranges
         /// If `n == 1` returns `to`.
         struct linear_distribute_fn
         {
-            template<typename T>
-            constexpr auto CPP_fun(operator())(T from, T to, std::ptrdiff_t n)(
-                const requires std::is_arithmetic<T>::value)
+            template(typename T)(
+                /// \pre
+                requires std::is_arithmetic<T>::value)
+            constexpr auto operator()(T from, T to, std::ptrdiff_t n) const
             {
                 return linear_distribute_view<T>{from, to, n};
             }
@@ -113,6 +114,6 @@ namespace ranges
     } // namespace views
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

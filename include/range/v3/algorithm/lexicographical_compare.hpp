@@ -25,7 +25,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -34,24 +34,24 @@ namespace ranges
     RANGES_FUNC_BEGIN(lexicographical_compare)
 
         /// \brief function template \c lexicographical_compare
-        template<typename I0,
+        template(typename I0,
                  typename S0,
                  typename I1,
                  typename S1,
                  typename C = less,
                  typename P0 = identity,
-                 typename P1 = identity>
-        auto RANGES_FUNC(lexicographical_compare)(I0 begin0,
+                 typename P1 = identity)(
+            /// \pre
+            requires input_iterator<I0> AND sentinel_for<S0, I0> AND
+                input_iterator<I1> AND sentinel_for<S1, I1> AND
+                indirect_strict_weak_order<C, projected<I0, P0>, projected<I1, P1>>)
+        bool RANGES_FUNC(lexicographical_compare)(I0 begin0,
                                                   S0 end0,
                                                   I1 begin1,
                                                   S1 end1,
                                                   C pred = C{},
                                                   P0 proj0 = P0{},
                                                   P1 proj1 = P1{})
-            ->CPP_ret(bool)( //
-                requires input_iterator<I0> && sentinel_for<S0, I0> &&
-                input_iterator<I1> && sentinel_for<S1, I1> &&
-                indirect_strict_weak_order<C, projected<I0, P0>, projected<I1, P1>>)
         {
             for(; begin1 != end1; ++begin0, ++begin1)
             {
@@ -65,18 +65,18 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng0,
+        template(typename Rng0,
                  typename Rng1,
                  typename C = less,
                  typename P0 = identity,
-                 typename P1 = identity>
-        auto RANGES_FUNC(lexicographical_compare)(
-            Rng0 && rng0, Rng1 && rng1, C pred = C{}, P0 proj0 = P0{}, P1 proj1 = P1{}) //
-            ->CPP_ret(bool)(                                                            //
-                requires input_range<Rng0> && input_range<Rng1> &&
+                 typename P1 = identity)(
+            /// \pre
+            requires input_range<Rng0> AND input_range<Rng1> AND
                 indirect_strict_weak_order<C,
                                            projected<iterator_t<Rng0>, P0>,
                                            projected<iterator_t<Rng1>, P1>>)
+        bool RANGES_FUNC(lexicographical_compare)(
+            Rng0 && rng0, Rng1 && rng1, C pred = C{}, P0 proj0 = P0{}, P1 proj1 = P1{}) //
         {
             return (*this)(begin(rng0),
                            end(rng0),
@@ -96,6 +96,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

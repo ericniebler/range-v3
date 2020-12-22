@@ -37,7 +37,7 @@
 #include <range/v3/view/take_while.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -126,8 +126,10 @@ namespace ranges
 
         public:
             cursor() = default;
-            CPP_template(bool Other)( //
-                requires IsConst && (!Other)) cursor(cursor<Other> that)
+            template(bool Other)(
+                /// \pre
+                requires IsConst AND CPP_NOT(Other)) //
+            cursor(cursor<Other> that)
               : cursor{std::move(that.cur_), std::move(that.last_), std::move(that.fun_)}
             {}
         };
@@ -135,11 +137,12 @@ namespace ranges
         {
             return {fun_, ranges::begin(rng_), ranges::end(rng_)};
         }
-        template<bool Const = true>
-        auto begin_cursor() const -> CPP_ret(cursor<Const>)( //
-            requires Const && range<meta::const_if_c<Const, Rng>> &&
+        template(bool Const = true)(
+            /// \pre
+            requires Const AND range<meta::const_if_c<Const, Rng>> AND
                 invocable<Fun const &, iterator_t<meta::const_if_c<Const, Rng>>,
                           sentinel_t<meta::const_if_c<Const, Rng>>>)
+        cursor<Const> begin_cursor() const
         {
             return {fun_, ranges::begin(rng_), ranges::end(rng_)};
         }
@@ -153,9 +156,11 @@ namespace ranges
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)(requires copy_constructible<Fun>)
-        split_when_view(Rng &&, Fun)
-            ->split_when_view<views::all_t<Rng>, Fun>;
+    template(typename Rng, typename Fun)(
+        /// \pre
+        requires copy_constructible<Fun>)
+    split_when_view(Rng &&, Fun)
+        -> split_when_view<views::all_t<Rng>, Fun>;
 #endif
 
     namespace views
@@ -168,9 +173,10 @@ namespace ranges
             {
                 semiregular_box_t<Pred> pred_;
 
-                template<typename I, typename S>
-                auto operator()(I cur, S last) const -> CPP_ret(std::pair<bool, I>)( //
+                template(typename I, typename S)(
+                    /// \pre
                     requires sentinel_for<S, I>)
+                std::pair<bool, I> operator()(I cur, S last) const
                 {
                     auto where = ranges::find_if_not(cur, last, std::ref(pred_));
                     return {cur != where, where};
@@ -178,23 +184,26 @@ namespace ranges
             };
 
         public:
-            template<typename Rng, typename Fun>
-            auto operator()(Rng && rng, Fun fun) const        //
-                -> CPP_ret(split_when_view<all_t<Rng>, Fun>)( //
-                    requires viewable_range<Rng> && forward_range<Rng> &&
-                        invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> && invocable<
-                            Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
-                            copy_constructible<Fun> && convertible_to<
-                                invoke_result_t<Fun &, iterator_t<Rng>, sentinel_t<Rng>>,
-                                std::pair<bool, iterator_t<Rng>>>)
+            template(typename Rng, typename Fun)(
+                /// \pre
+                requires viewable_range<Rng> AND forward_range<Rng> AND
+                    invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> AND
+                    invocable<Fun &, iterator_t<Rng>, iterator_t<Rng>> AND
+                    copy_constructible<Fun> AND
+                    convertible_to<
+                        invoke_result_t<Fun &, iterator_t<Rng>, sentinel_t<Rng>>,
+                        std::pair<bool, iterator_t<Rng>>>)
+            split_when_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const //
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
-            template<typename Rng, typename Fun>
-            auto operator()(Rng && rng, Fun fun) const
-                -> CPP_ret(split_when_view<all_t<Rng>, predicate_pred_<Fun>>)( //
-                    requires viewable_range<Rng> && forward_range<Rng> && predicate<
-                        Fun const &, range_reference_t<Rng>> && copy_constructible<Fun>)
+            template(typename Rng, typename Fun)(
+                /// \pre
+                requires viewable_range<Rng> AND forward_range<Rng> AND
+                    predicate<Fun const &, range_reference_t<Rng>> AND
+                    copy_constructible<Fun>)
+            split_when_view<all_t<Rng>, predicate_pred_<Fun>> //
+            operator()(Rng && rng, Fun fun) const
             {
                 return {all(static_cast<Rng &&>(rng)),
                         predicate_pred_<Fun>{std::move(fun)}};
@@ -220,7 +229,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::split_when_view)
 

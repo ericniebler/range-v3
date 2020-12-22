@@ -16,7 +16,7 @@
 
 #include <range/v3/functional/invoke.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -38,19 +38,20 @@ namespace ranges
             using ImplFn::operator();
 
             template<typename V0, typename... Args>
-            constexpr auto operator()(std::initializer_list<V0> && rng0,
-                                      Args &&... args) const
-                -> invoke_result_t<ImplFn const &, std::initializer_list<V0>, Args...>
+            constexpr invoke_result_t<ImplFn const &, std::initializer_list<V0>, Args...>
+            operator()(std::initializer_list<V0> && rng0, Args &&... args) const
             {
                 return base()(static_cast<std::initializer_list<V0> &&>(rng0),
                               static_cast<Args &&>(args)...);
             }
             /// \overload
             template<typename Rng0, typename V1, typename... Args>
-            constexpr auto operator()(Rng0 && rng0, std::initializer_list<V1> && rng1,
-                                      Args &&... args) const
-                -> invoke_result_t<ImplFn const &, Rng0, std::initializer_list<V1>,
-                                   Args...>
+            constexpr invoke_result_t<ImplFn const &,
+                                      Rng0,
+                                      std::initializer_list<V1>,
+                                      Args...> //
+            operator()(Rng0 && rng0, std::initializer_list<V1> && rng1, Args &&... args)
+                const
             {
                 return base()( //
                     static_cast<Rng0 &&>(rng0),
@@ -59,11 +60,13 @@ namespace ranges
             }
             /// \overload
             template<typename V0, typename V1, typename... Args>
-            constexpr auto operator()(std::initializer_list<V0> && rng0,
-                                      std::initializer_list<V1> && rng1,
-                                      Args &&... args) const
-                -> invoke_result_t<ImplFn const &, std::initializer_list<V0>,
-                                   std::initializer_list<V1>, Args...>
+            constexpr invoke_result_t<ImplFn const &,
+                                      std::initializer_list<V0>,
+                                      std::initializer_list<V1>,
+                                      Args...>
+            operator()(std::initializer_list<V0> && rng0,
+                       std::initializer_list<V1> && rng1,
+                       Args &&... args) const
             {
                 return base()( //
                     static_cast<std::initializer_list<V0> &&>(rng0),
@@ -75,6 +78,6 @@ namespace ranges
     /// \endcond
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -50,7 +50,7 @@
 #endif
 #endif // RANGES_SILENCE_COROUTINE_WARNINGS
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -120,7 +120,7 @@ namespace ranges
             using base_t::promise;
 
             coroutine_owner() = default;
-            explicit constexpr coroutine_owner(base_t coro) noexcept
+            constexpr explicit coroutine_owner(base_t coro) noexcept
               : base_t(coro)
             {}
             coroutine_owner(coroutine_owner && that) noexcept
@@ -171,7 +171,7 @@ namespace ranges
             }
 
         private:
-            std::atomic<bool> copied_{false};
+            mutable std::atomic<bool> copied_{false};
 
             base_t & base() noexcept
             {
@@ -210,12 +210,12 @@ namespace ranges
                 except_ = std::current_exception();
                 RANGES_EXPECT(except_);
             }
-            template<typename Arg>
-            auto yield_value(Arg && arg) noexcept(
+            template(typename Arg)(
+                /// \pre
+                requires convertible_to<Arg, Reference> AND
+                        std::is_assignable<semiregular_box_t<Reference> &, Arg>::value) //
+            RANGES_COROUTINES_NS::suspend_always yield_value(Arg && arg) noexcept(
                 std::is_nothrow_assignable<semiregular_box_t<Reference> &, Arg>::value)
-                -> CPP_ret(RANGES_COROUTINES_NS::suspend_always)( //
-                    requires convertible_to<Arg, Reference> &&
-                        std::is_assignable<semiregular_box_t<Reference> &, Arg>::value)
             {
                 ref_ = std::forward<Arg>(arg);
                 return {};
@@ -362,7 +362,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
 

@@ -28,7 +28,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -43,8 +43,10 @@ namespace ranges
         struct adaptor : adaptor_base
         {
             adaptor() = default;
-            CPP_template(bool Other)( //
-                requires Const && (!Other)) constexpr adaptor(adaptor<Other>)
+            template(bool Other)(
+                /// \pre
+                requires Const AND CPP_NOT(Other)) //
+            constexpr adaptor(adaptor<Other>)
             {}
             using CRng = meta::const_if_c<Const, Rng>;
             using value_type = range_value_t<Rng>;
@@ -66,14 +68,18 @@ namespace ranges
             return {};
         }
         CPP_member
-        auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires input_range<Rng const>)
+        auto begin_adaptor() const //
+            -> CPP_ret(adaptor<true>)(
+                /// \pre
+                requires input_range<Rng const>)
         {
             return {};
         }
         CPP_member
-        auto end_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires input_range<Rng const>)
+        auto end_adaptor() const //
+            -> CPP_ret(adaptor<true>)(
+                /// \pre
+                requires input_range<Rng const>)
         {
             return {};
         }
@@ -83,33 +89,39 @@ namespace ranges
         explicit move_view(Rng rng)
           : move_view::view_adaptor{std::move(rng)}
         {}
-        CPP_member
-        auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        CPP_auto_member
+        auto CPP_fun(size)()(const //
+            requires sized_range<Rng const>)
         {
             return ranges::size(this->base());
         }
-        CPP_member
-        auto CPP_fun(size)()(requires sized_range<Rng>)
+        CPP_auto_member
+        auto CPP_fun(size)()(
+            /// \pre
+            requires sized_range<Rng>)
         {
             return ranges::size(this->base());
         }
     };
 
     template<typename Rng>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<move_view<Rng>> = enable_safe_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<move_view<Rng>> =
+        enable_borrowed_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    move_view(Rng &&)->move_view<views::all_t<Rng>>;
+    move_view(Rng &&) //
+        -> move_view<views::all_t<Rng>>;
 #endif
 
     namespace views
     {
         struct move_fn
         {
-            template<typename Rng>
-            auto operator()(Rng && rng) const -> CPP_ret(move_view<all_t<Rng>>)( //
-                requires viewable_range<Rng> && input_range<Rng>)
+            template(typename Rng)(
+                /// \pre
+                requires viewable_range<Rng> AND input_range<Rng>)
+            move_view<all_t<Rng>> operator()(Rng && rng) const
             {
                 return move_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
@@ -122,7 +134,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::move_view)
 

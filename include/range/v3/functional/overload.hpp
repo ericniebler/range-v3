@@ -13,6 +13,8 @@
 #ifndef RANGES_V3_FUNCTIONAL_OVERLOAD_HPP
 #define RANGES_V3_FUNCTIONAL_OVERLOAD_HPP
 
+#include <meta/meta.hpp>
+
 #include <concepts/concepts.hpp>
 
 #include <range/v3/range_fwd.hpp>
@@ -21,42 +23,82 @@
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
     /// \addtogroup group-functional
     /// @{
+    /// \cond
+    namespace detail
+    {
+        struct _id
+        {
+            template<typename T>
+            using invoke = T;
+        };
+        struct _ref
+        {
+            template<typename T>
+            using invoke = T &;
+        };
+        struct _cref
+        {
+            template<typename T>
+            using invoke = T const &;
+        };
+        template<typename T>
+        struct _bind_front
+        {
+            template<typename... Args>
+            using invoke = invoke_result_t<T, Args...>;
+        };
+    } // namespace detail
+    /// \endcond
+
     template<typename... Ts>
     struct overloaded;
 
     template<>
     struct overloaded<>
-    {};
+    {
+    private:
+        template<typename...>
+        friend struct overloaded;
+        template<typename, typename...>
+        using _result_t = void;
+    };
 
     template<typename First, typename... Rest>
     struct overloaded<First, Rest...>
     {
     private:
+        template<typename...>
+        friend struct overloaded;
+
         RANGES_NO_UNIQUE_ADDRESS
         First first_;
         RANGES_NO_UNIQUE_ADDRESS
         overloaded<Rest...> second_;
 
-#if RANGES_CXX_IF_CONSTEXPR < RANGES_CXX_IF_CONSTEXPR_17
-        template<typename This, typename... Args>
-        static constexpr decltype(auto) select(std::true_type, This && ovr,
-                                               Args &&... args)
+        template<typename Qual>
+        using _result_first = detail::_bind_front<meta::invoke<Qual, First>>;
+        template<typename Qual>
+        struct _result_second
         {
-            return invoke(((This &&) ovr).first_, (Args &&) args...);
-        }
-        template<typename This, typename... Args>
-        static constexpr decltype(auto) select(std::false_type, This && ovr,
-                                               Args &&... args)
-        {
-            return invoke(((This &&) ovr).second_, (Args &&) args...);
-        }
-#endif
+            template<typename... Args>
+            using invoke = typename overloaded<Rest...>
+                ::template _result_t<Qual, Args...>;
+        };
+
+        template<typename Qual, typename... Args>
+        using _result_t =
+            meta::invoke<
+                meta::conditional_t<
+                    (bool) invocable<meta::invoke<Qual, First>, Args...>,
+                    _result_first<Qual>,
+                    _result_second<Qual>>,
+                Args...>;
 
     public:
         overloaded() = default;
@@ -64,55 +106,53 @@ namespace ranges
           : first_(static_cast<First &&>(first))
           , second_{static_cast<Rest &&>(rest)...}
         {}
-        CPP_template(typename... Args)( //
-            requires(defer::invocable<First &, Args...> ||
-                     defer::invocable<overloaded<Rest...> &, Args...>)) //
-            constexpr decltype(auto)
-            operator()(Args &&... args) &
+
+        template(typename... Args)(
+            /// \pre
+            requires invocable<First, Args...>)
+        constexpr _result_t<detail::_id, Args...> operator()(Args &&... args) &&
         {
-#if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-            if constexpr((bool)invocable<First &, Args...>)
-                return invoke(first_, (Args &&) args...);
-            else
-                return invoke(second_, (Args &&) args...);
-#else
-            return overloaded::select(
-                meta::bool_<invocable<First &, Args...>>{}, *this, (Args &&) args...);
-#endif
+            return invoke((First &&) first_, (Args &&) args...);
         }
-        CPP_template(typename... Args)( //
-            requires(defer::invocable<First const &, Args...> ||
-                     defer::invocable<overloaded<Rest...> const &, Args...>)) //
-            constexpr decltype(auto)
-            operator()(Args &&... args) const &
+        template(typename... Args)(
+            /// \pre
+            requires (!invocable<First, Args...>) AND
+                invocable<overloaded<Rest...>, Args...>)
+        constexpr _result_t<detail::_id, Args...> operator()(Args &&... args) &&
         {
-#if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-            if constexpr((bool)invocable<First const &, Args...>)
-                return invoke(first_, (Args &&) args...);
-            else
-                return invoke(second_, (Args &&) args...);
-#else
-            return overloaded::select(meta::bool_<invocable<First const &, Args...>>{},
-                                      *this,
-                                      (Args &&) args...);
-#endif
+            return invoke((overloaded<Rest...> &&) second_, (Args &&) args...);
         }
-        CPP_template(typename... Args)( //
-            requires(defer::invocable<First, Args...> ||
-                     defer::invocable<overloaded<Rest...>, Args...>)) //
-            constexpr decltype(auto)
-            operator()(Args &&... args) &&
+
+        template(typename... Args)(
+            /// \pre
+            requires invocable<First &, Args...>)
+        constexpr _result_t<detail::_ref, Args...> operator()(Args &&... args) &
         {
-#if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
-            if constexpr((bool)invocable<First const &, Args...>)
-                return invoke((First &&) first_, (Args &&) args...);
-            else
-                return invoke((overloaded<Rest...> &&) second_, (Args &&) args...);
-#else
-            return overloaded::select(meta::bool_<invocable<First, Args...>>{},
-                                      (overloaded &&) * this,
-                                      (Args &&) args...);
-#endif
+            return invoke(first_, (Args &&) args...);
+        }
+        template(typename... Args)(
+            /// \pre
+            requires (!invocable<First &, Args...>) AND
+                invocable<overloaded<Rest...> &, Args...>)
+        constexpr _result_t<detail::_ref, Args...> operator()(Args &&... args) &
+        {
+            return invoke(second_, (Args &&) args...);
+        }
+
+        template(typename... Args)(
+            /// \pre
+            requires invocable<First const &, Args...>)
+        constexpr _result_t<detail::_cref, Args...> operator()(Args &&... args) const &
+        {
+            return invoke(first_, (Args &&) args...);
+        }
+        template(typename... Args)(
+            /// \pre
+            requires (!invocable<First const &, Args...>) AND
+                invocable<overloaded<Rest...> const &, Args...>)
+        constexpr _result_t<detail::_cref, Args...> operator()(Args &&... args) const &
+        {
+            return invoke(second_, (Args &&) args...);
         }
     };
 
@@ -136,6 +176,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

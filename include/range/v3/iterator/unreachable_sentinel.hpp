@@ -17,7 +17,7 @@
 
 #include <range/v3/iterator/concepts.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -27,28 +27,32 @@ namespace ranges
     {
         template<typename I>
         friend constexpr auto operator==(I const &, unreachable_sentinel_t) noexcept
-            -> CPP_broken_friend_ret(bool)( //
+            -> CPP_broken_friend_ret(bool)(
+                /// \pre
                 requires weakly_incrementable<I>)
         {
             return false;
         }
         template<typename I>
         friend constexpr auto operator==(unreachable_sentinel_t, I const &) noexcept
-            -> CPP_broken_friend_ret(bool)( //
+            -> CPP_broken_friend_ret(bool)(
+                /// \pre
                 requires weakly_incrementable<I>)
         {
             return false;
         }
         template<typename I>
         friend constexpr auto operator!=(I const &, unreachable_sentinel_t) noexcept
-            -> CPP_broken_friend_ret(bool)( //
+            -> CPP_broken_friend_ret(bool)(
+                /// \pre
                 requires weakly_incrementable<I>)
         {
             return true;
         }
         template<typename I>
         friend constexpr auto operator!=(unreachable_sentinel_t, I const &) noexcept
-            -> CPP_broken_friend_ret(bool)( //
+            -> CPP_broken_friend_ret(bool)(
+                /// \pre
                 requires weakly_incrementable<I>)
         {
             return true;
@@ -65,6 +69,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_ITERATOR_UNREACHABLE_SENTINEL_HPP

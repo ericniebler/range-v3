@@ -20,7 +20,7 @@
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -28,19 +28,21 @@ namespace ranges
     /// @{
     struct iota_fn
     {
-        template<typename O, typename S, typename T>
-        auto operator()(O first, S last, T val) const -> CPP_ret(O)( //
-            requires output_iterator<O, T const &> && sentinel_for<S, O> &&
+        template(typename O, typename S, typename T)(
+            /// \pre
+            requires output_iterator<O, T const &> AND sentinel_for<S, O> AND
                 weakly_incrementable<T>)
+        O operator()(O first, S last, T val) const
         {
             for(; first != last; ++first, ++val)
                 *first = detail::as_const(val);
             return first;
         }
 
-        template<typename Rng, typename T>
-        auto operator()(Rng && rng, T val) const -> CPP_ret(safe_iterator_t<Rng>)( //
-            requires output_range<Rng, T const &> && weakly_incrementable<T>)
+        template(typename Rng, typename T)(
+            /// \pre
+            requires output_range<Rng, T const &> AND weakly_incrementable<T>)
+        borrowed_iterator_t<Rng> operator()(Rng && rng, T val) const //
         {
             return (*this)(begin(rng), end(rng), detail::move(val));
         }
@@ -50,6 +52,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

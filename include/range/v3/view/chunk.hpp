@@ -36,7 +36,7 @@
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -126,8 +126,10 @@ namespace ranges
               , n_((RANGES_EXPECT(0 < cv->n_), cv->n_))
               , end_(ranges::end(cv->base()))
             {}
-            CPP_template(bool Other)( //
-                requires Const && (!Other)) constexpr adaptor(adaptor<Other> that)
+            template(bool Other)(
+                /// \pre
+                requires Const AND CPP_NOT(Other)) //
+            constexpr adaptor(adaptor<Other> that)
               : box<offset_t<Const>>(that.offset())
               , n_(that.n_)
               , end_(that.end_)
@@ -146,8 +148,10 @@ namespace ranges
                 offset() = ranges::advance(it, n_, end_);
             }
             CPP_member
-            constexpr auto prev(iterator_t<CRng> & it) -> CPP_ret(void)( //
-                requires bidirectional_range<CRng>)
+            constexpr auto prev(iterator_t<CRng> & it) //
+                -> CPP_ret(void)(
+                    /// \pre
+                    requires bidirectional_range<CRng>)
             {
                 ranges::advance(it, -n_ + offset());
                 offset() = 0;
@@ -156,8 +160,9 @@ namespace ranges
             constexpr auto distance_to(iterator_t<CRng> const & here,
                                        iterator_t<CRng> const & there,
                                        adaptor const & that) const
-                -> CPP_ret(range_difference_t<Rng>)( //
-                    requires(detail::can_sized_sentinel_<Rng, Const>()))
+                -> CPP_ret(range_difference_t<Rng>)(
+                    /// \pre
+                    requires (detail::can_sized_sentinel_<Rng, Const>()))
             {
                 auto const delta = (there - here) + (that.offset() - offset());
                 // This can fail for cyclic base ranges when the chunk size does not
@@ -167,9 +172,10 @@ namespace ranges
                 return delta / n_;
             }
             CPP_member
-            constexpr auto advance(iterator_t<CRng> & it,
-                                   range_difference_t<Rng> n) -> CPP_ret(void)( //
-                requires random_access_range<CRng>)
+            constexpr auto advance(iterator_t<CRng> & it, range_difference_t<Rng> n) //
+                -> CPP_ret(void)(
+                    /// \pre
+                    requires random_access_range<CRng>)
             {
                 using Limits = std::numeric_limits<range_difference_t<CRng>>;
                 if(0 < n)
@@ -194,8 +200,10 @@ namespace ranges
             return adaptor<simple_view<Rng>()>{this};
         }
         CPP_member
-        constexpr auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires forward_range<Rng const>)
+        constexpr auto begin_adaptor() const //
+            -> CPP_ret(adaptor<true>)(
+                /// \pre
+                requires forward_range<Rng const>)
         {
             return adaptor<true>{this};
         }
@@ -212,13 +220,17 @@ namespace ranges
           : chunk_view_::view_adaptor(detail::move(rng))
           , n_((RANGES_EXPECT(0 < n), n))
         {}
-        CPP_member
-        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        CPP_auto_member
+        constexpr auto CPP_fun(size)()(const
+            /// \pre
+            requires sized_range<Rng const>)
         {
             return size_(ranges::size(this->base()));
         }
-        CPP_member
-        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
+        CPP_auto_member
+        constexpr auto CPP_fun(size)()(
+            /// \pre
+            requires sized_range<Rng>)
         {
             return size_(ranges::size(this->base()));
         }
@@ -290,7 +302,8 @@ namespace ranges
                 }
                 CPP_member
                 constexpr auto distance_to(default_sentinel_t) const
-                    -> CPP_ret(range_difference_t<Rng>)( //
+                    -> CPP_ret(range_difference_t<Rng>)(
+                        /// \pre
                         requires sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>>)
                 {
                     RANGES_EXPECT(rng_);
@@ -300,11 +313,12 @@ namespace ranges
 
             public:
                 inner_view() = default;
-                constexpr explicit inner_view(chunk_view_ & view) noexcept
-                  : rng_{&view}
+                constexpr explicit inner_view(chunk_view_ * view) noexcept
+                  : rng_{view}
                 {}
-                CPP_member
+                CPP_auto_member
                 constexpr auto CPP_fun(size)()(
+                    /// \pre
                     requires sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>>)
                 {
                     using size_type = detail::iter_size_t<iterator_t<Rng>>;
@@ -324,7 +338,7 @@ namespace ranges
             constexpr inner_view read() const
             {
                 RANGES_EXPECT(!done());
-                return inner_view{*rng_};
+                return inner_view{rng_};
             }
             constexpr bool done() const
             {
@@ -343,7 +357,8 @@ namespace ranges
             }
             CPP_member
             constexpr auto distance_to(default_sentinel_t) const
-                -> CPP_ret(range_difference_t<Rng>)( //
+                -> CPP_ret(range_difference_t<Rng>)(
+                    /// \pre
                     requires sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>>)
             {
                 RANGES_EXPECT(rng_);
@@ -378,13 +393,17 @@ namespace ranges
           , remainder_(n)
           , it_cache_{nullopt}
         {}
-        CPP_member
-        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        CPP_auto_member
+        constexpr auto CPP_fun(size)()(const
+            /// \pre
+            requires sized_range<Rng const>)
         {
             return size_(ranges::size(base_));
         }
-        CPP_member
-        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
+        CPP_auto_member
+        constexpr auto CPP_fun(size)()(
+            /// \pre
+            requires sized_range<Rng>)
         {
             return size_(ranges::size(base_));
         }
@@ -405,12 +424,13 @@ namespace ranges
 
     // Need to keep extra state for input_range, but forward_range is transparent
     template<typename Rng>
-    RANGES_INLINE_VAR constexpr bool enable_safe_range<chunk_view<Rng>> =
-        enable_safe_range<Rng> && forward_range<Rng>;
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<chunk_view<Rng>> =
+        enable_borrowed_range<Rng> && forward_range<Rng>;
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template<typename Rng>
-    chunk_view(Rng &&, range_difference_t<Rng>)->chunk_view<views::all_t<Rng>>;
+    chunk_view(Rng &&, range_difference_t<Rng>)
+        -> chunk_view<views::all_t<Rng>>;
 #endif
 
     namespace views
@@ -420,10 +440,11 @@ namespace ranges
         //                       The last range may have fewer.
         struct chunk_base_fn
         {
-            template<typename Rng>
-            constexpr auto operator()(Rng && rng, range_difference_t<Rng> n) const
-                -> CPP_ret(chunk_view<all_t<Rng>>)( //
-                    requires viewable_range<Rng> && input_range<Rng>)
+            template(typename Rng)(
+                /// \pre
+                requires viewable_range<Rng> AND input_range<Rng>)
+            constexpr chunk_view<all_t<Rng>> //
+            operator()(Rng && rng, range_difference_t<Rng> n) const
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
@@ -433,9 +454,10 @@ namespace ranges
         {
             using chunk_base_fn::operator();
 
-            template<typename Int>
-            constexpr auto CPP_fun(operator())(Int n)(const //
-                                                      requires detail::integer_like_<Int>)
+            template(typename Int)(
+                /// \pre
+                requires detail::integer_like_<Int>)
+            constexpr auto operator()(Int n) const
             {
                 return make_view_closure(bind_back(chunk_base_fn{}, n));
             }
@@ -448,7 +470,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::chunk_view)
 

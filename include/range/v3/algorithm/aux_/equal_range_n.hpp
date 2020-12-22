@@ -29,7 +29,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/subrange.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -37,11 +37,15 @@ namespace ranges
     {
         struct equal_range_n_fn
         {
-            template<typename I, typename V, typename R = less, typename P = identity>
-            auto operator()(I first, iter_difference_t<I> dist, V const & val,
-                            R pred = R{}, P proj = P{}) const -> CPP_ret(subrange<I>)( //
-                requires forward_iterator<I> &&
+            template(typename I, typename V, typename R = less, typename P = identity)(
+                /// \pre
+                requires forward_iterator<I> AND
                     indirect_strict_weak_order<R, V const *, projected<I, P>>)
+            subrange<I> operator()(I first,
+                                   iter_difference_t<I> dist,
+                                   V const & val,
+                                   R pred = R{},
+                                   P proj = P{}) const
             {
                 if(0 < dist)
                 {
@@ -83,6 +87,6 @@ namespace ranges
     } // namespace aux
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif

@@ -35,7 +35,7 @@
 #include <range/v3/view/facade.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -43,21 +43,21 @@ namespace ranges
     namespace detail
     {
         // clang-format off
-        template<typename Rng, typename Fun>
-        CPP_concept_fragment(partial_sum_view_constraints_, requires()(0) &&
-            copy_constructible<range_value_t<Rng>> &&
-            constructible_from<range_value_t<Rng>, range_reference_t<Rng>> &&
-            assignable_from<range_value_t<Rng> &, range_reference_t<Rng>> &&
-            indirectly_binary_invocable_<Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
+        template(typename Rng, typename Fun)(
+        concept (partial_sum_view_constraints_)(Rng, Fun),
+            copy_constructible<range_value_t<Rng>> AND
+            constructible_from<range_value_t<Rng>, range_reference_t<Rng>> AND
+            assignable_from<range_value_t<Rng> &, range_reference_t<Rng>> AND
+            indirectly_binary_invocable_<Fun &, iterator_t<Rng>, iterator_t<Rng>> AND
             assignable_from<
                 range_value_t<Rng> &,
                 indirect_result_t<Fun &, iterator_t<Rng>, iterator_t<Rng>>>
         );
         template<typename Rng, typename Fun>
-        CPP_concept_bool partial_sum_view_constraints =
+        CPP_concept partial_sum_view_constraints =
             input_range<Rng> &&
             copy_constructible<Fun> &&
-            CPP_fragment(detail::partial_sum_view_constraints_, Rng, Fun);
+            CPP_concept_ref(detail::partial_sum_view_constraints_, Rng, Fun);
         // clang-format on
     } // namespace detail
     /// \endcond
@@ -100,11 +100,12 @@ namespace ranges
                 if(current_ != ranges::end(rng->base_))
                     sum_ = *current_;
             }
-            CPP_template(bool Other)( //
-                requires IsConst && (!Other) &&
+            template(bool Other)(
+                /// \pre
+                requires IsConst AND CPP_NOT(Other) AND
                 convertible_to<iterator_t<Rng> const &,
-                               iterator_t<Base>>) //
-                constexpr cursor(cursor<Other> const & that)
+                               iterator_t<Base>>)
+            constexpr cursor(cursor<Other> const & that)
               : parent_{that.parent_}
               , current_(that.current_)
               , sum_(that.sum_)
@@ -130,9 +131,9 @@ namespace ranges
             {
                 return current_ == ranges::end(parent_->base_);
             }
-            CPP_member
-            constexpr bool CPP_fun(equal)(cursor const & that)(
-                const requires equality_comparable<iterator_t<Base>>)
+            CPP_auto_member
+            constexpr bool CPP_fun(equal)(cursor const & that)(const //
+                requires equality_comparable<iterator_t<Base>>)
             {
                 RANGES_EXPECT(parent_ == that.parent_);
                 return current_ == that.current_;
@@ -143,9 +144,10 @@ namespace ranges
         {
             return cursor<false>{this};
         }
-        template<typename CRng = Rng const>
-        constexpr auto begin_cursor() const -> CPP_ret(cursor<true>)( //
+        template(typename CRng = Rng const)(
+            /// \pre
             requires detail::partial_sum_view_constraints<CRng, Fun const>)
+        constexpr cursor<true> begin_cursor() const
         {
             return cursor<true>{this};
         }
@@ -158,32 +160,38 @@ namespace ranges
           : base_(std::move(rng))
           , fun_(std::move(fun))
         {}
-        CPP_member
-        constexpr auto CPP_fun(size)()(requires sized_range<Rng>)
+        CPP_auto_member
+        constexpr auto CPP_fun(size)()(
+            /// \pre
+            requires sized_range<Rng>)
         {
             return ranges::size(base_);
         }
-        CPP_member
-        constexpr auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        CPP_auto_member
+        constexpr auto CPP_fun(size)()(const //
+            requires sized_range<Rng const>)
         {
             return ranges::size(base_);
         }
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename Fun)(requires copy_constructible<Fun>)
-        partial_sum_view(Rng &&, Fun)
-            ->partial_sum_view<views::all_t<Rng>, Fun>;
+    template(typename Rng, typename Fun)(
+        /// \pre
+        requires copy_constructible<Fun>)
+    partial_sum_view(Rng &&, Fun)
+        -> partial_sum_view<views::all_t<Rng>, Fun>;
 #endif
 
     namespace views
     {
         struct partial_sum_base_fn
         {
-            template<typename Rng, typename Fun = plus>
-            constexpr auto operator()(Rng && rng, Fun fun = {}) const
-                -> CPP_ret(partial_sum_view<all_t<Rng>, Fun>)( //
-                    requires detail::partial_sum_view_constraints<all_t<Rng>, Fun>)
+            template(typename Rng, typename Fun = plus)(
+                /// \pre
+                requires detail::partial_sum_view_constraints<all_t<Rng>, Fun>)
+            constexpr partial_sum_view<all_t<Rng>, Fun> //
+            operator()(Rng && rng, Fun fun = {}) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
@@ -193,9 +201,10 @@ namespace ranges
         {
             using partial_sum_base_fn::operator();
 
-            template<typename Fun>
-            constexpr auto CPP_fun(operator())(Fun && fun)(const //
-                                                           requires(!range<Fun>))
+            template(typename Fun)(
+                /// \pre
+                requires (!range<Fun>))
+            constexpr auto operator()(Fun && fun) const
             {
                 return make_view_closure(
                     bind_back(partial_sum_base_fn{}, static_cast<Fun &&>(fun)));
@@ -218,7 +227,7 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::partial_sum_view)

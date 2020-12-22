@@ -24,21 +24,21 @@
 #include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/view.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
     // clang-format off
-    template<typename Rng, typename T, typename Fun>
-    CPP_concept_fragment(exclusive_scan_constraints_, requires()(0) &&
-        invocable<Fun &, T, range_reference_t<Rng>> &&
+    template(typename Rng, typename T, typename Fun)(
+    concept (exclusive_scan_constraints_)(Rng, T, Fun),
+        invocable<Fun &, T, range_reference_t<Rng>> AND
         assignable_from<T &, invoke_result_t<Fun &, T, range_reference_t<Rng>>>
     );
     template<typename Rng, typename T, typename Fun>
-    CPP_concept_bool exclusive_scan_constraints =
+    CPP_concept exclusive_scan_constraints =
         viewable_range<Rng> && input_range<Rng> &&
         copy_constructible<T> &&
-        CPP_fragment(ranges::exclusive_scan_constraints_, Rng, T, Fun);
+        CPP_concept_ref(ranges::exclusive_scan_constraints_, Rng, T, Fun);
     // clang-format on
 
     /// \addtogroup group-views
@@ -82,8 +82,10 @@ namespace ranges
             adaptor(exclusive_scan_view_t * rng)
               : rng_(rng)
             {}
-            CPP_template(bool Other)( //
-                requires IsConst && (!Other)) adaptor(adaptor<Other> that)
+            template(bool Other)(
+                /// \pre
+                requires IsConst AND CPP_NOT(Other)) //
+            adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
             iterator_t<CRng> begin(exclusive_scan_view_t &)
@@ -113,14 +115,17 @@ namespace ranges
             return {this};
         }
         CPP_member
-        auto begin_adaptor() const -> CPP_ret(adaptor<true>)( //
-            requires exclusive_scan_constraints<Rng const, T, Fun const>)
+        auto begin_adaptor() const //
+            -> CPP_ret(adaptor<true>)(
+                /// \pre
+                requires exclusive_scan_constraints<Rng const, T, Fun const>)
         {
             return {this};
         }
         CPP_member
         auto end_adaptor() const
-            -> CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)( //
+            -> CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)(
+                /// \pre
                 requires exclusive_scan_constraints<Rng const, T, Fun const>)
         {
             return {this};
@@ -133,33 +138,39 @@ namespace ranges
           , init_(std::move(init))
           , fun_(std::move(fun))
         {}
-        CPP_member
-        auto CPP_fun(size)()(const requires sized_range<Rng const>)
+        CPP_auto_member
+        auto CPP_fun(size)()(const
+            /// \pre
+            requires sized_range<Rng const>)
         {
             return ranges::size(this->base());
         }
-        CPP_member
-        auto CPP_fun(size)()(requires sized_range<Rng>)
+        CPP_auto_member
+        auto CPP_fun(size)()(
+            /// \pre
+            requires sized_range<Rng>)
         {
             return ranges::size(this->base());
         }
     };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-    CPP_template(typename Rng, typename T,
-                 typename Fun)(requires copy_constructible<T> && copy_constructible<Fun>)
-        exclusive_scan_view(Rng &&, T, Fun)
-            ->exclusive_scan_view<views::all_t<Rng>, T, Fun>;
+    template(typename Rng, typename T, typename Fun)(
+        /// \pre
+        requires copy_constructible<T> AND copy_constructible<Fun>)
+    exclusive_scan_view(Rng &&, T, Fun) //
+        -> exclusive_scan_view<views::all_t<Rng>, T, Fun>;
 #endif
 
     namespace views
     {
         struct exclusive_scan_base_fn
         {
-            template<typename Rng, typename T, typename Fun = plus>
-            constexpr auto operator()(Rng && rng, T init, Fun fun = Fun{}) const
-                -> CPP_ret(exclusive_scan_view<all_t<Rng>, T, Fun>)( //
-                    requires exclusive_scan_constraints<Rng, T, Fun>)
+            template(typename Rng, typename T, typename Fun = plus)(
+                /// \pre
+                requires exclusive_scan_constraints<Rng, T, Fun>)
+            constexpr exclusive_scan_view<all_t<Rng>, T, Fun> //
+            operator()(Rng && rng, T init, Fun fun = Fun{}) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(init), std::move(fun)};
             }
@@ -184,6 +195,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif // RANGES_V3_VIEW_EXCLUSIVE_SCAN_HPP

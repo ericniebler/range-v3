@@ -20,7 +20,7 @@
 #include <range/v3/view/facade.hpp>
 #include <range/v3/view/zip.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/prologue.hpp>
 
 namespace ranges
 {
@@ -85,7 +85,13 @@ namespace ranges
         public:
             index_view() = default;
         };
+
     } // namespace detail
+
+    template<typename Size, typename Diff>
+    RANGES_INLINE_VAR constexpr bool enable_borrowed_range<detail::index_view<Size, Diff>> =
+        true;
+
     /// \endcond
     /// \addtogroup group-views
     /// @{
@@ -95,8 +101,10 @@ namespace ranges
         /// its corresponding index.
         struct enumerate_fn
         {
-            template<typename Rng>
-            auto CPP_fun(operator())(Rng && rng)(const requires viewable_range<Rng>)
+            template(typename Rng)(
+                /// \pre
+                requires viewable_range<Rng>)
+            auto operator()(Rng && rng) const
             {
                 using D = range_difference_t<Rng>;
                 using S = detail::iter_size_t<iterator_t<Rng>>;
@@ -111,6 +119,6 @@ namespace ranges
     /// @}
 } // namespace ranges
 
-#include <range/v3/detail/reenable_warnings.hpp>
+#include <range/v3/detail/epilogue.hpp>
 
 #endif
