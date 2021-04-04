@@ -11,8 +11,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGES_V3_ITERATOR_HPP
-#define RANGES_V3_ITERATOR_HPP
+#ifndef RANGES_V3_RANGE_HPP
+#define RANGES_V3_RANGE_HPP
 
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
