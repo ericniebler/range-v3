@@ -40,7 +40,7 @@ namespace ranges
         CPP_assert(constructible_from<range_value_t<Rng>, range_reference_t<Rng>>);
         friend range_access;
         Rng rng_;
-        bool dirty_;
+        bool dirty_ = true;
         detail::non_propagating_cache<range_value_t<Rng>> cache_;
 
         CPP_member
