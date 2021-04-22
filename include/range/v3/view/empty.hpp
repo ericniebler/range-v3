@@ -47,7 +47,7 @@ namespace ranges
             return nullptr;
         }
         RANGES_DEPRECATED(
-            "Replace views::empty<T>() with views::empty<>. "
+            "Replace views::empty<T>() with views::empty<T>. "
             "It is now a variable template.")
         empty_view operator()() const
         {
