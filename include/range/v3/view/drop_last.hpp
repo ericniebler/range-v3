@@ -50,7 +50,6 @@ namespace ranges
                 RANGES_EXPECT(n_ >= 0);
                 range_size_t<Rng> const initial_size = ranges::size(rng);
                 range_size_t<Rng> const n = static_cast<range_size_t<Rng>>(n_);
-                RANGES_EXPECT(initial_size >= n);
                 return initial_size > n ? initial_size - n : 0;
             }
 
