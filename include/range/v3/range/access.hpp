@@ -42,7 +42,7 @@
 
 namespace ranges
 {
-#if defined(__cpp_lib_string_view) && __cpp_lib_string_view >= 201606L
+#if defined(__cpp_lib_string_view) && __cpp_lib_string_view >= 201603L
     template<class CharT, class Traits>
     RANGES_INLINE_VAR constexpr bool
         enable_borrowed_range<std::basic_string_view<CharT, Traits>> = true;
