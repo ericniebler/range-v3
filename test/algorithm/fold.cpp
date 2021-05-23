@@ -22,6 +22,7 @@
 #include <functional>
 
 #include <range/v3/algorithm/fold.hpp>
+#include <range/v3/algorithm/min.hpp>
 #include <range/v3/core.hpp>
 
 #include "../simple_test.hpp"
@@ -34,9 +35,17 @@ void test()
     CHECK(ranges::foldl(Iter(ia), Sent(ia), 1, std::plus()) == 1.0);
     CHECK(ranges::foldl(Iter(ia), Sent(ia + 2), 1, std::plus()) == 2.0);
 
+    CHECK(ranges::foldl1(Iter(ia), Sent(ia), ranges::min) == ranges::nullopt);
+    CHECK(ranges::foldl1(Iter(ia), Sent(ia + 2), ranges::min) ==
+          ranges::optional<double>(0.25));
+
     using ranges::make_subrange;
     CHECK(ranges::foldl(make_subrange(Iter(ia), Sent(ia)), 1, std::plus()) == 1.0);
     CHECK(ranges::foldl(make_subrange(Iter(ia), Sent(ia + 2)), 1, std::plus()) == 2.0);
+    CHECK(ranges::foldl1(make_subrange(Iter(ia), Sent(ia)), ranges::min) ==
+          ranges::nullopt);
+    CHECK(ranges::foldl1(make_subrange(Iter(ia), Sent(ia + 2)), ranges::min) ==
+          ranges::optional<double>(0.25));
 }
 
 int main()

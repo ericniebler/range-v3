@@ -19,6 +19,7 @@
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
+#include <range/v3/utility/optional.hpp>
 
 #include <range/v3/detail/prologue.hpp>
 
@@ -84,7 +85,43 @@ namespace ranges
         }
     };
 
+    struct foldl1_fn
+    {
+        template(typename I, typename S, typename Op, typename P = identity)(
+            /// \pre
+            requires sentinel_for<S, I> AND input_iterator<I> AND
+                indirectly_binary_left_foldable<Op, iter_value_t<I>, projected<I, P>>
+                    AND constructible_from<iter_value_t<I>, iter_reference_t<I>>) //
+            constexpr auto
+            operator()(I first, S last, Op op, P proj = P{}) const
+        {
+            using U = invoke_result_t<foldl_fn, I, S, iter_value_t<I>, Op, P>;
+            if(first == last)
+            {
+                return optional<U>();
+            }
+
+            iter_value_t<I> init = *first;
+            ++first;
+            return optional<U>(
+                in_place,
+                foldl_fn{}(std::move(first), std::move(last), std::move(init), op, proj));
+        }
+
+        template(typename R, typename Op, typename P = identity)(
+            /// \pre
+            requires input_range<R> AND
+                indirectly_binary_left_foldable<Op, range_value_t<R>, projected<iterator_t<R>, P>>
+                    AND constructible_from<range_value_t<R>, range_reference_t<R>>) //
+            constexpr auto
+            operator()(R && rng, Op op, P proj = P{}) const
+        {
+            return (*this)(begin(rng), end(rng), std::move(op), std::move(proj));
+        }
+    };
+
     RANGES_INLINE_VARIABLE(foldl_fn, foldl)
+    RANGES_INLINE_VARIABLE(foldl1_fn, foldl1)
     /// @}
 } // namespace ranges
 
