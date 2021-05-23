@@ -29,7 +29,7 @@
 #include "../test_iterators.hpp"
 
 template<class Iter, class Sent = Iter>
-void test()
+void test_left()
 {
     double ia[] = {0.25, 0.75};
     CHECK(ranges::foldl(Iter(ia), Sent(ia), 1, std::plus()) == 1.0);
@@ -48,18 +48,36 @@ void test()
           ranges::optional<double>(0.25));
 }
 
+void test_right()
+{
+    double ia[] = {0.25, 0.75};
+    CHECK(ranges::foldr(ia, ia + 2, 1, std::plus()) == 2.0);
+    CHECK(ranges::foldr(ia, 1, std::plus()) == 2.0);
+
+    // f(0.25, f(0.75, 1))
+    CHECK(ranges::foldr(ia, ia + 2, 1, std::minus()) == 0.5);
+    CHECK(ranges::foldr(ia, 1, std::minus()) == 0.5);
+
+    int xs[] = {1, 2, 3};
+    auto concat = [](int i, std::string s) { return s + std::to_string(i); };
+    CHECK(ranges::foldr(xs, xs + 2, std::string(), concat) == "21");
+    CHECK(ranges::foldr(xs, std::string(), concat) == "321");
+}
+
 int main()
 {
-    test<InputIterator<const double *>>();
-    test<ForwardIterator<const double *>>();
-    test<BidirectionalIterator<const double *>>();
-    test<RandomAccessIterator<const double *>>();
-    test<const double *>();
+    test_left<InputIterator<const double *>>();
+    test_left<ForwardIterator<const double *>>();
+    test_left<BidirectionalIterator<const double *>>();
+    test_left<RandomAccessIterator<const double *>>();
+    test_left<const double *>();
 
-    test<InputIterator<const double *>, Sentinel<const double *>>();
-    test<ForwardIterator<const double *>, Sentinel<const double *>>();
-    test<BidirectionalIterator<const double *>, Sentinel<const double *>>();
-    test<RandomAccessIterator<const double *>, Sentinel<const double *>>();
+    test_left<InputIterator<const double *>, Sentinel<const double *>>();
+    test_left<ForwardIterator<const double *>, Sentinel<const double *>>();
+    test_left<BidirectionalIterator<const double *>, Sentinel<const double *>>();
+    test_left<RandomAccessIterator<const double *>, Sentinel<const double *>>();
+
+    test_right();
 
     return ::test_result();
 }

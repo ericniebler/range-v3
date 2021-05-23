@@ -55,7 +55,7 @@ namespace ranges
             constexpr auto
             operator()(I first, S last, T init, Op op, P proj = P{}) const
         {
-            using U = std::decay_t<invoke_result_t<Op &, T, iter_reference_t<I>>>;
+            using U = std::decay_t<invoke_result_t<Op &, T, indirect_result_t<P&, I>>>;
 
             if(first == last)
             {
