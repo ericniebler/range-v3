@@ -42,7 +42,7 @@ namespace ranges
 
     // clang-format off
     template <class F, class T, class I>
-    concept indirectly_binary_right_foldable =
+    CPP_concept indirectly_binary_right_foldable =
         indirectly_binary_left_foldable<detail::flipped<F>, T, I>;
     // clang-format on
 
