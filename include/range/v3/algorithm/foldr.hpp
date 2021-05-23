@@ -35,7 +35,7 @@ namespace ranges
             F f;
 
             template(class T, class U)(requires invocable<F &, U, T>) //
-                constexpr invoke_result_t<F &, U, T>
+                invoke_result_t<F &, U, T>
                 operator()(T &&, U &&);
         };
     } // namespace detail
