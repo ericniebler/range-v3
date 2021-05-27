@@ -251,14 +251,6 @@ jobs:
             cxx_standard: 17,
             cxx_asan: true,
           }
-        - {
-            name: "Linux Clang 8 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            build_type: Debug,
-            cc: "clang-8", cxx: "clang++-8",
-            cxx_standard: 20,
-            cxx_asan: true,
-          }
 
         # Clang-9
         - {
@@ -275,21 +267,6 @@ jobs:
             build_type: RelWithDebInfo,
             cc: "clang-9", cxx: "clang++-9",
             cxx_standard: 17,
-          }
-        - {
-            name: "Linux Clang 9 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            build_type: Debug,
-            cc: "clang-9", cxx: "clang++-9",
-            cxx_standard: 20,
-            cxx_asan: true,
-          }
-        - {
-            name: "Linux Clang 9 Release (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            build_type: RelWithDebInfo,
-            cc: "clang-9", cxx: "clang++-9",
-            cxx_standard: 20,
           }
 
         # Clang-10
