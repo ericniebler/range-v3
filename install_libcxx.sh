@@ -53,8 +53,8 @@ if [ ${VERSION} == $TRUNK_VERSION ]; then
     git clone --depth=1 https://github.com/llvm-mirror/libcxxabi.git llvm-source/projects/libcxxabi
 else
     echo "Fetching libc++/libc++abi version: ${VERSION} ..."
-    IFS='.' read -ra VERSION_ADDR <<< "$VERSION"
-    if [[ ${VERSION_ARR[0]} -ge 8 ]]; then
+    MAJOR=$(echo ${VERSION} | cut -d '.' -f 1)
+    if [[ ${MAJOR} -lt 8 ]]; then
         URL_ROOT="https://releases.llvm.org/${VERSION}"
     else
         URL_ROOT="https://github.com/llvm/llvm-project/releases/download/llvmorg-${VERSION}"
