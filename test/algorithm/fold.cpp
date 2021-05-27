@@ -19,6 +19,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include <cmath>
 #include <functional>
 
 #include <range/v3/algorithm/fold.hpp>
@@ -28,46 +29,60 @@
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
-RANGES_DIAGNOSTIC_PUSH
-RANGES_DIAGNOSTIC_IGNORE_FLOAT_EQUAL
+struct Approx
+{
+    double value;
+    Approx(double v)
+      : value(v)
+    {}
+
+    friend bool operator==(Approx a, double d)
+    {
+        return std::fabs(a.value - d) < 0.001;
+    }
+    friend bool operator==(double d, Approx a)
+    {
+        return a == d;
+    }
+};
 
 template<class Iter, class Sent = Iter>
 void test_left()
 {
-    double ia[] = {0.25, 0.75};
-    CHECK(ranges::foldl(Iter(ia), Sent(ia), 1, std::plus<>()) == 1.0);
-    CHECK(ranges::foldl(Iter(ia), Sent(ia + 2), 1, std::plus<>()) == 2.0);
+    double da[] = {0.25, 0.75};
+    CHECK(ranges::foldl(Iter(da), Sent(da), 1, std::plus<>()) == Approx{1.0});
+    CHECK(ranges::foldl(Iter(da), Sent(da + 2), 1, std::plus<>()) == Approx{2.0});
 
-    CHECK(ranges::foldl1(Iter(ia), Sent(ia), ranges::min) == ranges::nullopt);
-    CHECK(ranges::foldl1(Iter(ia), Sent(ia + 2), ranges::min) ==
-          ranges::optional<double>(0.25));
+    CHECK(ranges::foldl1(Iter(da), Sent(da), ranges::min) == ranges::nullopt);
+    CHECK(ranges::foldl1(Iter(da), Sent(da + 2), ranges::min) ==
+          ranges::optional<Approx>(0.25));
 
     using ranges::make_subrange;
-    CHECK(ranges::foldl(make_subrange(Iter(ia), Sent(ia)), 1, std::plus<>()) == 1.0);
-    CHECK(ranges::foldl(make_subrange(Iter(ia), Sent(ia + 2)), 1, std::plus<>()) == 2.0);
-    CHECK(ranges::foldl1(make_subrange(Iter(ia), Sent(ia)), ranges::min) ==
+    CHECK(ranges::foldl(make_subrange(Iter(da), Sent(da)), 1, std::plus<>()) ==
+          Approx{1.0});
+    CHECK(ranges::foldl(make_subrange(Iter(da), Sent(da + 2)), 1, std::plus<>()) ==
+          Approx{2.0});
+    CHECK(ranges::foldl1(make_subrange(Iter(da), Sent(da)), ranges::min) ==
           ranges::nullopt);
-    CHECK(ranges::foldl1(make_subrange(Iter(ia), Sent(ia + 2)), ranges::min) ==
-          ranges::optional<double>(0.25));
+    CHECK(ranges::foldl1(make_subrange(Iter(da), Sent(da + 2)), ranges::min) ==
+          ranges::optional<Approx>(0.25));
 }
 
 void test_right()
 {
-    double ia[] = {0.25, 0.75};
-    CHECK(ranges::foldr(ia, ia + 2, 1, std::plus<>()) == 2.0);
-    CHECK(ranges::foldr(ia, 1, std::plus<>()) == 2.0);
+    double da[] = {0.25, 0.75};
+    CHECK(ranges::foldr(da, da + 2, 1, std::plus<>()) == Approx{2.0});
+    CHECK(ranges::foldr(da, 1, std::plus<>()) == Approx{2.0});
 
     // f(0.25, f(0.75, 1))
-    CHECK(ranges::foldr(ia, ia + 2, 1, std::minus<>()) == 0.5);
-    CHECK(ranges::foldr(ia, 1, std::minus<>()) == 0.5);
+    CHECK(ranges::foldr(da, da + 2, 1, std::minus<>()) == Approx{0.5});
+    CHECK(ranges::foldr(da, 1, std::minus<>()) == Approx{0.5});
 
     int xs[] = {1, 2, 3};
     auto concat = [](int i, std::string s) { return s + std::to_string(i); };
     CHECK(ranges::foldr(xs, xs + 2, std::string(), concat) == "21");
     CHECK(ranges::foldr(xs, std::string(), concat) == "321");
 }
-
-RANGES_DIAGNOSTIC_POP
 
 int main()
 {
