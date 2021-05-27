@@ -471,6 +471,11 @@ jobs:
           set(link_flags "${link_flags} -L $ENV{GITHUB_WORKSPACE}/llvm/lib -Wl,-rpath,$ENV{GITHUB_WORKSPACE}/llvm/lib -lc++abi")
         endif()
 
+        if ("${{ matrix.config.cxx }}" MATCHES "clang.*")
+            # clang spurious warning on <=> use
+            set(cxx_flags "${cxx_flags} -Wno-zero-as-null-pointer-constant")
+        endif()
+
         if ("x${{ matrix.config.cxx_asan }}" STREQUAL "xtrue")
           set(cxx_flags "${cxx_flags} -fsanitize=address -fno-omit-frame-pointer")
         endif()
