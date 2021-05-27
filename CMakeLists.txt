@@ -97,6 +97,11 @@ if(RANGE_V3_HEADER_CHECKS)
     endforeach()
   endif()
 
+  if(NOT RANGE_V3_COROUTINE_FLAGS)
+      # Can't test this header if we can't even compile it
+      list(APPEND RANGE_V3_DEPRECATED_PUBLIC_HEADERS range/v3/experimental/utility/generator.hpp)
+  endif()
+
   add_header_test(test.range.v3.headers
     EXCLUDE ${RANGE_V3_DEPRECATED_PUBLIC_HEADERS}
     HEADERS ${RANGE_V3_PUBLIC_HEADERS})

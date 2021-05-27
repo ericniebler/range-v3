@@ -52,13 +52,21 @@ if [ ${VERSION} == $TRUNK_VERSION ]; then
     git clone --depth=1 https://github.com/llvm-mirror/libcxx.git llvm-source/projects/libcxx
     git clone --depth=1 https://github.com/llvm-mirror/libcxxabi.git llvm-source/projects/libcxxabi
 else
-    echo "Fetching libc++/libc++abi version: ${VERSION}..."
-    LLVM_URL="https://releases.llvm.org/${VERSION}/llvm-${VERSION}.src.tar.xz"
-    LIBCXX_URL="https://releases.llvm.org/${VERSION}/libcxx-${VERSION}.src.tar.xz"
-    LIBCXXABI_URL="https://releases.llvm.org/${VERSION}/libcxxabi-${VERSION}.src.tar.xz"
-    curl -O $LLVM_URL
-    curl -O $LIBCXX_URL
-    curl -O $LIBCXXABI_URL
+    echo "Fetching libc++/libc++abi version: ${VERSION} ..."
+    MAJOR=$(echo ${VERSION} | cut -d '.' -f 1)
+    if [[ ${MAJOR} -lt 8 ]]; then
+        URL_ROOT="https://releases.llvm.org/${VERSION}"
+    else
+        URL_ROOT="https://github.com/llvm/llvm-project/releases/download/llvmorg-${VERSION}"
+    fi
+    echo "From url ${URL_ROOT} ..."
+
+    LLVM_URL="${URL_ROOT}/llvm-${VERSION}.src.tar.xz"
+    LIBCXX_URL="${URL_ROOT}/libcxx-${VERSION}.src.tar.xz"
+    LIBCXXABI_URL="${URL_ROOT}/libcxxabi-${VERSION}.src.tar.xz"
+    curl -LO $LLVM_URL
+    curl -LO $LIBCXX_URL
+    curl -LO $LIBCXXABI_URL
 
     mkdir llvm-source
     mkdir llvm-source/projects

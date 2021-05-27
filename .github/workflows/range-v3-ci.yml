@@ -18,7 +18,7 @@ jobs:
         # GCC-6
         - {
             name: "Linux GCC 6 Debug (C++14)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: Debug,
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 14,
@@ -26,7 +26,7 @@ jobs:
           }
         - {
             name: "Linux GCC 6 Release (C++14)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: RelWithDebInfo,
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 14,
@@ -34,7 +34,7 @@ jobs:
           }
         - {
             name: "Linux GCC 6 Debug (C++17)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: Debug,
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 17,
@@ -42,7 +42,7 @@ jobs:
           }
         - {
             name: "Linux GCC 6 Release (C++17)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: RelWithDebInfo,
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 17,
@@ -50,7 +50,7 @@ jobs:
           }
         - {
             name: "Linux GCC 6 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: RelWithDebInfo,
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 17,
@@ -59,7 +59,7 @@ jobs:
         # GCC-7
         - {
             name: "Linux GCC 7 Debug (C++14)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: Debug,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 14,
@@ -67,7 +67,7 @@ jobs:
           }
         - {
             name: "Linux GCC 7 Release (C++14)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: RelWithDebInfo,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 14,
@@ -75,7 +75,7 @@ jobs:
           }
         - {
             name: "Linux GCC 7 Debug (C++17)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: Debug,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 17,
@@ -83,7 +83,7 @@ jobs:
           }
         - {
             name: "Linux GCC 7 Release (C++17)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: RelWithDebInfo,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 17,
@@ -91,7 +91,7 @@ jobs:
           }
         - {
             name: "Linux GCC 7 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: RelWithDebInfo,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 17,
@@ -100,7 +100,7 @@ jobs:
         # GCC-8
         - {
             name: "Linux GCC 8 Debug (C++14)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: Debug,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 14,
@@ -108,7 +108,7 @@ jobs:
           }
         - {
             name: "Linux GCC 8 Release (C++14)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: RelWithDebInfo,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 14,
@@ -116,7 +116,7 @@ jobs:
           }
         - {
             name: "Linux GCC 8 Debug (C++17)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: Debug,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 17,
@@ -124,7 +124,7 @@ jobs:
           }
         - {
             name: "Linux GCC 8 Release (C++17)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: RelWithDebInfo,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 17,
@@ -132,7 +132,7 @@ jobs:
           }
         - {
             name: "Linux GCC 8 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: RelWithDebInfo,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 17,
@@ -179,10 +179,26 @@ jobs:
             cxx_standard: 20,
           }
 
+        # GCC-10
+        - {
+            name: "Linux GCC 10 Debug (C++20, Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-10", cxx: "g++-10",
+            cxx_standard: 20
+          }
+        - {
+            name: "Linux GCC 10 Release (C++20, Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-10", cxx: "g++-10",
+            cxx_standard: 20
+          }
+
         # Clang-5.0
         - {
             name: "Linux Clang 5.0 Debug (C++14 / libc++ / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: Debug,
             cc: "clang-5.0", cxx: "clang++-5.0",
             cxx_standard: 14,
@@ -191,25 +207,17 @@ jobs:
           }
         - {
             name: "Linux Clang 5.0 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-16.04,
             build_type: Debug,
             cc: "clang-5.0", cxx: "clang++-5.0",
             cxx_standard: 17,
-            cxx_asan: true,
-          }
-        - {
-            name: "Linux Clang 5.0 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            build_type: Debug,
-            cc: "clang-5.0", cxx: "clang++-5.0",
-            cxx_standard: 20,
             cxx_asan: true,
           }
 
         # Clang-6.0
         - {
             name: "Linux Clang 6.0 Debug (C++14 / libc++ / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-18.04,
             build_type: Debug,
             cc: "clang-6.0", cxx: "clang++-6.0",
             cxx_standard: 14,
@@ -218,18 +226,10 @@ jobs:
           }
         - {
             name: "Linux Clang 6.0 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-18.04,
             build_type: Debug,
             cc: "clang-6.0", cxx: "clang++-6.0",
             cxx_standard: 17,
-            cxx_asan: true,
-          }
-        - {
-            name: "Linux Clang 6.0 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            build_type: Debug,
-            cc: "clang-6.0", cxx: "clang++-6.0",
-            cxx_standard: 20,
             cxx_asan: true,
           }
 
@@ -251,14 +251,6 @@ jobs:
             cxx_standard: 17,
             cxx_asan: true,
           }
-        - {
-            name: "Linux Clang 8 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            build_type: Debug,
-            cc: "clang-8", cxx: "clang++-8",
-            cxx_standard: 20,
-            cxx_asan: true,
-          }
 
         # Clang-9
         - {
@@ -275,21 +267,6 @@ jobs:
             build_type: RelWithDebInfo,
             cc: "clang-9", cxx: "clang++-9",
             cxx_standard: 17,
-          }
-        - {
-            name: "Linux Clang 9 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            build_type: Debug,
-            cc: "clang-9", cxx: "clang++-9",
-            cxx_standard: 20,
-            cxx_asan: true,
-          }
-        - {
-            name: "Linux Clang 9 Release (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            build_type: RelWithDebInfo,
-            cc: "clang-9", cxx: "clang++-9",
-            cxx_standard: 20,
           }
 
         # Clang-10
@@ -421,34 +398,13 @@ jobs:
           )
         endif()
 
-    - name: Install GCC 6
-      id: install_gcc_6
-      if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'g++-6' )
+    - name: Install GCC or Clang
+      id: install_gcc_clang
+      if: startsWith(matrix.config.os, 'ubuntu')
       shell: bash
       working-directory: ${{ env.HOME }}
       run: |
-        sudo apt-get install -y gcc-6 g++-6
-
-    - name: Install Clang 5
-      id: install_clang_5
-      if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'clang++-5.0' )
-      shell: bash
-      working-directory: ${{ env.HOME }}
-      run: |
-        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key 2>/dev/null | sudo apt-key add -
-        sudo add-apt-repository 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-5.0 main' -y
-        sudo apt-get update -q
-        sudo apt-get install -y clang-5.0
-
-    - name: Install Clang 10
-      id: install_clang_10
-      if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'clang++-10' )
-      shell: bash
-      working-directory: ${{ env.HOME }}
-      run: |
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh 10
+        sudo apt-get install -y ${{matrix.config.cc}} ${{matrix.config.cxx}}
 
     - name: Install libc++
       id: install_libcxx
@@ -490,6 +446,11 @@ jobs:
         if ("x${{ matrix.config.libcxx }}" STREQUAL "xtrue")
           set(cxx_flags "${cxx_flags} -stdlib=libc++ -nostdinc++ -cxx-isystem $ENV{GITHUB_WORKSPACE}/llvm/include/c++/v1/ -Wno-unused-command-line-argument")
           set(link_flags "${link_flags} -L $ENV{GITHUB_WORKSPACE}/llvm/lib -Wl,-rpath,$ENV{GITHUB_WORKSPACE}/llvm/lib -lc++abi")
+        endif()
+
+        if ("${{ matrix.config.cxx }}" MATCHES "clang.*")
+            # clang spurious warning on <=> use
+            set(cxx_flags "${cxx_flags} -Wno-zero-as-null-pointer-constant")
         endif()
 
         if ("x${{ matrix.config.cxx_asan }}" STREQUAL "xtrue")
