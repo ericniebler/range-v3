@@ -421,13 +421,13 @@ jobs:
           )
         endif()
 
-    - name: Install GCC 6
-      id: install_gcc_6
-      if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'g++-6' )
+    - name: Install GCC
+      id: install_gcc
+      if: startsWith(matrix.config.os, 'ubuntu') && startsWith(matrix.config.cxx, 'g++')
       shell: bash
       working-directory: ${{ env.HOME }}
       run: |
-        sudo apt-get install -y gcc-6 g++-6
+        sudo apt-get install -y ${{matrix.config.cc}} ${{matrix.config.cxx}}
 
     - name: Install Clang 5
       id: install_clang_5
