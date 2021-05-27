@@ -179,6 +179,22 @@ jobs:
             cxx_standard: 20,
           }
 
+        # GCC-10
+        - {
+            name: "Linux GCC 10 Debug (C++20, Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-10", cxx: "g++-10",
+            cxx_standard: 20
+          }
+        - {
+            name: "Linux GCC 10 Release (C++20, Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-10", cxx: "g++-10",
+            cxx_standard: 20
+          }
+
         # Clang-5.0
         - {
             name: "Linux Clang 5.0 Debug (C++14 / libc++ / ASAN)", artifact: "Linux.tar.xz",
@@ -421,34 +437,13 @@ jobs:
           )
         endif()
 
-    - name: Install GCC
-      id: install_gcc
-      if: startsWith(matrix.config.os, 'ubuntu') && startsWith(matrix.config.cxx, 'g++')
+    - name: Install GCC or Clang
+      id: install_gcc_clang
+      if: startsWith(matrix.config.os, 'ubuntu')
       shell: bash
       working-directory: ${{ env.HOME }}
       run: |
         sudo apt-get install -y ${{matrix.config.cc}} ${{matrix.config.cxx}}
-
-    - name: Install Clang 5
-      id: install_clang_5
-      if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'clang++-5.0' )
-      shell: bash
-      working-directory: ${{ env.HOME }}
-      run: |
-        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key 2>/dev/null | sudo apt-key add -
-        sudo add-apt-repository 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-5.0 main' -y
-        sudo apt-get update -q
-        sudo apt-get install -y clang-5.0
-
-    - name: Install Clang 10
-      id: install_clang_10
-      if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'clang++-10' )
-      shell: bash
-      working-directory: ${{ env.HOME }}
-      run: |
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh 10
 
     - name: Install libc++
       id: install_libcxx
