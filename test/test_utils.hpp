@@ -45,7 +45,7 @@
 #if defined(RANGES_CXX_HAS_SLOC_BUILTINS) && defined(__has_include)
 #if __has_include(<source_location>)
 #include <source_location>
-#if __cpp_lib_source_location
+#ifdef __cpp_lib_source_location
 #define RANGES_HAS_SLOC 1
 using source_location = std::source_location;
 #endif
