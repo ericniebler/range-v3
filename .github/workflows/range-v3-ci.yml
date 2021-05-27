@@ -213,14 +213,6 @@ jobs:
             cxx_standard: 17,
             cxx_asan: true,
           }
-        - {
-            name: "Linux Clang 5.0 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-16.04,
-            build_type: Debug,
-            cc: "clang-5.0", cxx: "clang++-5.0",
-            cxx_standard: 20,
-            cxx_asan: true,
-          }
 
         # Clang-6.0
         - {
@@ -238,14 +230,6 @@ jobs:
             build_type: Debug,
             cc: "clang-6.0", cxx: "clang++-6.0",
             cxx_standard: 17,
-            cxx_asan: true,
-          }
-        - {
-            name: "Linux Clang 6.0 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
-            build_type: Debug,
-            cc: "clang-6.0", cxx: "clang++-6.0",
-            cxx_standard: 20,
             cxx_asan: true,
           }
 
