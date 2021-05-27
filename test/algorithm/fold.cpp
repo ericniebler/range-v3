@@ -28,42 +28,27 @@
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
-template<typename I, bool Sized = false>
-using RandomAccess = RandomAccessIterator<I>;
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_FLOAT_EQUAL
 
-template<typename I, bool Sized = false>
-using Identity = I;
-
-template<template<typename, bool> class IterT,
-         template<typename, bool> class SentT = IterT>
+template<class Iter, class Sent = Iter>
 void test_left()
 {
+    double ia[] = {0.25, 0.75};
+    CHECK(ranges::foldl(Iter(ia), Sent(ia), 1, std::plus<>()) == 1.0);
+    CHECK(ranges::foldl(Iter(ia), Sent(ia + 2), 1, std::plus<>()) == 2.0);
+
+    CHECK(ranges::foldl1(Iter(ia), Sent(ia), ranges::min) == ranges::nullopt);
+    CHECK(ranges::foldl1(Iter(ia), Sent(ia + 2), ranges::min) ==
+          ranges::optional<double>(0.25));
+
     using ranges::make_subrange;
-    {
-        double da[] = {0.25, 0.75};
-        using Iter = IterT<const double *, false>;
-        using Sent = SentT<const double *, false>;
-
-        CHECK(ranges::foldl(Iter(da), Sent(da), 1, std::plus<>()) == 1.0);
-        CHECK(ranges::foldl(Iter(da), Sent(da + 2), 1, std::plus<>()) == 2.0);
-        CHECK(ranges::foldl(make_subrange(Iter(da), Sent(da)), 1, std::plus<>()) == 1.0);
-        CHECK(ranges::foldl(make_subrange(Iter(da), Sent(da + 2)), 1, std::plus<>()) ==
-              2.0);
-    }
-
-    {
-        int ia[] = {1, 2};
-        using Iter = IterT<const int *, false>;
-        using Sent = SentT<const int *, false>;
-        CHECK(ranges::foldl1(Iter(ia), Sent(ia), ranges::min) == ranges::nullopt);
-        CHECK(ranges::foldl1(Iter(ia), Sent(ia + 2), ranges::min) ==
-              ranges::optional<int>(1));
-
-        CHECK(ranges::foldl1(make_subrange(Iter(ia), Sent(ia)), ranges::min) ==
-              ranges::nullopt);
-        CHECK(ranges::foldl1(make_subrange(Iter(ia), Sent(ia + 2)), ranges::min) ==
-              ranges::optional<int>(1));
-    }
+    CHECK(ranges::foldl(make_subrange(Iter(ia), Sent(ia)), 1, std::plus<>()) == 1.0);
+    CHECK(ranges::foldl(make_subrange(Iter(ia), Sent(ia + 2)), 1, std::plus<>()) == 2.0);
+    CHECK(ranges::foldl1(make_subrange(Iter(ia), Sent(ia)), ranges::min) ==
+          ranges::nullopt);
+    CHECK(ranges::foldl1(make_subrange(Iter(ia), Sent(ia + 2)), ranges::min) ==
+          ranges::optional<double>(0.25));
 }
 
 void test_right()
@@ -82,18 +67,20 @@ void test_right()
     CHECK(ranges::foldr(xs, std::string(), concat) == "321");
 }
 
+RANGES_DIAGNOSTIC_POP
+
 int main()
 {
-    test_left<InputIterator>();
-    test_left<ForwardIterator>();
-    test_left<BidirectionalIterator>();
-    test_left<RandomAccess>();
-    test_left<Identity>();
+    test_left<InputIterator<const double *>>();
+    test_left<ForwardIterator<const double *>>();
+    test_left<BidirectionalIterator<const double *>>();
+    test_left<RandomAccessIterator<const double *>>();
+    test_left<const double *>();
 
-    test_left<InputIterator, Sentinel>();
-    test_left<ForwardIterator, Sentinel>();
-    test_left<BidirectionalIterator, Sentinel>();
-    test_left<RandomAccess, Sentinel>();
+    test_left<InputIterator<const double *>, Sentinel<const double *>>();
+    test_left<ForwardIterator<const double *>, Sentinel<const double *>>();
+    test_left<BidirectionalIterator<const double *>, Sentinel<const double *>>();
+    test_left<RandomAccessIterator<const double *>, Sentinel<const double *>>();
 
     test_right();
 
