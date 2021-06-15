@@ -101,5 +101,6 @@
         "cfenv": "cpp"
     },
     "C_Cpp.configurationWarnings": "Disabled",
-    "cmake.configureOnOpen": true
+    "cmake.configureOnOpen": true,
+    "C_Cpp.intelliSenseEngineFallback": "Enabled"
 }

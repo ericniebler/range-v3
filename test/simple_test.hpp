@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <utility>
 #include <iostream>
+#include <range/v3/detail/config.hpp>
 
 namespace test_impl
 {
@@ -78,10 +79,14 @@ namespace test_impl
         {
             dismissed_ = true;
         }
+
         template<typename V = T>
         auto eval_(int) -> decltype(!std::declval<V&>())
         {
+            RANGES_DIAGNOSTIC_PUSH
+            RANGES_DIAGNOSTIC_IGNORE_FLOAT_CONVERSION
             return !t_;
+            RANGES_DIAGNOSTIC_POP
         }
         bool eval_(long)
         {
