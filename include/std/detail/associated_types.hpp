@@ -298,14 +298,13 @@ namespace ranges
         RANGES_INLINE_VAR constexpr bool is_std_iterator_traits_specialized_v =
             1 == sizeof(is_std_iterator_traits_specialized_impl_<I>(
                      static_cast<std::iterator_traits<I> *>(nullptr)));
-
+#endif
         // The standard iterator_traits<T *> specialization(s) do not count
         // as user-specialized. This will no longer be necessary in C++20.
         // This helps with `T volatile*` and `void *`.
         template<typename T>
         RANGES_INLINE_VAR constexpr bool is_std_iterator_traits_specialized_v<T *> =
             false;
-#endif
     } // namespace detail
     /// \endcond
 } // namespace ranges
