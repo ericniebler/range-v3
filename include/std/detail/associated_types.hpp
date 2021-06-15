@@ -265,11 +265,22 @@ namespace ranges
         template<typename I>
         char is_std_iterator_traits_specialized_impl_(void *);
 #elif defined(_LIBCPP_VERSION)
-        template<typename I, bool B>
-        char (
-            &is_std_iterator_traits_specialized_impl_(std::__iterator_traits<I, B> *))[2];
+        // In older versions of libc++, the base template inherits from std::__iterator_traits<typename, bool>.
+        template<template<typename, bool> class IteratorTraitsBase, typename I, bool B>
+        char (&libcpp_iterator_traits_base_impl(IteratorTraitsBase<I, B> *))[2];
+        template<template<typename, bool> class IteratorTraitsBase, typename I>
+        char libcpp_iterator_traits_base_impl(void *);
+
+        // In newer versions, the base template has only one template parameter and provides the
+        // __primary_template typedef which aliases the iterator_traits specialization.
+        template<template<typename> class, typename I>
+        char (&libcpp_iterator_traits_base_impl(typename std::iterator_traits<I>::__primary_template *))[2];
+        template<template<typename> class, typename I>
+        char libcpp_iterator_traits_base_impl(void *);
+
         template<typename I>
-        char is_std_iterator_traits_specialized_impl_(void *);
+        auto is_std_iterator_traits_specialized_impl_(std::iterator_traits<I>* traits)
+            -> decltype(libcpp_iterator_traits_base_impl<std::__iterator_traits, I>(traits));
 #elif defined(_MSVC_STL_VERSION)
         template<typename I>
         char (&is_std_iterator_traits_specialized_impl_(
@@ -287,14 +298,13 @@ namespace ranges
         RANGES_INLINE_VAR constexpr bool is_std_iterator_traits_specialized_v =
             1 == sizeof(is_std_iterator_traits_specialized_impl_<I>(
                      static_cast<std::iterator_traits<I> *>(nullptr)));
-
+#endif
         // The standard iterator_traits<T *> specialization(s) do not count
         // as user-specialized. This will no longer be necessary in C++20.
         // This helps with `T volatile*` and `void *`.
         template<typename T>
         RANGES_INLINE_VAR constexpr bool is_std_iterator_traits_specialized_v<T *> =
             false;
-#endif
     } // namespace detail
     /// \endcond
 } // namespace ranges
