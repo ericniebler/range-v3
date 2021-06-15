@@ -25,6 +25,7 @@
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/reverse_iterator.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -53,14 +54,18 @@ namespace ranges
             while(true)
             {
                 first = find_if(std::move(first), last, std::ref(pred), std::ref(proj));
-                last = find_if_not(make_reverse_iterator(std::move(last)),
-                                   make_reverse_iterator(first),
-                                   std::ref(pred),
-                                   std::ref(proj))
+                if(first == last)
+                    return first;
+
+                last = next(find_if_not(make_reverse_iterator(std::move(last)),
+                                        make_reverse_iterator(next(first)),
+                                        std::ref(pred),
+                                        std::ref(proj)))
                            .base();
                 if(first == last)
                     return first;
-                *first = iter_move(--last);
+
+                *first = iter_move(last);
 
                 // discussion here: https://github.com/ericniebler/range-v3/issues/988
                 ++first;
