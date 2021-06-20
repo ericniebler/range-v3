@@ -237,3 +237,6 @@ $RECYCLE.BIN/
 \#*#
 .#*
 /CMakeSettings.json
+
+# clangd cache
+.cache/clangd/
