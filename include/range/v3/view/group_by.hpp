@@ -21,9 +21,10 @@
 
 #include <range/v3/range_fwd.hpp>
 
-#include <range/v3/algorithm/find_if_not.hpp>
+#include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/functional/bind_back.hpp>
 #include <range/v3/functional/invoke.hpp>
+#include <range/v3/functional/not_fn.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -57,16 +58,6 @@ namespace ranges
         // cached version of the end of the first subrange / start of the second subrange
         detail::non_propagating_cache<iterator_t<Rng>> second_;
         semiregular_box_t<Fun> fun_;
-
-        struct pred
-        {
-            iterator_t<Rng> first_;
-            semiregular_box_ref_or_val_t<Fun, false> fun_;
-            bool operator()(range_reference_t<Rng> r) const
-            {
-                return invoke(fun_, *first_, r);
-            }
-        };
 
         struct cursor
         {
@@ -112,9 +103,8 @@ namespace ranges
             void next()
             {
                 cur_ = next_cur_;
-                next_cur_ = cur_ != last_
-                                ? find_if_not(ranges::next(cur_), last_, pred{cur_, fun_})
-                                : cur_;
+                auto partition_cur = adjacent_find(cur_, last_, not_fn(fun_));
+                next_cur_ = partition_cur != last_ ? ranges::next(partition_cur) : partition_cur;
             }
 
             bool equal(default_sentinel_t) const
@@ -142,7 +132,8 @@ namespace ranges
             auto e = ranges::end(rng_);
             if(!second_)
             {
-                second_ = b != e ? find_if_not(ranges::next(b), e, pred{b, fun_}) : b;
+                auto p = adjacent_find(b, e, not_fn(fun_));
+                second_ = p != e ? ranges::next(p) : p;
             }
             return {fun_, b, *second_, e};
         }
