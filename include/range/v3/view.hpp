@@ -24,6 +24,7 @@
 #include <range/v3/view/cache1.hpp>
 #include <range/v3/view/cartesian_product.hpp>
 #include <range/v3/view/chunk.hpp>
+#include <range/v3/view/chunk_by.hpp>
 #include <range/v3/view/common.hpp>
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/const.hpp>

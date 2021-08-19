@@ -616,6 +616,15 @@ namespace ranges
         struct all_fn;
     }
 
+
+    template<typename Rng, typename Fun>
+    struct chunk_by_view;
+
+    namespace views
+    {
+        struct chunk_by_fn;
+    }
+
     template<typename Rng>
     struct const_view;
 
