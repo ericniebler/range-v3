@@ -100,12 +100,12 @@ namespace ranges
         inline void unguarded_linear_insert(I last, iter_value_t<I> val, C & pred,
                                             P & proj)
         {
-            I next = prev(last);
-            while(invoke(pred, invoke(proj, val), invoke(proj, *next)))
+            I next_ = prev(last);
+            while(invoke(pred, invoke(proj, val), invoke(proj, *next_)))
             {
-                *last = iter_move(next);
-                last = next;
-                --next;
+                *last = iter_move(next_);
+                last = next_;
+                --next_;
             }
             *last = std::move(val);
         }
