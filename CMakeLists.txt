@@ -28,20 +28,23 @@ add_library(range-v3-meta INTERFACE)
 add_library(range-v3::meta ALIAS range-v3-meta)
 target_include_directories(range-v3-meta INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
 target_include_directories(range-v3-meta SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
-target_compile_options(range-v3-meta INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
+target_compile_options(range-v3-meta INTERFACE $<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->
+                                               $<$<COMPILE_LANG_AND_ID:CUDA,MSVC>:-Xcompiler=/permissive->)
 
 add_library(range-v3-concepts INTERFACE)
 add_library(range-v3::concepts ALIAS range-v3-concepts)
 target_include_directories(range-v3-concepts INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
 target_include_directories(range-v3-concepts SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
-target_compile_options(range-v3-concepts INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
+target_compile_options(range-v3-concepts INTERFACE $<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->
+                                                   $<$<COMPILE_LANG_AND_ID:CUDA,MSVC>:-Xcompiler=/permissive->)
 target_link_libraries(range-v3-concepts INTERFACE range-v3::meta)
 
 add_library(range-v3 INTERFACE)
 add_library(range-v3::range-v3 ALIAS range-v3)
 target_include_directories(range-v3 INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
 target_include_directories(range-v3 SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
-target_compile_options(range-v3 INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
+target_compile_options(range-v3 INTERFACE $<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->
+                                          $<$<COMPILE_LANG_AND_ID:CUDA,MSVC>:-Xcompiler=/permissive->)
 target_link_libraries(range-v3 INTERFACE range-v3::concepts range-v3::meta)
 
 function(rv3_add_test TESTNAME EXENAME FIRSTSOURCE)
