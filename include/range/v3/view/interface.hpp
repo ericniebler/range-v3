@@ -506,6 +506,7 @@ namespace ranges
             return Slice{}(detail::move(derived()), offs.from, offs.to);
         }
     private:
+#ifndef RANGES_V3_DISABLE_IO
         /// \brief Print a range to an ostream
         template<bool True = true>
         friend auto operator<<(std::ostream & sout, Derived const & rng)
@@ -533,8 +534,8 @@ namespace ranges
         {
             return detail::print_rng_(sout, rng);
         }
+#endif
     };
-
     namespace cpp20
     {
         template(typename Derived)(
