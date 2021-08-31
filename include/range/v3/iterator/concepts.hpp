@@ -255,7 +255,7 @@ namespace ranges
 
     template<typename I>
     CPP_concept weakly_incrementable =
-        semiregular<I> &&
+        copyable<I> &&
         CPP_requires_ref(ranges::weakly_incrementable_, I) &&
         CPP_concept_ref(ranges::weakly_incrementable_, I);
 
