@@ -307,7 +307,7 @@ provides, and a blurb about how each is intended to be used.
 <DT>\link ranges::views::linear_distribute_fn `views::linear_distribute`\endlink</DT>
   <DD>Distributes `n` values linearly in the closed interval `[from, to]` (the end points are always included). If `from == to`, returns `n`-times `to`, and if `n == 1` it returns `to`.</DD>
 <DT>\link ranges::views::move_fn `views::move`\endlink</DT>
-  <DD>Given a source range, return a new range where each element has been has been cast to an rvalue reference.</DD>
+  <DD>Given a source range, return a new range where each element has been cast to an rvalue reference.</DD>
 <DT>\link ranges::views::partial_sum_fn `views::partial_sum`\endlink</DT>
   <DD>Given a range and a binary function, return a new range where the *N*<SUP>th</SUP> element is the result of applying the function to the *N*<SUP>th</SUP> element from the source range and the (N-1)th element from the result range.</DD>
 <DT>\link ranges::views::remove_fn `views::remove`\endlink</DT>
