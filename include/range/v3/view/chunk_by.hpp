@@ -138,8 +138,9 @@ namespace ranges
         {
             template(typename Rng, typename Fun)(
                 /// \pre
-                requires viewable_range<Rng> AND forward_range<Rng> AND indirect_relation<
-                    Fun, iterator_t<Rng>>) constexpr chunk_by_view<all_t<Rng>, Fun>
+                requires viewable_range<Rng> AND forward_range<Rng> AND //
+                    indirect_relation<Fun, iterator_t<Rng>>)            //
+            constexpr chunk_by_view<all_t<Rng>, Fun>
             operator()(Rng && rng, Fun fun) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
