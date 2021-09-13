@@ -230,6 +230,17 @@ namespace ranges
                     engaged_ = true;
                     return data_;
                 }
+                template(typename I)(
+                    /// \pre
+                    requires constructible_from<T, iter_reference_t<I>>)
+                T & construct_from_deref(const I & it)
+                {
+                    RANGES_EXPECT(!engaged_);
+                    auto const address = static_cast<void *>(std::addressof(data_));
+                    ::new(address) T(*it);
+                    engaged_ = true;
+                    return data_;
+                }
                 template<typename U>
                 constexpr void assign_from(U && that) noexcept(
                     std::is_nothrow_constructible<T, decltype(*static_cast<U &&>(that))>::
@@ -648,6 +659,15 @@ namespace ranges
         {
             base_t::assign_from(std::move(that));
             return *this;
+        }
+
+        template(typename I)(
+            /// \pre
+            requires constructible_from<T, iter_reference_t<I>>)
+        T & emplace_deref(const I & it)
+        {
+            reset();
+            return base_t::construct_from_deref(it);
         }
 
         template(typename... Args)(

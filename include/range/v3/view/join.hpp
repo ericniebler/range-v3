@@ -466,7 +466,7 @@ namespace ranges
                 else
                 {
                     auto & it = ranges::get<1>(cur_);
-                    auto && inner = rng_->get_inner_(outer_it_);
+                    [[maybe_unused]] auto && inner = rng_->get_inner_(outer_it_);
                     RANGES_ASSERT(it != ranges::end(inner));
                     ++it;
                 }
