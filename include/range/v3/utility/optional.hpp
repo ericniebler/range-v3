@@ -978,6 +978,11 @@ namespace ranges
                 return *this;
             }
             using optional<T>::operator=;
+            template<class I>
+            constexpr T & emplace_deref(const I & i)
+            {
+                return optional<T>::emplace(*i);
+            }
         };
 
         template<typename T, typename Tag>
