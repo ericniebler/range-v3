@@ -14,6 +14,7 @@
 #include <list>
 #include <vector>
 #include <range/v3/core.hpp>
+#include <range/v3/view/chunk_by.hpp>
 #include <range/v3/view/cycle.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/repeat.hpp>
@@ -21,7 +22,6 @@
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/sliding.hpp>
 #include <range/v3/view/zip.hpp>
-#include <range/v3/view/group_by.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -133,7 +133,7 @@ void bug_975()
         using namespace ranges;
         auto vals = views::zip(v, i, t);
         using T = std::tuple<double, int, int>;
-        auto g = vals | views::group_by(
+        auto g = vals | views::chunk_by(
             [](T t1, T t2)
             {
                 return std::get<2>(t1) == std::get<2>(t2);

@@ -74,8 +74,8 @@
 #include <range/v3/iterator/stream_iterators.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/chunk.hpp>
+#include <range/v3/view/chunk_by.hpp>
 #include <range/v3/view/concat.hpp>
-#include <range/v3/view/group_by.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/repeat_n.hpp>
@@ -132,14 +132,14 @@ dates_from(unsigned short year)
 auto
 by_month()
 {
-    return views::group_by(
+    return views::chunk_by(
         [](date a, date b) { return a.month() == b.month(); });
 }
 
 auto
 by_week()
 {
-    return views::group_by([](date a, date b) {
+    return views::chunk_by([](date a, date b) {
         // ++a because week_number is Mon-Sun and we want Sun-Sat
         return (++a).week_number() == (++b).week_number();
     });
