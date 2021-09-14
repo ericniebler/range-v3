@@ -232,7 +232,7 @@ namespace ranges
                 }
                 template(typename I)(
                     /// \pre
-                    requires constructible_from<T, iter_reference_t<I>>)
+                    requires constructible_from<T, decltype(*std::declval<const I &>())>)
                 T & construct_from_deref(const I & it)
                 {
                     RANGES_EXPECT(!engaged_);
@@ -663,7 +663,7 @@ namespace ranges
 
         template(typename I)(
             /// \pre
-            requires constructible_from<T, iter_reference_t<I>>)
+            requires constructible_from<T, decltype(*std::declval<const I &>())>)
         T & emplace_deref(const I & it)
         {
             reset();
