@@ -50,6 +50,40 @@ namespace ranges
         {
             return that.data_;
         }
+
+        template<typename I>
+        auto demote_common_iter_cat(...) -> nil_;
+        template<typename I>
+        auto demote_common_iter_cat(long)
+            -> with_iterator_category<std::input_iterator_tag>;
+        template(typename I)(
+            /// \pre
+            requires derived_from<typename std::iterator_traits<I>::iterator_category,
+                                      std::forward_iterator_tag>)
+        auto demote_common_iter_cat(int)
+            -> with_iterator_category<std::forward_iterator_tag>;
+
+        template<typename I, bool = (bool)input_iterator<I>>
+        struct common_iterator_std_traits : decltype(detail::demote_common_iter_cat<I>(0))
+        {
+            using difference_type = iter_difference_t<I>;
+            using value_type = iter_value_t<I>;
+            using reference = iter_reference_t<I>;
+            using pointer = detail::iter_pointer_t<I>;
+            using iterator_concept =
+                meta::conditional_t<(bool)forward_iterator<I>, std::forward_iterator_tag,
+                          std::input_iterator_tag>;
+        };
+
+        template<typename I>
+        struct common_iterator_std_traits<I, false>
+        {
+            using difference_type = iter_difference_t<I>;
+            using value_type = void;
+            using reference = void;
+            using pointer = void;
+            using iterator_category = std::output_iterator_tag;
+        };
     } // namespace detail
 
 #if RANGES_BROKEN_CPO_LOOKUP
@@ -125,8 +159,13 @@ namespace ranges
             return arrow_proxy_(*j);
         }
 
+        using traits = detail::common_iterator_std_traits<I>;
     public:
-        using difference_type = iter_difference_t<I>;
+        using difference_type = typename traits::difference_type;
+        using value_type = typename traits::value_type;
+        using pointer = typename traits::pointer;
+        using reference = typename traits::reference;
+        using iterator_category = typename traits::iterator_category;
 
         common_iterator() = default;
         common_iterator(I i)
@@ -330,40 +369,6 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        template<typename I>
-        auto demote_common_iter_cat(...) -> nil_;
-        template<typename I>
-        auto demote_common_iter_cat(long)
-            -> with_iterator_category<std::input_iterator_tag>;
-        template(typename I)(
-            /// \pre
-            requires derived_from<typename std::iterator_traits<I>::iterator_category,
-                                      std::forward_iterator_tag>)
-        auto demote_common_iter_cat(int)
-            -> with_iterator_category<std::forward_iterator_tag>;
-
-        template<typename I, bool = (bool)input_iterator<I>>
-        struct common_iterator_std_traits : decltype(detail::demote_common_iter_cat<I>(0))
-        {
-            using difference_type = iter_difference_t<I>;
-            using value_type = iter_value_t<I>;
-            using reference = iter_reference_t<I>;
-            using pointer = detail::iter_pointer_t<I>;
-            using iterator_concept =
-                meta::conditional_t<(bool)forward_iterator<I>, std::forward_iterator_tag,
-                          std::input_iterator_tag>;
-        };
-
-        template<typename I>
-        struct common_iterator_std_traits<I, false>
-        {
-            using difference_type = iter_difference_t<I>;
-            using value_type = void;
-            using reference = void;
-            using pointer = void;
-            using iterator_category = std::output_iterator_tag;
-        };
-
         // An iterator adaptor that demotes a user-defined difference_type to
         // std::intmax_t, for use when constructing containers from such
         // iterators.
