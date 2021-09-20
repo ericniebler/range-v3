@@ -60,7 +60,6 @@ namespace
         CHECK(ranges::size(v) == 1u);
         check_equal(v, {5});
         auto it = ranges::begin(v);
-        CHECK(detail::addressof(*it) == &maybe_i.value());
         CHECK(++it == ranges::end(v));
 
         ranges::optional<int> nothing{nullopt};
@@ -103,7 +102,6 @@ namespace
         CHECK(ranges::size(v) == 1u);
         auto it = ranges::begin(v);
         CPP_assert(std::is_same<decltype(*it), user::MyObject &>::value);
-        CHECK(detail::addressof(*it) == &o);
         CHECK(++it == ranges::end(v));
 
         user::MyObject o2{emplaced_index<2u>};
@@ -111,7 +109,6 @@ namespace
         CHECK(ranges::size(v) == 1u);
         auto it2 = ranges::begin(v2);
         CPP_assert(std::is_same<decltype(*it2), user::MyObject const &>::value);
-        CHECK(detail::addressof(*it2) == &o2);
         CHECK(++it2 == ranges::end(v2));
 
         user::MyObject nothing{emplaced_index<0u>};
