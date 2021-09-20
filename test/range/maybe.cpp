@@ -97,18 +97,20 @@ namespace
         CPP_assert(ranges::maybe<user::MyObject>);
         user::MyObject o{emplaced_index<1U>};
         CHECK(ranges::is_just(o));
-        CPP_assert(std::is_same<decltype(ranges::get_just(o)), user::MyObject&>::value);
-	CHECK(&ranges::get_just(o) == &o);
+        CPP_assert(std::is_same<decltype(ranges::get_just(o)), user::MyObject &>::value);
+        CHECK(&ranges::get_just(o) == &o);
 
         const user::MyObject o2{emplaced_index<2U>};
-        CPP_assert(std::is_same<decltype(ranges::get_just(o2)), const user::MyObject&>::value);
-	CHECK(&ranges::get_just(o2) == &o2);
+        CPP_assert(
+            std::is_same<decltype(ranges::get_just(o2)), const user::MyObject &>::value);
+        CHECK(&ranges::get_just(o2) == &o2);
 
-	user::MyObject nothing{};
+        user::MyObject nothing{};
         CHECK(!is_just(nothing));
     }
 
-    void non_maybe_types(){
+    void non_maybe_types()
+    {
         CPP_assert(!ranges::maybe<int>);
         CPP_assert(!ranges::maybe<bool>);
         CPP_assert(!ranges::maybe<std::nullptr_t>);

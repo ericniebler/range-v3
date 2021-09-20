@@ -94,7 +94,7 @@ namespace ranges
         }
         constexpr T const * data() const noexcept
         {
-            const auto & m = static_cast<Maybe const&>(value_);
+            const auto & m = static_cast<Maybe const &>(value_);
             return ranges::is_just(m) ? detail::addressof(ranges::get_just(m)) : nullptr;
         }
     };
