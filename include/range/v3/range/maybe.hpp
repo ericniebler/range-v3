@@ -52,8 +52,8 @@ namespace ranges
 
             template(typename M)(
                 /// \pre
-                requires !has_non_member_is_just<M> AND
-                    concepts::explicitly_convertible_to<M, bool>) //
+                requires(!has_non_member_is_just<M>)
+                    AND concepts::explicitly_convertible_to<M, bool>) //
                 constexpr bool
                 operator()(M && m) const //
                 noexcept(noexcept(static_cast<bool>(m)))
@@ -114,7 +114,7 @@ namespace ranges
 
             template(typename M)(
                 /// \pre
-                requires !has_non_member_get_just<M> AND detail::dereferenceable_<M>) //
+                requires(!has_non_member_get_just<M>) AND detail::dereferenceable_<M>) //
                 constexpr _result_t<M>
                 operator()(M && m) const //
                 noexcept(noexcept(*(static_cast<M &&>(m))))
