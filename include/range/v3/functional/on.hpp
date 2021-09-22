@@ -49,7 +49,7 @@ namespace ranges
         auto CPP_auto_fun(operator())(Args &&... args)(const)
         (
             return invoke((Fn1 const &)first_,
-                          invoke((Fn2 const &)second_, static_cast<Args &&>(args)...))
+                          invoke((Fn2 const &)second_, static_cast<Args &&>(args))...)
         )
         // clang-format on
     };
