@@ -10,8 +10,8 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
-#ifndef RANGES_V3_ALGORITHM_FOLDL_HPP
-#define RANGES_V3_ALGORITHM_FOLDL_HPP
+#ifndef RANGES_V3_ALGORITHM_FOLD_LEFT_HPP
+#define RANGES_V3_ALGORITHM_FOLD_LEFT_HPP
 
 #include <meta/meta.hpp>
 
@@ -46,16 +46,16 @@ namespace ranges
 
     /// \addtogroup group-algorithms
     /// @{
-    struct foldl_fn
+    struct fold_left_fn
     {
-        template(typename I, typename S, typename T, typename Op, typename P = identity)(
+        template(typename I, typename S, typename T, typename Op)(
             /// \pre
             requires sentinel_for<S, I> AND input_iterator<I> AND
-                indirectly_binary_left_foldable<Op, T, projected<I, P>>) //
+                indirectly_binary_left_foldable<Op, T, I>) //
             constexpr auto
-            operator()(I first, S last, T init, Op op, P proj = P{}) const
+            operator()(I first, S last, T init, Op op) const
         {
-            using U = std::decay_t<invoke_result_t<Op &, T, indirect_result_t<P&, I>>>;
+            using U = std::decay_t<invoke_result_t<Op &, T, iter_reference_t<I>>>;
 
             if(first == last)
             {
@@ -65,37 +65,33 @@ namespace ranges
             U accum = invoke(op, std::move(init), *first);
             for(++first; first != last; ++first)
             {
-                accum = invoke(op, std::move(accum), invoke(proj, *first));
+                accum = invoke(op, std::move(accum), *first);
             }
             return accum;
         }
 
-        template(typename Rng, typename T, typename Op, typename P = identity)(
+        template(typename Rng, typename T, typename Op)(
             /// \pre
             requires input_range<Rng> AND
-                indirectly_binary_left_foldable<Op, T, projected<iterator_t<Rng>, P>>) //
+                indirectly_binary_left_foldable<Op, T, iterator_t<Rng>>) //
             constexpr auto
-            operator()(Rng && rng, T init, Op op, P proj = P{}) const
+            operator()(Rng && rng, T init, Op op) const
         {
-            return (*this)(begin(rng),
-                           end(rng),
-                           std::move(init),
-                           std::move(op),
-                           std::move(proj));
+            return (*this)(begin(rng), end(rng), std::move(init), std::move(op));
         }
     };
 
-    struct foldl1_fn
+    struct fold_left_first_fn
     {
-        template(typename I, typename S, typename Op, typename P = identity)(
+        template(typename I, typename S, typename Op)(
             /// \pre
             requires sentinel_for<S, I> AND input_iterator<I> AND
-                indirectly_binary_left_foldable<Op, iter_value_t<I>, projected<I, P>>
+                indirectly_binary_left_foldable<Op, iter_value_t<I>, I>
                     AND constructible_from<iter_value_t<I>, iter_reference_t<I>>) //
             constexpr auto
-            operator()(I first, S last, Op op, P proj = P{}) const
+            operator()(I first, S last, Op op) const
         {
-            using U = invoke_result_t<foldl_fn, I, S, iter_value_t<I>, Op, P>;
+            using U = invoke_result_t<fold_left_fn, I, S, iter_value_t<I>, Op>;
             if(first == last)
             {
                 return optional<U>();
@@ -105,23 +101,23 @@ namespace ranges
             ++first;
             return optional<U>(
                 in_place,
-                foldl_fn{}(std::move(first), std::move(last), std::move(init), op, proj));
+                fold_left_fn{}(std::move(first), std::move(last), std::move(init), op));
         }
 
-        template(typename R, typename Op, typename P = identity)(
+        template(typename R, typename Op)(
             /// \pre
             requires input_range<R> AND
-                indirectly_binary_left_foldable<Op, range_value_t<R>, projected<iterator_t<R>, P>>
+                indirectly_binary_left_foldable<Op, range_value_t<R>, iterator_t<R>>
                     AND constructible_from<range_value_t<R>, range_reference_t<R>>) //
             constexpr auto
-            operator()(R && rng, Op op, P proj = P{}) const
+            operator()(R && rng, Op op) const
         {
-            return (*this)(begin(rng), end(rng), std::move(op), std::move(proj));
+            return (*this)(begin(rng), end(rng), std::move(op));
         }
     };
 
-    RANGES_INLINE_VARIABLE(foldl_fn, foldl)
-    RANGES_INLINE_VARIABLE(foldl1_fn, foldl1)
+    RANGES_INLINE_VARIABLE(fold_left_fn, fold_left)
+    RANGES_INLINE_VARIABLE(fold_left_first_fn, fold_left_first)
     /// @}
 } // namespace ranges
 

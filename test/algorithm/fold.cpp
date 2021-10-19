@@ -50,38 +50,38 @@ template<class Iter, class Sent = Iter>
 void test_left()
 {
     double da[] = {0.25, 0.75};
-    CHECK(ranges::foldl(Iter(da), Sent(da), 1, std::plus<>()) == Approx{1.0});
-    CHECK(ranges::foldl(Iter(da), Sent(da + 2), 1, std::plus<>()) == Approx{2.0});
+    CHECK(ranges::fold_left(Iter(da), Sent(da), 1, std::plus<>()) == Approx{1.0});
+    CHECK(ranges::fold_left(Iter(da), Sent(da + 2), 1, std::plus<>()) == Approx{2.0});
 
-    CHECK(ranges::foldl1(Iter(da), Sent(da), ranges::min) == ranges::nullopt);
-    CHECK(ranges::foldl1(Iter(da), Sent(da + 2), ranges::min) ==
+    CHECK(ranges::fold_left_first(Iter(da), Sent(da), ranges::min) == ranges::nullopt);
+    CHECK(ranges::fold_left_first(Iter(da), Sent(da + 2), ranges::min) ==
           ranges::optional<Approx>(0.25));
 
     using ranges::make_subrange;
-    CHECK(ranges::foldl(make_subrange(Iter(da), Sent(da)), 1, std::plus<>()) ==
+    CHECK(ranges::fold_left(make_subrange(Iter(da), Sent(da)), 1, std::plus<>()) ==
           Approx{1.0});
-    CHECK(ranges::foldl(make_subrange(Iter(da), Sent(da + 2)), 1, std::plus<>()) ==
+    CHECK(ranges::fold_left(make_subrange(Iter(da), Sent(da + 2)), 1, std::plus<>()) ==
           Approx{2.0});
-    CHECK(ranges::foldl1(make_subrange(Iter(da), Sent(da)), ranges::min) ==
+    CHECK(ranges::fold_left_first(make_subrange(Iter(da), Sent(da)), ranges::min) ==
           ranges::nullopt);
-    CHECK(ranges::foldl1(make_subrange(Iter(da), Sent(da + 2)), ranges::min) ==
+    CHECK(ranges::fold_left_first(make_subrange(Iter(da), Sent(da + 2)), ranges::min) ==
           ranges::optional<Approx>(0.25));
 }
 
 void test_right()
 {
     double da[] = {0.25, 0.75};
-    CHECK(ranges::foldr(da, da + 2, 1, std::plus<>()) == Approx{2.0});
-    CHECK(ranges::foldr(da, 1, std::plus<>()) == Approx{2.0});
+    CHECK(ranges::fold_right(da, da + 2, 1, std::plus<>()) == Approx{2.0});
+    CHECK(ranges::fold_right(da, 1, std::plus<>()) == Approx{2.0});
 
     // f(0.25, f(0.75, 1))
-    CHECK(ranges::foldr(da, da + 2, 1, std::minus<>()) == Approx{0.5});
-    CHECK(ranges::foldr(da, 1, std::minus<>()) == Approx{0.5});
+    CHECK(ranges::fold_right(da, da + 2, 1, std::minus<>()) == Approx{0.5});
+    CHECK(ranges::fold_right(da, 1, std::minus<>()) == Approx{0.5});
 
     int xs[] = {1, 2, 3};
     auto concat = [](int i, std::string s) { return s + std::to_string(i); };
-    CHECK(ranges::foldr(xs, xs + 2, std::string(), concat) == "21");
-    CHECK(ranges::foldr(xs, std::string(), concat) == "321");
+    CHECK(ranges::fold_right(xs, xs + 2, std::string(), concat) == "21");
+    CHECK(ranges::fold_right(xs, std::string(), concat) == "321");
 }
 
 int main()
