@@ -19,6 +19,7 @@
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/view/filter.hpp>
 #include <range/v3/view/c_str.hpp>
+#include <range/v3/view/zip.hpp>
 #include <range/v3/utility/copy.hpp>
 #include <range/v3/algorithm/find.hpp>
 #include "../simple_test.hpp"
@@ -40,6 +41,12 @@ int main()
     ::check_equal(rng0 | views::reverse, {0,1,2,3,4,5,6,7,8,9});
     ::check_equal(rng0 | views::reverse | views::reverse, {9,8,7,6,5,4,3,2,1,0});
     ::check_equal(rng0 | views::reverse | views::reverse | views::reverse, {0,1,2,3,4,5,6,7,8,9});
+
+    {
+        auto z = views::zip(rgv);
+        auto rz = z | views::reverse;
+        CPP_assert(same_as<range_value_t<decltype(z)>, range_value_t<decltype(rz)>>);
+    }
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
 #if defined(__clang__) && __clang_major__ < 6

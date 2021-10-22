@@ -36,6 +36,9 @@ namespace ranges
         private:
             CPP_assert(bidirectional_iterator<I>);
             friend range_access;
+
+            using value_type = iter_value_t<I>;
+
             template<typename OtherI>
             friend struct reverse_cursor;
             struct mixin : basic_mixin<reverse_cursor>
