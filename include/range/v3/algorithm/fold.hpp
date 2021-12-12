@@ -13,7 +13,7 @@
 #ifndef RANGES_V3_ALGORITHM_FOLD_HPP
 #define RANGES_V3_ALGORITHM_FOLD_HPP
 
-#include <range/v3/algorithm/foldl.hpp>
-#include <range/v3/algorithm/foldr.hpp>
+#include <range/v3/algorithm/fold_left.hpp>
+#include <range/v3/algorithm/fold_right.hpp>
 
 #endif
