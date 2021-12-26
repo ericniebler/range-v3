@@ -28,6 +28,7 @@
 #include <functional>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -253,6 +254,30 @@ namespace
     }
 }
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    bool r = true;
+    constexpr int N = 100;
+    test::array<int, N> ia{{0}};
+    for(int i = 0; i < N; ++i)
+        ia[i] = i;
+    make_heap(ia);
+    for(int i = N; i > 0; --i)
+    {
+        if(pop_heap(make_subrange(begin(ia), begin(ia) + i), less{}) != begin(ia) + i)
+        {
+            r = false;
+        }
+        if(!is_heap(begin(ia), begin(ia) + i - 1))
+        {
+            r = false;
+        }
+    }
+    static_assert(pop_heap(make_subrange(begin(ia), begin(ia)), less{}) == begin(ia), "");
+    return r;
+}
+
 int main()
 {
     test_1(1000);
@@ -265,6 +290,10 @@ int main()
     test_8(1000);
     test_9(1000);
     test_10(1000);
+
+    {
+        static_assert(test_constexpr(), "");
+    }
 
     return test_result();
 }

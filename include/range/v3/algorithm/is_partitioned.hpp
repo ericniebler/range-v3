@@ -47,7 +47,7 @@ namespace ranges
             /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
             indirect_unary_predicate<C, projected<I, P>>)
-        bool RANGES_FUNC(is_partitioned)(I first, S last, C pred, P proj = P{}) //
+        constexpr bool RANGES_FUNC(is_partitioned)(I first, S last, C pred, P proj = P{}) //
         {
             for(; first != last; ++first)
                 if(!invoke(pred, invoke(proj, *first)))
@@ -63,7 +63,7 @@ namespace ranges
             /// \pre
             requires input_range<Rng> AND
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
-        bool RANGES_FUNC(is_partitioned)(Rng && rng, C pred, P proj = P{}) //
+        constexpr bool RANGES_FUNC(is_partitioned)(Rng && rng, C pred, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

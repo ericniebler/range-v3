@@ -19,6 +19,7 @@
 #include <range/v3/algorithm/equal.hpp>
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/iterator/stream_iterators.hpp>
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
@@ -34,6 +35,22 @@ bool test_constexpr_copy()
 
 static_assert(test_constexpr_copy(), "");
 #endif
+
+template<typename Rng>
+constexpr auto copy_rng(Rng && input)
+{
+    test::array<int, 4> tmp{{0, 0, 0, 0}};
+    auto res = ranges::copy(input, ranges::begin(tmp));
+    if(res.in != ranges::end(input))
+    {
+        throw 0;
+    };
+    if(res.out != ranges::end(tmp))
+    {
+        throw 0;
+    };
+    return tmp;
+}
 
 int main()
 {
@@ -89,6 +106,12 @@ int main()
         std::vector<int> copy_vec{1,1,1,1,1};
         copy(copy_vec, ostream_iterator<>(sout, " "));
         CHECK(sout.str() == "1 1 1 1 1 ");
+    }
+
+    {
+        using IL = std::initializer_list<int>;
+        constexpr auto a1 = copy_rng(IL{0, 1, 2, 3});
+        static_assert(ranges::equal(a1, IL{0, 1, 2, 3}), "");
     }
 
     return test_result();

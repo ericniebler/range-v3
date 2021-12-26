@@ -48,7 +48,7 @@ namespace ranges
     namespace detail
     {
         template<typename I, typename S, typename C, typename P>
-        I partition_impl(I first, S last, C pred, P proj, std::forward_iterator_tag)
+        constexpr I partition_impl(I first, S last, C pred, P proj, std::forward_iterator_tag)
         {
             while(true)
             {
@@ -70,7 +70,7 @@ namespace ranges
         }
 
         template<typename I, typename S, typename C, typename P>
-        I partition_impl(I first, S end_, C pred, P proj, std::bidirectional_iterator_tag)
+        constexpr I partition_impl(I first, S end_, C pred, P proj, std::bidirectional_iterator_tag)
         {
             I last = ranges::next(first, end_);
             while(true)
@@ -102,7 +102,7 @@ namespace ranges
             /// \pre
             requires permutable<I> AND sentinel_for<S, I> AND
             indirect_unary_predicate<C, projected<I, P>>)
-        I RANGES_FUNC(partition)(I first, S last, C pred, P proj = P{})
+        constexpr I RANGES_FUNC(partition)(I first, S last, C pred, P proj = P{})
         {
             return detail::partition_impl(std::move(first),
                                           std::move(last),
@@ -116,7 +116,7 @@ namespace ranges
             /// \pre
             requires forward_range<Rng> AND permutable<iterator_t<Rng>> AND
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
-        borrowed_iterator_t<Rng> RANGES_FUNC(partition)(Rng && rng, C pred, P proj = P{})
+        constexpr borrowed_iterator_t<Rng> RANGES_FUNC(partition)(Rng && rng, C pred, P proj = P{})
         {
             return detail::partition_impl(begin(rng),
                                           end(rng),

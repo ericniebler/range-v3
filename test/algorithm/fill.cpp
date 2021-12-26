@@ -23,6 +23,8 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/fill.hpp>
+#include <range/v3/algorithm/equal.hpp>
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -76,6 +78,20 @@ test_int()
     CHECK(ia[3] == 2);
 }
 
+constexpr auto fives()
+{
+    test::array<int, 4> a{{0}};
+    ranges::fill(a, 5);
+    return a;
+}
+
+constexpr auto fives(int n)
+{
+    test::array<int, 4> a{{0}};
+    ranges::fill_n(ranges::begin(a), n, 5);
+    return a;
+}
+
 int main()
 {
     test_char<ForwardIterator<char*> >();
@@ -95,6 +111,13 @@ int main()
     test_int<ForwardIterator<int*>, Sentinel<int*> >();
     test_int<BidirectionalIterator<int*>, Sentinel<int*> >();
     test_int<RandomAccessIterator<int*>, Sentinel<int*> >();
+
+    {
+        using IL = std::initializer_list<int>;
+        static_assert(ranges::equal(fives(), IL{5, 5, 5, 5}), "");
+        static_assert(ranges::equal(fives(2), IL{5, 5, 0, 0}), "");
+        static_assert(!ranges::equal(fives(2), IL{5, 5, 5, 5}), "");
+    }
 
     return ::test_result();
 }

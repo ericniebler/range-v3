@@ -18,10 +18,51 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/merge.hpp>
+#include <range/v3/algorithm/is_sorted.hpp>
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
 RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
+
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    constexpr unsigned N = 100;
+    test::array<int, N> ia{{0}};
+    test::array<int, N> ib{{0}};
+    test::array<int, 2 * N> ic{{0}};
+    for(unsigned i = 0; i < N; ++i)
+        ia[i] = 2 * i;
+    for(unsigned i = 0; i < N; ++i)
+        ib[i] = 2 * i + 1;
+    auto r = merge(ia, ib, begin(ic));
+    if(r.in1 != end(ia))
+    {
+        return false;
+    }
+    if(r.in2 != end(ib))
+    {
+        return false;
+    }
+    if(r.out != end(ic))
+    {
+        return false;
+    }
+    if(ic[0] != 0)
+    {
+        return false;
+    }
+    if(ic[2 * N - 1] != (int)(2 * N - 1))
+    {
+        return false;
+    }
+    if(!is_sorted(ic))
+    {
+        return false;
+    }
+    return true;
+}
 
 int main()
 {
@@ -86,6 +127,10 @@ int main()
 
         static_assert(std::is_same<decltype(r),
             ranges::merge_result<ranges::dangling, ranges::dangling, int *>>::value, "");
+    }
+
+    {
+        static_assert(test_constexpr(), "");
     }
 
     return ::test_result();

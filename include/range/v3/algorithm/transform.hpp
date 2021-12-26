@@ -52,7 +52,7 @@ namespace ranges
             requires input_iterator<I> AND sentinel_for<S, I> AND
             weakly_incrementable<O> AND copy_constructible<F> AND
             indirectly_writable<O, indirect_result_t<F &, projected<I, P>>>)
-        unary_transform_result<I, O> //
+        constexpr unary_transform_result<I, O> //
         RANGES_FUNC(transform)(I first, S last, O out, F fun, P proj = P{}) //
         {
             for(; first != last; ++first, ++out)
@@ -66,7 +66,7 @@ namespace ranges
             requires input_range<Rng> AND weakly_incrementable<O> AND
             copy_constructible<F> AND
             indirectly_writable<O, indirect_result_t<F &, projected<iterator_t<Rng>, P>>>)
-        unary_transform_result<borrowed_iterator_t<Rng>, O> //
+        constexpr unary_transform_result<borrowed_iterator_t<Rng>, O> //
         RANGES_FUNC(transform)(Rng && rng, O out, F fun, P proj = P{}) //
         {
             return (*this)(
@@ -90,7 +90,7 @@ namespace ranges
                 indirectly_writable<
                     O,
                     indirect_result_t<F &, projected<I0, P0>, projected<I1, P1>>>)
-        binary_transform_result<I0, I1, O> //
+        constexpr binary_transform_result<I0, I1, O> //
         RANGES_FUNC(transform)(I0 begin0,
                                S0 end0,
                                I1 begin1,
@@ -120,9 +120,9 @@ namespace ranges
                     indirect_result_t<F &,
                                       projected<iterator_t<Rng0>, P0>,
                                       projected<iterator_t<Rng1>, P1>>>)
-        binary_transform_result<borrowed_iterator_t<Rng0>,
-                                borrowed_iterator_t<Rng1>,
-                                O> //
+        constexpr binary_transform_result<borrowed_iterator_t<Rng0>,
+                                          borrowed_iterator_t<Rng1>,
+                                          O> //
         RANGES_FUNC(transform)(
             Rng0 && rng0, Rng1 && rng1, O out, F fun, P0 proj0 = P0{}, P1 proj1 = P1{}) //
         {

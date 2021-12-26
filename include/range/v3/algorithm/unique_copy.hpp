@@ -43,9 +43,13 @@ namespace ranges
     namespace detail
     {
         template<typename I, typename S, typename O, typename C, typename P>
-        unique_copy_result<I, O> unique_copy_impl(I first, S last, O out, C pred, P proj,
-                                                  std::input_iterator_tag,
-                                                  std::false_type)
+        constexpr unique_copy_result<I, O> unique_copy_impl(I first, 
+                                                            S last, 
+                                                            O out, 
+                                                            C pred, 
+                                                            P proj,
+                                                            std::input_iterator_tag,
+                                                            std::false_type)
         {
             if(first != last)
             {
@@ -70,9 +74,13 @@ namespace ranges
         }
 
         template<typename I, typename S, typename O, typename C, typename P>
-        unique_copy_result<I, O> unique_copy_impl(I first, S last, O out, C pred, P proj,
-                                                  std::forward_iterator_tag,
-                                                  std::false_type)
+        constexpr unique_copy_result<I, O> unique_copy_impl(I first, 
+                                                            S last, 
+                                                            O out, 
+                                                            C pred, 
+                                                            P proj,
+                                                            std::forward_iterator_tag,
+                                                            std::false_type)
         {
             if(first != last)
             {
@@ -94,8 +102,12 @@ namespace ranges
         }
 
         template<typename I, typename S, typename O, typename C, typename P>
-        unique_copy_result<I, O> unique_copy_impl(I first, S last, O out, C pred, P proj,
-                                                  std::input_iterator_tag, std::true_type)
+        constexpr unique_copy_result<I, O> unique_copy_impl(I first, 
+                                                            S last, 
+                                                            O out, 
+                                                            C pred, 
+                                                            P proj,
+                                                            std::input_iterator_tag, std::true_type)
         {
             if(first != last)
             {
@@ -133,7 +145,7 @@ namespace ranges
                 indirectly_copyable<I, O> AND
                 (forward_iterator<I> || forward_iterator<O> ||
                  indirectly_copyable_storable<I, O>)) //
-        unique_copy_result<I, O> RANGES_FUNC(unique_copy)(
+        constexpr unique_copy_result<I, O> RANGES_FUNC(unique_copy)(
             I first, S last, O out, C pred = C{}, P proj = P{}) //
         {
             return detail::unique_copy_impl(std::move(first),
@@ -153,7 +165,7 @@ namespace ranges
                 weakly_incrementable<O> AND indirectly_copyable<iterator_t<Rng>, O> AND
                 (forward_iterator<iterator_t<Rng>> || forward_iterator<O> ||
                  indirectly_copyable_storable<iterator_t<Rng>, O>)) //
-        unique_copy_result<borrowed_iterator_t<Rng>, O> //
+        constexpr unique_copy_result<borrowed_iterator_t<Rng>, O> //
         RANGES_FUNC(unique_copy)(Rng && rng, O out, C pred = C{}, P proj = P{}) //
         {
             return detail::unique_copy_impl(begin(rng),

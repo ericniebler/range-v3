@@ -34,7 +34,7 @@ namespace ranges
         template(typename O, typename S, typename V)(
             /// \pre
             requires output_iterator<O, V const &> AND sentinel_for<S, O>)
-        O RANGES_FUNC(fill)(O first, S last, V const & val) //
+        constexpr O RANGES_FUNC(fill)(O first, S last, V const & val) //
         {
             for(; first != last; ++first)
                 *first = val;
@@ -45,7 +45,7 @@ namespace ranges
         template(typename Rng, typename V)(
             /// \pre
             requires output_range<Rng, V const &>)
-        borrowed_iterator_t<Rng> RANGES_FUNC(fill)(Rng && rng, V const & val)
+        constexpr borrowed_iterator_t<Rng> RANGES_FUNC(fill)(Rng && rng, V const & val)
         {
             return (*this)(begin(rng), end(rng), val);
         }

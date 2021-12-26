@@ -112,6 +112,43 @@ struct S
     int i;
 };
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
+    constexpr unsigned sa = ranges::size(ia);
+    auto r = ranges::remove(ia, 2);
+    if(r != ia + sa - 3)
+    {
+        return false;
+    }
+    if(ia[0] != 0)
+    {
+        return false;
+    }
+    if(ia[1] != 1)
+    {
+        return false;
+    }
+    if(ia[2] != 3)
+    {
+        return false;
+    }
+    if(ia[3] != 4)
+    {
+        return false;
+    }
+    if(ia[4] != 3)
+    {
+        return false;
+    }
+    if(ia[5] != 4)
+    {
+        return false;
+    }
+    return true;
+}
+
 int main()
 {
     test_iter<ForwardIterator<int*> >();
@@ -180,6 +217,10 @@ int main()
     CHECK(vec[3].i == 4);
     CHECK(vec[4].i == 3);
     CHECK(vec[5].i == 4);
+
+    {
+        static_assert(test_constexpr(), "");
+    }
 
     return ::test_result();
 }

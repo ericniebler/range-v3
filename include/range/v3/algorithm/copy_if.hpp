@@ -47,7 +47,7 @@ namespace ranges
                 weakly_incrementable<O> AND
                 indirect_unary_predicate<F, projected<I, P>> AND
                 indirectly_copyable<I, O>)
-        copy_if_result<I, O> //
+        constexpr copy_if_result<I, O> //
         RANGES_FUNC(copy_if)(I first, S last, O out, F pred, P proj = P{}) //
         {
             for(; first != last; ++first)
@@ -68,7 +68,7 @@ namespace ranges
             requires input_range<Rng> AND weakly_incrementable<O> AND
             indirect_unary_predicate<F, projected<iterator_t<Rng>, P>> AND
             indirectly_copyable<iterator_t<Rng>, O>)
-        copy_if_result<borrowed_iterator_t<Rng>, O> //
+        constexpr copy_if_result<borrowed_iterator_t<Rng>, O> //
         RANGES_FUNC(copy_if)(Rng && rng, O out, F pred, P proj = P{})
         {
             return (*this)(

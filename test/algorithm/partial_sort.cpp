@@ -27,6 +27,7 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
+#include "../array.hpp"
 
 RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
 RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
@@ -138,6 +139,24 @@ namespace
     };
 }
 
+constexpr bool test_constexpr()
+{
+    test::array<int, 10> v{{0}};
+    for(int i = 0; (std::size_t)i < v.size(); ++i)
+    {
+        v[i] = v.size() - i - 1;
+    }
+    ranges::partial_sort(v, v.begin() + v.size() / 2, ranges::less{});
+    for(int i = 0; (std::size_t)i < v.size() / 2; ++i)
+    {
+        if(v[i] != i)
+        {
+            return false;
+        };
+    }
+    return true;
+}
+
 int main()
 {
     int i = 0;
@@ -177,6 +196,10 @@ int main()
             CHECK(v[j].i == j);
             CHECK((std::size_t)v[j].j == v.size() - j - 1);
         }
+    }
+
+    {
+        static_assert(test_constexpr(), "");
     }
 
     return ::test_result();

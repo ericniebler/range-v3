@@ -98,6 +98,39 @@ void test()
     }
 }
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    int ia[] = {0, 1, 2, 3, 4};
+    constexpr unsigned sa = ranges::size(ia);
+    auto r = ranges::reverse(ia);
+    if(r != ia + sa)
+    {
+        return false;
+    }
+    if(ia[0] != 4)
+    {
+        return false;
+    }
+    if(ia[1] != 3)
+    {
+        return false;
+    }
+    if(ia[2] != 2)
+    {
+        return false;
+    }
+    if(ia[3] != 1)
+    {
+        return false;
+    }
+    if(ia[4] != 0)
+    {
+        return false;
+    }
+    return true;
+}
+
 int main()
 {
     test<BidirectionalIterator<int *>>();
@@ -106,6 +139,10 @@ int main()
 
     test<BidirectionalIterator<int *>, Sentinel<int*>>();
     test<RandomAccessIterator<int *>, Sentinel<int*>>();
+
+    {
+        static_assert(test_constexpr(), "");
+    }
 
     return ::test_result();
 }

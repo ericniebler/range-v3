@@ -49,8 +49,13 @@ namespace ranges
     namespace detail
     {
         template<typename I, typename S, typename D, typename V, typename C, typename P>
-        subrange<I> search_n_sized_impl(I const begin_, S last, D const d_, D cnt,
-                                        V const & val, C & pred, P & proj)
+        constexpr subrange<I> search_n_sized_impl(I const begin_, 
+                                                  S last, 
+                                                  D const d_, 
+                                                  D cnt,
+                                                  V const & val, 
+                                                  C & pred, 
+                                                  P & proj)
         {
             D d = d_; // always the distance from first to end
             auto first = uncounted(begin_);
@@ -94,8 +99,12 @@ namespace ranges
         }
 
         template<typename I, typename S, typename D, typename V, typename C, typename P>
-        subrange<I> search_n_impl(I first, S last, D cnt, V const & val, C & pred,
-                                  P & proj)
+        constexpr subrange<I> search_n_impl(I first, 
+                                            S last, 
+                                            D cnt, 
+                                            V const & val, 
+                                            C & pred,
+                                            P & proj)
         {
             while(true)
             {
@@ -143,12 +152,12 @@ namespace ranges
             /// \pre
             requires forward_iterator<I> AND sentinel_for<S, I> AND
                 indirectly_comparable<I, V const *, C, P>)
-        subrange<I> RANGES_FUNC(search_n)(I first,
-                                          S last,
-                                          iter_difference_t<I> cnt,
-                                          V const & val,
-                                          C pred = C{},
-                                          P proj = P{}) //
+        constexpr subrange<I> RANGES_FUNC(search_n)(I first,
+                                                    S last,
+                                                    iter_difference_t<I> cnt,
+                                                    V const & val,
+                                                    C pred = C{},
+                                                    P proj = P{}) //
         {
             if(cnt <= 0)
                 return {first, first};
@@ -170,11 +179,11 @@ namespace ranges
             /// \pre
             requires forward_range<Rng> AND
                 indirectly_comparable<iterator_t<Rng>, V const *, C, P>)
-        borrowed_subrange_t<Rng> RANGES_FUNC(search_n)(Rng && rng,
-                                                   iter_difference_t<iterator_t<Rng>> cnt,
-                                                   V const & val,
-                                                   C pred = C{},
-                                                   P proj = P{}) //
+        constexpr borrowed_subrange_t<Rng> RANGES_FUNC(search_n)(Rng && rng,
+                                                                 iter_difference_t<iterator_t<Rng>> cnt,
+                                                                 V const & val,
+                                                                 C pred = C{},
+                                                                 P proj = P{}) //
         {
             if(cnt <= 0)
                 return subrange<iterator_t<Rng>>{begin(rng), begin(rng)};

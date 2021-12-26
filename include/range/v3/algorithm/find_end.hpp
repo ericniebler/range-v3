@@ -41,7 +41,7 @@ namespace ranges
         template(typename I, typename S)(
             /// \pre
             requires input_iterator<I> AND sentinel_for<S, I>)
-        I next_to_if(I i, S s, std::true_type)
+        constexpr I next_to_if(I i, S s, std::true_type)
         {
             return ranges::next(i, s);
         }
@@ -49,7 +49,7 @@ namespace ranges
         template(typename I, typename S)(
             /// \pre
             requires input_iterator<I> AND sentinel_for<S, I>)
-        S next_to_if(I, S s, std::false_type)
+        constexpr S next_to_if(I, S s, std::false_type)
         {
             return s;
         }
@@ -57,14 +57,14 @@ namespace ranges
         template(bool B, typename I, typename S)(
             /// \pre
             requires input_iterator<I> AND sentinel_for<S, I>)
-        meta::if_c<B, I, S> next_to_if(I i, S s)
+        constexpr meta::if_c<B, I, S> next_to_if(I i, S s)
         {
             return detail::next_to_if(std::move(i), std::move(s), meta::bool_<B>{});
         }
 
         template<typename I1, typename S1, typename I2, typename S2, typename R,
                  typename P>
-        subrange<I1> find_end_impl(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred, P proj,
+        constexpr subrange<I1> find_end_impl(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred, P proj,
                                    std::forward_iterator_tag, std::forward_iterator_tag)
         {
             bool found = false;
@@ -107,7 +107,7 @@ namespace ranges
         }
 
         template<typename I1, typename I2, typename R, typename P>
-        subrange<I1> find_end_impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
+        constexpr subrange<I1> find_end_impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
                                    std::bidirectional_iterator_tag,
                                    std::bidirectional_iterator_tag)
         {
@@ -144,7 +144,7 @@ namespace ranges
         }
 
         template<typename I1, typename I2, typename R, typename P>
-        subrange<I1> find_end_impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
+        constexpr subrange<I1> find_end_impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
                                    std::random_access_iterator_tag,
                                    std::random_access_iterator_tag)
         {
@@ -194,7 +194,7 @@ namespace ranges
             requires forward_iterator<I1> AND sentinel_for<S1, I1> AND
                 forward_iterator<I2> AND sentinel_for<S2, I2> AND
                 indirect_relation<R, projected<I1, P>, I2>)
-        subrange<I1> RANGES_FUNC(find_end)(
+        constexpr subrange<I1> RANGES_FUNC(find_end)(
             I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{}, P proj = P{}) //
         {
             constexpr bool Bidi =
@@ -217,7 +217,7 @@ namespace ranges
             /// \pre
             requires forward_range<Rng1> AND forward_range<Rng2> AND
                 indirect_relation<R, projected<iterator_t<Rng1>, P>, iterator_t<Rng2>>)
-        borrowed_subrange_t<Rng1> RANGES_FUNC(find_end)(
+        constexpr borrowed_subrange_t<Rng1> RANGES_FUNC(find_end)(
             Rng1 && rng1, Rng2 && rng2, R pred = R{}, P proj = P{}) //
         {
             return (*this)(begin(rng1),

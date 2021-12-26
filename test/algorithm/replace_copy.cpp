@@ -72,6 +72,44 @@ void test()
     test_rng<InIter, OutIter, Sent>();
 }
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    int ia[] = {0, 1, 2, 3, 4};
+    int ib[5] = {0};
+    constexpr unsigned sa = ranges::size(ia);
+    const auto r = ranges::replace_copy(ia, ib, 2, 42);
+    if(r.in != ia + sa)
+    {
+        return false;
+    }
+    if(r.out != ib + sa)
+    {
+        return false;
+    }
+    if(ib[0] != 0)
+    {
+        return false;
+    }
+    if(ib[1] != 1)
+    {
+        return false;
+    }
+    if(ib[2] != 42)
+    {
+        return false;
+    }
+    if(ib[3] != 3)
+    {
+        return false;
+    }
+    if(ib[4] != 4)
+    {
+        return false;
+    }
+    return true;
+}
+
 int main()
 {
     test<InputIterator<const int*>, OutputIterator<int*> >();
@@ -117,6 +155,10 @@ int main()
         CHECK(out[2] == P{5, "5"});
         CHECK(out[3] == P{3, "3"});
         CHECK(out[4] == P{4, "4"});
+    }
+
+    {
+        static_assert(test_constexpr(), "");
     }
 
     return ::test_result();

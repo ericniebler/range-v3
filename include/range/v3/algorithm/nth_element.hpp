@@ -38,6 +38,7 @@
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/traits.hpp>
+#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
 
@@ -110,7 +111,7 @@ namespace ranges
         template(typename I, typename S, typename C = less, typename P = identity)(
             /// \pre
             requires random_access_iterator<I> AND sortable<I, C, P>)
-        I RANGES_FUNC(nth_element)(
+        constexpr I RANGES_FUNC(nth_element)(
             I first, I nth, S end_, C pred = C{}, P proj = P{}) //
         {
             I last = ranges::next(nth, end_), end_orig = last;
@@ -119,7 +120,6 @@ namespace ranges
             difference_type const limit = 7;
             while(true)
             {
-            restart:
                 if(nth == last)
                     return end_orig;
                 difference_type len = last - first;
@@ -217,7 +217,7 @@ namespace ranges
                             // nth_element the second part
                             // nth_element<C>(i, nth, last, pred);
                             first = i;
-                            goto restart;
+                            continue;
                         }
                         if(invoke(pred, invoke(proj, *j), invoke(proj, *m)))
                         {
@@ -262,39 +262,45 @@ namespace ranges
                 // [first, i) < *i and *i <= [i+1, last)
                 if(nth == i)
                     return end_orig;
-                if(n_swaps == 0)
+                const auto optional_return = [&]() -> ranges::optional<I> {
+                    if(n_swaps == 0)
+                    {
+                        // We were given a perfectly partitioned sequence.  Coincidence?
+                        if(nth < i)
+                        {
+                            // Check for [first, i) already sorted
+                            j = m = first;
+                            while(++j != i)
+                            {
+                                if(invoke(pred, invoke(proj, *j), invoke(proj, *m)))
+                                    // not yet sorted, so sort
+                                    return ranges::nullopt;
+                                m = j;
+                            }
+                            // [first, i) sorted
+                            return end_orig;
+                        }
+                        else
+                        {
+                            // Check for [i, last) already sorted
+                            j = m = i;
+                            while(++j != last)
+                            {
+                                if(invoke(pred, invoke(proj, *j), invoke(proj, *m)))
+                                    // not yet sorted, so sort
+                                    return ranges::nullopt;
+                                m = j;
+                            }
+                            // [i, last) sorted
+                            return end_orig;
+                        }
+                    }
+                    return ranges::nullopt;
+                }();
+                if(optional_return)
                 {
-                    // We were given a perfectly partitioned sequence.  Coincidence?
-                    if(nth < i)
-                    {
-                        // Check for [first, i) already sorted
-                        j = m = first;
-                        while(++j != i)
-                        {
-                            if(invoke(pred, invoke(proj, *j), invoke(proj, *m)))
-                                // not yet sorted, so sort
-                                goto not_sorted;
-                            m = j;
-                        }
-                        // [first, i) sorted
-                        return end_orig;
-                    }
-                    else
-                    {
-                        // Check for [i, last) already sorted
-                        j = m = i;
-                        while(++j != last)
-                        {
-                            if(invoke(pred, invoke(proj, *j), invoke(proj, *m)))
-                                // not yet sorted, so sort
-                                goto not_sorted;
-                            m = j;
-                        }
-                        // [i, last) sorted
-                        return end_orig;
-                    }
+                    return *optional_return;
                 }
-            not_sorted:
                 // nth_element on range containing nth
                 if(nth < i)
                 {
@@ -314,7 +320,7 @@ namespace ranges
         template(typename Rng, typename C = less, typename P = identity)(
             /// \pre
             requires random_access_range<Rng> AND sortable<iterator_t<Rng>, C, P>)
-        borrowed_iterator_t<Rng> RANGES_FUNC(nth_element)(
+        constexpr borrowed_iterator_t<Rng> RANGES_FUNC(nth_element)(
             Rng && rng, iterator_t<Rng> nth, C pred = C{}, P proj = P{}) //
         {
             return (*this)(

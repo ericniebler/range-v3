@@ -46,7 +46,7 @@ namespace ranges
             /// \pre
             requires forward_iterator<I> AND sentinel_for<S, I> AND
                 indirect_strict_weak_order<C, V const *, projected<I, P>>)
-        subrange<I> RANGES_FUNC(equal_range)(
+        constexpr subrange<I> RANGES_FUNC(equal_range)(
             I first, S last, V const & val, C pred = C{}, P proj = P{})
         {
             if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S, I>))
@@ -70,7 +70,7 @@ namespace ranges
                     // at the end of the input range
                     dist -= d;
                     return aux::equal_range_n(
-                        std::move(first), dist, val, std::ref(pred), std::ref(proj));
+                        std::move(first), dist, val, ranges::ref(pred), ranges::ref(proj));
                 }
                 // if val < *mid, mid is after the target range.
                 auto && v = *mid;
@@ -78,7 +78,7 @@ namespace ranges
                 if(invoke(pred, val, pv))
                 {
                     return aux::equal_range_n(
-                        std::move(first), dist, val, std::ref(pred), std::ref(proj));
+                        std::move(first), dist, val, ranges::ref(pred), ranges::ref(proj));
                 }
                 else if(!invoke(pred, pv, val))
                 {
@@ -86,12 +86,12 @@ namespace ranges
                     // mid.
                     return {
                         aux::lower_bound_n(
-                            std::move(first), dist, val, std::ref(pred), std::ref(proj)),
+                            std::move(first), dist, val, ranges::ref(pred), ranges::ref(proj)),
                         upper_bound(std::move(mid),
                                     std::move(last),
                                     val,
-                                    std::ref(pred),
-                                    std::ref(proj))};
+                                    ranges::ref(pred),
+                                    ranges::ref(proj))};
                 }
                 // *mid < val, mid is before the target range.
                 first = std::move(mid);
@@ -105,7 +105,7 @@ namespace ranges
             /// \pre
             requires forward_range<Rng> AND
                 indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
-        borrowed_subrange_t<Rng> //
+        constexpr borrowed_subrange_t<Rng> //
         RANGES_FUNC(equal_range)(Rng && rng, V const & val, C pred = C{}, P proj = P{}) //
         {
             if(RANGES_CONSTEXPR_IF(sized_range<Rng>))

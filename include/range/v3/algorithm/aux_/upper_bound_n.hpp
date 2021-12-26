@@ -38,15 +38,15 @@ namespace ranges
             Val & val_;
 
             template<typename T>
-            bool operator()(T && t) const
+            constexpr bool operator()(T && t) const
             {
                 return !invoke(pred_, val_, static_cast<T &&>(t));
             }
         };
 
         template<typename Pred, typename Val>
-        upper_bound_predicate<Pred, Val> make_upper_bound_predicate(Pred & pred,
-                                                                    Val & val)
+        constexpr upper_bound_predicate<Pred, Val> make_upper_bound_predicate(Pred & pred,
+                                                                              Val & val)
         {
             return {pred, val};
         }
@@ -66,11 +66,11 @@ namespace ranges
                 /// \pre
                 requires forward_iterator<I> AND
                     indirect_strict_weak_order<C, V const *, projected<I, P>>)
-            I operator()(I first,
-                         iter_difference_t<I> d,
-                         V const & val,
-                         C pred = C{},
-                         P proj = P{}) const
+            constexpr I operator()(I first,
+                                   iter_difference_t<I> d,
+                                   V const & val,
+                                   C pred = C{},
+                                   P proj = P{}) const
             {
                 return partition_point_n(std::move(first),
                                          d,

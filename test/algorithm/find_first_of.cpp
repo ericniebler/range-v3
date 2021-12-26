@@ -209,6 +209,43 @@ void test_rng_pred_proj()
                              InputIterator<const S*>(ia));
 }
 
+void test_constexpr()
+{
+    using namespace ranges;
+    constexpr int ia[] = {0, 1, 2, 3, 0, 1, 2, 3};
+    constexpr unsigned sa = size(ia);
+    constexpr int ib[] = {1, 3, 5, 7};
+    constexpr unsigned sb = size(ib);
+    static_assert(
+        rng::find_first_of(as_lvalue(make_subrange(InputIterator<const int *>(ia),
+                                                   InputIterator<const int *>(ia + sa))),
+                           make_subrange(ForwardIterator<const int *>(ib),
+                                         ForwardIterator<const int *>(ib + sb)),
+                           equal_to{}) == InputIterator<const int *>(ia + 1),
+        "");
+    constexpr int ic[] = {7};
+    static_assert(
+        rng::find_first_of(as_lvalue(make_subrange(InputIterator<const int *>(ia),
+                                                   InputIterator<const int *>(ia + sa))),
+                           make_subrange(ForwardIterator<const int *>(ic),
+                                         ForwardIterator<const int *>(ic + 1)),
+                           equal_to{}) == InputIterator<const int *>(ia + sa),
+        "");
+    static_assert(
+        rng::find_first_of(as_lvalue(make_subrange(InputIterator<const int *>(ia),
+                                                   InputIterator<const int *>(ia + sa))),
+                           make_subrange(ForwardIterator<const int *>(ic),
+                                         ForwardIterator<const int *>(ic)),
+                           equal_to{}) == InputIterator<const int *>(ia + sa),
+        "");
+    static_assert(
+        rng::find_first_of(as_lvalue(make_subrange(InputIterator<const int *>(ia),
+                                                   InputIterator<const int *>(ia))),
+                           make_subrange(ForwardIterator<const int *>(ic),
+                                         ForwardIterator<const int *>(ic + 1)),
+                           equal_to{}) == InputIterator<const int *>(ia),
+        "");
+}
 
 int main()
 {
@@ -217,5 +254,6 @@ int main()
     ::test_rng();
     ::test_rng_pred();
     ::test_rng_pred_proj();
+
     return ::test_result();
 }

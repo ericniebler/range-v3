@@ -17,6 +17,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/take_while.hpp>
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -67,6 +68,87 @@ void test_infinite_range(Rng&& rng)
     }
 }
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+
+    auto rng = test::array<int, 10>{{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}};
+    using Rng = decltype(rng);
+    auto bit = ranges::begin(rng);
+    using I = decltype(bit);
+    auto it = bit + 5;
+    auto eit = ranges::end(rng);
+    auto n = ranges::distance(rng);
+    auto en = ranges::enumerate(rng);
+    if(n != 10)
+    {
+        return false;
+    }
+    if(distance(bit, eit) != n)
+    {
+        return false;
+    }
+    if(distance(it, eit) != 5)
+    {
+        return false;
+    }
+    if(distance_compare(bit, eit, n) != 0)
+    {
+        return false;
+    }
+    if(distance_compare(bit, eit, n - 1) <= 0)
+    {
+        return false;
+    }
+    if(distance_compare(bit, eit, n + 1) >= 0)
+    {
+        return false;
+    }
+    if(distance_compare(bit, eit, (std::numeric_limits<iter_difference_t<I>>::min)()) <=
+       0)
+    {
+        return false;
+    }
+    if(distance_compare(bit, eit, (std::numeric_limits<iter_difference_t<I>>::max)()) >=
+       0)
+    {
+        return false;
+    }
+    if(distance(rng) != n)
+    {
+        return false;
+    }
+    if(distance_compare(rng, n) != 0)
+    {
+        return false;
+    }
+    if(distance_compare(rng, n - 1) <= 0)
+    {
+        return false;
+    }
+    if(distance_compare(rng, n + 1) >= 0)
+    {
+        return false;
+    }
+    static_assert(
+        distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::min)()) > 0,
+        "");
+    static_assert(
+        distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::max)()) < 0,
+        "");
+
+    if(en.first != 10)
+    {
+        return false;
+    }
+    if(en.second != eit)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 int main()
 {
     using namespace ranges;
@@ -115,6 +197,10 @@ int main()
 
     {
         test_infinite_range(views::iota(0u));
+    }
+
+    {
+        static_assert(test_constexpr(), "");
     }
 
     return ::test_result();

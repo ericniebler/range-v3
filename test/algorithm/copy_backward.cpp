@@ -15,8 +15,26 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/copy_backward.hpp>
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
+#include "../test_utils.hpp"
+
+template<typename Rng>
+constexpr auto copy_rng(Rng && input)
+{
+    test::array<int, 4> tmp{{0, 0, 0, 0}};
+    auto res = ranges::copy_backward(input, ranges::end(tmp));
+    if(res.in != ranges::end(input))
+    {
+        throw 0;
+    };
+    if(res.out != ranges::begin(tmp))
+    {
+        throw 0;
+    };
+    return tmp;
+}
 
 int main()
 {
@@ -70,5 +88,10 @@ int main()
         CHECK(std::equal(a, a + size(a), out));
     }
 
+    {
+        constexpr auto a1 = copy_rng(test::array<int, 4>{{0, 1, 2, 3}});
+        using IL = std::initializer_list<int>;
+        static_assert(ranges::equal(a1, IL{0, 1, 2, 3}), "");
+    }
     return test_result();
 }

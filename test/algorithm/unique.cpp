@@ -136,6 +136,31 @@ void test()
     }
 }
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    int a[] = {0, 1, 1, 1, 2, 2, 2};
+    const unsigned sa = sizeof(a) / sizeof(a[0]);
+    auto r = unique(a, a + sa);
+    if(r != a + 3)
+    {
+        return false;
+    }
+    if(a[0] != 0)
+    {
+        return false;
+    }
+    if(a[1] != 1)
+    {
+        return false;
+    }
+    if(a[2] != 2)
+    {
+        return false;
+    }
+    return true;
+}
+
 int main()
 {
     test<ForwardIterator<int*>, iter_call>();
@@ -176,5 +201,9 @@ int main()
         CHECK(a[2] == 2);
     }
 
+    {
+        static_assert(test_constexpr(), "");
+    }
+    
     return ::test_result();
 }

@@ -31,6 +31,7 @@
 #include <range/v3/algorithm/is_sorted_until.hpp>
 #include <range/v3/core.hpp>
 
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 #include "../test_utils.hpp"
@@ -97,7 +98,7 @@ struct range_call
 };
 
 template<class It, template<class> class FunT>
-void test()
+void test_basic()
 {
     using Fun = FunT<It>;
 
@@ -406,17 +407,38 @@ struct A
     int a;
 };
 
+constexpr bool test_constexpr()
+{
+    test::array<int, 4> a{{1, 2, 3, 4}};
+    auto b = ranges::begin(a);
+    auto b1 = ++b;
+    auto end = ranges::end(a);
+    if(ranges::is_sorted_until(a) != end)
+    {
+        return false;
+    }
+    if(ranges::is_sorted_until(a, std::less<>{}) != end)
+    {
+        return false;
+    }
+    if(ranges::is_sorted_until(a, std::greater<>{}) != b1)
+    {
+        return false;
+    }
+    return true;
+}
+
 int main()
 {
-    test<ForwardIterator<const int *>, iter_call>();
-    test<BidirectionalIterator<const int *>, iter_call>();
-    test<RandomAccessIterator<const int *>, iter_call>();
-    test<const int *, iter_call>();
+    test_basic<ForwardIterator<const int *>, iter_call>();
+    test_basic<BidirectionalIterator<const int *>, iter_call>();
+    test_basic<RandomAccessIterator<const int *>, iter_call>();
+    test_basic<const int *, iter_call>();
 
-    test<ForwardIterator<const int *>, range_call>();
-    test<BidirectionalIterator<const int *>, range_call>();
-    test<RandomAccessIterator<const int *>, range_call>();
-    test<const int *, range_call>();
+    test_basic<ForwardIterator<const int *>, range_call>();
+    test_basic<BidirectionalIterator<const int *>, range_call>();
+    test_basic<RandomAccessIterator<const int *>, range_call>();
+    test_basic<const int *, range_call>();
 
     /// Initializer list test:
     {
@@ -446,6 +468,10 @@ int main()
             ranges::is_sorted_until(std::move(vec), std::less<int>{}, &A::a)));
         CHECK(::is_dangling(
             ranges::is_sorted_until(std::move(vec), std::greater<int>{}, &A::a)));
+    }
+
+    {
+        static_assert(test_constexpr(), "");
     }
 
     return ::test_result();

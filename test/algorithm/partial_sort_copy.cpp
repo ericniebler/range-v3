@@ -115,6 +115,26 @@ namespace
     };
 }
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    using IL = std::initializer_list<int>;
+    int output[9] = {0};
+    int * r = partial_sort_copy(IL{5, 3, 4, 1, 8, 2, 6, 7, 0, 9}, output, less{});
+    int * e = output + 9;
+    if(r != e)
+    {
+        return false;
+    }
+    int i = 0;
+    for(int * x = output; x < e; ++x, ++i)
+        if(*x != i)
+        {
+            return false;
+        }
+    return true;
+}
+
 int main()
 {
     int i = 0;
@@ -171,6 +191,10 @@ int main()
         i2 = 0;
         for (U* x = vec.data(); x < e; ++x, ++i2)
             CHECK(x->i == i2);
+    }
+
+    {
+        static_assert(test_constexpr(), "");
     }
 
     return ::test_result();

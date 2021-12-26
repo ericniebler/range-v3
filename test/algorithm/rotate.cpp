@@ -251,6 +251,45 @@ void test()
     CHECK(ig[5] == 2);
 }
 
+constexpr bool test_constexpr()
+{
+    int rgi[] = {0, 1, 2, 3, 4, 5};
+    auto r = ranges::rotate(rgi, rgi + 2);
+    if(r.begin() != rgi + 4)
+    {
+        return false;
+    }
+    if(r.end() != ranges::end(rgi))
+    {
+        return false;
+    }
+    if(rgi[0] != 2)
+    {
+        return false;
+    }
+    if(rgi[1] != 3)
+    {
+        return false;
+    }
+    if(rgi[2] != 4)
+    {
+        return false;
+    }
+    if(rgi[3] != 5)
+    {
+        return false;
+    }
+    if(rgi[4] != 0)
+    {
+        return false;
+    }
+    if(rgi[5] != 1)
+    {
+        return false;
+    }
+    return true;
+}
+
 int main()
 {
     test<ForwardIterator<int *>>();
@@ -297,6 +336,10 @@ int main()
         CHECK(rgi[3] == 5);
         CHECK(rgi[4] == 0);
         CHECK(rgi[5] == 1);
+    }
+
+    {
+        static_assert(test_constexpr(), "");
     }
 
     return ::test_result();

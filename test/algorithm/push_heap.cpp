@@ -36,6 +36,7 @@
 #include <functional>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -47,7 +48,7 @@ namespace
 {
     std::mt19937 gen;
 
-    void test(int N)
+    void test_basic(int N)
     {
         auto push_heap = make_testable_1(ranges::push_heap);
 
@@ -126,9 +127,32 @@ namespace
     }
 }
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    bool r = true;
+    constexpr int N = 100;
+    test::array<int, N> ia{{0}};
+    for(int i = 0; i < N; ++i)
+        ia[i] = i;
+    for(int i = 0; i <= N; ++i)
+    {
+        if(push_heap(make_subrange(begin(ia), begin(ia) + i), std::greater<int>()) !=
+           begin(ia) + i)
+        {
+            r = false;
+        }
+        if(!is_heap(begin(ia), begin(ia) + i, std::greater<int>()))
+        {
+            r = false;
+        }
+    }
+    return r;
+}
+
 int main()
 {
-    test(1000);
+    test_basic(1000);
     test_comp(1000);
     test_proj(1000);
     test_move_only(1000);
@@ -148,6 +172,10 @@ int main()
         }
         delete[] ia;
         delete[] ib;
+    }
+
+    {
+        static_assert(test_constexpr(), "");
     }
 
     return test_result();

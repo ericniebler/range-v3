@@ -41,7 +41,7 @@ namespace ranges
             requires input_iterator<I> AND sentinel_for<S, I> AND
                 indirect_unary_predicate<C, projected<I, P>> AND
                 indirectly_writable<I, T const &>)
-        I RANGES_FUNC(replace_if)(
+        constexpr I RANGES_FUNC(replace_if)(
             I first, S last, C pred, T const & new_value, P proj = P{}) //
         {
             for(; first != last; ++first)
@@ -56,7 +56,7 @@ namespace ranges
             requires input_range<Rng> AND
                 indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> AND
                 indirectly_writable<iterator_t<Rng>, T const &>)
-        borrowed_iterator_t<Rng> RANGES_FUNC(replace_if)(
+        constexpr borrowed_iterator_t<Rng> RANGES_FUNC(replace_if)(
             Rng && rng, C pred, T const & new_value, P proj = P{}) //
         {
             return (*this)(

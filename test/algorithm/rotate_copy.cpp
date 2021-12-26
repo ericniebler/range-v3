@@ -258,6 +258,48 @@ struct S
     int i;
 };
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    int rgi[] = {0, 1, 2, 3, 4, 5};
+    int rgo[6] = {0};
+    const auto r = ranges::rotate_copy(rgi, rgi + 2, rgo);
+    if(r.in != ranges::end(rgi))
+    {
+        return false;
+    }
+    if(r.out != ranges::end(rgo))
+    {
+        return false;
+    }
+    if(rgo[0] != 2)
+    {
+        return false;
+    }
+    if(rgo[1] != 3)
+    {
+        return false;
+    }
+    if(rgo[2] != 4)
+    {
+        return false;
+    }
+    if(rgo[3] != 5)
+    {
+        return false;
+    }
+    if(rgo[4] != 0)
+    {
+        return false;
+    }
+    if(rgo[5] != 1)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 int main()
 {
     test<ForwardIterator<const int*>, OutputIterator<int*> >();
@@ -331,6 +373,10 @@ int main()
         CHECK(rgo[3] == 5);
         CHECK(rgo[4] == 0);
         CHECK(rgo[5] == 1);
+    }
+
+    {
+        static_assert(test_constexpr(), "");
     }
 
     return ::test_result();

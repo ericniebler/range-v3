@@ -50,8 +50,15 @@ namespace ranges
     {
         template<typename I1, typename S1, typename D1, typename I2, typename S2,
                  typename D2, typename C, typename P1, typename P2>
-        subrange<I1> search_sized_impl(I1 const begin1_, S1 end1, D1 const d1_, I2 begin2,
-                                       S2 end2, D2 d2, C & pred, P1 & proj1, P2 & proj2)
+        constexpr subrange<I1> search_sized_impl(I1 const begin1_, 
+                                                 S1 end1,
+                                                 D1 const d1_,
+                                                 I2 begin2, 
+                                                 S2 end2, 
+                                                 D2 d2, 
+                                                 C & pred,
+                                                 P1 & proj1, 
+                                                 P2 & proj2)
         {
             D1 d1 = d1_;
             auto begin1 = uncounted(begin1_);
@@ -102,8 +109,13 @@ namespace ranges
 
         template<typename I1, typename S1, typename I2, typename S2, typename C,
                  typename P1, typename P2>
-        subrange<I1> search_impl(I1 begin1, S1 end1, I2 begin2, S2 end2, C & pred,
-                                 P1 & proj1, P2 & proj2)
+        constexpr subrange<I1> search_impl(I1 begin1, 
+                                           S1 end1, 
+                                           I2 begin2, 
+                                           S2 end2, 
+                                           C & pred,
+                                           P1 & proj1, 
+                                           P2 & proj2)
         {
             while(true)
             {
@@ -157,13 +169,13 @@ namespace ranges
             requires forward_iterator<I1> AND sentinel_for<S1, I1> AND
                 forward_iterator<I2> AND sentinel_for<S2, I2> AND
                 indirectly_comparable<I1, I2, C, P1, P2>)
-        subrange<I1> RANGES_FUNC(search)(I1 begin1,
-                                         S1 end1,
-                                         I2 begin2,
-                                         S2 end2,
-                                         C pred = C{},
-                                         P1 proj1 = P1{},
-                                         P2 proj2 = P2{}) //
+        constexpr subrange<I1> RANGES_FUNC(search)(I1 begin1,
+                                                   S1 end1,
+                                                   I2 begin2,
+                                                   S2 end2,
+                                                   C pred = C{},
+                                                   P1 proj1 = P1{},
+                                                   P2 proj2 = P2{}) //
         {
             if(begin2 == end2)
                 return {begin1, begin1};
@@ -197,7 +209,7 @@ namespace ranges
             /// \pre
             requires forward_range<Rng1> AND forward_range<Rng2> AND
                 indirectly_comparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
-        borrowed_subrange_t<Rng1> RANGES_FUNC(search)(
+        constexpr borrowed_subrange_t<Rng1> RANGES_FUNC(search)(
             Rng1 && rng1, Rng2 && rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) //
         {
             if(empty(rng2))

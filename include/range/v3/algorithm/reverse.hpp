@@ -36,7 +36,7 @@ namespace ranges
     namespace detail
     {
         template<typename I>
-        void reverse_impl(I first, I last, std::bidirectional_iterator_tag)
+        constexpr void reverse_impl(I first, I last, std::bidirectional_iterator_tag)
         {
             while(first != last)
             {
@@ -48,7 +48,7 @@ namespace ranges
         }
 
         template<typename I>
-        void reverse_impl(I first, I last, std::random_access_iterator_tag)
+        constexpr void reverse_impl(I first, I last, std::random_access_iterator_tag)
         {
             if(first != last)
                 for(; first < --last; ++first)
@@ -63,7 +63,7 @@ namespace ranges
         template(typename I, typename S)(
             /// \pre
             requires bidirectional_iterator<I> AND sentinel_for<S, I> AND permutable<I>)
-        I RANGES_FUNC(reverse)(I first, S end_)
+        constexpr I RANGES_FUNC(reverse)(I first, S end_)
         {
             I last = ranges::next(first, end_);
             detail::reverse_impl(first, last, iterator_tag_of<I>{});
@@ -74,7 +74,7 @@ namespace ranges
         template(typename Rng, typename I = iterator_t<Rng>)(
             /// \pre
             requires bidirectional_range<Rng> AND permutable<I>)
-        borrowed_iterator_t<Rng> RANGES_FUNC(reverse)(Rng && rng) //
+        constexpr borrowed_iterator_t<Rng> RANGES_FUNC(reverse)(Rng && rng) //
         {
             return (*this)(begin(rng), end(rng));
         }

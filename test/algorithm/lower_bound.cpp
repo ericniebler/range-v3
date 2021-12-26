@@ -19,6 +19,7 @@
 #include <range/v3/algorithm/lower_bound.hpp>
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
+#include "../test_utils.hpp"
 
 struct my_int
 {
@@ -44,8 +45,9 @@ int main()
     using ranges::size;
     using ranges::less;
 
-    std::pair<int, int> a[] = {{0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
-    const std::pair<int, int> c[] = {{0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
+    constexpr std::pair<int, int> a[] = {{0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
+    constexpr const std::pair<int, int> c[] = {
+        {0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
 
     CHECK(ranges::aux::lower_bound_n(begin(a), size(a), a[0]) == &a[0]);
     CHECK(ranges::aux::lower_bound_n(begin(a), size(a), a[1], less()) == &a[1]);
@@ -77,6 +79,24 @@ int main()
     {
         std::vector<std::pair<int, int>> const vec_c(ranges::begin(c), ranges::end(c));
         CHECK(::is_dangling(ranges::lower_bound(std::move(vec_c), 1, less(), &std::pair<int, int>::first)));
+    }
+
+    {
+        using namespace ranges;
+
+        static_assert(aux::lower_bound_n(begin(a), size(a), a[0]) == &a[0], "");
+        static_assert(aux::lower_bound_n(begin(a), size(a), a[1], less()) == &a[1], "");
+
+        static_assert(lower_bound(begin(a), end(a), a[0]) == &a[0], "");
+        static_assert(lower_bound(begin(a), end(a), a[1], less()) == &a[1], "");
+        static_assert(lower_bound(a, a[2]) == &a[2], "");
+        static_assert(lower_bound(a, a[4], less()) == &a[4], "");
+        static_assert(lower_bound(a, std::make_pair(1, 2), less()) == &a[2], "");
+#if RANGES_CXX_CONSTEXPR >= RANGES_CXX_CONSTEXPR_17
+        // requires constexpr std::addressof
+        static_assert(lower_bound(views::all(a), std::make_pair(1, 2), less()) == &a[2],
+                      "");
+#endif
     }
 
     return test_result();

@@ -12,6 +12,7 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/for_each.hpp>
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
@@ -21,6 +22,11 @@ struct S
     int *p_;
     int i_;
 };
+
+constexpr int void_f(int const &)
+{
+    return 3;
+}
 
 int main()
 {
@@ -46,6 +52,11 @@ int main()
     sum = 0;
     CHECK(::is_dangling(ranges::for_each(::MakeTestRange(v1.begin(), v1.end()), fun).in));
     CHECK(sum == 12);
+
+    {
+        constexpr auto rng = test::array<int, 4>{{0, 2, 4, 6}};
+        static_assert(ranges::for_each(rng, void_f).in == ranges::end(rng), "");
+    }
 
     return ::test_result();
 }
