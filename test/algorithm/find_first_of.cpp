@@ -215,7 +215,7 @@ void test_constexpr()
     constexpr int ia[] = {0, 1, 2, 3, 0, 1, 2, 3};
     constexpr auto sa = size(ia);
     constexpr int ib[] = {1, 3, 5, 7};
-    constexpr unsigned sb = size(ib);
+    constexpr auto sb = size(ib);
     STATIC_CHECK(
         rng::find_first_of(as_lvalue(make_subrange(InputIterator<const int *>(ia),
                                                    InputIterator<const int *>(ia + sa))),
