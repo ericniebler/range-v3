@@ -189,11 +189,11 @@ inline int test_result()
           "> ERROR: CHECK failed \"" #__VA_ARGS__ "\"> " file "(" STR(line) ")")
 
 #define STATIC_CHECK_IMPL(file, line, ...)                             \
+    do                                                                 \
     {                                                                  \
         constexpr auto _ = STATIC_CHECK_LINE(file, line, __VA_ARGS__); \
         (void)_;                                                       \
-    }                                                                  \
-    /**/
+    } while(0)
 
 #define STATIC_CHECK_RETURN_IMPL(file, line, ...) \
     if (!STATIC_CHECK_LINE(file, line, __VA_ARGS__)) return false;
