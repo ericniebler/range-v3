@@ -213,7 +213,7 @@ void test_constexpr()
 {
     using namespace ranges;
     constexpr int ia[] = {0, 1, 2, 3, 0, 1, 2, 3};
-    constexpr unsigned sa = size(ia);
+    constexpr auto sa = size(ia);
     constexpr int ib[] = {1, 3, 5, 7};
     constexpr unsigned sb = size(ib);
     STATIC_CHECK(

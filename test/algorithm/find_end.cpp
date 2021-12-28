@@ -31,7 +31,7 @@ constexpr bool test_constexpr()
     auto ia_b = begin(ia);
     auto ia_e = end(ia);
 
-    constexpr unsigned sa = size(ia);
+    constexpr auto sa = size(ia);
     int b[] = {0};
     int c[] = {0, 1};
     int d[] = {0, 1, 2};
