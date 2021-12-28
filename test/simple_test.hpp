@@ -196,7 +196,7 @@ inline int test_result()
     } while(0)
 
 #define STATIC_CHECK_RETURN_IMPL(file, line, ...) \
-    if (!STATIC_CHECK_LINE(file, line, __VA_ARGS__)) return false;
+    if (!STATIC_CHECK_LINE(file, line, __VA_ARGS__)) return false
 
 // use that as a standalone check
 #define STATIC_CHECK(...) STATIC_CHECK_IMPL(__FILE__, __LINE__, __VA_ARGS__)
