@@ -21,20 +21,16 @@
 #include "../test_iterators.hpp"
 #include "../test_utils.hpp"
 
-template<typename Rng>
-constexpr auto copy_rng(Rng && input)
+constexpr bool test_constexpr()
 {
-    test::array<int, 4> tmp{{0, 0, 0, 0}};
-    auto res = ranges::copy_backward(input, ranges::end(tmp));
-    if(res.in != ranges::end(input))
-    {
-        throw 0;
-    };
-    if(res.out != ranges::begin(tmp))
-    {
-        throw 0;
-    };
-    return tmp;
+    using IL = std::initializer_list<int>;
+    constexpr test::array<int, 4> input{{0, 1, 2, 3}};
+    test::array<int, 4> a1{{0, 0, 0, 0}};
+    auto res = ranges::copy_backward(input, ranges::end(a1));
+    STATIC_CHECK_RETURN(res.in == ranges::end(input));
+    STATIC_CHECK_RETURN(res.out == ranges::begin(a1));
+    STATIC_CHECK_RETURN(ranges::equal(a1, IL{0, 1, 2, 3}));
+    return true;
 }
 
 int main()
@@ -90,9 +86,7 @@ int main()
     }
 
     {
-        constexpr auto a1 = copy_rng(test::array<int, 4>{{0, 1, 2, 3}});
-        using IL = std::initializer_list<int>;
-        STATIC_CHECK(ranges::equal(a1, IL{0, 1, 2, 3}));
+        STATIC_CHECK(test_constexpr());
     }
     return test_result();
 }
