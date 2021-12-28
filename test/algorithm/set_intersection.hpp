@@ -98,7 +98,7 @@ constexpr bool test_constexpr()
     int ia[] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4};
     int ib[4] = {2, 4, 4, 6};
     int ir[3] = {2, 4, 4};
-    constexpr int sr = size(ir);
+    constexpr auto sr = size(ir);
 
     int * res = set_intersection(ia, ib, ic, less{});
     STATIC_CHECK_RETURN((res - ic) == sr);
