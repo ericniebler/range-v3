@@ -101,14 +101,8 @@ constexpr bool test_constexpr()
     constexpr int sr = size(ir);
 
     int * res = set_intersection(ia, ib, ic, less{});
-    if((res - ic) != sr)
-    {
-        return false;
-    }
-    if(lexicographical_compare(ic, res, ir, ir + sr, less{}) != 0)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN((res - ic) == sr);
+    STATIC_CHECK_RETURN(lexicographical_compare(ic, res, ir, ir + sr, less{}) == 0);
     return true;
 }
 
@@ -282,11 +276,11 @@ int main()
         CHECK((res - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, res, ir, ir+sr, std::less<int>(), &U::k) == false);
     }
-#endif
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
+#endif
 
     return ::test_result();
 }

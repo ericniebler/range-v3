@@ -142,22 +142,10 @@ constexpr bool test_constexpr()
     int a[] = {0, 1, 1, 1, 2, 2, 2};
     const unsigned sa = sizeof(a) / sizeof(a[0]);
     auto r = unique(a, a + sa);
-    if(r != a + 3)
-    {
-        return false;
-    }
-    if(a[0] != 0)
-    {
-        return false;
-    }
-    if(a[1] != 1)
-    {
-        return false;
-    }
-    if(a[2] != 2)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(r == a + 3);
+    STATIC_CHECK_RETURN(a[0] == 0);
+    STATIC_CHECK_RETURN(a[1] == 1);
+    STATIC_CHECK_RETURN(a[2] == 2);
     return true;
 }
 
@@ -202,7 +190,7 @@ int main()
     }
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
     
     return ::test_result();

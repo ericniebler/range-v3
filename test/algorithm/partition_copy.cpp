@@ -160,50 +160,17 @@ constexpr bool test_constexpr()
     int r1[10] = {0};
     int r2[10] = {0};
     const auto p = partition_copy(ia, r1, r2, is_odd());
-    if(p.in != std::end(ia))
-    {
-        return false;
-    }
-    if(p.out1 != r1 + 4)
-    {
-        return false;
-    }
-    if(r1[0] != 1)
-    {
-        return false;
-    }
-    if(r1[1] != 3)
-    {
-        return false;
-    }
-    if(r1[2] != 5)
-    {
-        return false;
-    }
-    if(r1[3] != 7)
-    {
-        return false;
-    }
-    if(p.out2 != r2 + 4)
-    {
-        return false;
-    }
-    if(r2[0] != 2)
-    {
-        return false;
-    }
-    if(r2[1] != 4)
-    {
-        return false;
-    }
-    if(r2[2] != 6)
-    {
-        return false;
-    }
-    if(r2[3] != 8)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(p.in == std::end(ia));
+    STATIC_CHECK_RETURN(p.out1 == r1 + 4);
+    STATIC_CHECK_RETURN(r1[0] == 1);
+    STATIC_CHECK_RETURN(r1[1] == 3);
+    STATIC_CHECK_RETURN(r1[2] == 5);
+    STATIC_CHECK_RETURN(r1[3] == 7);
+    STATIC_CHECK_RETURN(p.out2 == r2 + 4);
+    STATIC_CHECK_RETURN(r2[0] == 2);
+    STATIC_CHECK_RETURN(r2[1] == 4);
+    STATIC_CHECK_RETURN(r2[2] == 6);
+    STATIC_CHECK_RETURN(r2[3] == 8);
     return true;
 }
 
@@ -219,7 +186,7 @@ int main()
     test_rvalue();
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

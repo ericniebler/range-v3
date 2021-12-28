@@ -177,20 +177,11 @@ constexpr bool test_constexpr()
     using IL = std::initializer_list<int>;
     int ia[] = {6, 5, 4, 3, 2, 1};
     prev_permutation(ia);
-    if(!equal(ia, IL{6, 5, 4, 3, 1, 2}))
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(equal(ia, IL{6, 5, 4, 3, 1, 2}));
     prev_permutation(ia);
-    if(!equal(ia, IL{6, 5, 4, 2, 3, 1}))
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(equal(ia, IL{6, 5, 4, 2, 3, 1}));
     prev_permutation(ia);
-    if(!equal(ia, IL{6, 5, 4, 2, 1, 3}))
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(equal(ia, IL{6, 5, 4, 2, 1, 3}));
     return true;
 }
 
@@ -238,7 +229,7 @@ int main()
     // etc..
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

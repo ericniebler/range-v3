@@ -59,8 +59,8 @@ int main()
 
     {
         using IL = std::initializer_list<int>;
-        static_assert(ranges::count(IL{0, 1, 2, 1, 3, 1, 4}, 1) == 3, "");
-        static_assert(ranges::count(IL{0, 1, 2, 1, 3, 1, 4}, 5) == 0, "");
+        STATIC_CHECK(ranges::count(IL{0, 1, 2, 1, 3, 1, 4}, 1) == 3);
+        STATIC_CHECK(ranges::count(IL{0, 1, 2, 1, 3, 1, 4}, 5) == 0);
     }
 
     return ::test_result();

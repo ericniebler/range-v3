@@ -184,15 +184,9 @@ constexpr bool test_constexpr()
     int ic[] = {2, 4};
     constexpr auto sa = size(ia);
     auto r = search(ia, ib, equal_to{});
-    if(r.begin() != ia + 2)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(r.begin() == ia + 2);
     auto r2 = search(ia, ic, equal_to{});
-    if(r2.begin() != ia + sa)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(r2.begin() == ia + sa);
 
     return true;
 }
@@ -255,7 +249,7 @@ int main()
     }
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

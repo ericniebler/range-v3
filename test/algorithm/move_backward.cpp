@@ -197,25 +197,21 @@ int main()
     test1<std::unique_ptr<int>*, RandomAccessIterator<std::unique_ptr<int>*> >();
     test1<std::unique_ptr<int>*, std::unique_ptr<int>*>();
 
-    static_assert(test_constexpr<BidirectionalIterator<const int *>,
-                                 BidirectionalIterator<int *>>(),
-                  "");
-    static_assert(
-        test_constexpr<BidirectionalIterator<const int *>, RandomAccessIterator<int *>>(),
-        "");
-    static_assert(test_constexpr<BidirectionalIterator<const int *>, int *>(), "");
+    STATIC_CHECK(test_constexpr<BidirectionalIterator<const int *>,
+                                BidirectionalIterator<int *>>());
+    STATIC_CHECK(test_constexpr<BidirectionalIterator<const int *>,
+                                RandomAccessIterator<int *>>());
+    STATIC_CHECK(test_constexpr<BidirectionalIterator<const int *>, int *>());
 
-    static_assert(
-        test_constexpr<RandomAccessIterator<const int *>, BidirectionalIterator<int *>>(),
-        "");
-    static_assert(
-        test_constexpr<RandomAccessIterator<const int *>, RandomAccessIterator<int *>>(),
-        "");
-    static_assert(test_constexpr<RandomAccessIterator<const int *>, int *>(), "");
+    STATIC_CHECK(test_constexpr<RandomAccessIterator<const int *>,
+                                BidirectionalIterator<int *>>());
+    STATIC_CHECK(
+        test_constexpr<RandomAccessIterator<const int *>, RandomAccessIterator<int *>>());
+    STATIC_CHECK(test_constexpr<RandomAccessIterator<const int *>, int *>());
 
-    static_assert(test_constexpr<const int *, BidirectionalIterator<int *>>(), "");
-    static_assert(test_constexpr<const int *, RandomAccessIterator<int *>>(), "");
-    static_assert(test_constexpr<const int *, int *>(), "");
+    STATIC_CHECK(test_constexpr<const int *, BidirectionalIterator<int *>>());
+    STATIC_CHECK(test_constexpr<const int *, RandomAccessIterator<int *>>());
+    STATIC_CHECK(test_constexpr<const int *, int *>());
 
     return test_result();
 }

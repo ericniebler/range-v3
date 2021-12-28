@@ -231,7 +231,7 @@ int main()
 
     {
         constexpr test::array<int, 6> a{{1, 3, 5, 2, 4, 6}};
-        static_assert(ranges::partition_point(a, is_odd()) == ranges::begin(a) + 3, "");
+        STATIC_CHECK(ranges::partition_point(a, is_odd()) == ranges::begin(a) + 3);
     }
 
     return ::test_result();

@@ -99,18 +99,18 @@ int main()
     {
         using namespace ranges;
 
-        static_assert(aux::upper_bound_n(begin(a), size(a), a[0]) == &a[1], "");
-        static_assert(aux::upper_bound_n(begin(a), size(a), a[1], less()) == &a[2], "");
+        STATIC_CHECK(aux::upper_bound_n(begin(a), size(a), a[0]) == &a[1]);
+        STATIC_CHECK(aux::upper_bound_n(begin(a), size(a), a[1], less()) == &a[2]);
 
-        static_assert(upper_bound(begin(a), end(a), a[0]) == &a[1], "");
-        static_assert(upper_bound(begin(a), end(a), a[1], less()) == &a[2], "");
-        static_assert(upper_bound(a, a[2]) == &a[3], "");
-        static_assert(upper_bound(a, a[3], less()) == &a[4], "");
+        STATIC_CHECK(upper_bound(begin(a), end(a), a[0]) == &a[1]);
+        STATIC_CHECK(upper_bound(begin(a), end(a), a[1], less()) == &a[2]);
+        STATIC_CHECK(upper_bound(a, a[2]) == &a[3]);
+        STATIC_CHECK(upper_bound(a, a[3], less()) == &a[4]);
 
-        static_assert(upper_bound(a, std::make_pair(1, 3), less()) == &a[4], "");
+        STATIC_CHECK(upper_bound(a, std::make_pair(1, 3), less()) == &a[4]);
 #if RANGES_CXX_CONSTEXPR >= RANGES_CXX_CONSTEXPR_17
         // requires constexpr std::addressof
-        static_assert(upper_bound(views::all(a), std::make_pair(1, 3), less()) == &a[4], "");
+        STATIC_CHECK(upper_bound(views::all(a), std::make_pair(1, 3), less()) == &a[4]);
 #endif
     }
 

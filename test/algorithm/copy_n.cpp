@@ -19,47 +19,17 @@ constexpr bool test_constexpr()
     using namespace ranges;
     test::array<int, 4> a{{1, 2, 3, 4}};
     test::array<int, 4> b{{0, 0, 0, 0}};
-    auto res = copy_n(begin(a), 2, ranges::begin(b));
-    if(res.first != begin(a) + 2)
-    {
-        return false;
-    };
-    if(res.second != begin(b) + 2)
-    {
-        return false;
-    };
-    if(a[0] != 1)
-    {
-        return false;
-    }
-    if(a[1] != 2)
-    {
-        return false;
-    }
-    if(a[2] != 3)
-    {
-        return false;
-    }
-    if(a[3] != 4)
-    {
-        return false;
-    }
-    if(b[0] != 1)
-    {
-        return false;
-    }
-    if(b[1] != 2)
-    {
-        return false;
-    }
-    if(b[2] != 0)
-    {
-        return false;
-    }
-    if(b[3] != 0)
-    {
-        return false;
-    }
+    const auto res = copy_n(begin(a), 2, ranges::begin(b));
+    STATIC_CHECK_RETURN(res.first == begin(a) + 2);
+    STATIC_CHECK_RETURN(res.second == begin(b) + 2);
+    STATIC_CHECK_RETURN(a[0] == 1);
+    STATIC_CHECK_RETURN(a[1] == 2);
+    STATIC_CHECK_RETURN(a[2] == 3);
+    STATIC_CHECK_RETURN(a[3] == 4);
+    STATIC_CHECK_RETURN(b[0] == 1);
+    STATIC_CHECK_RETURN(b[1] == 2);
+    STATIC_CHECK_RETURN(b[2] == 0);
+    STATIC_CHECK_RETURN(b[3] == 0);
     return true;
 }
 
@@ -67,7 +37,7 @@ int main()
 {
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return test_result();

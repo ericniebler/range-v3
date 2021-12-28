@@ -129,8 +129,8 @@ int main()
 
     {
         using IL = std::initializer_list<int>;
-        static_assert(ranges::is_partitioned(IL{1, 3, 5, 2, 4, 6}, is_odd()), "");
-        static_assert(!ranges::is_partitioned(IL{1, 3, 1, 2, 5, 6}, is_odd()), "");
+        STATIC_CHECK(ranges::is_partitioned(IL{1, 3, 5, 2, 4, 6}, is_odd()));
+        STATIC_CHECK(!ranges::is_partitioned(IL{1, 3, 1, 2, 5, 6}, is_odd()));
     }
 
     return ::test_result();

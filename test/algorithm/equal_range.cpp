@@ -206,19 +206,14 @@ int main()
     }
 
     {
-        static_assert(test_constexpr_some(), "");
-        static_assert(test_constexpr<ForwardIterator<const int *>>(), "");
-        static_assert(test_constexpr<BidirectionalIterator<const int *>>(), "");
-        static_assert(test_constexpr<RandomAccessIterator<const int *>>(), "");
-        static_assert(test_constexpr<const int *>(), "");
-        static_assert(
-            test_constexpr<ForwardIterator<const int *>, Sentinel<const int *>>(), "");
-        static_assert(
-            test_constexpr<BidirectionalIterator<const int *>, Sentinel<const int *>>(),
-            "");
-        static_assert(
-            test_constexpr<RandomAccessIterator<const int *>, Sentinel<const int *>>(),
-            "");
+        STATIC_CHECK(test_constexpr_some());
+        STATIC_CHECK(test_constexpr<ForwardIterator<const int *>>());
+        STATIC_CHECK(test_constexpr<BidirectionalIterator<const int *>>());
+        STATIC_CHECK(test_constexpr<RandomAccessIterator<const int *>>());
+        STATIC_CHECK(test_constexpr<const int *>());
+        STATIC_CHECK(test_constexpr<ForwardIterator<const int *>, Sentinel<const int *>>());
+        STATIC_CHECK(test_constexpr<BidirectionalIterator<const int *>, Sentinel<const int *>>());
+        STATIC_CHECK(test_constexpr<RandomAccessIterator<const int *>, Sentinel<const int *>>());
     }
 
     return ::test_result();

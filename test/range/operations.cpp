@@ -80,71 +80,23 @@ constexpr bool test_constexpr()
     auto eit = ranges::end(rng);
     auto n = ranges::distance(rng);
     auto en = ranges::enumerate(rng);
-    if(n != 10)
-    {
-        return false;
-    }
-    if(distance(bit, eit) != n)
-    {
-        return false;
-    }
-    if(distance(it, eit) != 5)
-    {
-        return false;
-    }
-    if(distance_compare(bit, eit, n) != 0)
-    {
-        return false;
-    }
-    if(distance_compare(bit, eit, n - 1) <= 0)
-    {
-        return false;
-    }
-    if(distance_compare(bit, eit, n + 1) >= 0)
-    {
-        return false;
-    }
-    if(distance_compare(bit, eit, (std::numeric_limits<iter_difference_t<I>>::min)()) <=
-       0)
-    {
-        return false;
-    }
-    if(distance_compare(bit, eit, (std::numeric_limits<iter_difference_t<I>>::max)()) >=
-       0)
-    {
-        return false;
-    }
-    if(distance(rng) != n)
-    {
-        return false;
-    }
-    if(distance_compare(rng, n) != 0)
-    {
-        return false;
-    }
-    if(distance_compare(rng, n - 1) <= 0)
-    {
-        return false;
-    }
-    if(distance_compare(rng, n + 1) >= 0)
-    {
-        return false;
-    }
-    static_assert(
-        distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::min)()) > 0,
-        "");
-    static_assert(
-        distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::max)()) < 0,
-        "");
+    STATIC_CHECK_RETURN(n == 10);
+    STATIC_CHECK_RETURN(distance(bit, eit) == n);
+    STATIC_CHECK_RETURN(distance(it, eit) == 5);
+    STATIC_CHECK_RETURN(distance_compare(bit, eit, n) == 0);
+    STATIC_CHECK_RETURN(distance_compare(bit, eit, n - 1) > 0);
+    STATIC_CHECK_RETURN(distance_compare(bit, eit, n + 1) < 0);
+    STATIC_CHECK_RETURN(distance_compare(bit, eit, (std::numeric_limits<iter_difference_t<I>>::min)()) > 0);
+    STATIC_CHECK_RETURN(distance_compare(bit, eit, (std::numeric_limits<iter_difference_t<I>>::max)()) < 0);
+    STATIC_CHECK_RETURN(distance(rng) == n);
+    STATIC_CHECK_RETURN(distance_compare(rng, n) == 0);
+    STATIC_CHECK_RETURN(distance_compare(rng, n - 1) > 0);
+    STATIC_CHECK_RETURN(distance_compare(rng, n + 1) < 0);
+    STATIC_CHECK_RETURN(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::min)()) > 0);
+    STATIC_CHECK_RETURN(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::max)()) < 0);
 
-    if(en.first != 10)
-    {
-        return false;
-    }
-    if(en.second != eit)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(en.first == 10);
+    STATIC_CHECK_RETURN(en.second == eit);
 
     return true;
 }
@@ -200,7 +152,7 @@ int main()
     }
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

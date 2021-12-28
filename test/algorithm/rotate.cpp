@@ -255,38 +255,14 @@ constexpr bool test_constexpr()
 {
     int rgi[] = {0, 1, 2, 3, 4, 5};
     auto r = ranges::rotate(rgi, rgi + 2);
-    if(r.begin() != rgi + 4)
-    {
-        return false;
-    }
-    if(r.end() != ranges::end(rgi))
-    {
-        return false;
-    }
-    if(rgi[0] != 2)
-    {
-        return false;
-    }
-    if(rgi[1] != 3)
-    {
-        return false;
-    }
-    if(rgi[2] != 4)
-    {
-        return false;
-    }
-    if(rgi[3] != 5)
-    {
-        return false;
-    }
-    if(rgi[4] != 0)
-    {
-        return false;
-    }
-    if(rgi[5] != 1)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(r.begin() == rgi + 4);
+    STATIC_CHECK_RETURN(r.end() == ranges::end(rgi));
+    STATIC_CHECK_RETURN(rgi[0] == 2);
+    STATIC_CHECK_RETURN(rgi[1] == 3);
+    STATIC_CHECK_RETURN(rgi[2] == 4);
+    STATIC_CHECK_RETURN(rgi[3] == 5);
+    STATIC_CHECK_RETURN(rgi[4] == 0);
+    STATIC_CHECK_RETURN(rgi[5] == 1);
     return true;
 }
 
@@ -339,7 +315,7 @@ int main()
     }
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

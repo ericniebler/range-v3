@@ -216,35 +216,31 @@ void test_constexpr()
     constexpr unsigned sa = size(ia);
     constexpr int ib[] = {1, 3, 5, 7};
     constexpr unsigned sb = size(ib);
-    static_assert(
+    STATIC_CHECK(
         rng::find_first_of(as_lvalue(make_subrange(InputIterator<const int *>(ia),
                                                    InputIterator<const int *>(ia + sa))),
                            make_subrange(ForwardIterator<const int *>(ib),
                                          ForwardIterator<const int *>(ib + sb)),
-                           equal_to{}) == InputIterator<const int *>(ia + 1),
-        "");
+                           equal_to{}) == InputIterator<const int *>(ia + 1));
     constexpr int ic[] = {7};
-    static_assert(
+    STATIC_CHECK(
         rng::find_first_of(as_lvalue(make_subrange(InputIterator<const int *>(ia),
                                                    InputIterator<const int *>(ia + sa))),
                            make_subrange(ForwardIterator<const int *>(ic),
                                          ForwardIterator<const int *>(ic + 1)),
-                           equal_to{}) == InputIterator<const int *>(ia + sa),
-        "");
-    static_assert(
+                           equal_to{}) == InputIterator<const int *>(ia + sa));
+    STATIC_CHECK(
         rng::find_first_of(as_lvalue(make_subrange(InputIterator<const int *>(ia),
                                                    InputIterator<const int *>(ia + sa))),
                            make_subrange(ForwardIterator<const int *>(ic),
                                          ForwardIterator<const int *>(ic)),
-                           equal_to{}) == InputIterator<const int *>(ia + sa),
-        "");
-    static_assert(
+                           equal_to{}) == InputIterator<const int *>(ia + sa));
+    STATIC_CHECK(
         rng::find_first_of(as_lvalue(make_subrange(InputIterator<const int *>(ia),
                                                    InputIterator<const int *>(ia))),
                            make_subrange(ForwardIterator<const int *>(ic),
                                          ForwardIterator<const int *>(ic + 1)),
-                           equal_to{}) == InputIterator<const int *>(ia),
-        "");
+                           equal_to{}) == InputIterator<const int *>(ia));
 }
 
 int main()

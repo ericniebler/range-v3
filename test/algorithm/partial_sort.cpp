@@ -24,10 +24,11 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/partial_sort.hpp>
+
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
-#include "../array.hpp"
 
 RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
 RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
@@ -149,10 +150,7 @@ constexpr bool test_constexpr()
     ranges::partial_sort(v, v.begin() + v.size() / 2, ranges::less{});
     for(int i = 0; (std::size_t)i < v.size() / 2; ++i)
     {
-        if(v[i] != i)
-        {
-            return false;
-        };
+        STATIC_CHECK_RETURN(v[i] == i);
     }
     return true;
 }
@@ -199,7 +197,7 @@ int main()
     }
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

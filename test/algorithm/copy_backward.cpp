@@ -15,6 +15,7 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/copy_backward.hpp>
+
 #include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
@@ -91,7 +92,7 @@ int main()
     {
         constexpr auto a1 = copy_rng(test::array<int, 4>{{0, 1, 2, 3}});
         using IL = std::initializer_list<int>;
-        static_assert(ranges::equal(a1, IL{0, 1, 2, 3}), "");
+        STATIC_CHECK(ranges::equal(a1, IL{0, 1, 2, 3}));
     }
     return test_result();
 }

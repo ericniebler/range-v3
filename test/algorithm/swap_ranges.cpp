@@ -197,38 +197,14 @@ constexpr bool test_constexpr()
     int i[3] = {1, 2, 3};
     int j[3] = {4, 5, 6};
     const auto r = ranges::swap_ranges(i, j);
-    if(r.in1 != i + 3)
-    {
-        return false;
-    }
-    if(r.in2 != j + 3)
-    {
-        return false;
-    }
-    if(i[0] != 4)
-    {
-        return false;
-    }
-    if(i[1] != 5)
-    {
-        return false;
-    }
-    if(i[2] != 6)
-    {
-        return false;
-    }
-    if(j[0] != 1)
-    {
-        return false;
-    }
-    if(j[1] != 2)
-    {
-        return false;
-    }
-    if(j[2] != 3)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(r.in1 == i + 3);
+    STATIC_CHECK_RETURN(r.in2 == j + 3);
+    STATIC_CHECK_RETURN(i[0] == 4);
+    STATIC_CHECK_RETURN(i[1] == 5);
+    STATIC_CHECK_RETURN(i[2] == 6);
+    STATIC_CHECK_RETURN(j[0] == 1);
+    STATIC_CHECK_RETURN(j[1] == 2);
+    STATIC_CHECK_RETURN(j[2] == 3);
     return true;
 }
 
@@ -285,7 +261,7 @@ int main()
     }
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
     
     return ::test_result();

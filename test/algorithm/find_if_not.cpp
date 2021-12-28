@@ -44,8 +44,8 @@ int main()
 
     {
         using IL = std::initializer_list<int>;
-        static_assert(contains_other_than_three(IL{3, 3, 2, 3}), "");
-        static_assert(!contains_other_than_three(IL{3, 3, 3}), "");
+        STATIC_CHECK(contains_other_than_three(IL{3, 3, 2, 3}));
+        STATIC_CHECK(!contains_other_than_three(IL{3, 3, 3}));
     }
 
     return ::test_result();

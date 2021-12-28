@@ -1061,7 +1061,7 @@ int main()
 
     {
         using IL = std::initializer_list<int>;
-        static_assert(ranges::is_heap(IL{0, 1, 1, 1, 1, 1, 1}, ranges::greater{}), "");
+        STATIC_CHECK(ranges::is_heap(IL{0, 1, 1, 1, 1, 1, 1}, ranges::greater{}));
     }
 
     return ::test_result();

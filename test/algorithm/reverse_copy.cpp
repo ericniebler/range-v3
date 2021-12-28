@@ -127,56 +127,18 @@ constexpr bool test_constexpr()
     int ib[5] = {0};
     constexpr unsigned sa = ranges::size(ia);
     const auto r = ranges::reverse_copy(ia, ib);
-    if(r.in != ia + sa)
-    {
-        return false;
-    }
-    if(r.out != ib + sa)
-    {
-        return false;
-    }
-
-    if(ia[0] != 0)
-    {
-        return false;
-    }
-    if(ia[1] != 1)
-    {
-        return false;
-    }
-    if(ia[2] != 2)
-    {
-        return false;
-    }
-    if(ia[3] != 3)
-    {
-        return false;
-    }
-    if(ia[4] != 4)
-    {
-        return false;
-    }
-
-    if(ib[0] != 4)
-    {
-        return false;
-    }
-    if(ib[1] != 3)
-    {
-        return false;
-    }
-    if(ib[2] != 2)
-    {
-        return false;
-    }
-    if(ib[3] != 1)
-    {
-        return false;
-    }
-    if(ib[4] != 0)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(r.in == ia + sa);
+    STATIC_CHECK_RETURN(r.out == ib + sa);
+    STATIC_CHECK_RETURN(ia[0] == 0);
+    STATIC_CHECK_RETURN(ia[1] == 1);
+    STATIC_CHECK_RETURN(ia[2] == 2);
+    STATIC_CHECK_RETURN(ia[3] == 3);
+    STATIC_CHECK_RETURN(ia[4] == 4);
+    STATIC_CHECK_RETURN(ib[0] == 4);
+    STATIC_CHECK_RETURN(ib[1] == 3);
+    STATIC_CHECK_RETURN(ib[2] == 2);
+    STATIC_CHECK_RETURN(ib[3] == 1);
+    STATIC_CHECK_RETURN(ib[4] == 0);
 
     return true;
 }
@@ -220,7 +182,7 @@ int main()
     test<const int*, int*>();
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

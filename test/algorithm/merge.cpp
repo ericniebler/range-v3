@@ -19,6 +19,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/merge.hpp>
 #include <range/v3/algorithm/is_sorted.hpp>
+
 #include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
@@ -37,30 +38,12 @@ constexpr bool test_constexpr()
     for(unsigned i = 0; i < N; ++i)
         ib[i] = 2 * i + 1;
     auto r = merge(ia, ib, begin(ic));
-    if(r.in1 != end(ia))
-    {
-        return false;
-    }
-    if(r.in2 != end(ib))
-    {
-        return false;
-    }
-    if(r.out != end(ic))
-    {
-        return false;
-    }
-    if(ic[0] != 0)
-    {
-        return false;
-    }
-    if(ic[2 * N - 1] != (int)(2 * N - 1))
-    {
-        return false;
-    }
-    if(!is_sorted(ic))
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(r.in1 == end(ia));
+    STATIC_CHECK_RETURN(r.in2 == end(ib));
+    STATIC_CHECK_RETURN(r.out == end(ic));
+    STATIC_CHECK_RETURN(ic[0] == 0);
+    STATIC_CHECK_RETURN(ic[2 * N - 1] == (int)(2 * N - 1));
+    STATIC_CHECK_RETURN(is_sorted(ic));
     return true;
 }
 
@@ -130,7 +113,7 @@ int main()
     }
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

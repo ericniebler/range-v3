@@ -12,6 +12,7 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/for_each.hpp>
+
 #include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
@@ -55,7 +56,7 @@ int main()
 
     {
         constexpr auto rng = test::array<int, 4>{{0, 2, 4, 6}};
-        static_assert(ranges::for_each(rng, void_f).in == ranges::end(rng), "");
+        STATIC_CHECK(ranges::for_each(rng, void_f).in == ranges::end(rng));
     }
 
     return ::test_result();

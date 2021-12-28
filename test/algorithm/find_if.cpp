@@ -108,8 +108,8 @@ int main()
 
     {
         using IL = std::initializer_list<int>;
-        static_assert(contains_three(IL{0, 1, 2, 3}), "");
-        static_assert(!contains_three(IL{0, 1, 2}), "");
+        STATIC_CHECK(contains_three(IL{0, 1, 2, 3}));
+        STATIC_CHECK(!contains_three(IL{0, 1, 2}));
     }
 
     return ::test_result();

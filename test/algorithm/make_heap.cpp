@@ -28,6 +28,7 @@
 #include <functional>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
+
 #include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -200,20 +201,13 @@ namespace
     constexpr bool test_constexpr()
     {
         using namespace ranges;
-        bool r = true;
         constexpr int N = 100;
         test::array<int, N> ia{{0}};
         for(int i = 0; i < N; ++i)
             ia[i] = N - 1 - i;
-        if(make_heap(begin(ia), end(ia), std::less<int>{}) != end(ia))
-        {
-            r = false;
-        }
-        if(!is_heap(begin(ia), end(ia)))
-        {
-            r = false;
-        }
-        return r;
+        STATIC_CHECK_RETURN(make_heap(begin(ia), end(ia), std::less<int>{}) == end(ia));
+        STATIC_CHECK_RETURN(is_heap(begin(ia), end(ia)));
+        return true;
     }
 }
 
@@ -229,7 +223,7 @@ int main()
     test_10(1000);
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return test_result();

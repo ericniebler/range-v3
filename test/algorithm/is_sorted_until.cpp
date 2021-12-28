@@ -413,18 +413,9 @@ constexpr bool test_constexpr()
     auto b = ranges::begin(a);
     auto b1 = ++b;
     auto end = ranges::end(a);
-    if(ranges::is_sorted_until(a) != end)
-    {
-        return false;
-    }
-    if(ranges::is_sorted_until(a, std::less<>{}) != end)
-    {
-        return false;
-    }
-    if(ranges::is_sorted_until(a, std::greater<>{}) != b1)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(ranges::is_sorted_until(a) == end);
+    STATIC_CHECK_RETURN(ranges::is_sorted_until(a, std::less<>{}) == end);
+    STATIC_CHECK_RETURN(ranges::is_sorted_until(a, std::greater<>{}) == b1);
     return true;
 }
 
@@ -471,7 +462,7 @@ int main()
     }
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

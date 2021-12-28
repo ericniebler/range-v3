@@ -67,9 +67,9 @@ int main()
   CHECK(ranges::any_of(ILS{S(false), S(true), S(false)}, &S::p));
   CHECK(!ranges::any_of(ILS{S(false), S(false), S(false)}, &S::p));
 
-  static_assert(test_constexpr({0, 2, 4, 6}), "");
-  static_assert(test_constexpr({1, 3, 4, 7}), "");
-  static_assert(!test_constexpr({1, 3, 5, 7}), "");
+  STATIC_CHECK(test_constexpr({0, 2, 4, 6}));
+  STATIC_CHECK(test_constexpr({1, 3, 4, 7}));
+  STATIC_CHECK(!test_constexpr({1, 3, 5, 7}));
 
   return ::test_result();
 }

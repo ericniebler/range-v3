@@ -24,6 +24,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/fill.hpp>
 #include <range/v3/algorithm/equal.hpp>
+
 #include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -114,9 +115,9 @@ int main()
 
     {
         using IL = std::initializer_list<int>;
-        static_assert(ranges::equal(fives(), IL{5, 5, 5, 5}), "");
-        static_assert(ranges::equal(fives(2), IL{5, 5, 0, 0}), "");
-        static_assert(!ranges::equal(fives(2), IL{5, 5, 5, 5}), "");
+        STATIC_CHECK(ranges::equal(fives(), IL{5, 5, 5, 5}));
+        STATIC_CHECK(ranges::equal(fives(2), IL{5, 5, 0, 0}));
+        STATIC_CHECK(!ranges::equal(fives(2), IL{5, 5, 5, 5}));
     }
 
     return ::test_result();

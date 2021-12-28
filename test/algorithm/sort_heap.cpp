@@ -49,14 +49,8 @@ namespace
         for(int i = 0; i < N; ++i)
             ia[i] = N - 1 - i;
         make_heap(begin(ia), end(ia));
-        if(sort_heap(begin(ia), end(ia), ranges::less{}) != end(ia))
-        {
-            r = false;
-        }
-        if(!is_sorted(ia))
-        {
-            r = false;
-        }
+        STATIC_CHECK_RETURN(sort_heap(begin(ia), end(ia), ranges::less{}) == end(ia));
+        STATIC_CHECK_RETURN(is_sorted(ia));
         return r;
     }
 
@@ -224,7 +218,7 @@ int main()
     test_10(1000);
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return test_result();

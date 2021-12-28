@@ -122,16 +122,13 @@ constexpr bool test_constexpr()
     int output[9] = {0};
     int * r = partial_sort_copy(IL{5, 3, 4, 1, 8, 2, 6, 7, 0, 9}, output, less{});
     int * e = output + 9;
-    if(r != e)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(r == e);
+
     int i = 0;
     for(int * x = output; x < e; ++x, ++i)
-        if(*x != i)
-        {
-            return false;
-        }
+    {
+        STATIC_CHECK_RETURN(*x == i);
+    }
     return true;
 }
 
@@ -194,7 +191,7 @@ int main()
     }
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

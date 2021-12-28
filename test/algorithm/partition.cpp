@@ -27,10 +27,11 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/partition.hpp>
+
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
-#include "../array.hpp"
 
 RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
 
@@ -191,37 +192,27 @@ constexpr bool test_constexpr()
     using namespace ranges;
     test::array<int, 9> ia{{1, 2, 3, 4, 5, 6, 7, 8, 9}};
     int * r = partition(ia, is_odd());
-    if(r != begin(ia) + 5)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(r == begin(ia) + 5);
     for(int * i = begin(ia); i < r; ++i)
-        if(!is_odd()(*i))
-        {
-            return false;
-        }
+    {
+        STATIC_CHECK_RETURN(is_odd()(*i));
+    }
     for(int * i = r; i < end(ia); ++i)
-        if(is_odd()(*i))
-        {
-            return false;
-        }
-
+    {
+        STATIC_CHECK_RETURN(!is_odd()(*i));
+    }
+    
     // Test rvalue range
     auto r2 = partition(make_subrange(begin(ia), end(ia)), is_odd());
-    if(r2 != begin(ia) + 5)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(r2 == begin(ia) + 5);
     for(int * i = begin(ia); i < r2; ++i)
-        if(!is_odd()(*i))
-        {
-            return false;
-        }
+    {
+        STATIC_CHECK_RETURN(is_odd()(*i));
+    }
     for(int * i = r2; i < end(ia); ++i)
-        if(is_odd()(*i))
-        {
-            return false;
-        }
+    {
+        STATIC_CHECK_RETURN(!is_odd()(*i));
+    }
     return true;
 }
 
@@ -263,7 +254,7 @@ int main()
     CHECK(::is_dangling(r3));
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

@@ -407,10 +407,10 @@ int main()
 
     {
         using IL = std::initializer_list<int>;
-        static_assert(ranges::is_sorted(IL{0, 1, 2, 3}), "");
-        static_assert(ranges::is_sorted(IL{0, 1, 2, 3}, std::less<>{}), "");
-        static_assert(!ranges::is_sorted(IL{3, 2, 1, 0}), "");
-        static_assert(ranges::is_sorted(IL{3, 2, 1, 0}, std::greater<>{}), "");
+        STATIC_CHECK(ranges::is_sorted(IL{0, 1, 2, 3}));
+        STATIC_CHECK(ranges::is_sorted(IL{0, 1, 2, 3}, std::less<>{}));
+        STATIC_CHECK(!ranges::is_sorted(IL{3, 2, 1, 0}));
+        STATIC_CHECK(ranges::is_sorted(IL{3, 2, 1, 0}, std::greater<>{}));
     }
 
     return ::test_result();

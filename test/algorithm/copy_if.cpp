@@ -24,56 +24,24 @@ constexpr bool test_constexpr()
     using namespace ranges;
     test::array<int, 4> a{{1, 2, 3, 4}};
     test::array<int, 4> b{{0, 0, 0, 0}};
-    auto res = copy_if(a, ranges::begin(b), is_even);
-    if(res.in != end(a))
-    {
-        return false;
-    };
-    if(res.out != begin(b) + 2)
-    {
-        return false;
-    };
-    if(a[0] != 1)
-    {
-        return false;
-    }
-    if(a[1] != 2)
-    {
-        return false;
-    }
-    if(a[2] != 3)
-    {
-        return false;
-    }
-    if(a[3] != 4)
-    {
-        return false;
-    }
-    if(b[0] != 2)
-    {
-        return false;
-    }
-    if(b[1] != 4)
-    {
-        return false;
-    }
-    if(b[2] != 0)
-    {
-        return false;
-    }
-    if(b[3] != 0)
-    {
-        return false;
-    }
+    const auto res = copy_if(a, ranges::begin(b), is_even);
+    STATIC_CHECK_RETURN(res.in == end(a));
+    STATIC_CHECK_RETURN(res.out == begin(b) + 2);
+    STATIC_CHECK_RETURN(a[0] == 1);
+    STATIC_CHECK_RETURN(a[1] == 2);
+    STATIC_CHECK_RETURN(a[2] == 3);
+    STATIC_CHECK_RETURN(a[3] == 4);
+    STATIC_CHECK_RETURN(b[0] == 2);
+    STATIC_CHECK_RETURN(b[1] == 4);
+    STATIC_CHECK_RETURN(b[2] == 0);
+    STATIC_CHECK_RETURN(b[3] == 0);
     return true;
 }
 
 int main()
 {
 
-    {
-        static_assert(test_constexpr(), "");
-    }
+    STATIC_CHECK(test_constexpr());
 
     return test_result();
 }

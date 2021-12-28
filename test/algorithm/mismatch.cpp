@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/mismatch.hpp>
+
 #include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -136,13 +137,13 @@ int main()
     CHECK(ps2.in1->i == -4);
     CHECK(ps2.in2->i == 5);
 
-    constexpr auto r1 = test::array<int, 11>{1, 2, 3, 4, -4, 5, 6, 40, 7, 8, 9};
-    constexpr auto r11 = test::array<int, 9>{1, 2, 3, 4, 5, 6, 7, 8, 9};
-    constexpr auto r2 = test::array<int, 10>{1, 2, 3, 4, 5, 6, 40, 7, 8, 9};
-    static_assert(*ranges::mismatch(r1, r11, std::equal_to<int>{}).in1 == -4, "");
-    static_assert(*ranges::mismatch(r1, r11, std::equal_to<int>{}).in2 == 5, "");
-    static_assert(*ranges::mismatch(r1, r2, std::equal_to<int>{}).in1 == -4, "");
-    static_assert(*ranges::mismatch(r1, r2, std::equal_to<int>{}).in2 == 5, "");
+    constexpr auto r1 = test::array<int, 11>{{1, 2, 3, 4, -4, 5, 6, 40, 7, 8, 9}};
+    constexpr auto r11 = test::array<int, 9>{{1, 2, 3, 4, 5, 6, 7, 8, 9}};
+    constexpr auto r2 = test::array<int, 10>{{1, 2, 3, 4, 5, 6, 40, 7, 8, 9}};
+    STATIC_CHECK(*ranges::mismatch(r1, r11, std::equal_to<int>{}).in1 == -4);
+    STATIC_CHECK(*ranges::mismatch(r1, r11, std::equal_to<int>{}).in2 == 5);
+    STATIC_CHECK(*ranges::mismatch(r1, r2, std::equal_to<int>{}).in1 == -4);
+    STATIC_CHECK(*ranges::mismatch(r1, r2, std::equal_to<int>{}).in2 == 5);
 
     return test_result();
 }

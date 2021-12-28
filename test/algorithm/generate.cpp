@@ -188,13 +188,13 @@ int main()
 
     test2();
 
-    static_assert(test_constexpr<ForwardIterator<int *>>(), "");
-    static_assert(test_constexpr<BidirectionalIterator<int *>>(), "");
-    static_assert(test_constexpr<RandomAccessIterator<int *>>(), "");
-    static_assert(test_constexpr<int *>(), "");
-    static_assert(test_constexpr<ForwardIterator<int *>, Sentinel<int *>>(), "");
-    static_assert(test_constexpr<BidirectionalIterator<int *>, Sentinel<int *>>(), "");
-    static_assert(test_constexpr<RandomAccessIterator<int *>, Sentinel<int *>>(), "");
+    STATIC_CHECK(test_constexpr<ForwardIterator<int *>>());
+    STATIC_CHECK(test_constexpr<BidirectionalIterator<int *>>());
+    STATIC_CHECK(test_constexpr<RandomAccessIterator<int *>>());
+    STATIC_CHECK(test_constexpr<int *>());
+    STATIC_CHECK(test_constexpr<ForwardIterator<int *>, Sentinel<int *>>());
+    STATIC_CHECK(test_constexpr<BidirectionalIterator<int *>, Sentinel<int *>>());
+    STATIC_CHECK(test_constexpr<RandomAccessIterator<int *>, Sentinel<int *>>());
     
     return ::test_result();
 }

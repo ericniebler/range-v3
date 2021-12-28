@@ -28,10 +28,11 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
+
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
-#include "../array.hpp"
 
 void test_basic()
 {
@@ -1048,12 +1049,6 @@ struct S
     int i;
 };
 
-constexpr bool test_constexpr()
-{
-    test::array<int, 7> i{{1, 0, 0, 0, 0, 0, 1}};
-    return ranges::is_heap_until(i, ranges::greater{}) == ranges::begin(i) + 1;
-}
-
 int main()
 {
     test_basic();
@@ -1073,9 +1068,12 @@ int main()
     auto res1 = ranges::is_heap_until(std::move(vec), std::greater<int>(), &S::i);
     CHECK(::is_dangling(res1));
 
+#ifdef IS_HEAP_UNTIL_3
     {
-        static_assert(test_constexpr(), "");
+        constexpr test::array<int, 7> i{{1, 0, 0, 0, 0, 0, 1}};
+        STATIC_CHECK(ranges::is_heap_until(i, ranges::greater{}) == ranges::begin(i) + 1);
     }
+#endif
 
     return ::test_result();
 }

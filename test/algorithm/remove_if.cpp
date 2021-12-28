@@ -138,34 +138,13 @@ constexpr bool test_constexpr()
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
     constexpr unsigned sa = ranges::size(ia);
     auto r = ranges::remove_if(ia, equals_two);
-    if(r != ia + sa - 3)
-    {
-        return false;
-    }
-    if(ia[0] != 0)
-    {
-        return false;
-    }
-    if(ia[1] != 1)
-    {
-        return false;
-    }
-    if(ia[2] != 3)
-    {
-        return false;
-    }
-    if(ia[3] != 4)
-    {
-        return false;
-    }
-    if(ia[4] != 3)
-    {
-        return false;
-    }
-    if(ia[5] != 4)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(r == ia + sa - 3);
+    STATIC_CHECK_RETURN(ia[0] == 0);
+    STATIC_CHECK_RETURN(ia[1] == 1);
+    STATIC_CHECK_RETURN(ia[2] == 3);
+    STATIC_CHECK_RETURN(ia[3] == 4);
+    STATIC_CHECK_RETURN(ia[4] == 3);
+    STATIC_CHECK_RETURN(ia[5] == 4);
     return true;
 }
 
@@ -245,7 +224,7 @@ int main()
     }
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

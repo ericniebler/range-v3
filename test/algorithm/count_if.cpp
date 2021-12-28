@@ -81,8 +81,8 @@ int main()
 
     {
         using IL = std::initializer_list<int>;
-        static_assert(ranges::count_if(IL{0, 1, 2, 1, 3, 1, 4}, even) == 3, "");
-        static_assert(ranges::count_if(IL{1, 1, 3, 1}, even) == 0, "");
+        STATIC_CHECK(ranges::count_if(IL{0, 1, 2, 1, 3, 1, 4}, even) == 3);
+        STATIC_CHECK(ranges::count_if(IL{1, 1, 3, 1}, even) == 0);
     }
 
     return ::test_result();

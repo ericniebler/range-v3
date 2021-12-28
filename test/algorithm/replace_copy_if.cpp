@@ -86,34 +86,13 @@ constexpr bool test_constexpr()
     int ib[5] = {0};
     constexpr unsigned sa = ranges::size(ia);
     const auto r = ranges::replace_copy_if(ia, ib, equals_two, 42);
-    if(r.in != ia + sa)
-    {
-        return false;
-    }
-    if(r.out != ib + sa)
-    {
-        return false;
-    }
-    if(ib[0] != 0)
-    {
-        return false;
-    }
-    if(ib[1] != 1)
-    {
-        return false;
-    }
-    if(ib[2] != 42)
-    {
-        return false;
-    }
-    if(ib[3] != 3)
-    {
-        return false;
-    }
-    if(ib[4] != 4)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(r.in == ia + sa);
+    STATIC_CHECK_RETURN(r.out == ib + sa);
+    STATIC_CHECK_RETURN(ib[0] == 0);
+    STATIC_CHECK_RETURN(ib[1] == 1);
+    STATIC_CHECK_RETURN(ib[2] == 42);
+    STATIC_CHECK_RETURN(ib[3] == 3);
+    STATIC_CHECK_RETURN(ib[4] == 4);
     return true;
 }
 
@@ -166,7 +145,7 @@ int main()
     }
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

@@ -45,50 +45,17 @@ constexpr bool test_constexpr()
     int r2[10] = {0};
     typedef std::tuple<int const *, int *, int *> P;
     P p = partition_move(ia, r1, r2, is_odd());
-    if(std::get<0>(p) != std::end(ia))
-    {
-        return false;
-    }
-    if(std::get<1>(p) != r1 + 4)
-    {
-        return false;
-    }
-    if(r1[0] != 1)
-    {
-        return false;
-    }
-    if(r1[1] != 3)
-    {
-        return false;
-    }
-    if(r1[2] != 5)
-    {
-        return false;
-    }
-    if(r1[3] != 7)
-    {
-        return false;
-    }
-    if(std::get<2>(p) != r2 + 4)
-    {
-        return false;
-    }
-    if(r2[0] != 2)
-    {
-        return false;
-    }
-    if(r2[1] != 4)
-    {
-        return false;
-    }
-    if(r2[2] != 6)
-    {
-        return false;
-    }
-    if(r2[3] != 8)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(std::get<0>(p) == std::end(ia));
+    STATIC_CHECK_RETURN(std::get<1>(p) == r1 + 4);
+    STATIC_CHECK_RETURN(r1[0] == 1);
+    STATIC_CHECK_RETURN(r1[1] == 3);
+    STATIC_CHECK_RETURN(r1[2] == 5);
+    STATIC_CHECK_RETURN(r1[3] == 7);
+    STATIC_CHECK_RETURN(std::get<2>(p) == r2 + 4);
+    STATIC_CHECK_RETURN(r2[0] == 2);
+    STATIC_CHECK_RETURN(r2[1] == 4);
+    STATIC_CHECK_RETURN(r2[2] == 6);
+    STATIC_CHECK_RETURN(r2[3] == 8);
     return true;
 }
 
@@ -96,7 +63,7 @@ int main()
 {
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

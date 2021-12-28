@@ -71,9 +71,9 @@ int main()
 
 #ifdef RANGES_CXX_GREATER_THAN_11
     {
-        static_assert(ranges::equal(fives(), {5, 5, 5, 5}), "");
-        static_assert(ranges::equal(fives(2), {5, 5, 0, 0}), "");
-        static_assert(!ranges::equal(fives(2), {5, 5, 5, 5}), "");
+        STATIC_CHECK(ranges::equal(fives(), {5, 5, 5, 5}));
+        STATIC_CHECK(ranges::equal(fives(2), {5, 5, 0, 0}));
+        STATIC_CHECK(!ranges::equal(fives(2), {5, 5, 5, 5}));
     }
 #endif
 

@@ -104,9 +104,9 @@ int main()
 
     {
         using IL = std::initializer_list<int>;
-        static_assert(ret_val(IL{1, 2}, 2) == 2, "");
-        static_assert(found(IL{1, 3, 4}, 4), "");
-        static_assert(!found(IL{1, 3, 4}, 5), "");
+        STATIC_CHECK(ret_val(IL{1, 2}, 2) == 2);
+        STATIC_CHECK(found(IL{1, 3, 4}, 4));
+        STATIC_CHECK(!found(IL{1, 3, 4}, 5));
     }
 
     return ::test_result();

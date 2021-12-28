@@ -24,6 +24,7 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/min_element.hpp>
+
 #include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -163,8 +164,8 @@ int main()
     CHECK(ps->i == -4);
 
     {
-        constexpr auto a = test::array<int, 10>{1, 2, 3, 4, -4, 5, 6, 7, 8, 9};
-        static_assert(ranges::min_element(a) == ranges::begin(a) + 4, "");
+        constexpr auto a = test::array<int, 10>{{1, 2, 3, 4, -4, 5, 6, 7, 8, 9}};
+        STATIC_CHECK(ranges::min_element(a) == ranges::begin(a) + 4);
     }
 
     return test_result();

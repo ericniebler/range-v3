@@ -196,10 +196,7 @@ constexpr bool test_constexpr()
     using namespace ranges;
     int ia[] = {0, 1, 2, 2, 4, 5};
     auto r = search_n(ia, 2, 2, equal_to{});
-    if(r.begin() != ia + 2)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(r.begin() == ia + 2);
 
     return true;
 }
@@ -259,7 +256,7 @@ int main()
     }
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

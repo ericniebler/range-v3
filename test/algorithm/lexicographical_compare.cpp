@@ -169,7 +169,6 @@ void test_iter_comp()
 
 constexpr bool test_constexpr()
 {
-    bool r = true;
     test::array<int, 4> ia{{1, 2, 3, 4}};
     test::array<int, 3> ib{{1, 2, 3}};
     auto ia_b = ranges::begin(ia);
@@ -179,58 +178,22 @@ constexpr bool test_constexpr()
     auto ib_2 = ib_b + 2;
     auto ib_3 = ib_b + 3;
 
-    if(!(!ranges::lexicographical_compare(ia_b, ia_e, ib_b, ib_2)))
-    {
-        r = false;
-    }
-    if(!(ranges::lexicographical_compare(ib_b, ib_2, ia_b, ia_e)))
-    {
-        r = false;
-    }
-    if(!(!ranges::lexicographical_compare(ia_b, ia_e, ib_b, ib_3)))
-    {
-        r = false;
-    }
-    if(!(ranges::lexicographical_compare(ib_b, ib_3, ia_b, ia_e)))
-    {
-        r = false;
-    }
-    if(!(ranges::lexicographical_compare(ia_b, ia_e, ib_1, ib_3)))
-    {
-        r = false;
-    }
-    if(!(!ranges::lexicographical_compare(ib_1, ib_3, ia_b, ia_e)))
-    {
-        r = false;
-    }
+    STATIC_CHECK_RETURN(!ranges::lexicographical_compare(ia_b, ia_e, ib_b, ib_2));
+    STATIC_CHECK_RETURN(ranges::lexicographical_compare(ib_b, ib_2, ia_b, ia_e));
+    STATIC_CHECK_RETURN(!ranges::lexicographical_compare(ia_b, ia_e, ib_b, ib_3));
+    STATIC_CHECK_RETURN(ranges::lexicographical_compare(ib_b, ib_3, ia_b, ia_e));
+    STATIC_CHECK_RETURN(ranges::lexicographical_compare(ia_b, ia_e, ib_1, ib_3));
+    STATIC_CHECK_RETURN(!ranges::lexicographical_compare(ib_1, ib_3, ia_b, ia_e));
 
     typedef std::greater<int> C;
-    C c;
-    if(!(!ranges::lexicographical_compare(ia_b, ia_e, ib_b, ib_2, c)))
-    {
-        r = false;
-    }
-    if(!(ranges::lexicographical_compare(ib_b, ib_2, ia_b, ia_e, c)))
-    {
-        r = false;
-    }
-    if(!(!ranges::lexicographical_compare(ia_b, ia_e, ib_b, ib_3, c)))
-    {
-        r = false;
-    }
-    if(!(ranges::lexicographical_compare(ib_b, ib_3, ia_b, ia_e, c)))
-    {
-        r = false;
-    }
-    if(!(!ranges::lexicographical_compare(ia_b, ia_e, ib_1, ib_3, c)))
-    {
-        r = false;
-    }
-    if(!(ranges::lexicographical_compare(ib_1, ib_3, ia_b, ia_e, c)))
-    {
-        r = false;
-    }
-    return r;
+    C c{};
+    STATIC_CHECK_RETURN(!ranges::lexicographical_compare(ia_b, ia_e, ib_b, ib_2, c));
+    STATIC_CHECK_RETURN(ranges::lexicographical_compare(ib_b, ib_2, ia_b, ia_e, c));
+    STATIC_CHECK_RETURN(!ranges::lexicographical_compare(ia_b, ia_e, ib_b, ib_3, c));
+    STATIC_CHECK_RETURN(ranges::lexicographical_compare(ib_b, ib_3, ia_b, ia_e, c));
+    STATIC_CHECK_RETURN(!ranges::lexicographical_compare(ia_b, ia_e, ib_1, ib_3, c));
+    STATIC_CHECK_RETURN(ranges::lexicographical_compare(ib_1, ib_3, ia_b, ia_e, c));
+    return true;
 }
 
 int main()
@@ -239,7 +202,7 @@ int main()
     test_iter_comp();
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
     return test_result();
 }

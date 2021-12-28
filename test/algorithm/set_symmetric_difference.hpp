@@ -129,41 +129,17 @@ constexpr bool test_constexpr()
     const int sr = sizeof(ir) / sizeof(ir[0]);
 
     const auto res1 = set_symmetric_difference(ia, ib, ic, less{});
-    if(res1.in1 != end(ia))
-    {
-        return false;
-    }
-    if(res1.in2 != end(ib))
-    {
-        return false;
-    }
-    if((res1.out - begin(ic)) != sr)
-    {
-        return false;
-    }
-    if(lexicographical_compare(ic, res1.out, ir, ir + sr, less{}) != 0)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(res1.in1 == end(ia));
+    STATIC_CHECK_RETURN(res1.in2 == end(ib));
+    STATIC_CHECK_RETURN((res1.out - begin(ic)) == sr);
+    STATIC_CHECK_RETURN(lexicographical_compare(ic, res1.out, ir, ir + sr, less{}) == 0);
     fill(ic, 0);
 
     const auto res2 = set_symmetric_difference(ib, ia, ic, less{});
-    if(res2.in1 != end(ib))
-    {
-        return false;
-    }
-    if(res2.in2 != end(ia))
-    {
-        return false;
-    }
-    if(res2.out - begin(ic) != sr)
-    {
-        return false;
-    }
-    if(lexicographical_compare(ic, res2.out, ir, ir + sr, less{}) != 0)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(res2.in1 == end(ib));
+    STATIC_CHECK_RETURN(res2.in2 == end(ia));
+    STATIC_CHECK_RETURN(res2.out - begin(ic) == sr);
+    STATIC_CHECK_RETURN(lexicographical_compare(ic, res2.out, ir, ir + sr, less{}) == 0);
 
     return true;
 }
@@ -393,11 +369,11 @@ int main()
         CHECK((res2.out - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, res2.out, ir, ir+sr, std::less<int>(), &U::k) == false);
     }
-#endif
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
+#endif
 
     return ::test_result();
 }

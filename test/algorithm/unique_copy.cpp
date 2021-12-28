@@ -258,54 +258,18 @@ constexpr bool test_constexpr()
     const unsigned sa = sizeof(a) / sizeof(a[0]);
     const unsigned sb = sizeof(b) / sizeof(b[0]);
     const auto r = unique_copy(a, b);
-    if(r.in != a + sa)
-    {
-        return false;
-    }
-    if(r.out != b + sb)
-    {
-        return false;
-    }
-    if(a[0] != 0)
-    {
-        return false;
-    }
-    if(a[1] != 1)
-    {
-        return false;
-    }
-    if(a[2] != 1)
-    {
-        return false;
-    }
-    if(a[3] != 1)
-    {
-        return false;
-    }
-    if(a[4] != 2)
-    {
-        return false;
-    }
-    if(a[5] != 2)
-    {
-        return false;
-    }
-    if(a[6] != 2)
-    {
-        return false;
-    }
-    if(b[0] != 0)
-    {
-        return false;
-    }
-    if(b[1] != 1)
-    {
-        return false;
-    }
-    if(b[2] != 2)
-    {
-        return false;
-    }
+    STATIC_CHECK_RETURN(r.in == a + sa);
+    STATIC_CHECK_RETURN(r.out == b + sb);
+    STATIC_CHECK_RETURN(a[0] == 0);
+    STATIC_CHECK_RETURN(a[1] == 1);
+    STATIC_CHECK_RETURN(a[2] == 1);
+    STATIC_CHECK_RETURN(a[3] == 1);
+    STATIC_CHECK_RETURN(a[4] == 2);
+    STATIC_CHECK_RETURN(a[5] == 2);
+    STATIC_CHECK_RETURN(a[6] == 2);
+    STATIC_CHECK_RETURN(b[0] == 0);
+    STATIC_CHECK_RETURN(b[1] == 1);
+    STATIC_CHECK_RETURN(b[2] == 2);
     return true;
 }
 
@@ -381,7 +345,7 @@ int main()
     }
 
     {
-        static_assert(test_constexpr(), "");
+        STATIC_CHECK(test_constexpr());
     }
     
     return ::test_result();
