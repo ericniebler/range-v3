@@ -100,47 +100,39 @@ constexpr bool test_constexpr(Iter first, Sent last, const T & value)
     bool result = true;
     const auto i = ranges::equal_range(first, last, value);
     for(Iter j = first; j != i.begin(); ++j)
-        if(!(*j < value))
-        {
-            result = false;
-        }
+    {
+        STATIC_CHECK_RETURN(*j < value);
+    }
     for(Iter j = i.begin(); j != last; ++j)
-        if(!(!(*j < value)))
-        {
-            result = false;
-        }
+    {
+        STATIC_CHECK_RETURN(!(*j < value));
+    }
     for(Iter j = first; j != i.end(); ++j)
-        if(!(!(value < *j)))
-        {
-            result = false;
-        }
+    {
+        STATIC_CHECK_RETURN(!(value < *j));
+    }
     for(Iter j = i.end(); j != last; ++j)
-        if(!(value < *j))
-        {
-            result = false;
-        }
+    {
+        STATIC_CHECK_RETURN(value < *j);
+    }
 
     const auto res = ranges::equal_range(ranges::make_subrange(first, last), value);
     for(Iter j = first; j != res.begin(); ++j)
-        if(!(*j < value))
-        {
-            result = false;
-        }
+    {
+        STATIC_CHECK_RETURN(*j < value);
+    }
     for(Iter j = res.begin(); j != last; ++j)
-        if(!(!(*j < value)))
-        {
-            result = false;
-        }
+    {
+        STATIC_CHECK_RETURN(!(*j < value));
+    }
     for(Iter j = first; j != res.end(); ++j)
-        if(!(!(value < *j)))
-        {
-            result = false;
-        }
+    {
+        STATIC_CHECK_RETURN(!(value < *j));
+    }
     for(Iter j = res.end(); j != last; ++j)
-        if(!(value < *j))
-        {
-            result = false;
-        }
+    {
+        STATIC_CHECK_RETURN(value < *j);
+    }
 
     return result;
 }
@@ -148,7 +140,6 @@ constexpr bool test_constexpr(Iter first, Sent last, const T & value)
 template<class Iter, class Sent = Iter>
 constexpr bool test_constexpr()
 {
-    using namespace ranges::view;
     constexpr unsigned M = 10;
     constexpr unsigned N = 10;
     test::array<int, N * M> v{{0}};
@@ -159,26 +150,24 @@ constexpr bool test_constexpr()
             v[i * M + j] = (int)i;
         }
     }
-    bool result = true;
     for(int x = 0; x <= (int)M; ++x)
-        if(!test_constexpr(Iter(v.data()), Sent(v.data() + v.size()), x))
-        {
-            result = false;
-        }
-    return result;
+    {
+        STATIC_CHECK_RETURN(test_constexpr(Iter(v.data()), Sent(v.data() + v.size()), x));
+    }
+    return true;
 }
 
 constexpr bool test_constexpr_some()
 {
     constexpr int d[] = {0, 1, 2, 3};
-    bool result = true;
     for(auto e = ranges::begin(d); e < ranges::end(d); ++e)
+    {
         for(int x = -1; x <= 4; ++x)
-            if(!test_constexpr(d, e, x))
-            {
-                result = false;
-            };
-    return result;
+        {
+            STATIC_CHECK_RETURN(test_constexpr(d, e, x));
+        }
+    }
+    return true;
 }
 
 int main()

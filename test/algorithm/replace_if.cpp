@@ -68,7 +68,7 @@ constexpr bool test_constexpr()
 {
     using namespace ranges;
     int ia[] = {0, 1, 2, 3, 4};
-    constexpr unsigned sa = ranges::size(ia);
+    constexpr auto sa = ranges::size(ia);
     auto r = ranges::replace_if(ia, equals_two, 42);
     STATIC_CHECK_RETURN(r == ia + sa);
     STATIC_CHECK_RETURN(ia[0] == 0);

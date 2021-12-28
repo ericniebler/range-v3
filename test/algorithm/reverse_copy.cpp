@@ -125,7 +125,7 @@ constexpr bool test_constexpr()
     using namespace ranges;
     int ia[] = {0, 1, 2, 3, 4};
     int ib[5] = {0};
-    constexpr unsigned sa = ranges::size(ia);
+    constexpr auto sa = ranges::size(ia);
     const auto r = ranges::reverse_copy(ia, ib);
     STATIC_CHECK_RETURN(r.in == ia + sa);
     STATIC_CHECK_RETURN(r.out == ib + sa);
