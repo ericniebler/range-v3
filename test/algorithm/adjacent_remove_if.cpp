@@ -124,15 +124,13 @@ test_range_rvalue()
 }
 
 template<class Iter, class Sent = Iter>
-bool
-constexpr test_constexpr()
+bool constexpr test_constexpr()
 {
     int ia[] = {0, 1, 1, 1, 4, 2, 2, 4, 2};
     constexpr auto sa = ranges::size(ia);
-    Iter r = ranges::adjacent_remove_if(
-        ranges::make_subrange(Iter(ia), Sent(ia+sa)),
-        ranges::equal_to{});
-    STATIC_CHECK_RETURN(base(r) == ia + sa-3);
+    Iter r = ranges::adjacent_remove_if(ranges::make_subrange(Iter(ia), Sent(ia + sa)),
+                                        ranges::equal_to{});
+    STATIC_CHECK_RETURN(base(r) == ia + sa - 3);
     STATIC_CHECK_RETURN(ia[0] == 0);
     STATIC_CHECK_RETURN(ia[1] == 1);
     STATIC_CHECK_RETURN(ia[2] == 4);
@@ -213,13 +211,13 @@ int main()
         CHECK(ia[5].i == 21);
     }
 
-    STATIC_CHECK(test_constexpr<ForwardIterator<int*> >());
-    STATIC_CHECK(test_constexpr<BidirectionalIterator<int*> >());
-    STATIC_CHECK(test_constexpr<RandomAccessIterator<int*> >());
-    STATIC_CHECK(test_constexpr<int*>());
-    STATIC_CHECK(test_constexpr<ForwardIterator<int*>, Sentinel<int*>>());
-    STATIC_CHECK(test_constexpr<BidirectionalIterator<int*>, Sentinel<int*>>());
-    STATIC_CHECK(test_constexpr<RandomAccessIterator<int*>, Sentinel<int*>>());
+    STATIC_CHECK(test_constexpr<ForwardIterator<int *>>());
+    STATIC_CHECK(test_constexpr<BidirectionalIterator<int *>>());
+    STATIC_CHECK(test_constexpr<RandomAccessIterator<int *>>());
+    STATIC_CHECK(test_constexpr<int *>());
+    STATIC_CHECK(test_constexpr<ForwardIterator<int *>, Sentinel<int *>>());
+    STATIC_CHECK(test_constexpr<BidirectionalIterator<int *>, Sentinel<int *>>());
+    STATIC_CHECK(test_constexpr<RandomAccessIterator<int *>, Sentinel<int *>>());
 
     return ::test_result();
 }

@@ -33,11 +33,12 @@ constexpr bool test_constexpr()
         {
             sum_ += i;
         }
-        
+
         int sum_ = 0;
     } fun;
-    constexpr test::array<int, 5> v1{{ 1, 2, 4, 6 }};
-    STATIC_CHECK_RETURN(ranges::for_each_n(v1.begin(), 2, ranges::ref(fun)) == v1.begin() + 2);
+    constexpr test::array<int, 5> v1{{1, 2, 4, 6}};
+    STATIC_CHECK_RETURN(ranges::for_each_n(v1.begin(), 2, ranges::ref(fun)) ==
+                        v1.begin() + 2);
     STATIC_CHECK_RETURN(ranges::for_each_n(v1, 2, ranges::ref(fun)) == v1.begin() + 2);
     STATIC_CHECK_RETURN(fun.sum_ == 3 * 2);
     return true;
