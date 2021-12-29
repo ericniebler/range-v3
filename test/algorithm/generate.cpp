@@ -91,88 +91,34 @@ void test2()
 template<class Iter, class Sent = Iter>
 constexpr bool test_constexpr()
 {
-    bool r = true;
     const unsigned n = 4;
     int ia[n] = {0};
     const auto res = ranges::generate(Iter(ia), Sent(ia + n), gen_test(1));
-    if(ia[0] != 1)
-    {
-        r = false;
-    };
-    if(ia[1] != 2)
-    {
-        r = false;
-    };
-    if(ia[2] != 3)
-    {
-        r = false;
-    };
-    if(ia[3] != 4)
-    {
-        r = false;
-    };
-    if(res.out != Iter(ia + n))
-    {
-        r = false;
-    };
-    if(res.fun.i_ != 5)
-    {
-        r = false;
-    };
+    STATIC_CHECK_RETURN(ia[0] == 1);
+    STATIC_CHECK_RETURN(ia[1] == 2);
+    STATIC_CHECK_RETURN(ia[2] == 3);
+    STATIC_CHECK_RETURN(ia[3] == 4);
+    STATIC_CHECK_RETURN(res.out == Iter(ia + n));
+    STATIC_CHECK_RETURN(res.fun.i_ == 5);
 
     auto rng = ranges::make_subrange(Iter(ia), Sent(ia + n));
     const auto res2 = ranges::generate(rng, res.fun);
-    if(ia[0] != 5)
-    {
-        r = false;
-    };
-    if(ia[1] != 6)
-    {
-        r = false;
-    };
-    if(ia[2] != 7)
-    {
-        r = false;
-    };
-    if(ia[3] != 8)
-    {
-        r = false;
-    };
-    if(res2.out != Iter(ia + n))
-    {
-        r = false;
-    };
-    if(res2.fun.i_ != 9)
-    {
-        r = false;
-    };
+    STATIC_CHECK_RETURN(ia[0] == 5);
+    STATIC_CHECK_RETURN(ia[1] == 6);
+    STATIC_CHECK_RETURN(ia[2] == 7);
+    STATIC_CHECK_RETURN(ia[3] == 8);
+    STATIC_CHECK_RETURN(res2.out == Iter(ia + n));
+    STATIC_CHECK_RETURN(res2.fun.i_ == 9);
 
     const auto res3 = ranges::generate(std::move(rng), res2.fun);
-    if(ia[0] != 9)
-    {
-        r = false;
-    };
-    if(ia[1] != 10)
-    {
-        r = false;
-    };
-    if(ia[2] != 11)
-    {
-        r = false;
-    };
-    if(ia[3] != 12)
-    {
-        r = false;
-    };
-    if(res3.out != Iter(ia + n))
-    {
-        r = false;
-    };
-    if(res3.fun.i_ != 13)
-    {
-        r = false;
-    };
-    return r;
+    STATIC_CHECK_RETURN(ia[0] == 9);
+    STATIC_CHECK_RETURN(ia[1] == 10);
+    STATIC_CHECK_RETURN(ia[2] == 11);
+    STATIC_CHECK_RETURN(ia[3] == 12);
+    STATIC_CHECK_RETURN(res3.out == Iter(ia + n));
+    STATIC_CHECK_RETURN(res3.fun.i_ == 13);
+    
+    return true;
 }
 
 int main()

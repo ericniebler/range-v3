@@ -142,13 +142,13 @@ namespace
 
 constexpr bool test_constexpr()
 {
-    test::array<int, 10> v{{0}};
-    for(int i = 0; (std::size_t)i < v.size(); ++i)
+    test::array<std::size_t, 10> v{{0}};
+    for(std::size_t i = 0; i < v.size(); ++i)
     {
         v[i] = v.size() - i - 1;
     }
     ranges::partial_sort(v, v.begin() + v.size() / 2, ranges::less{});
-    for(int i = 0; (std::size_t)i < v.size() / 2; ++i)
+    for(size_t i = 0; i < v.size() / 2; ++i)
     {
         STATIC_CHECK_RETURN(v[i] == i);
     }
