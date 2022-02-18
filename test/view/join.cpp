@@ -19,7 +19,6 @@
 #include <range/v3/view/split.hpp>
 #include <range/v3/view/generate_n.hpp>
 #include <range/v3/view/repeat_n.hpp>
-#include <range/v3/view/cache1.hpp>
 #include <range/v3/view/chunk.hpp>
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/iota.hpp>
@@ -220,7 +219,6 @@ int main()
     {
         auto rng = views::iota(0,4)
             | views::transform([](int i) {return std::string((std::size_t) i, char('a'+i));})
-            | views::cache1
             | views::join;
         check_equal(rng, {'b','c','c','d','d','d'});
         CPP_assert(input_range<decltype(rng)>);
@@ -232,7 +230,6 @@ int main()
     {
         auto rng = views::iota(0,4)
             | views::transform([](int i) {return std::string((std::size_t) i, char('a'+i));})
-            | views::cache1
             | views::join('-');
         check_equal(rng, {'-','b','-','c','c','-','d','d','d'});
         CPP_assert(input_range<decltype(rng)>);

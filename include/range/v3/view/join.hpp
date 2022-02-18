@@ -80,25 +80,26 @@ namespace ranges
         template<typename Inner>
         struct store_inner_
         {
-            views::all_t<Inner> inner_ = views::all_t<Inner>();
+            non_propagating_cache<std::remove_cv_t<Inner>> inner_ = {};
 
-            constexpr views::all_t<Inner> & update_inner_(Inner && inner)
+            template<typename OuterIt>
+            constexpr auto && update_inner_(OuterIt && it)
             {
-                return (inner_ = views::all(static_cast<Inner &&>(inner)));
+                return inner_.emplace_deref(it);
             }
-            constexpr views::all_t<Inner> & get_inner_(ignore_t) noexcept
+            constexpr Inner & get_inner_(ignore_t) noexcept
             {
-                return inner_;
+                return *inner_;
             }
         };
 
         struct pass_thru_inner_
         {
             // Intentionally promote xvalues to lvalues here:
-            template<typename Inner>
-            static constexpr Inner & update_inner_(Inner && inner) noexcept
+            template<typename OuterIt>
+            static constexpr auto && update_inner_(OuterIt && it) noexcept
             {
-                return inner;
+                return *it;
             }
             template<typename OuterIt>
             static constexpr decltype(auto) get_inner_(OuterIt && outer_it)
@@ -139,8 +140,6 @@ namespace ranges
     {
         CPP_assert(input_range<Rng> && view_<Rng>);
         CPP_assert(input_range<range_reference_t<Rng>>);
-        CPP_assert(std::is_reference<range_reference_t<Rng>>::value ||
-                   view_<range_reference_t<Rng>>);
 
         join_view() = default;
         explicit join_view(Rng rng)
@@ -196,7 +195,7 @@ namespace ranges
             {
                 for(; outer_it_ != ranges::end(rng_->outer_); ++outer_it_)
                 {
-                    auto & inner = rng_->update_inner_(*outer_it_);
+                    auto && inner = rng_->update_inner_(outer_it_);
                     inner_it_ = ranges::begin(inner);
                     if(inner_it_ != ranges::end(inner))
                         return;
@@ -356,6 +355,7 @@ namespace ranges
     template<typename Rng, typename ValRng>
     struct join_with_view
       : view_facade<join_with_view<Rng, ValRng>, detail::join_cardinality<Rng, ValRng>()>
+      , private detail::join_view_inner<Rng>
     {
         CPP_assert(input_range<Rng>);
         CPP_assert(input_range<range_reference_t<Rng>>);
@@ -399,7 +399,6 @@ namespace ranges
         using Inner = views::all_t<range_reference_t<Outer> &>;
 
         Outer outer_{};
-        Inner inner_{};
         views::all_t<ValRng> val_{};
 
         class cursor
@@ -417,13 +416,13 @@ namespace ranges
                         if(ranges::get<0>(cur_) != ranges::end(rng_->val_))
                             break;
                         // Intentionally promote xvalues to lvalues here:
-                        auto && tmp = *outer_it_;
-                        rng_->inner_ = views::all(tmp);
-                        ranges::emplace<1>(cur_, ranges::begin(rng_->inner_));
+                        auto && inner = rng_->update_inner_(outer_it_);
+                        ranges::emplace<1>(cur_, ranges::begin(inner));
                     }
                     else
                     {
-                        if(ranges::get<1>(cur_) != ranges::end(rng_->inner_))
+                        auto && inner = rng_->get_inner_(outer_it_);
+                        if(ranges::get<1>(cur_) != ranges::end(inner))
                             break;
                         if(++outer_it_ == ranges::end(rng_->outer_))
                             break;
@@ -446,10 +445,8 @@ namespace ranges
             {
                 if(outer_it_ != ranges::end(rng->outer_))
                 {
-                    // Intentionally promote xvalues to lvalues here:
-                    auto && tmp = *outer_it_;
-                    rng->inner_ = views::all(tmp);
-                    ranges::emplace<1>(cur_, ranges::begin(rng->inner_));
+                    auto && inner = rng_->update_inner_(outer_it_);
+                    ranges::emplace<1>(cur_, ranges::begin(inner));
                     satisfy();
                 }
             }
@@ -469,7 +466,10 @@ namespace ranges
                 else
                 {
                     auto & it = ranges::get<1>(cur_);
-                    RANGES_ASSERT(it != ranges::end(rng_->inner_));
+                    #ifndef NDEBUG
+                    auto && inner = rng_->get_inner_(outer_it_);
+                    RANGES_ASSERT(it != ranges::end(inner));
+                    #endif
                     ++it;
                 }
                 satisfy();
@@ -506,9 +506,7 @@ namespace ranges
         // clang-format off
         template(typename Rng)(
         concept (joinable_range_)(Rng),
-            input_range<range_reference_t<Rng>> AND
-            (std::is_reference<range_reference_t<Rng>>::value ||
-                view_<range_reference_t<Rng>>)
+            input_range<range_reference_t<Rng>>
         );
         template<typename Rng>
         CPP_concept joinable_range =
@@ -642,9 +640,7 @@ namespace ranges
         template(typename Rng)(
             /// \pre
             requires input_range<Rng> AND view_<Rng> AND
-                input_range<iter_reference_t<iterator_t<Rng>>> AND
-            (std::is_reference<iter_reference_t<iterator_t<Rng>>>::value ||
-             view_<iter_value_t<iterator_t<Rng>>>)) //
+                input_range<iter_reference_t<iterator_t<Rng>>>) //
             using join_view = ranges::join_view<Rng>;
     } // namespace cpp20
 } // namespace ranges
