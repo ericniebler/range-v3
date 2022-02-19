@@ -84,7 +84,7 @@ namespace ranges
             constexpr linear_distribute_view(T from, T to, std::ptrdiff_t n) noexcept
               : from_(from)
               , to_(to)
-              , delta_((to - from) / Calc(n - 1))
+              , delta_(n > 1 ? (to - from) / Calc(n - 1) : 0)
               , n_(n)
             {
                 RANGES_EXPECT(n_ > 0);
