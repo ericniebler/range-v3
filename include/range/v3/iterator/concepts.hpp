@@ -463,11 +463,11 @@ namespace ranges
 
         template(typename F, typename I)(
         concept (indirectly_unary_invocable_impl_)(F, I),
-            invocable<F &, iter_value_t<I> &> AND
+            invocable<F &, indirect_value_t<I>> AND
             invocable<F &, iter_reference_t<I>> AND
             invocable<F &, iter_common_reference_t<I>> AND
             common_reference_with<
-                invoke_result_t<F &, iter_value_t<I> &>,
+                invoke_result_t<F &, indirect_value_t<I>>,
                 invoke_result_t<F &, iter_reference_t<I>>>
         );
 
@@ -487,11 +487,11 @@ namespace ranges
 
     template(typename F, typename I)(
     concept (indirectly_regular_unary_invocable_)(F, I),
-        regular_invocable<F &, iter_value_t<I> &> AND
+        regular_invocable<F &, indirect_value_t<I>> AND
         regular_invocable<F &, iter_reference_t<I>> AND
         regular_invocable<F &, iter_common_reference_t<I>> AND
         common_reference_with<
-            invoke_result_t<F &, iter_value_t<I> &>,
+            invoke_result_t<F &, indirect_value_t<I>>,
             invoke_result_t<F &, iter_reference_t<I>>>
     );
 
@@ -505,15 +505,15 @@ namespace ranges
     // Non-standard indirect invocable concepts
     template(typename F, typename I1, typename I2)(
     concept (indirectly_binary_invocable_impl_)(F, I1, I2),
-        invocable<F &, iter_value_t<I1> &, iter_value_t<I2> &> AND
-        invocable<F &, iter_value_t<I1> &, iter_reference_t<I2>> AND
-        invocable<F &, iter_reference_t<I1>, iter_value_t<I2> &> AND
+        invocable<F &, indirect_value_t<I1>, indirect_value_t<I2>> AND
+        invocable<F &, indirect_value_t<I1>, iter_reference_t<I2>> AND
+        invocable<F &, iter_reference_t<I1>, indirect_value_t<I2>> AND
         invocable<F &, iter_reference_t<I1>, iter_reference_t<I2>> AND
         invocable<F &, iter_common_reference_t<I1>, iter_common_reference_t<I2>> AND
         detail::common_reference_with_4_<
-            invoke_result_t<F &, iter_value_t<I1> &, iter_value_t<I2> &>,
-            invoke_result_t<F &, iter_value_t<I1> &, iter_reference_t<I2>>,
-            invoke_result_t<F &, iter_reference_t<I1>, iter_value_t<I2> &>,
+            invoke_result_t<F &, indirect_value_t<I1>, indirect_value_t<I2>>,
+            invoke_result_t<F &, indirect_value_t<I1>, iter_reference_t<I2>>,
+            invoke_result_t<F &, iter_reference_t<I1>, indirect_value_t<I2>>,
             invoke_result_t<F &, iter_reference_t<I1>, iter_reference_t<I2>>>
     );
 
@@ -525,15 +525,15 @@ namespace ranges
 
     template(typename F, typename I1, typename I2)(
     concept (indirectly_regular_binary_invocable_impl_)(F, I1, I2),
-        regular_invocable<F &, iter_value_t<I1> &, iter_value_t<I2> &> AND
-        regular_invocable<F &, iter_value_t<I1> &, iter_reference_t<I2>> AND
-        regular_invocable<F &, iter_reference_t<I1>, iter_value_t<I2> &> AND
+        regular_invocable<F &, indirect_value_t<I1>, indirect_value_t<I2>> AND
+        regular_invocable<F &, indirect_value_t<I1>, iter_reference_t<I2>> AND
+        regular_invocable<F &, iter_reference_t<I1>, indirect_value_t<I2>> AND
         regular_invocable<F &, iter_reference_t<I1>, iter_reference_t<I2>> AND
         regular_invocable<F &, iter_common_reference_t<I1>, iter_common_reference_t<I2>> AND
         detail::common_reference_with_4_<
-            invoke_result_t<F &, iter_value_t<I1> &, iter_value_t<I2> &>,
-            invoke_result_t<F &, iter_value_t<I1> &, iter_reference_t<I2>>,
-            invoke_result_t<F &, iter_reference_t<I1>, iter_value_t<I2> &>,
+            invoke_result_t<F &, indirect_value_t<I1>, indirect_value_t<I2>>,
+            invoke_result_t<F &, indirect_value_t<I1>, iter_reference_t<I2>>,
+            invoke_result_t<F &, iter_reference_t<I1>, indirect_value_t<I2>>,
             invoke_result_t<F &, iter_reference_t<I1>, iter_reference_t<I2>>>
     );
 
@@ -546,7 +546,7 @@ namespace ranges
 
     template(typename F, typename I)(
     concept (indirect_unary_predicate_)(F, I),
-        predicate<F &, iter_value_t<I> &> AND
+        predicate<F &, indirect_value_t<I>> AND
         predicate<F &, iter_reference_t<I>> AND
         predicate<F &, iter_common_reference_t<I>>
     );
@@ -559,9 +559,9 @@ namespace ranges
 
     template(typename F, typename I1, typename I2)(
     concept (indirect_binary_predicate_impl_)(F, I1, I2),
-        predicate<F &, iter_value_t<I1> &, iter_value_t<I2> &> AND
-        predicate<F &, iter_value_t<I1> &, iter_reference_t<I2>> AND
-        predicate<F &, iter_reference_t<I1>, iter_value_t<I2> &> AND
+        predicate<F &, indirect_value_t<I1>, indirect_value_t<I2>> AND
+        predicate<F &, indirect_value_t<I1>, iter_reference_t<I2>> AND
+        predicate<F &, iter_reference_t<I1>, indirect_value_t<I2>> AND
         predicate<F &, iter_reference_t<I1>, iter_reference_t<I2>> AND
         predicate<F &, iter_common_reference_t<I1>, iter_common_reference_t<I2>>
     );
@@ -574,9 +574,9 @@ namespace ranges
 
     template(typename F, typename I1, typename I2)(
     concept (indirect_relation_)(F, I1, I2),
-        relation<F &, iter_value_t<I1> &, iter_value_t<I2> &> AND
-        relation<F &, iter_value_t<I1> &, iter_reference_t<I2>> AND
-        relation<F &, iter_reference_t<I1>, iter_value_t<I2> &> AND
+        relation<F &, indirect_value_t<I1>, indirect_value_t<I2>> AND
+        relation<F &, indirect_value_t<I1>, iter_reference_t<I2>> AND
+        relation<F &, iter_reference_t<I1>, indirect_value_t<I2>> AND
         relation<F &, iter_reference_t<I1>, iter_reference_t<I2>> AND
         relation<F &, iter_common_reference_t<I1>, iter_common_reference_t<I2>>
     );
@@ -589,9 +589,9 @@ namespace ranges
 
     template(typename F, typename I1, typename I2)(
     concept (indirect_strict_weak_order_)(F, I1, I2),
-        strict_weak_order<F &, iter_value_t<I1> &, iter_value_t<I2> &> AND
-        strict_weak_order<F &, iter_value_t<I1> &, iter_reference_t<I2>> AND
-        strict_weak_order<F &, iter_reference_t<I1>, iter_value_t<I2> &> AND
+        strict_weak_order<F &, indirect_value_t<I1>, indirect_value_t<I2>> AND
+        strict_weak_order<F &, indirect_value_t<I1>, iter_reference_t<I2>> AND
+        strict_weak_order<F &, iter_reference_t<I1>, indirect_value_t<I2>> AND
         strict_weak_order<F &, iter_reference_t<I1>, iter_reference_t<I2>> AND
         strict_weak_order<F &, iter_common_reference_t<I1>, iter_common_reference_t<I2>>
     );
@@ -618,6 +618,8 @@ namespace ranges
                 using reference = indirect_result_t<Proj &, I>;
                 using value_type = uncvref_t<reference>;
                 reference operator*() const;
+
+                using indirect_value_type = invoke_result_t<Proj &, iter_value_t<I> &>;
             };
         };
         RANGES_DIAGNOSTIC_POP
@@ -626,11 +628,9 @@ namespace ranges
         struct select_projected_
         {
             template<typename I>
-            using apply =
-                meta::_t<
-                    detail::enable_if_t<
-                        (bool)indirectly_regular_unary_invocable<Proj, I>,
-                        detail::projected_<I, Proj>>>;
+            using apply = meta::_t<
+                detail::enable_if_t<(bool)indirectly_regular_unary_invocable<Proj, I>,
+                                    detail::projected_<I, Proj>>>;
         };
 
         template<>
@@ -644,6 +644,13 @@ namespace ranges
 
     template<typename I, typename Proj>
     using projected = typename detail::select_projected_<Proj>::template apply<I>;
+
+    template<typename T>
+    struct indirect_value<T,
+                          decltype(std::declval<typename T::indirect_value_type>(), void())>
+    {
+        using type = typename T::indirect_value_type;
+    };
 
     template<typename I, typename Proj>
     struct incrementable_traits<detail::projected_<I, Proj>> : incrementable_traits<I>
