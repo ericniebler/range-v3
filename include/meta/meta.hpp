@@ -3189,7 +3189,7 @@ namespace meta
                         void_<bool_<invoke<Fn, A>::type::value>>>
 #endif
             {
-                using type = if_<invoke<Fn, A>, pair<list<Yes..., A>, list<No...>>,
+                using type = if_<meta::invoke<Fn, A>, pair<list<Yes..., A>, list<No...>>,
                                     pair<list<Yes...>, list<No..., A>>>;
             };
 
