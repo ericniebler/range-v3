@@ -84,5 +84,7 @@ else()
   set(RANGES_RELEASE_BUILD TRUE)
 endif()
 
-find_package(Doxygen)
+if(RANGE_V3_DOCS)
+  find_package(Doxygen)
+endif()
 find_package(Git)
