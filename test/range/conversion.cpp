@@ -221,5 +221,26 @@ int main()
         check_equal(d, v);
     }
 
+    {
+        std::vector<std::pair<int, int>> v = {{1, 2}, {3, 4}};
+        auto m1 = ranges::to<std::map<int, int>>(v);
+        auto m2 = v | ranges::to<std::map<int, int>>();
+
+        CPP_assert(same_as<decltype(m1), std::map<int, int>>);
+        CPP_assert(same_as<decltype(m2), std::map<int, int>>);
+        check_equal(m1, std::map<int, int>{{1, 2}, {3, 4}});
+        check_equal(m1, m2);
+
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+        auto m3 = ranges::to<std::map>(v);
+        auto m4 = v | ranges::to<std::map>();
+        CPP_assert(same_as<decltype(m3), std::map<int, int>>);
+        CPP_assert(same_as<decltype(m4), std::map<int, int>>);
+        check_equal(m1, m3);
+        check_equal(m1, m4);
+#endif
+
+    }
+
     return ::test_result();
 }
