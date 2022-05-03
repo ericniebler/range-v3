@@ -24,6 +24,55 @@
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    int ia[] = {0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 0, 1, 2, 3, 0, 1, 2, 0, 1, 0};
+    auto ia_b = begin(ia);
+    auto ia_e = end(ia);
+
+    constexpr auto sa = size(ia);
+    int b[] = {0};
+    int c[] = {0, 1};
+    int d[] = {0, 1, 2};
+    int e[] = {0, 1, 2, 3};
+    int f[] = {0, 1, 2, 3, 4};
+    int g[] = {0, 1, 2, 3, 4, 5};
+    int h[] = {0, 1, 2, 3, 4, 5, 6};
+    STATIC_CHECK_RETURN(find_end(ia_b, ia_e, begin(b), b + 1).begin() == ia + sa - 1);
+    STATIC_CHECK_RETURN(find_end(ia_b, ia_e, begin(c), c + 2).begin() == ia + 18);
+    STATIC_CHECK_RETURN(find_end(ia_b, ia_e, begin(d), d + 3).begin() == ia + 15);
+    STATIC_CHECK_RETURN(find_end(ia_b, ia_e, begin(e), e + 4).begin() == ia + 11);
+    STATIC_CHECK_RETURN(find_end(ia_b, ia_e, begin(f), f + 5).begin() == ia + 6);
+    STATIC_CHECK_RETURN(find_end(ia_b, ia_e, begin(g), g + 6).begin() == ia);
+    STATIC_CHECK_RETURN(find_end(ia_b, ia_e, begin(h), h + 7).begin() == ia + sa);
+    STATIC_CHECK_RETURN(find_end(ia_b, ia_e, begin(b), b).begin() == ia + sa);
+    STATIC_CHECK_RETURN(find_end(ia_b, ia_b, begin(b), b + 1).begin() == ia);
+
+    auto ir = make_subrange(ia_b, ia_e);
+    STATIC_CHECK_RETURN(find_end(ir, make_subrange(begin(b), b + 1)).begin() == ia + sa - 1);
+    STATIC_CHECK_RETURN(find_end(ir, make_subrange(begin(c), c + 2)).begin() == ia + 18);
+    STATIC_CHECK_RETURN(find_end(ir, make_subrange(begin(d), d + 3)).begin() == ia + 15);
+    STATIC_CHECK_RETURN(find_end(ir, make_subrange(begin(e), e + 4)).begin() == ia + 11);
+    STATIC_CHECK_RETURN(find_end(ir, make_subrange(begin(f), f + 5)).begin() == ia + 6);
+    STATIC_CHECK_RETURN(find_end(ir, make_subrange(begin(g), g + 6)).begin() == ia);
+    STATIC_CHECK_RETURN(find_end(ir, make_subrange(begin(h), h + 7)).begin() == ia + sa);
+    STATIC_CHECK_RETURN(find_end(ir, make_subrange(begin(b), b)).begin() == ia + sa);
+    STATIC_CHECK_RETURN(find_end(std::move(ir), make_subrange(begin(b), b + 1)).begin() == ia + sa - 1);
+    STATIC_CHECK_RETURN(find_end(std::move(ir), make_subrange(begin(c), c + 2)).begin() == ia + 18);
+    STATIC_CHECK_RETURN(find_end(std::move(ir), make_subrange(begin(d), d + 3)).begin() == ia + 15);
+    STATIC_CHECK_RETURN(find_end(std::move(ir), make_subrange(begin(e), e + 4)).begin() == ia + 11);
+    STATIC_CHECK_RETURN(find_end(std::move(ir), make_subrange(begin(f), f + 5)).begin() == ia + 6);
+    STATIC_CHECK_RETURN(find_end(std::move(ir), make_subrange(begin(g), g + 6)).begin() == ia);
+    STATIC_CHECK_RETURN(find_end(std::move(ir), make_subrange(begin(h), h + 7)).begin() == ia + sa);
+    STATIC_CHECK_RETURN(find_end(std::move(ir), make_subrange(begin(b), b)).begin() == ia + sa);
+
+    auto er = make_subrange(ia_b, ia);
+    STATIC_CHECK_RETURN(find_end(er, make_subrange(b, b + 1)).begin() == ia);
+    STATIC_CHECK_RETURN(find_end(std::move(er), make_subrange(b, b + 1)).begin() == ia);
+    return true;
+}
+
 template<class Iter1, class Iter2, typename Sent1 = Iter1, typename Sent2 = Iter2>
 void
 test()
@@ -291,6 +340,10 @@ int main()
     // test_proj<RandomAccessIterator<const S*>, ForwardIterator<const int*>, Sentinel<const S*>, Sentinel<const int *> >();
     // test_proj<RandomAccessIterator<const S*>, BidirectionalIterator<const int*>, Sentinel<const S*>, Sentinel<const int *> >();
     // test_proj<RandomAccessIterator<const S*>, RandomAccessIterator<const int*>, Sentinel<const S*>, Sentinel<const int *> >();
+
+    {
+        STATIC_CHECK(test_constexpr());
+    }
 
     return ::test_result();
 }

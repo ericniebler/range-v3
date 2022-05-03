@@ -44,7 +44,7 @@ namespace ranges
             /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
             weakly_incrementable<O> AND indirectly_movable<I, O>)
-        move_result<I, O> RANGES_FUNC(move)(I first, S last, O out) //
+        constexpr move_result<I, O> RANGES_FUNC(move)(I first, S last, O out) //
         {
             for(; first != last; ++first, ++out)
                 *out = iter_move(first);
@@ -56,7 +56,7 @@ namespace ranges
             /// \pre
             requires input_range<Rng> AND weakly_incrementable<O> AND
             indirectly_movable<iterator_t<Rng>, O>)
-        move_result<borrowed_iterator_t<Rng>, O> //
+        constexpr move_result<borrowed_iterator_t<Rng>, O> //
         RANGES_FUNC(move)(Rng && rng, O out)            //
         {
             return (*this)(begin(rng), end(rng), std::move(out));

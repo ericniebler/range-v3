@@ -43,7 +43,7 @@ namespace ranges
             /// \pre
             requires bidirectional_iterator<I> AND sentinel_for<S, I> AND
             bidirectional_iterator<O> AND indirectly_movable<I, O>)
-        move_backward_result<I, O> RANGES_FUNC(move_backward)(I first, S end_, O out) //
+        constexpr move_backward_result<I, O> RANGES_FUNC(move_backward)(I first, S end_, O out) //
         {
             I i = ranges::next(first, end_), last = i;
             while(first != i)
@@ -56,7 +56,7 @@ namespace ranges
             /// \pre
             requires bidirectional_range<Rng> AND bidirectional_iterator<O> AND
             indirectly_movable<iterator_t<Rng>, O>)
-        move_backward_result<borrowed_iterator_t<Rng>, O> //
+        constexpr move_backward_result<borrowed_iterator_t<Rng>, O> //
         RANGES_FUNC(move_backward)(Rng && rng, O out)            //
         {
             return (*this)(begin(rng), end(rng), std::move(out));

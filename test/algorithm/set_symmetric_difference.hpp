@@ -119,6 +119,31 @@ struct U
     U& operator=(T t) { k = t.j; return *this;}
 };
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    int ia[] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4};
+    int ib[] = {2, 4, 4, 6};
+    int ic[20] = {0};
+    int ir[] = {1, 2, 3, 3, 3, 4, 4, 6};
+    const int sr = sizeof(ir) / sizeof(ir[0]);
+
+    const auto res1 = set_symmetric_difference(ia, ib, ic, less{});
+    STATIC_CHECK_RETURN(res1.in1 == end(ia));
+    STATIC_CHECK_RETURN(res1.in2 == end(ib));
+    STATIC_CHECK_RETURN((res1.out - begin(ic)) == sr);
+    STATIC_CHECK_RETURN(lexicographical_compare(ic, res1.out, ir, ir + sr, less{}) == 0);
+    fill(ic, 0);
+
+    const auto res2 = set_symmetric_difference(ib, ia, ic, less{});
+    STATIC_CHECK_RETURN(res2.in1 == end(ib));
+    STATIC_CHECK_RETURN(res2.in2 == end(ia));
+    STATIC_CHECK_RETURN(res2.out - begin(ic) == sr);
+    STATIC_CHECK_RETURN(lexicographical_compare(ic, res2.out, ir, ir + sr, less{}) == 0);
+
+    return true;
+}
+
 int main()
 {
 #ifdef SET_SYMMETRIC_DIFFERENCE_1
@@ -343,6 +368,10 @@ int main()
         CHECK(::is_dangling(res2.in2));
         CHECK((res2.out - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, res2.out, ir, ir+sr, std::less<int>(), &U::k) == false);
+    }
+
+    {
+        STATIC_CHECK(test_constexpr());
     }
 #endif
 

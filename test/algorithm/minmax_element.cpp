@@ -24,6 +24,8 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/minmax_element.hpp>
+
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -236,6 +238,12 @@ int main()
     ranges::minmax_element_result<S const *> ps = ranges::minmax_element(s, std::less<int>{}, &S::i);
     CHECK(ps.min->i == -4);
     CHECK(ps.max->i == 40);
+
+    {
+        constexpr auto a = test::array<int, 10>{{1, 2, 3, 4, -4, 5, 6, 40, 8, 9}};
+        STATIC_CHECK(ranges::minmax_element(a).min == ranges::begin(a) + 4);
+        STATIC_CHECK(ranges::minmax_element(a).max == ranges::begin(a) + 7);
+    }
 
     return test_result();
 }

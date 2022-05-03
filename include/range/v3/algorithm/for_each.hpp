@@ -44,7 +44,7 @@ namespace ranges
             /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
             indirectly_unary_invocable<F, projected<I, P>>)
-        for_each_result<I, F> RANGES_FUNC(for_each)(I first, S last, F fun, P proj = P{})
+        constexpr for_each_result<I, F> RANGES_FUNC(for_each)(I first, S last, F fun, P proj = P{})
         {
             for(; first != last; ++first)
             {
@@ -58,7 +58,7 @@ namespace ranges
             /// \pre
             requires input_range<Rng> AND
             indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
-        for_each_result<borrowed_iterator_t<Rng>, F> //
+        constexpr for_each_result<borrowed_iterator_t<Rng>, F> //
         RANGES_FUNC(for_each)(Rng && rng, F fun, P proj = P{})
         {
             return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in,

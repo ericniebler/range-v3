@@ -25,8 +25,9 @@ int main()
     using ranges::size;
     using ranges::less;
 
-    std::pair<int, int> a[] = {{0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
-    const std::pair<int, int> c[] = {{0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
+    constexpr std::pair<int, int> a[] = {{0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
+    constexpr const std::pair<int, int> c[] = {
+        {0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
 
     CHECK(ranges::binary_search(begin(a), end(a), a[0]));
     CHECK(ranges::binary_search(begin(a), end(a), a[1], less()));
@@ -49,6 +50,12 @@ int main()
 
     CHECK(!ranges::binary_search(a, 4, less(), &std::pair<int, int>::first));
     CHECK(!ranges::binary_search(c, 4, less(), &std::pair<int, int>::first));
+
+    STATIC_CHECK(ranges::binary_search(begin(a), end(a), a[0]));
+    STATIC_CHECK(ranges::binary_search(begin(a), end(a), a[1], less()));
+    STATIC_CHECK(ranges::binary_search(a, a[2]));
+    STATIC_CHECK(ranges::binary_search(a, a[4], less()));
+    STATIC_CHECK(!ranges::binary_search(a, std::make_pair(-1, -1), less()));
 
     return test_result();
 }

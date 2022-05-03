@@ -49,7 +49,7 @@ namespace ranges
             /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
             indirect_unary_predicate<F, projected<I, P>>)
-        I RANGES_FUNC(find_if)(I first, S last, F pred, P proj = P{})
+        constexpr I RANGES_FUNC(find_if)(I first, S last, F pred, P proj = P{})
         {
             for(; first != last; ++first)
                 if(invoke(pred, invoke(proj, *first)))
@@ -62,7 +62,7 @@ namespace ranges
             /// \pre
             requires input_range<Rng> AND
             indirect_unary_predicate<F, projected<iterator_t<Rng>, P>>)
-        borrowed_iterator_t<Rng> RANGES_FUNC(find_if)(Rng && rng, F pred, P proj = P{})
+        constexpr borrowed_iterator_t<Rng> RANGES_FUNC(find_if)(Rng && rng, F pred, P proj = P{})
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

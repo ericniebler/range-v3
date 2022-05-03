@@ -201,6 +201,27 @@ struct S
     int i;
 };
 
+constexpr int plus_one(int i)
+{
+    return i + 1;
+}
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    int ia[] = {0, 1, 2, 3, 4};
+    constexpr auto sa = ranges::size(ia);
+    int ib[sa] = {0};
+    auto r = transform(ia, ib, plus_one);
+    STATIC_CHECK_RETURN(r.in == ia + sa);
+    STATIC_CHECK_RETURN(r.out == ib + sa);
+    STATIC_CHECK_RETURN(ib[0] == 1);
+    STATIC_CHECK_RETURN(ib[1] == 2);
+    STATIC_CHECK_RETURN(ib[2] == 3);
+    STATIC_CHECK_RETURN(ib[3] == 4);
+    STATIC_CHECK_RETURN(ib[4] == 5);
+    return true;
+}
+
 int main()
 {
     test1<InputIterator<const int*>, OutputIterator<int*> >();
@@ -426,5 +447,9 @@ int main()
     static_assert(std::is_same<ranges::binary_transform_result<S const*, S const *, int*>,
         decltype(ranges::transform(s, s, p, binary, &S::i, &S::i))>::value, "");
 
+    {
+        STATIC_CHECK(test_constexpr());
+    }
+    
     return ::test_result();
 }

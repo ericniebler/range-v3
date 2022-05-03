@@ -15,8 +15,23 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/copy_backward.hpp>
+
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
+#include "../test_utils.hpp"
+
+constexpr bool test_constexpr()
+{
+    using IL = std::initializer_list<int>;
+    constexpr test::array<int, 4> input{{0, 1, 2, 3}};
+    test::array<int, 4> a1{{0, 0, 0, 0}};
+    auto res = ranges::copy_backward(input, ranges::end(a1));
+    STATIC_CHECK_RETURN(res.in == ranges::end(input));
+    STATIC_CHECK_RETURN(res.out == ranges::begin(a1));
+    STATIC_CHECK_RETURN(ranges::equal(a1, IL{0, 1, 2, 3}));
+    return true;
+}
 
 int main()
 {
@@ -70,5 +85,8 @@ int main()
         CHECK(std::equal(a, a + size(a), out));
     }
 
+    {
+        STATIC_CHECK(test_constexpr());
+    }
     return test_result();
 }

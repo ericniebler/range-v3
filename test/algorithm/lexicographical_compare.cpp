@@ -20,6 +20,7 @@
 
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/lexicographical_compare.hpp>
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -166,11 +167,42 @@ void test_iter_comp()
     test_iter_comp1<const int*, const int*>();
 }
 
+constexpr bool test_constexpr()
+{
+    test::array<int, 4> ia{{1, 2, 3, 4}};
+    test::array<int, 3> ib{{1, 2, 3}};
+    auto ia_b = ranges::begin(ia);
+    auto ia_e = ranges::end(ia);
+    auto ib_b = ranges::begin(ib);
+    auto ib_1 = ib_b + 1;
+    auto ib_2 = ib_b + 2;
+    auto ib_3 = ib_b + 3;
+
+    STATIC_CHECK_RETURN(!ranges::lexicographical_compare(ia_b, ia_e, ib_b, ib_2));
+    STATIC_CHECK_RETURN(ranges::lexicographical_compare(ib_b, ib_2, ia_b, ia_e));
+    STATIC_CHECK_RETURN(!ranges::lexicographical_compare(ia_b, ia_e, ib_b, ib_3));
+    STATIC_CHECK_RETURN(ranges::lexicographical_compare(ib_b, ib_3, ia_b, ia_e));
+    STATIC_CHECK_RETURN(ranges::lexicographical_compare(ia_b, ia_e, ib_1, ib_3));
+    STATIC_CHECK_RETURN(!ranges::lexicographical_compare(ib_1, ib_3, ia_b, ia_e));
+
+    typedef std::greater<int> C;
+    C c{};
+    STATIC_CHECK_RETURN(!ranges::lexicographical_compare(ia_b, ia_e, ib_b, ib_2, c));
+    STATIC_CHECK_RETURN(ranges::lexicographical_compare(ib_b, ib_2, ia_b, ia_e, c));
+    STATIC_CHECK_RETURN(!ranges::lexicographical_compare(ia_b, ia_e, ib_b, ib_3, c));
+    STATIC_CHECK_RETURN(ranges::lexicographical_compare(ib_b, ib_3, ia_b, ia_e, c));
+    STATIC_CHECK_RETURN(!ranges::lexicographical_compare(ia_b, ia_e, ib_1, ib_3, c));
+    STATIC_CHECK_RETURN(ranges::lexicographical_compare(ib_1, ib_3, ia_b, ia_e, c));
+    return true;
+}
 
 int main()
 {
     test_iter();
     test_iter_comp();
 
+    {
+        STATIC_CHECK(test_constexpr());
+    }
     return test_result();
 }

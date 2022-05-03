@@ -39,7 +39,7 @@ namespace ranges
             /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
             indirect_relation<equal_to, projected<I, P>, V const *>)
-        iter_difference_t<I> //
+        constexpr iter_difference_t<I> //
         RANGES_FUNC(count)(I first, S last, V const & val, P proj = P{})
         {
             iter_difference_t<I> n = 0;
@@ -54,7 +54,7 @@ namespace ranges
             /// \pre
             requires input_range<Rng> AND
             indirect_relation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
-        iter_difference_t<iterator_t<Rng>> //
+        constexpr iter_difference_t<iterator_t<Rng>> //
         RANGES_FUNC(count)(Rng && rng, V const & val, P proj = P{})
         {
             return (*this)(begin(rng), end(rng), val, std::move(proj));

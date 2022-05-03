@@ -61,7 +61,7 @@ namespace ranges
     namespace detail
     {
         template<typename I, typename C, typename P>
-        inline I unguarded_partition(I first, I last, C & pred, P & proj)
+        inline constexpr I unguarded_partition(I first, I last, C & pred, P & proj)
         {
             I mid = first + (last - first) / 2, penultimate = ranges::prev(last);
             auto &&x = *first, &&y = *mid, &&z = *penultimate;
@@ -97,8 +97,10 @@ namespace ranges
         }
 
         template<typename I, typename C, typename P>
-        inline void unguarded_linear_insert(I last, iter_value_t<I> val, C & pred,
-                                            P & proj)
+        inline constexpr void unguarded_linear_insert(I last, 
+                                                      iter_value_t<I> val, 
+                                                      C & pred,
+                                                      P & proj)
         {
             I next_ = prev(last);
             while(invoke(pred, invoke(proj, val), invoke(proj, *next_)))
@@ -111,7 +113,7 @@ namespace ranges
         }
 
         template<typename I, typename C, typename P>
-        inline void linear_insert(I first, I last, C & pred, P & proj)
+        inline constexpr void linear_insert(I first, I last, C & pred, P & proj)
         {
             iter_value_t<I> val = iter_move(last);
             if(invoke(pred, invoke(proj, val), invoke(proj, *first)))
@@ -124,7 +126,7 @@ namespace ranges
         }
 
         template<typename I, typename C, typename P>
-        inline void insertion_sort(I first, I last, C & pred, P & proj)
+        inline constexpr void insertion_sort(I first, I last, C & pred, P & proj)
         {
             if(first == last)
                 return;
@@ -133,7 +135,7 @@ namespace ranges
         }
 
         template<typename I, typename C, typename P>
-        inline void unguarded_insertion_sort(I first, I last, C & pred, P & proj)
+        inline constexpr void unguarded_insertion_sort(I first, I last, C & pred, P & proj)
         {
             for(I i = first; i != last; ++i)
                 detail::unguarded_linear_insert(i, iter_move(i), pred, proj);
@@ -145,7 +147,7 @@ namespace ranges
         }
 
         template<typename I, typename C, typename P>
-        inline void final_insertion_sort(I first, I last, C & pred, P & proj)
+        inline constexpr void final_insertion_sort(I first, I last, C & pred, P & proj)
         {
             if(last - first > detail::introsort_threshold())
             {
@@ -159,7 +161,7 @@ namespace ranges
         }
 
         template<typename Size>
-        inline Size log2(Size n)
+        inline constexpr Size log2(Size n)
         {
             Size k = 0;
             for(; n != 1; n >>= 1)
@@ -168,7 +170,7 @@ namespace ranges
         }
 
         template<typename I, typename Size, typename C, typename P>
-        inline void introsort_loop(I first, I last, Size depth_limit, C & pred, P & proj)
+        inline constexpr void introsort_loop(I first, I last, Size depth_limit, C & pred, P & proj)
         {
             while(last - first > detail::introsort_threshold())
             {
@@ -198,7 +200,7 @@ namespace ranges
             /// \pre
             requires sortable<I, C, P> AND random_access_iterator<I> AND
                 sentinel_for<S, I>)
-        I RANGES_FUNC(sort)(I first, S end_, C pred = C{}, P proj = P{})
+        constexpr I RANGES_FUNC(sort)(I first, S end_, C pred = C{}, P proj = P{})
         {
             I last = ranges::next(first, std::move(end_));
             if(first != last)
@@ -214,7 +216,7 @@ namespace ranges
         template(typename Rng, typename C = less, typename P = identity)(
             /// \pre
             requires sortable<iterator_t<Rng>, C, P> AND random_access_range<Rng>)
-        borrowed_iterator_t<Rng> //
+        constexpr borrowed_iterator_t<Rng> //
         RANGES_FUNC(sort)(Rng && rng, C pred = C{}, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

@@ -45,8 +45,11 @@ namespace ranges
             /// \pre
             requires forward_iterator<I> AND sentinel_for<S, I> AND
                 indirect_strict_weak_order<C, V const *, projected<I, P>>)
-        I RANGES_FUNC(lower_bound)(
-            I first, S last, V const & val, C pred = C{}, P proj = P{})
+        constexpr I RANGES_FUNC(lower_bound)(I first, 
+                                             S last, 
+                                             V const & val, 
+                                             C pred = C{}, 
+                                             P proj = P{})
         {
             return partition_point(std::move(first),
                                    std::move(last),
@@ -59,7 +62,7 @@ namespace ranges
             /// \pre
             requires forward_range<Rng> AND
                 indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
-        borrowed_iterator_t<Rng> //
+        constexpr borrowed_iterator_t<Rng> //
         RANGES_FUNC(lower_bound)(Rng && rng, V const & val, C pred = C{}, P proj = P{})
         {
             return partition_point(

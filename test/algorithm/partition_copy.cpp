@@ -33,7 +33,10 @@
 
 struct is_odd
 {
-    bool operator()(const int& i) const {return i & 1;}
+    constexpr bool operator()(const int & i) const
+    {
+        return i & 1;
+    }
 };
 
 template<class Iter, class Sent = Iter>
@@ -150,6 +153,27 @@ void test_rvalue()
     CHECK(r2[3].i == 8);
 }
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    const int ia[] = {1, 2, 3, 4, 6, 8, 5, 7};
+    int r1[10] = {0};
+    int r2[10] = {0};
+    const auto p = partition_copy(ia, r1, r2, is_odd());
+    STATIC_CHECK_RETURN(p.in == std::end(ia));
+    STATIC_CHECK_RETURN(p.out1 == r1 + 4);
+    STATIC_CHECK_RETURN(r1[0] == 1);
+    STATIC_CHECK_RETURN(r1[1] == 3);
+    STATIC_CHECK_RETURN(r1[2] == 5);
+    STATIC_CHECK_RETURN(r1[3] == 7);
+    STATIC_CHECK_RETURN(p.out2 == r2 + 4);
+    STATIC_CHECK_RETURN(r2[0] == 2);
+    STATIC_CHECK_RETURN(r2[1] == 4);
+    STATIC_CHECK_RETURN(r2[2] == 6);
+    STATIC_CHECK_RETURN(r2[3] == 8);
+    return true;
+}
+
 int main()
 {
     test_iter<InputIterator<const int*> >();
@@ -160,6 +184,10 @@ int main()
 
     test_proj();
     test_rvalue();
+
+    {
+        STATIC_CHECK(test_constexpr());
+    }
 
     return ::test_result();
 }

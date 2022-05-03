@@ -50,9 +50,9 @@ namespace ranges
         template(typename I, typename S, typename C = equal_to, typename P = identity)(
             /// \pre
             requires sortable<I, C, P> AND sentinel_for<S, I>)
-        I RANGES_FUNC(unique)(I first, S last, C pred = C{}, P proj = P{})
+        constexpr I RANGES_FUNC(unique)(I first, S last, C pred = C{}, P proj = P{})
         {
-            first = adjacent_find(std::move(first), last, std::ref(pred), std::ref(proj));
+            first = adjacent_find(std::move(first), last, ranges::ref(pred), ranges::ref(proj));
 
             if(first != last)
             {
@@ -68,7 +68,7 @@ namespace ranges
         template(typename Rng, typename C = equal_to, typename P = identity)(
             /// \pre
             requires sortable<iterator_t<Rng>, C, P> AND range<Rng>)
-        borrowed_iterator_t<Rng> //
+        constexpr borrowed_iterator_t<Rng> //
         RANGES_FUNC(unique)(Rng && rng, C pred = C{}, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

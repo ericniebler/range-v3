@@ -191,6 +191,16 @@ struct S
     int i;
 };
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    int ia[] = {0, 1, 2, 2, 4, 5};
+    auto r = search_n(ia, 2, 2, equal_to{});
+    STATIC_CHECK_RETURN(r.begin() == ia + 2);
+
+    return true;
+}
+
 int main()
 {
     test<ForwardIterator<const int*>, ForwardIterator<const int*> >();
@@ -243,6 +253,10 @@ int main()
     {
         std::vector<int> ib{0, 0, 1, 1, 2, 2};
         CHECK(::is_dangling(ranges::search_n(std::move(ib), 2, 1)));
+    }
+
+    {
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

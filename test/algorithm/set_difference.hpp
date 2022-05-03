@@ -125,6 +125,34 @@ struct U
     U& operator=(T t) { k = t.j; return *this;}
 };
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    using IL = std::initializer_list<int>;
+    int ia[] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4};
+    const int sa = sizeof(ia) / sizeof(ia[0]);
+    int ib[] = {2, 4, 4, 6};
+    const int sb = sizeof(ib) / sizeof(ib[0]);
+    int ic[20] = {0};
+    int ir[] = {1, 2, 3, 3, 3, 4, 4};
+    const int sr = sizeof(ir) / sizeof(ir[0]);
+
+    const auto res = set_difference(ia, IL{2, 4, 4, 6}, ic, less{});
+    STATIC_CHECK_RETURN((res.in1 - ia) == sa);
+    STATIC_CHECK_RETURN((res.out - ic) == sr);
+    STATIC_CHECK_RETURN(lexicographical_compare(ic, res.out, ir, ir + sr, less{}) == 0);
+    fill(ic, 0);
+
+    int irr[] = {6};
+    const int srr = sizeof(irr) / sizeof(irr[0]);
+    const auto res2 = set_difference(ib, IL{1, 2, 2, 3, 3, 3, 4, 4, 4, 4}, ic, less{});
+    STATIC_CHECK_RETURN((res2.in1 - ib) == sb);
+    STATIC_CHECK_RETURN((res2.out - ic) == srr);
+    STATIC_CHECK_RETURN(lexicographical_compare(ic, res2.out, irr, irr + srr, less{}) == 0);
+
+    return true;
+}
+
 int main()
 {
 #ifdef SET_DIFFERENCE_1
@@ -336,6 +364,10 @@ int main()
         CHECK(::is_dangling(res3.in1));
         CHECK((res3.out - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, res3.out, ir, ir+sr, std::less<int>(), &U::k) == false);
+    }
+
+    {
+        STATIC_CHECK(test_constexpr());
     }
 #endif
 

@@ -28,6 +28,8 @@
 #include <functional>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
+#include <range/v3/algorithm/is_sorted.hpp>
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -37,6 +39,21 @@ RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
 
 namespace
 {
+
+    constexpr bool test_constexpr()
+    {
+        using namespace ranges;
+        bool r = true;
+        constexpr int N = 100;
+        test::array<int, N> ia{{0}};
+        for(int i = 0; i < N; ++i)
+            ia[i] = N - 1 - i;
+        make_heap(begin(ia), end(ia));
+        STATIC_CHECK_RETURN(sort_heap(begin(ia), end(ia), ranges::less{}) == end(ia));
+        STATIC_CHECK_RETURN(is_sorted(ia));
+        return r;
+    }
+
     std::mt19937 gen;
 
     void test_1(int N)
@@ -176,7 +193,7 @@ namespace
         delete[] ib;
     }
 
-    void test(int N)
+    void test_all(int N)
     {
         test_1(N);
         test_2(N);
@@ -191,14 +208,18 @@ namespace
 
 int main()
 {
-    test(0);
-    test(1);
-    test(2);
-    test(3);
-    test(10);
-    test(1000);
+    test_all(0);
+    test_all(1);
+    test_all(2);
+    test_all(3);
+    test_all(10);
+    test_all(1000);
     test_9(1000);
     test_10(1000);
+
+    {
+        STATIC_CHECK(test_constexpr());
+    }
 
     return test_result();
 }

@@ -190,6 +190,7 @@ ClientBin/
 *.[Pp]ublish.xml
 *.pfx
 *.publishsettings
+.DS_Store
 
 # RIA/Silverlight projects
 Generated_Code/
@@ -233,6 +234,7 @@ $RECYCLE.BIN/
 .vscode/
 .vs/
 .history/
+.devcontainer/
 
 \#*#
 .#*

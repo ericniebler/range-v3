@@ -50,20 +50,20 @@ namespace ranges
                 random_access_iterator<O> AND sentinel_for<SO, O> AND
                 indirectly_copyable<I, O> AND sortable<O, C, PO> AND
                 indirect_strict_weak_order<C, projected<I, PI>, projected<O, PO>>)
-        O RANGES_FUNC(partial_sort_copy)(I first,
-                                         SI last,
-                                         O out_begin,
-                                         SO out_end,
-                                         C pred = C{},
-                                         PI in_proj = PI{},
-                                         PO out_proj = PO{}) //
+        constexpr O RANGES_FUNC(partial_sort_copy)(I first,
+                                                   SI last,
+                                                   O out_begin,
+                                                   SO out_end,
+                                                   C pred = C{},
+                                                   PI in_proj = PI{},
+                                                   PO out_proj = PO{}) //
         {
             O r = out_begin;
             if(r != out_end)
             {
                 for(; first != last && r != out_end; ++first, ++r)
                     *r = *first;
-                make_heap(out_begin, r, std::ref(pred), std::ref(out_proj));
+                make_heap(out_begin, r, ranges::ref(pred), ranges::ref(out_proj));
                 auto len = r - out_begin;
                 for(; first != last; ++first)
                 {
@@ -74,11 +74,11 @@ namespace ranges
                         detail::sift_down_n(out_begin,
                                             len,
                                             out_begin,
-                                            std::ref(pred),
-                                            std::ref(out_proj));
+                                            ranges::ref(pred),
+                                            ranges::ref(out_proj));
                     }
                 }
-                sort_heap(out_begin, r, std::ref(pred), std::ref(out_proj));
+                sort_heap(out_begin, r, ranges::ref(pred), ranges::ref(out_proj));
             }
             return r;
         }
@@ -96,11 +96,11 @@ namespace ranges
                 indirect_strict_weak_order<C,
                                            projected<iterator_t<InRng>, PI>,
                                            projected<iterator_t<OutRng>, PO>>)
-        borrowed_iterator_t<OutRng> RANGES_FUNC(partial_sort_copy)(InRng && in_rng,
-                                                                   OutRng && out_rng,
-                                                                   C pred = C{},
-                                                                   PI in_proj = PI{},
-                                                                   PO out_proj = PO{}) //
+        constexpr borrowed_iterator_t<OutRng> RANGES_FUNC(partial_sort_copy)(InRng && in_rng,
+                                                                             OutRng && out_rng,
+                                                                             C pred = C{},
+                                                                             PI in_proj = PI{},
+                                                                             PO out_proj = PO{}) //
         {
             return (*this)(begin(in_rng),
                            end(in_rng),

@@ -36,7 +36,7 @@ namespace ranges
         template(typename O, typename V)(
             /// \pre
             requires output_iterator<O, V const &>)
-        O RANGES_FUNC(fill_n)(O first, iter_difference_t<O> n, V const & val)
+        constexpr O RANGES_FUNC(fill_n)(O first, iter_difference_t<O> n, V const & val)
         {
             RANGES_EXPECT(n >= 0);
             auto norig = n;

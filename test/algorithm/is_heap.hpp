@@ -1059,5 +1059,10 @@ int main()
     S i183[] = {S{0}, S{1}, S{1}, S{1}, S{1}, S{1}, S{1}};
     CHECK(ranges::is_heap(i183, i183+7, std::greater<int>(), &S::i));
 
+    {
+        using IL = std::initializer_list<int>;
+        STATIC_CHECK(ranges::is_heap(IL{0, 1, 1, 1, 1, 1, 1}, ranges::greater{}));
+    }
+
     return ::test_result();
 }

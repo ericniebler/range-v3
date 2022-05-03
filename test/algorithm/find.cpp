@@ -30,6 +30,21 @@ struct S
     int i_;
 };
 
+template<class Rng, class T>
+constexpr T ret_val(Rng r, T val)
+{
+    auto rng = r;
+    auto pi = ranges::find(rng, val);
+    return *pi;
+}
+template<class Rng, class T>
+constexpr bool found(Rng r, T val)
+{
+    auto rng = r;
+    auto pi = ranges::find(rng, val);
+    return pi != ranges::end(rng);
+}
+
 int main()
 {
     using namespace ranges;
@@ -85,6 +100,13 @@ int main()
         auto vec = std::vector<std::string>{{"a"}, {"b"}, {"c"}};
         auto it = ranges::find(vec, "b");
         CHECK(it == vec.begin() + 1);
+    }
+
+    {
+        using IL = std::initializer_list<int>;
+        STATIC_CHECK(ret_val(IL{1, 2}, 2) == 2);
+        STATIC_CHECK(found(IL{1, 3, 4}, 4));
+        STATIC_CHECK(!found(IL{1, 3, 4}, 5));
     }
 
     return ::test_result();

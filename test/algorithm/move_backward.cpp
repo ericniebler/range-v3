@@ -61,6 +61,59 @@ test()
     }
 }
 
+template<typename InIter, typename OutIter, typename Sent = InIter>
+constexpr bool test_constexpr()
+{
+    {
+        constexpr int N = 1000;
+        int ia[N]{1};
+        for(int i = 0; i < N; ++i)
+            ia[i] = i;
+        int ib[N] = {0};
+
+        const auto r = ranges::move_backward(InIter(ia), Sent(ia + N), OutIter(ib + N));
+        if(base(r.in) != ia + N)
+        {
+            return false;
+        }
+        if(base(r.out) != ib)
+        {
+            return false;
+        }
+        for(int i = 0; i < N; ++i)
+            if(ia[i] != ib[i])
+            {
+                return false;
+            }
+    }
+
+    {
+        constexpr int N = 1000;
+        int ia[N]{1};
+        for(int i = 0; i < N; ++i)
+            ia[i] = i;
+        int ib[N] = {0};
+
+        const auto r = ranges::move_backward(
+            as_lvalue(ranges::make_subrange(InIter(ia), Sent(ia + N))), OutIter(ib + N));
+        if(base(r.in) != ia + N)
+        {
+            return false;
+        }
+        if(base(r.out) != ib)
+        {
+            return false;
+        }
+        for(int i = 0; i < N; ++i)
+            if(ia[i] != ib[i])
+            {
+                return false;
+            }
+    }
+
+    return true;
+}
+
 struct S
 {
     std::unique_ptr<int> p;
@@ -143,6 +196,22 @@ int main()
     test1<std::unique_ptr<int>*, BidirectionalIterator<std::unique_ptr<int>*> >();
     test1<std::unique_ptr<int>*, RandomAccessIterator<std::unique_ptr<int>*> >();
     test1<std::unique_ptr<int>*, std::unique_ptr<int>*>();
+
+    STATIC_CHECK(test_constexpr<BidirectionalIterator<const int *>,
+                                BidirectionalIterator<int *>>());
+    STATIC_CHECK(test_constexpr<BidirectionalIterator<const int *>,
+                                RandomAccessIterator<int *>>());
+    STATIC_CHECK(test_constexpr<BidirectionalIterator<const int *>, int *>());
+
+    STATIC_CHECK(test_constexpr<RandomAccessIterator<const int *>,
+                                BidirectionalIterator<int *>>());
+    STATIC_CHECK(
+        test_constexpr<RandomAccessIterator<const int *>, RandomAccessIterator<int *>>());
+    STATIC_CHECK(test_constexpr<RandomAccessIterator<const int *>, int *>());
+
+    STATIC_CHECK(test_constexpr<const int *, BidirectionalIterator<int *>>());
+    STATIC_CHECK(test_constexpr<const int *, RandomAccessIterator<int *>>());
+    STATIC_CHECK(test_constexpr<const int *, int *>());
 
     return test_result();
 }

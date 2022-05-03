@@ -32,7 +32,10 @@
 
 struct is_odd
 {
-    bool operator()(const int& i) const {return i & 1;}
+    constexpr bool operator()(const int & i) const
+    {
+        return i & 1;
+    }
 };
 
 template<class Iter, class Sent = Iter>
@@ -123,6 +126,12 @@ int main()
     // Test projections
     const S ia[] = {S{1}, S{3}, S{5}, S{2}, S{4}, S{6}};
     CHECK( ranges::is_partitioned(ia, is_odd(), &S::i) );
+
+    {
+        using IL = std::initializer_list<int>;
+        STATIC_CHECK(ranges::is_partitioned(IL{1, 3, 5, 2, 4, 6}, is_odd()));
+        STATIC_CHECK(!ranges::is_partitioned(IL{1, 3, 1, 2, 5, 6}, is_odd()));
+    }
 
     return ::test_result();
 }

@@ -14,7 +14,10 @@
 #include <range/v3/algorithm/all_of.hpp>
 #include "../simple_test.hpp"
 
-bool even(int n) { return n % 2 == 0; }
+constexpr bool even(int n)
+{
+    return n % 2 == 0;
+}
 
 struct S {
   S(bool p) : test(p) { }
@@ -23,6 +26,11 @@ struct S {
 
   bool test;
 };
+
+constexpr bool test_constexpr(std::initializer_list<int> il)
+{
+    return ranges::all_of(il, even);
+}
 
 int main()
 {
@@ -57,6 +65,11 @@ int main()
   CHECK(ranges::all_of(ILS{S(true), S(true), S(true)}, &S::p));
   CHECK(!ranges::all_of(ILS{S(false), S(true), S(false)}, &S::p));
   CHECK(!ranges::all_of(ILS{S(false), S(false), S(false)}, &S::p));
+
+  STATIC_CHECK(test_constexpr({0, 2, 4, 6}));
+  STATIC_CHECK(!test_constexpr({0, 2, 4, 5}));
+  STATIC_CHECK(!test_constexpr({1, 3, 4, 7}));
+  STATIC_CHECK(!test_constexpr({1, 3, 5, 7}));
 
   return ::test_result();
 }

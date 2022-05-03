@@ -19,6 +19,8 @@
 #include <range/v3/algorithm/equal.hpp>
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/iterator/stream_iterators.hpp>
+
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
@@ -34,6 +36,21 @@ bool test_constexpr_copy()
 
 static_assert(test_constexpr_copy(), "");
 #endif
+
+constexpr bool test_constexpr()
+{
+    using IL = std::initializer_list<int>;
+    constexpr test::array<int, 4> input{{0, 1, 2, 3}};
+    test::array<int, 4> tmp{{0, 0, 0, 0}};
+    
+    auto res = ranges::copy(input, ranges::begin(tmp));
+    
+    STATIC_CHECK_RETURN(res.in == ranges::end(input));
+    STATIC_CHECK_RETURN(res.out == ranges::end(tmp));
+    STATIC_CHECK_RETURN(ranges::equal(tmp, IL{0, 1, 2, 3}));
+
+    return true;
+}
 
 int main()
 {
@@ -89,6 +106,10 @@ int main()
         std::vector<int> copy_vec{1,1,1,1,1};
         copy(copy_vec, ostream_iterator<>(sout, " "));
         CHECK(sout.str() == "1 1 1 1 1 ");
+    }
+
+    {
+        STATIC_CHECK(test_constexpr());
     }
 
     return test_result();

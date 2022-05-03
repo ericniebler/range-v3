@@ -33,6 +33,7 @@
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/transform.hpp>
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
@@ -55,7 +56,7 @@ void not_totally_ordered()
 
 template<class Iter, class Sent, class T, class Proj = ranges::identity>
 void
-test(Iter first, Sent last, const T& value, Proj proj = Proj{})
+test_it(Iter first, Sent last, const T& value, Proj proj = Proj{})
 {
     ranges::subrange<Iter, Iter> i =
         ranges::equal_range(first, last, value, ranges::less{}, proj);
@@ -82,7 +83,7 @@ test(Iter first, Sent last, const T& value, Proj proj = Proj{})
 
 template<class Iter, class Sent = Iter>
 void
-test()
+test_it()
 {
     using namespace ranges::views;
     static constexpr unsigned M = 10;
@@ -90,7 +91,83 @@ test()
     auto input = ints | take(100) | transform([](int i){return repeat_n(i,M);}) | join;
     ranges::copy(input, ranges::back_inserter(v));
     for (int x = 0; x <= (int)M; ++x)
-        test(Iter(v.data()), Sent(v.data()+v.size()), x);
+        test_it(Iter(v.data()), Sent(v.data()+v.size()), x);
+}
+
+template<class Iter, class Sent, class T>
+constexpr bool test_constexpr(Iter first, Sent last, const T & value)
+{
+    bool result = true;
+    const auto i = ranges::equal_range(first, last, value);
+    for(Iter j = first; j != i.begin(); ++j)
+    {
+        STATIC_CHECK_RETURN(*j < value);
+    }
+    for(Iter j = i.begin(); j != last; ++j)
+    {
+        STATIC_CHECK_RETURN(!(*j < value));
+    }
+    for(Iter j = first; j != i.end(); ++j)
+    {
+        STATIC_CHECK_RETURN(!(value < *j));
+    }
+    for(Iter j = i.end(); j != last; ++j)
+    {
+        STATIC_CHECK_RETURN(value < *j);
+    }
+
+    const auto res = ranges::equal_range(ranges::make_subrange(first, last), value);
+    for(Iter j = first; j != res.begin(); ++j)
+    {
+        STATIC_CHECK_RETURN(*j < value);
+    }
+    for(Iter j = res.begin(); j != last; ++j)
+    {
+        STATIC_CHECK_RETURN(!(*j < value));
+    }
+    for(Iter j = first; j != res.end(); ++j)
+    {
+        STATIC_CHECK_RETURN(!(value < *j));
+    }
+    for(Iter j = res.end(); j != last; ++j)
+    {
+        STATIC_CHECK_RETURN(value < *j);
+    }
+
+    return result;
+}
+
+template<class Iter, class Sent = Iter>
+constexpr bool test_constexpr()
+{
+    constexpr unsigned M = 10;
+    constexpr unsigned N = 10;
+    test::array<int, N * M> v{{0}};
+    for(unsigned i = 0; i < N; ++i)
+    {
+        for(unsigned j = 0; j < M; ++j)
+        {
+            v[i * M + j] = (int)i;
+        }
+    }
+    for(int x = 0; x <= (int)M; ++x)
+    {
+        STATIC_CHECK_RETURN(test_constexpr(Iter(v.data()), Sent(v.data() + v.size()), x));
+    }
+    return true;
+}
+
+constexpr bool test_constexpr_some()
+{
+    constexpr int d[] = {0, 1, 2, 3};
+    for(auto e = ranges::begin(d); e < ranges::end(d); ++e)
+    {
+        for(int x = -1; x <= 4; ++x)
+        {
+            STATIC_CHECK_RETURN(test_constexpr(d, e, x));
+        }
+    }
+    return true;
 }
 
 int main()
@@ -98,22 +175,34 @@ int main()
     int d[] = {0, 1, 2, 3};
     for (int* e = d; e <= d+4; ++e)
         for (int x = -1; x <= 4; ++x)
-            test(d, e, x);
+            test_it(d, e, x);
 
-    test<ForwardIterator<const int*> >();
-    test<BidirectionalIterator<const int*> >();
-    test<RandomAccessIterator<const int*> >();
-    test<const int*>();
 
-    test<ForwardIterator<const int*>, Sentinel<const int*> >();
-    test<BidirectionalIterator<const int*>, Sentinel<const int*> >();
-    test<RandomAccessIterator<const int*>, Sentinel<const int*> >();
+    test_it<ForwardIterator<const int*> >();
+    test_it<BidirectionalIterator<const int*> >();
+    test_it<RandomAccessIterator<const int*> >();
+    test_it<const int*>();
+
+    test_it<ForwardIterator<const int*>, Sentinel<const int*> >();
+    test_it<BidirectionalIterator<const int*>, Sentinel<const int*> >();
+    test_it<RandomAccessIterator<const int*>, Sentinel<const int*> >();
 
     {
         struct foo { int i; };
 
         foo some_foos[] = {{1}, {2}, {4}};
-        test(some_foos, some_foos + 3, 2, &foo::i);
+        test_it(some_foos, some_foos + 3, 2, &foo::i);
+    }
+
+    {
+        STATIC_CHECK(test_constexpr_some());
+        STATIC_CHECK(test_constexpr<ForwardIterator<const int *>>());
+        STATIC_CHECK(test_constexpr<BidirectionalIterator<const int *>>());
+        STATIC_CHECK(test_constexpr<RandomAccessIterator<const int *>>());
+        STATIC_CHECK(test_constexpr<const int *>());
+        STATIC_CHECK(test_constexpr<ForwardIterator<const int *>, Sentinel<const int *>>());
+        STATIC_CHECK(test_constexpr<BidirectionalIterator<const int *>, Sentinel<const int *>>());
+        STATIC_CHECK(test_constexpr<RandomAccessIterator<const int *>, Sentinel<const int *>>());
     }
 
     return ::test_result();

@@ -43,7 +43,7 @@ namespace ranges
             /// \pre
             requires invocable<F &> AND output_iterator<O, invoke_result_t<F &>> AND
             sentinel_for<S, O>)
-        generate_result<O, F> RANGES_FUNC(generate)(O first, S last, F fun) //
+        constexpr generate_result<O, F> RANGES_FUNC(generate)(O first, S last, F fun) //
         {
             for(; first != last; ++first)
                 *first = invoke(fun);
@@ -54,7 +54,7 @@ namespace ranges
         template(typename Rng, typename F)(
             /// \pre
             requires invocable<F &> AND output_range<Rng, invoke_result_t<F &>>)
-        generate_result<borrowed_iterator_t<Rng>, F> //
+        constexpr generate_result<borrowed_iterator_t<Rng>, F> //
         RANGES_FUNC(generate)(Rng && rng, F fun)
         {
             return {(*this)(begin(rng), end(rng), ref(fun)).out, detail::move(fun)};
