@@ -75,7 +75,7 @@ namespace ranges
                 }
                 else
                 {
-                    from_ = T(to_ - (delta_ * (n_ - 1)));
+                    from_ = T(to_ - (delta_ * Calc(n_ - 1)));
                 }
             }
 
