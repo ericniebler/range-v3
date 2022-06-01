@@ -495,6 +495,7 @@ strings, as below:
 
 ~~~~~~~{.cpp}
     #include <iostream>
+    #include <range/v3/algorithm/for_each.hpp>
 
     int main()
     {

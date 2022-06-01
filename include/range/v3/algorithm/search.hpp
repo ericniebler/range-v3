@@ -50,8 +50,15 @@ namespace ranges
     {
         template<typename I1, typename S1, typename D1, typename I2, typename S2,
                  typename D2, typename C, typename P1, typename P2>
-        constexpr subrange<I1> search_sized_impl(I1 const begin1_, S1 end1, D1 const d1_, I2 begin2,
-                                                 S2 end2, D2 d2, C & pred, P1 & proj1, P2 & proj2)
+        constexpr subrange<I1> search_sized_impl(I1 const begin1_, 
+                                                 S1 end1,
+                                                 D1 const d1_,
+                                                 I2 begin2, 
+                                                 S2 end2, 
+                                                 D2 d2, 
+                                                 C & pred,
+                                                 P1 & proj1, 
+                                                 P2 & proj2)
         {
             D1 d1 = d1_;
             auto begin1 = uncounted(begin1_);
@@ -102,8 +109,13 @@ namespace ranges
 
         template<typename I1, typename S1, typename I2, typename S2, typename C,
                  typename P1, typename P2>
-        constexpr subrange<I1> search_impl(I1 begin1, S1 end1, I2 begin2, S2 end2, C & pred,
-                                           P1 & proj1, P2 & proj2)
+        constexpr subrange<I1> search_impl(I1 begin1, 
+                                           S1 end1, 
+                                           I2 begin2, 
+                                           S2 end2, 
+                                           C & pred,
+                                           P1 & proj1, 
+                                           P2 & proj2)
         {
             while(true)
             {

@@ -49,7 +49,7 @@ namespace ranges
     namespace detail
     {
         template<typename I> // Forward
-        subrange<I> rotate_left(I first, I last)
+        constexpr subrange<I> rotate_left(I first, I last)
         {
             iter_value_t<I> tmp = iter_move(first);
             I lm1 = ranges::move(next(first), last, first).out;
@@ -58,7 +58,7 @@ namespace ranges
         }
 
         template<typename I> // Bidirectional
-        subrange<I> rotate_right(I first, I last)
+        constexpr subrange<I> rotate_right(I first, I last)
         {
             I lm1 = prev(last);
             iter_value_t<I> tmp = iter_move(lm1);
@@ -68,7 +68,7 @@ namespace ranges
         }
 
         template<typename I, typename S> // Forward
-        subrange<I> rotate_forward(I first, I middle, S last)
+        constexpr subrange<I> rotate_forward(I first, I middle, S last)
         {
             I i = middle;
             while(true)
@@ -102,7 +102,7 @@ namespace ranges
         }
 
         template<typename D>
-        D gcd(D x, D y)
+        constexpr D gcd(D x, D y)
         {
             do
             {
@@ -114,7 +114,7 @@ namespace ranges
         }
 
         template<typename I> // Random
-        subrange<I> rotate_gcd(I first, I middle, I last)
+        constexpr subrange<I> rotate_gcd(I first, I middle, I last)
         {
             auto const m1 = middle - first;
             auto const m2 = last - middle;
@@ -145,13 +145,13 @@ namespace ranges
         }
 
         template<typename I, typename S>
-        subrange<I> rotate_(I first, I middle, S last, std::forward_iterator_tag)
+        constexpr subrange<I> rotate_(I first, I middle, S last, std::forward_iterator_tag)
         {
             return detail::rotate_forward(first, middle, last);
         }
 
         template<typename I>
-        subrange<I> rotate_(I first, I middle, I last, std::forward_iterator_tag)
+        constexpr subrange<I> rotate_(I first, I middle, I last, std::forward_iterator_tag)
         {
             using value_type = iter_value_t<I>;
             if(detail::is_trivially_move_assignable_v<value_type>)
@@ -163,7 +163,7 @@ namespace ranges
         }
 
         template<typename I>
-        subrange<I> rotate_(I first, I middle, I last, std::bidirectional_iterator_tag)
+        constexpr subrange<I> rotate_(I first, I middle, I last, std::bidirectional_iterator_tag)
         {
             using value_type = iter_value_t<I>;
             if(detail::is_trivially_move_assignable_v<value_type>)
@@ -177,7 +177,7 @@ namespace ranges
         }
 
         template<typename I>
-        subrange<I> rotate_(I first, I middle, I last, std::random_access_iterator_tag)
+        constexpr subrange<I> rotate_(I first, I middle, I last, std::random_access_iterator_tag)
         {
             using value_type = iter_value_t<I>;
             if(detail::is_trivially_move_assignable_v<value_type>)
@@ -199,7 +199,7 @@ namespace ranges
         template(typename I, typename S)(
             /// \pre
             requires permutable<I> AND sentinel_for<S, I>)
-        subrange<I> RANGES_FUNC(rotate)(I first, I middle, S last) //
+        constexpr subrange<I> RANGES_FUNC(rotate)(I first, I middle, S last) //
         {
             if(first == middle)
             {
@@ -217,7 +217,7 @@ namespace ranges
         template(typename Rng, typename I = iterator_t<Rng>)(
             /// \pre
             requires range<Rng> AND permutable<I>)
-        borrowed_subrange_t<Rng> RANGES_FUNC(rotate)(Rng && rng, I middle) //
+        constexpr borrowed_subrange_t<Rng> RANGES_FUNC(rotate)(Rng && rng, I middle) //
         {
             return (*this)(begin(rng), std::move(middle), end(rng));
         }

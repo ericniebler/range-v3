@@ -85,6 +85,7 @@ namespace ranges
         {
             CPP_assert(std::is_void<decltype(current_++)>());
             ++current_;
+            --cnt_;
         }
         constexpr auto post_increment_(std::false_type) -> decltype(current_++)
         {

@@ -144,6 +144,7 @@ namespace ranges
 #define RANGES_CXX_CONSTEXPR_11 200704L
 #define RANGES_CXX_CONSTEXPR_14 201304L
 #define RANGES_CXX_CONSTEXPR_17 201603L
+#define RANGES_CXX_CONSTEXPR_20 201907L
 #define RANGES_CXX_CONSTEXPR_LAMBDAS 201603L
 #define RANGES_CXX_RANGE_BASED_FOR_11 200907L
 #define RANGES_CXX_RANGE_BASED_FOR_14 RANGES_CXX_RANGE_BASED_FOR_11
@@ -546,15 +547,6 @@ namespace ranges
 #ifndef RANGES_CXX_COROUTINES
 #define RANGES_CXX_COROUTINES RANGES_CXX_FEATURE(COROUTINES)
 #endif
-#endif
-
-// RANGES_CXX14_CONSTEXPR macro (see also BOOST_CXX14_CONSTEXPR)
-// Note: constexpr implies inline, to retain the same visibility
-// C++14 constexpr functions are inline in C++11
-#if RANGES_CXX_CONSTEXPR >= RANGES_CXX_CONSTEXPR_14
-#define RANGES_CXX14_CONSTEXPR constexpr
-#else
-#define RANGES_CXX14_CONSTEXPR inline
 #endif
 
 #ifdef NDEBUG

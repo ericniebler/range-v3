@@ -22,6 +22,7 @@
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
+#include <range/v3/functional/reference_wrapper.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -41,11 +42,11 @@ namespace ranges
                 /// \pre
                 requires forward_iterator<I> AND
                     indirect_strict_weak_order<R, V const *, projected<I, P>>)
-            subrange<I> operator()(I first,
-                                   iter_difference_t<I> dist,
-                                   V const & val,
-                                   R pred = R{},
-                                   P proj = P{}) const
+            constexpr subrange<I> operator()(I first,
+                                             iter_difference_t<I> dist,
+                                             V const & val,
+                                             R pred = R{},
+                                             P proj = P{}) const
             {
                 if(0 < dist)
                 {
@@ -69,13 +70,13 @@ namespace ranges
                             return {lower_bound_n(std::move(first),
                                                   half,
                                                   val,
-                                                  std::ref(pred),
-                                                  std::ref(proj)),
+                                                  ranges::ref(pred),
+                                                  ranges::ref(proj)),
                                     upper_bound_n(ranges::next(middle),
                                                   dist - (half + 1),
                                                   val,
-                                                  std::ref(pred),
-                                                  std::ref(proj))};
+                                                  ranges::ref(pred),
+                                                  ranges::ref(proj))};
                         }
                     } while(0 != dist);
                 }

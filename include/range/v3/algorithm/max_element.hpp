@@ -40,7 +40,7 @@ namespace ranges
             /// \pre
             requires forward_iterator<I> AND sentinel_for<S, I> AND
             indirect_strict_weak_order<C, projected<I, P>>)
-        I RANGES_FUNC(max_element)(I first, S last, C pred = C{}, P proj = P{})
+        constexpr I RANGES_FUNC(max_element)(I first, S last, C pred = C{}, P proj = P{})
         {
             if(first != last)
                 for(auto tmp = next(first); tmp != last; ++tmp)
@@ -54,7 +54,7 @@ namespace ranges
             /// \pre
             requires forward_range<Rng> AND
             indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>)
-        borrowed_iterator_t<Rng> //
+        constexpr borrowed_iterator_t<Rng> //
         RANGES_FUNC(max_element)(Rng && rng, C pred = C{}, P proj = P{})
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

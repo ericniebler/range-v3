@@ -46,7 +46,7 @@ namespace ranges
                 weakly_incrementable<O> AND
                 indirect_relation<equal_to, projected<I, P>, T const *> AND
                 indirectly_copyable<I, O>)
-        remove_copy_result<I, O> RANGES_FUNC(remove_copy)(
+        constexpr remove_copy_result<I, O> RANGES_FUNC(remove_copy)(
             I first, S last, O out, T const & val, P proj = P{}) //
         {
             for(; first != last; ++first)
@@ -67,7 +67,7 @@ namespace ranges
             requires input_range<Rng> AND weakly_incrementable<O> AND
             indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *> AND
             indirectly_copyable<iterator_t<Rng>, O>)
-        remove_copy_result<borrowed_iterator_t<Rng>, O> //
+        constexpr remove_copy_result<borrowed_iterator_t<Rng>, O> //
         RANGES_FUNC(remove_copy)(Rng && rng, O out, T const & val, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(out), val, std::move(proj));

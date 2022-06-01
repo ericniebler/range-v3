@@ -157,7 +157,19 @@ namespace test_impl
             return {filename_, lineno_, expr_, std::forward<T>(t)};
         }
     };
-}
+
+    constexpr bool static_check(bool b, const char * message)
+    {
+        if(!b)
+        {
+            // an error about this subexpression not valid in a constant expression
+            // means the check failed
+            // the message should be printed in the compiler output
+            throw std::logic_error{message};
+        }
+        return true;
+    }
+} // namespace test_impl
 
 inline int test_result()
 {
@@ -169,6 +181,28 @@ inline int test_result()
     /**/
 
 #define CHECK(...) CHECK_LINE(__FILE__, __LINE__, __VA_ARGS__)
+
+#define STR(x) #x
+
+#define STATIC_CHECK_LINE(file, line, ...) \
+    ::test_impl::static_check(__VA_ARGS__,                     \
+          "> ERROR: CHECK failed \"" #__VA_ARGS__ "\"> " file "(" STR(line) ")")
+
+#define STATIC_CHECK_IMPL(file, line, ...)                             \
+    do                                                                 \
+    {                                                                  \
+        constexpr auto _ = STATIC_CHECK_LINE(file, line, __VA_ARGS__); \
+        (void)_;                                                       \
+    } while(0)
+
+#define STATIC_CHECK_RETURN_IMPL(file, line, ...) \
+    if (!STATIC_CHECK_LINE(file, line, __VA_ARGS__)) return false
+
+// use that as a standalone check
+#define STATIC_CHECK(...) STATIC_CHECK_IMPL(__FILE__, __LINE__, __VA_ARGS__)
+
+// use that in a constexpr test returning bool
+#define STATIC_CHECK_RETURN(...) STATIC_CHECK_RETURN_IMPL(__FILE__, __LINE__, __VA_ARGS__)
 
 template<class>
 struct undef;

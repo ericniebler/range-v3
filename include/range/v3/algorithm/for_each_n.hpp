@@ -41,7 +41,7 @@ namespace ranges
             /// \pre
             requires input_iterator<I> AND
                 indirectly_unary_invocable<F, projected<I, P>>)
-        I RANGES_FUNC(for_each_n)(I first, iter_difference_t<I> n, F fun, P proj = P{})
+        constexpr I RANGES_FUNC(for_each_n)(I first, iter_difference_t<I> n, F fun, P proj = P{})
         {
             RANGES_EXPECT(0 <= n);
             auto norig = n;
@@ -56,7 +56,7 @@ namespace ranges
             /// \pre
             requires input_range<Rng> AND
                 indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
-        borrowed_iterator_t<Rng> RANGES_FUNC(for_each_n)(
+        constexpr borrowed_iterator_t<Rng> RANGES_FUNC(for_each_n)(
             Rng && rng, range_difference_t<Rng> n, F fun, P proj = P{})
         {
             if(sized_range<Rng>)

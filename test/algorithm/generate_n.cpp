@@ -29,9 +29,16 @@
 struct gen_test
 {
     int i_;
-    gen_test() = default;
-    gen_test(int i) : i_(i) {}
-    int operator()() {return i_++;}
+    constexpr gen_test()
+      : i_{}
+    {}
+    constexpr gen_test(int i)
+      : i_(i)
+    {}
+    constexpr int operator()()
+    {
+        return i_++;
+    }
 };
 
 template<class Iter, class Sent = Iter>
@@ -62,6 +69,40 @@ void test2()
     CHECK(v[4] == 5);
 }
 
+template<class Iter, class Sent = Iter>
+constexpr bool test_constexpr()
+{
+    bool r = true;
+    const unsigned n = 4;
+    int ia[n] = {0};
+    const auto res = ranges::generate_n(Iter(ia), n, gen_test(1));
+    if(ia[0] != 1)
+    {
+        r = false;
+    }
+    if(ia[1] != 2)
+    {
+        r = false;
+    }
+    if(ia[2] != 3)
+    {
+        r = false;
+    }
+    if(ia[3] != 4)
+    {
+        r = false;
+    }
+    if(res.out != Iter(ia + n))
+    {
+        r = false;
+    }
+    if(res.fun.i_ != 5)
+    {
+        r = false;
+    }
+    return r;
+}
+
 int main()
 {
     test<ForwardIterator<int*> >();
@@ -74,6 +115,17 @@ int main()
     test<RandomAccessIterator<int*>, Sentinel<int*> >();
 
     test2();
+
+    {
+        STATIC_CHECK(test_constexpr<ForwardIterator<int *>>());
+        STATIC_CHECK(test_constexpr<BidirectionalIterator<int *>>());
+        STATIC_CHECK(test_constexpr<RandomAccessIterator<int *>>());
+        STATIC_CHECK(test_constexpr<int *>());
+
+        STATIC_CHECK(test_constexpr<ForwardIterator<int *>, Sentinel<int *>>());
+        STATIC_CHECK(test_constexpr<BidirectionalIterator<int *>, Sentinel<int *>>());
+        STATIC_CHECK(test_constexpr<RandomAccessIterator<int *>, Sentinel<int *>>());
+    }
 
     return ::test_result();
 }

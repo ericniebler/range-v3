@@ -81,6 +81,29 @@ struct S
     int i;
 };
 
+constexpr bool equals_two(int i)
+{
+    return i == 2;
+}
+
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
+    int ib[6] = {0};
+    constexpr auto sa = ranges::size(ia);
+    auto r = ranges::remove_copy_if(ia, ib, equals_two);
+    STATIC_CHECK_RETURN(r.in == ia + sa);
+    STATIC_CHECK_RETURN(r.out == ib + (sa - 3));
+    STATIC_CHECK_RETURN(ib[0] == 0);
+    STATIC_CHECK_RETURN(ib[1] == 1);
+    STATIC_CHECK_RETURN(ib[2] == 3);
+    STATIC_CHECK_RETURN(ib[3] == 4);
+    STATIC_CHECK_RETURN(ib[4] == 3);
+    STATIC_CHECK_RETURN(ib[5] == 4);
+    return true;
+}
+
 int main()
 {
     test<InputIterator<const int*>, OutputIterator<int*>>();
@@ -181,6 +204,10 @@ int main()
         CHECK(ib[3].i == 4);
         CHECK(ib[4].i == 3);
         CHECK(ib[5].i == 4);
+    }
+
+    {
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

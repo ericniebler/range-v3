@@ -52,7 +52,7 @@ namespace ranges
             /// \pre
             requires forward_iterator<I> AND sentinel_for<S, I> AND
             indirect_unary_predicate<C, projected<I, P>>)
-        I RANGES_FUNC(partition_point)(I first, S last, C pred, P proj = P{})
+        constexpr I RANGES_FUNC(partition_point)(I first, S last, C pred, P proj = P{})
         {
             if(RANGES_CONSTEXPR_IF(sized_sentinel_for<S, I>))
             {
@@ -72,7 +72,7 @@ namespace ranges
                 {
                     len -= d;
                     return aux::partition_point_n(
-                        std::move(first), len, std::ref(pred), std::ref(proj));
+                        std::move(first), len, ranges::ref(pred), ranges::ref(proj));
                 }
                 first = std::move(mid);
                 len *= 2;
@@ -84,7 +84,7 @@ namespace ranges
             /// \pre
             requires forward_range<Rng> AND
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
-        borrowed_iterator_t<Rng> //
+        constexpr borrowed_iterator_t<Rng> //
         RANGES_FUNC(partition_point)(Rng && rng, C pred, P proj = P{}) //
         {
             if(RANGES_CONSTEXPR_IF(sized_range<Rng>))

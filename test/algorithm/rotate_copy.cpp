@@ -258,6 +258,24 @@ struct S
     int i;
 };
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    int rgi[] = {0, 1, 2, 3, 4, 5};
+    int rgo[6] = {0};
+    const auto r = ranges::rotate_copy(rgi, rgi + 2, rgo);
+    STATIC_CHECK_RETURN(r.in == ranges::end(rgi));
+    STATIC_CHECK_RETURN(r.out == ranges::end(rgo));
+    STATIC_CHECK_RETURN(rgo[0] == 2);
+    STATIC_CHECK_RETURN(rgo[1] == 3);
+    STATIC_CHECK_RETURN(rgo[2] == 4);
+    STATIC_CHECK_RETURN(rgo[3] == 5);
+    STATIC_CHECK_RETURN(rgo[4] == 0);
+    STATIC_CHECK_RETURN(rgo[5] == 1);
+
+    return true;
+}
+
 int main()
 {
     test<ForwardIterator<const int*>, OutputIterator<int*> >();
@@ -331,6 +349,10 @@ int main()
         CHECK(rgo[3] == 5);
         CHECK(rgo[4] == 0);
         CHECK(rgo[5] == 1);
+    }
+
+    {
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

@@ -57,5 +57,11 @@ int main()
     CHECK(count(make_subrange(InputIterator<const S*>(sa),
                       Sentinel<const S*>(sa)), 2, &S::i) == 0);
 
+    {
+        using IL = std::initializer_list<int>;
+        STATIC_CHECK(ranges::count(IL{0, 1, 2, 1, 3, 1, 4}, 1) == 3);
+        STATIC_CHECK(ranges::count(IL{0, 1, 2, 1, 3, 1, 4}, 5) == 0);
+    }
+
     return ::test_result();
 }

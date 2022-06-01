@@ -405,5 +405,13 @@ int main()
         CHECK(!ranges::is_sorted(as, std::greater<int>{}, &A::a));
     }
 
+    {
+        using IL = std::initializer_list<int>;
+        STATIC_CHECK(ranges::is_sorted(IL{0, 1, 2, 3}));
+        STATIC_CHECK(ranges::is_sorted(IL{0, 1, 2, 3}, std::less<>{}));
+        STATIC_CHECK(!ranges::is_sorted(IL{3, 2, 1, 0}));
+        STATIC_CHECK(ranges::is_sorted(IL{3, 2, 1, 0}, std::greater<>{}));
+    }
+
     return ::test_result();
 }

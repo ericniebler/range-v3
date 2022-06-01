@@ -18,6 +18,7 @@
 #include <range/v3/action/remove_if.hpp>
 #include <range/v3/action/sort.hpp>
 
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 

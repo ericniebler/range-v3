@@ -558,14 +558,13 @@ namespace ranges
     {
     private:
         template<typename Rng>
-        static std::pair<range_difference_t<Rng>, iterator_t<Rng>> impl_r(Rng & rng,
-                                                                          range_tag,
-                                                                          range_tag)
+        static constexpr std::pair<range_difference_t<Rng>, iterator_t<Rng>> impl_r(
+            Rng & rng, range_tag, range_tag)
         {
             return iter_enumerate(begin(rng), end(rng));
         }
         template<typename Rng>
-        static std::pair<range_difference_t<Rng>, iterator_t<Rng>> impl_r(
+        static constexpr std::pair<range_difference_t<Rng>, iterator_t<Rng>> impl_r(
             Rng & rng, common_range_tag, sized_range_tag)
         {
             return {static_cast<range_difference_t<Rng>>(size(rng)), end(rng)};
@@ -577,7 +576,7 @@ namespace ranges
         template(typename Rng)(
             /// \pre
             requires range<Rng>)
-        std::pair<range_difference_t<Rng>, iterator_t<Rng>> operator()(Rng && rng) const
+        constexpr std::pair<range_difference_t<Rng>, iterator_t<Rng>> operator()(Rng && rng) const
         {
             // Better not be trying to compute the distance of an infinite range:
             RANGES_EXPECT(!is_infinite<Rng>::value);
@@ -625,7 +624,7 @@ namespace ranges
     {
     private:
         template<typename Rng>
-        static int impl_r(Rng & rng, range_difference_t<Rng> n, range_tag)
+        static constexpr int impl_r(Rng & rng, range_difference_t<Rng> n, range_tag)
         {
             // Infinite ranges are always compared to be larger than a finite number.
             return is_infinite<Rng>::value
@@ -633,7 +632,7 @@ namespace ranges
                        : iter_distance_compare(begin(rng), end(rng), n);
         }
         template<typename Rng>
-        static int impl_r(Rng & rng, range_difference_t<Rng> n, sized_range_tag)
+        static constexpr int impl_r(Rng & rng, range_difference_t<Rng> n, sized_range_tag)
         {
             auto dist = distance(rng); // O(1) since rng is a sized_range
             if(dist > n)
@@ -650,7 +649,7 @@ namespace ranges
         template(typename Rng)(
             /// \pre
             requires range<Rng>)
-        int operator()(Rng && rng, range_difference_t<Rng> n) const
+        constexpr int operator()(Rng && rng, range_difference_t<Rng> n) const
         {
             return distance_compare_fn::impl_r(rng, n, sized_range_tag_of<Rng>());
         }

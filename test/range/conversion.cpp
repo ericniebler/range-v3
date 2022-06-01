@@ -115,6 +115,21 @@ template<typename Rng>
 void test_zip_to_map(Rng &&, long)
 {}
 
+template<typename K, typename V>
+struct map_like : std::map<K, V>
+{
+    template<typename Iter>
+    map_like(Iter f, Iter l)
+      : std::map<K, V>(f, l)
+    {}
+};
+
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+template<typename Iter>
+map_like(Iter, Iter) -> map_like<typename ranges::iter_value_t<Iter>::first_type,
+                                 typename ranges::iter_value_t<Iter>::second_type>;
+#endif
+
 int main()
 {
     using namespace ranges;
@@ -219,6 +234,26 @@ int main()
         auto m = views::transform(d, views::all);
         auto v = ranges::to<std::vector<std::vector<int>>>(m);
         check_equal(d, v);
+    }
+
+    {
+        std::vector<std::pair<int, int>> v = {{1, 2}, {3, 4}};
+        auto m1 = ranges::to<map_like<int, int>>(v);
+        auto m2 = v | ranges::to<map_like<int, int>>();
+
+        CPP_assert(same_as<decltype(m1), map_like<int, int>>);
+        CPP_assert(same_as<decltype(m2), map_like<int, int>>);
+        check_equal(m1, std::map<int, int>{{1, 2}, {3, 4}});
+        check_equal(m1, m2);
+
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+        auto m3 = ranges::to<map_like>(v);
+        auto m4 = v | ranges::to<map_like>();
+        CPP_assert(same_as<decltype(m3), map_like<int, int>>);
+        CPP_assert(same_as<decltype(m4), map_like<int, int>>);
+        check_equal(m1, m3);
+        check_equal(m1, m4);
+#endif
     }
 
     return ::test_result();

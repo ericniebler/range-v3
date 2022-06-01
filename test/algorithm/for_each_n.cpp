@@ -13,6 +13,8 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/for_each_n.hpp>
+
+#include "../array.hpp"
 #include "../simple_test.hpp"
 
 struct S
@@ -21,6 +23,26 @@ struct S
     int *p_;
     int i_;
 };
+
+constexpr bool test_constexpr()
+{
+    // lambda closure types are non-literal types before C++17
+    struct
+    {
+        constexpr void operator()(int i)
+        {
+            sum_ += i;
+        }
+
+        int sum_ = 0;
+    } fun;
+    constexpr test::array<int, 5> v1{{1, 2, 4, 6}};
+    STATIC_CHECK_RETURN(ranges::for_each_n(v1.begin(), 2, ranges::ref(fun)) ==
+                        v1.begin() + 2);
+    STATIC_CHECK_RETURN(ranges::for_each_n(v1, 2, ranges::ref(fun)) == v1.begin() + 2);
+    STATIC_CHECK_RETURN(fun.sum_ == 3 * 2);
+    return true;
+}
 
 int main()
 {
@@ -49,6 +71,7 @@ int main()
     CHECK(ranges::for_each_n(v2, 4, fun, &S::i_) == v2.begin() + 4);
     CHECK(sum == 13 * 2);
 
+    STATIC_CHECK(test_constexpr());
 
     return ::test_result();
 }

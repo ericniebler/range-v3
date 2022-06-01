@@ -49,7 +49,7 @@ namespace ranges
             /// \pre
             requires forward_iterator<I> AND sentinel_for<S, I> AND
             indirect_strict_weak_order<R, projected<I, P>>)
-        bool RANGES_FUNC(is_sorted)(I first, S last, R rel = R{}, P proj = P{})
+        constexpr bool RANGES_FUNC(is_sorted)(I first, S last, R rel = R{}, P proj = P{})
         {
             return is_sorted_until(
                        std::move(first), last, std::move(rel), std::move(proj)) == last;
@@ -60,7 +60,7 @@ namespace ranges
             /// \pre
             requires forward_range<Rng> AND
             indirect_strict_weak_order<R, projected<iterator_t<Rng>, P>>)
-        bool RANGES_FUNC(is_sorted)(Rng && rng, R rel = R{}, P proj = P{}) //
+        constexpr bool RANGES_FUNC(is_sorted)(Rng && rng, R rel = R{}, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(rel), std::move(proj));
         }

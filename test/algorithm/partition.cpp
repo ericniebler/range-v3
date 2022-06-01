@@ -27,6 +27,8 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/partition.hpp>
+
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -37,7 +39,10 @@ namespace
 {
     struct is_odd
     {
-        bool operator()(const int& i) const {return i & 1;}
+        constexpr bool operator()(const int & i) const
+        {
+            return i & 1;
+        }
     };
 
     template<class Iter, class Sent = Iter>
@@ -182,6 +187,35 @@ namespace
     };
 }
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    test::array<int, 9> ia{{1, 2, 3, 4, 5, 6, 7, 8, 9}};
+    int * r = partition(ia, is_odd());
+    STATIC_CHECK_RETURN(r == begin(ia) + 5);
+    for(int * i = begin(ia); i < r; ++i)
+    {
+        STATIC_CHECK_RETURN(is_odd()(*i));
+    }
+    for(int * i = r; i < end(ia); ++i)
+    {
+        STATIC_CHECK_RETURN(!is_odd()(*i));
+    }
+    
+    // Test rvalue range
+    auto r2 = partition(make_subrange(begin(ia), end(ia)), is_odd());
+    STATIC_CHECK_RETURN(r2 == begin(ia) + 5);
+    for(int * i = begin(ia); i < r2; ++i)
+    {
+        STATIC_CHECK_RETURN(is_odd()(*i));
+    }
+    for(int * i = r2; i < end(ia); ++i)
+    {
+        STATIC_CHECK_RETURN(!is_odd()(*i));
+    }
+    return true;
+}
+
 int main()
 {
     test_iter<ForwardIterator<int*> >();
@@ -218,6 +252,10 @@ int main()
     std::vector<S> vec(ranges::begin(ia), ranges::end(ia));
     auto r3 = ranges::partition(std::move(vec), is_odd(), &S::i);
     CHECK(::is_dangling(r3));
+
+    {
+        STATIC_CHECK(test_constexpr());
+    }
 
     return ::test_result();
 }

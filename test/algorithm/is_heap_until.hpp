@@ -28,11 +28,13 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
+
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-void test()
+void test_basic()
 {
 #ifdef IS_HEAP_UNTIL_1
     auto is_heap_until = make_testable_1(ranges::is_heap_until);
@@ -1049,7 +1051,7 @@ struct S
 
 int main()
 {
-    test();
+    test_basic();
     test_pred();
 
     // Test projections:
@@ -1065,6 +1067,13 @@ int main()
     std::vector<S> vec(ranges::begin(i185), ranges::end(i185));
     auto res1 = ranges::is_heap_until(std::move(vec), std::greater<int>(), &S::i);
     CHECK(::is_dangling(res1));
+
+#ifdef IS_HEAP_UNTIL_3
+    {
+        constexpr test::array<int, 7> i{{1, 0, 0, 0, 0, 0, 1}};
+        STATIC_CHECK(ranges::is_heap_until(i, ranges::greater{}) == ranges::begin(i) + 1);
+    }
+#endif
 
     return ::test_result();
 }

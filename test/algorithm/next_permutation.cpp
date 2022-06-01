@@ -27,6 +27,7 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/permutation.hpp>
+#include <range/v3/algorithm/equal.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -170,6 +171,20 @@ std::ostream &operator<<(std::ostream& sout, std::pair<int, c_str> p)
     return sout << "{" << p.first << "," << p.second.value << "}";
 }
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    int ia[] = {6, 5, 4, 3, 2, 1};
+    using IL = std::initializer_list<int>;
+    next_permutation(ia, greater{});
+    STATIC_CHECK_RETURN(equal(ia, IL{6, 5, 4, 3, 1, 2}));
+    next_permutation(ia, greater{});
+    STATIC_CHECK_RETURN(equal(ia, IL{6, 5, 4, 2, 3, 1}));
+    next_permutation(ia, greater{});
+    STATIC_CHECK_RETURN(equal(ia, IL{6, 5, 4, 2, 1, 3}));
+    return true;
+}
+
 int main()
 {
     test_iter<BidirectionalIterator<int*> >();
@@ -212,6 +227,10 @@ int main()
     CHECK(ranges::next_permutation(ia, C(), &std::pair<int,c_str>::first));
     ::check_equal(ia, I{{6, {"six"}}, {5,{"five"}}, {4,{"four"}}, {2,{"two"}}, {1,{"one"}}, {3,{"three"}}});
     // etc..
+
+    {
+        STATIC_CHECK(test_constexpr());
+    }
 
     return ::test_result();
 }

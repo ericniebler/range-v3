@@ -11,6 +11,8 @@
 
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/adjacent_find.hpp>
+
+#include "../array.hpp"
 #include "../simple_test.hpp"
 
 int main()
@@ -26,5 +28,14 @@ int main()
     static_assert(std::is_same<std::pair<int,int>*,
                                decltype(ranges::adjacent_find(v2, ranges::equal_to{},
                                     &std::pair<int, int>::second))>::value, "");
+
+    {
+        using namespace ranges;
+        constexpr auto a1 = test::array<int, 5>{{0, 2, 2, 4, 6}};
+        STATIC_CHECK(adjacent_find(begin(a1), end(a1)) == (begin(a1) + 1));
+        STATIC_CHECK(adjacent_find(a1) == (begin(a1) + 1));
+        constexpr std::pair<int, int> a2[] = {{0, 0}, {0, 2}, {0, 2}, {0, 4}, {0, 6}};
+        STATIC_CHECK(adjacent_find(a2, ranges::equal_to{}) == (begin(a2) + 1));
+    }
     return test_result();
 }

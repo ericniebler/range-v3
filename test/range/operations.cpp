@@ -17,6 +17,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/take_while.hpp>
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -67,6 +68,39 @@ void test_infinite_range(Rng&& rng)
     }
 }
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+
+    auto rng = test::array<int, 10>{{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}};
+    using Rng = decltype(rng);
+    auto bit = ranges::begin(rng);
+    using I = decltype(bit);
+    auto it = bit + 5;
+    auto eit = ranges::end(rng);
+    auto n = ranges::distance(rng);
+    auto en = ranges::enumerate(rng);
+    STATIC_CHECK_RETURN(n == 10);
+    STATIC_CHECK_RETURN(distance(bit, eit) == n);
+    STATIC_CHECK_RETURN(distance(it, eit) == 5);
+    STATIC_CHECK_RETURN(distance_compare(bit, eit, n) == 0);
+    STATIC_CHECK_RETURN(distance_compare(bit, eit, n - 1) > 0);
+    STATIC_CHECK_RETURN(distance_compare(bit, eit, n + 1) < 0);
+    STATIC_CHECK_RETURN(distance_compare(bit, eit, (std::numeric_limits<iter_difference_t<I>>::min)()) > 0);
+    STATIC_CHECK_RETURN(distance_compare(bit, eit, (std::numeric_limits<iter_difference_t<I>>::max)()) < 0);
+    STATIC_CHECK_RETURN(distance(rng) == n);
+    STATIC_CHECK_RETURN(distance_compare(rng, n) == 0);
+    STATIC_CHECK_RETURN(distance_compare(rng, n - 1) > 0);
+    STATIC_CHECK_RETURN(distance_compare(rng, n + 1) < 0);
+    STATIC_CHECK_RETURN(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::min)()) > 0);
+    STATIC_CHECK_RETURN(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::max)()) < 0);
+
+    STATIC_CHECK_RETURN(en.first == 10);
+    STATIC_CHECK_RETURN(en.second == eit);
+
+    return true;
+}
+
 int main()
 {
     using namespace ranges;
@@ -115,6 +149,10 @@ int main()
 
     {
         test_infinite_range(views::iota(0u));
+    }
+
+    {
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

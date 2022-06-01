@@ -25,6 +25,11 @@ struct T
     bool m() { return b; }
 };
 
+constexpr bool even(int i)
+{
+    return i % 2 == 0;
+}
+
 int main()
 {
     using namespace ranges;
@@ -73,6 +78,12 @@ int main()
                          Sentinel<T*>(ta + size(ta))), &T::m) == 4);
     CHECK(count_if(make_subrange(InputIterator<T*>(ta),
                          Sentinel<T*>(ta + size(ta))), &T::b) == 4);
+
+    {
+        using IL = std::initializer_list<int>;
+        STATIC_CHECK(ranges::count_if(IL{0, 1, 2, 1, 3, 1, 4}, even) == 3);
+        STATIC_CHECK(ranges::count_if(IL{1, 1, 3, 1}, even) == 0);
+    }
 
     return ::test_result();
 }

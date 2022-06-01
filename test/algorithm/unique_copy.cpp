@@ -250,6 +250,29 @@ bool operator==(S l, S r)
     return l.i == r.i && l.j == r.j;
 }
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    int a[] = {0, 1, 1, 1, 2, 2, 2};
+    int b[] = {0, 0, 0};
+    const unsigned sa = sizeof(a) / sizeof(a[0]);
+    const unsigned sb = sizeof(b) / sizeof(b[0]);
+    const auto r = unique_copy(a, b);
+    STATIC_CHECK_RETURN(r.in == a + sa);
+    STATIC_CHECK_RETURN(r.out == b + sb);
+    STATIC_CHECK_RETURN(a[0] == 0);
+    STATIC_CHECK_RETURN(a[1] == 1);
+    STATIC_CHECK_RETURN(a[2] == 1);
+    STATIC_CHECK_RETURN(a[3] == 1);
+    STATIC_CHECK_RETURN(a[4] == 2);
+    STATIC_CHECK_RETURN(a[5] == 2);
+    STATIC_CHECK_RETURN(a[6] == 2);
+    STATIC_CHECK_RETURN(b[0] == 0);
+    STATIC_CHECK_RETURN(b[1] == 1);
+    STATIC_CHECK_RETURN(b[2] == 2);
+    return true;
+}
+
 int main()
 {
     test<InputIterator<const int*>, OutputIterator<int*> >();
@@ -321,5 +344,9 @@ int main()
         check_equal(ranges::make_subrange(ib, ib+7), {S{1,1},S{2,2},S{3,3},S{4,5},S{5,6},S{6,9},S{7,10}});
     }
 
+    {
+        STATIC_CHECK(test_constexpr());
+    }
+    
     return ::test_result();
 }

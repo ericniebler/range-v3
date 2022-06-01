@@ -149,5 +149,11 @@ int main()
         CHECK(ranges::includes(ia, id, std::less<int>(), &S::i, &T::j));
     }
 
+    {
+        using IL = std::initializer_list<int>;
+        STATIC_CHECK(ranges::includes(
+            IL{1, 2, 2, 3, 3, 3, 4, 4, 4, 4}, IL{3, 3, 3}, std::less<int>()));
+    }
+
     return ::test_result();
 }

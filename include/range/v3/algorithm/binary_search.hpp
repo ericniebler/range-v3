@@ -49,11 +49,11 @@ namespace ranges
             /// \pre
             requires forward_iterator<I> AND sentinel_for<S, I> AND
                 indirect_strict_weak_order<C, V const *, projected<I, P>>)
-        bool RANGES_FUNC(binary_search)(
+        constexpr bool RANGES_FUNC(binary_search)(
             I first, S last, V const & val, C pred = C{}, P proj = P{})
         {
             first =
-                lower_bound(std::move(first), last, val, std::ref(pred), std::ref(proj));
+                lower_bound(std::move(first), last, val, ranges::ref(pred), ranges::ref(proj));
             return first != last && !invoke(pred, val, invoke(proj, *first));
         }
 
@@ -62,7 +62,7 @@ namespace ranges
             /// \pre
             requires forward_range<Rng> AND
                 indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
-        bool RANGES_FUNC(binary_search)(
+        constexpr bool RANGES_FUNC(binary_search)(
             Rng && rng, V const & val, C pred = C{}, P proj = P{}) //
         {
             static_assert(!is_infinite<Rng>::value,

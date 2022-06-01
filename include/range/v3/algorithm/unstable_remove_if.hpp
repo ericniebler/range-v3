@@ -49,18 +49,18 @@ namespace ranges
             /// \pre
             requires bidirectional_iterator<I> AND permutable<I> AND
             indirect_unary_predicate<C, projected<I, P>>)
-        I RANGES_FUNC(unstable_remove_if)(I first, I last, C pred, P proj = {})
+        constexpr I RANGES_FUNC(unstable_remove_if)(I first, I last, C pred, P proj = {})
         {
             while(true)
             {
-                first = find_if(std::move(first), last, std::ref(pred), std::ref(proj));
+                first = find_if(std::move(first), last, ranges::ref(pred), ranges::ref(proj));
                 if(first == last)
                     return first;
 
                 last = next(find_if_not(make_reverse_iterator(std::move(last)),
                                         make_reverse_iterator(next(first)),
-                                        std::ref(pred),
-                                        std::ref(proj)))
+                                        ranges::ref(pred),
+                                        ranges::ref(proj)))
                            .base();
                 if(first == last)
                     return first;
@@ -78,7 +78,7 @@ namespace ranges
             requires bidirectional_range<Rng> AND common_range<Rng> AND
             permutable<iterator_t<Rng>> AND
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
-        borrowed_iterator_t<Rng> //
+        constexpr borrowed_iterator_t<Rng> //
         RANGES_FUNC(unstable_remove_if)(Rng && rng, C pred, P proj = P{}) //
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

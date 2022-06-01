@@ -24,6 +24,8 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/partial_sort.hpp>
+
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -138,6 +140,21 @@ namespace
     };
 }
 
+constexpr bool test_constexpr()
+{
+    test::array<std::size_t, 10> v{{0}};
+    for(std::size_t i = 0; i < v.size(); ++i)
+    {
+        v[i] = v.size() - i - 1;
+    }
+    ranges::partial_sort(v, v.begin() + v.size() / 2, ranges::less{});
+    for(size_t i = 0; i < v.size() / 2; ++i)
+    {
+        STATIC_CHECK_RETURN(v[i] == i);
+    }
+    return true;
+}
+
 int main()
 {
     int i = 0;
@@ -177,6 +194,10 @@ int main()
             CHECK(v[j].i == j);
             CHECK((std::size_t)v[j].j == v.size() - j - 1);
         }
+    }
+
+    {
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

@@ -30,6 +30,18 @@ struct S
     int i_;
 };
 
+constexpr bool is_three(int i)
+{
+    return i == 3;
+}
+
+template<class Rng>
+constexpr bool contains_three(Rng r)
+{
+    auto it = ranges::find_if(r, is_three);
+    return it != ranges::end(r);
+}
+
 int main()
 {
     using namespace ranges;
@@ -92,6 +104,12 @@ int main()
         CHECK(ps->i_ == 3);
         ps = find_if(sa, [](int i){return i == 10;}, &S::i_);
         CHECK(ps == end(sa));
+    }
+
+    {
+        using IL = std::initializer_list<int>;
+        STATIC_CHECK(contains_three(IL{0, 1, 2, 3}));
+        STATIC_CHECK(!contains_three(IL{0, 1, 2}));
     }
 
     return ::test_result();

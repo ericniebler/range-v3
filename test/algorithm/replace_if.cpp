@@ -59,6 +59,26 @@ void test_rng()
     CHECK(base(i) == ia + sa);
 }
 
+constexpr bool equals_two(int i)
+{
+    return i == 2;
+}
+
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    int ia[] = {0, 1, 2, 3, 4};
+    constexpr auto sa = ranges::size(ia);
+    auto r = ranges::replace_if(ia, equals_two, 42);
+    STATIC_CHECK_RETURN(r == ia + sa);
+    STATIC_CHECK_RETURN(ia[0] == 0);
+    STATIC_CHECK_RETURN(ia[1] == 1);
+    STATIC_CHECK_RETURN(ia[2] == 42);
+    STATIC_CHECK_RETURN(ia[3] == 3);
+    STATIC_CHECK_RETURN(ia[4] == 4);
+    return true;
+}
+
 int main()
 {
     test_iter<ForwardIterator<int*> >();
@@ -120,6 +140,10 @@ int main()
         CHECK(ia[2] == P{42,"42"});
         CHECK(ia[3] == P{3,"3"});
         CHECK(ia[4] == P{4,"4"});
+    }
+
+    {
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

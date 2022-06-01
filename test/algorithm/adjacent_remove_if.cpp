@@ -123,6 +123,24 @@ test_range_rvalue()
     CHECK(*ia[6] == 2);
 }
 
+template<class Iter, class Sent = Iter>
+bool constexpr test_constexpr()
+{
+    int ia[] = {0, 1, 1, 1, 4, 2, 2, 4, 2};
+    constexpr auto sa = ranges::size(ia);
+    Iter r = ranges::adjacent_remove_if(ranges::make_subrange(Iter(ia), Sent(ia + sa)),
+                                        ranges::equal_to{});
+    STATIC_CHECK_RETURN(base(r) == ia + sa - 3);
+    STATIC_CHECK_RETURN(ia[0] == 0);
+    STATIC_CHECK_RETURN(ia[1] == 1);
+    STATIC_CHECK_RETURN(ia[2] == 4);
+    STATIC_CHECK_RETURN(ia[3] == 2);
+    STATIC_CHECK_RETURN(ia[4] == 4);
+    STATIC_CHECK_RETURN(ia[5] == 2);
+
+    return true;
+}
+
 struct S
 {
     int i;
@@ -192,6 +210,14 @@ int main()
         CHECK(ia[4].i == 8);
         CHECK(ia[5].i == 21);
     }
+
+    STATIC_CHECK(test_constexpr<ForwardIterator<int *>>());
+    STATIC_CHECK(test_constexpr<BidirectionalIterator<int *>>());
+    STATIC_CHECK(test_constexpr<RandomAccessIterator<int *>>());
+    STATIC_CHECK(test_constexpr<int *>());
+    STATIC_CHECK(test_constexpr<ForwardIterator<int *>, Sentinel<int *>>());
+    STATIC_CHECK(test_constexpr<BidirectionalIterator<int *>, Sentinel<int *>>());
+    STATIC_CHECK(test_constexpr<RandomAccessIterator<int *>, Sentinel<int *>>());
 
     return ::test_result();
 }

@@ -33,10 +33,10 @@ namespace ranges
                 /// \pre
                 requires forward_iterator<I> AND
                         indirect_unary_predicate<C, projected<I, P>>)
-            I operator()(I first,
-                         iter_difference_t<I> d,
-                         C pred,
-                         P proj = P{}) const //
+            constexpr I operator()(I first,
+                                   iter_difference_t<I> d,
+                                   C pred,
+                                   P proj = P{}) const //
             {
                 if(0 < d)
                 {

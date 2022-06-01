@@ -68,14 +68,14 @@ namespace ranges
             /// \pre
             requires sentinel_for<S0, I0> AND sentinel_for<S1, I1> AND
                 mergeable<I0, I1, O, C, P0, P1>)
-        merge_result<I0, I1, O> RANGES_FUNC(merge)(I0 begin0,
-                                                   S0 end0,
-                                                   I1 begin1,
-                                                   S1 end1,
-                                                   O out,
-                                                   C pred = C{},
-                                                   P0 proj0 = P0{},
-                                                   P1 proj1 = P1{}) //
+        constexpr merge_result<I0, I1, O> RANGES_FUNC(merge)(I0 begin0,
+                                                             S0 end0,
+                                                             I1 begin1,
+                                                             S1 end1,
+                                                             O out,
+                                                             C pred = C{},
+                                                             P0 proj0 = P0{},
+                                                             P1 proj1 = P1{}) //
         {
             for(; begin0 != end0 && begin1 != end1; ++out)
             {
@@ -105,7 +105,7 @@ namespace ranges
             /// \pre
             requires range<Rng0> AND range<Rng1> AND
                 mergeable<iterator_t<Rng0>, iterator_t<Rng1>, O, C, P0, P1>)
-        merge_result<borrowed_iterator_t<Rng0>, borrowed_iterator_t<Rng1>, O>
+        constexpr merge_result<borrowed_iterator_t<Rng0>, borrowed_iterator_t<Rng1>, O>
         RANGES_FUNC(merge)(Rng0 && rng0,
                            Rng1 && rng1,
                            O out,

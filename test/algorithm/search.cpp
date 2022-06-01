@@ -176,6 +176,21 @@ struct T
     int i;
 };
 
+constexpr bool test_constexpr()
+{
+    using namespace ranges;
+    int ia[] = {0, 1, 2, 3, 4};
+    int ib[] = {2, 3};
+    int ic[] = {2, 4};
+    constexpr auto sa = size(ia);
+    auto r = search(ia, ib, equal_to{});
+    STATIC_CHECK_RETURN(r.begin() == ia + 2);
+    auto r2 = search(ia, ic, equal_to{});
+    STATIC_CHECK_RETURN(r2.begin() == ia + sa);
+
+    return true;
+}
+
 int main()
 {
     test<ForwardIterator<const int*>, ForwardIterator<const int*> >();
@@ -231,6 +246,10 @@ int main()
         std::vector<int> ib{0, 1, 2, 0, 1, 2, 3, 0, 1, 2, 3, 4};
         int ie[] = {1, 2, 3};
         CHECK(::is_dangling(ranges::search(std::move(ib), ie)));
+    }
+
+    {
+        STATIC_CHECK(test_constexpr());
     }
 
     return ::test_result();

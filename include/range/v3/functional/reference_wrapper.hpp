@@ -102,7 +102,7 @@ namespace ranges
         template(typename...)(
             /// \pre
             requires (!std::is_rvalue_reference<T>::value)) //
-        operator std::reference_wrapper<type>() const noexcept
+        constexpr operator std::reference_wrapper<type>() const noexcept
         {
             return {get()};
         }
@@ -120,19 +120,19 @@ namespace ranges
         template(typename T)(
             /// \pre
             requires (!is_reference_wrapper_v<T>)) //
-        reference_wrapper<T> operator()(T & t) const
+        constexpr reference_wrapper<T> operator()(T & t) const
         {
             return {t};
         }
         /// \overload
         template<typename T>
-        reference_wrapper<T> operator()(reference_wrapper<T> t) const
+        constexpr reference_wrapper<T> operator()(reference_wrapper<T> t) const
         {
             return t;
         }
         /// \overload
         template<typename T>
-        reference_wrapper<T> operator()(std::reference_wrapper<T> t) const
+        constexpr reference_wrapper<T> operator()(std::reference_wrapper<T> t) const
         {
             return {t.get()};
         }
@@ -148,26 +148,26 @@ namespace ranges
     struct unwrap_reference_fn
     {
         template<typename T>
-        T && operator()(T && t) const noexcept
+        constexpr T && operator()(T && t) const noexcept
         {
             return static_cast<T &&>(t);
         }
         /// \overload
         template<typename T>
-        typename reference_wrapper<T>::reference operator()(reference_wrapper<T> t) const
+        constexpr typename reference_wrapper<T>::reference operator()(reference_wrapper<T> t) const
             noexcept
         {
             return t.get();
         }
         /// \overload
         template<typename T>
-        T & operator()(std::reference_wrapper<T> t) const noexcept
+        constexpr T & operator()(std::reference_wrapper<T> t) const noexcept
         {
             return t.get();
         }
         /// \overload
         template<typename T>
-        T & operator()(ref_view<T> t) const noexcept
+        constexpr T & operator()(ref_view<T> t) const noexcept
         {
             return t.base();
         }

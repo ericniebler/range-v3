@@ -24,6 +24,8 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/min_element.hpp>
+
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -160,6 +162,11 @@ int main()
     S s[] = {S{1},S{2},S{3},S{4},S{-4},S{5},S{6},S{7},S{8},S{9}};
     S const *ps = ranges::min_element(s, std::less<int>{}, &S::i);
     CHECK(ps->i == -4);
+
+    {
+        constexpr auto a = test::array<int, 10>{{1, 2, 3, 4, -4, 5, 6, 7, 8, 9}};
+        STATIC_CHECK(ranges::min_element(a) == ranges::begin(a) + 4);
+    }
 
     return test_result();
 }

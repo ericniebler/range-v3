@@ -28,6 +28,8 @@
 #include <functional>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
+
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -184,7 +186,7 @@ namespace
         delete [] ib;
     }
 
-    void test(int N)
+    void test_all(int N)
     {
         test_1(N);
         test_2(N);
@@ -195,18 +197,34 @@ namespace
         test_7(N);
         test_8(N);
     }
+
+    constexpr bool test_constexpr()
+    {
+        using namespace ranges;
+        constexpr int N = 100;
+        test::array<int, N> ia{{0}};
+        for(int i = 0; i < N; ++i)
+            ia[i] = N - 1 - i;
+        STATIC_CHECK_RETURN(make_heap(begin(ia), end(ia), std::less<int>{}) == end(ia));
+        STATIC_CHECK_RETURN(is_heap(begin(ia), end(ia)));
+        return true;
+    }
 }
 
 int main()
 {
-    test(0);
-    test(1);
-    test(2);
-    test(3);
-    test(10);
-    test(1000);
+    test_all(0);
+    test_all(1);
+    test_all(2);
+    test_all(3);
+    test_all(10);
+    test_all(1000);
     test_9(1000);
     test_10(1000);
+
+    {
+        STATIC_CHECK(test_constexpr());
+    }
 
     return test_result();
 }
