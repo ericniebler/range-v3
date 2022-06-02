@@ -17,6 +17,8 @@
 
 #include <type_traits>
 
+#include <meta/meta.hpp>
+
 #include <range/v3/range_fwd.hpp>
 
 #include <range/v3/iterator/default_sentinel.hpp>
@@ -39,8 +41,10 @@ namespace ranges
 
         private:
             friend range_access;
+            using Calc = meta::conditional_t<std::is_floating_point<T>::value, T, double>;
 
             T from_, to_;
+            Calc delta_;
             std::ptrdiff_t n_;
 
             constexpr T read() const noexcept
@@ -71,15 +75,16 @@ namespace ranges
                 }
                 else
                 {
-                    from_ += (to_ - from_) / T(n_);
+                    from_ = T(to_ - (delta_ * Calc(n_ - 1)));
                 }
             }
 
         public:
             constexpr linear_distribute_view() = default;
-            constexpr linear_distribute_view(T from, T to__, std::ptrdiff_t n) noexcept
+            constexpr linear_distribute_view(T from, T to, std::ptrdiff_t n) noexcept
               : from_(from)
-              , to_(to__)
+              , to_(to)
+              , delta_(n > 1 ? (to - from) / Calc(n - 1) : 0)
               , n_(n)
             {
                 RANGES_EXPECT(n_ > 0);

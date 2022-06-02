@@ -79,12 +79,16 @@ int main()
         CHECK(ranges::size(frng) == std::size_t{3});
         CHECK(ranges::equal(frng, std::initializer_list<double>{0.,0.,0.}, float_eq));
     }
-
     {   // regression test for #1088
         auto ld = linear_distribute(1, 10, 10);
         auto const first = ranges::begin(ld);
         auto const i = ranges::next(first, 4);
         CHECK(ranges::distance(first, i) == 4);
+    }
+    {   // integral numbers spacing
+        auto irng = linear_distribute(0, 10, 22);
+        auto frng = linear_distribute(0., 10., 22);
+        check_equal(irng, frng | ranges::views::transform(ranges::convert_to<int>{}));
     }
 
     return test_result();
