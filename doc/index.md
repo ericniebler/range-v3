@@ -290,8 +290,8 @@ provides, and a blurb about how each is intended to be used.
   <DD>Given a nullary function, return an infinite range whose elements are generated with the function.</DD>
 <DT>\link ranges::views::generate_n_fn `views::generate_n`\endlink</DT>
   <DD>Given a nullary function and a count, return a range that generates the requested number of elements by calling the function.</DD>
-<DT>\link ranges::views::group_by_fn `views::group_by`\endlink</DT>
-  <DD>Given a source range and a binary predicate, return a range of ranges where each range contains contiguous elements from the source range such that the following condition holds: for each element in the range apart from the first, when that element and the first element are passed to the binary predicate, the result is true. In essence, `views::group_by` *groups* contiguous elements together with a binary predicate.</DD>
+<DT>\link ranges::views::chunk_by_fn `views::chunk_by`\endlink</DT>
+  <DD>Given a source range and a binary predicate, return a range of ranges where each range contains contiguous elements from the source range such that the following condition holds: for each element in the range apart from the first, when that element and the previous element are passed to the binary predicate, the result is true. In essence, `views::chunk_by` groups contiguous elements together with a binary predicate.</DD>
 <DT>\link ranges::views::indirect_fn `views::indirect`\endlink</DT>
   <DD>Given a source range of readable values (e.g. pointers or iterators), return a new view that is the result of dereferencing each.</DD>
 <DT>\link ranges::views::intersperse_fn `views::intersperse`\endlink</DT>
