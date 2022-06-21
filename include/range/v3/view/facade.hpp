@@ -92,7 +92,6 @@ namespace ranges
         /// `b`.
         /// \return `ranges::basic_iterator<B>(b)`
         template(typename D = Derived)(
-            /// \pre
             requires same_as<D, Derived>)
         constexpr auto begin() -> detail::facade_iterator_t<D>
         {
@@ -101,7 +100,6 @@ namespace ranges
         }
         /// \overload
         template(typename D = Derived)(
-            /// \pre
             requires same_as<D, Derived>)
         constexpr auto begin() const -> detail::facade_iterator_t<D const>
         {
@@ -115,7 +113,6 @@ namespace ranges
         /// \return `ranges::basic_iterator<E>(e)` if `E` is the same
         /// as `B` computed above for `begin()`; otherwise, return `e`.
         template(typename D = Derived)(
-            /// \pre
             requires same_as<D, Derived>)
         constexpr auto end() -> detail::facade_sentinel_t<D>
         {
@@ -124,7 +121,6 @@ namespace ranges
         }
         /// \overload
         template(typename D = Derived)(
-            /// \pre
             requires same_as<D, Derived>)
         constexpr auto end() const -> detail::facade_sentinel_t<D const>
         {

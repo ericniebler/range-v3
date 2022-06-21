@@ -101,7 +101,6 @@ namespace ranges
         struct generate_n_fn
         {
             template(typename G)(
-                /// \pre
                 requires invocable<G &> AND copy_constructible<G> AND
                     std::is_object<detail::decay_t<invoke_result_t<G &>>>::value AND
                     constructible_from<detail::decay_t<invoke_result_t<G &>>,

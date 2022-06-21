@@ -27,7 +27,6 @@ namespace ranges
     struct equal_to
     {
         template(typename T, typename U)(
-            /// \pre
             requires equality_comparable_with<T, U>)
         constexpr bool operator()(T && t, U && u) const
         {
@@ -39,7 +38,6 @@ namespace ranges
     struct not_equal_to
     {
         template(typename T, typename U)(
-            /// \pre
             requires equality_comparable_with<T, U>)
         constexpr bool operator()(T && t, U && u) const
         {
@@ -51,7 +49,6 @@ namespace ranges
     struct less
     {
         template(typename T, typename U)(
-            /// \pre
             requires totally_ordered_with<T, U>)
         constexpr bool operator()(T && t, U && u) const
         {
@@ -63,7 +60,6 @@ namespace ranges
     struct less_equal
     {
         template(typename T, typename U)(
-            /// \pre
             requires totally_ordered_with<T, U>)
         constexpr bool operator()(T && t, U && u) const
         {
@@ -75,7 +71,6 @@ namespace ranges
     struct greater_equal
     {
         template(typename T, typename U)(
-            /// \pre
             requires totally_ordered_with<T, U>)
         constexpr bool operator()(T && t, U && u) const
         {
@@ -87,7 +82,6 @@ namespace ranges
     struct greater
     {
         template(typename T, typename U)(
-            /// \pre
             requires totally_ordered_with<T, U>)
         constexpr bool operator()(T && t, U && u) const
         {
@@ -104,7 +98,6 @@ namespace ranges
     struct compare_three_way
     {
         template(typename T, typename U)(
-            /// \pre
             requires three_way_comparable_with<T, U>)
         constexpr auto operator()(T && t, U && u) const
             -> decltype((T &&) t <=> (U &&) u)

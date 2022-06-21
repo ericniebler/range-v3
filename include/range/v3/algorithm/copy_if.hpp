@@ -42,7 +42,6 @@ namespace ranges
 
         /// \brief function template \c copy_if
         template(typename I, typename S, typename O, typename F, typename P = identity)(
-            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
                 weakly_incrementable<O> AND
                 indirect_unary_predicate<F, projected<I, P>> AND
@@ -64,7 +63,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename O, typename F, typename P = identity)(
-            /// \pre
             requires input_range<Rng> AND weakly_incrementable<O> AND
             indirect_unary_predicate<F, projected<iterator_t<Rng>, P>> AND
             indirectly_copyable<iterator_t<Rng>, O>)

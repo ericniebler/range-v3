@@ -62,7 +62,6 @@ namespace ranges
             }
 
             template(typename I)(
-                /// \pre
                 requires (!invocable<Pred const &, iter_reference_t<I>>))
             common_reference_t<unwrap_reference_t<Val const &>, iter_reference_t<I>> //
             operator()(I const & i)
@@ -73,7 +72,6 @@ namespace ranges
                 return (decltype(x) &&)x;
             }
             template(typename I)(
-                /// \pre
                 requires invocable<Pred const &, iter_reference_t<I>>)
             common_reference_t<unwrap_reference_t<Val const &>, iter_reference_t<I>> //
             operator()(I const & i) const
@@ -85,7 +83,6 @@ namespace ranges
             }
 
             template(typename I)(
-                /// \pre
                 requires (!invocable<Pred const &, iter_rvalue_reference_t<I>>))
             common_reference_t<
                 unwrap_reference_t<Val const &>, //
@@ -98,7 +95,6 @@ namespace ranges
                 return (decltype(x) &&)x;
             }
             template(typename I)(
-                /// \pre
                 requires invocable<Pred const &, iter_rvalue_reference_t<I>>)
             common_reference_t< //
                 unwrap_reference_t<Val const &>, //
@@ -121,7 +117,6 @@ namespace ranges
         struct replace_if_base_fn
         {
             template(typename Rng, typename Pred, typename Val)(
-                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng> AND
                     indirect_unary_predicate<Pred, iterator_t<Rng>> AND
                     common_with<detail::decay_t<unwrap_reference_t<Val const &>>,

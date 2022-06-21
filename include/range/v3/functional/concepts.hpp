@@ -28,26 +28,36 @@ namespace ranges
     // clang-format off
     // WORKAROUND mysterious msvc bug
 #if defined(_MSC_VER) && !defined(__clang__)
+    /// \concept invocable
+    /// \brief The \c invocable concept
     template<typename Fun, typename... Args>
     CPP_concept invocable =
         std::is_invocable_v<Fun, Args...>;
 #else
+    /// \concept invocable_
+    /// \brief The \c invocable_ concept
     template<typename Fun, typename... Args>
     CPP_requires(invocable_,
         requires(Fun && fn) //
         (
             invoke((Fun &&) fn, std::declval<Args>()...)
         ));
+    /// \concept invocable
+    /// \brief The \c invocable concept
     template<typename Fun, typename... Args>
     CPP_concept invocable =
         CPP_requires_ref(ranges::invocable_, Fun, Args...);
 #endif
 
+    /// \concept regular_invocable
+    /// \brief The \c regular_invocable concept
     template<typename Fun, typename... Args>
     CPP_concept regular_invocable =
         invocable<Fun, Args...>;
         // Axiom: equality_preserving(invoke(f, args...))
 
+    /// \concept predicate_
+    /// \brief The \c predicate_ concept
     template<typename Fun, typename... Args>
     CPP_requires(predicate_,
         requires(Fun && fn) //
@@ -57,11 +67,15 @@ namespace ranges
                     decltype(invoke((Fun &&) fn, std::declval<Args>()...)),
                     bool>>
         ));
+    /// \concept predicate
+    /// \brief The \c predicate concept
     template<typename Fun, typename... Args>
     CPP_concept predicate =
         regular_invocable<Fun, Args...> &&
         CPP_requires_ref(ranges::predicate_, Fun, Args...);
 
+    /// \concept relation
+    /// \brief The \c relation concept
     template<typename R, typename T, typename U>
     CPP_concept relation =
         predicate<R, T, T> &&
@@ -69,6 +83,8 @@ namespace ranges
         predicate<R, T, U> &&
         predicate<R, U, T>;
 
+    /// \concept strict_weak_order
+    /// \brief The \c strict_weak_order concept
     template<typename R, typename T, typename U>
     CPP_concept strict_weak_order =
         relation<R, T, U>;

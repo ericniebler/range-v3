@@ -39,7 +39,6 @@ namespace ranges
     namespace detail
     {
         template(typename I, typename S)(
-            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I>)
         constexpr I next_to_if(I i, S s, std::true_type)
         {
@@ -47,7 +46,6 @@ namespace ranges
         }
 
         template(typename I, typename S)(
-            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I>)
         constexpr S next_to_if(I, S s, std::false_type)
         {
@@ -55,7 +53,6 @@ namespace ranges
         }
 
         template(bool B, typename I, typename S)(
-            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I>)
         constexpr meta::if_c<B, I, S> next_to_if(I i, S s)
         {
@@ -190,7 +187,6 @@ namespace ranges
                  typename S2,
                  typename R = equal_to,
                  typename P = identity)(
-            /// \pre
             requires forward_iterator<I1> AND sentinel_for<S1, I1> AND
                 forward_iterator<I2> AND sentinel_for<S2, I2> AND
                 indirect_relation<R, projected<I1, P>, I2>)
@@ -214,7 +210,6 @@ namespace ranges
                  typename Rng2,
                  typename R = equal_to,
                  typename P = identity)(
-            /// \pre
             requires forward_range<Rng1> AND forward_range<Rng2> AND
                 indirect_relation<R, projected<iterator_t<Rng1>, P>, iterator_t<Rng2>>)
         constexpr borrowed_subrange_t<Rng1> RANGES_FUNC(find_end)(

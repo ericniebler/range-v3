@@ -945,10 +945,10 @@ back to using `std::enable_if`.
 --------------------------------------------------------------------------------
 Range-v3 formed the basis for the
 [Technical Specification on Ranges](https://www.iso.org/standard/70910.html),
-which has since been merged into the working draft of C++20.
+which has since been merged into the working draft and shipped with C++20 in
+the `std::ranges` namespace.
 
-In addition, a subset of range-v3's views are also a part of the C++20 working
-draft, with more slated for eventual inclusion in future versions of C++.
+More range adaptors are slated for inclusion in C++23 and beyond.
 
 The actions, as well as various utilities, have not yet been reviewed by the
 Committee, although the basic direction has already passed an initial review.

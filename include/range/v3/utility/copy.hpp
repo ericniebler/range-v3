@@ -31,7 +31,6 @@ namespace ranges
         struct copy_fn : copy_tag
         {
             template(typename T)(
-                /// \pre
                 requires constructible_from<detail::decay_t<T>, T>)
             constexpr auto operator()(T && t) const -> detail::decay_t<T>
             {
@@ -43,7 +42,6 @@ namespace ranges
             template<typename T>
             friend constexpr auto operator|(T && t, copy_fn)
                 -> CPP_broken_friend_ret(detail::decay_t<T>)(
-                    /// \pre
                     requires constructible_from<detail::decay_t<T>, T>)
             {
                 return static_cast<T &&>(t);

@@ -44,7 +44,6 @@ namespace ranges
             {
                 Value value_;
                 template(typename T)(
-                    /// \pre
                     requires equality_comparable_with<T, Value const &>)
                 bool operator()(T && other) const
                 {
@@ -54,7 +53,6 @@ namespace ranges
 
         public:
             template(typename Rng, typename Value)(
-                /// \pre
                 requires move_constructible<Value> AND viewable_range<Rng> AND
                     input_range<Rng> AND
                     indirectly_comparable<iterator_t<Rng>, Value const *, equal_to>)
@@ -65,7 +63,6 @@ namespace ranges
             }
 
             template(typename Rng, typename Value, typename Proj)(
-                /// \pre
                 requires move_constructible<Value> AND viewable_range<Rng> AND
                     input_range<Rng> AND
                     indirectly_comparable<iterator_t<Rng>, Value const *, equal_to, Proj>)
@@ -85,7 +82,6 @@ namespace ranges
                 return make_view_closure(bind_back(remove_base_fn{}, std::move(value)));
             }
             template(typename Value, typename Proj)(
-                /// \pre
                 requires (!range<Value>)) // TODO: underconstrained
             constexpr auto operator()(Value && value, Proj proj) const
             {

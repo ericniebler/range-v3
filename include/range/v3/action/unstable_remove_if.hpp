@@ -39,7 +39,6 @@ namespace ranges
         struct unstable_remove_if_fn
         {
             template(typename C, typename P = identity)(
-                /// \pre
                 requires (!range<C>))
             constexpr auto operator()(C pred, P proj = P{}) const
             {
@@ -48,7 +47,6 @@ namespace ranges
             }
 
             template(typename Rng, typename C, typename P = identity)(
-                /// \pre
                 requires bidirectional_range<Rng> AND common_range<Rng> AND
                     permutable<iterator_t<Rng>> AND
                     indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> AND

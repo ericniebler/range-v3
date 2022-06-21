@@ -35,7 +35,6 @@ namespace ranges
         struct drop_fn
         {
             template(typename Int)(
-                /// \pre
                 requires detail::integer_like_<Int>)
             constexpr auto operator()(Int n) const
             {
@@ -44,7 +43,6 @@ namespace ranges
             }
 
             template(typename Rng)(
-                /// \pre
                 requires forward_range<Rng> AND
                     erasable_range<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
             Rng operator()(Rng && rng, range_difference_t<Rng> n) const

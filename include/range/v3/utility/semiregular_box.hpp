@@ -136,7 +136,6 @@ namespace ranges
         }
 #if defined(__cpp_conditional_explicit) && 0 < __cpp_conditional_explicit
         template(typename U)(
-            /// \pre
             requires (!same_as<uncvref_t<U>, semiregular_box>) AND
                 constructible_from<T, U>)
         explicit(!convertible_to<U, T>) constexpr semiregular_box(U && u)
@@ -145,7 +144,6 @@ namespace ranges
         {}
 #else
         template(typename U)(
-            /// \pre
             requires (!same_as<uncvref_t<U>, semiregular_box>) AND
                 constructible_from<T, U> AND (!convertible_to<U, T>)) //
         constexpr explicit semiregular_box(U && u)
@@ -153,7 +151,6 @@ namespace ranges
           : semiregular_box(in_place, static_cast<U &&>(u))
         {}
         template(typename U)(
-            /// \pre
             requires (!same_as<uncvref_t<U>, semiregular_box>) AND
                 constructible_from<T, U> AND convertible_to<U, T>)
         constexpr semiregular_box(U && u)
@@ -162,7 +159,6 @@ namespace ranges
         {}
 #endif
         template(typename... Args)(
-            /// \pre
             requires constructible_from<T, Args...>)
         constexpr semiregular_box(in_place_t, Args &&... args) //
             noexcept(std::is_nothrow_constructible<T, Args...>::value)
@@ -227,7 +223,6 @@ namespace ranges
         operator T const &&() const && = delete;
         // clang-format off
         template(typename... Args)(
-            /// \pre
             requires invocable<T &, Args...>)
         constexpr decltype(auto) operator()(Args &&... args) &
             noexcept(is_nothrow_invocable_v<T &, Args...>)
@@ -235,7 +230,6 @@ namespace ranges
             return invoke(data_, static_cast<Args &&>(args)...);
         }
         template(typename... Args)(
-            /// \pre
             requires invocable<T const &, Args...>)
         constexpr decltype(auto) operator()(Args &&... args) const &
             noexcept(is_nothrow_invocable_v<T const &, Args...>)
@@ -243,7 +237,6 @@ namespace ranges
             return invoke(data_, static_cast<Args &&>(args)...);
         }
         template(typename... Args)(
-            /// \pre
             requires invocable<T, Args...>)
         constexpr decltype(auto) operator()(Args &&... args) &&
             noexcept(is_nothrow_invocable_v<T, Args...>)
@@ -262,7 +255,6 @@ namespace ranges
     {
         semiregular_box() = default;
         template(typename Arg)(
-            /// \pre
             requires constructible_from<ranges::reference_wrapper<T &>, Arg &>)
         semiregular_box(in_place_t, Arg & arg) noexcept //
           : ranges::reference_wrapper<T &>(arg)
@@ -273,7 +265,6 @@ namespace ranges
 
 #if defined(_MSC_VER)
         template(typename U)(
-            /// \pre
             requires (!same_as<uncvref_t<U>, semiregular_box>) AND
             constructible_from<ranges::reference_wrapper<T &>, U>)
         constexpr semiregular_box(U && u) noexcept(
@@ -292,7 +283,6 @@ namespace ranges
     {
         semiregular_box() = default;
         template(typename Arg)(
-            /// \pre
             requires constructible_from<ranges::reference_wrapper<T &&>, Arg>)
         semiregular_box(in_place_t, Arg && arg) noexcept //
           : ranges::reference_wrapper<T &&>(static_cast<Arg &&>(arg))
@@ -303,7 +293,6 @@ namespace ranges
 
 #if defined(_MSC_VER)
         template(typename U)(
-            /// \pre
             requires (!same_as<uncvref_t<U>, semiregular_box>) AND
             constructible_from<ranges::reference_wrapper<T &&>, U>)
         constexpr semiregular_box(U && u) noexcept(

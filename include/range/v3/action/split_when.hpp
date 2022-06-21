@@ -55,7 +55,6 @@ namespace ranges
             // BUGBUG something is not right with the actions. It should be possible
             // to move a container into a split and have elements moved into the result.
             template(typename Rng, typename Fun)(
-                /// \pre
                 requires forward_range<Rng> AND
                         invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> AND
                             invocable<Fun &, iterator_t<Rng>, iterator_t<Rng>> AND
@@ -70,7 +69,6 @@ namespace ranges
             }
 
             template(typename Rng, typename Fun)(
-                /// \pre
                 requires forward_range<Rng> AND
                         predicate<Fun const &, range_reference_t<Rng>> AND
                             copy_constructible<Fun>)

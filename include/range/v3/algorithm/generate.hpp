@@ -40,7 +40,6 @@ namespace ranges
 
         /// \brief function template \c generate_n
         template(typename O, typename S, typename F)(
-            /// \pre
             requires invocable<F &> AND output_iterator<O, invoke_result_t<F &>> AND
             sentinel_for<S, O>)
         constexpr generate_result<O, F> RANGES_FUNC(generate)(O first, S last, F fun) //
@@ -52,7 +51,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename F)(
-            /// \pre
             requires invocable<F &> AND output_range<Rng, invoke_result_t<F &>>)
         constexpr generate_result<borrowed_iterator_t<Rng>, F> //
         RANGES_FUNC(generate)(Rng && rng, F fun)

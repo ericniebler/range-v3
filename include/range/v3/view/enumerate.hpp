@@ -102,7 +102,6 @@ namespace ranges
         struct enumerate_fn
         {
             template(typename Rng)(
-                /// \pre
                 requires viewable_range<Rng>)
             auto operator()(Rng && rng) const
             {

@@ -197,7 +197,6 @@ namespace ranges
 
         /// \brief function template \c rotate
         template(typename I, typename S)(
-            /// \pre
             requires permutable<I> AND sentinel_for<S, I>)
         constexpr subrange<I> RANGES_FUNC(rotate)(I first, I middle, S last) //
         {
@@ -215,7 +214,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename I = iterator_t<Rng>)(
-            /// \pre
             requires range<Rng> AND permutable<I>)
         constexpr borrowed_subrange_t<Rng> RANGES_FUNC(rotate)(Rng && rng, I middle) //
         {

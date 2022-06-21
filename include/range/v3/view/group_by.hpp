@@ -162,7 +162,6 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Rng, typename Fun)(
-        /// \pre
         requires copy_constructible<Fun>)
         group_by_view(Rng &&, Fun)
             ->group_by_view<views::all_t<Rng>, Fun>;
@@ -173,7 +172,6 @@ namespace ranges
         struct group_by_base_fn
         {
             template(typename Rng, typename Fun)(
-                /// \pre
                 requires viewable_range<Rng> AND forward_range<Rng> AND
                     indirect_relation<Fun, iterator_t<Rng>>)
                 RANGES_DEPRECATED(

@@ -46,7 +46,6 @@ namespace ranges
                  typename C,
                  typename T,
                  typename P = identity)(
-            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
                 output_iterator<O, T const &> AND
                 indirect_unary_predicate<C, projected<I, P>> AND
@@ -67,7 +66,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename O, typename C, typename T, typename P = identity)(
-            /// \pre
             requires input_range<Rng> AND output_iterator<O, T const &> AND
                 indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> AND
                 indirectly_copyable<iterator_t<Rng>, O>)

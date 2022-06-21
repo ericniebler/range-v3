@@ -62,7 +62,6 @@ namespace ranges
             diffmax_t() = default;
 
             template(typename T)(
-                /// \pre
                 requires integral<T>)
             constexpr diffmax_t(T val) noexcept
               : neg_(0 > val)
@@ -221,7 +220,6 @@ namespace ranges
             template<typename T>
             friend constexpr auto operator+=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)(
-                    /// \pre
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} + b));
@@ -229,7 +227,6 @@ namespace ranges
             template<typename T>
             friend constexpr auto operator-=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)(
-                    /// \pre
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} - b));
@@ -237,7 +234,6 @@ namespace ranges
             template<typename T>
             friend constexpr auto operator*=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)(
-                    /// \pre
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} * b));
@@ -245,7 +241,6 @@ namespace ranges
             template<typename T>
             friend constexpr auto operator/=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)(
-                    /// \pre
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} / b));
@@ -253,7 +248,6 @@ namespace ranges
             template<typename T>
             friend constexpr auto operator%=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)(
-                    /// \pre
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} % b));
@@ -261,7 +255,6 @@ namespace ranges
             template<typename T>
             friend constexpr auto operator&=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)(
-                    /// \pre
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} & b));
@@ -269,7 +262,6 @@ namespace ranges
             template<typename T>
             friend constexpr auto operator|=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)(
-                    /// \pre
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} | b));
@@ -277,7 +269,6 @@ namespace ranges
             template<typename T>
             friend constexpr auto operator^=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)(
-                    /// \pre
                     requires integral<T>)
             {
                 return (a = static_cast<T>(diffmax_t{a} ^ b));
@@ -285,7 +276,6 @@ namespace ranges
             template<typename T>
             friend constexpr auto operator<<=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)(
-                    /// \pre
                     requires integral<T>)
             {
                 a = static_cast<T>(diffmax_t{a} << b);
@@ -294,7 +284,6 @@ namespace ranges
             template<typename T>
             friend constexpr auto operator>>=(T & a, diffmax_t b) noexcept
                 -> CPP_broken_friend_ret(T &)(
-                    /// \pre
                     requires integral<T>)
             {
                 a = static_cast<T>(diffmax_t{a} >> b);
@@ -325,7 +314,6 @@ namespace ranges
             }
 
             template(typename T)(
-                /// \pre
                 requires integral<T>)
                 constexpr explicit
                 operator T() const noexcept
@@ -344,7 +332,6 @@ namespace ranges
             template<typename Ostream>
             friend auto operator<<(Ostream & sout, diffmax_t a)
                 -> CPP_broken_friend_ret(std::ostream &)(
-                    /// \pre
                     requires derived_from<
                         Ostream, std::basic_ostream<typename Ostream::char_type,
                                                     typename Ostream::traits_type>>)

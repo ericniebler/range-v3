@@ -36,7 +36,6 @@ namespace ranges
         dangling() = default;
         /// Implicit converting constructor; ignores argument
         template(typename T)(
-            /// \pre
             requires not_same_as_<T, dangling>)
         constexpr dangling(T &&)
         {}
@@ -46,7 +45,6 @@ namespace ranges
     namespace detail
     {
         template(class R, class U)(
-            /// \pre
             requires range<R>)
             using maybe_dangling_ =     //
                 meta::conditional_t<detail::_borrowed_range<R>, U, dangling>;

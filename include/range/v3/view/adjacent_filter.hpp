@@ -37,10 +37,14 @@ namespace ranges
     namespace detail
     {
         // clang-format off
+        /// \concept adjacent_filter_constraints_
+        /// \brief The \c adjacent_filter_constraints_ concept
         template(typename Rng, typename Pred)(
         concept (adjacent_filter_constraints_)(Rng, Pred),
             indirect_binary_predicate_<Pred, iterator_t<Rng>, iterator_t<Rng>>
         );
+        /// \concept adjacent_filter_constraints
+        /// \brief The \c adjacent_filter_constraints concept
         template<typename Rng, typename Pred>
         CPP_concept adjacent_filter_constraints =
             viewable_range<Rng> && forward_range<Rng> &&
@@ -75,7 +79,6 @@ namespace ranges
               : rng_(rng)
             {}
             template(bool Other)(
-                /// \pre
                 requires Const && CPP_NOT(Other)) //
                 constexpr adaptor(adaptor<Other> that)
               : rng_(that.rng_)
@@ -92,7 +95,6 @@ namespace ranges
             CPP_member
             constexpr auto prev(iterator_t<CRng> & it) const //
                 -> CPP_ret(void)(
-                    /// \pre
                     requires bidirectional_range<CRng>)
             {
                 auto const first = ranges::begin(rng_->base());
@@ -116,7 +118,6 @@ namespace ranges
         CPP_member
         constexpr auto begin_adaptor() const noexcept //
             -> CPP_ret(adaptor<true>)(
-                /// \pre
                 requires detail::adjacent_filter_constraints<Rng const, Pred const>)
         {
             return {this};
@@ -128,7 +129,6 @@ namespace ranges
         CPP_member
         constexpr auto end_adaptor() const noexcept //
             -> CPP_ret(adaptor<true>)(
-                /// \pre
                 requires detail::adjacent_filter_constraints<Rng const, Pred const>)
         {
             return {this};
@@ -144,7 +144,6 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Rng, typename Fun)(
-        /// \pre
         requires copy_constructible<Rng>)
         adjacent_filter_view(Rng &&, Fun)
             ->adjacent_filter_view<views::all_t<Rng>, Fun>;
@@ -155,7 +154,6 @@ namespace ranges
         struct adjacent_filter_base_fn
         {
             template(typename Rng, typename Pred)(
-                /// \pre
                 requires detail::adjacent_filter_constraints<Rng, Pred>)
             constexpr adjacent_filter_view<all_t<Rng>, Pred> //
             operator()(Rng && rng, Pred pred) const

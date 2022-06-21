@@ -51,7 +51,6 @@ namespace ranges
           , delim_(d)
         {}
         template(typename U)(
-            /// \pre
             requires convertible_to<U, value_t<U> const &>)
         ostream_iterator & operator=(U && value)
         {
@@ -132,7 +131,6 @@ namespace ranges
     struct make_ostream_joiner_fn
     {
         template(typename Delim, typename Char, typename Traits)(
-            /// \pre
             requires semiregular<detail::decay_t<Delim>>)
         ostream_joiner<detail::decay_t<Delim>, Char, Traits> //
         operator()(std::basic_ostream<Char, Traits> & s, Delim && d) const

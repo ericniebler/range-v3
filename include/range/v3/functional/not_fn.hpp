@@ -43,7 +43,6 @@ namespace ranges
                 requires default_constructible<FD>)
         {}
         template(typename T)(
-            /// \pre
             requires (!same_as<detail::decay_t<T>, logical_negate>) AND
                 constructible_from<FD, T>)
         constexpr explicit logical_negate(T && pred)
@@ -51,7 +50,6 @@ namespace ranges
         {}
 
         template(typename... Args)(
-            /// \pre
             requires predicate<FD &, Args...>)
         constexpr bool operator()(Args &&... args) &
         {
@@ -59,7 +57,6 @@ namespace ranges
         }
         /// \overload
         template(typename... Args)(
-            /// \pre
             requires predicate<FD const &, Args...>)
         constexpr bool operator()(Args &&... args) const &
         {
@@ -67,7 +64,6 @@ namespace ranges
         }
         /// \overload
         template(typename... Args)(
-            /// \pre
             requires predicate<FD, Args...>)
         constexpr bool operator()(Args &&... args) &&
         {
@@ -78,7 +74,6 @@ namespace ranges
     struct not_fn_fn
     {
         template(typename Pred)(
-            /// \pre
             requires move_constructible<detail::decay_t<Pred>> AND
                 constructible_from<detail::decay_t<Pred>, Pred>)
         constexpr logical_negate<detail::decay_t<Pred>> operator()(Pred && pred) const

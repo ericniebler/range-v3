@@ -36,7 +36,6 @@ namespace ranges
     {
         /// \return `begin(rng)[n]`
         template(typename Rng)(
-            /// \pre
             requires random_access_range<Rng> AND sized_range<Rng> AND
                 borrowed_range<Rng>)
         constexpr range_reference_t<Rng> //
@@ -69,7 +68,6 @@ namespace ranges
     {
         /// \return `begin(rng)[n]`
         template(typename Rng, typename Int)(
-            /// \pre
             requires random_access_range<Rng> AND integral<Int> AND borrowed_range<Rng>)
         constexpr range_reference_t<Rng> operator()(Rng && rng, Int n) const //
         {
@@ -92,7 +90,6 @@ namespace ranges
     {
         /// \return `*prev(end(rng))`
         template(typename Rng)(
-            /// \pre
             requires common_range<Rng> AND bidirectional_range<Rng> AND
                 borrowed_range<Rng>)
         constexpr range_reference_t<Rng> operator()(Rng && rng) const
@@ -110,7 +107,6 @@ namespace ranges
     {
         /// \return `*begin(rng)`
         template(typename Rng)(
-            /// \pre
             requires forward_range<Rng> AND borrowed_range<Rng>)
         constexpr range_reference_t<Rng> operator()(Rng && rng) const
         {

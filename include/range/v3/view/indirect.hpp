@@ -49,7 +49,6 @@ namespace ranges
 
             adaptor() = default;
             template(bool Other)(
-                /// \pre
                 requires IsConst && CPP_NOT(Other)) //
             constexpr adaptor(adaptor<Other>) noexcept
             {}
@@ -69,7 +68,6 @@ namespace ranges
         CPP_member
         constexpr auto begin_adaptor() noexcept //
             -> CPP_ret(adaptor<false>)(
-                /// \pre
                 requires (!simple_view<Rng>()))
         {
             return {};
@@ -77,7 +75,6 @@ namespace ranges
         CPP_member
         constexpr auto begin_adaptor() const noexcept //
             -> CPP_ret(adaptor<true>)(
-                /// \pre
                 requires range<Rng const>)
         {
             return {};
@@ -86,7 +83,6 @@ namespace ranges
         CPP_member
         constexpr auto end_adaptor() noexcept //
             -> CPP_ret(adaptor<false>)(
-                /// \pre
                 requires (!simple_view<Rng>()))
         {
             return {};
@@ -94,7 +90,6 @@ namespace ranges
         CPP_member
         constexpr auto end_adaptor() const noexcept //
             -> CPP_ret(adaptor<true>)(
-                /// \pre
                 requires range<Rng const>)
         {
             return {};
@@ -113,7 +108,6 @@ namespace ranges
         }
         CPP_auto_member
         constexpr auto CPP_fun(size)()(
-            /// \pre
             requires sized_range<Rng>)
         {
             return ranges::size(this->base());
@@ -135,7 +129,6 @@ namespace ranges
         struct indirect_fn
         {
             template(typename Rng)(
-                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng> AND
                 // We shouldn't need to strip references to test if something
                 // is readable. https://github.com/ericniebler/stl2/issues/594

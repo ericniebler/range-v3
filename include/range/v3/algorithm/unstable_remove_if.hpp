@@ -46,7 +46,6 @@ namespace ranges
 
         /// \brief function template \c unstable_remove_if
         template(typename I, typename C, typename P = identity)(
-            /// \pre
             requires bidirectional_iterator<I> AND permutable<I> AND
             indirect_unary_predicate<C, projected<I, P>>)
         constexpr I RANGES_FUNC(unstable_remove_if)(I first, I last, C pred, P proj = {})
@@ -74,7 +73,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename C, typename P = identity)(
-            /// \pre
             requires bidirectional_range<Rng> AND common_range<Rng> AND
             permutable<iterator_t<Rng>> AND
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)

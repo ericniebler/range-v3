@@ -37,7 +37,6 @@ namespace ranges
 
         /// \brief function template \c swap_ranges
         template(typename I1, typename S1, typename I2)(
-            /// \pre
             requires input_iterator<I1> AND sentinel_for<S1, I1> AND
             input_iterator<I2> AND indirectly_swappable<I1, I2>)
         constexpr swap_ranges_result<I1, I2> //
@@ -50,7 +49,6 @@ namespace ranges
 
         /// \overload
         template(typename I1, typename S1, typename I2, typename S2)(
-            /// \pre
             requires input_iterator<I1> AND sentinel_for<S1, I1> AND
                 input_iterator<I2> AND sentinel_for<S2, I2> AND
                 indirectly_swappable<I1, I2>)
@@ -65,7 +63,6 @@ namespace ranges
         }
 
         template(typename Rng1, typename I2_)(
-            /// \pre
             requires input_range<Rng1> AND input_iterator<uncvref_t<I2_>> AND
             indirectly_swappable<iterator_t<Rng1>, uncvref_t<I2_>>)
         constexpr swap_ranges_result<iterator_t<Rng1>, uncvref_t<I2_>> //
@@ -75,7 +72,6 @@ namespace ranges
         }
 
         template(typename Rng1, typename Rng2)(
-            /// \pre
             requires input_range<Rng1> AND input_range<Rng2> AND
                 indirectly_swappable<iterator_t<Rng1>, iterator_t<Rng2>>)
         constexpr swap_ranges_result<borrowed_iterator_t<Rng1>, borrowed_iterator_t<Rng2>> //

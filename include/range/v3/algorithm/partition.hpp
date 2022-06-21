@@ -99,7 +99,6 @@ namespace ranges
 
         /// \brief function template \c partition
         template(typename I, typename S, typename C, typename P = identity)(
-            /// \pre
             requires permutable<I> AND sentinel_for<S, I> AND
             indirect_unary_predicate<C, projected<I, P>>)
         constexpr I RANGES_FUNC(partition)(I first, S last, C pred, P proj = P{})
@@ -113,7 +112,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename C, typename P = identity)(
-            /// \pre
             requires forward_range<Rng> AND permutable<iterator_t<Rng>> AND
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>>)
         constexpr borrowed_iterator_t<Rng> RANGES_FUNC(partition)(Rng && rng, C pred, P proj = P{})

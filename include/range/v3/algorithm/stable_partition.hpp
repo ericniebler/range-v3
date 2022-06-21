@@ -294,7 +294,6 @@ namespace ranges
 
         /// \brief function template \c stable_partition
         template(typename I, typename S, typename C, typename P = identity)(
-            /// \pre
             requires bidirectional_iterator<I> AND sentinel_for<S, I> AND
             indirect_unary_predicate<C, projected<I, P>> AND permutable<I>)
         I RANGES_FUNC(stable_partition)(I first, S last, C pred, P proj = P{})
@@ -309,7 +308,6 @@ namespace ranges
         // BUGBUG Can this be optimized if Rng has O1 size?
         /// \overload
         template(typename Rng, typename C, typename P = identity)(
-            /// \pre
             requires bidirectional_range<Rng> AND
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> AND
             permutable<iterator_t<Rng>>)

@@ -87,7 +87,6 @@ namespace ranges
             return begin_(meta::bool_<(bool)common_range<Rng>>{});
         }
         template(bool Const = true)(
-            /// \pre
             requires Const AND common_range<meta::const_if_c<Const, Rng>>)
         constexpr reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>> begin() const
         {
@@ -98,7 +97,6 @@ namespace ranges
             return make_reverse_iterator(ranges::begin(rng_));
         }
         template(bool Const = true)(
-            /// \pre
             requires Const AND common_range<meta::const_if_c<Const, Rng>>)
         constexpr reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>> end() const
         {
@@ -106,7 +104,6 @@ namespace ranges
         }
         CPP_auto_member
         constexpr auto CPP_fun(size)()(
-            /// \pre
             requires sized_range<Rng>)
         {
             return ranges::size(rng_);
@@ -157,7 +154,6 @@ namespace ranges
         struct reverse_fn
         {
             template(typename Rng)(
-                /// \pre
                 requires viewable_range<Rng> AND bidirectional_range<Rng>)
             constexpr reverse_view<all_t<Rng>> operator()(Rng && rng) const
             {
@@ -177,7 +173,6 @@ namespace ranges
             using ranges::views::reverse;
         }
         template(typename Rng)(
-            /// \pre
             requires view_<Rng> AND bidirectional_range<Rng>)
         using reverse_view = ranges::reverse_view<Rng>;
     } // namespace cpp20

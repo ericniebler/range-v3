@@ -39,7 +39,6 @@ namespace ranges
 
         /// \brief function template \c remove
         template(typename I, typename S, typename T, typename P = identity)(
-            /// \pre
             requires permutable<I> AND sentinel_for<S, I> AND
             indirect_relation<equal_to, projected<I, P>, T const *>)
         constexpr I RANGES_FUNC(remove)(I first, S last, T const & val, P proj = P{})
@@ -61,7 +60,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename T, typename P = identity)(
-            /// \pre
             requires forward_range<Rng> AND permutable<iterator_t<Rng>> AND
             indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T const *>)
         constexpr borrowed_iterator_t<Rng> //

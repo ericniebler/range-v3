@@ -73,7 +73,6 @@ namespace ranges
             CPP_member
             constexpr auto prev(iterator_t<Rng> & it) const //
                 -> CPP_ret(void)(
-                    /// \pre
                     requires bidirectional_range<Rng>)
             {
                 rng_->satisfy_reverse(it);
@@ -92,7 +91,6 @@ namespace ranges
         CPP_member
         constexpr auto end_adaptor() const noexcept //
             -> CPP_ret(adaptor_base)(
-                /// \pre
                 requires (!common_range<Rng>))
         {
             return {};
@@ -100,7 +98,6 @@ namespace ranges
         CPP_member
         constexpr auto end_adaptor() //
             -> CPP_ret(adaptor)(
-                /// \pre
                 requires common_range<Rng>)
         {
             if(bidirectional_range<Rng>)
@@ -142,7 +139,6 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Rng, typename Pred)(
-        /// \pre
         requires copy_constructible<Pred>)
     remove_if_view(Rng &&, Pred)
         -> remove_if_view<views::all_t<Rng>, Pred>;
@@ -155,7 +151,6 @@ namespace ranges
         struct remove_if_base_fn
         {
             template(typename Rng, typename Pred)(
-                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng> AND
                     indirect_unary_predicate<Pred, iterator_t<Rng>>)
             constexpr remove_if_view<all_t<Rng>, Pred> operator()(Rng && rng, Pred pred)
@@ -165,7 +160,6 @@ namespace ranges
                                                         std::move(pred)};
             }
             template(typename Rng, typename Pred, typename Proj)(
-                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng> AND
                     indirect_unary_predicate<Pred, projected<iterator_t<Rng>, Proj>>)
             constexpr remove_if_view<all_t<Rng>, composed<Pred, Proj>> //
@@ -185,7 +179,6 @@ namespace ranges
                 return make_view_closure(bind_back(remove_if_base_fn{}, std::move(pred)));
             }
             template(typename Pred, typename Proj)(
-                /// \pre
                 requires (!range<Pred>)) // TODO: underconstrained
             constexpr auto operator()(Pred && pred, Proj proj) const
             {

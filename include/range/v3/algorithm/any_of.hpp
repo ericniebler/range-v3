@@ -37,7 +37,6 @@ namespace ranges
 
         /// \brief function template \c any_of
         template(typename I, typename S, typename F, typename P = identity)(
-            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
             indirect_unary_predicate<F, projected<I, P>>)
         constexpr bool RANGES_FUNC(any_of)(I first, S last, F pred, P proj = P{}) //
@@ -50,7 +49,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename F, typename P = identity)(
-            /// \pre
             requires input_range<Rng> AND
             indirect_unary_predicate<F, projected<iterator_t<Rng>, P>>)
         constexpr bool RANGES_FUNC(any_of)(Rng && rng, F pred, P proj = P{}) //

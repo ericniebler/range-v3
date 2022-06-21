@@ -46,7 +46,6 @@ namespace ranges
         CPP_member
         auto update_(range_reference_t<Rng> && val) //
             -> CPP_ret(void)(
-                /// \pre
                 requires assignable_from<range_value_t<Rng> &, range_reference_t<Rng>>)
         {
             if(!cache_)
@@ -57,7 +56,6 @@ namespace ranges
         CPP_member
         auto update_(range_reference_t<Rng> && val) //
             -> CPP_ret(void)(
-                /// \pre
                 requires (!assignable_from<range_value_t<Rng> &, range_reference_t<Rng>>))
         {
             cache_.emplace(static_cast<range_reference_t<Rng> &&>(val));
@@ -120,7 +118,6 @@ namespace ranges
             CPP_member
             auto distance_to(cursor const & that) const //
                 -> CPP_ret(difference_type)(
-                    /// \pre
                     requires sized_sentinel_for<iterator_t<Rng>, iterator_t<Rng>>)
             {
                 return that.current_ - current_;
@@ -128,7 +125,6 @@ namespace ranges
             CPP_member
             auto distance_to(sentinel const & that) const //
                 -> CPP_ret(difference_type)(
-                    /// \pre
                     requires sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>>)
             {
                 return that.last_ - current_;
@@ -161,7 +157,6 @@ namespace ranges
         {}
         CPP_auto_member
         constexpr auto CPP_fun(size)()(
-            /// \pre
             requires sized_range<Rng>)
         {
             return ranges::size(rng_);
@@ -184,7 +179,6 @@ namespace ranges
             /// combinations of \c view::filter and \c view::transform, for instance.
             /// \note \c views::cache1 is always single-pass.
             template(typename Rng)(
-                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng> AND
                     constructible_from<range_value_t<Rng>, range_reference_t<Rng>>)
             constexpr cache1_view<all_t<Rng>> operator()(Rng && rng) const //

@@ -63,7 +63,6 @@ namespace ranges
             ///
             /// \pre `Rng` is a model of the `range` concept
             template(typename I, typename V, typename C = less, typename P = identity)(
-                /// \pre
                 requires forward_iterator<I> AND
                     indirect_strict_weak_order<C, V const *, projected<I, P>>)
             constexpr I operator()(I first,

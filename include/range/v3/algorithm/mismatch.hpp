@@ -49,7 +49,6 @@ namespace ranges
                      typename C = equal_to,
                      typename P1 = identity,
                      typename P2 = identity)(
-            /// \pre
             requires input_iterator<I1> AND sentinel_for<S1, I1> AND
                 input_iterator<I2> AND
                 indirect_relation<C, projected<I1, P1>, projected<I2, P2>>)
@@ -77,7 +76,6 @@ namespace ranges
                      typename C = equal_to,
                      typename P1 = identity,
                      typename P2 = identity)(
-            /// \pre
             requires input_iterator<I1> AND sentinel_for<S1, I1> AND
                 input_iterator<I2> AND sentinel_for<S2, I2> AND
                 indirect_relation<C, projected<I1, P1>, projected<I2, P2>>)
@@ -132,7 +130,6 @@ namespace ranges
                      typename C = equal_to,
                      typename P1 = identity,
                      typename P2 = identity)(
-            /// \pre
             requires input_range<Rng1> AND input_range<Rng2> AND
                 indirect_relation<C,
                                   projected<iterator_t<Rng1>, P1>,

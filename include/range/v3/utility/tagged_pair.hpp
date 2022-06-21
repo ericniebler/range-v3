@@ -84,21 +84,18 @@ namespace ranges
         tagged() = default;
         using base_t::base_t;
         template(typename Other)(
-            /// \pre
             requires can_convert<Other>::value)          //
         constexpr tagged(tagged<Other, Tags...> && that) //
             noexcept(std::is_nothrow_constructible<Base, Other>::value)
           : base_t(static_cast<Other &&>(that))
         {}
         template(typename Other)(
-            /// \pre
             requires can_convert<Other>::value)               //
         constexpr tagged(tagged<Other, Tags...> const & that) //
             noexcept(std::is_nothrow_constructible<Base, Other const &>::value)
           : base_t(static_cast<Other const &>(that))
         {}
         template(typename Other)(
-            /// \pre
             requires can_convert<Other>::value) //
         constexpr tagged & operator=(tagged<Other, Tags...> && that) //
             noexcept(
@@ -108,7 +105,6 @@ namespace ranges
             return *this;
         }
         template(typename Other)(
-            /// \pre
             requires can_convert<Other>::value) //
         constexpr tagged & operator=(tagged<Other, Tags...> const & that) //
             noexcept(
@@ -118,7 +114,6 @@ namespace ranges
             return *this;
         }
         template(typename U)(
-            /// \pre
             requires (!same_as<tagged, detail::decay_t<U>>) AND
                 satisfies<Base &, std::is_assignable, U>)
         constexpr tagged & operator=(U && u) //
@@ -128,7 +123,6 @@ namespace ranges
             return *this;
         }
         template(typename B = Base)(
-            /// \pre
             requires is_swappable<B>::value) //
         constexpr void swap(tagged & that) noexcept(is_nothrow_swappable<B>::value)
         {
@@ -139,7 +133,6 @@ namespace ranges
         friend constexpr auto swap(tagged & x, tagged & y) //
             noexcept(is_nothrow_swappable<B>::value)
             -> CPP_broken_friend_ret(void)(
-                /// \pre
                 requires is_swappable<B>::value)
         {
             x.swap(y);
@@ -151,7 +144,6 @@ namespace ranges
     namespace _tagged_
     {
         template(typename Base, typename... Tags)(
-            /// \pre
             requires is_swappable<Base>::value) //
         constexpr void swap(tagged<Base, Tags...> & x, tagged<Base, Tags...> & y) //
             noexcept(is_nothrow_swappable<Base>::value)

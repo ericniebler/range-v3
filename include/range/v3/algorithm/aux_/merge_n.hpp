@@ -57,7 +57,6 @@ namespace ranges
         {
             template(typename I0, typename I1, typename O, typename C = less,
                      typename P0 = identity, typename P1 = identity)(
-                /// \pre
                 requires mergeable<I0, I1, O, C, P0, P1>)
             merge_n_result<I0, I1, O> operator()(I0 begin0,
                                                  iter_difference_t<I0> n0,

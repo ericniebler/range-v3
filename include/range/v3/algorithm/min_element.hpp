@@ -37,7 +37,6 @@ namespace ranges
 
         /// \brief function template \c min_element
         template(typename I, typename S, typename C = less, typename P = identity)(
-            /// \pre
             requires forward_iterator<I> AND sentinel_for<S, I> AND
             indirect_strict_weak_order<C, projected<I, P>>)
         constexpr I RANGES_FUNC(min_element)(I first, S last, C pred = C{}, P proj = P{})
@@ -51,7 +50,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename C = less, typename P = identity)(
-            /// \pre
             requires forward_range<Rng> AND
             indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>)
         constexpr borrowed_iterator_t<Rng> //

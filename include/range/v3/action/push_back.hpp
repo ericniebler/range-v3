@@ -47,7 +47,6 @@ namespace ranges
                            std::declval<Rng>())));
 
         template(typename Cont, typename T)(
-            /// \pre
             requires lvalue_container_like<Cont> AND
                 (!range<T>) AND constructible_from<range_value_t<Cont>, T>)
         push_back_t<Cont, T> push_back(Cont && cont, T && t)
@@ -56,7 +55,6 @@ namespace ranges
         }
 
         template(typename Cont, typename Rng)(
-            /// \pre
             requires lvalue_container_like<Cont> AND range<Rng>)
         insert_t<Cont, Rng> push_back(Cont && cont, Rng && rng)
         {
@@ -65,12 +63,16 @@ namespace ranges
 
         /// \cond
         // clang-format off
+        /// \concept can_push_back_frag_
+        /// \brief The \c can_push_back_frag_ concept
         template<typename Rng, typename T>
         CPP_requires(can_push_back_frag_,
             requires(Rng && rng, T && t) //
             (
                 push_back(rng, (T &&) t)
             ));
+        /// \concept can_push_back_
+        /// \brief The \c can_push_back_ concept
         template<typename Rng, typename T>
         CPP_concept can_push_back_ =
             CPP_requires_ref(adl_push_back_detail::can_push_back_frag_, Rng, T);
@@ -87,7 +89,6 @@ namespace ranges
             }
 
             template(typename T)(
-                /// \pre
                 requires range<T &>)
             constexpr auto operator()(T & t) const
             {
@@ -102,7 +103,6 @@ namespace ranges
             }
 
             template(typename Rng, typename T)(
-                /// \pre
                 requires input_range<Rng> AND can_push_back_<Rng, T> AND
                 (range<T> || constructible_from<range_value_t<Rng>, T>)) //
             Rng operator()(Rng && rng, T && t) const //
@@ -112,7 +112,6 @@ namespace ranges
             }
 
             template(typename Rng, typename T)(
-                /// \pre
                 requires input_range<Rng> AND
                         can_push_back_<Rng, std::initializer_list<T>> AND
                             constructible_from<range_value_t<Rng>, T const &>)
