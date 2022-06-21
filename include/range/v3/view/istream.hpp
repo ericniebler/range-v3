@@ -76,6 +76,7 @@ namespace ranges
         }
 
     public:
+        istream_view() = default;
         explicit istream_view(std::istream & sin)
           : sin_(&sin)
           , obj_{}
