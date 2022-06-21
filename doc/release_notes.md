@@ -1,6 +1,59 @@
 Release Notes           {#release_notes}
 =============
 
+\section v0-12-0 Version 0.12.0 "Dude, Where's My Bored Ape?"
+
+_Released:_ June 19, 2022
+
+> **IMPORTANT:** This release deprecates `views::group_by` which was
+> an endless source of confusion. `group_by` is replaced with
+> `views::chunk_by` (which, beware, has _subtly_ different semantics,
+> see below.)
+
+Changes:
+* **NEW:** `views::chunk_by` which, like the old `views::group_by` it replaces,
+  splits a range into a range-of-ranges, where adjacent elements satisfy a binary
+  predicate  ([\#1648](https://github.com/ericniebler/range-v3/pull/1648)). [_Note:_ Whereas `views::group_by` evaluated the predicate
+  between the current element and the _first_ element in the chunk, `views::chunk_by`
+  evaluates the predicate between _adjacent_ elements. -- _end note_]
+* **NEW:** `constexpr` all the algorithms that are `constexpr` in C++20's `std::ranges`
+  ([\#1683](https://github.com/ericniebler/range-v3/pull/1683)).
+* **NEW:** Fold algorithms from [P2322](http://wg21.link/P2322) ([\#1628](https://github.com/ericniebler/range-v3/pull/1628)), ([\#1668](https://github.com/ericniebler/range-v3/pull/1668)).
+* **NEW:** `ranges::unformatted_ostream_iterator` ([\#1586](https://github.com/ericniebler/range-v3/pull/1586)).
+* **NEW:** Support for the `build2` build system ([\#1562](https://github.com/ericniebler/range-v3/pull/1562)).
+* Implement [P2328](http://wg21.link/P2328): relax the constraint on `ranges::join_view`
+  to support joining ranges of prvalue non-`view` ranges ([\#1655](https://github.com/ericniebler/range-v3/pull/1655)).
+* Improved algorithm for `ranges::linear_distribute` ([\#1679](https://github.com/ericniebler/range-v3/pull/1679)).
+* Renamed `safe_subrange_t` to `borrowed_subrange_t` ([\#1542](https://github.com/ericniebler/range-v3/pull/1542)).
+* Extend `ranges::to` to support conversion to container-of-containers ([\#1553](https://github.com/ericniebler/range-v3/pull/1553)).
+* `views::enumerate` can be a `borrowed_view` ([\#1571](https://github.com/ericniebler/range-v3/pull/1571)).
+* `ranges::upper_bound` works in the presence of overloaded `operator&` ([\#1632](https://github.com/ericniebler/range-v3/pull/1632)).
+* Input iterators are no longer required to be default-constructible ([\#1652](https://github.com/ericniebler/range-v3/pull/1652)).
+
+Bugs fixed:
+* `ranges::to<std::map>(v)` does not work ([\#1700](https://github.com/ericniebler/range-v3/pull/1700))
+* `ranges::reverse_iterator` has the wrong `value_type` when reversing a proxy
+  range ([\#1670](https://github.com/ericniebler/range-v3/pull/1670)).
+* A post-increment of a `ranges::counted_iterator` wrapping an input iterator with
+  a `void`-returning post-increment operator isn't incrementing the count ([\#1664](https://github.com/ericniebler/range-v3/pull/1664)).
+* Bad assert in `views::drop_last` ([\#1599](https://github.com/ericniebler/range-v3/pull/1599)).
+* Read of uninitialized `bool` in `views::cache1` ([\#1610](https://github.com/ericniebler/range-v3/pull/1610)).
+* `ranges::unstable_remove_if` calls predicate on same element twice ([\#1629](https://github.com/ericniebler/range-v3/pull/1629)).
+* `ranges::on(f,g)(x...)` should be `f(g(x)...)` instead of `f(g(x...))` ([\#1661](https://github.com/ericniebler/range-v3/pull/1661)).
+* Broken qualification of cmake targets ([\#1557](https://github.com/ericniebler/range-v3/pull/1557)).
+* Various portability and documentation fixes.
+
+**Credits:** I would like to thank the following people who contributed to this release
+(in no particular order): Barry Revzin, @dvirtz, Gonzalo Brito, Johel Ernesto Guerrero
+Peña, Joël Lamotte, Doug Roeper, Facundo Tuesca, Vitaly Zaitsev, @23rd, @furkanusta,
+Jonathan Haigh, @SmorkalovG, @marehr, Matt Beardsley, Chris Glover, Louis Dionne, Jin
+Shang (@js8544), Hui Xie, @huixie90, Robert Maynard, Silver Zachara, @sergegers,
+Théo DELRIEU, @LesnyRumcajs, Yehezkel Bernat, Maciej Patro, Klemens Nanni, Thomas
+Madlener, and Jason Merrill.
+
+&#127881; Special thanks to Barry Revzin for stepping up to be part-time co-maintainer of
+range-v3. &#127881;
+
 \section v0-11-0 Version 0.11.0 "Thanks, ISO"
 
 _Released:_ August 6, 2020
@@ -54,7 +107,7 @@ Changes:
 * Better conformance with C++20's use of the _`boolean-testable`_ concept.
 * Support C++20 coroutines.
 * Honor CMake's `CMAKE_CXX_STANDARD` variable.
-* A fix for the cardinality of `views::zip[_with]` (#1486).
+* A fix for the cardinality of `views::zip[_with]` ([\#1486](https://github.com/ericniebler/range-v3/pull/1486)).
 * Add `view_interface::data()` member function.
 * Add necessary specializations for `std::basic_common_reference` and
   `std::common_type`.
@@ -62,10 +115,10 @@ Changes:
 * Various CMake fixes and improvements.
 * `drop_while_view` is not a `sized_range`.
 * Added support for Wind River Systems.
-* Bug fixes to `views::group_by` (#1393).
+* Bug fixes to `views::group_by` ([\#1393](https://github.com/ericniebler/range-v3/pull/1393)).
 * `common_[reference|type]` of `common_[tuple|pair]` now yields a `common_[tuple|pair]`
-  instead of a `std::[tuple|pair]` (#1422).
-* Avoid UB when currying an lvalue in some views and actions (#1320).
+  instead of a `std::[tuple|pair]` ([\#1422](https://github.com/ericniebler/range-v3/pull/1422)).
+* Avoid UB when currying an lvalue in some views and actions ([\#1320](https://github.com/ericniebler/range-v3/pull/1320)).
 
 **Credits:** I would like to thank the following people who contributed to this release
 (in no particular order): Christopher Di Bella, @marehr, Casey Carter, Dvir Yitzchaki,
