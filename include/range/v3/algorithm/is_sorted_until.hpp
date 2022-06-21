@@ -48,7 +48,6 @@ namespace ranges
         /// projected<I, P>>` concept
         ///
         template(typename I, typename S, typename R = less, typename P = identity)(
-            /// \pre
             requires forward_iterator<I> AND sentinel_for<S, I> AND
             indirect_strict_weak_order<R, projected<I, P>>)
         constexpr I RANGES_FUNC(is_sorted_until)(I first, S last, R pred = R{}, P proj = P{})
@@ -68,7 +67,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename R = less, typename P = identity)(
-            /// \pre
             requires forward_range<Rng> AND
             indirect_strict_weak_order<R, projected<iterator_t<Rng>, P>>)
         constexpr borrowed_iterator_t<Rng> //

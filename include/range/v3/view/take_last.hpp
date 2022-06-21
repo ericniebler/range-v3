@@ -35,7 +35,6 @@ namespace ranges
         struct take_last_base_fn
         {
             template(typename Rng)(
-                /// \pre
                 requires viewable_range<Rng> AND sized_range<Rng>)
             auto operator()(Rng && rng, range_difference_t<Rng> n) const
             {
@@ -49,7 +48,6 @@ namespace ranges
             using take_last_base_fn::operator();
 
             template(typename Int)(
-                /// \pre
                 requires detail::integer_like_<Int>)
             constexpr auto operator()(Int n) const
             {

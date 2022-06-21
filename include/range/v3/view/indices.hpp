@@ -35,14 +35,12 @@ namespace ranges
             indices_fn() = default;
 
             template(typename Val)(
-                /// \pre
                 requires integral<Val>)
             iota_view<Val, Val> operator()(Val to) const
             {
                 return {Val(), to};
             }
             template(typename Val)(
-                /// \pre
                 requires integral<Val>)
             iota_view<Val, Val> operator()(Val from, Val to) const
             {
@@ -54,14 +52,12 @@ namespace ranges
         struct closed_indices_fn
         {
             template(typename Val)(
-                /// \pre
                 requires integral<Val>)
             closed_iota_view<Val> operator()(Val to) const
             {
                 return {Val(), to};
             }
             template(typename Val)(
-                /// \pre
                 requires integral<Val>)
             closed_iota_view<Val> operator()(Val from, Val to) const
             {

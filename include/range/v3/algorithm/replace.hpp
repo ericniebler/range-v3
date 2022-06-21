@@ -37,7 +37,6 @@ namespace ranges
 
         /// \brief function template \c replace
         template(typename I, typename S, typename T1, typename T2, typename P = identity)(
-            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
                 indirectly_writable<I, T2 const &> AND
                 indirect_relation<equal_to, projected<I, P>, T1 const *>)
@@ -52,7 +51,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename T1, typename T2, typename P = identity)(
-            /// \pre
             requires input_range<Rng> AND
                 indirectly_writable<iterator_t<Rng>, T2 const &> AND
                 indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>)

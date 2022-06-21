@@ -49,7 +49,6 @@ namespace ranges
                  typename O1,
                  typename C,
                  typename P = identity)(
-            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
                 weakly_incrementable<O0> AND weakly_incrementable<O1> AND
                 indirectly_copyable<I, O0> AND indirectly_copyable<I, O1> AND
@@ -80,7 +79,6 @@ namespace ranges
                  typename O1,
                  typename C,
                  typename P = identity)(
-            /// \pre
             requires input_range<Rng> AND weakly_incrementable<O0> AND
                 weakly_incrementable<O1> AND indirectly_copyable<iterator_t<Rng>, O0> AND
                 indirectly_copyable<iterator_t<Rng>, O1> AND

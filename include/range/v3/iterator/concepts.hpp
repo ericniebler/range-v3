@@ -50,64 +50,53 @@ namespace ranges
 
 #if defined(_GLIBCXX_DEBUG)
         template(typename I, typename T, typename Seq)(
-            /// \pre
             requires same_as<I, __gnu_debug::_Safe_iterator<T *, Seq>>)
         auto iter_concept_(__gnu_debug::_Safe_iterator<T *, Seq>, priority_tag<3>)
             -> ranges::contiguous_iterator_tag;
 #endif
 #if defined(__GLIBCXX__)
         template(typename I, typename T, typename Seq)(
-            /// \pre
             requires same_as<I, __gnu_cxx::__normal_iterator<T *, Seq>>)
         auto iter_concept_(__gnu_cxx::__normal_iterator<T *, Seq>, priority_tag<3>)
             -> ranges::contiguous_iterator_tag;
 #endif
 #if defined(_LIBCPP_VERSION)
         template(typename I, typename T)(
-            /// \pre
             requires same_as<I, std::__wrap_iter<T *>>)
         auto iter_concept_(std::__wrap_iter<T *>, priority_tag<3>)
             -> ranges::contiguous_iterator_tag;
 #endif
 #if defined(_MSVC_STL_VERSION) || defined(_IS_WRS)
         template(typename I)(
-            /// \pre
             requires same_as<I, class I::_Array_iterator>)
         auto iter_concept_(I, priority_tag<3>)
             -> ranges::contiguous_iterator_tag;
         template(typename I)(
-            /// \pre
             requires same_as<I, class I::_Array_const_iterator>)
         auto iter_concept_(I, priority_tag<3>)
             -> ranges::contiguous_iterator_tag;
         template(typename I)(
-            /// \pre
             requires same_as<I, class I::_Vector_iterator>)
         auto iter_concept_(I, priority_tag<3>)
             -> ranges::contiguous_iterator_tag;
         template(typename I)(
-            /// \pre
             requires same_as<I, class I::_Vector_const_iterator>)
         auto iter_concept_(I, priority_tag<3>)
             -> ranges::contiguous_iterator_tag;
         template(typename I)(
-            /// \pre
             requires same_as<I, class I::_String_iterator>)
         auto iter_concept_(I, priority_tag<3>)
             -> ranges::contiguous_iterator_tag;
         template(typename I)(
-            /// \pre
             requires same_as<I, class I::_String_const_iterator>)
         auto iter_concept_(I, priority_tag<3>)
             -> ranges::contiguous_iterator_tag;
         template(typename I)(
-            /// \pre
             requires same_as<I, class I::_String_view_iterator>)
         auto iter_concept_(I, priority_tag<3>)
             -> ranges::contiguous_iterator_tag;
 #endif
         template(typename I, typename T)(
-            /// \pre
             requires same_as<I, T *>)
         auto iter_concept_(T *, priority_tag<3>)
             -> ranges::contiguous_iterator_tag;
@@ -135,6 +124,8 @@ namespace ranges
       /// \endcond
 
     // clang-format off
+    /// \concept readable_
+    /// \brief The \c readable_ concept
     template(typename I)(
     concept (readable_)(I),
         // requires (I const i)
@@ -150,6 +141,8 @@ namespace ranges
         common_reference_with<iter_rvalue_reference_t<I> &&, iter_value_t<I> const &>
     );
 
+    /// \concept indirectly_readable
+    /// \brief The \c indirectly_readable concept
     template<typename I>
     CPP_concept indirectly_readable = //
         CPP_concept_ref(ranges::readable_, uncvref_t<I>);
@@ -159,6 +152,8 @@ namespace ranges
     RANGES_INLINE_VAR constexpr bool readable = //
         indirectly_readable<I>;
 
+    /// \concept writable_
+    /// \brief The \c writable_ concept
     template<typename O, typename T>
     CPP_requires(writable_,
         requires(O && o, T && t) //
@@ -168,6 +163,8 @@ namespace ranges
             const_cast<iter_reference_t<O> const &&>(*o) = (T &&) t,
             const_cast<iter_reference_t<O> const &&>(*(O &&) o) = (T &&) t
         ));
+    /// \concept indirectly_writable
+    /// \brief The \c indirectly_writable concept
     template<typename O, typename T>
     CPP_concept indirectly_writable = //
         CPP_requires_ref(ranges::writable_, O, T);
@@ -203,6 +200,8 @@ namespace ranges
 #endif // __SIZEOF_INT128__
 
         // clang-format off
+        /// \concept integer_like_
+        /// \brief The \c integer_like_ concept
         template<typename D>
         CPP_concept integer_like_ = _is_integer_like_<D>;
             // TODO additional syntactic and semantic requirements
@@ -218,10 +217,14 @@ namespace ranges
             return false;
         }
 
+        /// \concept signed_integer_like_
+        /// \brief The \c signed_integer_like_ concept
         template<typename D>
         CPP_concept signed_integer_like_ =
             integer_like_<D> && detail::_is_signed_((D*) nullptr);
 #else // ^^^ workaround / no workaround vvv
+        /// \concept signed_integer_like_impl_
+        /// \brief The \c signed_integer_like_impl_ concept
         template(typename D)(
         concept (signed_integer_like_impl_)(D),
             integer_like_<D> AND
@@ -229,6 +232,8 @@ namespace ranges
             std::integral_constant<bool, (D(-1) < D(0))>::value
         );
 
+        /// \concept signed_integer_like_
+        /// \brief The \c signed_integer_like_ concept
         template<typename D>
         CPP_concept signed_integer_like_ =
             integer_like_<D> &&
@@ -239,6 +244,8 @@ namespace ranges
       /// \endcond
 
     // clang-format off
+    /// \concept weakly_incrementable_
+    /// \brief The \c weakly_incrementable_ concept
     template<typename I>
     CPP_requires(weakly_incrementable_,
         requires(I i) //
@@ -248,45 +255,61 @@ namespace ranges
             concepts::requires_<same_as<I&, decltype(++i)>>
         ));
 
+    /// \concept weakly_incrementable_
+    /// \brief The \c weakly_incrementable_ concept
     template(typename I)(
     concept (weakly_incrementable_)(I),
         concepts::type<iter_difference_t<I>> AND
         detail::signed_integer_like_<iter_difference_t<I>>);
 
+    /// \concept weakly_incrementable
+    /// \brief The \c weakly_incrementable concept
     template<typename I>
     CPP_concept weakly_incrementable =
         copyable<I> &&
         CPP_requires_ref(ranges::weakly_incrementable_, I) &&
         CPP_concept_ref(ranges::weakly_incrementable_, I);
 
+    /// \concept incrementable_
+    /// \brief The \c incrementable_ concept
     template<typename I>
     CPP_requires(incrementable_,
         requires(I i) //
         (
             concepts::requires_<same_as<I, decltype(i++)>>
         ));
+    /// \concept incrementable
+    /// \brief The \c incrementable concept
     template<typename I>
     CPP_concept incrementable =
         regular<I> &&
         weakly_incrementable<I> &&
         CPP_requires_ref(ranges::incrementable_, I);
 
+    /// \concept input_or_output_iterator_
+    /// \brief The \c input_or_output_iterator_ concept
     template(typename I)(
     concept (input_or_output_iterator_)(I),
         detail::dereferenceable_<I&>
     );
 
+    /// \concept input_or_output_iterator
+    /// \brief The \c input_or_output_iterator concept
     template<typename I>
     CPP_concept input_or_output_iterator =
         weakly_incrementable<I> &&
         CPP_concept_ref(ranges::input_or_output_iterator_, I);
 
+    /// \concept sentinel_for
+    /// \brief The \c sentinel_for concept
     template<typename S, typename I>
     CPP_concept sentinel_for =
         semiregular<S> &&
         input_or_output_iterator<I> &&
         detail::weakly_equality_comparable_with_<S, I>;
 
+    /// \concept sized_sentinel_for_
+    /// \brief The \c sized_sentinel_for_ concept
     template<typename S, typename I>
     CPP_requires(sized_sentinel_for_,
         requires(S const & s, I const & i) //
@@ -296,39 +319,53 @@ namespace ranges
             concepts::requires_<same_as<iter_difference_t<I>, decltype(s - i)>>,
             concepts::requires_<same_as<iter_difference_t<I>, decltype(i - s)>>
         ));
+    /// \concept sized_sentinel_for_
+    /// \brief The \c sized_sentinel_for_ concept
     template(typename S, typename I)(
     concept (sized_sentinel_for_)(S, I),
         (!disable_sized_sentinel<std::remove_cv_t<S>, std::remove_cv_t<I>>) AND
         sentinel_for<S, I>);
 
+    /// \concept sized_sentinel_for
+    /// \brief The \c sized_sentinel_for concept
     template<typename S, typename I>
     CPP_concept sized_sentinel_for =
         CPP_concept_ref(sized_sentinel_for_, S, I) &&
         CPP_requires_ref(ranges::sized_sentinel_for_, S, I);
 
+    /// \concept output_iterator_
+    /// \brief The \c output_iterator_ concept
     template<typename Out, typename T>
     CPP_requires(output_iterator_,
         requires(Out o, T && t) //
         (
             *o++ = (T &&) t
         ));
+    /// \concept output_iterator
+    /// \brief The \c output_iterator concept
     template<typename Out, typename T>
     CPP_concept output_iterator =
         input_or_output_iterator<Out> &&
         indirectly_writable<Out, T> &&
         CPP_requires_ref(ranges::output_iterator_, Out, T);
 
+    /// \concept with_category_
+    /// \brief The \c with_category_ concept
     template(typename I, typename Tag)(
     concept (with_category_)(I, Tag),
         derived_from<detail::iter_concept_t<I>, Tag>
     );
 
+    /// \concept input_iterator
+    /// \brief The \c input_iterator concept
     template<typename I>
     CPP_concept input_iterator =
         input_or_output_iterator<I> &&
         indirectly_readable<I> &&
         CPP_concept_ref(ranges::with_category_, I, std::input_iterator_tag);
 
+    /// \concept forward_iterator
+    /// \brief The \c forward_iterator concept
     template<typename I>
     CPP_concept forward_iterator =
         input_iterator<I> &&
@@ -336,6 +373,8 @@ namespace ranges
         sentinel_for<I, I> &&
         CPP_concept_ref(ranges::with_category_, I, std::forward_iterator_tag);
 
+    /// \concept bidirectional_iterator_
+    /// \brief The \c bidirectional_iterator_ concept
     template<typename I>
     CPP_requires(bidirectional_iterator_,
         requires(I i) //
@@ -345,12 +384,16 @@ namespace ranges
             concepts::requires_<same_as<I&, decltype(--i)>>,
             concepts::requires_<same_as<I, decltype(i--)>>
         ));
+    /// \concept bidirectional_iterator
+    /// \brief The \c bidirectional_iterator concept
     template<typename I>
     CPP_concept bidirectional_iterator =
         forward_iterator<I> &&
         CPP_requires_ref(ranges::bidirectional_iterator_, I) &&
         CPP_concept_ref(ranges::with_category_, I, std::bidirectional_iterator_tag);
 
+    /// \concept random_access_iterator_
+    /// \brief The \c random_access_iterator_ concept
     template<typename I>
     CPP_requires(random_access_iterator_,
         requires(I i, iter_difference_t<I> n)
@@ -367,6 +410,8 @@ namespace ranges
             concepts::requires_<same_as<decltype(i -= n), I&>>,
             concepts::requires_<same_as<decltype(i[n]), iter_reference_t<I>>>
         ));
+    /// \concept random_access_iterator
+    /// \brief The \c random_access_iterator concept
     template<typename I>
     CPP_concept random_access_iterator =
         bidirectional_iterator<I> &&
@@ -375,6 +420,8 @@ namespace ranges
         CPP_requires_ref(ranges::random_access_iterator_, I) &&
         CPP_concept_ref(ranges::with_category_, I, std::random_access_iterator_tag);
 
+    /// \concept contiguous_iterator_
+    /// \brief The \c contiguous_iterator_ concept
     template(typename I)(
     concept (contiguous_iterator_)(I),
         std::is_lvalue_reference<iter_reference_t<I>>::value AND
@@ -382,6 +429,8 @@ namespace ranges
         derived_from<detail::iter_concept_t<I>, ranges::contiguous_iterator_tag>
     );
 
+    /// \concept contiguous_iterator
+    /// \brief The \c contiguous_iterator concept
     template<typename I>
     CPP_concept contiguous_iterator =
         random_access_iterator<I> &&
@@ -429,6 +478,8 @@ namespace ranges
     /// \cond
     // Generally useful to know if an iterator is single-pass or not:
     // clang-format off
+    /// \concept single_pass_iterator_
+    /// \brief The \c single_pass_iterator_ concept
     template<typename I>
     CPP_concept single_pass_iterator_ =
         input_or_output_iterator<I> && !forward_iterator<I>;
@@ -446,6 +497,8 @@ namespace ranges
     namespace detail
     {
         // clang-format off
+        /// \concept common_reference_with_4_impl_
+        /// \brief The \c common_reference_with_4_impl_ concept
         template(typename T1, typename T2, typename T3, typename T4)(
         concept (common_reference_with_4_impl_)(T1, T2, T3, T4),
             concepts::type<common_reference_t<T1, T2, T3, T4>>     AND
@@ -455,12 +508,16 @@ namespace ranges
             convertible_to<T4, common_reference_t<T1, T2, T3, T4>>
         );
 
+        /// \concept common_reference_with_4_
+        /// \brief The \c common_reference_with_4_ concept
         template<typename T1, typename T2, typename T3, typename T4>
         CPP_concept common_reference_with_4_ =
             CPP_concept_ref(detail::common_reference_with_4_impl_, T1, T2, T3, T4);
         // axiom: all permutations of T1,T2,T3,T4 have the same
         // common reference type.
 
+        /// \concept indirectly_unary_invocable_impl_
+        /// \brief The \c indirectly_unary_invocable_impl_ concept
         template(typename F, typename I)(
         concept (indirectly_unary_invocable_impl_)(F, I),
             invocable<F &, iter_value_t<I> &> AND
@@ -471,6 +528,8 @@ namespace ranges
                 invoke_result_t<F &, iter_reference_t<I>>>
         );
 
+        /// \concept indirectly_unary_invocable_
+        /// \brief The \c indirectly_unary_invocable_ concept
         template<typename F, typename I>
         CPP_concept indirectly_unary_invocable_ =
             indirectly_readable<I> &&
@@ -480,11 +539,15 @@ namespace ranges
       /// \endcond
 
     // clang-format off
+    /// \concept indirectly_unary_invocable
+    /// \brief The \c indirectly_unary_invocable concept
     template<typename F, typename I>
     CPP_concept indirectly_unary_invocable =
         detail::indirectly_unary_invocable_<F, I> &&
         copy_constructible<F>;
 
+    /// \concept indirectly_regular_unary_invocable_
+    /// \brief The \c indirectly_regular_unary_invocable_ concept
     template(typename F, typename I)(
     concept (indirectly_regular_unary_invocable_)(F, I),
         regular_invocable<F &, iter_value_t<I> &> AND
@@ -495,6 +558,8 @@ namespace ranges
             invoke_result_t<F &, iter_reference_t<I>>>
     );
 
+    /// \concept indirectly_regular_unary_invocable
+    /// \brief The \c indirectly_regular_unary_invocable concept
     template<typename F, typename I>
     CPP_concept indirectly_regular_unary_invocable =
         indirectly_readable<I> &&
@@ -503,6 +568,8 @@ namespace ranges
 
     /// \cond
     // Non-standard indirect invocable concepts
+    /// \concept indirectly_binary_invocable_impl_
+    /// \brief The \c indirectly_binary_invocable_impl_ concept
     template(typename F, typename I1, typename I2)(
     concept (indirectly_binary_invocable_impl_)(F, I1, I2),
         invocable<F &, iter_value_t<I1> &, iter_value_t<I2> &> AND
@@ -517,12 +584,16 @@ namespace ranges
             invoke_result_t<F &, iter_reference_t<I1>, iter_reference_t<I2>>>
     );
 
+    /// \concept indirectly_binary_invocable_
+    /// \brief The \c indirectly_binary_invocable_ concept
     template<typename F, typename I1, typename I2>
     CPP_concept indirectly_binary_invocable_ =
         indirectly_readable<I1> && indirectly_readable<I2> &&
         copy_constructible<F> &&
         CPP_concept_ref(ranges::indirectly_binary_invocable_impl_, F, I1, I2);
 
+    /// \concept indirectly_regular_binary_invocable_impl_
+    /// \brief The \c indirectly_regular_binary_invocable_impl_ concept
     template(typename F, typename I1, typename I2)(
     concept (indirectly_regular_binary_invocable_impl_)(F, I1, I2),
         regular_invocable<F &, iter_value_t<I1> &, iter_value_t<I2> &> AND
@@ -537,6 +608,8 @@ namespace ranges
             invoke_result_t<F &, iter_reference_t<I1>, iter_reference_t<I2>>>
     );
 
+    /// \concept indirectly_regular_binary_invocable_
+    /// \brief The \c indirectly_regular_binary_invocable_ concept
     template<typename F, typename I1, typename I2>
     CPP_concept indirectly_regular_binary_invocable_ =
         indirectly_readable<I1> && indirectly_readable<I2> &&
@@ -544,6 +617,8 @@ namespace ranges
         CPP_concept_ref(ranges::indirectly_regular_binary_invocable_impl_, F, I1, I2);
     /// \endcond
 
+    /// \concept indirect_unary_predicate_
+    /// \brief The \c indirect_unary_predicate_ concept
     template(typename F, typename I)(
     concept (indirect_unary_predicate_)(F, I),
         predicate<F &, iter_value_t<I> &> AND
@@ -551,12 +626,16 @@ namespace ranges
         predicate<F &, iter_common_reference_t<I>>
     );
 
+    /// \concept indirect_unary_predicate
+    /// \brief The \c indirect_unary_predicate concept
     template<typename F, typename I>
     CPP_concept indirect_unary_predicate =
         indirectly_readable<I> &&
         copy_constructible<F> &&
         CPP_concept_ref(ranges::indirect_unary_predicate_, F, I);
 
+    /// \concept indirect_binary_predicate_impl_
+    /// \brief The \c indirect_binary_predicate_impl_ concept
     template(typename F, typename I1, typename I2)(
     concept (indirect_binary_predicate_impl_)(F, I1, I2),
         predicate<F &, iter_value_t<I1> &, iter_value_t<I2> &> AND
@@ -566,12 +645,16 @@ namespace ranges
         predicate<F &, iter_common_reference_t<I1>, iter_common_reference_t<I2>>
     );
 
+    /// \concept indirect_binary_predicate_
+    /// \brief The \c indirect_binary_predicate_ concept
     template<typename F, typename I1, typename I2>
     CPP_concept indirect_binary_predicate_ =
         indirectly_readable<I1> && indirectly_readable<I2> &&
         copy_constructible<F> &&
         CPP_concept_ref(ranges::indirect_binary_predicate_impl_, F, I1, I2);
 
+    /// \concept indirect_relation_
+    /// \brief The \c indirect_relation_ concept
     template(typename F, typename I1, typename I2)(
     concept (indirect_relation_)(F, I1, I2),
         relation<F &, iter_value_t<I1> &, iter_value_t<I2> &> AND
@@ -581,12 +664,16 @@ namespace ranges
         relation<F &, iter_common_reference_t<I1>, iter_common_reference_t<I2>>
     );
 
+    /// \concept indirect_relation
+    /// \brief The \c indirect_relation concept
     template<typename F, typename I1, typename I2 = I1>
     CPP_concept indirect_relation =
         indirectly_readable<I1> && indirectly_readable<I2> &&
         copy_constructible<F> &&
         CPP_concept_ref(ranges::indirect_relation_, F, I1, I2);
 
+    /// \concept indirect_strict_weak_order_
+    /// \brief The \c indirect_strict_weak_order_ concept
     template(typename F, typename I1, typename I2)(
     concept (indirect_strict_weak_order_)(F, I1, I2),
         strict_weak_order<F &, iter_value_t<I1> &, iter_value_t<I2> &> AND
@@ -596,6 +683,8 @@ namespace ranges
         strict_weak_order<F &, iter_common_reference_t<I1>, iter_common_reference_t<I2>>
     );
 
+    /// \concept indirect_strict_weak_order
+    /// \brief The \c indirect_strict_weak_order concept
     template<typename F, typename I1, typename I2 = I1>
     CPP_concept indirect_strict_weak_order =
         indirectly_readable<I1> && indirectly_readable<I2> &&
@@ -650,15 +739,21 @@ namespace ranges
     {};
 
     // clang-format off
+    /// \concept indirectly_movable_
+    /// \brief The \c indirectly_movable_ concept
     template(typename I, typename O)(
     concept (indirectly_movable_)(I, O),
         indirectly_writable<O, iter_rvalue_reference_t<I>>
     );
 
+    /// \concept indirectly_movable
+    /// \brief The \c indirectly_movable concept
     template<typename I, typename O>
     CPP_concept indirectly_movable =
         indirectly_readable<I> && CPP_concept_ref(ranges::indirectly_movable_, I, O);
 
+    /// \concept indirectly_movable_storable_
+    /// \brief The \c indirectly_movable_storable_ concept
     template(typename I, typename O)(
     concept (indirectly_movable_storable_)(I, O),
         indirectly_writable<O, iter_value_t<I>> AND
@@ -667,20 +762,28 @@ namespace ranges
         assignable_from<iter_value_t<I> &, iter_rvalue_reference_t<I>>
     );
 
+    /// \concept indirectly_movable_storable
+    /// \brief The \c indirectly_movable_storable concept
     template<typename I, typename O>
     CPP_concept indirectly_movable_storable =
         indirectly_movable<I, O> &&
         CPP_concept_ref(ranges::indirectly_movable_storable_, I, O);
 
+    /// \concept indirectly_copyable_
+    /// \brief The \c indirectly_copyable_ concept
     template(typename I, typename O)(
     concept (indirectly_copyable_)(I, O),
         indirectly_writable<O, iter_reference_t<I>>
     );
 
+    /// \concept indirectly_copyable
+    /// \brief The \c indirectly_copyable concept
     template<typename I, typename O>
     CPP_concept indirectly_copyable =
         indirectly_readable<I> && CPP_concept_ref(ranges::indirectly_copyable_, I, O);
 
+    /// \concept indirectly_copyable_storable_
+    /// \brief The \c indirectly_copyable_storable_ concept
     template(typename I, typename O)(
     concept (indirectly_copyable_storable_)(I, O),
         indirectly_writable<O, iter_value_t<I> const &> AND
@@ -689,11 +792,15 @@ namespace ranges
         assignable_from<iter_value_t<I> &, iter_reference_t<I>>
     );
 
+    /// \concept indirectly_copyable_storable
+    /// \brief The \c indirectly_copyable_storable concept
     template<typename I, typename O>
     CPP_concept indirectly_copyable_storable =
         indirectly_copyable<I, O> &&
         CPP_concept_ref(ranges::indirectly_copyable_storable_, I, O);
 
+    /// \concept indirectly_swappable_
+    /// \brief The \c indirectly_swappable_ concept
     template<typename I1, typename I2>
     CPP_requires(indirectly_swappable_,
         requires(I1 const i1, I2 const i2) //
@@ -703,17 +810,23 @@ namespace ranges
             ranges::iter_swap(i2, i2),
             ranges::iter_swap(i2, i1)
         ));
+    /// \concept indirectly_swappable
+    /// \brief The \c indirectly_swappable concept
     template<typename I1, typename I2 = I1>
     CPP_concept indirectly_swappable =
         indirectly_readable<I1> && //
         indirectly_readable<I2> && //
         CPP_requires_ref(ranges::indirectly_swappable_, I1, I2);
 
+    /// \concept projected_indirect_relation_
+    /// \brief The \c projected_indirect_relation_ concept
     template(typename C, typename I1, typename P1, typename I2, typename P2)(
     concept (projected_indirect_relation_)(C, I1, P1, I2, P2),
         indirect_relation<C, projected<I1, P1>, projected<I2, P2>>
     );
 
+    /// \concept indirectly_comparable
+    /// \brief The \c indirectly_comparable concept
     template<typename I1, typename I2, typename C, typename P1 = identity,
         typename P2 = identity>
     CPP_concept indirectly_comparable =
@@ -721,12 +834,16 @@ namespace ranges
 
     //////////////////////////////////////////////////////////////////////////////////////
     // Composite concepts for use defining algorithms:
+    /// \concept permutable
+    /// \brief The \c permutable concept
     template<typename I>
     CPP_concept permutable =
         forward_iterator<I> &&
         indirectly_swappable<I, I> &&
         indirectly_movable_storable<I, I>;
 
+    /// \concept projected_indirect_strict_weak_order_
+    /// \brief The \c projected_indirect_strict_weak_order_ concept
     template(typename C, typename I1, typename P1, typename I2, typename P2)(
     concept (projected_indirect_strict_weak_order_)(C, I1, P1, I2, P2),
         indirect_strict_weak_order<C, projected<I1, P1>, projected<I2, P2>>
@@ -742,6 +859,8 @@ namespace ranges
         indirectly_copyable<I2, Out> &&
         CPP_concept_ref(ranges::projected_indirect_strict_weak_order_, C, I1, P1, I2, P2);
 
+    /// \concept sortable
+    /// \brief The \c sortable concept
     template<typename I, typename C = less, typename P = identity>
     CPP_concept sortable =
         permutable<I> &&
@@ -839,13 +958,11 @@ namespace ranges
 namespace __gnu_debug
 {
     template(typename I1, typename I2, typename Seq)(
-        /// \pre
         requires (!::ranges::sized_sentinel_for<I1, I2>)) //
     void operator-(_Safe_iterator<I1, Seq> const &, _Safe_iterator<I2, Seq> const &) =
         delete;
 
     template(typename I1, typename Seq)(
-        /// \pre
         requires (!::ranges::sized_sentinel_for<I1, I1>)) //
     void operator-(_Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &) =
         delete;

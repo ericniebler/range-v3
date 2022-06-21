@@ -48,7 +48,6 @@ namespace ranges
         // Single-range variant
         /// \brief function template \c transform
         template(typename I, typename S, typename O, typename F, typename P = identity)(
-            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
             weakly_incrementable<O> AND copy_constructible<F> AND
             indirectly_writable<O, indirect_result_t<F &, projected<I, P>>>)
@@ -62,7 +61,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename O, typename F, typename P = identity)(
-            /// \pre
             requires input_range<Rng> AND weakly_incrementable<O> AND
             copy_constructible<F> AND
             indirectly_writable<O, indirect_result_t<F &, projected<iterator_t<Rng>, P>>>)
@@ -83,7 +81,6 @@ namespace ranges
                  typename F,
                  typename P0 = identity,
                  typename P1 = identity)(
-            /// \pre
             requires input_iterator<I0> AND sentinel_for<S0, I0> AND
                 input_iterator<I1> AND sentinel_for<S1, I1> AND
                 weakly_incrementable<O> AND copy_constructible<F> AND
@@ -112,7 +109,6 @@ namespace ranges
                  typename F,
                  typename P0 = identity,
                  typename P1 = identity)(
-            /// \pre
             requires input_range<Rng0> AND input_range<Rng1> AND
                 weakly_incrementable<O> AND copy_constructible<F> AND
                 indirectly_writable<
@@ -145,7 +141,6 @@ namespace ranges
                      typename F,
                      typename P0 = identity,
                      typename P1 = identity)(
-            /// \pre
             requires input_iterator<I0> AND sentinel_for<S0, I0> AND
                 input_iterator<I1> AND weakly_incrementable<O> AND
                 copy_constructible<F> AND
@@ -181,7 +176,6 @@ namespace ranges
                  typename F,
                  typename P0 = identity,
                  typename P1 = identity)(
-            /// \pre
             requires input_range<Rng0> AND input_iterator<uncvref_t<I1Ref>> AND
                 weakly_incrementable<O> AND copy_constructible<F> AND
                 indirectly_writable<

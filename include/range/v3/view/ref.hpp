@@ -63,7 +63,6 @@ namespace ranges
         CPP_member
         constexpr auto empty() const noexcept(noexcept(ranges::empty(*rng_)))
             -> CPP_ret(bool)(
-                /// \pre
                 requires detail::can_empty_<Rng>)
         {
             return ranges::empty(*rng_);
@@ -86,7 +85,6 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename R)(
-        /// \pre
         requires range<R>)
     ref_view(R &) //
         -> ref_view<R>;
@@ -97,7 +95,6 @@ namespace ranges
         struct ref_fn
         {
             template(typename Rng)(
-                /// \pre
                 requires range<Rng>)
             constexpr ref_view<Rng> operator()(Rng & rng) const noexcept
             {
@@ -115,7 +112,6 @@ namespace ranges
     namespace cpp20
     {
         template(typename Rng)(
-            /// \pre
             requires std::is_object<Rng>::value) //
             using ref_view = ranges::ref_view<Rng>;
     }

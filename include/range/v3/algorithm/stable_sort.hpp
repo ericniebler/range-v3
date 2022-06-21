@@ -194,7 +194,6 @@ namespace ranges
 
         /// \brief function template \c stable_sort
         template(typename I, typename S, typename C = less, typename P = identity)(
-            /// \pre
             requires sortable<I, C, P> AND random_access_iterator<I> AND
             sentinel_for<S, I>)
         I RANGES_FUNC(stable_sort)(I first, S end_, C pred = C{}, P proj = P{})
@@ -216,7 +215,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename C = less, typename P = identity)(
-            /// \pre
             requires sortable<iterator_t<Rng>, C, P> AND random_access_range<Rng>)
         borrowed_iterator_t<Rng> //
         RANGES_FUNC(stable_sort)(Rng && rng, C pred = C{}, P proj = P{}) //

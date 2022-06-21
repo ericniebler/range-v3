@@ -35,7 +35,6 @@ namespace ranges
         struct transform_fn
         {
             template(typename F, typename P = identity)(
-                /// \pre
                 requires (!range<F>))
             constexpr auto operator()(F fun, P proj = P{}) const
             {
@@ -44,7 +43,6 @@ namespace ranges
             }
 
             template(typename Rng, typename F, typename P = identity)(
-                /// \pre
                 requires input_range<Rng> AND copy_constructible<F> AND
                     indirectly_writable<
                         iterator_t<Rng>,

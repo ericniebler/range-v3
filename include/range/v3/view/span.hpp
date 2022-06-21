@@ -49,7 +49,6 @@ namespace ranges
     namespace detail
     {
         template(typename To, typename From)(
-            /// \pre
             requires integral<To> AND integral<From>)
         constexpr To narrow_cast(From from) noexcept
         {
@@ -118,20 +117,28 @@ namespace ranges
     } // namespace detail
 
     // clang-format off
+    /// \concept span_compatible_range_
+    /// \brief The \c span_compatible_range_ concept
     template(typename Rng, typename T)(
     concept (span_compatible_range_)(Rng, T),
         detail::is_convertible<detail::element_t<Rng>(*)[], T(*)[]>::value
     );
+    /// \concept span_compatible_range
+    /// \brief The \c span_compatible_range concept
     template<typename Rng, typename T>
     CPP_concept span_compatible_range =
         sized_range<Rng> && contiguous_range<Rng> &&
         CPP_concept_ref(ranges::span_compatible_range_, Rng, T);
 
+    /// \concept span_dynamic_conversion
+    /// \brief The \c span_dynamic_conversion concept
     template<typename Rng, detail::span_index_t N>
     CPP_concept span_dynamic_conversion =
         N == dynamic_extent ||
             range_cardinality<Rng>::value < cardinality();
 
+    /// \concept span_static_conversion
+    /// \brief The \c span_static_conversion concept
     template<typename Rng, detail::span_index_t N>
     CPP_concept span_static_conversion =
         N != dynamic_extent && range_cardinality<Rng>::value == N;
@@ -169,7 +176,6 @@ namespace ranges
         {}
 
         template(typename Rng)(
-            /// \pre
             requires (!same_as<span, uncvref_t<Rng>>) AND
                 span_compatible_range<Rng, T> AND
                 span_dynamic_conversion<Rng, N>)
@@ -179,7 +185,6 @@ namespace ranges
         {}
 
         template(typename Rng)(
-            /// \pre
             requires (!same_as<span, uncvref_t<Rng>>) AND
                 span_compatible_range<Rng, T> AND
                 span_static_conversion<Rng, N>)
@@ -308,7 +313,6 @@ namespace ranges
         }
 
         template(typename U, index_type M)(
-            /// \pre
             requires equality_comparable_with<T, U>)
         bool operator==(span<U, M> const & that) const
         {
@@ -317,7 +321,6 @@ namespace ranges
             return ranges::equal(*this, that);
         }
         template(typename U, index_type M)(
-            /// \pre
             requires equality_comparable_with<T, U>)
         bool operator!=(span<U, M> const & that) const
         {
@@ -325,7 +328,6 @@ namespace ranges
         }
 
         template(typename U, index_type M)(
-            /// \pre
             requires totally_ordered_with<T, U>)
         bool operator<(span<U, M> const & that) const
         {
@@ -334,21 +336,18 @@ namespace ranges
             return ranges::lexicographical_compare(*this, that);
         }
         template(typename U, index_type M)(
-            /// \pre
             requires totally_ordered_with<T, U>)
         bool operator>(span<U, M> const & that) const
         {
             return that < *this;
         }
         template(typename U, index_type M)(
-            /// \pre
             requires totally_ordered_with<T, U>)
         bool operator<=(span<U, M> const & that) const
         {
             return !(that < *this);
         }
         template(typename U, index_type M)(
-            /// \pre
             requires totally_ordered_with<T, U>)
         bool operator>=(span<U, M> const & that) const
         {
@@ -367,7 +366,6 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Rng)(
-        /// \pre
         requires contiguous_range<Rng>)
         span(Rng && rng)
             ->span<detail::element_t<Rng>, (range_cardinality<Rng>::value < cardinality()
@@ -400,7 +398,6 @@ namespace ranges
         return span<ElementType>{first, last};
     }
     template(typename Rng)(
-        /// \pre
         requires contiguous_range<Rng> AND
         (range_cardinality<Rng>::value < cardinality())) //
         constexpr span<detail::element_t<Rng>> make_span(Rng && rng) noexcept(
@@ -410,7 +407,6 @@ namespace ranges
                 detail::narrow_cast<detail::span_index_t>(ranges::size(rng))};
     }
     template(typename Rng)(
-        /// \pre
         requires contiguous_range<Rng> AND
         (range_cardinality<Rng>::value >= cardinality())) //
         constexpr span<

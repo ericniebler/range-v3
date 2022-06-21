@@ -37,7 +37,6 @@ namespace ranges
         struct unique_fn
         {
             template(typename C, typename P = identity)(
-                /// \pre
                 requires (!range<C>))
             constexpr auto operator()(C pred, P proj = P{}) const
             {
@@ -46,7 +45,6 @@ namespace ranges
             }
 
             template(typename Rng, typename C = equal_to, typename P = identity)(
-                /// \pre
                 requires forward_range<Rng> AND
                     erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> AND
                     sortable<iterator_t<Rng>, C, P>)

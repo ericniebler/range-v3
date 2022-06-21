@@ -56,7 +56,6 @@ namespace ranges
               : end_(std::move(last))
             {}
             template(bool Other)(
-                /// \pre
                 requires Const AND CPP_NOT(Other) AND
                 convertible_to<sentinel_t<Rng>,
                                sentinel_t<Base>>)
@@ -166,7 +165,6 @@ namespace ranges
 
         CPP_auto_member
         constexpr auto CPP_fun(begin)()(
-            /// \pre
             requires(!simple_view<Rng>()))
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
@@ -214,7 +212,6 @@ namespace ranges
 
         CPP_auto_member
         constexpr auto CPP_fun(end)()(
-            /// \pre
             requires(!simple_view<Rng>()))
         {
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
@@ -258,7 +255,6 @@ namespace ranges
 
         CPP_auto_member
         constexpr auto CPP_fun(size)()(
-            /// \pre
             requires sized_range<Rng>)
         {
             auto n = ranges::size(base_);
@@ -288,7 +284,6 @@ namespace ranges
         struct take_base_fn
         {
             template(typename Rng)(
-                /// \pre
                 requires viewable_range<Rng>)
             take_view<all_t<Rng>> operator()(Rng && rng, range_difference_t<Rng> n) const
             {
@@ -301,7 +296,6 @@ namespace ranges
             using take_base_fn::operator();
 
             template(typename Int)(
-                /// \pre
                 requires detail::integer_like_<Int>)
             constexpr auto operator()(Int n) const
             {
@@ -320,7 +314,6 @@ namespace ranges
             using ranges::views::take;
         }
         template(typename Rng)(
-            /// \pre
             requires view_<Rng>)
         using take_view = ranges::take_view<Rng>;
     } // namespace cpp20

@@ -128,7 +128,6 @@ namespace ranges
         compressed_pair() = default;
 
         template(typename U, typename V)(
-            /// \pre
             requires constructible_from<First, U> AND constructible_from<Second, V>)
         constexpr compressed_pair(U && u, V && v) //
             noexcept(noexcept(First((U &&) u)) && noexcept(Second((V &&) v)))
@@ -163,7 +162,6 @@ namespace ranges
         }
 
         template(typename F, typename S)(
-            /// \pre
             requires convertible_to<First const &, F> AND
                 convertible_to<Second const &, S>)
             constexpr

@@ -53,7 +53,6 @@ namespace ranges
         struct unbounded_fn
         {
             template(typename I)(
-                /// \pre
                 requires input_iterator<I>)
             constexpr unbounded_view<I> operator()(I it) const
             {

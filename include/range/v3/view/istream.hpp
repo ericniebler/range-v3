@@ -100,7 +100,6 @@ namespace ranges
     {
         /// \endcond
         template(typename Val)(
-            /// \pre
             requires copy_constructible<Val> AND default_constructible<Val>)
         inline istream_view<Val> istream(std::istream & sin)
         {

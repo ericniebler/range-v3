@@ -85,27 +85,34 @@ namespace ranges
         void begin(std::initializer_list<T>) = delete;
 
         template(typename I)(
-            /// \pre
             requires input_or_output_iterator<I>)
         void is_iterator(I);
 
         // clang-format off
+        /// \concept has_member_begin_
+        /// \brief The \c has_member_begin_ concept
         template<typename T>
         CPP_requires(has_member_begin_,
             requires(T & t) //
             (
                 _begin_::is_iterator(t.begin())
             ));
+        /// \concept has_member_begin
+        /// \brief The \c has_member_begin concept
         template<typename T>
         CPP_concept has_member_begin =
             CPP_requires_ref(_begin_::has_member_begin_, T);
 
+        /// \concept has_non_member_begin_
+        /// \brief The \c has_non_member_begin_ concept
         template<typename T>
         CPP_requires(has_non_member_begin_,
             requires(T & t) //
             (
                 _begin_::is_iterator(begin(t))
             ));
+        /// \concept has_non_member_begin
+        /// \brief The \c has_non_member_begin concept
         template<typename T>
         CPP_concept has_non_member_begin =
             CPP_requires_ref(_begin_::has_non_member_begin_, T);
@@ -145,7 +152,6 @@ namespace ranges
             }
 
             template(typename R)(
-                /// \pre
                 requires detail::_borrowed_range<R> AND has_member_begin<R>)
             constexpr _result_t<R> operator()(R && r) const //
                 noexcept(noexcept(r.begin()))
@@ -154,7 +160,6 @@ namespace ranges
             }
 
             template(typename R)(
-                /// \pre
                 requires detail::_borrowed_range<R> AND (!has_member_begin<R>) AND
                     has_non_member_begin<R>)
             constexpr _result_t<R> operator()(R && r) const //
@@ -192,27 +197,34 @@ namespace ranges
         void end(std::initializer_list<T>) = delete;
 
         template(typename I, typename S)(
-            /// \pre
             requires sentinel_for<S, I>)
         void _is_sentinel(S, I);
 
         // clang-format off
+        /// \concept has_member_end_
+        /// \brief The \c has_member_end_ concept
         template<typename T>
         CPP_requires(has_member_end_,
             requires(T & t) //
             (
                 _end_::_is_sentinel(t.end(), ranges::begin(t))
             ));
+        /// \concept has_member_end
+        /// \brief The \c has_member_end concept
         template<typename T>
         CPP_concept has_member_end =
             CPP_requires_ref(_end_::has_member_end_, T);
 
+        /// \concept has_non_member_end_
+        /// \brief The \c has_non_member_end_ concept
         template<typename T>
         CPP_requires(has_non_member_end_,
             requires(T & t) //
             (
                 _end_::_is_sentinel(end(t), ranges::begin(t))
             ));
+        /// \concept has_non_member_end
+        /// \brief The \c has_non_member_end concept
         template<typename T>
         CPP_concept has_non_member_end =
             CPP_requires_ref(_end_::has_non_member_end_, T);
@@ -258,7 +270,6 @@ namespace ranges
             }
 
             template(typename R)(
-                /// \pre
                 requires detail::_borrowed_range<R> AND has_member_end<R>)
             constexpr _result_t<R> operator()(R && r) const //
                 noexcept(noexcept(r.end()))
@@ -267,7 +278,6 @@ namespace ranges
             }
 
             template(typename R)(
-                /// \pre
                 requires detail::_borrowed_range<R> AND (!has_member_end<R>) AND
                     has_non_member_end<R>)
             constexpr _result_t<R> operator()(R && r) const //
@@ -277,7 +287,6 @@ namespace ranges
             }
 
             template(typename Int)(
-                /// \pre
                 requires detail::integer_like_<Int>)
             auto operator-(Int dist) const
                 -> detail::from_end_<iter_diff_t<Int>>
@@ -364,22 +373,30 @@ namespace ranges
         void rbegin(T (&)[N]) = delete;
 
         // clang-format off
+        /// \concept has_member_rbegin_
+        /// \brief The \c has_member_rbegin_ concept
         template<typename T>
         CPP_requires(has_member_rbegin_,
             requires(T & t) //
             (
                 _begin_::is_iterator(t.rbegin())
             ));
+        /// \concept has_member_rbegin
+        /// \brief The \c has_member_rbegin concept
         template<typename T>
         CPP_concept has_member_rbegin =
             CPP_requires_ref(_rbegin_::has_member_rbegin_, T);
 
+        /// \concept has_non_member_rbegin_
+        /// \brief The \c has_non_member_rbegin_ concept
         template<typename T>
         CPP_requires(has_non_member_rbegin_,
             requires(T & t) //
             (
                 _begin_::is_iterator(rbegin(t))
             ));
+        /// \concept has_non_member_rbegin
+        /// \brief The \c has_non_member_rbegin concept
         template<typename T>
         CPP_concept has_non_member_rbegin =
             CPP_requires_ref(_rbegin_::has_non_member_rbegin_, T);
@@ -387,6 +404,8 @@ namespace ranges
         template<typename I>
         void _same_type(I, I);
 
+        /// \concept can_reverse_end_
+        /// \brief The \c can_reverse_end_ concept
         template<typename T>
         CPP_requires(can_reverse_end_,
             requires(T & t) //
@@ -396,6 +415,8 @@ namespace ranges
                 ranges::make_reverse_iterator(ranges::end(t)),
                 _rbegin_::_same_type(ranges::begin(t), ranges::end(t))
             ));
+        /// \concept can_reverse_end
+        /// \brief The \c can_reverse_end concept
         template<typename T>
         CPP_concept can_reverse_end =
             CPP_requires_ref(_rbegin_::can_reverse_end_, T);
@@ -443,7 +464,6 @@ namespace ranges
 
         public:
             template(typename R)(
-                /// \pre
                 requires detail::_borrowed_range<R> AND has_member_rbegin<R>)
             constexpr auto operator()(R && r) const //
                 noexcept(noexcept(r.rbegin())) //
@@ -452,7 +472,6 @@ namespace ranges
             }
 
             template(typename R)(
-                /// \pre
                 requires detail::_borrowed_range<R> AND (!has_member_rbegin<R>) AND
                     has_non_member_rbegin<R>)
             constexpr auto operator()(R && r) const //
@@ -462,7 +481,6 @@ namespace ranges
             }
 
             template(typename R)(
-                /// \pre
                 requires detail::_borrowed_range<R> AND (!has_member_rbegin<R>) AND
                     (!has_non_member_rbegin<R>) AND can_reverse_end<R>)
             constexpr auto operator()(R && r) const //
@@ -499,26 +517,36 @@ namespace ranges
         void rend(T (&)[N]) = delete;
 
         // clang-format off
+        /// \concept has_member_rend_
+        /// \brief The \c has_member_rend_ concept
         template<typename T>
         CPP_requires(has_member_rend_,
             requires(T & t) //
             (
                 _end_::_is_sentinel(t.rend(), ranges::rbegin(t))
             ));
+        /// \concept has_member_rend
+        /// \brief The \c has_member_rend concept
         template<typename T>
         CPP_concept has_member_rend =
             CPP_requires_ref(_rend_::has_member_rend_, T);
 
+        /// \concept has_non_member_rend_
+        /// \brief The \c has_non_member_rend_ concept
         template<typename T>
         CPP_requires(has_non_member_rend_,
             requires(T & t) //
             (
                 _end_::_is_sentinel(rend(t), ranges::rbegin(t))
             ));
+        /// \concept has_non_member_rend
+        /// \brief The \c has_non_member_rend concept
         template<typename T>
         CPP_concept has_non_member_rend =
             CPP_requires_ref(_rend_::has_non_member_rend_, T);
 
+        /// \concept can_reverse_begin_
+        /// \brief The \c can_reverse_begin_ concept
         template<typename T>
         CPP_requires(can_reverse_begin_,
             requires(T & t) //
@@ -528,6 +556,8 @@ namespace ranges
                 ranges::make_reverse_iterator(ranges::begin(t)),
                 _rbegin_::_same_type(ranges::begin(t), ranges::end(t))
             ));
+        /// \concept can_reverse_begin
+        /// \brief The \c can_reverse_begin concept
         template<typename T>
         CPP_concept can_reverse_begin =
             CPP_requires_ref(_rend_::can_reverse_begin_, T);
@@ -575,7 +605,6 @@ namespace ranges
 
         public:
             template(typename R)(
-                /// \pre
                 requires detail::_borrowed_range<R> AND has_member_rend<R>)
             constexpr auto operator()(R && r) const //
                 noexcept(noexcept(r.rend())) //
@@ -584,7 +613,6 @@ namespace ranges
             }
 
             template(typename R)(
-                /// \pre
                 requires detail::_borrowed_range<R> AND (!has_member_rend<R>) AND
                     has_non_member_rend<R>)
             constexpr auto operator()(R && r) const //
@@ -594,7 +622,6 @@ namespace ranges
             }
 
             template(typename R)(
-                /// \pre
                 requires detail::_borrowed_range<R> AND (!has_member_rend<R>) AND
                     (!has_non_member_rend<R>) AND can_reverse_begin<R>)
             constexpr auto operator()(R && r) const //

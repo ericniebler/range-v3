@@ -49,7 +49,6 @@ namespace ranges
         struct is_heap_until_n_fn
         {
             template(typename I, typename C = less, typename P = identity)(
-                /// \pre
                 requires random_access_iterator<I> AND
                     indirect_strict_weak_order<C, projected<I, P>>)
             constexpr I operator()(I const begin_, 
@@ -82,7 +81,6 @@ namespace ranges
         struct is_heap_n_fn
         {
             template(typename I, typename C = less, typename P = identity)(
-                /// \pre
                 requires random_access_iterator<I> AND
                     indirect_strict_weak_order<C, projected<I, P>>)
             constexpr bool operator()(I first, 
@@ -105,7 +103,6 @@ namespace ranges
 
         /// \brief function template \c is_heap_until
         template(typename I, typename S, typename C = less, typename P = identity)(
-            /// \pre
             requires random_access_iterator<I> AND sentinel_for<S, I> AND
             indirect_strict_weak_order<C, projected<I, P>>)
         constexpr I RANGES_FUNC(is_heap_until)(I first, S last, C pred = C{}, P proj = P{})
@@ -118,7 +115,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename C = less, typename P = identity)(
-            /// \pre
             requires random_access_range<Rng> AND
             indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>)
         constexpr borrowed_iterator_t<Rng> //
@@ -139,7 +135,6 @@ namespace ranges
 
         /// \brief function template \c is_heap
         template(typename I, typename S, typename C = less, typename P = identity)(
-            /// \pre
             requires random_access_iterator<I> AND sentinel_for<S, I> AND
             indirect_strict_weak_order<C, projected<I, P>>)
         constexpr bool RANGES_FUNC(is_heap)(I first, S last, C pred = C{}, P proj = P{}) //
@@ -152,7 +147,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename C = less, typename P = identity)(
-            /// \pre
             requires random_access_range<Rng> AND
             indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>>)
         constexpr bool RANGES_FUNC(is_heap)(Rng && rng, C pred = C{}, P proj = P{}) //
@@ -275,7 +269,6 @@ namespace ranges
 
         /// \brief function template \c push_heap
         template(typename I, typename S, typename C = less, typename P = identity)(
-            /// \pre
             requires random_access_iterator<I> AND sentinel_for<S, I> AND
             sortable<I, C, P>)
         constexpr I RANGES_FUNC(push_heap)(I first, S last, C pred = C{}, P proj = P{})
@@ -287,7 +280,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename C = less, typename P = identity)(
-            /// \pre
             requires random_access_range<Rng> AND sortable<iterator_t<Rng>, C, P>)
         constexpr borrowed_iterator_t<Rng> //
         RANGES_FUNC(push_heap)(Rng && rng, C pred = C{}, P proj = P{}) //
@@ -312,7 +304,6 @@ namespace ranges
         struct pop_heap_n_fn
         {
             template(typename I, typename C = less, typename P = identity)(
-                /// \pre
                 requires random_access_iterator<I> AND sortable<I, C, P>)
             constexpr void operator()(I first, 
                                       iter_difference_t<I> len, 
@@ -338,7 +329,6 @@ namespace ranges
 
         /// \brief function template \c pop_heap
         template(typename I, typename S, typename C = less, typename P = identity)(
-            /// \pre
             requires random_access_iterator<I> AND sentinel_for<S, I> AND
             sortable<I, C, P>)
         constexpr I RANGES_FUNC(pop_heap)(I first, S last, C pred = C{}, P proj = P{})
@@ -350,7 +340,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename C = less, typename P = identity)(
-            /// \pre
             requires random_access_range<Rng> AND sortable<iterator_t<Rng>, C, P>)
         constexpr borrowed_iterator_t<Rng> //
         RANGES_FUNC(pop_heap)(Rng && rng, C pred = C{}, P proj = P{})
@@ -372,7 +361,6 @@ namespace ranges
 
         /// \brief function template \c make_heap
         template(typename I, typename S, typename C = less, typename P = identity)(
-            /// \pre
             requires random_access_iterator<I> AND sentinel_for<S, I> AND
             sortable<I, C, P>)
         constexpr I RANGES_FUNC(make_heap)(I first, S last, C pred = C{}, P proj = P{})
@@ -388,7 +376,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename C = less, typename P = identity)(
-            /// \pre
             requires random_access_range<Rng> AND sortable<iterator_t<Rng>, C, P>)
         constexpr borrowed_iterator_t<Rng> //
         RANGES_FUNC(make_heap)(Rng && rng, C pred = C{}, P proj = P{})
@@ -413,7 +400,6 @@ namespace ranges
     RANGES_FUNC_BEGIN(sort_heap)
 
         template(typename I, typename S, typename C = less, typename P = identity)(
-            /// \pre
             requires random_access_iterator<I> AND sentinel_for<S, I> AND
             sortable<I, C, P>)
         constexpr I RANGES_FUNC(sort_heap)(I first, S last, C pred = C{}, P proj = P{})
@@ -425,7 +411,6 @@ namespace ranges
         }
 
         template(typename Rng, typename C = less, typename P = identity)(
-            /// \pre
             requires random_access_range<Rng &> AND sortable<iterator_t<Rng>, C, P>)
         constexpr borrowed_iterator_t<Rng> //
         RANGES_FUNC(sort_heap)(Rng && rng, C pred = C{}, P proj = P{})

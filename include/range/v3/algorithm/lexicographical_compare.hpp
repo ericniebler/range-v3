@@ -41,7 +41,6 @@ namespace ranges
                  typename C = less,
                  typename P0 = identity,
                  typename P1 = identity)(
-            /// \pre
             requires input_iterator<I0> AND sentinel_for<S0, I0> AND
                 input_iterator<I1> AND sentinel_for<S1, I1> AND
                 indirect_strict_weak_order<C, projected<I0, P0>, projected<I1, P1>>)
@@ -70,7 +69,6 @@ namespace ranges
                  typename C = less,
                  typename P0 = identity,
                  typename P1 = identity)(
-            /// \pre
             requires input_range<Rng0> AND input_range<Rng1> AND
                 indirect_strict_weak_order<C,
                                            projected<iterator_t<Rng0>, P0>,

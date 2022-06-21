@@ -41,7 +41,6 @@ namespace ranges
 
         /// \brief function template \c move
         template(typename I, typename S, typename O)(
-            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
             weakly_incrementable<O> AND indirectly_movable<I, O>)
         constexpr move_result<I, O> RANGES_FUNC(move)(I first, S last, O out) //
@@ -53,7 +52,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename O)(
-            /// \pre
             requires input_range<Rng> AND weakly_incrementable<O> AND
             indirectly_movable<iterator_t<Rng>, O>)
         constexpr move_result<borrowed_iterator_t<Rng>, O> //

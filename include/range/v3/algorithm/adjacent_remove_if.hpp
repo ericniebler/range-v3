@@ -45,7 +45,6 @@ namespace ranges
         /// \pre `Rng` is a model of the `forward_range` concept.
         /// \pre `Pred` is a model of the `BinaryPredicate` concept.
         template(typename I, typename S, typename Pred, typename Proj = identity)(
-            /// \pre
             requires permutable<I> AND sentinel_for<S, I> AND
                 indirect_relation<Pred, projected<I, Proj>>)
         constexpr I RANGES_FUNC(adjacent_remove_if)(I first, S last, Pred pred = {}, Proj proj = {})
@@ -71,7 +70,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename Pred, typename Proj = identity)(
-            /// \pre
             requires forward_range<Rng> AND
             indirect_relation<Pred, projected<iterator_t<Rng>, Proj>> AND
             permutable<iterator_t<Rng>>)

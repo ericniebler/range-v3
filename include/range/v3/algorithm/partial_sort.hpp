@@ -39,7 +39,6 @@ namespace ranges
 
         /// \brief function template \c partial_sort
         template(typename I, typename S, typename C = less, typename P = identity)(
-            /// \pre
             requires sortable<I, C, P> AND random_access_iterator<I> AND
                 sentinel_for<S, I>)
         constexpr I RANGES_FUNC(partial_sort)(
@@ -63,7 +62,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename C = less, typename P = identity)(
-            /// \pre
             requires sortable<iterator_t<Rng>, C, P> AND random_access_range<Rng>)
         constexpr borrowed_iterator_t<Rng> RANGES_FUNC(partial_sort)(
             Rng && rng, iterator_t<Rng> middle, C pred = C{}, P proj = P{}) //

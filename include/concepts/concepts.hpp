@@ -204,7 +204,12 @@
 //   void foo(A a, B b)
 //   {}
 #if CPP_CXX_CONCEPTS
+#if defined(CPP_DOXYGEN_INVOKED)
+#define CPP_template(...) template<__VA_ARGS__> CPP_TEMPLATE_EXPAND_
+#define CPP_TEMPLATE_EXPAND_(X,Y) X Y
+#else
 #define CPP_template(...) template<__VA_ARGS__ CPP_TEMPLATE_AUX_
+#endif
 #define CPP_template_def CPP_template
 #define CPP_member
 #define CPP_ctor(TYPE) TYPE CPP_CTOR_IMPL_1_
@@ -214,14 +219,8 @@
 #define CPP_auto_member
 #endif
 
-#if defined(CPP_DOXYGEN_INVOKED) && CPP_DOXYGEN_INVOKED
-/// INTERNAL ONLY
-#define CPP_CTOR_IMPL_1_(...) (__VA_ARGS__) CPP_CTOR_IMPL_2_
-#define CPP_CTOR_IMPL_2_(...) __VA_ARGS__ `
-#else
 /// INTERNAL ONLY
 #define CPP_CTOR_IMPL_1_(...) (__VA_ARGS__) CPP_PP_EXPAND
-#endif
 
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_AUX_(...)                                                  \
@@ -239,26 +238,22 @@
 #define CPP_TEMPLATE_PROBE_CONCEPT_concept                                      \
     CPP_PP_PROBE(~)
 
-#if defined(CPP_DOXYGEN_INVOKED) && CPP_DOXYGEN_INVOKED
-// A template with a requires clause. Turn the requires clause into
-// a Doxygen precondition block.
-/// INTERNAL ONLY
-#define CPP_TEMPLATE_AUX_0(...) __VA_ARGS__`
-#define requires requires `
-
-#else
 // A template with a requires clause
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_AUX_0(...) __VA_ARGS__
-#endif
 
 // A concept definition
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_AUX_1(DECL, ...)                                           \
     CPP_concept CPP_CONCEPT_NAME_(DECL) = __VA_ARGS__
 
+#if defined(CPP_DOXYGEN_INVOKED)
 #define CPP_concept_ref(NAME, ...)                                              \
-    CPP_PP_CAT(NAME, _concept_)<__VA_ARGS__>
+    NAME<__VA_ARGS__>
+#else
+#define CPP_concept_ref(NAME, ...)                                              \
+    CPP_PP_CAT(NAME, concept_)<__VA_ARGS__>
+#endif
 
 #else // ^^^^ with concepts / without concepts vvvv
 
@@ -268,7 +263,7 @@
 #define CPP_auto_member CPP_member_sfinae
 #define CPP_ctor CPP_ctor_sfinae
 #define CPP_concept_ref(NAME, ...)                                              \
-    (1u == sizeof(CPP_PP_CAT(NAME, _concept_)(                                  \
+    (1u == sizeof(CPP_PP_CAT(NAME, concept_)(                                   \
         (::concepts::detail::tag<__VA_ARGS__>*)nullptr)))
 
 /// INTERNAL ONLY
@@ -321,7 +316,7 @@
 #define CPP_CONCEPT_NAME_(DECL)                                                 \
     CPP_PP_EVAL(                                                                \
         CPP_PP_CAT,                                                             \
-        CPP_PP_EVAL(CPP_PP_FIRST, CPP_EAT_CONCEPT_(DECL)), _concept_)
+        CPP_PP_EVAL(CPP_PP_FIRST, CPP_EAT_CONCEPT_(DECL)), concept_)
 
 /// INTERNAL ONLY
 #define CPP_CONCEPT_PARAMS_(DECL)                                               \
@@ -334,9 +329,11 @@
 /// INTERNAL ONLY
 #define CPP_EAT_CONCEPT_concept
 
+/// INTERNAL ONLY
 #define CPP_and_sfinae                                                          \
     && CPP_BOOL(CPP_true), int> = 0, std::enable_if_t<
 
+/// INTERNAL ONLY
 #define CPP_template_def_sfinae(...)                                            \
     template<__VA_ARGS__ CPP_TEMPLATE_DEF_SFINAE_AUX_
 
@@ -348,15 +345,18 @@
         CPP_BOOL(CPP_true),                                                     \
         int>>
 
+/// INTERNAL ONLY
 #define CPP_and_sfinae_def                                                      \
     && CPP_BOOL(CPP_true), int>, std::enable_if_t<
 
 /// INTERNAL ONLY
 #define CPP_TEMPLATE_SFINAE_AUX_3_requires
 
+/// INTERNAL ONLY
 #define CPP_member_sfinae                                                       \
     CPP_broken_friend_member
 
+/// INTERNAL ONLY
 #define CPP_ctor_sfinae(TYPE)                                                   \
     CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                            \
     TYPE CPP_CTOR_SFINAE_IMPL_1_
@@ -414,6 +414,7 @@
     CPP_PP_EAT CPP_PP_LPAREN
 
 #ifdef CPP_DOXYGEN_INVOKED
+/// INTERNAL ONLY
 #define CPP_broken_friend_ret(...)                                              \
     __VA_ARGS__ CPP_PP_EXPAND
 
@@ -436,11 +437,13 @@
     (__VA_ARGS__ && CPP_TRUE_FN)>>
 
 #ifdef CPP_WORKAROUND_MSVC_779763
+/// INTERNAL ONLY
 #define CPP_broken_friend_member                                                \
     template<::concepts::detail::CPP_true_t const &CPP_true_fn =                \
         ::concepts::detail::CPP_true_fn_>
 
 #else // ^^^ workaround / no workaround vvv
+/// INTERNAL ONLY
 #define CPP_broken_friend_member                                                \
     template<bool (&CPP_true_fn)(::concepts::detail::xNil) =                    \
         ::concepts::detail::CPP_true_fn>
@@ -449,12 +452,19 @@
 #endif
 
 #if CPP_CXX_CONCEPTS
+#if defined(CPP_DOXYGEN_INVOKED)
 #define CPP_requires(NAME, REQS)                                                \
-CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      \
-    CPP_PP_CAT(CPP_REQUIRES_, REQS)
-
+    concept NAME =                                                              \
+        CPP_PP_CAT(CPP_REQUIRES_, REQS)
 #define CPP_requires_ref(NAME, ...)                                             \
-    CPP_PP_CAT(NAME, _requires_)<__VA_ARGS__>
+    NAME<__VA_ARGS__>
+#else
+#define CPP_requires(NAME, REQS)                                                \
+    CPP_concept CPP_PP_CAT(NAME, requires_) =                                   \
+        CPP_PP_CAT(CPP_REQUIRES_, REQS)
+#define CPP_requires_ref(NAME, ...)                                             \
+    CPP_PP_CAT(NAME, requires_)<__VA_ARGS__>
+#endif
 
 /// INTERNAL ONLY
 #define CPP_REQUIRES_requires(...)                                              \
@@ -466,11 +476,11 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
 
 #else
 #define CPP_requires(NAME, REQS)                                                \
-    auto CPP_PP_CAT(NAME, _requires_test_)                                      \
+    auto CPP_PP_CAT(NAME, requires_test_)                                       \
     CPP_REQUIRES_AUX_(NAME, CPP_REQUIRES_ ## REQS)
 
 #define CPP_requires_ref(NAME, ...)                                             \
-    (1u == sizeof(CPP_PP_CAT(NAME, _requires_)(                                 \
+    (1u == sizeof(CPP_PP_CAT(NAME, requires_)(                                  \
         (::concepts::detail::tag<__VA_ARGS__>*)nullptr)))
 
 /// INTERNAL ONLY
@@ -484,48 +494,30 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
 #define CPP_REQUIRES_AUX_(NAME, ...)                                            \
     __VA_ARGS__                                                                 \
     template<typename... As>                                                    \
-    auto CPP_PP_CAT(NAME, _requires_)(                                          \
+    auto CPP_PP_CAT(NAME, requires_)(                                           \
         ::concepts::detail::tag<As...> *,                                       \
-        decltype(&CPP_PP_CAT(NAME, _requires_test_)<As...>) = nullptr)          \
+        decltype(&CPP_PP_CAT(NAME, requires_test_)<As...>) = nullptr)           \
         -> char(&)[1];                                                          \
-    auto CPP_PP_CAT(NAME, _requires_)(...) -> char(&)[2]
+    auto CPP_PP_CAT(NAME, requires_)(...) -> char(&)[2]
 
 #endif
 
 #if CPP_CXX_CONCEPTS
-
-#if defined(CPP_DOXYGEN_INVOKED) && CPP_DOXYGEN_INVOKED
-#define CPP_ret(...)                                                            \
-    __VA_ARGS__ CPP_RET_AUX_
-#define CPP_RET_AUX_(...) __VA_ARGS__ `
-#else
 #define CPP_ret(...)                                                            \
     __VA_ARGS__ CPP_PP_EXPAND
-#endif
-
 #else
 #define CPP_ret                                                                 \
     CPP_broken_friend_ret
-
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // CPP_fun
 #if CPP_CXX_CONCEPTS
 
-#if defined(CPP_DOXYGEN_INVOKED) && CPP_DOXYGEN_INVOKED
-/// INTERNAL ONLY
-#define CPP_FUN_IMPL_1_(...)                                                    \
-    (__VA_ARGS__)                                                               \
-    CPP_FUN_IMPL_2_
-#define CPP_FUN_IMPL_2_(...)                                                    \
-    __VA_ARGS__ `
-#else
 /// INTERNAL ONLY
 #define CPP_FUN_IMPL_1_(...)                                                    \
     (__VA_ARGS__)                                                               \
     CPP_PP_EXPAND
-#endif
 
 #define CPP_fun(X) X CPP_FUN_IMPL_1_
 #else
@@ -574,7 +566,7 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
         CPP_PP_EVAL(                                                            \
             CPP_PP_CAT,                                                         \
             CPP_FUN_IMPL_EAT_REQUIRES_,                                         \
-            __VA_ARGS__) && CPP_TRUE_FN,                                           \
+            __VA_ARGS__) && CPP_TRUE_FN,                                        \
         ::concepts::detail::Nil                                                 \
     > = {}) const                                                               \
     CPP_PP_IGNORE_CXX2A_COMPAT_END
@@ -585,7 +577,7 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
         CPP_PP_EVAL(                                                            \
             CPP_PP_CAT,                                                         \
             CPP_FUN_IMPL_EAT_REQUIRES_,                                         \
-            CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)) && CPP_TRUE_FN,   \
+            CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)) && CPP_TRUE_FN,\
         ::concepts::detail::Nil                                                 \
     > = {}) const                                                               \
     CPP_PP_EXPAND(CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))
@@ -614,7 +606,7 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
 /// INTERNAL ONLY
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_0(...)                            \
     std::enable_if_t<                                                           \
-        CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__) && CPP_TRUE_FN,        \
+        CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__) && CPP_TRUE_FN,     \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
     CPP_PP_IGNORE_CXX2A_COMPAT_END
@@ -626,7 +618,7 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
             CPP_PP_CAT,                                                         \
             CPP_FUN_IMPL_EAT_REQUIRES_,                                         \
             CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)                 \
-        ) && CPP_TRUE_FN,                                                          \
+        ) && CPP_TRUE_FN,                                                       \
         ::concepts::detail::Nil                                                 \
     > = {})                                                                     \
     CPP_PP_EXPAND(CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))
@@ -716,6 +708,11 @@ CPP_concept CPP_PP_CAT(NAME, _requires_) =                                      
 
 #endif
 
+#if defined(CPP_DOXYGEN_INVOKED)
+#define concept(NAME) concept NAME CPP_CONCEPT_EQUALS_
+#define CPP_CONCEPT_EQUALS_(...) =
+#endif
+
 namespace concepts
 {
     template<bool B>
@@ -753,6 +750,7 @@ namespace concepts
     template<typename T, typename EnableIf>
     using return_t = meta::invoke<return_t_<EnableIf>, T>;
 
+    /// \cond
     namespace detail
     {
         struct ignore
@@ -812,6 +810,7 @@ namespace concepts
             return true;
         }
     } // namespace detail
+    /// \endcond
 
 #if defined(__clang__) || defined(_MSC_VER)
     template<bool B>
@@ -828,12 +827,18 @@ namespace concepts
         // Utility concepts
         ////////////////////////////////////////////////////////////////////////
 
+        /// \concept is_true
+        /// \brief The \c is_true concept
         template<bool B>
         CPP_concept is_true = B;
 
+        /// \concept type
+        /// \brief The \c type concept
         template<typename... Args>
         CPP_concept type = true;
 
+        /// \concept satisfies
+        /// \brief The \c satisfies concept
         template<class T, template<typename...> class Trait, typename... Args>
         CPP_concept satisfies =
             static_cast<bool>(Trait<T, Args...>::type::value);
@@ -842,58 +847,80 @@ namespace concepts
         // Core language concepts
         ////////////////////////////////////////////////////////////////////////
 
+        /// \concept same_as
+        /// \brief The \c same_as concept
         template<typename A, typename B>
         CPP_concept same_as =
             META_IS_SAME(A, B) && META_IS_SAME(B, A);
 
         /// \cond
+        /// \concept not_same_as_
+        /// \brief The \c not_same_as_ concept
         template<typename A, typename B>
         CPP_concept not_same_as_ =
             (!same_as<remove_cvref_t<A>, remove_cvref_t<B>>);
+        /// \endcond
 
         // Workaround bug in the Standard Library:
         // From cannot be an incomplete class type despite that
         // is_convertible<X, Y> should be equivalent to is_convertible<X&&, Y>
         // in such a case.
+        /// \concept implicitly_convertible_to
+        /// \brief The \c implicitly_convertible_to concept
         template<typename From, typename To>
         CPP_concept implicitly_convertible_to =
             std::is_convertible<std::add_rvalue_reference_t<From>, To>::value;
 
+        /// \concept explicitly_convertible_to_
+        /// \brief The \c explicitly_convertible_to_ concept
         template<typename From, typename To>
         CPP_requires(explicitly_convertible_to_,
             requires(From(*from)()) //
             (
                 static_cast<To>(from())
             ));
+        /// \concept explicitly_convertible_to
+        /// \brief The \c explicitly_convertible_to concept
         template<typename From, typename To>
         CPP_concept explicitly_convertible_to =
             CPP_requires_ref(concepts::explicitly_convertible_to_, From, To);
-        /// \endcond
 
+        /// \concept convertible_to
+        /// \brief The \c convertible_to concept
         template<typename From, typename To>
         CPP_concept convertible_to =
             implicitly_convertible_to<From, To> &&
             explicitly_convertible_to<From, To>;
 
+        /// \concept derived_from_
+        /// \brief The \c derived_from_ concept
         CPP_template(typename T, typename U)(
         concept (derived_from_)(T, U),
             convertible_to<T const volatile *, U const volatile *>
         );
+        /// \concept derived_from
+        /// \brief The \c derived_from concept
         template<typename T, typename U>
         CPP_concept derived_from =
             META_IS_BASE_OF(U, T) &&
             CPP_concept_ref(concepts::derived_from_, T, U);
 
+        /// \concept common_reference_with_
+        /// \brief The \c common_reference_with_ concept
         CPP_template(typename T, typename U)(
         concept (common_reference_with_)(T, U),
             same_as<common_reference_t<T, U>, common_reference_t<U, T>> CPP_and
             convertible_to<T, common_reference_t<T, U>> CPP_and
             convertible_to<U, common_reference_t<T, U>>
         );
+        /// \concept common_reference_with
+        /// \brief The \c common_reference_with concept
         template<typename T, typename U>
         CPP_concept common_reference_with =
             CPP_concept_ref(concepts::common_reference_with_, T, U);
 
+        /// \concept common_with_
+        /// \brief The \c common_with_ concept
         CPP_template(typename T, typename U)(
         concept (common_with_)(T, U),
             same_as<common_type_t<T, U>, common_type_t<U, T>> CPP_and
@@ -908,24 +935,34 @@ namespace concepts
                     std::add_lvalue_reference_t<T const>,
                     std::add_lvalue_reference_t<U const>>>
         );
+        /// \concept common_with
+        /// \brief The \c common_with concept
         template<typename T, typename U>
         CPP_concept common_with =
             CPP_concept_ref(concepts::common_with_, T, U);
 
+        /// \concept integral
+        /// \brief The \c integral concept
         template<typename T>
         CPP_concept integral =
             std::is_integral<T>::value;
 
+        /// \concept signed_integral
+        /// \brief The \c signed_integral concept
         template<typename T>
         CPP_concept signed_integral =
             integral<T> &&
             std::is_signed<T>::value;
 
+        /// \concept unsigned_integral
+        /// \brief The \c unsigned_integral concept
         template<typename T>
         CPP_concept unsigned_integral =
             integral<T> &&
             !signed_integral<T>;
 
+        /// \concept assignable_from_
+        /// \brief The \c assignable_from_ concept
         template<typename T, typename U>
         CPP_requires(assignable_from_,
             requires(T t, U && u) //
@@ -933,22 +970,30 @@ namespace concepts
                 t = (U &&) u,
                 requires_<same_as<T, decltype(t = (U &&) u)>>
             ));
+        /// \concept assignable_from
+        /// \brief The \c assignable_from concept
         template<typename T, typename U>
         CPP_concept assignable_from =
             std::is_lvalue_reference<T>::value &&
             common_reference_with<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
             CPP_requires_ref(defs::assignable_from_, T, U);
 
+        /// \concept swappable_
+        /// \brief The \c swappable_ concept
         template<typename T>
         CPP_requires(swappable_,
             requires(T & t, T & u) //
             (
                 concepts::swap(t, u)
             ));
+        /// \concept swappable
+        /// \brief The \c swappable concept
         template<typename T>
         CPP_concept swappable =
             CPP_requires_ref(defs::swappable_, T);
 
+        /// \concept swappable_with_
+        /// \brief The \c swappable_with_ concept
         template<typename T, typename U>
         CPP_requires(swappable_with_,
             requires(T && t, U && u) //
@@ -958,6 +1003,8 @@ namespace concepts
                 concepts::swap((U &&) u, (T &&) t),
                 concepts::swap((T &&) t, (U &&) u)
             ));
+        /// \concept swappable_with
+        /// \brief The \c swappable_with concept
         template<typename T, typename U>
         CPP_concept swappable_with =
             common_reference_with<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
@@ -967,9 +1014,13 @@ namespace concepts
 
     namespace detail
     {
+        /// \concept boolean_testable_impl_
+        /// \brief The \c boolean_testable_impl_ concept
         template<typename T>
         CPP_concept boolean_testable_impl_ = convertible_to<T, bool>;
 
+        /// \concept boolean_testable_frag_
+        /// \brief The \c boolean_testable_frag_ concept
         template<typename T>
         CPP_requires(boolean_testable_frag_,
             requires(T && t) //
@@ -978,6 +1029,8 @@ namespace concepts
                 concepts::requires_<boolean_testable_impl_<decltype(!(T&&) t)>>
             ));
 
+        /// \concept boolean_testable_
+        /// \brief The \c boolean_testable_ concept
         template<typename T>
         CPP_concept boolean_testable_ =
             CPP_requires_ref(boolean_testable_frag_, T) &&
@@ -986,6 +1039,8 @@ namespace concepts
         CPP_DIAGNOSTIC_PUSH
         CPP_DIAGNOSTIC_IGNORE_FLOAT_EQUAL
 
+        /// \concept weakly_equality_comparable_with_frag_
+        /// \brief The \c weakly_equality_comparable_with_frag_ concept
         template<typename T, typename U>
         CPP_requires(weakly_equality_comparable_with_frag_,
             requires(detail::as_cref_t<T> t, detail::as_cref_t<U> u) //
@@ -995,10 +1050,14 @@ namespace concepts
                 concepts::requires_<boolean_testable_<decltype(u == t)>>,
                 concepts::requires_<boolean_testable_<decltype(u != t)>>
             ));
+        /// \concept weakly_equality_comparable_with_
+        /// \brief The \c weakly_equality_comparable_with_ concept
         template<typename T, typename U>
         CPP_concept weakly_equality_comparable_with_ =
             CPP_requires_ref(weakly_equality_comparable_with_frag_, T, U);
 
+        /// \concept partially_ordered_with_frag_
+        /// \brief The \c partially_ordered_with_frag_ concept
         template<typename T, typename U>
         CPP_requires(partially_ordered_with_frag_,
             requires(detail::as_cref_t<T>& t, detail::as_cref_t<U>& u) //
@@ -1012,6 +1071,8 @@ namespace concepts
                 concepts::requires_<boolean_testable_<decltype(u <= t)>>,
                 concepts::requires_<boolean_testable_<decltype(u >= t)>>
             ));
+        /// \concept partially_ordered_with_
+        /// \brief The \c partially_ordered_with_ concept
         template<typename T, typename U>
         CPP_concept partially_ordered_with_ =
             CPP_requires_ref(partially_ordered_with_frag_, T, U);
@@ -1025,15 +1086,21 @@ namespace concepts
         // Comparison concepts
         ////////////////////////////////////////////////////////////////////////
 
+        /// \concept equality_comparable
+        /// \brief The \c equality_comparable concept
         template<typename T>
         CPP_concept equality_comparable =
             detail::weakly_equality_comparable_with_<T, T>;
 
+        /// \concept equality_comparable_with_
+        /// \brief The \c equality_comparable_with_ concept
         CPP_template(typename T, typename U)(
         concept (equality_comparable_with_)(T, U),
             equality_comparable<
                 common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
         );
+        /// \concept equality_comparable_with
+        /// \brief The \c equality_comparable_with concept
         template<typename T, typename U>
         CPP_concept equality_comparable_with =
             equality_comparable<T> &&
@@ -1042,11 +1109,15 @@ namespace concepts
             common_reference_with<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
             CPP_concept_ref(concepts::equality_comparable_with_, T, U);
 
+        /// \concept totally_ordered
+        /// \brief The \c totally_ordered concept
         template<typename T>
         CPP_concept totally_ordered =
             equality_comparable<T> &&
             detail::partially_ordered_with_<T, T>;
 
+        /// \concept totally_ordered_with_
+        /// \brief The \c totally_ordered_with_ concept
         CPP_template(typename T, typename U)(
         concept (totally_ordered_with_)(T, U),
             totally_ordered<
@@ -1055,6 +1126,8 @@ namespace concepts
                     detail::as_cref_t<U>>> CPP_and
             detail::partially_ordered_with_<T, U>);
 
+        /// \concept totally_ordered_with
+        /// \brief The \c totally_ordered_with concept
         template<typename T, typename U>
         CPP_concept totally_ordered_with =
             totally_ordered<T> &&
@@ -1066,24 +1139,34 @@ namespace concepts
         // Object concepts
         ////////////////////////////////////////////////////////////////////////
 
+        /// \concept destructible
+        /// \brief The \c destructible concept
         template<typename T>
         CPP_concept destructible =
             std::is_nothrow_destructible<T>::value;
 
+        /// \concept constructible_from
+        /// \brief The \c constructible_from concept
         template<typename T, typename... Args>
         CPP_concept constructible_from =
             destructible<T> &&
             META_IS_CONSTRUCTIBLE(T, Args...);
 
+        /// \concept default_constructible
+        /// \brief The \c default_constructible concept
         template<typename T>
         CPP_concept default_constructible =
             constructible_from<T>;
 
+        /// \concept move_constructible
+        /// \brief The \c move_constructible concept
         template<typename T>
         CPP_concept move_constructible =
             constructible_from<T, T> &&
             convertible_to<T, T>;
 
+        /// \concept copy_constructible_
+        /// \brief The \c copy_constructible_ concept
         CPP_template(typename T)(
         concept (copy_constructible_)(T),
             constructible_from<T, T &> &&
@@ -1092,15 +1175,21 @@ namespace concepts
             convertible_to<T &, T> &&
             convertible_to<T const &, T> &&
             convertible_to<T const, T>);
+        /// \concept copy_constructible
+        /// \brief The \c copy_constructible concept
         template<typename T>
         CPP_concept copy_constructible =
             move_constructible<T> &&
             CPP_concept_ref(concepts::copy_constructible_, T);
 
+        /// \concept move_assignable_
+        /// \brief The \c move_assignable_ concept
         CPP_template(typename T)(
         concept (move_assignable_)(T),
             assignable_from<T &, T>
         );
+        /// \concept movable
+        /// \brief The \c movable concept
         template<typename T>
         CPP_concept movable =
             std::is_object<T>::value &&
@@ -1108,16 +1197,22 @@ namespace concepts
             CPP_concept_ref(concepts::move_assignable_, T) &&
             swappable<T>;
 
+        /// \concept copy_assignable_
+        /// \brief The \c copy_assignable_ concept
         CPP_template(typename T)(
         concept (copy_assignable_)(T),
             assignable_from<T &, T const &>
         );
+        /// \concept copyable
+        /// \brief The \c copyable concept
         template<typename T>
         CPP_concept copyable =
             copy_constructible<T> &&
             movable<T> &&
             CPP_concept_ref(concepts::copy_assignable_, T);
 
+        /// \concept semiregular
+        /// \brief The \c semiregular concept
         template<typename T>
         CPP_concept semiregular =
             copyable<T> &&
@@ -1125,6 +1220,8 @@ namespace concepts
             // Axiom: copies are independent. See Fundamentals of Generic
             // Programming http://www.stepanovpapers.com/DeSt98.pdf
 
+        /// \concept regular
+        /// \brief The \c regular concept
         template<typename T>
         CPP_concept regular =
             semiregular<T> &&

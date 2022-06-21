@@ -62,7 +62,6 @@ namespace ranges
           : value_(std::move(t))
         {}
         template(class... Args)(
-            /// \pre
             requires constructible_from<T, Args...>)
             constexpr single_view(in_place_t, Args &&... args)
           : single_view{in_place,
@@ -110,7 +109,6 @@ namespace ranges
         struct single_fn
         {
             template(typename Val)(
-                /// \pre
                 requires copy_constructible<Val>)
             single_view<Val> operator()(Val value) const
             {
@@ -130,7 +128,6 @@ namespace ranges
             using ranges::views::single;
         }
         template(typename T)(
-            /// \pre
             requires std::is_object<T>::value) //
             using single_view = ranges::single_view<T>;
     } // namespace cpp20

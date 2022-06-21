@@ -54,7 +54,6 @@ namespace ranges
                  typename C = less,
                  typename P1 = identity,
                  typename P2 = identity)(
-            /// \pre
             requires input_iterator<I1> AND sentinel_for<S1, I1> AND
                 input_iterator<I2> AND sentinel_for<S2, I2> AND
                 indirect_strict_weak_order<C, projected<I1, P1>, projected<I2, P2>>)
@@ -83,7 +82,6 @@ namespace ranges
                  typename C = less,
                  typename P1 = identity,
                  typename P2 = identity)(
-            /// \pre
             requires input_range<Rng1> AND input_range<Rng2> AND
                 indirect_strict_weak_order<C,
                                            projected<iterator_t<Rng1>, P1>,
@@ -121,7 +119,6 @@ namespace ranges
                  typename C = less,
                  typename P1 = identity,
                  typename P2 = identity)(
-            /// \pre
             requires sentinel_for<S1, I1> AND sentinel_for<S2, I2> AND
                 mergeable<I1, I2, O, C, P1, P2>)
         constexpr set_union_result<I1, I2, O> RANGES_FUNC(set_union)(I1 begin1,
@@ -164,7 +161,6 @@ namespace ranges
                  typename C = less,
                  typename P1 = identity,
                  typename P2 = identity)(
-            /// \pre
             requires range<Rng1> AND range<Rng2> AND
                 mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         constexpr set_union_result<borrowed_iterator_t<Rng1>, borrowed_iterator_t<Rng2>, O> //
@@ -204,7 +200,6 @@ namespace ranges
                  typename C = less,
                  typename P1 = identity,
                  typename P2 = identity)(
-            /// \pre
             requires sentinel_for<S1, I1> AND sentinel_for<S2, I2> AND
                 mergeable<I1, I2, O, C, P1, P2>)
         constexpr O RANGES_FUNC(set_intersection)(I1 begin1,
@@ -241,7 +236,6 @@ namespace ranges
                  typename C = less,
                  typename P1 = identity,
                  typename P2 = identity)(
-            /// \pre
             requires range<Rng1> AND range<Rng2> AND
                 mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         constexpr O RANGES_FUNC(set_intersection)(Rng1 && rng1,
@@ -282,7 +276,6 @@ namespace ranges
                  typename C = less,
                  typename P1 = identity,
                  typename P2 = identity)(
-            /// \pre
             requires sentinel_for<S1, I1> AND sentinel_for<S2, I2> AND
                 mergeable<I1, I2, O, C, P1, P2>)
         constexpr set_difference_result<I1, O> RANGES_FUNC(set_difference)(I1 begin1,
@@ -324,7 +317,6 @@ namespace ranges
                  typename C = less,
                  typename P1 = identity,
                  typename P2 = identity)(
-            /// \pre
             requires range<Rng1> AND range<Rng2> AND
                 mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         constexpr set_difference_result<borrowed_iterator_t<Rng1>, O> //
@@ -367,7 +359,6 @@ namespace ranges
                  typename C = less,
                  typename P1 = identity,
                  typename P2 = identity)(
-            /// \pre
             requires sentinel_for<S1, I1> AND sentinel_for<S2, I2> AND
                 mergeable<I1, I2, O, C, P1, P2>)
         constexpr set_symmetric_difference_result<I1, I2, O> //
@@ -416,7 +407,6 @@ namespace ranges
                  typename C = less,
                  typename P1 = identity,
                  typename P2 = identity)(
-            /// \pre
             requires range<Rng1> AND range<Rng2> AND
                 mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         constexpr set_symmetric_difference_result<borrowed_iterator_t<Rng1>,

@@ -98,7 +98,6 @@ namespace ranges
     struct protect_fn
     {
         template(typename F)(
-            /// \pre
             requires std::is_bind_expression<uncvref_t<F>>::value) //
         protector<uncvref_t<F>> operator()(F && f) const
         {
@@ -106,7 +105,6 @@ namespace ranges
         }
         /// \overload
         template(typename F)(
-            /// \pre
             requires (!std::is_bind_expression<uncvref_t<F>>::value)) //
         F operator()(F && f) const
         {

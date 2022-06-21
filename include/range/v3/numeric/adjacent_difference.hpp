@@ -39,6 +39,8 @@ namespace ranges
     /// \addtogroup group-numerics
     /// @{
     // clang-format off
+    /// \concept differenceable_
+    /// \brief The \c differenceable_ concept
     template(typename I, typename O, typename BOp, typename P)(
     concept (differenceable_)(I, O, BOp, P),
         invocable<P&, iter_value_t<I>> AND
@@ -58,6 +60,8 @@ namespace ranges
                 invoke_result_t<P&, iter_value_t<I>>,
                 invoke_result_t<P&, iter_value_t<I>>>>);
 
+    /// \concept differenceable
+    /// \brief The \c differenceable concept
     template<typename I, typename O, typename BOp = minus, typename P = identity>
     CPP_concept differenceable =
         input_iterator<I> &&
@@ -71,7 +75,6 @@ namespace ranges
     {
         template(typename I, typename S, typename O, typename S2, typename BOp = minus,
                  typename P = identity)(
-            /// \pre
             requires sentinel_for<S, I> AND sentinel_for<S2, O> AND
                 differenceable<I, O, BOp, P>)
         adjacent_difference_result<I, O> operator()(I first,
@@ -104,7 +107,6 @@ namespace ranges
 
         template(typename I, typename S, typename O, typename BOp = minus,
                  typename P = identity)(
-            /// \pre
             requires sentinel_for<S, I> AND differenceable<I, O, BOp, P>)
         adjacent_difference_result<I, O> //
         operator()(I first, S last, O result, BOp bop = BOp{}, P proj = P{}) const
@@ -119,7 +121,6 @@ namespace ranges
 
         template(typename Rng, typename ORef, typename BOp = minus, typename P = identity,
                  typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>)(
-            /// \pre
             requires range<Rng> AND differenceable<I, O, BOp, P>)
         adjacent_difference_result<borrowed_iterator_t<Rng>, O> //
         operator()(Rng && rng, ORef && result, BOp bop = BOp{}, P proj = P{}) const
@@ -133,7 +134,6 @@ namespace ranges
 
         template(typename Rng, typename ORng, typename BOp = minus, typename P = identity,
                  typename I = iterator_t<Rng>, typename O = iterator_t<ORng>)(
-            /// \pre
             requires range<Rng> AND range<ORng> AND differenceable<I, O, BOp, P>)
         adjacent_difference_result<borrowed_iterator_t<Rng>, borrowed_iterator_t<ORng>>
         operator()(Rng && rng, ORng && result, BOp bop = BOp{}, P proj = P{}) const

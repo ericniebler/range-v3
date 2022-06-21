@@ -41,7 +41,6 @@ namespace ranges
 
         /// \brief function template \c remove_copy_if
         template(typename I, typename S, typename O, typename C, typename P = identity)(
-            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
             weakly_incrementable<O> AND indirect_unary_predicate<C, projected<I, P>> AND
             indirectly_copyable<I, O>)
@@ -62,7 +61,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename O, typename C, typename P = identity)(
-            /// \pre
             requires input_range<Rng> AND weakly_incrementable<O> AND
             indirect_unary_predicate<C, projected<iterator_t<Rng>, P>> AND
             indirectly_copyable<iterator_t<Rng>, O>)

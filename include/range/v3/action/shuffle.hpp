@@ -36,7 +36,6 @@ namespace ranges
         struct shuffle_fn
         {
             template(typename Gen)(
-                /// \pre
                 requires uniform_random_bit_generator<Gen>)
             constexpr auto operator()(Gen & gen) const
             {
@@ -45,7 +44,6 @@ namespace ranges
             }
 
             template(typename Gen)(
-                /// \pre
                 requires uniform_random_bit_generator<Gen>)
             constexpr auto operator()(Gen && gen) const
             {
@@ -54,7 +52,6 @@ namespace ranges
             }
 
             template(typename Rng, typename Gen)(
-                /// \pre
                 requires random_access_range<Rng> AND permutable<iterator_t<Rng>> AND
                     uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
                     convertible_to<invoke_result_t<Gen &>, range_difference_t<Rng>>)

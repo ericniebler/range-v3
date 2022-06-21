@@ -49,11 +49,13 @@ namespace ranges
     /// \addtogroup group-range-concepts
     /// @{
 
-    ///
-    /// Range concepts below
-    ///
+    //
+    // Range concepts below
+    //
 
     // clang-format off
+    /// \concept _range_
+    /// \brief The \c _range_ concept
     template<typename T>
     CPP_requires(_range_,
         requires(T & t) //
@@ -61,10 +63,14 @@ namespace ranges
             ranges::begin(t), // not necessarily equality-preserving
             ranges::end(t)
         ));
+    /// \concept range
+    /// \brief The \c range concept
     template<typename T>
     CPP_concept range =
         CPP_requires_ref(ranges::_range_, T);
 
+    /// \concept borrowed_range
+    /// \brief The \c borrowed_range concept
     template<typename T>
     CPP_concept borrowed_range =
         range<T> && detail::_borrowed_range<T>;
@@ -73,43 +79,63 @@ namespace ranges
     RANGES_DEPRECATED("Please use ranges::borrowed_range instead.")
     RANGES_INLINE_VAR constexpr bool safe_range = borrowed_range<R>;
 
+    /// \concept output_range_
+    /// \brief The \c output_range_ concept
     template(typename T, typename V)(
     concept (output_range_)(T, V),
         output_iterator<iterator_t<T>, V>
     );
+    /// \concept output_range
+    /// \brief The \c output_range concept
     template<typename T, typename V>
     CPP_concept output_range =
         range<T> && CPP_concept_ref(ranges::output_range_, T, V);
 
+    /// \concept input_range_
+    /// \brief The \c input_range_ concept
     template(typename T)(
     concept (input_range_)(T),
         input_iterator<iterator_t<T>>
     );
+    /// \concept input_range
+    /// \brief The \c input_range concept
     template<typename T>
     CPP_concept input_range =
         range<T> && CPP_concept_ref(ranges::input_range_, T);
 
+    /// \concept forward_range_
+    /// \brief The \c forward_range_ concept
     template(typename T)(
     concept (forward_range_)(T),
         forward_iterator<iterator_t<T>>
     );
+    /// \concept forward_range
+    /// \brief The \c forward_range concept
     template<typename T>
     CPP_concept forward_range =
         input_range<T> && CPP_concept_ref(ranges::forward_range_, T);
 
+    /// \concept bidirectional_range_
+    /// \brief The \c bidirectional_range_ concept
     template(typename T)(
     concept (bidirectional_range_)(T),
         bidirectional_iterator<iterator_t<T>>
     );
+    /// \concept bidirectional_range
+    /// \brief The \c bidirectional_range concept
     template<typename T>
     CPP_concept bidirectional_range =
         forward_range<T> && CPP_concept_ref(ranges::bidirectional_range_, T);
 
+    /// \concept random_access_range_
+    /// \brief The \c random_access_range_ concept
     template(typename T)(
     concept (random_access_range_)(T),
         random_access_iterator<iterator_t<T>>
     );
 
+    /// \concept random_access_range
+    /// \brief The \c random_access_range concept
     template<typename T>
     CPP_concept random_access_range =
         bidirectional_range<T> && CPP_concept_ref(ranges::random_access_range_, T);
@@ -127,41 +153,57 @@ namespace ranges
       /// \endcond
 
     // clang-format off
+    /// \concept contiguous_range_
+    /// \brief The \c contiguous_range_ concept
     template(typename T)(
     concept (contiguous_range_)(T),
         contiguous_iterator<iterator_t<T>> AND
         same_as<detail::data_t<T>, std::add_pointer_t<iter_reference_t<iterator_t<T>>>>
     );
 
+    /// \concept contiguous_range
+    /// \brief The \c contiguous_range concept
     template<typename T>
     CPP_concept contiguous_range =
         random_access_range<T> && CPP_concept_ref(ranges::contiguous_range_, T);
 
+    /// \concept common_range_
+    /// \brief The \c common_range_ concept
     template(typename T)(
     concept (common_range_)(T),
         same_as<iterator_t<T>, sentinel_t<T>>
     );
 
+    /// \concept common_range
+    /// \brief The \c common_range concept
     template<typename T>
     CPP_concept common_range =
         range<T> && CPP_concept_ref(ranges::common_range_, T);
 
     /// \cond
+    /// \concept bounded_range
+    /// \brief The \c bounded_range concept
     template<typename T>
     CPP_concept bounded_range =
         common_range<T>;
     /// \endcond
 
+    /// \concept sized_range_
+    /// \brief The \c sized_range_ concept
     template<typename T>
     CPP_requires(sized_range_,
         requires(T & t) //
         (
             ranges::size(t)
         ));
+    /// \concept sized_range_
+    /// \brief The \c sized_range_ concept
     template(typename T)(
     concept (sized_range_)(T),
         detail::integer_like_<range_size_t<T>>);
 
+    /// \concept sized_range
+    /// \brief The \c sized_range concept
     template<typename T>
     CPP_concept sized_range =
         range<T> &&
@@ -204,12 +246,16 @@ namespace ranges
     //
 
     // clang-format off
+    /// \concept view_
+    /// \brief The \c view_ concept
     template<typename T>
     CPP_concept view_ =
         range<T> &&
         semiregular<T> &&
         enable_view<T>;
 
+    /// \concept viewable_range
+    /// \brief The \c viewable_range concept
     template<typename T>
     CPP_concept viewable_range =
         range<T> &&
@@ -279,6 +325,8 @@ namespace ranges
     namespace view_detail_
     {
         // clang-format off
+        /// \concept view
+        /// \brief The \c view concept
         template<typename T>
         CPP_concept view =
             ranges::view_<T>;

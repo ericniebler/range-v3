@@ -39,7 +39,6 @@ namespace ranges
         struct remove_if_fn
         {
             template(typename C, typename P = identity)(
-                /// \pre
                 requires (!range<C>))
             constexpr auto operator()(C pred, P proj = P{}) const
             {
@@ -48,7 +47,6 @@ namespace ranges
             }
 
             template(typename Rng, typename C, typename P = identity)(
-                /// \pre
                 requires forward_range<Rng> AND
                     erasable_range<Rng &, iterator_t<Rng>, iterator_t<Rng>> AND
                         permutable<iterator_t<Rng>> AND

@@ -37,7 +37,6 @@ namespace ranges
             unwrap_reference(std::declval<Cont>()).insert(std::declval<Args>()...));
 
         template(typename Cont, typename T)(
-            /// \pre
             requires lvalue_container_like<Cont> AND
             (!range<T> && constructible_from<range_value_t<Cont>, T>)) //
         insert_result_t<Cont &, T> insert(Cont && cont, T && t)
@@ -46,7 +45,6 @@ namespace ranges
         }
 
         template(typename Cont, typename I, typename S)(
-            /// \pre
             requires lvalue_container_like<Cont> AND sentinel_for<S, I> AND (!range<S>))
         insert_result_t<Cont &, detail::cpp17_iterator_t<I, S>,
                                 detail::cpp17_iterator_t<I, S>>
@@ -57,7 +55,6 @@ namespace ranges
         }
 
         template(typename Cont, typename Rng)(
-            /// \pre
             requires lvalue_container_like<Cont> AND range<Rng>)
         insert_result_t<Cont &, detail::range_cpp17_iterator_t<Rng>,
                                 detail::range_cpp17_iterator_t<Rng>>
@@ -69,7 +66,6 @@ namespace ranges
         }
 
         template(typename Cont, typename I, typename T)(
-            /// \pre
             requires lvalue_container_like<Cont> AND input_iterator<I> AND
             (!range<T> && constructible_from<range_value_t<Cont>, T>)) //
         insert_result_t<Cont &, I, T> insert(Cont && cont, I p, T && t)
@@ -78,7 +74,6 @@ namespace ranges
         }
 
         template(typename Cont, typename I, typename N, typename T)(
-            /// \pre
             requires lvalue_container_like<Cont> AND input_iterator<I> AND
                 integral<N> AND constructible_from<range_value_t<Cont>, T>)
         insert_result_t<Cont &, I, N, T> insert(Cont && cont, I p, N n, T && t)
@@ -93,7 +88,6 @@ namespace ranges
             using ranges::detail::range_cpp17_iterator_t;
 
             template(typename Cont, typename P)(
-                /// \pre
                 requires container<Cont> AND input_iterator<P> AND
                         random_access_reservable<Cont>)
             iterator_t<Cont> insert_reserve_helper(
@@ -117,7 +111,6 @@ namespace ranges
             }
 
             template(typename Cont, typename P, typename I, typename S)(
-                /// \pre
                 requires sentinel_for<S, I> AND (!range<S>)) //
             auto insert_impl(Cont && cont, P p, I i, S j, std::false_type)
                 -> decltype(unwrap_reference(cont).insert(
@@ -128,7 +121,6 @@ namespace ranges
             }
 
             template(typename Cont, typename P, typename I, typename S)(
-                /// \pre
                 requires sized_sentinel_for<S, I> AND random_access_reservable<Cont> AND
                     (!range<S>)) //
             auto insert_impl(Cont && cont_, P p, I i, S j, std::true_type)
@@ -144,7 +136,6 @@ namespace ranges
             }
 
             template(typename Cont, typename I, typename Rng)(
-                /// \pre
                 requires range<Rng>)
             auto insert_impl(Cont && cont, I p, Rng && rng, std::false_type)
                 -> decltype(unwrap_reference(cont).insert(
@@ -157,7 +148,6 @@ namespace ranges
             }
 
             template(typename Cont, typename I, typename Rng)(
-                /// \pre
                 requires random_access_reservable<Cont> AND sized_range<Rng>)
             auto insert_impl(Cont && cont_, I p, Rng && rng, std::true_type)
                 -> decltype(unwrap_reference(cont_).insert(
@@ -175,7 +165,6 @@ namespace ranges
         /// \endcond
 
         template(typename Cont, typename P, typename I, typename S)(
-            /// \pre
             requires lvalue_container_like<Cont> AND input_iterator<P> AND
                 sentinel_for<S, I> AND
             (!range<S>)) //
@@ -197,7 +186,6 @@ namespace ranges
         }
 
         template(typename Cont, typename I, typename Rng)(
-            /// \pre
             requires lvalue_container_like<Cont> AND input_iterator<I> AND range<Rng>)
         auto insert(Cont && cont, I p, Rng && rng)
             -> decltype(detail::insert_impl(
@@ -218,7 +206,6 @@ namespace ranges
                 decltype(insert(std::declval<Rng>(), std::declval<Args>()...));
 
             template(typename Rng, typename T)(
-                /// \pre
                 requires range<Rng> AND
                     (!range<T>) AND constructible_from<range_value_t<Rng>, T>)
             insert_result_t<Rng, T> operator()(Rng && rng, T && t) const
@@ -227,7 +214,6 @@ namespace ranges
             }
 
             template(typename Rng, typename Rng2)(
-                /// \pre
                 requires range<Rng> AND range<Rng2>)
             insert_result_t<Rng, Rng2> operator()(Rng && rng, Rng2 && rng2) const
             {
@@ -237,7 +223,6 @@ namespace ranges
             }
 
             template(typename Rng, typename T)(
-                /// \pre
                 requires range<Rng>)
             insert_result_t<Rng, std::initializer_list<T> &> //
             operator()(Rng && rng, std::initializer_list<T> rng2) const
@@ -246,7 +231,6 @@ namespace ranges
             }
 
             template(typename Rng, typename I, typename S)(
-                /// \pre
                 requires range<Rng> AND sentinel_for<S, I> AND (!range<S>)) //
             insert_result_t<Rng, I, S> operator()(Rng && rng, I i, S j) const
             {
@@ -254,7 +238,6 @@ namespace ranges
             }
 
             template(typename Rng, typename I, typename T)(
-                /// \pre
                 requires range<Rng> AND input_iterator<I> AND
                     (!range<T>) AND constructible_from<range_value_t<Rng>, T>)
             insert_result_t<Rng, I, T> operator()(Rng && rng, I p, T && t) const
@@ -264,7 +247,6 @@ namespace ranges
             }
 
             template(typename Rng, typename I, typename Rng2)(
-                /// \pre
                 requires range<Rng> AND input_iterator<I> AND range<Rng2>)
             insert_result_t<Rng, I, Rng2> operator()(Rng && rng, I p, Rng2 && rng2) const
             {
@@ -275,7 +257,6 @@ namespace ranges
             }
 
             template(typename Rng, typename I, typename T)(
-                /// \pre
                 requires range<Rng> AND input_iterator<I>)
             insert_result_t<Rng, I, std::initializer_list<T> &> //
             operator()(Rng && rng, I p, std::initializer_list<T> rng2) const
@@ -284,7 +265,6 @@ namespace ranges
             }
 
             template(typename Rng, typename I, typename N, typename T)(
-                /// \pre
                 requires range<Rng> AND input_iterator<I> AND integral<N> AND
                     (!range<T>) AND constructible_from<range_value_t<Rng>, T>)
             insert_result_t<Rng, I, N, T> operator()(Rng && rng, I p, N n, T && t) const
@@ -294,7 +274,6 @@ namespace ranges
             }
 
             template(typename Rng, typename P, typename I, typename S)(
-                /// \pre
                 requires range<Rng> AND input_iterator<P> AND sentinel_for<S, I> AND
                 (!range<S>)) //
             insert_result_t<Rng, P, I, S> operator()(Rng && rng, P p, I i, S j) const

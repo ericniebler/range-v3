@@ -36,7 +36,6 @@ namespace ranges
         struct sort_fn
         {
             template(typename C, typename P = identity)(
-                /// \pre
                 requires (!range<C>))
             constexpr auto operator()(C pred, P proj = {}) const
             {
@@ -45,7 +44,6 @@ namespace ranges
             }
 
             template(typename Rng, typename C = less, typename P = identity)(
-                /// \pre
                 requires forward_range<Rng> AND sortable<iterator_t<Rng>, C, P>)
             Rng operator()(Rng && rng, C pred = {}, P proj = {}) const
             {

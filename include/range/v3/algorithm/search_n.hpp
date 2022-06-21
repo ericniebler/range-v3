@@ -149,7 +149,6 @@ namespace ranges
                  typename V,
                  typename C = equal_to,
                  typename P = identity)(
-            /// \pre
             requires forward_iterator<I> AND sentinel_for<S, I> AND
                 indirectly_comparable<I, V const *, C, P>)
         constexpr subrange<I> RANGES_FUNC(search_n)(I first,
@@ -176,7 +175,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename V, typename C = equal_to, typename P = identity)(
-            /// \pre
             requires forward_range<Rng> AND
                 indirectly_comparable<iterator_t<Rng>, V const *, C, P>)
         constexpr borrowed_subrange_t<Rng> RANGES_FUNC(search_n)(Rng && rng,

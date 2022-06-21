@@ -127,7 +127,6 @@ namespace ranges
         public:
             cursor() = default;
             template(bool Other)(
-                /// \pre
                 requires IsConst AND CPP_NOT(Other)) //
             cursor(cursor<Other> that)
               : cursor{std::move(that.cur_), std::move(that.last_), std::move(that.fun_)}
@@ -138,7 +137,6 @@ namespace ranges
             return {fun_, ranges::begin(rng_), ranges::end(rng_)};
         }
         template(bool Const = true)(
-            /// \pre
             requires Const AND range<meta::const_if_c<Const, Rng>> AND
                 invocable<Fun const &, iterator_t<meta::const_if_c<Const, Rng>>,
                           sentinel_t<meta::const_if_c<Const, Rng>>>)
@@ -157,7 +155,6 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Rng, typename Fun)(
-        /// \pre
         requires copy_constructible<Fun>)
     split_when_view(Rng &&, Fun)
         -> split_when_view<views::all_t<Rng>, Fun>;
@@ -174,7 +171,6 @@ namespace ranges
                 semiregular_box_t<Pred> pred_;
 
                 template(typename I, typename S)(
-                    /// \pre
                     requires sentinel_for<S, I>)
                 std::pair<bool, I> operator()(I cur, S last) const
                 {
@@ -185,7 +181,6 @@ namespace ranges
 
         public:
             template(typename Rng, typename Fun)(
-                /// \pre
                 requires viewable_range<Rng> AND forward_range<Rng> AND
                     invocable<Fun &, iterator_t<Rng>, sentinel_t<Rng>> AND
                     invocable<Fun &, iterator_t<Rng>, iterator_t<Rng>> AND
@@ -198,7 +193,6 @@ namespace ranges
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
             template(typename Rng, typename Fun)(
-                /// \pre
                 requires viewable_range<Rng> AND forward_range<Rng> AND
                     predicate<Fun const &, range_reference_t<Rng>> AND
                     copy_constructible<Fun>)

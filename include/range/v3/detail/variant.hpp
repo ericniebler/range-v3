@@ -109,7 +109,6 @@ namespace ranges
         struct indexed_element_fn;
 
         template(typename I, typename S, typename O)(
-            /// \pre
             requires (!sized_sentinel_for<S, I>)) //
         O uninitialized_copy(I first, S last, O out)
         {
@@ -119,7 +118,6 @@ namespace ranges
         }
 
         template(typename I, typename S, typename O)(
-            /// \pre
             requires sized_sentinel_for<S, I>)
         O uninitialized_copy(I first, S last, O out)
         {
@@ -148,14 +146,12 @@ namespace ranges
               : datum_{}
             {}
             template(typename... Ts)(
-                /// \pre
                 requires constructible_from<T, Ts...> AND (sizeof...(Ts) != 0)) //
             constexpr indexed_datum(Ts &&... ts) noexcept(
                     std::is_nothrow_constructible<T, Ts...>::value)
               : datum_(static_cast<Ts &&>(ts)...)
             {}
             template(typename U)(
-                /// \pre
                 requires (!same_as<T, U>) AND convertible_to<U, T>)
             constexpr indexed_datum(indexed_datum<U, Index> that) //
                 noexcept(std::is_nothrow_constructible<T, U>::value) //
@@ -669,7 +665,6 @@ namespace ranges
           , index_((std::size_t)-1)
         {}
         template(typename... Args)(
-            /// \pre
             requires (sizeof...(Args) == sizeof...(Ts))) //
         static constexpr bool all_convertible_to(int) noexcept
         {
@@ -689,7 +684,6 @@ namespace ranges
           : variant{emplaced_index<0>}
         {}
         template(std::size_t N, typename... Args)(
-            /// \pre
             requires constructible_from<datum_t<N>, Args...>)
             constexpr variant(emplaced_index_t<N>, Args &&... args) noexcept(
                 std::is_nothrow_constructible<datum_t<N>, Args...>::value)
@@ -697,7 +691,6 @@ namespace ranges
           , index_(N)
         {}
         template(std::size_t N, typename T, typename... Args)(
-            /// \pre
             requires constructible_from<datum_t<N>, std::initializer_list<T> &,
                                         Args...>)
             constexpr variant(
@@ -712,7 +705,6 @@ namespace ranges
           , index_(N)
         {}
         template(std::size_t N)(
-            /// \pre
             requires constructible_from<datum_t<N>, meta::nil_>)
         constexpr variant(emplaced_index_t<N>, meta::nil_)
             noexcept(std::is_nothrow_constructible<datum_t<N>, meta::nil_>::value)
@@ -729,7 +721,6 @@ namespace ranges
           , index_(detail::variant_move_copy_(that.index(), data_(), that.data_()))
         {}
         template(typename... Args)(
-            /// \pre
             requires (!same_as<variant<Args...>, variant>) AND
             (all_convertible_to<Args...>(0))) //
         variant(variant<Args...> that)
@@ -752,7 +743,6 @@ namespace ranges
             return *this;
         }
         template(typename... Args)(
-            /// \pre
             requires (!same_as<variant<Args...>, variant>) AND
             (all_convertible_to<Args...>(0)))
         variant & operator=(variant<Args...> that)
@@ -767,7 +757,6 @@ namespace ranges
             return sizeof...(Ts);
         }
         template(std::size_t N, typename... Args)(
-            /// \pre
             requires constructible_from<datum_t<N>, Args...>)
         void emplace(Args &&... args)
         {
@@ -827,7 +816,6 @@ namespace ranges
     };
 
     template(typename... Ts, typename... Us)(
-        /// \pre
         requires and_v<equality_comparable_with<Ts, Us>...>)
     bool operator==(variant<Ts...> const & lhs, variant<Us...> const & rhs)
     {
@@ -839,7 +827,6 @@ namespace ranges
     }
 
     template(typename... Ts, typename... Us)(
-        /// \pre
         requires and_v<equality_comparable_with<Ts, Us>...>)
     bool operator!=(variant<Ts...> const & lhs, variant<Us...> const & rhs)
     {
@@ -849,7 +836,6 @@ namespace ranges
     //////////////////////////////////////////////////////////////////////////////////////
     // emplace
     template(std::size_t N, typename... Ts, typename... Args)(
-        /// \pre
         requires constructible_from<detail::variant_datum_t<N, Ts...>, Args...>)
     void emplace(variant<Ts...> & var, Args &&... args)
     {

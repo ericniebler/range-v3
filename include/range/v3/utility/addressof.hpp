@@ -53,7 +53,6 @@ namespace ranges
         }
 
         template(typename T)(
-            /// \pre
             requires(has_bad_addressof<T>()))
         T * addressof(T & arg) noexcept
         {
@@ -61,7 +60,6 @@ namespace ranges
         }
 
         template(typename T)(
-            /// \pre
             requires (!has_bad_addressof<T>()))
         constexpr T * addressof(T & arg) noexcept
         {

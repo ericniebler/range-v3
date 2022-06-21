@@ -29,11 +29,15 @@
 namespace ranges
 {
     // clang-format off
+    /// \concept exclusive_scan_constraints_
+    /// \brief The \c exclusive_scan_constraints_ concept
     template(typename Rng, typename T, typename Fun)(
     concept (exclusive_scan_constraints_)(Rng, T, Fun),
         invocable<Fun &, T, range_reference_t<Rng>> AND
         assignable_from<T &, invoke_result_t<Fun &, T, range_reference_t<Rng>>>
     );
+    /// \concept exclusive_scan_constraints
+    /// \brief The \c exclusive_scan_constraints concept
     template<typename Rng, typename T, typename Fun>
     CPP_concept exclusive_scan_constraints =
         viewable_range<Rng> && input_range<Rng> &&
@@ -83,7 +87,6 @@ namespace ranges
               : rng_(rng)
             {}
             template(bool Other)(
-                /// \pre
                 requires IsConst AND CPP_NOT(Other)) //
             adaptor(adaptor<Other> that)
               : rng_(that.rng_)
@@ -117,7 +120,6 @@ namespace ranges
         CPP_member
         auto begin_adaptor() const //
             -> CPP_ret(adaptor<true>)(
-                /// \pre
                 requires exclusive_scan_constraints<Rng const, T, Fun const>)
         {
             return {this};
@@ -125,7 +127,6 @@ namespace ranges
         CPP_member
         auto end_adaptor() const
             -> CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)(
-                /// \pre
                 requires exclusive_scan_constraints<Rng const, T, Fun const>)
         {
             return {this};
@@ -140,14 +141,12 @@ namespace ranges
         {}
         CPP_auto_member
         auto CPP_fun(size)()(const
-            /// \pre
             requires sized_range<Rng const>)
         {
             return ranges::size(this->base());
         }
         CPP_auto_member
         auto CPP_fun(size)()(
-            /// \pre
             requires sized_range<Rng>)
         {
             return ranges::size(this->base());
@@ -156,7 +155,6 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Rng, typename T, typename Fun)(
-        /// \pre
         requires copy_constructible<T> AND copy_constructible<Fun>)
     exclusive_scan_view(Rng &&, T, Fun) //
         -> exclusive_scan_view<views::all_t<Rng>, T, Fun>;
@@ -167,7 +165,6 @@ namespace ranges
         struct exclusive_scan_base_fn
         {
             template(typename Rng, typename T, typename Fun = plus)(
-                /// \pre
                 requires exclusive_scan_constraints<Rng, T, Fun>)
             constexpr exclusive_scan_view<all_t<Rng>, T, Fun> //
             operator()(Rng && rng, T init, Fun fun = Fun{}) const

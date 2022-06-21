@@ -105,7 +105,6 @@ namespace ranges
         struct linear_distribute_fn
         {
             template(typename T)(
-                /// \pre
                 requires std::is_arithmetic<T>::value)
             constexpr auto operator()(T from, T to, std::ptrdiff_t n) const
             {

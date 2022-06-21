@@ -42,7 +42,6 @@ namespace ranges
                  typename V,
                  typename C = less,
                  typename P = identity)(
-            /// \pre
             requires forward_iterator<I> AND sentinel_for<S, I> AND
                 indirect_strict_weak_order<C, V const *, projected<I, P>>)
         constexpr I RANGES_FUNC(lower_bound)(I first, 
@@ -59,7 +58,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename V, typename C = less, typename P = identity)(
-            /// \pre
             requires forward_range<Rng> AND
                 indirect_strict_weak_order<C, V const *, projected<iterator_t<Rng>, P>>)
         constexpr borrowed_iterator_t<Rng> //

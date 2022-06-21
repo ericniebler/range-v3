@@ -39,7 +39,6 @@ namespace ranges
 
         /// \brief function template \c shuffle
         template(typename I, typename S, typename Gen = detail::default_random_engine &)(
-            /// \pre
             requires random_access_iterator<I> AND sentinel_for<S, I> AND
                 permutable<I> AND
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
@@ -67,7 +66,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename Gen = detail::default_random_engine &)(
-            /// \pre
             requires random_access_range<Rng> AND permutable<iterator_t<Rng>> AND
                 uniform_random_bit_generator<std::remove_reference_t<Gen>> AND
                 convertible_to<invoke_result_t<Gen &>,

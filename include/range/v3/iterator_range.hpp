@@ -99,19 +99,16 @@ namespace ranges
           : compressed_pair<I, S>{detail::move(first), detail::move(last)}
         {}
         template(typename X, typename Y)(
-            /// \pre
             requires constructible_from<I, X> AND constructible_from<S, Y>)
         constexpr iterator_range(iterator_range<X, Y> rng)
           : compressed_pair<I, S>{detail::move(rng.begin()), detail::move(rng.end())}
         {}
         template(typename X, typename Y)(
-            /// \pre
             requires constructible_from<I, X> AND constructible_from<S, Y>)
         constexpr explicit iterator_range(std::pair<X, Y> rng)
           : compressed_pair<I, S>{detail::move(rng.first), detail::move(rng.second)}
         {}
         template(typename X, typename Y)(
-            /// \pre
             requires assignable_from<I &, X> AND assignable_from<S &, Y>)
         iterator_range & operator=(iterator_range<X, Y> rng)
         {
@@ -120,7 +117,6 @@ namespace ranges
             return *this;
         }
         template(typename X, typename Y)(
-            /// \pre
             requires convertible_to<I, X> AND convertible_to<S, Y>)
         constexpr operator std::pair<X, Y>() const
         {
@@ -167,13 +163,11 @@ namespace ranges
 #endif
         }
         template(typename X, typename Y)(
-            /// \pre
             requires constructible_from<I, X> AND constructible_from<S, Y>)
         RANGES_NDEBUG_CONSTEXPR sized_iterator_range(std::pair<X, Y> rng, size_type size)
           : sized_iterator_range{detail::move(rng).first, detail::move(rng).second, size}
         {}
         template(typename X, typename Y)(
-            /// \pre
             requires constructible_from<I, X> AND constructible_from<S, Y>)
         RANGES_NDEBUG_CONSTEXPR sized_iterator_range(iterator_range<X, Y> rng,
                                                      size_type size)
@@ -182,7 +176,6 @@ namespace ranges
                                  size}
         {}
         template(typename X, typename Y)(
-            /// \pre
             requires constructible_from<I, X> AND constructible_from<S, Y>)
         RANGES_NDEBUG_CONSTEXPR sized_iterator_range(sized_iterator_range<X, Y> rng)
           : sized_iterator_range{detail::move(rng).rng_.first(),
@@ -190,7 +183,6 @@ namespace ranges
                                  rng.size_}
         {}
         template(typename X, typename Y)(
-            /// \pre
             requires assignable_from<I &, X> AND assignable_from<S &, Y>)
         sized_iterator_range & operator=(sized_iterator_range<X, Y> rng)
         {
@@ -211,14 +203,12 @@ namespace ranges
             return size_;
         }
         template(typename X, typename Y)(
-            /// \pre
             requires convertible_to<I, X> AND convertible_to<S, Y>)
         constexpr operator std::pair<X, Y>() const
         {
             return rng_;
         }
         template(typename X, typename Y)(
-            /// \pre
             requires convertible_to<I, X> AND convertible_to<S, Y>)
         constexpr operator iterator_range<X, Y>() const
         {
@@ -231,7 +221,6 @@ namespace ranges
         // clang-format off
         /// Tuple-like access for `sized_iterator_range`
         template(std::size_t N)(
-            /// \pre
             requires (N < 2))        //
         friend constexpr auto CPP_auto_fun(get)(sized_iterator_range const &p)
         (
@@ -241,7 +230,6 @@ namespace ranges
         // clang-format on
         /// \overload
         template(std::size_t N)(
-            /// \pre
             requires (N == 2)) //
         friend constexpr size_type get(sized_iterator_range const & p) noexcept
         {
@@ -253,7 +241,6 @@ namespace ranges
     {
         /// \return `{first, last}`
         template(typename I, typename S)(
-            /// \pre
             requires sentinel_for<S, I>)
         constexpr iterator_range<I, S> operator()(I first, S last) const
         {
@@ -262,7 +249,6 @@ namespace ranges
 
         /// \return `{first, last, size}`
         template(typename I, typename S)(
-            /// \pre
             requires sentinel_for<S, I>)
         constexpr sized_iterator_range<I, S> //
         operator()(I first, S last, detail::iter_size_t<I> sz) const

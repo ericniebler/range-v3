@@ -78,7 +78,6 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Rng, typename Val)(
-        /// \pre
         requires copy_constructible<Val>)
     delimit_view(Rng &&, Val)
         -> delimit_view<views::all_t<Rng>, Val>;
@@ -89,7 +88,6 @@ namespace ranges
         struct delimit_base_fn
         {
             template(typename I_, typename Val, typename I = detail::decay_t<I_>)(
-                /// \pre
                 requires (!range<I_>) AND convertible_to<I_, I> AND input_iterator<I> AND
                     semiregular<Val> AND
                     equality_comparable_with<Val, iter_reference_t<I>>)
@@ -100,7 +98,6 @@ namespace ranges
             }
 
             template(typename Rng, typename Val)(
-                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng> AND semiregular<
                         Val> AND equality_comparable_with<Val, range_reference_t<Rng>>)
             constexpr auto operator()(Rng && rng, Val value) const //

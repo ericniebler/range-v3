@@ -228,6 +228,8 @@ namespace ranges
         // Concepts that the range cursor must model
         // clang-format off
         //
+        /// \concept cursor
+        /// \brief The \c cursor concept
         template<typename T>
         CPP_concept cursor =
             semiregular<T> && semiregular<range_access::mixin_base_t<T>> &&
@@ -237,15 +239,21 @@ namespace ranges
             //   which perfectly-returns the contained cursor object and does not throw
             //   exceptions.
 
+        /// \concept has_cursor_next_
+        /// \brief The \c has_cursor_next_ concept
         template<typename T>
         CPP_requires(has_cursor_next_,
             requires(T & t)
             (
                 range_access::next(t)
             ));
+        /// \concept has_cursor_next
+        /// \brief The \c has_cursor_next concept
         template<typename T>
         CPP_concept has_cursor_next = CPP_requires_ref(detail::has_cursor_next_, T);
 
+        /// \concept sentinel_for_cursor_
+        /// \brief The \c sentinel_for_cursor_ concept
         template<typename S, typename C>
         CPP_requires(sentinel_for_cursor_,
             requires(S & s, C & c) //
@@ -254,40 +262,56 @@ namespace ranges
                 concepts::requires_<convertible_to<decltype(
                     range_access::equal(c, s)), bool>>
             ));
+        /// \concept sentinel_for_cursor
+        /// \brief The \c sentinel_for_cursor concept
         template<typename S, typename C>
         CPP_concept sentinel_for_cursor =
             semiregular<S> &&
             cursor<C> &&
             CPP_requires_ref(detail::sentinel_for_cursor_, S, C);
 
+        /// \concept readable_cursor_
+        /// \brief The \c readable_cursor_ concept
         template<typename T>
         CPP_requires(readable_cursor_,
             requires(T & t) //
             (
                 range_access::read(t)
             ));
+        /// \concept readable_cursor
+        /// \brief The \c readable_cursor concept
         template<typename T>
         CPP_concept readable_cursor = CPP_requires_ref(detail::readable_cursor_, T);
 
+        /// \concept has_cursor_arrow_
+        /// \brief The \c has_cursor_arrow_ concept
         template<typename T>
         CPP_requires(has_cursor_arrow_,
             requires(T const & t) //
             (
                 range_access::arrow(t)
             ));
+        /// \concept has_cursor_arrow
+        /// \brief The \c has_cursor_arrow concept
         template<typename T>
         CPP_concept has_cursor_arrow = CPP_requires_ref(detail::has_cursor_arrow_, T);
 
+        /// \concept writable_cursor_
+        /// \brief The \c writable_cursor_ concept
         template<typename T, typename U>
         CPP_requires(writable_cursor_,
             requires(T & t, U && u) //
             (
                 range_access::write(t, (U &&) u)
             ));
+        /// \concept writable_cursor
+        /// \brief The \c writable_cursor concept
         template<typename T, typename U>
         CPP_concept writable_cursor =
             CPP_requires_ref(detail::writable_cursor_, T, U);
 
+        /// \concept sized_sentinel_for_cursor_
+        /// \brief The \c sized_sentinel_for_cursor_ concept
         template<typename S, typename C>
         CPP_requires(sized_sentinel_for_cursor_,
             requires(S & s, C & c) //
@@ -297,41 +321,57 @@ namespace ranges
                     range_access::distance_to(c, s))>>
             )
         );
+        /// \concept sized_sentinel_for_cursor
+        /// \brief The \c sized_sentinel_for_cursor concept
         template<typename S, typename C>
         CPP_concept sized_sentinel_for_cursor =
             sentinel_for_cursor<S, C> &&
             CPP_requires_ref(detail::sized_sentinel_for_cursor_, S, C);
 
+        /// \concept output_cursor
+        /// \brief The \c output_cursor concept
         template<typename T, typename U>
         CPP_concept output_cursor =
             writable_cursor<T, U> && cursor<T>;
 
+        /// \concept input_cursor
+        /// \brief The \c input_cursor concept
         template<typename T>
         CPP_concept input_cursor =
             readable_cursor<T> && cursor<T> && has_cursor_next<T>;
 
+        /// \concept forward_cursor
+        /// \brief The \c forward_cursor concept
         template<typename T>
         CPP_concept forward_cursor =
             input_cursor<T> && sentinel_for_cursor<T, T> &&
             !range_access::single_pass_t<uncvref_t<T>>::value;
 
+        /// \concept bidirectional_cursor_
+        /// \brief The \c bidirectional_cursor_ concept
         template<typename T>
         CPP_requires(bidirectional_cursor_,
             requires(T & t) //
             (
                 range_access::prev(t)
             ));
+        /// \concept bidirectional_cursor
+        /// \brief The \c bidirectional_cursor concept
         template<typename T>
         CPP_concept bidirectional_cursor =
             forward_cursor<T> &&
             CPP_requires_ref(detail::bidirectional_cursor_, T);
 
+        /// \concept random_access_cursor_
+        /// \brief The \c random_access_cursor_ concept
         template<typename T>
         CPP_requires(random_access_cursor_,
             requires(T & t) //
             (
                 range_access::advance(t, range_access::distance_to(t, t))
             ));
+        /// \concept random_access_cursor
+        /// \brief The \c random_access_cursor concept
         template<typename T>
         CPP_concept random_access_cursor =
             bidirectional_cursor<T> && //
@@ -339,16 +379,19 @@ namespace ranges
             CPP_requires_ref(detail::random_access_cursor_, T);
 
         template(class T)(
-            /// \pre
             requires std::is_lvalue_reference<T>::value)
         void is_lvalue_reference(T&&);
 
+        /// \concept contiguous_cursor_
+        /// \brief The \c contiguous_cursor_ concept
         template<typename T>
         CPP_requires(contiguous_cursor_,
             requires(T & t) //
             (
                 detail::is_lvalue_reference(range_access::read(t))
             ));
+        /// \concept contiguous_cursor
+        /// \brief The \c contiguous_cursor concept
         template<typename T>
         CPP_concept contiguous_cursor =
             random_access_cursor<T> && //

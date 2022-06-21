@@ -42,7 +42,6 @@ namespace ranges
 
         /// \brief function template \c copy_n
         template(typename I, typename O, typename P = identity)(
-            /// \pre
             requires input_iterator<I> AND weakly_incrementable<O> AND
             indirectly_copyable<I, O>)
         constexpr copy_n_result<I, O> RANGES_FUNC(copy_n)(I first, iter_difference_t<I> n, O out)

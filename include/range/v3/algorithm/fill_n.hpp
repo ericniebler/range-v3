@@ -34,7 +34,6 @@ namespace ranges
 
         /// \brief function template \c equal
         template(typename O, typename V)(
-            /// \pre
             requires output_iterator<O, V const &>)
         constexpr O RANGES_FUNC(fill_n)(O first, iter_difference_t<O> n, V const & val)
         {

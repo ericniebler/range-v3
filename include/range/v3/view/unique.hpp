@@ -38,7 +38,6 @@ namespace ranges
         struct unique_base_fn
         {
             template(typename Rng, typename C = equal_to)(
-                /// \pre
                 requires viewable_range<Rng> AND forward_range<Rng> AND
                     indirect_relation<C, iterator_t<Rng>>)
             constexpr adjacent_filter_view<all_t<Rng>, logical_negate<C>> //
@@ -53,7 +52,6 @@ namespace ranges
             using unique_base_fn::operator();
 
             template(typename C)(
-                /// \pre
                 requires (!range<C>))
             constexpr auto operator()(C && pred) const
             {

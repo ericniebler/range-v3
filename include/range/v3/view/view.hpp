@@ -56,21 +56,29 @@ namespace ranges
       /// \endcond
 
     // clang-format off
+    /// \concept simple_view_impl_
+    /// \brief The \c simple_view_impl_ concept
     template(typename Rng)(
     concept (simple_view_impl_)(Rng),
         same_as<iterator_t<Rng>, iterator_t<Rng const>> AND
         same_as<sentinel_t<Rng>, sentinel_t<Rng const>>);
 
+    /// \concept simple_view_
+    /// \brief The \c simple_view_ concept
     template<typename Rng>
     CPP_concept simple_view_ =
         view_<Rng> &&
         range<Rng const> &&
         CPP_concept_ref(ranges::simple_view_impl_, Rng);
 
+    /// \concept invocable_view_closure_
+    /// \brief The \c invocable_view_closure_ concept
     template(typename ViewFn, typename Rng)(
     concept (invocable_view_closure_)(ViewFn, Rng),
         !derived_from<invoke_result_t<ViewFn, Rng>, detail::view_closure_base_>);
 
+    /// \concept invocable_view_closure
+    /// \brief The \c invocable_view_closure concept
     template<typename ViewFn, typename Rng>
     CPP_concept invocable_view_closure =
         invocable<ViewFn, Rng> &&
@@ -104,7 +112,6 @@ namespace ranges
             // Piping requires viewable_ranges. Pipeing a value into a closure
             // should not yield another closure.
             template(typename Rng, typename ViewFn)(
-                /// \pre
                 requires viewable_range<Rng> AND
                     invocable_view_closure<ViewFn, Rng>)
             friend constexpr auto operator|(Rng && rng, view_closure<ViewFn> vw)
@@ -134,7 +141,6 @@ namespace ranges
             template<typename ViewFn, typename Pipeable>
             friend constexpr auto operator|(view_closure<ViewFn> vw, Pipeable pipe)
                 -> CPP_broken_friend_ret(view_closure<composed<Pipeable, ViewFn>>)(
-                    /// \pre
                     requires (is_pipeable_v<Pipeable>))
             {
                 return make_view_closure(
@@ -232,7 +238,6 @@ namespace ranges
 
             // Piping requires range arguments or lvalue containers.
             template(typename Rng, typename Vw)(
-                /// \pre
                 requires viewable_range<Rng> AND invocable<ViewFn &, Rng>)
             static constexpr auto pipe(Rng && rng, Vw && v)
             {
@@ -249,7 +254,6 @@ namespace ranges
 
             // Calling directly requires a viewable_range.
             template(typename Rng, typename... Rest)(
-                /// \pre
                 requires viewable_range<Rng> AND invocable<ViewFn const &, Rng, Rest...>)
             constexpr invoke_result_t<ViewFn const &, Rng, Rest...> //
             operator()(Rng && rng, Rest &&... rest) const

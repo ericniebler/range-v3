@@ -56,6 +56,8 @@ namespace ranges
 
     // axiom: BOp is associative over values of I.
     // clang-format off
+    /// \concept indirect_semigroup_
+    /// \brief The \c indirect_semigroup_ concept
     template(typename I, typename BOp)(
     concept (indirect_semigroup_)(I, BOp),
         copyable<iter_value_t<I>> AND
@@ -63,11 +65,15 @@ namespace ranges
             composed<coerce<iter_value_t<I>>, BOp>,
             iter_value_t<I>*, I>
     );
+    /// \concept indirect_semigroup
+    /// \brief The \c indirect_semigroup concept
     template<typename I, typename BOp>
     CPP_concept indirect_semigroup =
         indirectly_readable<I> &&
         CPP_concept_ref(ranges::indirect_semigroup_, I, BOp);
 
+    /// \concept partial_sum_constraints_
+    /// \brief The \c partial_sum_constraints_ concept
     template(typename I, typename O, typename BOp, typename P)(
     concept (partial_sum_constraints_)(I, O, BOp, P),
         indirect_semigroup<
@@ -78,6 +84,8 @@ namespace ranges
             iter_value_t<
                 projected<projected<I, detail::as_value_type_t<I>>, P>> const &>
     );
+    /// \concept partial_sum_constraints
+    /// \brief The \c partial_sum_constraints concept
     template<typename I, typename O, typename BOp = plus, typename P = identity>
     CPP_concept partial_sum_constraints =
         input_iterator<I> &&
@@ -91,7 +99,6 @@ namespace ranges
     {
         template(typename I, typename S1, typename O, typename S2, typename BOp = plus,
                  typename P = identity)(
-            /// \pre
             requires sentinel_for<S1, I> AND sentinel_for<S2, O> AND
                 partial_sum_constraints<I, O, BOp, P>)
         partial_sum_result<I, O> operator()(I first,
@@ -122,7 +129,6 @@ namespace ranges
 
         template(typename I, typename S, typename O, typename BOp = plus,
                  typename P = identity)(
-            /// \pre
             requires sentinel_for<S, I> AND partial_sum_constraints<I, O, BOp, P>)
         partial_sum_result<I, O> //
         operator()(I first, S last, O result, BOp bop = BOp{}, P proj = P{}) const
@@ -137,7 +143,6 @@ namespace ranges
 
         template(typename Rng, typename ORef, typename BOp = plus, typename P = identity,
                  typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>)(
-            /// \pre
             requires range<Rng> AND partial_sum_constraints<I, O, BOp, P>)
         partial_sum_result<borrowed_iterator_t<Rng>, O> //
         operator()(Rng && rng, ORef && result, BOp bop = BOp{}, P proj = P{}) const
@@ -151,7 +156,6 @@ namespace ranges
 
         template(typename Rng, typename ORng, typename BOp = plus, typename P = identity,
                  typename I = iterator_t<Rng>, typename O = iterator_t<ORng>)(
-            /// \pre
             requires range<Rng> AND range<ORng> AND partial_sum_constraints<I, O, BOp, P>)
         partial_sum_result<borrowed_iterator_t<Rng>, borrowed_iterator_t<ORng>> //
         operator()(Rng && rng, ORng && result, BOp bop = BOp{}, P proj = P{}) const

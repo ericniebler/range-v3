@@ -78,7 +78,6 @@ namespace ranges
         struct _advance_
         {
             template(typename I, typename Diff)(
-                /// \pre
                 requires input_or_output_iterator<I> AND integer_like_<Diff>)
             void operator()(I & i, Diff n) const
             {
@@ -139,12 +138,16 @@ namespace ranges
     namespace views
     {
         // clang-format off
+        /// \concept zippable_with_
+        /// \brief The \c zippable_with_ concept
         template(typename Fun, typename... Rngs)(
         concept (zippable_with_)(Fun, Rngs...),
             invocable<Fun&, iterator_t<Rngs>...> AND
             invocable<Fun&, copy_tag, iterator_t<Rngs>...> AND
             invocable<Fun&, move_tag, iterator_t<Rngs>...>
         );
+        /// \concept zippable_with
+        /// \brief The \c zippable_with concept
         template<typename Fun, typename ...Rngs>
         CPP_concept zippable_with =
             and_v<input_range<Rngs>...> &&
@@ -188,7 +191,6 @@ namespace ranges
               : ends_(std::move(ends))
             {}
             template(bool Other)(
-                /// \pre
                 requires Const AND CPP_NOT(Other)) //
             sentinel(sentinel<Other> that)
               : ends_(std::move(that.ends_))
@@ -219,7 +221,6 @@ namespace ranges
               , its_(std::move(its))
             {}
             template(bool Other)(
-                /// \pre
                 requires Const AND CPP_NOT(Other)) //
             cursor(cursor<Other> that)
               : fun_(std::move(that.fun_))
@@ -238,7 +239,6 @@ namespace ranges
             CPP_member
             auto equal(cursor const & that) const //
                 -> CPP_ret(bool)(
-                    /// \pre
                     requires and_v<
                         sentinel_for<iterator_t<meta::const_if_c<Const, Rngs>>,
                                     iterator_t<meta::const_if_c<Const, Rngs>>>...>)
@@ -262,7 +262,6 @@ namespace ranges
             CPP_member
             auto prev() //
                 -> CPP_ret(void)(
-                    /// \pre
                     requires and_v<bidirectional_range<meta::const_if_c<Const, Rngs>>...>)
             {
                 tuple_for_each(its_, detail::dec);
@@ -270,7 +269,6 @@ namespace ranges
             CPP_member
             auto advance(difference_type n) //
                 -> CPP_ret(void)(
-                    /// \pre
                     requires and_v<random_access_range<meta::const_if_c<Const, Rngs>>...>)
             {
                 tuple_for_each(its_, bind_back(detail::advance_, n));
@@ -278,7 +276,6 @@ namespace ranges
             CPP_member
             auto distance_to(cursor const & that) const //
                 -> CPP_ret(difference_type)(
-                    /// \pre
                     requires and_v<
                         sized_sentinel_for<iterator_t<meta::const_if_c<Const, Rngs>>,
                                            iterator_t<meta::const_if_c<Const, Rngs>>>...>)
@@ -327,7 +324,6 @@ namespace ranges
             return {fun_, tuple_transform(rngs_, ranges::end)};
         }
         template(bool Const = true)(
-            /// \pre
             requires Const AND and_v<range<Rngs const>...> AND
                 views::zippable_with<Fun, meta::if_c<Const, Rngs const>...>)
         cursor<Const> begin_cursor() const
@@ -335,7 +331,6 @@ namespace ranges
             return {fun_, tuple_transform(rngs_, ranges::begin)};
         }
         template(bool Const = true)(
-            /// \pre
             requires Const AND and_v<range<Rngs const>...> AND
                 views::zippable_with<Fun, meta::if_c<Const, Rngs const>...>)
         end_cursor_t<Const> end_cursor() const
@@ -387,7 +382,6 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Fun, typename... Rng)(
-        /// \pre
         requires copy_constructible<Fun>)
     zip_with_view(Fun, Rng &&...)
         -> zip_with_view<Fun, views::all_t<Rng>...>;
@@ -398,7 +392,6 @@ namespace ranges
         struct iter_zip_with_fn
         {
             template(typename... Rngs, typename Fun)(
-                /// \pre
                 requires and_v<viewable_range<Rngs>...> AND
                     zippable_with<Fun, Rngs...> AND (sizeof...(Rngs) != 0)) //
             iter_zip_with_view<Fun, all_t<Rngs>...> //
@@ -409,7 +402,6 @@ namespace ranges
             }
 
             template(typename Fun)(
-                /// \pre
                 requires zippable_with<Fun>) //
                 constexpr empty_view<detail::decay_t<invoke_result_t<Fun &>>>
                 operator()(Fun) const noexcept
@@ -425,7 +417,6 @@ namespace ranges
         struct zip_with_fn
         {
             template(typename... Rngs, typename Fun)(
-                /// \pre
                 requires and_v<viewable_range<Rngs>...> AND
                     and_v<input_range<Rngs>...> AND copy_constructible<Fun> AND
                     invocable<Fun &, range_reference_t<Rngs>...> AND
@@ -437,7 +428,6 @@ namespace ranges
             }
 
             template(typename Fun)(
-                /// \pre
                 requires copy_constructible<Fun> AND invocable<Fun &>) //
                 constexpr empty_view<detail::decay_t<invoke_result_t<Fun &>>>
                 operator()(Fun) const noexcept

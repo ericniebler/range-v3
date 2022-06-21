@@ -47,7 +47,6 @@ namespace ranges
             From from;
             To to;
             template(typename F, typename T)(
-                /// \pre
                 requires convertible_to<F, From> AND convertible_to<T, To>)
             constexpr slice_bounds(F f, T t)
               : from(static_cast<From>(f))
@@ -65,7 +64,6 @@ namespace ranges
             {}
 
             template(typename Other)(
-                /// \pre
                 requires integer_like_<Other> AND explicitly_convertible_to<Other, Int>)
             constexpr operator from_end_<Other>() const
             {
@@ -77,12 +75,16 @@ namespace ranges
         using from_end_of_t = from_end_<range_difference_t<Rng>>;
 
         // clang-format off
+        /// \concept _can_empty_
+        /// \brief The \c _can_empty_ concept
         template<typename Rng>
         CPP_requires(_can_empty_,
             requires(Rng & rng) //
             (
                 ranges::empty(rng)
             ));
+        /// \concept can_empty_
+        /// \brief The \c can_empty_ concept
         template<typename Rng>
         CPP_concept can_empty_ = //
             CPP_requires_ref(detail::_can_empty_, Rng);
@@ -151,14 +153,12 @@ namespace ranges
         CPP_member
         constexpr auto empty() const noexcept //
             -> CPP_ret(bool)(
-                /// \pre
                 requires (detail::has_fixed_size_<Cardinality>))
         {
             return Cardinality == 0;
         }
         /// \overload
         template(bool True = true)(
-            /// \pre
             requires True AND (Cardinality < 0) AND (Cardinality != infinite) AND
                 (!forward_range<D<True>>) AND sized_range<D<True>>)
         constexpr bool empty() //
@@ -168,7 +168,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true)(
-            /// \pre
             requires True AND (Cardinality < 0) AND (Cardinality != infinite) AND
                 (!forward_range<D<True> const>) AND sized_range<D<True> const>)
         constexpr bool empty() const //
@@ -178,7 +177,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true)(
-            /// \pre
             requires True AND (!detail::has_fixed_size_<Cardinality>) AND
                 forward_range<D<True>>)
         constexpr bool empty() noexcept(
@@ -189,7 +187,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true)(
-            /// \pre
             requires True AND (!detail::has_fixed_size_<Cardinality>) AND
                 forward_range<D<True> const>)
         constexpr bool empty() const
@@ -199,7 +196,6 @@ namespace ranges
             return bool(ranges::begin(derived()) == ranges::end(derived()));
         }
         CPP_template_gcc_workaround(bool True = true)(
-            /// \pre
             requires True && detail::can_empty_<D<True>>) // clang-format off
         constexpr explicit operator bool()
             noexcept(noexcept(ranges::empty(std::declval<D<True> &>())))
@@ -209,7 +205,6 @@ namespace ranges
         // clang-format on
         /// \overload
         CPP_template_gcc_workaround(bool True = true)(
-            /// \pre
             requires True && detail::can_empty_<D<True> const>) // clang-format off
         constexpr explicit operator bool() const
             noexcept(noexcept(ranges::empty(std::declval<D<True> const &>())))
@@ -220,7 +215,6 @@ namespace ranges
         /// If the size of the range is known at compile-time and finite,
         /// return it.
         template(bool True = true, int = 42)(
-            /// \pre
             requires True AND (Cardinality >= 0)) //
         static constexpr std::size_t size() noexcept
         {
@@ -230,7 +224,6 @@ namespace ranges
         /// satisfied, and if `Derived` is a `forward_range`, then return
         /// `end - begin` cast to an unsigned integer.
         template(bool True = true)(
-            /// \pre
             requires True AND (Cardinality < 0) AND
                 sized_sentinel_for<sentinel_t<D<True>>, iterator_t<D<True>>> AND
                 forward_range<D<True>>)
@@ -241,7 +234,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true)(
-            /// \pre
             requires True AND (Cardinality < 0) AND
                 sized_sentinel_for<sentinel_t<D<True> const>,
                                    iterator_t<D<True> const>> AND
@@ -253,7 +245,6 @@ namespace ranges
         }
         /// Access the first element in a range:
         template(bool True = true)(
-            /// \pre
             requires True AND forward_range<D<True>>)
         constexpr range_reference_t<D<True>> front()
         {
@@ -261,7 +252,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true)(
-            /// \pre
             requires True AND forward_range<D<True> const>)
         constexpr range_reference_t<D<True> const> front() const
         {
@@ -269,7 +259,6 @@ namespace ranges
         }
         /// Access the last element in a range:
         template(bool True = true)(
-            /// \pre
             requires True AND common_range<D<True>> AND bidirectional_range<D<True>>)
         constexpr range_reference_t<D<True>> back()
         {
@@ -277,7 +266,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true)(
-            /// \pre
             requires True AND common_range<D<True> const> AND
                 bidirectional_range<D<True> const>)
         constexpr range_reference_t<D<True> const> back() const
@@ -286,7 +274,6 @@ namespace ranges
         }
         /// Simple indexing:
         template(bool True = true)(
-            /// \pre
             requires True AND random_access_range<D<True>>)
         constexpr range_reference_t<D<True>> operator[](range_difference_t<D<True>> n)
         {
@@ -294,7 +281,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true)(
-            /// \pre
             requires True AND random_access_range<D<True> const>)
         constexpr range_reference_t<D<True> const> //
         operator[](range_difference_t<D<True>> n) const
@@ -304,7 +290,6 @@ namespace ranges
         /// Returns a pointer to the block of memory
         /// containing the elements of a contiguous range:
         template(bool True = true)(
-            /// \pre
             requires True AND contiguous_iterator<iterator_t<D<True>>>)
         constexpr std::add_pointer_t<range_reference_t<D<True>>> data() //
         {
@@ -312,7 +297,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true)(
-            /// \pre
             requires True AND contiguous_iterator<iterator_t<D<True> const>>)
         constexpr std::add_pointer_t<range_reference_t<D<True> const>> data() const //
         {
@@ -321,7 +305,6 @@ namespace ranges
         /// Returns a reference to the element at specified location pos, with bounds
         /// checking.
         template(bool True = true)(
-            /// \pre
             requires True AND random_access_range<D<True>> AND sized_range<D<True>>)
         constexpr range_reference_t<D<True>> at(range_difference_t<D<True>> n)
         {
@@ -334,7 +317,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true)(
-            /// \pre
             requires True AND random_access_range<D<True> const> AND
                 sized_range<D<True> const>)
         constexpr range_reference_t<D<True> const> at(range_difference_t<D<True>> n) const
@@ -349,7 +331,6 @@ namespace ranges
         /// Python-ic slicing:
         //      rng[{4,6}]
         template(bool True = true, typename Slice = views::slice_fn)(
-            /// \pre
             requires True AND input_range<D<True> &>)
         constexpr auto
             operator[](detail::slice_bounds<range_difference_t<D<True>>> offs) &
@@ -358,7 +339,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true, typename Slice = views::slice_fn)(
-            /// \pre
             requires True AND input_range<D<True> const &>)
         constexpr auto
             operator[](detail::slice_bounds<range_difference_t<D<True>>> offs) const &
@@ -367,7 +347,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true, typename Slice = views::slice_fn)(
-            /// \pre
             requires True AND input_range<D<True>>)
         constexpr auto
             operator[](detail::slice_bounds<range_difference_t<D<True>>> offs) &&
@@ -377,7 +356,6 @@ namespace ranges
         //      rng[{4,end-2}]
         /// \overload
         template(bool True = true, typename Slice = views::slice_fn)(
-            /// \pre
             requires True AND input_range<D<True> &> AND sized_range<D<True> &>)
         constexpr auto //
         operator[](detail::slice_bounds<range_difference_t<D<True>>,
@@ -387,7 +365,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true, typename Slice = views::slice_fn)(
-            /// \pre
             requires True AND input_range<D<True> const &> AND
                 sized_range<D<True> const &>)
         constexpr auto //
@@ -398,7 +375,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true, typename Slice = views::slice_fn)(
-            /// \pre
             requires True AND input_range<D<True>> AND sized_range<D<True>>)
         constexpr auto //
         operator[](detail::slice_bounds<range_difference_t<D<True>>,
@@ -409,7 +385,6 @@ namespace ranges
         //      rng[{end-4,end-2}]
         /// \overload
         template(bool True = true, typename Slice = views::slice_fn)(
-            /// \pre
             requires True AND (forward_range<D<True> &> ||
                               (input_range<D<True> &> && sized_range<D<True> &>))) //
         constexpr auto //
@@ -420,7 +395,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true, typename Slice = views::slice_fn)(
-            /// \pre
             requires True AND
             (forward_range<D<True> const &> ||
              (input_range<D<True> const &> && sized_range<D<True> const &>))) //
@@ -432,7 +406,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true, typename Slice = views::slice_fn)(
-            /// \pre
             requires True AND
                 (forward_range<D<True>> ||
                     (input_range<D<True>> && sized_range<D<True>>))) //
@@ -445,7 +418,6 @@ namespace ranges
         //      rng[{4,end}]
         /// \overload
         template(bool True = true, typename Slice = views::slice_fn)(
-            /// \pre
             requires True AND input_range<D<True> &>)
         constexpr auto //
         operator[](detail::slice_bounds<range_difference_t<D<True>>, end_fn> offs) &
@@ -454,7 +426,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true, typename Slice = views::slice_fn)(
-            /// \pre
             requires True AND input_range<D<True> const &>)
         constexpr auto //
         operator[](detail::slice_bounds<range_difference_t<D<True>>, end_fn> offs) const &
@@ -463,7 +434,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true, typename Slice = views::slice_fn)(
-            /// \pre
             requires True AND input_range<D<True>>)
         constexpr auto //
         operator[](detail::slice_bounds<range_difference_t<D<True>>, end_fn> offs) &&
@@ -473,7 +443,6 @@ namespace ranges
         //      rng[{end-4,end}]
         /// \overload
         template(bool True = true, typename Slice = views::slice_fn)(
-            /// \pre
             requires True AND
                 (forward_range<D<True> &> ||
                     (input_range<D<True> &> && sized_range<D<True> &>))) //
@@ -484,7 +453,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true, typename Slice = views::slice_fn)(
-            /// \pre
             requires True AND
                 (forward_range<D<True> const &> ||
                     (input_range<D<True> const &> && sized_range<D<True> const &>))) //
@@ -496,7 +464,6 @@ namespace ranges
         }
         /// \overload
         template(bool True = true, typename Slice = views::slice_fn)(
-            /// \pre
             requires True AND
                 (forward_range<D<True>> ||
                     (input_range<D<True>> && sized_range<D<True>>))) //
@@ -511,7 +478,6 @@ namespace ranges
         template<bool True = true>
         friend auto operator<<(std::ostream & sout, Derived const & rng)
             -> CPP_broken_friend_ret(std::ostream &)(
-                /// \pre
                 requires True && input_range<D<True> const>)
         {
             return detail::print_rng_(sout, rng);
@@ -520,7 +486,6 @@ namespace ranges
         template<bool True = true>
         friend auto operator<<(std::ostream & sout, Derived & rng)
             -> CPP_broken_friend_ret(std::ostream &)(
-                /// \pre
                 requires True && (!range<D<True> const>) && input_range<D<True>>)
         {
             return detail::print_rng_(sout, rng);
@@ -529,7 +494,6 @@ namespace ranges
         template<bool True = true>
         friend auto operator<<(std::ostream & sout, Derived && rng)
             -> CPP_broken_friend_ret(std::ostream &)(
-                /// \pre
                 requires True && (!range<D<True> const>) && input_range<D<True>>)
         {
             return detail::print_rng_(sout, rng);
@@ -539,7 +503,6 @@ namespace ranges
     namespace cpp20
     {
         template(typename Derived)(
-            /// \pre
             requires std::is_class<Derived>::value AND
                 same_as<Derived, meta::_t<std::remove_cv<Derived>>>)
         using view_interface = ranges::view_interface<Derived, ranges::unknown>;

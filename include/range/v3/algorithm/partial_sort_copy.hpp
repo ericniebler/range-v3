@@ -45,7 +45,6 @@ namespace ranges
                  typename C = less,
                  typename PI = identity,
                  typename PO = identity)(
-            /// \pre
             requires input_iterator<I> AND sentinel_for<SI, I> AND
                 random_access_iterator<O> AND sentinel_for<SO, O> AND
                 indirectly_copyable<I, O> AND sortable<O, C, PO> AND
@@ -89,7 +88,6 @@ namespace ranges
                  typename C = less,
                  typename PI = identity,
                  typename PO = identity)(
-            /// \pre
             requires input_range<InRng> AND random_access_range<OutRng> AND
                 indirectly_copyable<iterator_t<InRng>, iterator_t<OutRng>> AND
                 sortable<iterator_t<OutRng>, C, PO> AND

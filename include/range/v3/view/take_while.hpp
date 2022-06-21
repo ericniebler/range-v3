@@ -61,7 +61,6 @@ namespace ranges
               : pred_(std::move(pred))
             {}
             template(bool Other)(
-                /// \pre
                 requires IsConst AND CPP_NOT(Other)) //
                 sentinel_adaptor(sentinel_adaptor<Other> that)
               : pred_(std::move(that.pred_))
@@ -76,7 +75,6 @@ namespace ranges
             return {pred_};
         }
         template(bool Const = true)(
-            /// \pre
             requires Const AND range<meta::const_if_c<Const, Rng>> AND
                 invocable<Pred const &, iterator_t<meta::const_if_c<Const, Rng>>>)
         sentinel_adaptor<Const> end_adaptor() const
@@ -104,7 +102,6 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Rng, typename Fun)(
-        /// \pre
         requires copy_constructible<Fun>)
     take_while_view(Rng &&, Fun)
         -> take_while_view<views::all_t<Rng>, Fun>;
@@ -115,7 +112,6 @@ namespace ranges
         struct iter_take_while_base_fn
         {
             template(typename Rng, typename Pred)(
-                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng> AND
                     predicate<Pred &, iterator_t<Rng>> AND copy_constructible<Pred>)
             constexpr iter_take_while_view<all_t<Rng>, Pred> //
@@ -140,7 +136,6 @@ namespace ranges
         struct take_while_base_fn
         {
             template(typename Rng, typename Pred)(
-                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng> AND
                     indirect_unary_predicate<Pred &, iterator_t<Rng>>)
             constexpr take_while_view<all_t<Rng>, Pred> //
@@ -149,7 +144,6 @@ namespace ranges
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
             template(typename Rng, typename Pred, typename Proj)(
-                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng> AND
                     indirect_unary_predicate<composed<Pred, Proj> &, iterator_t<Rng>>)
             constexpr take_while_view<all_t<Rng>, composed<Pred, Proj>> //
@@ -169,7 +163,6 @@ namespace ranges
                     bind_back(take_while_base_fn{}, std::move(pred)));
             }
             template(typename Pred, typename Proj)(
-                /// \pre
                 requires (!range<Pred>)) // TODO: underconstrained
             constexpr auto operator()(Pred && pred, Proj proj) const
                                                           
@@ -202,7 +195,6 @@ namespace ranges
             using ranges::views::take_while;
         }
         template(typename Rng, typename Pred)(
-            /// \pre
             requires viewable_range<Rng> AND input_range<Rng> AND
                 predicate<Pred &, iterator_t<Rng>> AND copy_constructible<Pred>)
             using take_while_view = ranges::take_while_view<Rng, Pred>;
