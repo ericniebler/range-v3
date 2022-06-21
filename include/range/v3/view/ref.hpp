@@ -42,9 +42,8 @@ namespace ranges
     private:
         CPP_assert(range<Rng>);
         static_assert(std::is_object<Rng>::value, "");
-        Rng * rng_ = nullptr; // exposition only
+        Rng * rng_; // exposition only
     public:
-        constexpr ref_view() noexcept = default;
         constexpr ref_view(Rng & rng) noexcept
           : rng_(detail::addressof(rng))
         {}

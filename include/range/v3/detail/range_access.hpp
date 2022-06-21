@@ -230,7 +230,7 @@ namespace ranges
         //
         template<typename T>
         CPP_concept cursor =
-            semiregular<T> && semiregular<range_access::mixin_base_t<T>> &&
+            copyable<T> && copyable<range_access::mixin_base_t<T>> &&
             constructible_from<range_access::mixin_base_t<T>, T> &&
             constructible_from<range_access::mixin_base_t<T>, T const &>;
             // Axiom: mixin_base_t<T> has a member get(), accessible to derived classes,
@@ -312,7 +312,7 @@ namespace ranges
 
         template<typename T>
         CPP_concept forward_cursor =
-            input_cursor<T> && sentinel_for_cursor<T, T> &&
+            input_cursor<T> && default_constructible<T> && sentinel_for_cursor<T, T> &&
             !range_access::single_pass_t<uncvref_t<T>>::value;
 
         template<typename T>
