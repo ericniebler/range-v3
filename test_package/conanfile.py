@@ -30,4 +30,4 @@ class Rangev3TestConan(ConanFile):
 
     def test(self):
         os.chdir("bin")
-        self.run(".%sexample" % os.sep)
+        self.run(".%srange-v3-example" % os.sep)

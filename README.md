@@ -58,7 +58,7 @@ The code is known to work on the following compilers:
 - GCC 6.5 (or later)
 - Clang/LLVM 6 (or later) on Windows (older versions may work - we haven't tested.)
 - Visual Studio 2019 (or later) on Windows, with some caveats due to range-v3's strict conformance requirements:
-  - range-v3 needs `/permissive-` and either `/std:c++latest` or `/std:c++17`
+  - range-v3 needs `/permissive-` and either `/std:c++latest`, `/std:c++20`,  or `/std:c++17`
 
 **Development Status:** This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. _In general_, no promise is made about support or long-term stability. This code *will* evolve without regard to backwards compatibility.
 
@@ -99,7 +99,7 @@ target_link_libraries(${PROJECT_NAME} CONAN_PKG::range-v3)
 Create `conanfile.txt` in your source dir:
 ```
 [requires]
-range-v3/0.10.0
+range-v3/0.12.0
 
 [generators]
 cmake
