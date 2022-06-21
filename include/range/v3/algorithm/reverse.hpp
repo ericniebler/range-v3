@@ -61,7 +61,6 @@ namespace ranges
 
         /// \brief function template \c reverse
         template(typename I, typename S)(
-            /// \pre
             requires bidirectional_iterator<I> AND sentinel_for<S, I> AND permutable<I>)
         constexpr I RANGES_FUNC(reverse)(I first, S end_)
         {
@@ -72,7 +71,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename I = iterator_t<Rng>)(
-            /// \pre
             requires bidirectional_range<Rng> AND permutable<I>)
         constexpr borrowed_iterator_t<Rng> RANGES_FUNC(reverse)(Rng && rng) //
         {

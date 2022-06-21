@@ -46,7 +46,6 @@ namespace ranges
                  typename T1,
                  typename T2,
                  typename P = identity)(
-            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
                 output_iterator<O, T2 const &> AND indirectly_copyable<I, O> AND
                 indirect_relation<equal_to, projected<I, P>, T1 const *>)
@@ -74,7 +73,6 @@ namespace ranges
                  typename T1,
                  typename T2,
                  typename P = identity)(
-            /// \pre
             requires input_range<Rng> AND output_iterator<O, T2 const &> AND
                 indirectly_copyable<iterator_t<Rng>, O> AND
                 indirect_relation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>)

@@ -114,6 +114,8 @@ namespace ranges
                       store_inner_<range_reference_t<Rng>>, pass_thru_inner_>;
 
         // clang-format off
+        /// \concept has_member_arrow_
+        /// \brief The \c has_member_arrow_ concept
         template<typename I>
         CPP_requires(has_member_arrow_,
             requires(I i) //
@@ -121,6 +123,8 @@ namespace ranges
                 i.operator->()
             ));
 
+        /// \concept has_arrow_
+        /// \brief The \c has_arrow_ concept
         template<typename I>
         CPP_concept has_arrow_ =
             input_iterator<I> &&
@@ -154,7 +158,6 @@ namespace ranges
         CPP_member
         static constexpr auto size() //
             -> CPP_ret(std::size_t)(
-                /// \pre
                 requires (detail::join_cardinality<Rng>() >= 0))
         {
             return static_cast<std::size_t>(detail::join_cardinality<Rng>());
@@ -162,7 +165,6 @@ namespace ranges
         // Not to spec
         CPP_auto_member
         constexpr auto CPP_fun(size)()(
-            /// \pre
             requires(detail::join_cardinality<Rng>() < 0) &&
                 (range_cardinality<Rng>::value >= 0) &&
                 forward_range<Rng> &&
@@ -222,7 +224,6 @@ namespace ranges
                 satisfy();
             }
             template(bool Other)(
-                /// \pre
                 requires Const AND CPP_NOT(Other) AND
                 convertible_to<iterator_t<Rng>, iterator_t<COuter>> AND
                 convertible_to<iterator_t<range_reference_t<Rng>>,
@@ -235,7 +236,6 @@ namespace ranges
             CPP_member
             constexpr auto arrow() //
                 -> CPP_ret(iterator_t<CInner>)(
-                    /// \pre
                     requires detail::has_arrow_<iterator_t<CInner>>)
             {
                 return inner_it_;
@@ -247,7 +247,6 @@ namespace ranges
             CPP_member
             constexpr auto equal(cursor const & that) const //
                 -> CPP_ret(bool)(
-                    /// \pre
                     requires ref_is_glvalue::value && //
                         equality_comparable<iterator_t<COuter>> && //
                         equality_comparable<iterator_t<CInner>>)
@@ -266,7 +265,6 @@ namespace ranges
             CPP_member
             constexpr auto prev() //
                 -> CPP_ret(void)(
-                    /// \pre
                     requires ref_is_glvalue::value && //
                         bidirectional_range<COuter> && //
                         bidirectional_range<CInner> && //
@@ -322,7 +320,6 @@ namespace ranges
         }
 
         template(bool Const = true)(
-            /// \pre
             requires Const AND input_range<meta::const_if_c<Const, Rng>> AND
                 std::is_reference<range_reference_t<meta::const_if_c<Const, Rng>>>::value)
         constexpr cursor<Const> begin_cursor() const
@@ -340,7 +337,6 @@ namespace ranges
         }
 
         template(bool Const = true)(
-            /// \pre
             requires Const AND input_range<meta::const_if_c<Const, Rng>> AND
                 std::is_reference<range_reference_t<meta::const_if_c<Const, Rng>>>::value)
         constexpr auto end_cursor() const
@@ -378,7 +374,6 @@ namespace ranges
         CPP_member
         static constexpr auto size() //
             -> CPP_ret(std::size_t)(
-                /// \pre
                 requires (detail::join_cardinality<Rng, ValRng>() >= 0))
         {
             return static_cast<std::size_t>(detail::join_cardinality<Rng, ValRng>());
@@ -509,15 +504,21 @@ namespace ranges
         // Don't forget to update views::for_each whenever this set
         // of concepts changes
         // clang-format off
+        /// \concept joinable_range_
+        /// \brief The \c joinable_range_ concept
         template(typename Rng)(
         concept (joinable_range_)(Rng),
             input_range<range_reference_t<Rng>>
         );
+        /// \concept joinable_range
+        /// \brief The \c joinable_range concept
         template<typename Rng>
         CPP_concept joinable_range =
             viewable_range<Rng> && input_range<Rng> &&
             CPP_concept_ref(views::joinable_range_, Rng);
 
+        /// \concept joinable_with_range_
+        /// \brief The \c joinable_with_range_ concept
         template(typename Rng, typename ValRng)(
         concept (joinable_with_range_)(Rng, ValRng),
             common_with<
@@ -534,6 +535,8 @@ namespace ranges
                 range_rvalue_reference_t<ValRng>,
                 range_rvalue_reference_t<range_reference_t<Rng>>>
         );
+        /// \concept joinable_with_range
+        /// \brief The \c joinable_with_range concept
         template<typename Rng, typename ValRng>
         CPP_concept joinable_with_range =
             joinable_range<Rng> &&
@@ -545,7 +548,6 @@ namespace ranges
         struct cpp20_join_fn
         {
             template(typename Rng)(
-                /// \pre
                 requires joinable_range<Rng>)
             join_view<all_t<Rng>> operator()(Rng && rng) const
             {
@@ -562,7 +564,6 @@ namespace ranges
             using cpp20_join_fn::operator();
 
             template(typename Rng)(
-                /// \pre
                 requires joinable_with_range<Rng, single_view<inner_value_t<Rng>>>)
             join_with_view<all_t<Rng>, single_view<inner_value_t<Rng>>> //
             operator()(Rng && rng, inner_value_t<Rng> v) const
@@ -571,7 +572,6 @@ namespace ranges
             }
 
             template(typename Rng, typename ValRng)(
-                /// \pre
                 requires joinable_with_range<Rng, ValRng>)
             join_with_view<all_t<Rng>, all_t<ValRng>> //
             operator()(Rng && rng, ValRng && val) const
@@ -592,14 +592,12 @@ namespace ranges
         struct join_bind_fn
         {
             template(typename T)(
-                /// \pre
                 requires (!joinable_range<T>)) // TODO: underconstrained
             constexpr auto operator()(T && t)const
             {
                 return make_view_closure(bind_back(join_base_fn{}, static_cast<T &&>(t)));
             }
             template(typename T)(
-                /// \pre
                 requires (!joinable_range<T &>) AND range<T &>)
             constexpr auto operator()(T & t) const
             {
@@ -623,13 +621,11 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Rng)(
-        /// \pre
         requires views::joinable_range<Rng>)
         explicit join_view(Rng &&)
             ->join_view<views::all_t<Rng>>;
 
     template(typename Rng, typename ValRng)(
-        /// \pre
         requires views::joinable_with_range<Rng, ValRng>)
         explicit join_with_view(Rng &&, ValRng &&)
             ->join_with_view<views::all_t<Rng>, views::all_t<ValRng>>;
@@ -643,7 +639,6 @@ namespace ranges
                 ranges::views::view_closure<ranges::views::cpp20_join_fn>, join)
         }
         template(typename Rng)(
-            /// \pre
             requires input_range<Rng> AND view_<Rng> AND
                 input_range<iter_reference_t<iterator_t<Rng>>>) //
             using join_view = ranges::join_view<Rng>;

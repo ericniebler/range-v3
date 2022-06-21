@@ -54,12 +54,16 @@ namespace ranges
         U & can_reference_(U &&);
 
         // clang-format off
+        /// \concept dereferenceable_part_
+        /// \brief The \c dereferenceable_part_ concept
         template<typename T>
         CPP_requires(dereferenceable_part_,
             requires(T && t) //
             (
                 detail::can_reference_(*(T &&) t)
             ));
+        /// \concept dereferenceable_
+        /// \brief The \c dereferenceable_ concept
         template<typename T>
         CPP_concept dereferenceable_ = //
             CPP_requires_ref(detail::dereferenceable_part_, T);
@@ -91,7 +95,6 @@ namespace ranges
     {
     private:
         template(typename, typename T1)(
-            /// \pre
             requires detail::dereferenceable_<T1>)
         static constexpr decltype(auto) coerce(T1 && t1, long)
             noexcept(noexcept(*static_cast<T1 &&>(t1)))
@@ -100,7 +103,6 @@ namespace ranges
         }
 
         template(typename T, typename T1)(
-            /// \pre
             requires derived_from<detail::decay_t<T1>, T>)
         static constexpr T1 && coerce(T1 && t1, int) noexcept
         {
@@ -108,7 +110,6 @@ namespace ranges
         }
 
         template(typename, typename T1)(
-            /// \pre
             requires detail::is_reference_wrapper_v<detail::decay_t<T1>>)
         static constexpr decltype(auto) coerce(T1 && t1, int) noexcept
         {

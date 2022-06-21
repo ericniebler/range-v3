@@ -118,7 +118,6 @@ namespace ranges
                  typename C = equal_to,
                  typename P1 = identity,
                  typename P2 = identity)(
-            /// \pre
             requires forward_iterator<I1> AND sentinel_for<S1, I1> AND
                 forward_iterator<I2> AND indirectly_comparable<I1, I2, C, P1, P2>)
         RANGES_DEPRECATED(
@@ -179,7 +178,6 @@ namespace ranges
                  typename C = equal_to,
                  typename P1 = identity,
                  typename P2 = identity)(
-            /// \pre
             requires forward_iterator<I1> AND sentinel_for<S1, I1> AND
                 forward_iterator<I2> AND sentinel_for<S2, I2> AND
                 indirectly_comparable<I1, I2, C, P1, P2>)
@@ -220,7 +218,6 @@ namespace ranges
                      typename C = equal_to,
                      typename P1 = identity,
                      typename P2 = identity)(
-            /// \pre
             requires forward_range<Rng1> AND forward_iterator<uncvref_t<I2Ref>> AND
                 indirectly_comparable<iterator_t<Rng1>, uncvref_t<I2Ref>, C, P1, P2>)
         RANGES_DEPRECATED(
@@ -249,7 +246,6 @@ namespace ranges
                      typename C = equal_to,
                      typename P1 = identity,
                      typename P2 = identity)(
-            /// \pre
             requires forward_range<Rng1> AND forward_range<Rng2> AND
                 indirectly_comparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
         constexpr bool RANGES_FUNC(is_permutation)(
@@ -282,7 +278,6 @@ namespace ranges
 
         /// \brief function template \c next_permutation
         template(typename I, typename S, typename C = less, typename P = identity)(
-            /// \pre
             requires bidirectional_iterator<I> AND sentinel_for<S, I> AND
                 sortable<I, C, P>)
         constexpr bool RANGES_FUNC(next_permutation)(I first, S end_, C pred = C{}, P proj = P{}) //
@@ -314,7 +309,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename C = less, typename P = identity)(
-            /// \pre
             requires bidirectional_range<Rng> AND sortable<iterator_t<Rng>, C, P>)
         constexpr bool RANGES_FUNC(next_permutation)(Rng && rng, C pred = C{}, P proj = P{}) //
         {
@@ -327,7 +321,6 @@ namespace ranges
 
         /// \brief function template \c prev_permutation
         template(typename I, typename S, typename C = less, typename P = identity)(
-            /// \pre
             requires bidirectional_iterator<I> AND sentinel_for<S, I> AND
                 sortable<I, C, P>)
         constexpr bool RANGES_FUNC(prev_permutation)(I first, S end_, C pred = C{}, P proj = P{}) //
@@ -359,7 +352,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename C = less, typename P = identity)(
-            /// \pre
             requires bidirectional_range<Rng> AND sortable<iterator_t<Rng>, C, P>)
         constexpr bool RANGES_FUNC(prev_permutation)(Rng && rng, C pred = C{}, P proj = P{}) //
         {

@@ -38,7 +38,6 @@ namespace ranges
 
         /// \brief function template \c max
         template(typename T, typename C = less, typename P = identity)(
-            /// \pre
             requires indirect_strict_weak_order<C, projected<T const *, P>>)
         constexpr T const & RANGES_FUNC(max)(
             T const & a, T const & b, C pred = C{}, P proj = P{}) //
@@ -48,7 +47,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename C = less, typename P = identity)(
-            /// \pre
             requires input_range<Rng> AND
             indirect_strict_weak_order<C, projected<iterator_t<Rng>, P>> AND
             indirectly_copyable_storable<iterator_t<Rng>, range_value_t<Rng> *>)
@@ -70,7 +68,6 @@ namespace ranges
 
         /// \overload
         template(typename T, typename C = less, typename P = identity)(
-            /// \pre
             requires copyable<T> AND
                 indirect_strict_weak_order<C, projected<T const *, P>>)
         constexpr T RANGES_FUNC(max)(

@@ -35,6 +35,8 @@ namespace ranges
     /// \addtogroup group-numerics
     /// @{
     // clang-format off
+    /// \concept inner_product_constraints_
+    /// \brief The \c inner_product_constraints_ concept
     template(typename I1, typename I2, typename T, typename BOp1, typename BOp2,
         typename P1, typename P2)(
     concept (inner_product_constraints_)(I1, I2, T, BOp1, BOp2, P1, P2),
@@ -61,6 +63,8 @@ namespace ranges
                     invoke_result_t<P1&, iter_value_t<I1>>,
                     invoke_result_t<P2&, iter_value_t<I2>>>>>
     );
+    /// \concept inner_product_constraints
+    /// \brief The \c inner_product_constraints concept
     template<typename I1, typename I2, typename T, typename BOp1 = plus,
         typename BOp2 = multiplies, typename P1 = identity, typename P2 = identity>
     CPP_concept inner_product_constraints =
@@ -74,7 +78,6 @@ namespace ranges
         template(typename I1, typename S1, typename I2, typename S2, typename T,
                  typename BOp1 = plus, typename BOp2 = multiplies, typename P1 = identity,
                  typename P2 = identity)(
-            /// \pre
             requires sentinel_for<S1, I1> AND sentinel_for<S2, I2> AND
                 inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
         T operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, T init,
@@ -92,7 +95,6 @@ namespace ranges
         template(typename I1, typename S1, typename I2, typename T, typename BOp1 = plus,
                  typename BOp2 = multiplies, typename P1 = identity,
                  typename P2 = identity)(
-            /// \pre
             requires sentinel_for<S1, I1> AND
                 inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
         T operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
@@ -113,7 +115,6 @@ namespace ranges
                  typename BOp2 = multiplies, typename P1 = identity,
                  typename P2 = identity, typename I1 = iterator_t<Rng1>,
                  typename I2 = uncvref_t<I2Ref>)(
-            /// \pre
             requires range<Rng1> AND
                 inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
         T operator()(Rng1 && rng1, I2Ref && begin2, T init, BOp1 bop1 = BOp1{},
@@ -133,7 +134,6 @@ namespace ranges
                  typename BOp2 = multiplies, typename P1 = identity,
                  typename P2 = identity, typename I1 = iterator_t<Rng1>,
                  typename I2 = iterator_t<Rng2>)(
-            /// \pre
             requires range<Rng1> AND range<Rng2> AND
                 inner_product_constraints<I1, I2, T, BOp1, BOp2, P1, P2>)
         T operator()(Rng1 && rng1, Rng2 && rng2, T init, BOp1 bop1 = BOp1{},

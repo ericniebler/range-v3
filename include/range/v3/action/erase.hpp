@@ -29,7 +29,6 @@ namespace ranges
     namespace adl_erase_detail
     {
         template(typename Cont, typename I, typename S)(
-            /// \pre
             requires lvalue_container_like<Cont> AND forward_iterator<I> AND
                 sentinel_for<S, I>)
         auto erase(Cont && cont, I first, S last)                            //
@@ -41,7 +40,6 @@ namespace ranges
         struct erase_fn
         {
             template(typename Rng, typename I, typename S)(
-                /// \pre
                 requires range<Rng> AND forward_iterator<I> AND sentinel_for<S, I>)
             auto operator()(Rng && rng, I first, S last) const
                 -> decltype(erase((Rng &&) rng, first, last))
@@ -63,6 +61,8 @@ namespace ranges
     /// \addtogroup group-range
     /// @{
     // clang-format off
+    /// \concept erasable_range_
+    /// \brief The \c erasable_range_ concept
     template<typename Rng, typename I, typename S>
     CPP_requires(erasable_range_,
         requires(Rng && rng, I first, S last)
@@ -70,6 +70,8 @@ namespace ranges
             ranges::erase((Rng &&) rng, first, last)
         )
     );
+    /// \concept erasable_range
+    /// \brief The \c erasable_range concept
     template<typename Rng, typename I, typename S>
     CPP_concept erasable_range =
         range<Rng> && CPP_requires_ref(ranges::erasable_range_, Rng, I, S);

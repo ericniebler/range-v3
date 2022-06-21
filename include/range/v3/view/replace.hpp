@@ -89,7 +89,6 @@ namespace ranges
         struct replace_base_fn
         {
             template(typename Rng, typename Val1, typename Val2)(
-                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng> AND
                     same_as<
                         detail::decay_t<unwrap_reference_t<Val1>>,
@@ -122,7 +121,6 @@ namespace ranges
             using replace_base_fn::operator();
 
             template(typename Val1, typename Val2)(
-                /// \pre
                 requires same_as<detail::decay_t<unwrap_reference_t<Val1>>,
                                  detail::decay_t<unwrap_reference_t<Val2>>>)
             constexpr auto operator()(Val1 old_value, Val2 new_value) const

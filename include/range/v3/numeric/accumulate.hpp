@@ -35,7 +35,6 @@ namespace ranges
     {
         template(typename I, typename S, typename T, typename Op = plus,
                  typename P = identity)(
-            /// \pre
             requires sentinel_for<S, I> AND input_iterator<I> AND
                 indirectly_binary_invocable_<Op, T *, projected<I, P>> AND
                 assignable_from<T &, indirect_result_t<Op &, T *, projected<I, P>>>)
@@ -48,7 +47,6 @@ namespace ranges
         }
 
         template(typename Rng, typename T, typename Op = plus, typename P = identity)(
-            /// \pre
             requires input_range<Rng> AND
                 indirectly_binary_invocable_<Op, T *, projected<iterator_t<Rng>, P>> AND
                 assignable_from<

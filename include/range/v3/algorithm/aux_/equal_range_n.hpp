@@ -39,7 +39,6 @@ namespace ranges
         struct equal_range_n_fn
         {
             template(typename I, typename V, typename R = less, typename P = identity)(
-                /// \pre
                 requires forward_iterator<I> AND
                     indirect_strict_weak_order<R, V const *, projected<I, P>>)
             constexpr subrange<I> operator()(I first,

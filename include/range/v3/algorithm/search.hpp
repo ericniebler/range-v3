@@ -165,7 +165,6 @@ namespace ranges
                  typename C = equal_to,
                  typename P1 = identity,
                  typename P2 = identity)(
-            /// \pre
             requires forward_iterator<I1> AND sentinel_for<S1, I1> AND
                 forward_iterator<I2> AND sentinel_for<S2, I2> AND
                 indirectly_comparable<I1, I2, C, P1, P2>)
@@ -206,7 +205,6 @@ namespace ranges
                  typename C = equal_to,
                  typename P1 = identity,
                  typename P2 = identity)(
-            /// \pre
             requires forward_range<Rng1> AND forward_range<Rng2> AND
                 indirectly_comparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
         constexpr borrowed_subrange_t<Rng1> RANGES_FUNC(search)(

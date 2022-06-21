@@ -37,7 +37,6 @@ namespace ranges
         struct adjacent_remove_if_fn
         {
             template(typename Pred, typename Proj = identity)(
-                /// \pre
                 requires (!range<Pred>))
             constexpr auto operator()(Pred pred, Proj proj = {}) const
             {
@@ -46,7 +45,6 @@ namespace ranges
             }
 
             template(typename Rng, typename Pred, typename Proj = identity)(
-                /// \pre
                 requires forward_range<Rng> AND
                     erasable_range<Rng, iterator_t<Rng>, sentinel_t<Rng>> AND
                     indirect_relation<Pred, projected<iterator_t<Rng>, Proj>> AND

@@ -43,6 +43,8 @@ namespace ranges
     namespace detail
     {
         // clang-format off
+        /// \concept partial_sum_view_constraints_
+        /// \brief The \c partial_sum_view_constraints_ concept
         template(typename Rng, typename Fun)(
         concept (partial_sum_view_constraints_)(Rng, Fun),
             copy_constructible<range_value_t<Rng>> AND
@@ -53,6 +55,8 @@ namespace ranges
                 range_value_t<Rng> &,
                 indirect_result_t<Fun &, iterator_t<Rng>, iterator_t<Rng>>>
         );
+        /// \concept partial_sum_view_constraints
+        /// \brief The \c partial_sum_view_constraints concept
         template<typename Rng, typename Fun>
         CPP_concept partial_sum_view_constraints =
             input_range<Rng> &&
@@ -101,7 +105,6 @@ namespace ranges
                     sum_ = *current_;
             }
             template(bool Other)(
-                /// \pre
                 requires IsConst AND CPP_NOT(Other) AND
                 convertible_to<iterator_t<Rng> const &,
                                iterator_t<Base>>)
@@ -145,7 +148,6 @@ namespace ranges
             return cursor<false>{this};
         }
         template(typename CRng = Rng const)(
-            /// \pre
             requires detail::partial_sum_view_constraints<CRng, Fun const>)
         constexpr cursor<true> begin_cursor() const
         {
@@ -162,7 +164,6 @@ namespace ranges
         {}
         CPP_auto_member
         constexpr auto CPP_fun(size)()(
-            /// \pre
             requires sized_range<Rng>)
         {
             return ranges::size(base_);
@@ -177,7 +178,6 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Rng, typename Fun)(
-        /// \pre
         requires copy_constructible<Fun>)
     partial_sum_view(Rng &&, Fun)
         -> partial_sum_view<views::all_t<Rng>, Fun>;
@@ -188,7 +188,6 @@ namespace ranges
         struct partial_sum_base_fn
         {
             template(typename Rng, typename Fun = plus)(
-                /// \pre
                 requires detail::partial_sum_view_constraints<all_t<Rng>, Fun>)
             constexpr partial_sum_view<all_t<Rng>, Fun> //
             operator()(Rng && rng, Fun fun = {}) const
@@ -202,7 +201,6 @@ namespace ranges
             using partial_sum_base_fn::operator();
 
             template(typename Fun)(
-                /// \pre
                 requires (!range<Fun>))
             constexpr auto operator()(Fun && fun) const
             {

@@ -48,7 +48,6 @@ namespace ranges
         /// \pre `C` is a model of the `relation` concept
         ///
         template(typename I, typename S, typename C = equal_to, typename P = identity)(
-            /// \pre
             requires sortable<I, C, P> AND sentinel_for<S, I>)
         constexpr I RANGES_FUNC(unique)(I first, S last, C pred = C{}, P proj = P{})
         {
@@ -66,7 +65,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename C = equal_to, typename P = identity)(
-            /// \pre
             requires sortable<iterator_t<Rng>, C, P> AND range<Rng>)
         constexpr borrowed_iterator_t<Rng> //
         RANGES_FUNC(unique)(Rng && rng, C pred = C{}, P proj = P{}) //

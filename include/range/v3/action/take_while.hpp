@@ -35,7 +35,6 @@ namespace ranges
         struct take_while_fn
         {
             template(typename Fun)(
-                /// \pre
                 requires (!range<Fun>))
             constexpr auto operator()(Fun fun) const
             {
@@ -43,7 +42,6 @@ namespace ranges
             }
 
             template(typename Rng, typename Fun)(
-                /// \pre
                 requires forward_range<Rng> AND
                     erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> AND
                     indirect_unary_predicate<Fun, iterator_t<Rng>>)

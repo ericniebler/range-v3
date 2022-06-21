@@ -30,7 +30,6 @@ namespace ranges
         struct partition_point_n_fn
         {
             template(typename I, typename C, typename P = identity)(
-                /// \pre
                 requires forward_iterator<I> AND
                         indirect_unary_predicate<C, projected<I, P>>)
             constexpr I operator()(I first,

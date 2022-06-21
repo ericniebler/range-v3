@@ -43,7 +43,6 @@ namespace ranges
         }
 
         template(typename T)(
-            /// \pre
             requires move_constructible<T>)
         constexpr T get_first_second_helper(T & t, std::false_type) //
             noexcept(std::is_nothrow_move_constructible<T>::value)
@@ -82,6 +81,8 @@ namespace ranges
         };
 
         // clang-format off
+        /// \concept kv_pair_like_
+        /// \brief The \c kv_pair_like_ concept
         template<typename T>
         CPP_concept kv_pair_like_ =
             invocable<get_first const &, T> &&
@@ -97,7 +98,6 @@ namespace ranges
         struct keys_fn
         {
             template(typename Rng)(
-                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng> AND
                     detail::kv_pair_like_<range_reference_t<Rng>>)
             keys_range_view<all_t<Rng>> operator()(Rng && rng) const
@@ -109,7 +109,6 @@ namespace ranges
         struct values_fn
         {
             template(typename Rng)(
-                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng> AND
                     detail::kv_pair_like_<range_reference_t<Rng>>)
             values_view<all_t<Rng>> operator()(Rng && rng) const

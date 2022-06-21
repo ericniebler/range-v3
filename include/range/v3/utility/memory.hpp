@@ -89,7 +89,6 @@ namespace ranges
         };
 
         template(typename T, typename... Args)(
-            /// \pre
             requires (!std::is_array<T>::value)) //
         std::unique_ptr<T> make_unique(Args &&... args)
         {
@@ -121,7 +120,6 @@ namespace ranges
         CPP_member
         auto operator=(Val const & val) //
             -> CPP_ret(raw_storage_iterator &)(
-                /// \pre
                 requires copy_constructible<Val>)
         {
             ::new((void *)std::addressof(*out_)) Val(val);
@@ -130,7 +128,6 @@ namespace ranges
         CPP_member
         auto operator=(Val && val) //
             -> CPP_ret(raw_storage_iterator &)(
-                /// \pre
                 requires move_constructible<Val>)
         {
             ::new((void *)std::addressof(*out_)) Val(std::move(val));
@@ -144,7 +141,6 @@ namespace ranges
         CPP_member
         auto operator++(int) //
             -> CPP_ret(void)(
-                /// \pre
                 requires (!forward_iterator<O>))
         {
             ++out_;
@@ -152,7 +148,6 @@ namespace ranges
         CPP_member
         auto operator++(int) //
             -> CPP_ret(raw_storage_iterator)(
-                /// \pre
                 requires forward_iterator<O>)
         {
             auto tmp = *this;
@@ -212,7 +207,6 @@ namespace ranges
     };
 
     template(typename I)(
-        /// \pre
         requires input_or_output_iterator<I>)
     iterator_wrapper<I> iter_ref(I & i)
     {

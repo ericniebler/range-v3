@@ -35,7 +35,6 @@ namespace ranges
         struct reverse_fn
         {
             template(typename Rng)(
-                /// \pre
                 requires bidirectional_range<Rng> AND permutable<iterator_t<Rng>>)
             Rng operator()(Rng && rng) const
             {

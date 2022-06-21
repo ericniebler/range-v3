@@ -35,7 +35,6 @@ namespace ranges
         struct stride_fn
         {
             template(typename D)(
-                /// \pre
                 requires detail::integer_like_<D>)
             constexpr auto operator()(D step) const
             {
@@ -43,7 +42,6 @@ namespace ranges
             }
 
             template(typename Rng, typename D = range_difference_t<Rng>)(
-                /// \pre
                 requires forward_range<Rng> AND
                     erasable_range<Rng &, iterator_t<Rng>, sentinel_t<Rng>> AND
                     permutable<iterator_t<Rng>>)

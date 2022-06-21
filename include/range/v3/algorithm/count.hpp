@@ -36,7 +36,6 @@ namespace ranges
 
         /// \brief function template \c count
         template(typename I, typename S, typename V, typename P = identity)(
-            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
             indirect_relation<equal_to, projected<I, P>, V const *>)
         constexpr iter_difference_t<I> //
@@ -51,7 +50,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename V, typename P = identity)(
-            /// \pre
             requires input_range<Rng> AND
             indirect_relation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
         constexpr iter_difference_t<iterator_t<Rng>> //

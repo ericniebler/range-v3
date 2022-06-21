@@ -123,7 +123,6 @@ namespace ranges
     public:
         any() noexcept = default;
         template(typename TRef, typename T = detail::decay_t<TRef>)(
-            /// \pre
             requires copyable<T> AND (!same_as<T, any>)) //
         any(TRef && t)
           : ptr_(new impl<T>(static_cast<TRef &&>(t)))
@@ -139,7 +138,6 @@ namespace ranges
             return *this;
         }
         template(typename TRef, typename T = detail::decay_t<TRef>)(
-            /// \pre
             requires copyable<T> AND (!same_as<T, any>)) //
         any & operator=(TRef && t)
         {

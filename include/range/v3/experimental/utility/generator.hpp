@@ -211,7 +211,6 @@ namespace ranges
                 RANGES_EXPECT(except_);
             }
             template(typename Arg)(
-                /// \pre
                 requires convertible_to<Arg, Reference> AND
                         std::is_assignable<semiregular_box_t<Reference> &, Arg>::value) //
             RANGES_COROUTINES_NS::suspend_always yield_value(Arg && arg) noexcept(

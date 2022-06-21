@@ -44,7 +44,6 @@ namespace ranges
         struct join_fn
         {
             template(typename Rng)(
-                /// \pre
                 requires input_range<Rng> AND input_range<range_value_t<Rng>> AND
                     semiregular<join_action_value_t_<Rng>>)
             join_action_value_t_<Rng> operator()(Rng && rng) const

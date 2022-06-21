@@ -29,7 +29,6 @@ namespace ranges
     struct iota_fn
     {
         template(typename O, typename S, typename T)(
-            /// \pre
             requires output_iterator<O, T const &> AND sentinel_for<S, O> AND
                 weakly_incrementable<T>)
         O operator()(O first, S last, T val) const
@@ -40,7 +39,6 @@ namespace ranges
         }
 
         template(typename Rng, typename T)(
-            /// \pre
             requires output_range<Rng, T const &> AND weakly_incrementable<T>)
         borrowed_iterator_t<Rng> operator()(Rng && rng, T val) const //
         {

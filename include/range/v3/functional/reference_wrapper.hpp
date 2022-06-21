@@ -84,7 +84,6 @@ namespace ranges
 
         constexpr reference_wrapper() = default;
         template(typename U)(
-            /// \pre
             requires (!same_as<uncvref_t<U>, reference_wrapper>) AND
                 constructible_from<base_, U>)
         constexpr reference_wrapper(U && u) noexcept(
@@ -100,7 +99,6 @@ namespace ranges
             return get();
         }
         template(typename...)(
-            /// \pre
             requires (!std::is_rvalue_reference<T>::value)) //
         constexpr operator std::reference_wrapper<type>() const noexcept
         {
@@ -118,7 +116,6 @@ namespace ranges
     struct ref_fn
     {
         template(typename T)(
-            /// \pre
             requires (!is_reference_wrapper_v<T>)) //
         constexpr reference_wrapper<T> operator()(T & t) const
         {

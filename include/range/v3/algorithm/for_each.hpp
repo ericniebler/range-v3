@@ -41,7 +41,6 @@ namespace ranges
 
         /// \brief function template \c for_each
         template(typename I, typename S, typename F, typename P = identity)(
-            /// \pre
             requires input_iterator<I> AND sentinel_for<S, I> AND
             indirectly_unary_invocable<F, projected<I, P>>)
         constexpr for_each_result<I, F> RANGES_FUNC(for_each)(I first, S last, F fun, P proj = P{})
@@ -55,7 +54,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename F, typename P = identity)(
-            /// \pre
             requires input_range<Rng> AND
             indirectly_unary_invocable<F, projected<iterator_t<Rng>, P>>)
         constexpr for_each_result<borrowed_iterator_t<Rng>, F> //

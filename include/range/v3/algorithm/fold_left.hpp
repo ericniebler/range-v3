@@ -26,6 +26,8 @@
 namespace ranges
 {
     // clang-format off
+    /// \concept indirectly_binary_left_foldable_impl
+    /// \brief The \c indirectly_binary_left_foldable_impl concept
     template<class F, class T, class I, class U>
     CPP_concept indirectly_binary_left_foldable_impl =
         movable<T> &&
@@ -34,7 +36,9 @@ namespace ranges
         invocable<F&, U, iter_reference_t<I>> &&
         assignable_from<U&, invoke_result_t<F&, U, iter_reference_t<I>>>;
 
-    template <class F, class T, class I>
+    /// \concept indirectly_binary_left_foldable
+    /// \brief The \c indirectly_binary_left_foldable concept
+    template<class F, class T, class I>
     CPP_concept indirectly_binary_left_foldable =
         copy_constructible<F> &&
         indirectly_readable<I> &&
@@ -46,14 +50,13 @@ namespace ranges
 
     /// \addtogroup group-algorithms
     /// @{
-    struct fold_left_fn
-    {
+    RANGES_FUNC_BEGIN(fold_left)
+
         template(typename I, typename S, typename T, typename Op)(
-            /// \pre
             requires sentinel_for<S, I> AND input_iterator<I> AND
                 indirectly_binary_left_foldable<Op, T, I>) //
             constexpr auto
-            operator()(I first, S last, T init, Op op) const
+            RANGES_FUNC(fold_left)(I first, S last, T init, Op op)
         {
             using U = std::decay_t<invoke_result_t<Op &, T, iter_reference_t<I>>>;
 
@@ -71,25 +74,24 @@ namespace ranges
         }
 
         template(typename Rng, typename T, typename Op)(
-            /// \pre
             requires input_range<Rng> AND
                 indirectly_binary_left_foldable<Op, T, iterator_t<Rng>>) //
             constexpr auto
-            operator()(Rng && rng, T init, Op op) const
+            RANGES_FUNC(fold_left)(Rng && rng, T init, Op op)
         {
             return (*this)(begin(rng), end(rng), std::move(init), std::move(op));
         }
-    };
 
-    struct fold_left_first_fn
-    {
+    RANGES_FUNC_END(fold_left)
+
+    RANGES_FUNC_BEGIN(fold_left_first)
+
         template(typename I, typename S, typename Op)(
-            /// \pre
             requires sentinel_for<S, I> AND input_iterator<I> AND
                 indirectly_binary_left_foldable<Op, iter_value_t<I>, I>
                     AND constructible_from<iter_value_t<I>, iter_reference_t<I>>) //
             constexpr auto
-            operator()(I first, S last, Op op) const
+            RANGES_FUNC(fold_left_first)(I first, S last, Op op)
         {
             using U = invoke_result_t<fold_left_fn, I, S, iter_value_t<I>, Op>;
             if(first == last)
@@ -105,19 +107,16 @@ namespace ranges
         }
 
         template(typename R, typename Op)(
-            /// \pre
             requires input_range<R> AND
                 indirectly_binary_left_foldable<Op, range_value_t<R>, iterator_t<R>>
                     AND constructible_from<range_value_t<R>, range_reference_t<R>>) //
             constexpr auto
-            operator()(R && rng, Op op) const
+            RANGES_FUNC(fold_left_first)(R && rng, Op op)
         {
             return (*this)(begin(rng), end(rng), std::move(op));
         }
-    };
 
-    RANGES_INLINE_VARIABLE(fold_left_fn, fold_left)
-    RANGES_INLINE_VARIABLE(fold_left_first_fn, fold_left_first)
+    RANGES_FUNC_END(fold_left_first)
     /// @}
 } // namespace ranges
 

@@ -127,7 +127,6 @@ namespace ranges
               , end_(ranges::end(cv->base()))
             {}
             template(bool Other)(
-                /// \pre
                 requires Const AND CPP_NOT(Other)) //
             constexpr adaptor(adaptor<Other> that)
               : box<offset_t<Const>>(that.offset())
@@ -150,7 +149,6 @@ namespace ranges
             CPP_member
             constexpr auto prev(iterator_t<CRng> & it) //
                 -> CPP_ret(void)(
-                    /// \pre
                     requires bidirectional_range<CRng>)
             {
                 ranges::advance(it, -n_ + offset());
@@ -161,7 +159,6 @@ namespace ranges
                                        iterator_t<CRng> const & there,
                                        adaptor const & that) const
                 -> CPP_ret(range_difference_t<Rng>)(
-                    /// \pre
                     requires (detail::can_sized_sentinel_<Rng, Const>()))
             {
                 auto const delta = (there - here) + (that.offset() - offset());
@@ -174,7 +171,6 @@ namespace ranges
             CPP_member
             constexpr auto advance(iterator_t<CRng> & it, range_difference_t<Rng> n) //
                 -> CPP_ret(void)(
-                    /// \pre
                     requires random_access_range<CRng>)
             {
                 using Limits = std::numeric_limits<range_difference_t<CRng>>;
@@ -202,7 +198,6 @@ namespace ranges
         CPP_member
         constexpr auto begin_adaptor() const //
             -> CPP_ret(adaptor<true>)(
-                /// \pre
                 requires forward_range<Rng const>)
         {
             return adaptor<true>{this};
@@ -222,14 +217,12 @@ namespace ranges
         {}
         CPP_auto_member
         constexpr auto CPP_fun(size)()(const
-            /// \pre
             requires sized_range<Rng const>)
         {
             return size_(ranges::size(this->base()));
         }
         CPP_auto_member
         constexpr auto CPP_fun(size)()(
-            /// \pre
             requires sized_range<Rng>)
         {
             return size_(ranges::size(this->base()));
@@ -303,7 +296,6 @@ namespace ranges
                 CPP_member
                 constexpr auto distance_to(default_sentinel_t) const
                     -> CPP_ret(range_difference_t<Rng>)(
-                        /// \pre
                         requires sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>>)
                 {
                     RANGES_EXPECT(rng_);
@@ -318,7 +310,6 @@ namespace ranges
                 {}
                 CPP_auto_member
                 constexpr auto CPP_fun(size)()(
-                    /// \pre
                     requires sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>>)
                 {
                     using size_type = detail::iter_size_t<iterator_t<Rng>>;
@@ -358,7 +349,6 @@ namespace ranges
             CPP_member
             constexpr auto distance_to(default_sentinel_t) const
                 -> CPP_ret(range_difference_t<Rng>)(
-                    /// \pre
                     requires sized_sentinel_for<sentinel_t<Rng>, iterator_t<Rng>>)
             {
                 RANGES_EXPECT(rng_);
@@ -395,14 +385,12 @@ namespace ranges
         {}
         CPP_auto_member
         constexpr auto CPP_fun(size)()(const
-            /// \pre
             requires sized_range<Rng const>)
         {
             return size_(ranges::size(base_));
         }
         CPP_auto_member
         constexpr auto CPP_fun(size)()(
-            /// \pre
             requires sized_range<Rng>)
         {
             return size_(ranges::size(base_));
@@ -441,7 +429,6 @@ namespace ranges
         struct chunk_base_fn
         {
             template(typename Rng)(
-                /// \pre
                 requires viewable_range<Rng> AND input_range<Rng>)
             constexpr chunk_view<all_t<Rng>> //
             operator()(Rng && rng, range_difference_t<Rng> n) const
@@ -455,7 +442,6 @@ namespace ranges
             using chunk_base_fn::operator();
 
             template(typename Int)(
-                /// \pre
                 requires detail::integer_like_<Int>)
             constexpr auto operator()(Int n) const
             {

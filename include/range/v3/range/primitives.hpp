@@ -43,22 +43,30 @@ namespace ranges
 #endif
 
         // clang-format off
+        /// \concept has_member_size_
+        /// \brief The \c has_member_size_ concept
         template<typename T>
         CPP_requires(has_member_size_,
             requires(T && t) //
             (
                 ((T &&) t).size()
             ));
+        /// \concept has_member_size
+        /// \brief The \c has_member_size concept
         template<typename T>
         CPP_concept has_member_size =
             CPP_requires_ref(_size_::has_member_size_, T);
 
+        /// \concept has_non_member_size_
+        /// \brief The \c has_non_member_size_ concept
         template<typename T>
         CPP_requires(has_non_member_size_,
             requires(T && t) //
             (
                 size((T &&) t)
             ));
+        /// \concept has_non_member_size
+        /// \brief The \c has_non_member_size concept
         template<typename T>
         CPP_concept has_non_member_size =
             CPP_requires_ref(_size_::has_non_member_size_, T);
@@ -118,7 +126,6 @@ namespace ranges
 
             // Prefer member if it returns integral.
             template(typename R)(
-                /// \pre
                 requires (!disable_sized_range<uncvref_t<R>>) AND
                     has_member_size<R> AND detail::integer_like_<_result_t<R>>)
             constexpr _result_t<R> operator()(R && r) const
@@ -129,7 +136,6 @@ namespace ranges
 
             // Use ADL if it returns integral.
             template(typename R)(
-                /// \pre
                 requires (!disable_sized_range<uncvref_t<R>>) AND
                     (!has_member_size<R>) AND has_non_member_size<R> AND
                     detail::integer_like_<_result_t<R>>)
@@ -140,7 +146,6 @@ namespace ranges
             }
 
             template(typename R)(
-                /// \pre
                 requires (!has_member_size<R> || disable_sized_range<uncvref_t<R>>) AND
                     (!has_non_member_size<R> || disable_sized_range<uncvref_t<R>>) AND
                     forward_iterator<_begin_::_t<R>> AND
@@ -185,12 +190,16 @@ namespace ranges
     namespace _data_
     {
         // clang-format off
+        /// \concept has_member_data_
+        /// \brief The \c has_member_data_ concept
         template<typename T>
         CPP_requires(has_member_data_,
             requires(T & t) //
             (
                 t.data()
             ));
+        /// \concept has_member_data
+        /// \brief The \c has_member_data concept
         template<typename T>
         CPP_concept has_member_data =
             CPP_requires_ref(_data_::has_member_data_, T);
@@ -237,7 +246,6 @@ namespace ranges
 
         public:
             template(typename R)(
-                /// \pre
                 requires has_member_data<R &> AND
                     std::is_pointer<_result_t<R &>>::value)
             constexpr _result_t<R &> operator()(R & r) const //
@@ -246,7 +254,6 @@ namespace ranges
                 return r.data();
             }
             template(typename R)(
-                /// \pre
                 requires (!has_member_data<R &>) AND
                     std::is_pointer<_begin_::_t<R>>::value)
             constexpr _result_t<R> operator()(R && r) const //
@@ -255,7 +262,6 @@ namespace ranges
                 return ranges::begin((R &&) r);
             }
             template(typename R)(
-                /// \pre
                 requires (!has_member_data<R &>) AND
                     (!std::is_pointer<_begin_::_t<R>>::value) AND
                     contiguous_iterator<_begin_::_t<R>>)
@@ -319,22 +325,30 @@ namespace ranges
     namespace _empty_
     {
         // clang-format off
+        /// \concept has_member_empty_
+        /// \brief The \c has_member_empty_ concept
         template<typename T>
         CPP_requires(has_member_empty_,
             requires(T && t) //
             (
                 bool(((T &&) t).empty())
             ));
+        /// \concept has_member_empty
+        /// \brief The \c has_member_empty concept
         template<typename T>
         CPP_concept has_member_empty =
             CPP_requires_ref(_empty_::has_member_empty_, T);
 
+        /// \concept has_size_
+        /// \brief The \c has_size_ concept
         template<typename T>
         CPP_requires(has_size_,
             requires(T && t) //
             (
                 ranges::size((T &&) t)
             ));
+        /// \concept has_size
+        /// \brief The \c has_size concept
         template<typename T>
         CPP_concept has_size =
             CPP_requires_ref(_empty_::has_size_, T);
@@ -344,7 +358,6 @@ namespace ranges
         {
             // Prefer member if it is valid.
             template(typename R)(
-                /// \pre
                 requires has_member_empty<R>)
             constexpr bool operator()(R && r) const
                 noexcept(noexcept(bool(((R &&) r).empty())))
@@ -354,7 +367,6 @@ namespace ranges
 
             // Fall back to size == 0.
             template(typename R)(
-                /// \pre
                 requires (!has_member_empty<R>) AND has_size<R>)
             constexpr bool operator()(R && r) const
                 noexcept(noexcept(bool(ranges::size((R &&) r) == 0)))
@@ -364,7 +376,6 @@ namespace ranges
 
             // Fall further back to begin == end.
             template(typename R)(
-                /// \pre
                 requires (!has_member_empty<R>) AND (!has_size<R>) AND
                     forward_iterator<_begin_::_t<R>>)
             constexpr bool operator()(R && r) const

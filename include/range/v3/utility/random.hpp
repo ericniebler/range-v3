@@ -76,6 +76,8 @@ namespace ranges
     /// \addtogroup group-numerics
     /// @{
     // clang-format off
+    /// \concept uniform_random_bit_generator_
+    /// \brief The \c uniform_random_bit_generator_ concept
     template<typename Gen>
     CPP_requires(uniform_random_bit_generator_,
         requires() //
@@ -83,12 +85,16 @@ namespace ranges
             Gen::min(),
             Gen::max()
         ));
+    /// \concept uniform_random_bit_generator_
+    /// \brief The \c uniform_random_bit_generator_ concept
     template(typename Gen)(
     concept (uniform_random_bit_generator_)(Gen),
         unsigned_integral<invoke_result_t<Gen &>> AND
         same_as<invoke_result_t<Gen &>, decltype(Gen::min())> AND
         same_as<invoke_result_t<Gen &>, decltype(Gen::max())>);
 
+    /// \concept uniform_random_bit_generator
+    /// \brief The \c uniform_random_bit_generator concept
     template<typename Gen>
     CPP_concept uniform_random_bit_generator =
         invocable<Gen &> &&
@@ -119,7 +125,6 @@ namespace ranges
             }
 
             template(typename I)(
-                /// \pre
                 requires unsigned_integral<I>)
             constexpr I fast_exp(I x, I power, I result = I{1})
             {
@@ -220,7 +225,6 @@ namespace ranges
                 std::array<IntRep, count> mixer_;
 
                 template(typename I, typename S)(
-                    /// \pre
                     requires input_iterator<I> AND sentinel_for<S, I> AND
                         convertible_to<iter_reference_t<I>, IntRep>)
                 void mix_entropy(I first, S last)
@@ -263,7 +267,6 @@ namespace ranges
                 void operator=(const seed_seq_fe &) = delete;
 
                 template(typename T)(
-                    /// \pre
                     requires convertible_to<T const &, IntRep>)
                 seed_seq_fe(std::initializer_list<T> init)
                 {
@@ -271,7 +274,6 @@ namespace ranges
                 }
 
                 template(typename I, typename S)(
-                    /// \pre
                     requires input_iterator<I> AND sentinel_for<S, I> AND
                         convertible_to<iter_reference_t<I>, IntRep>)
                 seed_seq_fe(I first, S last)
@@ -281,7 +283,6 @@ namespace ranges
 
                 // generating functions
                 template(typename I, typename S)(
-                    /// \pre
                     requires random_access_iterator<I> AND sentinel_for<S, I>)
                 RANGES_INTENDED_MODULAR_ARITHMETIC //
                 void generate(I first, S const last) const
@@ -309,7 +310,6 @@ namespace ranges
                 }
 
                 template(typename O)(
-                    /// \pre
                     requires weakly_incrementable<O> AND
                         indirectly_copyable<decltype(mixer_.begin()), O>)
                 RANGES_INTENDED_MODULAR_ARITHMETIC void param(O dest) const
@@ -359,7 +359,6 @@ namespace ranges
                 }
 
                 template(typename I, typename S)(
-                    /// \pre
                     requires input_iterator<I> AND sentinel_for<S, I> AND
                         convertible_to<iter_reference_t<I>, IntRep>)
                 void seed(I first, S last)

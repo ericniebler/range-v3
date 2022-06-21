@@ -66,7 +66,6 @@ namespace ranges
 
         public:
             template(typename T)(
-                /// \pre
                 requires range<T &> AND viewable_range<T>)
             constexpr auto operator()(T && t) const
             {
@@ -114,7 +113,6 @@ namespace ranges
             using ranges::views::all_t;
         }
         template(typename Rng)(
-            /// \pre
             requires viewable_range<Rng>)
         using all_view RANGES_DEPRECATED(
             "Please use ranges::cpp20::views::all_t instead.") =

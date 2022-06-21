@@ -69,7 +69,6 @@ namespace ranges
             return {ranges::begin(rng), ranges::end(rng), rex_, subs_, flags_};
         }
         template(bool Const = true)(
-            /// \pre
             requires range<Rng const>)
         iterator_t<Const> begin() const
         {
@@ -80,7 +79,6 @@ namespace ranges
             return {};
         }
         template(bool Const = true)(
-            /// \pre
             requires range<Rng const>)
         iterator_t<Const> end() const
         {
@@ -94,7 +92,6 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Rng, typename Regex, typename SubMatchRange)(
-        /// \pre
         requires copy_constructible<Regex> AND copy_constructible<SubMatchRange>)
         tokenize_view(Rng &&, Regex, SubMatchRange)
             ->tokenize_view<views::all_t<Rng>, Regex, SubMatchRange>;
@@ -105,7 +102,6 @@ namespace ranges
         struct tokenize_base_fn
         {
             template(typename Rng, typename Regex)(
-                /// \pre
                 requires bidirectional_range<Rng> AND common_range<Rng> AND
                     same_as< //
                         range_value_t<Rng>, //
@@ -124,7 +120,6 @@ namespace ranges
             }
 
             template(typename Rng, typename Regex)(
-                /// \pre
                 requires bidirectional_range<Rng> AND common_range<Rng> AND
                     same_as<range_value_t<Rng>,
                             typename detail::decay_t<Regex>::value_type>)
@@ -142,7 +137,6 @@ namespace ranges
             }
 
             template(typename Rng, typename Regex)(
-                /// \pre
                 requires bidirectional_range<Rng> AND common_range<Rng> AND
                     same_as<range_value_t<Rng>,
                             typename detail::decay_t<Regex>::value_type>)

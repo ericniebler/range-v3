@@ -3,7 +3,7 @@
 #=============================================================================
 if (NOT DOXYGEN_FOUND)
     message(STATUS
-    "Doxygen not found; the 'doc' and 'gh-pages.{clean,copy,update}' targets "
+    "Doxygen not found; the 'range-v3-doc' and 'range-v3-gh-pages.{clean,copy,update}' targets "
     "will be unavailable.")
     return()
 endif()
@@ -42,7 +42,7 @@ set_target_properties(range-v3-doc
 
 if (NOT GIT_FOUND)
     message(STATUS
-    "Git was not found; the 'gh-pages.{clean,copy,update}' targets "
+    "Git was not found; the 'range-v3-gh-pages.{clean,copy,update}' targets "
     "will be unavailable.")
     return()
 endif()

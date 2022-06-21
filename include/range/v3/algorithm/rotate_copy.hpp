@@ -41,7 +41,6 @@ namespace ranges
 
         /// \brief function template \c rotate_copy
         template(typename I, typename S, typename O, typename P = identity)(
-            /// \pre
             requires forward_iterator<I> AND sentinel_for<S, I> AND
             weakly_incrementable<O> AND indirectly_copyable<I, O>)
         constexpr rotate_copy_result<I, O> //
@@ -54,7 +53,6 @@ namespace ranges
 
         /// \overload
         template(typename Rng, typename O, typename P = identity)(
-            /// \pre
             requires range<Rng> AND weakly_incrementable<O> AND
             indirectly_copyable<iterator_t<Rng>, O>)
         constexpr rotate_copy_result<borrowed_iterator_t<Rng>, O> //

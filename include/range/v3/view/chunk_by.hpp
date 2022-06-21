@@ -127,7 +127,6 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Rng, typename Fun)(
-        /// \pre
         requires copy_constructible<Fun>) chunk_by_view(Rng &&, Fun)
         ->chunk_by_view<views::all_t<Rng>, Fun>;
 #endif
@@ -137,7 +136,6 @@ namespace ranges
         struct chunk_by_base_fn
         {
             template(typename Rng, typename Fun)(
-                /// \pre
                 requires viewable_range<Rng> AND forward_range<Rng> AND //
                     indirect_relation<Fun, iterator_t<Rng>>)            //
             constexpr chunk_by_view<all_t<Rng>, Fun>
