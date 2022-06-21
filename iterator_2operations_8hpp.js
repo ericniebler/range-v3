@@ -9,7 +9,5 @@ var iterator_2operations_8hpp =
     [ "iter_enumerate", "iterator_2operations_8hpp.html#ga832121844c3db3d16954a4622cf83e42", null ],
     [ "iter_size", "iterator_2operations_8hpp.html#ga460380f738d8a2bc822e1d43b8f84ac6", null ],
     [ "next", "iterator_2operations_8hpp.html#gaf136ff254688f2c24f5c5f58df7ff56d", null ],
-    [ "prev", "iterator_2operations_8hpp.html#gaa5307b0c95d051483a41d4870d65f680", null ],
-    [ "recounted", "iterator_2operations_8hpp.html#gabe23f079588ff743efc5225fb907b7f4", null ],
-    [ "uncounted", "iterator_2operations_8hpp.html#ga2966dc8eaabb6f8cfeac9564124ba41d", null ]
+    [ "prev", "iterator_2operations_8hpp.html#gaa5307b0c95d051483a41d4870d65f680", null ]
 ];

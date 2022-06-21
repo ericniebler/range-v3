@@ -1,5 +1,5 @@
 var algorithm_2stable__sort_8hpp =
 [
-    [ "stable_sort", "algorithm_2stable__sort_8hpp.html#ga744aa2d7beb5a12115be0a7a1db6e86d", null ],
-    [ "stable_sort", "algorithm_2stable__sort_8hpp.html#gacbb4bbc0d34818b1601dec3812147d2e", null ]
+    [ "stable_sort", "algorithm_2stable__sort_8hpp.html#gade2249b0d86bbf7f133b790e4b300e8b", null ],
+    [ "stable_sort", "algorithm_2stable__sort_8hpp.html#ga766a0d60ab49dc16d84abfdf5bdc40d2", null ]
 ];

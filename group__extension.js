@@ -1,4 +1,4 @@
 var group__extension =
 [
-    [ "apply", "structmeta_1_1extension_1_1apply.html", null ]
+    [ "meta::extension::apply< Fn, L >", "structmeta_1_1extension_1_1apply.html", null ]
 ];

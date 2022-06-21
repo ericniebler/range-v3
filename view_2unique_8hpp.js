@@ -1,4 +1,5 @@
 var view_2unique_8hpp =
 [
-    [ "unique", "view_2unique_8hpp.html#ga8f8e8b4ecff6369191eddb5a85518fde", null ]
+    [ "ranges::views::unique_base_fn", "structranges_1_1views_1_1unique__base__fn.html", null ],
+    [ "ranges::views::unique_fn", "structranges_1_1views_1_1unique__fn.html", null ]
 ];

@@ -1,4 +1,4 @@
 var structranges_1_1make__ostream__joiner__fn =
 [
-    [ "operator()", "structranges_1_1make__ostream__joiner__fn.html#a658ad9c66a5aa3d88659aa3a441eafb2", null ]
+    [ "operator()", "structranges_1_1make__ostream__joiner__fn.html#a9217162851fe391fd024323f7622f2c5", null ]
 ];

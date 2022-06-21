@@ -33,17 +33,17 @@ var NAVTREE =
       ] ],
       [ "Quick Start", "index.html#tutorial-quick-start", [
         [ "Views", "index.html#tutorial-views", null ],
-        [ "View const-ness", "index.html#autotoc_md6", null ],
-        [ "View validity", "index.html#autotoc_md7", null ],
-        [ "List of range views", "index.html#autotoc_md8", null ],
+        [ "View const-ness", "index.html#autotoc_md21", null ],
+        [ "View validity", "index.html#autotoc_md22", null ],
+        [ "List of range views", "index.html#autotoc_md23", null ],
         [ "Actions", "index.html#tutorial-actions", null ],
-        [ "List of range actions", "index.html#autotoc_md10", null ],
+        [ "List of range actions", "index.html#autotoc_md25", null ],
         [ "Utilities", "index.html#tutorial-utilities", [
-          [ "Create Custom Views with view_facade", "index.html#autotoc_md12", null ],
-          [ "Create Custom Views with view_adaptor", "index.html#autotoc_md13", [
-            [ "view_adaptor in details", "index.html#autotoc_md14", null ]
+          [ "Create Custom Views with view_facade", "index.html#autotoc_md27", null ],
+          [ "Create Custom Views with view_adaptor", "index.html#autotoc_md28", [
+            [ "view_adaptor in details", "index.html#autotoc_md29", null ]
           ] ],
-          [ "Create Custom Iterators with basic_iterator", "index.html#autotoc_md15", null ]
+          [ "Create Custom Iterators with basic_iterator", "index.html#autotoc_md30", null ]
         ] ],
         [ "Concept Checking", "index.html#tutorial-concepts", null ],
         [ "Range-v3 and the Future", "index.html#tutorial-future", null ]
@@ -93,38 +93,47 @@ var NAVTREE =
       [ "Version 0.1.1", "release_notes.html#v0-1-1", null ],
       [ "Version 0.1.0", "release_notes.html#v0-1-0", null ]
     ] ],
-    [ "Reference", "modules.html", "modules" ],
-    [ "Indexes", "usergroup0.html", [
-      [ "Methods", "functions.html", [
-        [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", "functions_func" ],
+    [ "Modules", "modules.html", "modules" ],
+    [ "Namespaces", "namespaces.html", [
+      [ "Namespace List", "namespaces.html", "namespaces_dup" ],
+      [ "Namespace Members", "namespacemembers.html", [
+        [ "All", "namespacemembers.html", null ],
+        [ "Functions", "namespacemembers_func.html", null ],
+        [ "Variables", "namespacemembers_vars.html", null ],
+        [ "Typedefs", "namespacemembers_type.html", null ]
+      ] ]
+    ] ],
+    [ "Concepts", "concepts.html", "concepts" ],
+    [ "Classes", "annotated.html", [
+      [ "Class List", "annotated.html", "annotated_dup" ],
+      [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
+      [ "Class Members", "functions.html", [
+        [ "All", "functions.html", null ],
+        [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", null ],
         [ "Related Functions", "functions_rela.html", null ]
-      ] ],
-      [ "Classes", "annotated.html", "annotated" ],
-      [ "Files", "files.html", "files" ]
+      ] ]
+    ] ],
+    [ "Files", "files.html", [
+      [ "File List", "files.html", "files_dup" ],
+      [ "File Members", "globals.html", [
+        [ "All", "globals.html", null ],
+        [ "Variables", "globals_vars.html", null ],
+        [ "Macros", "globals_defs.html", null ]
+      ] ]
     ] ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-".html",
-"classranges_1_1sample__view.html#ab60a7eef1bf38e2406fa9bc05ad3e90f",
-"equal__range_8hpp.html",
-"group__group-algorithms.html#gac1663f9fd1985e4095d958b39b0f4f4e",
-"group__group-views.html#gad032e209a7d07f0fa9bad8f7a9677276",
-"identity_8hpp.html",
-"meta_8hpp.html#ga8d0d695134bd6b94698ae4f1c0d2f553",
-"range_2traits_8hpp.html#ga55960f2d90da8a3d53f3a7795a38c138",
-"structmeta_1_1compose___3_01_fn0_01_4.html#ac65e09e1dde99fdc928922489ac2dc0f",
-"structranges_1_1bind__element_3_01reference__wrapper_3_01_t_01_4_01_4.html#a7a6caef2e0c5829ae329b7ef4fb1723c",
-"structranges_1_1experimental_1_1coroutine__owner.html#ae897b895bfbc9d1eb72e30e62974c0e5",
-"structranges_1_1move__iterator.html#a0550d63ab6fed5cc93a55100941924d0",
-"structranges_1_1semiregular__box.html#a0bc1fb205fe4ac10a10b204f23c28baa",
-"structranges_1_1view__interface.html#a97261fec512a0a953c755e7ca4791977",
-"structranges_1_1views_1_1take__exactly__base__fn.html",
-"view_2take_8hpp.html"
+"accumulate_8hpp.html",
+"conceptranges_1_1range.html",
+"group__group-algorithms.html#ga8b388e16334836ff0f36d9cfc251734a",
+"group__lazy__query.html#gae589e49d658820f9ffd7bffbcddde074",
+"ref_8hpp.html",
+"structranges_1_1invoke__result.html",
+"structranges_1_1views_1_1take__last__fn.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

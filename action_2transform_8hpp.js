@@ -1,4 +1,4 @@
 var action_2transform_8hpp =
 [
-    [ "transform", "action_2transform_8hpp.html#gaf87bb5a7dff9484d06ca2a349d06f818", null ]
+    [ "ranges::actions::transform_fn", "structranges_1_1actions_1_1transform__fn.html", null ]
 ];

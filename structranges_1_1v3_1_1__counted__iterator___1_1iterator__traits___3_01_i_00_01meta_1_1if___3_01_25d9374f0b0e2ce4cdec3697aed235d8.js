@@ -1,8 +1,0 @@
-var structranges_1_1v3_1_1__counted__iterator___1_1iterator__traits___3_01_i_00_01meta_1_1if___3_01_25d9374f0b0e2ce4cdec3697aed235d8 =
-[
-    [ "difference_type", "structranges_1_1v3_1_1__counted__iterator___1_1iterator__traits___3_01_i_00_01meta_1_1if___3_01_25d9374f0b0e2ce4cdec3697aed235d8.html#a6dbd6e7f743f1b4a058b95fddf05ba05", null ],
-    [ "iterator_category", "structranges_1_1v3_1_1__counted__iterator___1_1iterator__traits___3_01_i_00_01meta_1_1if___3_01_25d9374f0b0e2ce4cdec3697aed235d8.html#aaf4e2be18e10bc7c096638ddf40eb9c3", null ],
-    [ "pointer", "structranges_1_1v3_1_1__counted__iterator___1_1iterator__traits___3_01_i_00_01meta_1_1if___3_01_25d9374f0b0e2ce4cdec3697aed235d8.html#ab3df77462e4b80ed48e990f5d81fff59", null ],
-    [ "reference", "structranges_1_1v3_1_1__counted__iterator___1_1iterator__traits___3_01_i_00_01meta_1_1if___3_01_25d9374f0b0e2ce4cdec3697aed235d8.html#ae22eadc6ca6780ddace67c8c34cbf408", null ],
-    [ "value_type", "structranges_1_1v3_1_1__counted__iterator___1_1iterator__traits___3_01_i_00_01meta_1_1if___3_01_25d9374f0b0e2ce4cdec3697aed235d8.html#a7c4288e281e2bfb0a4bdc4cb2244499f", null ]
-];

@@ -1,6 +1,5 @@
 var structranges_1_1actions_1_1take__while__fn =
 [
-    [ "take_while", "structranges_1_1actions_1_1take__while__fn.html#a5f98c5a047c468b633113f29d8ead005", null ],
-    [ "operator()", "structranges_1_1actions_1_1take__while__fn.html#a249845be5b24b624b66a212d76858ce1", null ],
-    [ "operator()", "structranges_1_1actions_1_1take__while__fn.html#afe08e7591e51a5edafa6ef54afabda69", null ]
+    [ "operator()", "structranges_1_1actions_1_1take__while__fn.html#a5fda4f2cef0c4a5398320efe3d8136a5", null ],
+    [ "operator()", "structranges_1_1actions_1_1take__while__fn.html#ac37163cc13fe134ead5434765af7ae84", null ]
 ];

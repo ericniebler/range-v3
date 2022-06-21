@@ -1,4 +1,5 @@
 var view_2replace__if_8hpp =
 [
-    [ "replace_if", "view_2replace__if_8hpp.html#ga17ef53f46c01c9502e58e0a742e8ad56", null ]
+    [ "ranges::views::replace_if_base_fn", "structranges_1_1views_1_1replace__if__base__fn.html", null ],
+    [ "ranges::views::replace_if_fn", "structranges_1_1views_1_1replace__if__fn.html", null ]
 ];

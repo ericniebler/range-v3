@@ -1,4 +1,4 @@
 var action_2stable__sort_8hpp =
 [
-    [ "stable_sort", "action_2stable__sort_8hpp.html#ga04fa2cd3741600d6b9369906cb796f75", null ]
+    [ "ranges::actions::stable_sort_fn", "structranges_1_1actions_1_1stable__sort__fn.html", "structranges_1_1actions_1_1stable__sort__fn" ]
 ];

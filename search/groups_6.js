@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['iterator_2169',['Iterator',['../group__group-iterator.html',1,'']]],
-  ['iterator_20concepts_2170',['Iterator Concepts',['../group__group-iterator-concepts.html',1,'']]],
-  ['integer_20sequence_2171',['Integer sequence',['../group__integral.html',1,'']]],
-  ['invocation_2172',['Invocation',['../group__invocation.html',1,'']]]
+  ['lazy_0',['lazy',['../group__lazy__composition.html',1,'(Global Namespace)'],['../group__lazy__datatype.html',1,'(Global Namespace)'],['../group__lazy__invocation.html',1,'(Global Namespace)'],['../group__lazy__list.html',1,'(Global Namespace)'],['../group__lazy__logical.html',1,'(Global Namespace)'],['../group__lazy__math.html',1,'(Global Namespace)'],['../group__lazy__query.html',1,'(Global Namespace)'],['../group__lazy__trait.html',1,'(Global Namespace)'],['../group__lazy__transformation.html',1,'(Global Namespace)']]],
+  ['list_5flike_1',['list_like',['../group__list.html',1,'']]],
+  ['logical_2',['Logical',['../group__logical.html',1,'']]]
 ];

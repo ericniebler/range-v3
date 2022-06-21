@@ -1,4 +1,4 @@
 var action_2drop_8hpp =
 [
-    [ "drop", "action_2drop_8hpp.html#ga17b7bac0ae8e65445f4ffd4c8539b6ae", null ]
+    [ "ranges::actions::drop_fn", "structranges_1_1actions_1_1drop__fn.html", null ]
 ];

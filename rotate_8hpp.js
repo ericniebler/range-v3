@@ -1,5 +1,5 @@
 var rotate_8hpp =
 [
-    [ "rotate", "rotate_8hpp.html#ga33a5ef3705f30edd28453a9999cd576d", null ],
-    [ "rotate", "rotate_8hpp.html#gae12d6438e495d01fb95843e6b6f8c35b", null ]
+    [ "rotate", "rotate_8hpp.html#gaf0a7c215ad231b50b33027aefc2b7208", null ],
+    [ "rotate", "rotate_8hpp.html#gac675d71f931ca61b04c8b555fa7ba25b", null ]
 ];
