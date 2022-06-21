@@ -438,7 +438,11 @@ namespace ranges
             }
 
         public:
-            constexpr move_into_cursor() = default;
+            CPP_member
+            constexpr CPP_ctor(move_into_cursor)()(                       //
+                noexcept(std::is_nothrow_default_constructible<I>::value) //
+                    requires default_constructible<I>)
+            {}
         };
     } // namespace detail
     /// \endcond
