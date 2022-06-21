@@ -1,5 +1,6 @@
 var NAVTREEINDEX6 =
 {
+"structranges_1_1views_1_1take__last__base__fn.html":[6,0,2,4,106],
 "structranges_1_1views_1_1take__last__fn.html":[6,0,2,4,107],
 "structranges_1_1views_1_1take__while__base__fn.html":[6,0,2,4,108],
 "structranges_1_1views_1_1take__while__bind__fn.html":[6,0,2,4,109],

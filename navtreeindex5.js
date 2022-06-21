@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"structranges_1_1invoke__fn.html":[3,7,24],
 "structranges_1_1invoke__result.html":[3,7,25],
 "structranges_1_1iota__fn.html":[3,8,13],
 "structranges_1_1iota__view.html":[3,4,52],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "structranges_1_1views_1_1take__base__fn.html":[6,0,2,4,102],
 "structranges_1_1views_1_1take__exactly__base__fn.html":[6,0,2,4,103],
 "structranges_1_1views_1_1take__exactly__fn.html":[6,0,2,4,104],
-"structranges_1_1views_1_1take__fn.html":[6,0,2,4,105],
-"structranges_1_1views_1_1take__last__base__fn.html":[6,0,2,4,106]
+"structranges_1_1views_1_1take__fn.html":[6,0,2,4,105]
 };

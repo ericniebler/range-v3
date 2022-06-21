@@ -96,6 +96,39 @@ $(document).ready(function(){initNavTree('release_notes.html',''); initResizable
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p ><a class="anchor" id="md_release_notes"></a></p>
+<h1><a class="anchor" id="v0-12-0"></a>
+Version 0.12.0 "Dude, Where's My Bored Ape?"</h1>
+<p ><em>Released:</em> June 19, 2022</p>
+<blockquote class="doxtable">
+<p >&zwj;<b>IMPORTANT:</b> This release deprecates <code>views::group_by</code> which was an endless source of confusion. <code>group_by</code> is replaced with <code>views::chunk_by</code> (which, beware, has <em>subtly</em> different semantics, see below.) </p>
+</blockquote>
+<p>Changes:</p><ul>
+<li><b>NEW:</b> <code>views::chunk_by</code> which, like the old <code>views::group_by</code> it replaces, splits a range into a range-of-ranges, where adjacent elements satisfy a binary predicate (<a href="https://github.com/ericniebler/range-v3/pull/1648">#1648</a>). [<em>Note:</em> Whereas <code>views::group_by</code> evaluated the predicate between the current element and the <em>first</em> element in the chunk, <code>views::chunk_by</code> evaluates the predicate between <em>adjacent</em> elements. &ndash; <em>end note</em>]</li>
+<li><b>NEW:</b> <code>constexpr</code> all the algorithms that are <code>constexpr</code> in C++20's <code>std::ranges</code> (<a href="https://github.com/ericniebler/range-v3/pull/1683">#1683</a>).</li>
+<li><b>NEW:</b> Fold algorithms from <a href="http://wg21.link/P2322">P2322</a> (<a href="https://github.com/ericniebler/range-v3/pull/1628">#1628</a>), (<a href="https://github.com/ericniebler/range-v3/pull/1668">#1668</a>).</li>
+<li><b>NEW:</b> <code><a class="el" href="classranges_1_1unformatted__ostream__iterator.html" title="Writes to an ostream object using the unformatted std::basic_ostream::write operation....">ranges::unformatted_ostream_iterator</a></code> (<a href="https://github.com/ericniebler/range-v3/pull/1586">#1586</a>).</li>
+<li><b>NEW:</b> Support for the <code>build2</code> build system (<a href="https://github.com/ericniebler/range-v3/pull/1562">#1562</a>).</li>
+<li>Implement <a href="http://wg21.link/P2328">P2328</a>: relax the constraint on <code><a class="el" href="structranges_1_1join__view.html">ranges::join_view</a></code> to support joining ranges of prvalue non-<code>view</code> ranges (<a href="https://github.com/ericniebler/range-v3/pull/1655">#1655</a>).</li>
+<li>Improved algorithm for <code>ranges::linear_distribute</code> (<a href="https://github.com/ericniebler/range-v3/pull/1679">#1679</a>).</li>
+<li>Renamed <code>safe_subrange_t</code> to <code>borrowed_subrange_t</code> (<a href="https://github.com/ericniebler/range-v3/pull/1542">#1542</a>).</li>
+<li>Extend <code>ranges::to</code> to support conversion to container-of-containers (<a href="https://github.com/ericniebler/range-v3/pull/1553">#1553</a>).</li>
+<li><code>views::enumerate</code> can be a <code>borrowed_view</code> (<a href="https://github.com/ericniebler/range-v3/pull/1571">#1571</a>).</li>
+<li><code>ranges::upper_bound</code> works in the presence of overloaded <code>operator&amp;</code> (<a href="https://github.com/ericniebler/range-v3/pull/1632">#1632</a>).</li>
+<li>Input iterators are no longer required to be default-constructible (<a href="https://github.com/ericniebler/range-v3/pull/1652">#1652</a>).</li>
+</ul>
+<p >Bugs fixed:</p><ul>
+<li><code>ranges::to&lt;std::map&gt;(v)</code> does not work (<a href="https://github.com/ericniebler/range-v3/pull/1700">#1700</a>)</li>
+<li><code>ranges::reverse_iterator</code> has the wrong <code>value_type</code> when reversing a proxy range (<a href="https://github.com/ericniebler/range-v3/pull/1670">#1670</a>).</li>
+<li>A post-increment of a <code>ranges::counted_iterator</code> wrapping an input iterator with a <code>void</code>-returning post-increment operator isn't incrementing the count (<a href="https://github.com/ericniebler/range-v3/pull/1664">#1664</a>).</li>
+<li>Bad assert in <code>views::drop_last</code> (<a href="https://github.com/ericniebler/range-v3/pull/1599">#1599</a>).</li>
+<li>Read of uninitialized <code>bool</code> in <code>views::cache1</code> (<a href="https://github.com/ericniebler/range-v3/pull/1610">#1610</a>).</li>
+<li><code>ranges::unstable_remove_if</code> calls predicate on same element twice (<a href="https://github.com/ericniebler/range-v3/pull/1629">#1629</a>).</li>
+<li><code>ranges::on(f,g)(x...)</code> should be <code>f(g(x)...)</code> instead of <code>f(g(x...))</code> (<a href="https://github.com/ericniebler/range-v3/pull/1661">#1661</a>).</li>
+<li>Broken qualification of cmake targets (<a href="https://github.com/ericniebler/range-v3/pull/1557">#1557</a>).</li>
+<li>Various portability and documentation fixes.</li>
+</ul>
+<p ><b>Credits:</b> I would like to thank the following people who contributed to this release (in no particular order): Barry Revzin, @dvirtz, Gonzalo Brito, Johel Ernesto Guerrero Peña, Joël Lamotte, Doug Roeper, Facundo Tuesca, Vitaly Zaitsev, @23rd, @furkanusta, Jonathan Haigh, @SmorkalovG, @marehr, Matt Beardsley, Chris Glover, Louis Dionne, Jin Shang (@js8544), Hui Xie, @huixie90, Robert Maynard, Silver Zachara, @sergegers, Théo DELRIEU, @LesnyRumcajs, Yehezkel Bernat, Maciej Patro, Klemens Nanni, Thomas Madlener, and Jason Merrill.</p>
+<p >&amp;#127881; Special thanks to Barry Revzin for stepping up to be part-time co-maintainer of range-v3. &amp;#127881;</p>
 <h1><a class="anchor" id="v0-11-0"></a>
 Version 0.11.0 "Thanks, ISO"</h1>
 <p ><em>Released:</em> August 6, 2020</p>
@@ -144,16 +177,16 @@ Version 0.11.0 "Thanks, ISO"</h1>
 <li>Better conformance with C++20's use of the _<code>boolean-testable</code>_ concept.</li>
 <li>Support C++20 coroutines.</li>
 <li>Honor CMake's <code>CMAKE_CXX_STANDARD</code> variable.</li>
-<li>A fix for the cardinality of <code>views::zip[_with]</code> (#1486).</li>
+<li>A fix for the cardinality of <code>views::zip[_with]</code> (<a href="https://github.com/ericniebler/range-v3/pull/1486">#1486</a>).</li>
 <li>Add <code>view_interface::data()</code> member function.</li>
 <li>Add necessary specializations for <code>std::basic_common_reference</code> and <code>std::common_type</code>.</li>
 <li>Numerous workarounds for MSVC.</li>
 <li>Various CMake fixes and improvements.</li>
 <li><code>drop_while_view</code> is not a <code>sized_range</code>.</li>
 <li>Added support for Wind River Systems.</li>
-<li>Bug fixes to <code>views::group_by</code> (#1393).</li>
-<li><code>common_[reference|type]</code> of <code>common_[tuple|pair]</code> now yields a <code>common_[tuple|pair]</code> instead of a <code>std::[tuple|pair]</code> (#1422).</li>
-<li>Avoid UB when currying an lvalue in some views and actions (#1320).</li>
+<li>Bug fixes to <code>views::group_by</code> (<a href="https://github.com/ericniebler/range-v3/pull/1393">#1393</a>).</li>
+<li><code>common_[reference|type]</code> of <code>common_[tuple|pair]</code> now yields a <code>common_[tuple|pair]</code> instead of a <code>std::[tuple|pair]</code> (<a href="https://github.com/ericniebler/range-v3/pull/1422">#1422</a>).</li>
+<li>Avoid UB when currying an lvalue in some views and actions (<a href="https://github.com/ericniebler/range-v3/pull/1320">#1320</a>).</li>
 </ul>
 <p ><b>Credits:</b> I would like to thank the following people who contributed to this release (in no particular order): Christopher Di Bella, @marehr, Casey Carter, Dvir Yitzchaki, Justin Riddell, Johel Ernesto Guerrero Peña, Barry Revzin, Kamlesh Kumar, and Vincas Dargis.</p>
 <h1><a class="anchor" id="v0-10-0"></a>

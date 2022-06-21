@@ -73,6 +73,7 @@ var NAVTREE =
       ] ]
     ] ],
     [ "Release Notes", "release_notes.html", [
+      [ "Version 0.12.0 \"Dude, Where's My Bored Ape?\"", "release_notes.html#v0-12-0", null ],
       [ "Version 0.11.0 \"Thanks, ISO\"", "release_notes.html#v0-11-0", null ],
       [ "Version 0.10.0 \"To Err is Human\"", "release_notes.html#v0-10-0", null ],
       [ "Version 0.9.1", "release_notes.html#v0-9-1", null ],
@@ -132,8 +133,8 @@ var NAVTREEINDEX =
 "group__group-algorithms.html#ga8b388e16334836ff0f36d9cfc251734a",
 "group__lazy__query.html#gae589e49d658820f9ffd7bffbcddde074",
 "ref_8hpp.html",
-"structranges_1_1invoke__result.html",
-"structranges_1_1views_1_1take__last__fn.html"
+"structranges_1_1invoke__fn.html",
+"structranges_1_1views_1_1take__last__base__fn.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
