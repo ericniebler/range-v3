@@ -117,7 +117,7 @@ cmake --build .
 Building range-v3 - Using `build2`
 ----------------------------------
 
-You can use [`build2`](https://build2.org), a dependency manager and a build-system combined, to use `range-v3` (or work on it):
+You can use [`build2`](https://build2.org), a dependency manager and build-system combined, to use `range-v3` (or work on it):
 
 Currently this package is available in these package repositories:
  - **https://cppget.org/range-v3/** for released and published versions.
@@ -127,7 +127,7 @@ Currently this package is available in these package repositories:
 
  - `build2` package name: `range-v3`
  - Library target name : `lib{range-v3}`
- - [Detailed use cases and instructions in this document](https://github.com/build2-packaging/range-v3/NOTES-build2.md).
+ - [Detailed use cases and instructions in this document](https://github.com/build2-packaging/range-v3/blob/master/NOTES-build2.md).
 
 For example, to make your `build2` project depend on `range-v3`:
   - Add one of the repositories to your configurations, or in your `repositories.manifest`, if not already there; for example:
@@ -149,7 +149,7 @@ For example, to make your `build2` project depend on `range-v3`:
 
 Then just build your project as usual (with `b` or `bdep update`), `build2` will figure out the rest.
 
-For `build2` newcomers or to get more details and use cases, you can read [this document](https://github.com/build2-packaging/range-v3/NOTES-build2.md) and the [`build2` toolchain introduction](https://build2.org/build2-toolchain/doc/build2-toolchain-intro.xhtml).
+For `build2` newcomers or to get more details and use cases, you can read [this document](https://github.com/build2-packaging/range-v3/blob/master/NOTES-build2.md) and the [`build2` toolchain introduction](https://build2.org/build2-toolchain/doc/build2-toolchain-intro.xhtml).
 
 
 Say Thanks!
