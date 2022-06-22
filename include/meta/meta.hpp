@@ -27,6 +27,7 @@
 #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wdocumentation-deprecated-sync"
 #pragma GCC diagnostic ignored "-Wmissing-variable-declarations"
+#pragma GCC diagnostic ignored "-Wreserved-identifier" // _z at namespace scope is not reserved
 #endif
 
 /// \defgroup meta Meta
