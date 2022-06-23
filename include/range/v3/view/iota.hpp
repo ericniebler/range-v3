@@ -315,9 +315,9 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename From, typename To)(
-        requires weakly_incrementable<From> AND copyable<To> AND(
-            !integral<From> || !integral<To> ||
-            std::is_signed<From>::value == std::is_signed<To>::value)) //
+        requires weakly_incrementable<From> AND copyable<To> AND
+        (!integral<From> || !integral<To> ||
+         std::is_signed<From>::value == std::is_signed<To>::value)) //
         closed_iota_view(From, To)
             ->closed_iota_view<From, To>;
 #endif
@@ -460,9 +460,9 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename From, typename To)(
-        requires weakly_incrementable<From> AND copyable<To> AND(
-            !integral<From> || !integral<To> ||
-            std::is_signed<From>::value == std::is_signed<To>::value)) //
+        requires weakly_incrementable<From> AND copyable<To> AND
+        (!integral<From> || !integral<To> ||
+         std::is_signed<From>::value == std::is_signed<To>::value)) //
         iota_view(From, To)
             ->iota_view<From, To>;
 #endif
@@ -479,11 +479,10 @@ namespace ranges
             }
             template(typename From, typename To)(
                 requires weakly_incrementable<From> AND copyable<To> AND
-                    detail::weakly_equality_comparable_with_<From, To>
-                        AND(!integral<From> || !integral<To> ||
-                            std::is_signed<From>::value == std::is_signed<To>::value)) //
-                iota_view<From, To>
-                operator()(From from, To to) const
+                    detail::weakly_equality_comparable_with_<From, To> AND
+                (!integral<From> || !integral<To> ||
+                 std::is_signed<From>::value == std::is_signed<To>::value)) //
+            iota_view<From, To> operator()(From from, To to) const
             {
                 return {std::move(from), std::move(to)};
             }
@@ -493,11 +492,10 @@ namespace ranges
         {
             template(typename From, typename To)(
                 requires weakly_incrementable<From> AND copyable<To> AND
-                    detail::weakly_equality_comparable_with_<From, To>
-                        AND(!integral<From> || !integral<To> ||
-                            std::is_signed<From>::value == std::is_signed<To>::value)) //
-                closed_iota_view<From, To>
-                operator()(From from, To to) const
+                        detail::weakly_equality_comparable_with_<From, To> AND
+                    (!integral<From> || !integral<To> ||
+                     std::is_signed<From>::value == std::is_signed<To>::value)) //
+            closed_iota_view<From, To> operator()(From from, To to) const
             {
                 return {std::move(from), std::move(to)};
             }

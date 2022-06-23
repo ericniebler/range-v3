@@ -38,28 +38,11 @@ struct NonDefaultInt
 {
     using difference_type = int;
     int i = 0;
-    explicit NonDefaultInt(int j)
-      : i(j)
-    {}
-    NonDefaultInt & operator++()
-    {
-        ++i;
-        return *this;
-    }
-    NonDefaultInt operator++(int)
-    {
-        auto tmp = *this;
-        ++*this;
-        return tmp;
-    }
-    bool operator==(NonDefaultInt j) const
-    {
-        return i == j.i;
-    }
-    bool operator!=(NonDefaultInt j) const
-    {
-        return i != j.i;
-    }
+    explicit NonDefaultInt(int j) : i(j) {}
+    NonDefaultInt & operator++() {++i; CHECK(i <= 10); return *this;}
+    NonDefaultInt operator++(int) {auto tmp = *this; ++*this; return tmp;}
+    bool operator==(NonDefaultInt j) const { return i == j.i; }
+    bool operator!=(NonDefaultInt j) const { return i != j.i; }
 };
 
 CPP_template(typename I)(
