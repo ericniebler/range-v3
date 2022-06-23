@@ -30,12 +30,24 @@ bool counting_equals(const T & a, const T & b)
     return a == b;
 }
 
+namespace {
+
+template <class T, std::size_t N>
+struct array
+{
+    T elems[N];
+    T* begin() { return elems; }
+    T* end() { return elems + N; }
+};
+
+}
+
 int main()
 {
     using namespace ranges;
-    auto full_range = std::array<int, 10>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    auto valid_subrange = std::array<int, 5>{2, 3, 4, 5, 6};
-    auto invalid_subrange = std::array<int, 5>{3, 4, 5, 6, 2};
+    auto full_range = array<int, 10>{{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}};
+    auto valid_subrange = array<int, 5>{{2, 3, 4, 5, 6}};
+    auto invalid_subrange = array<int, 5>{{3, 4, 5, 6, 2}};
     CHECK(contains_subrange(ForwardIterator<const int *>(full_range.begin()),
                             Sentinel<const int *>(full_range.end()),
                             ForwardIterator<const int *>(valid_subrange.begin()),
@@ -50,7 +62,7 @@ int main()
                       Sentinel<const int *>(full_range.end())),
         make_subrange(ForwardIterator<const int *>(valid_subrange.begin()),
                       Sentinel<const int *>(valid_subrange.end()))));
-    
+
     comparison_count = 0;
     CHECK(!contains_subrange(RandomAccessIterator<const int*>(valid_subrange.begin()),
                              RandomAccessIterator<const int*>(valid_subrange.end()),
@@ -58,7 +70,7 @@ int main()
                              RandomAccessIterator<const int*>(full_range.end()),
                              counting_equals<int>));
     CHECK(comparison_count == 0);
-    
+
     comparison_count = 0;
     CHECK(contains_subrange(ForwardIterator<const int *>(full_range.begin()),
                             Sentinel<const int *>(full_range.end()),
@@ -66,7 +78,7 @@ int main()
                             Sentinel<const int *>(valid_subrange.end()),
                             counting_equals<int>));
     CHECK(comparison_count > 0);
-    
+
     comparison_count = 0;
     CHECK(contains_subrange(make_subrange(ForwardIterator<const int *>(full_range.begin()),
                                           Sentinel<const int *>(full_range.end())),
@@ -74,7 +86,7 @@ int main()
                                           Sentinel<const int *>(valid_subrange.end())),
                             counting_equals<int>));
     CHECK(comparison_count > 0);
-    
+
     comparison_count = 0;
     CHECK(!contains_subrange(
         make_subrange(ForwardIterator<const int *>(full_range.begin()),
