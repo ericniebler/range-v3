@@ -351,9 +351,6 @@ namespace ranges
 #define RANGES_WORKAROUND_CLANG_43400 // template friend is redefinition of itself
 #endif
 #else                                 // __GNUC__
-#if __GNUC__ < 6
-#define RANGES_WORKAROUND_GCC_UNFILED0 /* Workaround old GCC name lookup bug */
-#endif
 #if __GNUC__ == 7 || __GNUC__ == 8
 #define RANGES_WORKAROUND_GCC_91525 /* Workaround strange GCC ICE */
 #endif
@@ -724,8 +721,9 @@ namespace ranges
 #endif
 #endif // RANGES_CONSTEXPR_IF
 
-#if !defined(RANGES_BROKEN_CPO_LOOKUP) && !defined(RANGES_DOXYGEN_INVOKED) && \
-    (defined(RANGES_WORKAROUND_GCC_UNFILED0) || defined(RANGES_WORKAROUND_MSVC_895622))
+#if !defined(RANGES_BROKEN_CPO_LOOKUP) && \
+    !defined(RANGES_DOXYGEN_INVOKED) && \
+    defined(RANGES_WORKAROUND_MSVC_895622)
 #define RANGES_BROKEN_CPO_LOOKUP 1
 #endif
 #ifndef RANGES_BROKEN_CPO_LOOKUP

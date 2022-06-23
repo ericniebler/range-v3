@@ -61,25 +61,9 @@ namespace ranges
     template<typename T>
     T const * any_cast(any const *) noexcept;
 
-    struct any
+    namespace _any_
     {
-    private:
-        template<typename T>
-        friend meta::if_c<std::is_reference<T>() || (bool)copyable<T>, T> any_cast(any &);
-
-        template<typename T>
-        friend meta::if_c<std::is_reference<T>() || (bool)copyable<T>, T> any_cast(
-            any const &);
-
-        template<typename T>
-        friend meta::if_c<std::is_reference<T>() || (bool)copyable<T>, T> any_cast(
-            any &&);
-
-        template<typename T>
-        friend T * any_cast(any *) noexcept;
-
-        template<typename T>
-        friend T const * any_cast(any const *) noexcept;
+        struct _base {};
 
         struct interface
         {
@@ -117,15 +101,39 @@ namespace ranges
                 return typeid(T);
             }
         };
+    } // namespace _any_
 
-        std::unique_ptr<interface> ptr_;
+    struct any
+      #if RANGES_BROKEN_CPO_LOOKUP
+      : private _any_::_base
+      #endif
+    {
+    private:
+        template<typename T>
+        friend meta::if_c<std::is_reference<T>() || (bool)copyable<T>, T> any_cast(any &);
+
+        template<typename T>
+        friend meta::if_c<std::is_reference<T>() || (bool)copyable<T>, T> any_cast(
+            any const &);
+
+        template<typename T>
+        friend meta::if_c<std::is_reference<T>() || (bool)copyable<T>, T> any_cast(
+            any &&);
+
+        template<typename T>
+        friend T * any_cast(any *) noexcept;
+
+        template<typename T>
+        friend T const * any_cast(any const *) noexcept;
+
+        std::unique_ptr<_any_::interface> ptr_;
 
     public:
         any() noexcept = default;
         template(typename TRef, typename T = detail::decay_t<TRef>)(
             requires (!same_as<T, any>) AND copyable<T>) //
         any(TRef && t)
-          : ptr_(new impl<T>(static_cast<TRef &&>(t)))
+          : ptr_(new _any_::impl<T>(static_cast<TRef &&>(t)))
         {}
         any(any &&) noexcept = default;
         any(any const & that)
@@ -185,7 +193,7 @@ namespace ranges
     {
         if(x.type() != typeid(detail::decay_t<T>))
             throw bad_any_cast{};
-        return static_cast<any::impl<detail::decay_t<T>> *>(x.ptr_.get())->get();
+        return static_cast<_any_::impl<detail::decay_t<T>> *>(x.ptr_.get())->get();
     }
 
     /// \overload
@@ -194,7 +202,7 @@ namespace ranges
     {
         if(x.type() != typeid(detail::decay_t<T>))
             throw bad_any_cast{};
-        return static_cast<any::impl<detail::decay_t<T>> const *>(x.ptr_.get())->get();
+        return static_cast<_any_::impl<detail::decay_t<T>> const *>(x.ptr_.get())->get();
     }
 
     /// \overload
@@ -203,7 +211,7 @@ namespace ranges
     {
         if(x.type() != typeid(detail::decay_t<T>))
             throw bad_any_cast{};
-        return static_cast<any::impl<detail::decay_t<T>> *>(x.ptr_.get())->get();
+        return static_cast<_any_::impl<detail::decay_t<T>> *>(x.ptr_.get())->get();
     }
 
     /// \overload
@@ -211,7 +219,7 @@ namespace ranges
     T * any_cast(any * p) noexcept
     {
         if(p && p->ptr_)
-            if(any::impl<T> * q = dynamic_cast<any::impl<T> *>(p->ptr_.get()))
+            if(_any_::impl<T> * q = dynamic_cast<_any_::impl<T> *>(p->ptr_.get()))
                 return &q->get();
         return nullptr;
     }
@@ -221,7 +229,7 @@ namespace ranges
     T const * any_cast(any const * p) noexcept
     {
         if(p && p->ptr_)
-            if(any::impl<T> const * q = dynamic_cast<any::impl<T> const *>(p->ptr_.get()))
+            if(_any_::impl<T> const * q = dynamic_cast<_any_::impl<T> const *>(p->ptr_.get()))
                 return &q->get();
         return nullptr;
     }
