@@ -199,7 +199,6 @@ RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_FUNC_TEMPLATE
         CPP_assert(same_as<decltype(l0), decltype(s2)>);
     }
     {
-        std::list<int> li{1, 2, 3};
         subrange s(li.begin(), li.end());
         subrange s2 = s.next();
         CHECK(s2.begin() == std::next(li.begin()));
