@@ -2,5 +2,9 @@
 #include <range/v3/all.hpp>
 
 int main() {
-    return (I == I) ? 0 : 1;
+#ifdef I
+    return 0;
+#else
+    return 1;
+#endif
 }
