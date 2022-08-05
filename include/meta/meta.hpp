@@ -171,8 +171,8 @@ namespace meta
 
     /// An integral constant wrapper for \c int.
     /// \ingroup integral
-    template <int I>
-    using int_ = std::integral_constant<int, I>;
+    template <int Int>
+    using int_ = std::integral_constant<int, Int>;
 
     /// An integral constant wrapper for \c char.
     /// \ingroup integral

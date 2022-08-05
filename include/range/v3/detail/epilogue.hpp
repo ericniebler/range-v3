@@ -19,4 +19,6 @@
 #undef AND
 #undef declval
 
+#pragma pop_macro("I")
+
 RANGES_DIAGNOSTIC_POP
