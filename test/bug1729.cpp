@@ -2,5 +2,5 @@
 #include <range/v3/all.hpp>
 
 int main() {
-    return sizeof(I);
+    return (I == I) ? 0 : 1;
 }
