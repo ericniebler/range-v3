@@ -145,7 +145,12 @@ namespace ranges
         CPP_assert(input_range<Rng> && view_<Rng>);
         CPP_assert(input_range<range_reference_t<Rng>>);
 
-        join_view() = default;
+        CPP_member
+        constexpr CPP_ctor(join_view)()(                                //
+            noexcept(std::is_nothrow_default_constructible<Rng>::value) //
+                requires default_constructible<Rng>)
+        {}
+
         explicit join_view(Rng rng)
           : outer_(views::all(std::move(rng)))
         {}

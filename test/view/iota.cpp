@@ -34,6 +34,17 @@ struct Int
     bool operator!=(Int j) const { return i != j.i; }
 };
 
+struct NonDefaultInt
+{
+    using difference_type = int;
+    int i = 0;
+    explicit NonDefaultInt(int j) : i(j) {}
+    NonDefaultInt & operator++() {++i; CHECK(i <= 10); return *this;}
+    NonDefaultInt operator++(int) {auto tmp = *this; ++*this; return tmp;}
+    bool operator==(NonDefaultInt j) const { return i == j.i; }
+    bool operator!=(NonDefaultInt j) const { return i != j.i; }
+};
+
 CPP_template(typename I)(
     requires ranges::integral<I>)
 void test_iota_distance()
@@ -141,6 +152,12 @@ int main()
         CPP_assert(!sized_range<decltype(is)>);
         CPP_assert(forward_range<decltype(is)>);
         CPP_assert(!bidirectional_range<decltype(is)>);
+    }
+
+    {
+        auto is = views::iota(NonDefaultInt{0});
+        CPP_assert(input_range<decltype(is)>);
+        CPP_assert(!forward_range<decltype(is)>);
     }
 
     {
