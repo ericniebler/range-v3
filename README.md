@@ -6,7 +6,7 @@ Range library for C++14/17/20. This code was the basis of [a formal proposal](ht
 About:
 ------
 
-Ranges are an extension of the Standard Template Library that makes its iterators and algorithms more powerful by making them _composable_. Unlike other range-like solutions which seek to do away with iterators, in range-v3 ranges are an abstration layer _on top_ of iterators.
+Ranges are an extension of the Standard Template Library that makes its iterators and algorithms more powerful by making them _composable_. Unlike other range-like solutions which seek to do away with iterators, in range-v3 ranges are an abstraction layer _on top_ of iterators.
 
 Range-v3 is built on three pillars: Views, Actions, and Algorithms. The algorithms are the same as those with which you are already familiar in the STL, except that in range-v3 all the algorithms have overloads that take ranges in addition to the overloads that take iterators. Views are composable adaptations of ranges where the adaptation happens lazily as the view is iterated. And an action is an eager application of an algorithm to a container that mutates the container in-place and returns it for further processing.
 
