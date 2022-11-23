@@ -97,7 +97,7 @@ namespace ranges
         {
             // Intentionally promote xvalues to lvalues here:
             template<typename OuterIt>
-            static constexpr auto && update_inner_(OuterIt && it) noexcept
+            static constexpr auto && update_inner_(OuterIt && it) noexcept(noexcept(*it))
             {
                 return *it;
             }
