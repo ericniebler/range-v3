@@ -9,6 +9,7 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <exception>
 #include <iterator>
 #include <forward_list>
 #include <functional>
@@ -19,6 +20,7 @@
 #include <range/v3/view/split.hpp>
 #include <range/v3/view/generate_n.hpp>
 #include <range/v3/view/repeat_n.hpp>
+#include <range/v3/view/cache1.hpp>
 #include <range/v3/view/chunk.hpp>
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/iota.hpp>
@@ -88,6 +90,28 @@ RANGES_DIAGNOSTIC_IGNORE("-Wunused-member-function")
         std::vector<char> i2;
         auto v2 = u2 | ranges::views::chunk(3) | ranges::views::join(i2);
         CPP_assert(ranges::input_range<decltype(v2)>);
+    }
+
+    // https://github.com/ericniebler/range-v3/issues/1753
+    void test_issue_1753()
+    {
+        bool exceptionCaught = false;
+        try
+        {
+            int rgi[] = {1};
+            rgi | ranges::views::transform([&](int) {
+                throw std::exception();
+                return std::vector<int>{};
+            })                          //
+                | ranges::views::cache1 //
+                | ranges::views::join   //
+                | ranges::to<std::vector>();
+        }
+        catch(const std::exception &)
+        {
+            exceptionCaught = true;
+        }
+        check_equal(exceptionCaught, true);
     }
 }
 
@@ -268,6 +292,7 @@ int main()
 
     test_issue_283();
     test_issue_1414();
+    test_issue_1753();
 
     return ::test_result();
 }

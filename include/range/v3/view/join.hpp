@@ -87,7 +87,7 @@ namespace ranges
             {
                 return inner_.emplace_deref(it);
             }
-            constexpr Inner & get_inner_(ignore_t) noexcept
+            constexpr Inner & get_inner_(ignore_t) noexcept(noexcept(*inner_))
             {
                 return *inner_;
             }
@@ -97,7 +97,7 @@ namespace ranges
         {
             // Intentionally promote xvalues to lvalues here:
             template<typename OuterIt>
-            static constexpr auto && update_inner_(OuterIt && it) noexcept
+            static constexpr auto && update_inner_(OuterIt && it) noexcept(noexcept(*it))
             {
                 return *it;
             }
