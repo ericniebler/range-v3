@@ -812,7 +812,7 @@ namespace concepts
     } // namespace detail
     /// \endcond
 
-#if defined(__clang__) || defined(_MSC_VER)
+#if defined(__clang__) || defined(_MSC_VER) || defined(__NVCOMPILER)
     template<bool B>
     std::enable_if_t<B> requires_()
     {}
