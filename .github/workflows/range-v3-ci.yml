@@ -160,9 +160,10 @@ jobs:
             os: ubuntu-latest,
             build_type: RelWithDebInfo,
             cc: "gcc-9", cxx: "g++-9",
-            cxx_standard: 20,
+            cxx_standard: 20, 
           }
-
+          
+          
         # GCC-10
         - {
             name: "Linux GCC 10 Debug (C++17)", artifact: "Linux.tar.xz",
