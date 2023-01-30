@@ -25,6 +25,8 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+#if RANGES_V3_VIEW_ANY_VIEW_AVAILABLE
+
 namespace
 {
     template<typename S, typename T, typename = void>
@@ -225,3 +227,5 @@ int main()
 
     return test_result();
 }
+
+#endif

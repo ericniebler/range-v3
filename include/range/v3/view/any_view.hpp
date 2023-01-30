@@ -15,6 +15,28 @@
 #ifndef RANGES_V3_VIEW_ANY_VIEW_HPP
 #define RANGES_V3_VIEW_ANY_VIEW_HPP
 
+#ifndef RANGES_V3_VIEW_ANY_VIEW_AVAILABLE
+#if defined(__cpp_rtti) || defined(__RTTI) || defined(__INTEL_RTTI__) || \
+    defined(__GXX_RTTI) || defined(_CPPRTTI)
+#define RANGES_V3_VIEW_ANY_VIEW_AVAILABLE 1
+#elif defined(__has_feature)
+#if __has_feature(cxx_rtti)
+#define RANGES_V3_VIEW_ANY_VIEW_AVAILABLE 1
+#else
+#define RANGES_V3_VIEW_ANY_VIEW_AVAILABLE 0
+#endif
+#elif defined(_MSVC_STL_VERSION)
+#if _HAS_STATIC_RTTI
+#define RANGES_V3_VIEW_ANY_VIEW_AVAILABLE 1
+#else
+#define RANGES_V3_VIEW_ANY_VIEW_AVAILABLE 0
+#endif
+#else
+#define RANGES_V3_VIEW_ANY_VIEW_AVAILABLE 0
+#endif
+
+#if RANGES_V3_VIEW_ANY_VIEW_AVAILABLE
+
 #include <type_traits>
 #include <typeinfo>
 #include <utility>
@@ -688,5 +710,7 @@ RANGES_SATISFY_BOOST_RANGE(::ranges::any_view)
 RANGES_DIAGNOSTIC_POP
 
 #include <range/v3/detail/epilogue.hpp>
+
+#endif
 
 #endif

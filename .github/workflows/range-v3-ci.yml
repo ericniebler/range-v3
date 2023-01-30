@@ -185,6 +185,22 @@ jobs:
             os: ubuntu-latest,
             build_type: Debug,
             cc: "gcc-10", cxx: "g++-10",
+            cxx_standard: 20,
+            cxx_no_rtti: true,
+          }
+        - {
+            name: "Linux GCC 10 Release (C++20, Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-10", cxx: "g++-10",
+            cxx_standard: 20,
+            cxx_no_rtti: true,
+          }
+        - {
+            name: "Linux GCC 10 Debug (C++20, Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-10", cxx: "g++-10",
             cxx_standard: 20
           }
         - {
@@ -277,6 +293,24 @@ jobs:
             cc: "clang-10", cxx: "clang++-10",
             cxx_standard: 20,
             cxx_asan: true,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
+          }
+        - {
+            name: "Linux Clang 10 Release (C++20 / Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang-10", cxx: "clang++-10",
+            cxx_standard: 20,
+            cxx_no_rtti: true,
+          }
+        - {
+            name: "Linux Clang 10 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "clang-10", cxx: "clang++-10",
+            cxx_standard: 20,
+            cxx_asan: true,
             cxx_concepts: false
           }
         - {
@@ -302,6 +336,23 @@ jobs:
             build_type: RelWithDebInfo,
             cc: "clang", cxx: "clang++",
             cxx_standard: 17,
+          }
+        - {
+            name: "macOS Clang Debug (C++20 / ASAN)", artifact: "macOS.tar.xz",
+            os: macos-latest,
+            build_type: Debug,
+            cc: "clang", cxx: "clang++",
+            cxx_standard: 20,
+            cxx_asan: true,
+            cxx_no_rtti: true,
+          }
+        - {
+            name: "macOS Clang Release (C++20)", artifact: "macOS.tar.xz",
+            os: macos-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang", cxx: "clang++",
+            cxx_standard: 20,
+            cxx_no_rtti: true,
           }
         - {
             name: "macOS Clang Debug (C++20 / ASAN)", artifact: "macOS.tar.xz",
@@ -460,6 +511,10 @@ jobs:
         set(cxx_concepts ON)
         if ("x${{ matrix.config.cxx_concepts }}" STREQUAL "xfalse")
           set(cxx_concepts OFF)
+        endif()
+
+        if ("x${{ matrix.config.cxx_no_rtti }}" STREQUAL "xtrue")
+          set(cxx_flags "${cxx_flags} -fno-rtti")
         endif()
 
         execute_process(
