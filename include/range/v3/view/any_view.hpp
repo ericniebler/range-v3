@@ -34,6 +34,7 @@
 #else
 #define RANGES_V3_VIEW_ANY_VIEW_AVAILABLE 0
 #endif
+#endif
 
 #if RANGES_V3_VIEW_ANY_VIEW_AVAILABLE
 
