@@ -11,6 +11,7 @@
 #include <range/v3/view/any_view.hpp>
 #include <range/v3/algorithm/for_each.hpp>
 
+#if RANGES_V3_VIEW_ANY_VIEW_AVAILABLE
 struct Foo {
     Foo() = default;
     Foo(Foo const&) = default;
@@ -21,12 +22,15 @@ struct Foo {
 struct Bar : public Foo {
     virtual void foo() override {}
 };
+#endif
 
 int main()
 {
+#if RANGES_V3_VIEW_ANY_VIEW_AVAILABLE
     std::vector<Bar> bars { Bar() };
     ranges::any_view<Foo &> foos = bars;
     ranges::for_each(foos, [] (Foo & foo) {
         foo.foo();
     });
+#endif
 }
