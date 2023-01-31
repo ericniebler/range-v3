@@ -57,6 +57,7 @@ int main()
 
     // issue #556
 
+#if RANGES_V3_VIEW_ANY_VIEW_AVAILABLE
     {
         std::string s{"abc"};
         any_view<any_view<char, category::random_access>, category::random_access> v1 =
@@ -71,6 +72,7 @@ int main()
         ::check_equal(owner1, std::vector<std::vector<char>>{{'b', 'c'}, {'c'}});
         ::check_equal(owner2, std::vector<std::string>{{"bc"}, {"c"}});
     }
+#endif
 
     // map
 
