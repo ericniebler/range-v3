@@ -25,7 +25,7 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
-#if RANGES_V3_VIEW_ANY_VIEW_AVAILABLE
+#if META_HAS_STATIC_RTTI
 namespace
 {
     template<typename S, typename T, typename = void>
@@ -88,7 +88,7 @@ namespace
 
 int main()
 {
-#if RANGES_V3_VIEW_ANY_VIEW_AVAILABLE
+#if META_HAS_STATIC_RTTI
     using namespace ranges;
     auto const ten_ints = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 

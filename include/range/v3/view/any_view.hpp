@@ -15,28 +15,7 @@
 #ifndef RANGES_V3_VIEW_ANY_VIEW_HPP
 #define RANGES_V3_VIEW_ANY_VIEW_HPP
 
-#ifndef RANGES_V3_VIEW_ANY_VIEW_AVAILABLE
-#if defined(__cpp_rtti) || defined(__RTTI) || defined(__INTEL_RTTI__) || \
-    defined(__GXX_RTTI) || defined(_CPPRTTI)
-#define RANGES_V3_VIEW_ANY_VIEW_AVAILABLE 1
-#elif defined(__has_feature)
-#if __has_feature(cxx_rtti)
-#define RANGES_V3_VIEW_ANY_VIEW_AVAILABLE 1
-#else
-#define RANGES_V3_VIEW_ANY_VIEW_AVAILABLE 0
-#endif
-#elif defined(_MSVC_STL_VERSION)
-#if _HAS_STATIC_RTTI
-#define RANGES_V3_VIEW_ANY_VIEW_AVAILABLE 1
-#else
-#define RANGES_V3_VIEW_ANY_VIEW_AVAILABLE 0
-#endif
-#else
-#define RANGES_V3_VIEW_ANY_VIEW_AVAILABLE 0
-#endif
-#endif
-
-#if RANGES_V3_VIEW_ANY_VIEW_AVAILABLE
+#if META_HAS_STATIC_RTTI
 
 #include <type_traits>
 #include <typeinfo>
