@@ -162,27 +162,29 @@ if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
   message(STATUS "  conan upload --all range-v3/${RANGE_V3_VERSION}@ericniebler/stable -r=range-v3")
 endif()
 
-include(CMakePackageConfigHelpers)
+if (RANGE_V3_INSTALL)
+  include(CMakePackageConfigHelpers)
 
-# write_basic_package_version_file(...) gained ARCH_INDEPENDENT in CMake 3.14.
-# For CMake 3.6, this workaround makes the version file ARCH_INDEPENDENT
-# by making CMAKE_SIZEOF_VOID_P empty.
-set(OLD_CMAKE_SIZEOF_VOID_P ${CMAKE_SIZEOF_VOID_P})
-set(CMAKE_SIZEOF_VOID_P "")
-write_basic_package_version_file(
-  ${CMAKE_CURRENT_BINARY_DIR}/range-v3-config-version.cmake
-  VERSION ${RANGE_V3_VERSION}
-  COMPATIBILITY ExactVersion
-)
-set(CMAKE_SIZEOF_VOID_P ${OLD_CMAKE_SIZEOF_VOID_P})
+  # write_basic_package_version_file(...) gained ARCH_INDEPENDENT in CMake 3.14.
+  # For CMake 3.6, this workaround makes the version file ARCH_INDEPENDENT
+  # by making CMAKE_SIZEOF_VOID_P empty.
+  set(OLD_CMAKE_SIZEOF_VOID_P ${CMAKE_SIZEOF_VOID_P})
+  set(CMAKE_SIZEOF_VOID_P "")
+  write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/range-v3-config-version.cmake
+    VERSION ${RANGE_V3_VERSION}
+    COMPATIBILITY ExactVersion
+  )
+  set(CMAKE_SIZEOF_VOID_P ${OLD_CMAKE_SIZEOF_VOID_P})
 
-include(GNUInstallDirs)
-install(TARGETS range-v3-concepts range-v3-meta range-v3 EXPORT range-v3-targets DESTINATION ${CMAKE_INSTALL_LIBDIR})
-install(EXPORT range-v3-targets FILE range-v3-targets.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/range-v3)
-install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/range-v3-config-version.cmake
-  cmake/range-v3-config.cmake
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/range-v3)
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} FILES_MATCHING PATTERN "*")
+  include(GNUInstallDirs)
+  install(TARGETS range-v3-concepts range-v3-meta range-v3 EXPORT range-v3-targets DESTINATION ${CMAKE_INSTALL_LIBDIR})
+  install(EXPORT range-v3-targets FILE range-v3-targets.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/range-v3)
+  install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/range-v3-config-version.cmake
+    cmake/range-v3-config.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/range-v3)
+  install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} FILES_MATCHING PATTERN "*")
 
-export(EXPORT range-v3-targets FILE range-v3-config.cmake)
+  export(EXPORT range-v3-targets FILE range-v3-config.cmake)
+endif()
