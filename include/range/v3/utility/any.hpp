@@ -17,7 +17,7 @@
 #include <meta/meta_fwd.hpp>
 
 #if !META_HAS_STATIC_RTTI
-#error anyrequires static RTTI
+#error any requires static RTTI
 #endif
 
 #include <memory>
