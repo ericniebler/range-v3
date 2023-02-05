@@ -25,7 +25,6 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
-#if META_HAS_STATIC_RTTI
 namespace
 {
     template<typename S, typename T, typename = void>
@@ -84,11 +83,9 @@ namespace
         CPP_assert(!can_convert_to<incomplete &, incomplete &&>());
     }
 } // unnamed namespace
-#endif
 
 int main()
 {
-#if META_HAS_STATIC_RTTI
     using namespace ranges;
     auto const ten_ints = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
@@ -227,5 +224,4 @@ int main()
     test_polymorphic_downcast();
 
     return test_result();
-#endif
 }

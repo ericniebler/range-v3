@@ -14,13 +14,17 @@
 #ifndef RANGES_V3_UTILITY_ANY_HPP
 #define RANGES_V3_UTILITY_ANY_HPP
 
-#include <meta/meta.hpp>
+#include <meta/meta_fwd.hpp>
 
-#if META_HAS_STATIC_RTTI
+#if !META_HAS_STATIC_RTTI
+#error anyrequires static RTTI
+#endif
 
 #include <memory>
 #include <type_traits>
 #include <typeinfo>
+
+#include <meta/meta.hpp>
 
 #include <concepts/concepts.hpp>
 
@@ -240,7 +244,5 @@ namespace ranges
 RANGES_DIAGNOSTIC_POP
 
 #include <range/v3/detail/epilogue.hpp>
-
-#endif
 
 #endif

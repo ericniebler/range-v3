@@ -17,7 +17,9 @@
 
 #include <meta/meta_fwd.hpp>
 
-#if META_HAS_STATIC_RTTI
+#if !META_HAS_STATIC_RTTI
+#error any_view requires static RTTI
+#endif
 
 #include <type_traits>
 #include <typeinfo>
@@ -692,7 +694,5 @@ RANGES_SATISFY_BOOST_RANGE(::ranges::any_view)
 RANGES_DIAGNOSTIC_POP
 
 #include <range/v3/detail/epilogue.hpp>
-
-#endif
 
 #endif

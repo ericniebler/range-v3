@@ -17,7 +17,9 @@
 #include <string>
 #include <vector>
 #include <range/v3/core.hpp>
+#if META_HAS_STATIC_RTTI
 #include <range/v3/view/any_view.hpp>
+#endif
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/drop.hpp>
 #include <range/v3/view/take.hpp>
