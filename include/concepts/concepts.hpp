@@ -785,7 +785,7 @@ namespace concepts
 
         struct CPP_true_t
         {
-            constexpr bool operator()(Nil) const noexcept
+            constexpr bool operator()(KnightsWhoSayNil) const noexcept
             {
                 return true;
             }
