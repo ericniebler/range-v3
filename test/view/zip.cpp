@@ -302,6 +302,29 @@ int main()
 
         has_cardinality<cardinality::unknown>(rng);
     }
+    
+    {
+        std::vector<int> v0{1, 2, 3};
+        std::vector<int> v1{};
+
+        auto rng0 = views::zip(v0, v1);
+        auto rng1 = views::zip(v1, v0);
+
+        CHECK(ranges::distance(ranges::begin(rng0), ranges::end(rng0)) == 0);
+        CHECK(ranges::distance(ranges::begin(rng1), ranges::end(rng1)) == 0);
+        CHECK(ranges::distance(ranges::end(rng0), ranges::begin(rng0)) == 0);
+        CHECK(ranges::distance(ranges::end(rng1), ranges::begin(rng1)) == 0);
+    }
+
+    {
+        std::vector<int> v0{1, 2, 3};
+        std::vector<int> v1{1, 2, 3, 4, 5};
+
+        auto rng = views::zip(v0, v1);
+
+        CHECK(ranges::distance(ranges::begin(rng), ranges::end(rng)) == 3);
+        CHECK(ranges::distance(ranges::end(rng), ranges::begin(rng)) == -3);
+    }
 
     return test_result();
 }
