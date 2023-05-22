@@ -21,7 +21,7 @@ jobs:
         - {
             name: "Linux GCC 6 Debug (C++14)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 14,
@@ -30,7 +30,7 @@ jobs:
         - {
             name: "Linux GCC 6 Release (C++14)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 14,
@@ -39,7 +39,7 @@ jobs:
         - {
             name: "Linux GCC 6 Debug (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 17,
@@ -48,7 +48,7 @@ jobs:
         - {
             name: "Linux GCC 6 Release (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 17,
@@ -57,7 +57,7 @@ jobs:
         - {
             name: "Linux GCC 6 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 17,
@@ -67,7 +67,7 @@ jobs:
         - {
             name: "Linux GCC 7 Debug (C++14)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 14,
@@ -76,7 +76,7 @@ jobs:
         - {
             name: "Linux GCC 7 Release (C++14)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 14,
@@ -85,7 +85,7 @@ jobs:
         - {
             name: "Linux GCC 7 Debug (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 17,
@@ -94,7 +94,7 @@ jobs:
         - {
             name: "Linux GCC 7 Release (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 17,
@@ -103,7 +103,7 @@ jobs:
         - {
             name: "Linux GCC 7 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 17,
@@ -113,7 +113,7 @@ jobs:
         - {
             name: "Linux GCC 8 Debug (C++14)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 14,
@@ -122,7 +122,7 @@ jobs:
         - {
             name: "Linux GCC 8 Release (C++14)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 14,
@@ -131,7 +131,7 @@ jobs:
         - {
             name: "Linux GCC 8 Debug (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 17,
@@ -140,7 +140,7 @@ jobs:
         - {
             name: "Linux GCC 8 Release (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 17,
@@ -149,7 +149,7 @@ jobs:
         - {
             name: "Linux GCC 8 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 17,
@@ -216,7 +216,7 @@ jobs:
         - {
             name: "Linux Clang 5.0 Debug (C++14 / libc++ / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "clang-5.0", cxx: "clang++-5.0",
             cxx_standard: 14,
@@ -226,7 +226,7 @@ jobs:
         - {
             name: "Linux Clang 5.0 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "clang-5.0", cxx: "clang++-5.0",
             cxx_standard: 17,
@@ -237,7 +237,7 @@ jobs:
         - {
             name: "Linux Clang 6.0 Debug (C++14 / libc++ / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "clang-6.0", cxx: "clang++-6.0",
             cxx_standard: 14,
@@ -247,7 +247,7 @@ jobs:
         - {
             name: "Linux Clang 6.0 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: ubuntu:18.04,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "clang-6.0", cxx: "clang++-6.0",
             cxx_standard: 17,
