@@ -278,6 +278,7 @@ jobs:
         - {
             name: "Linux Clang 9 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "clang-9", cxx: "clang++-9",
             cxx_standard: 17,
@@ -286,6 +287,7 @@ jobs:
         - {
             name: "Linux Clang 9 Release (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "clang-9", cxx: "clang++-9",
             cxx_standard: 17,
@@ -295,6 +297,7 @@ jobs:
         - {
             name: "Linux Clang 10 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "clang-10", cxx: "clang++-10",
             cxx_standard: 20,
@@ -304,6 +307,7 @@ jobs:
         - {
             name: "Linux Clang 10 Release (C++20 / Concepts)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "clang-10", cxx: "clang++-10",
             cxx_standard: 20,
