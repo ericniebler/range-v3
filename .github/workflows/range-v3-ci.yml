@@ -258,6 +258,7 @@ jobs:
         - {
             name: "Linux Clang 8 Debug (C++14 / libc++ / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "clang-8", cxx: "clang++-8",
             cxx_standard: 14,
@@ -266,7 +267,7 @@ jobs:
           }
         - {
             name: "Linux Clang 8 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-20.04,
             build_type: Debug,
             cc: "clang-8", cxx: "clang++-8",
             cxx_standard: 17,
