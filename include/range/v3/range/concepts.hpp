@@ -238,7 +238,7 @@ namespace ranges
 #if defined(__cpp_lib_span) && __cpp_lib_span >= 202002L && \
     (!defined(__GLIBCXX__) || defined(__cpp_lib_concepts))
     template<typename T, std::size_t N>
-    RANGES_INLINE_VAR constexpr bool enable_view<std::span<T, N>> = N + 1 < 2;
+    RANGES_INLINE_VAR constexpr bool enable_view<std::span<T, N>> = true;
 #endif
 
     //
@@ -251,7 +251,7 @@ namespace ranges
     template<typename T>
     CPP_concept view_ =
         range<T> &&
-        semiregular<T> &&
+        copyable<T> &&
         enable_view<T>;
 
     /// \concept viewable_range

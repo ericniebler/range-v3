@@ -315,7 +315,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename From, typename To)(
-        requires weakly_incrementable<From> AND semiregular<To> AND
+        requires weakly_incrementable<From> AND copyable<To> AND
         (!integral<From> || !integral<To> ||
          std::is_signed<From>::value == std::is_signed<To>::value)) //
         closed_iota_view(From, To)
@@ -460,7 +460,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename From, typename To)(
-        requires weakly_incrementable<From> AND semiregular<To> AND
+        requires weakly_incrementable<From> AND copyable<To> AND
         (!integral<From> || !integral<To> ||
          std::is_signed<From>::value == std::is_signed<To>::value)) //
         iota_view(From, To)
@@ -478,7 +478,7 @@ namespace ranges
                 return iota_view<From>{std::move(value)};
             }
             template(typename From, typename To)(
-                requires weakly_incrementable<From> AND semiregular<To> AND
+                requires weakly_incrementable<From> AND copyable<To> AND
                     detail::weakly_equality_comparable_with_<From, To> AND
                 (!integral<From> || !integral<To> ||
                  std::is_signed<From>::value == std::is_signed<To>::value)) //
@@ -491,7 +491,7 @@ namespace ranges
         struct closed_iota_fn
         {
             template(typename From, typename To)(
-                requires weakly_incrementable<From> AND semiregular<To> AND
+                requires weakly_incrementable<From> AND copyable<To> AND
                         detail::weakly_equality_comparable_with_<From, To> AND
                     (!integral<From> || !integral<To> ||
                      std::is_signed<From>::value == std::is_signed<To>::value)) //

@@ -95,6 +95,10 @@ namespace ranges
             requires same_as<I, class I::_String_view_iterator>)
         auto iter_concept_(I, priority_tag<3>)
             -> ranges::contiguous_iterator_tag;
+        template(typename I)(
+            requires same_as<I, class I::_Span_iterator>)
+        auto iter_concept_(I, priority_tag<3>)
+            -> ranges::contiguous_iterator_tag;
 #endif
         template(typename I, typename T)(
             requires same_as<I, T *>)

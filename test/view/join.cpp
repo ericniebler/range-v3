@@ -266,6 +266,25 @@ int main()
         ::check_equal(rng, {"foo","bar","XX","bax","bat"});
     }
 
+    {
+        std::vector<int> v = {1, 2, 3};
+        auto throws = [](auto &&) -> std::vector<std::vector<int>> & { throw 42; };
+
+        auto rng = v | ranges::views::transform(throws) | ranges::views::join;
+        try
+        {
+            auto d = ranges::distance(rng);
+            CHECK(false);
+            CHECK(d == 3);
+        }
+        catch(int)
+        {}
+        catch(...)
+        {
+            CHECK(false);
+        }
+    }
+
     test_issue_283();
     test_issue_1414();
 

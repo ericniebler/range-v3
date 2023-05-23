@@ -6,7 +6,7 @@ Range library for C++14/17/20. This code was the basis of [a formal proposal](ht
 About:
 ------
 
-Ranges are an extension of the Standard Template Library that makes its iterators and algorithms more powerful by making them _composable_. Unlike other range-like solutions which seek to do away with iterators, in range-v3 ranges are an abstration layer _on top_ of iterators.
+Ranges are an extension of the Standard Template Library that makes its iterators and algorithms more powerful by making them _composable_. Unlike other range-like solutions which seek to do away with iterators, in range-v3 ranges are an abstraction layer _on top_ of iterators.
 
 Range-v3 is built on three pillars: Views, Actions, and Algorithms. The algorithms are the same as those with which you are already familiar in the STL, except that in range-v3 all the algorithms have overloads that take ranges in addition to the overloads that take iterators. Views are composable adaptations of ranges where the adaptation happens lazily as the view is iterated. And an action is an eager application of an algorithm to a container that mutates the container in-place and returns it for further processing.
 
@@ -71,13 +71,13 @@ Building range-v3 - Using vcpkg
 -------------------------------
 
 You can download and install range-v3 using the [vcpkg](https://github.com/Microsoft/vcpkg) dependency manager:
-
-    git clone https://github.com/Microsoft/vcpkg.git
-    cd vcpkg
-    ./bootstrap-vcpkg.sh
-    ./vcpkg integrate install
-    ./vcpkg install range-v3
-
+```sh
+git clone https://github.com/Microsoft/vcpkg.git
+cd vcpkg
+./bootstrap-vcpkg.sh
+./vcpkg integrate install
+./vcpkg install range-v3
+```
 The range-v3 port in vcpkg is kept up to date by Microsoft team members and community contributors. If the version is out of date, please [create an issue or pull request](https://github.com/Microsoft/vcpkg) on the vcpkg repository.
 
 Building range-v3 - Using Conan
@@ -86,7 +86,7 @@ Building range-v3 - Using Conan
 You can download and install range-v3 using the [Conan](https://github.com/conan-io/conan) dependency manager.
 
 Setup your CMakeLists.txt (see [Conan documentation](https://docs.conan.io/en/latest/integrations/build_system.html) on how to use MSBuild, Meson and others):
-```
+```cmake
 project(myproject CXX)
 
 add_executable(${PROJECT_NAME} main.cpp)
@@ -97,7 +97,7 @@ conan_basic_setup(TARGETS) # Introduce Conan-generated targets
 target_link_libraries(${PROJECT_NAME} CONAN_PKG::range-v3)
 ```
 Create `conanfile.txt` in your source dir:
-```
+```sh
 [requires]
 range-v3/0.12.0
 
@@ -105,7 +105,7 @@ range-v3/0.12.0
 cmake
 ```
 Install and run `conan`, then build your project as always:
-```
+```sh
 pip install conan
 mkdir build
 cd build
@@ -141,7 +141,7 @@ For example, to make your `build2` project depend on `range-v3`:
     depends: range-v3 ~0.11.0
     ```
   - Import the target and use it as a prerequisite to your own target using `range-v3` in the appropriate `buildfile`:
-    ```
+    ```py
     import range_v3 = range-v3%lib{range-v3}
 
     lib{mylib} : cxx{**} ... $range_v3
