@@ -54,7 +54,7 @@ if [ ${VERSION} == $TRUNK_VERSION ]; then
 else
     echo "Fetching libc++/libc++abi version: ${VERSION} ..."
     MAJOR=$(echo ${VERSION} | cut -d '.' -f 1)
-    if [[ ${MAJOR} -lt 8 ]]; then
+    if [[ ${MAJOR} -lt 14 ]]; then
         URL_ROOT="https://releases.llvm.org/${VERSION}"
     else
         URL_ROOT="https://github.com/llvm/llvm-project/releases/download/llvmorg-${VERSION}"

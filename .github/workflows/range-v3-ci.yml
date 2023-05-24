@@ -11,6 +11,8 @@ jobs:
   build:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
+    container: ${{ matrix.config.container }}
+
     strategy:
       fail-fast: false
       matrix:
@@ -18,7 +20,8 @@ jobs:
         # GCC-6
         - {
             name: "Linux GCC 6 Debug (C++14)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 14,
@@ -26,7 +29,8 @@ jobs:
           }
         - {
             name: "Linux GCC 6 Release (C++14)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 14,
@@ -34,7 +38,8 @@ jobs:
           }
         - {
             name: "Linux GCC 6 Debug (C++17)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 17,
@@ -42,7 +47,8 @@ jobs:
           }
         - {
             name: "Linux GCC 6 Release (C++17)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 17,
@@ -50,7 +56,8 @@ jobs:
           }
         - {
             name: "Linux GCC 6 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 17,
@@ -59,7 +66,8 @@ jobs:
         # GCC-7
         - {
             name: "Linux GCC 7 Debug (C++14)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 14,
@@ -67,7 +75,8 @@ jobs:
           }
         - {
             name: "Linux GCC 7 Release (C++14)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 14,
@@ -75,7 +84,8 @@ jobs:
           }
         - {
             name: "Linux GCC 7 Debug (C++17)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 17,
@@ -83,7 +93,8 @@ jobs:
           }
         - {
             name: "Linux GCC 7 Release (C++17)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 17,
@@ -91,7 +102,8 @@ jobs:
           }
         - {
             name: "Linux GCC 7 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 17,
@@ -100,7 +112,8 @@ jobs:
         # GCC-8
         - {
             name: "Linux GCC 8 Debug (C++14)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 14,
@@ -108,7 +121,8 @@ jobs:
           }
         - {
             name: "Linux GCC 8 Release (C++14)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 14,
@@ -116,7 +130,8 @@ jobs:
           }
         - {
             name: "Linux GCC 8 Debug (C++17)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 17,
@@ -124,7 +139,8 @@ jobs:
           }
         - {
             name: "Linux GCC 8 Release (C++17)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 17,
@@ -132,7 +148,8 @@ jobs:
           }
         - {
             name: "Linux GCC 8 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 17,
@@ -198,7 +215,8 @@ jobs:
         # Clang-5.0
         - {
             name: "Linux Clang 5.0 Debug (C++14 / libc++ / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "clang-5.0", cxx: "clang++-5.0",
             cxx_standard: 14,
@@ -207,7 +225,8 @@ jobs:
           }
         - {
             name: "Linux Clang 5.0 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "clang-5.0", cxx: "clang++-5.0",
             cxx_standard: 17,
@@ -217,7 +236,8 @@ jobs:
         # Clang-6.0
         - {
             name: "Linux Clang 6.0 Debug (C++14 / libc++ / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "clang-6.0", cxx: "clang++-6.0",
             cxx_standard: 14,
@@ -226,7 +246,8 @@ jobs:
           }
         - {
             name: "Linux Clang 6.0 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04,
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "clang-6.0", cxx: "clang++-6.0",
             cxx_standard: 17,
@@ -237,6 +258,7 @@ jobs:
         - {
             name: "Linux Clang 8 Debug (C++14 / libc++ / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "clang-8", cxx: "clang++-8",
             cxx_standard: 14,
@@ -245,7 +267,7 @@ jobs:
           }
         - {
             name: "Linux Clang 8 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-20.04,
             build_type: Debug,
             cc: "clang-8", cxx: "clang++-8",
             cxx_standard: 17,
@@ -256,6 +278,7 @@ jobs:
         - {
             name: "Linux Clang 9 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "clang-9", cxx: "clang++-9",
             cxx_standard: 17,
@@ -264,6 +287,7 @@ jobs:
         - {
             name: "Linux Clang 9 Release (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "clang-9", cxx: "clang++-9",
             cxx_standard: 17,
@@ -273,6 +297,7 @@ jobs:
         - {
             name: "Linux Clang 10 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: Debug,
             cc: "clang-10", cxx: "clang++-10",
             cxx_standard: 20,
@@ -282,6 +307,7 @@ jobs:
         - {
             name: "Linux Clang 10 Release (C++20 / Concepts)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "clang-10", cxx: "clang++-10",
             cxx_standard: 20,
@@ -354,7 +380,19 @@ jobs:
           }
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
+
+    - name: Setup container environment
+      if: matrix.config.container
+      run: |
+        apt-get update
+        apt-get -y install sudo python git g++ cmake curl
+
+    - name: Install packages
+      if: matrix.install
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install ${{matrix.install}}
 
     - name: Download Ninja and CMake
       id: cmake_and_ninja
