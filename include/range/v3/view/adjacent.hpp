@@ -1,11 +1,7 @@
 /// \file
 // Range v3 library
 //
-//  Copyright Eric Niebler 2013-present
-//  Copyright Tobias Mayer 2016
-//  Copyright Casey Carter 2016
-//
-//  Created by Eightfold 2023
+//  Copyright Alex Mills 2023
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
