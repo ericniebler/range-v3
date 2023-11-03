@@ -61,7 +61,7 @@ int main()
 
         test_enumerate_with(range);
 
-        // check that range hasn't accidentially been modified
+        // check that range hasn't accidentally been modified
         CHECK(rcopy == range);
 
         // check with empty range
