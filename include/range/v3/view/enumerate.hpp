@@ -35,6 +35,7 @@ namespace ranges
         {
         private:
             friend range_access;
+            size_t start_{0};
 
             struct cursor
             {
@@ -72,10 +73,12 @@ namespace ranges
 
             public:
                 cursor() = default;
+                cursor(size_t n) : index_{n}
+                {}
             };
             cursor begin_cursor() const
             {
-                return cursor{};
+                return cursor{start_};
             }
             unreachable_sentinel_t end_cursor() const
             {
@@ -84,6 +87,8 @@ namespace ranges
 
         public:
             index_view() = default;
+            index_view(size_t n) : start_{n}
+            {}
         };
 
     } // namespace detail
@@ -103,11 +108,11 @@ namespace ranges
         {
             template(typename Rng)(
                 requires viewable_range<Rng>)
-            auto operator()(Rng && rng) const
+            auto operator()(Rng && rng, size_t n = 0) const
             {
                 using D = range_difference_t<Rng>;
                 using S = detail::iter_size_t<iterator_t<Rng>>;
-                return zip(detail::index_view<S, D>(), all(static_cast<Rng &&>(rng)));
+                return zip(detail::index_view<S, D>(n), all(static_cast<Rng &&>(rng)));
             }
         };
 
