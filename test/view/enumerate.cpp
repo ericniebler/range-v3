@@ -150,5 +150,15 @@ int main()
         CPP_assert(same_as<range_value_t<X>, std::pair<detail::diffmax_t, char const*>>);
     }
 
+    {
+        using namespace ranges;
+        auto x = views::indices( std::uintmax_t( 100 ) )
+          | views::transform([](std::uintmax_t) { return "";})
+          | views::enumerate(99);
+        using X = decltype(x);
+        CPP_assert(same_as<range_difference_t<X>, detail::diffmax_t>);
+        CPP_assert(same_as<range_value_t<X>, std::pair<detail::diffmax_t, char const*>>);
+    }
+
     return ::test_result();
 }
