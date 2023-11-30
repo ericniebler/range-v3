@@ -733,6 +733,14 @@ namespace ranges
         struct partial_sum_fn;
     }
 
+    template<typename T>
+    struct maybe_view;
+
+    namespace views
+    {
+        struct maybe_fn;
+    }
+
     template<typename Rng>
     struct move_view;
 
