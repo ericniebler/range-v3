@@ -20,6 +20,7 @@
 #include <range/v3/algorithm/any_of.hpp>
 #include <range/v3/algorithm/binary_search.hpp>
 #include <range/v3/algorithm/contains.hpp>
+#include <range/v3/algorithm/contains_subrange.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/copy_backward.hpp>
 #include <range/v3/algorithm/copy_if.hpp>
