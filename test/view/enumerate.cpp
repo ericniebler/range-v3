@@ -25,12 +25,12 @@
 using std::begin;
 
 template<class RangeT>
-void test_enumerate_with(RangeT &&range)
+void test_enumerate_with(RangeT &&range, int n = 0)
 {
-    auto enumerated_range = ranges::views::enumerate(range);
+    auto enumerated_range = ranges::views::enumerate(range, n);
     CPP_assert(ranges::borrowed_range<decltype(enumerated_range)>);
 
-    std::size_t idx_ref = 0;
+    std::size_t idx_ref = n;
     auto it_ref = begin( range );
 
     for(auto it = enumerated_range.begin(); it != enumerated_range.end(); ++it)
@@ -50,18 +50,37 @@ int main()
         test_enumerate_with(es);
     }
 
+    { // test array with starting index
+        int const es[] = { 9,8,7,6,5,4,3,2,1,0 };
+        test_enumerate_with(es, 7);
+    }
+
     { // test with vector of complex value type
         std::vector<std::list<int>> range{ {1, 2, 3}, { 3,5,6,7 }, { 10,5,6,1 }, { 1,2,3,4 } };
         const auto rcopy = range;
 
         test_enumerate_with(range);
 
-        // check that range hasn't accidentially been modified
+        // check that range hasn't accidentally been modified
         CHECK(rcopy == range);
 
         // check with empty range
         range.clear();
         test_enumerate_with(range);
+    }
+
+    { // test with vector of complex value type with starting index
+        std::vector<std::list<int>> range{ {1, 2, 3}, { 3,5,6,7 }, { 10,5,6,1 }, { 1,2,3,4 } };
+        const auto rcopy = range;
+
+        test_enumerate_with(range, 2);
+
+        // check that range hasn't accidentally been modified
+        CHECK(rcopy == range);
+
+        // check with empty range
+        range.clear();
+        test_enumerate_with(range, 2);
     }
 
     { // test with list
@@ -72,8 +91,20 @@ int main()
         test_enumerate_with(range);
     }
 
+    { // test with list with starting index
+        std::list<int> range{ 9,8,7,6,5,4,3,2,1 };
+        test_enumerate_with(range, 1);
+
+        range.clear();
+        test_enumerate_with(range, 1);
+    }
+
     { // test with initializer_list
         test_enumerate_with(std::initializer_list<int>{9, 8, 7, 6, 5, 4, 3, 2, 1});
+    }
+
+    { // test with initializer_list with starting index
+        test_enumerate_with(std::initializer_list<int>{9, 8, 7, 6, 5, 4, 3, 2, 1}, 49);
     }
 
     {
@@ -85,11 +116,27 @@ int main()
     }
 
     {
+        auto range = ranges::views::iota(0, 0);
+        test_enumerate_with(range, 2);
+
+        range = ranges::views::iota(-10000, 10000);
+        test_enumerate_with(range, 2);
+    }
+
+    {
         auto range = ranges::views::iota((std::uintmax_t)0, (std::uintmax_t)0);
         test_enumerate_with(range);
 
         auto range2 = ranges::views::iota((std::intmax_t) -10000, (std::intmax_t) 10000);
         test_enumerate_with(range2);
+    }
+
+    {
+        auto range = ranges::views::iota((std::uintmax_t)0, (std::uintmax_t)0);
+        test_enumerate_with(range, 42);
+
+        auto range2 = ranges::views::iota((std::intmax_t) -10000, (std::intmax_t) 10000);
+        test_enumerate_with(range2, 42);
     }
 
     // https://github.com/ericniebler/range-v3/issues/1141
@@ -98,6 +145,16 @@ int main()
         auto x = views::indices( std::uintmax_t( 100 ) )
           | views::transform([](std::uintmax_t) { return "";})
           | views::enumerate;
+        using X = decltype(x);
+        CPP_assert(same_as<range_difference_t<X>, detail::diffmax_t>);
+        CPP_assert(same_as<range_value_t<X>, std::pair<detail::diffmax_t, char const*>>);
+    }
+
+    {
+        using namespace ranges;
+        auto x = views::indices( std::uintmax_t( 100 ) )
+          | views::transform([](std::uintmax_t) { return "";})
+          | views::enumerate(99);
         using X = decltype(x);
         CPP_assert(same_as<range_difference_t<X>, detail::diffmax_t>);
         CPP_assert(same_as<range_value_t<X>, std::pair<detail::diffmax_t, char const*>>);
