@@ -9,9 +9,11 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <memory>
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/for_each.hpp>
+#include <range/v3/view/iota.hpp>
 
 #include "../array.hpp"
 #include "../simple_test.hpp"
@@ -58,6 +60,12 @@ int main()
         constexpr auto rng = test::array<int, 4>{{0, 2, 4, 6}};
         STATIC_CHECK(ranges::for_each(rng, void_f).in == ranges::end(rng));
     }
+    sum = 0;
+    auto v3 = ranges::views::iota(0,3);
+    auto vfun = [&](std::unique_ptr<int> i){ sum += *i; };
+    auto moproj = [&](int i){ return std::make_unique<int>(i); };
+    CHECK(ranges::for_each(v3, vfun, moproj).in == v3.end());
+    CHECK(sum == 3);
 
     return ::test_result();
 }

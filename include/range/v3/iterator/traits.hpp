@@ -63,9 +63,19 @@ namespace ranges
     template<typename I>
     using iter_rvalue_reference_t = detail::iter_rvalue_reference_t<I>;
 
+    //////////////////////////////////////////////////////////////////////////////////////
+    // indirect_value_t
+    template<typename I,typename = void>
+    struct indirect_value
+    {
+        using type = iter_value_t<I> &;
+    };
+    template<typename I>
+    using indirect_value_t = typename indirect_value<I>::type;
+
     template<typename I>
     using iter_common_reference_t =
-        common_reference_t<iter_reference_t<I>, iter_value_t<I> &>;
+        common_reference_t<iter_reference_t<I>, indirect_value_t<I>>;
 
 #if defined(RANGES_DEEP_STL_INTEGRATION) && RANGES_DEEP_STL_INTEGRATION && \
     !defined(RANGES_DOXYGEN_INVOKED)
