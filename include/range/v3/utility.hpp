@@ -14,7 +14,11 @@
 #ifndef RANGES_V3_UTILITY_HPP
 #define RANGES_V3_UTILITY_HPP
 
+#include <meta/meta_fwd.hpp>
+
+#if META_HAS_STATIC_RTTI
 #include <range/v3/utility/any.hpp>
+#endif
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/common_tuple.hpp>
 #include <range/v3/utility/common_type.hpp>

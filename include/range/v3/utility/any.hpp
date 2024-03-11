@@ -14,6 +14,12 @@
 #ifndef RANGES_V3_UTILITY_ANY_HPP
 #define RANGES_V3_UTILITY_ANY_HPP
 
+#include <meta/meta_fwd.hpp>
+
+#if !META_HAS_STATIC_RTTI
+#error any requires static RTTI
+#endif
+
 #include <memory>
 #include <type_traits>
 #include <typeinfo>
