@@ -1,4 +1,4 @@
-#if defined(__cpp_coroutines) && defined(__has_include)
+#if (defined(__cpp_coroutines) || defined(__cpp_impl_coroutine)) && defined(__has_include)
 #if __has_include(<coroutine>)
 #include <coroutine>
 namespace std_coro = std;
