@@ -380,15 +380,15 @@ jobs:
           }
 
     steps:
-    - uses: actions/checkout@v3
-
-    - name: Setup container enviroversion `GLIBC_2.28' not foundnment
+    - name: Setup container environment
       if: matrix.config.container
       run: |
         apt-get update
         apt-get -y install sudo python git g++ cmake curl
         apt-get remove nodejs
         nvm install 16.15.1
+
+    - uses: actions/checkout@v4
 
     - name: Install packages
       if: matrix.install
