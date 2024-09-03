@@ -387,6 +387,8 @@ jobs:
       run: |
         apt-get update
         apt-get -y install sudo python git g++ cmake curl
+        apt-get remove nodejs
+        nvm install 16.15.1
 
     - name: Install packages
       if: matrix.install
