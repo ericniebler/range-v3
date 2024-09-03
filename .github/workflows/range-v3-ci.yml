@@ -383,7 +383,7 @@ jobs:
           }
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
 
     - name: Setup container environment
       if: matrix.config.container
