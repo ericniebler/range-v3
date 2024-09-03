@@ -25,6 +25,8 @@
 
 #include <range/v3/detail/prologue.hpp>
 
+#include <string>
+
 namespace ranges
 {
     /// \addtogroup group-range
