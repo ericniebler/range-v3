@@ -138,9 +138,7 @@ namespace ranges
 
         private:
             void const volatile * obj_ = nullptr;
-#ifndef NDEBUG
             std::type_info const * info_ = nullptr;
-#endif
         };
 
         template<typename Base>
