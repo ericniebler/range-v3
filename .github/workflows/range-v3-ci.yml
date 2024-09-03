@@ -385,8 +385,7 @@ jobs:
       run: |
         apt-get update
         apt-get -y install sudo python git g++ cmake curl
-        apt-get remove nodejs
-        nvm install 16.15.1
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 
     - uses: actions/checkout@v4
 
