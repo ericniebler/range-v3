@@ -25,7 +25,9 @@
 
 #include <range/v3/detail/prologue.hpp>
 
+#if RANGES_CXX_STD <= RANGES_CXX_STD_14
 #include <string>
+#endif
 
 namespace ranges
 {
