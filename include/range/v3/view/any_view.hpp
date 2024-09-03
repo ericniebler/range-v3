@@ -125,15 +125,22 @@ namespace ranges
             template<typename T>
             constexpr any_ref(T & obj) noexcept
               : obj_(detail::addressof(obj))
+#ifndef NDEBUG
+              , info_(&typeid(rtti_tag<T>))
+#endif
             {}
             template<typename T>
             T & get() const noexcept
             {
+                RANGES_ASSERT(obj_ && info_ && *info_ == typeid(rtti_tag<T>));
                 return *const_cast<T *>(static_cast<T const volatile *>(obj_));
             }
 
         private:
             void const volatile * obj_ = nullptr;
+#ifndef NDEBUG
+            std::type_info const * info_ = nullptr;
+#endif
         };
 
         template<typename Base>
