@@ -138,7 +138,7 @@ namespace ranges
 
         private:
             void const volatile * obj_ = nullptr;
-            std::type_info const * info_ = nullptr;
+            [[maybe_unused]] std::type_info const * info_ = nullptr;
         };
 
         template<typename Base>
