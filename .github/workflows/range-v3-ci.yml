@@ -385,6 +385,7 @@ jobs:
       run: |
         apt-get update
         apt-get -y install sudo python git g++ cmake curl
+        touch ~/.profile
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
         export NVM_DIR="$HOME/.nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
