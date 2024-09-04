@@ -22,6 +22,11 @@ namespace ranges
     {
         static constexpr T value{};
     };
+
+    /// \ingroup group-utility
+    /// \sa `static_const`
+    template<typename T>
+    constexpr T static_const<T>::value;
 } // namespace ranges
 
 #endif
