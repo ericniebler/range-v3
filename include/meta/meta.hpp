@@ -2837,10 +2837,6 @@ namespace meta
         {
             static constexpr T value{};
         };
-
-        // Avoid potential ODR violations with global objects:
-        template <typename T>
-        constexpr T static_const<T>::value;
     } // namespace detail
 
     ///\endcond
