@@ -347,6 +347,85 @@ namespace ranges
         template<typename Enable>
         constexpr bool _is_integer_like_<diffmax_t, Enable> = true;
 #endif
+
+        template<bool = true>
+        struct diffmax_numeric_limits
+        {
+            static constexpr bool const is_specialized = true;
+            static constexpr bool const is_signed = true;
+            static constexpr bool const is_integer = true;
+            static constexpr bool const is_exact = true;
+            static constexpr bool const has_infinity = false;
+            static constexpr bool const has_quiet_NaN = false;
+            static constexpr bool const has_signaling_NaN = false;
+            static constexpr bool const has_denorm = false;
+            static constexpr bool const has_denorm_loss = false;
+            static constexpr std::float_round_style const round_style =
+                std::round_toward_zero;
+            static constexpr bool const is_iec559 = false;
+            static constexpr bool const is_bounded = true;
+            static constexpr bool const is_modulo = false;
+            static constexpr int const digits = CHAR_BIT * sizeof(std::uintmax_t) + 1;
+            static constexpr int const digits10 =
+                static_cast<int>(digits * 0.301029996); // digits * std::log10(2)
+            static constexpr int const max_digits10 = 0;
+            static constexpr int const radix = 2;
+            static constexpr int const min_exponent = 0;
+            static constexpr int const min_exponent10 = 0;
+            static constexpr int const max_exponent = 0;
+            static constexpr int const max_exponent10 = 0;
+            static constexpr bool const traps = true;
+            static constexpr bool const tinyness_before = false;
+        };
+
+#if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17
+        template<bool B>
+        constexpr bool const diffmax_numeric_limits<B>::is_specialized;
+        template<bool B>
+        constexpr bool const diffmax_numeric_limits<B>::is_signed;
+        template<bool B>
+        constexpr bool const diffmax_numeric_limits<B>::is_integer;
+        template<bool B>
+        constexpr bool const diffmax_numeric_limits<B>::is_exact;
+        template<bool B>
+        constexpr bool const diffmax_numeric_limits<B>::has_infinity;
+        template<bool B>
+        constexpr bool const diffmax_numeric_limits<B>::has_quiet_NaN;
+        template<bool B>
+        constexpr bool const diffmax_numeric_limits<B>::has_signaling_NaN;
+        template<bool B>
+        constexpr bool const diffmax_numeric_limits<B>::has_denorm;
+        template<bool B>
+        constexpr bool const diffmax_numeric_limits<B>::has_denorm_loss;
+        template<bool B>
+        constexpr std::float_round_style const diffmax_numeric_limits<B>::round_style;
+        template<bool B>
+        constexpr bool const diffmax_numeric_limits<B>::is_iec559;
+        template<bool B>
+        constexpr bool const diffmax_numeric_limits<B>::is_bounded;
+        template<bool B>
+        constexpr bool const diffmax_numeric_limits<B>::is_modulo;
+        template<bool B>
+        constexpr int const diffmax_numeric_limits<B>::digits;
+        template<bool B>
+        constexpr int const diffmax_numeric_limits<B>::digits10;
+        template<bool B>
+        constexpr int const diffmax_numeric_limits<B>::max_digits10;
+        template<bool B>
+        constexpr int const diffmax_numeric_limits<B>::radix;
+        template<bool B>
+        constexpr int const diffmax_numeric_limits<B>::min_exponent;
+        template<bool B>
+        constexpr int const diffmax_numeric_limits<B>::min_exponent10;
+        template<bool B>
+        constexpr int const diffmax_numeric_limits<B>::max_exponent;
+        template<bool B>
+        constexpr int const diffmax_numeric_limits<B>::max_exponent10;
+        template<bool B>
+        constexpr bool const diffmax_numeric_limits<B>::traps;
+        template<bool B>
+        constexpr bool const diffmax_numeric_limits<B>::tinyness_before;
+#endif
     } // namespace detail
     /// \endcond
 } // namespace ranges
@@ -358,32 +437,8 @@ namespace std
 {
     template<>
     struct numeric_limits<::ranges::detail::diffmax_t>
+      : ::ranges::detail::diffmax_numeric_limits<>
     {
-        static constexpr bool is_specialized = true;
-        static constexpr bool is_signed = true;
-        static constexpr bool is_integer = true;
-        static constexpr bool is_exact = true;
-        static constexpr bool has_infinity = false;
-        static constexpr bool has_quiet_NaN = false;
-        static constexpr bool has_signaling_NaN = false;
-        static constexpr bool has_denorm = false;
-        static constexpr bool has_denorm_loss = false;
-        static constexpr std::float_round_style round_style = std::round_toward_zero;
-        static constexpr bool is_iec559 = false;
-        static constexpr bool is_bounded = true;
-        static constexpr bool is_modulo = false;
-        static constexpr int digits = CHAR_BIT * sizeof(std::uintmax_t) + 1;
-        static constexpr int digits10 =
-            static_cast<int>(digits * 0.301029996); // digits * std::log10(2)
-        static constexpr int max_digits10 = 0;
-        static constexpr int radix = 2;
-        static constexpr int min_exponent = 0;
-        static constexpr int min_exponent10 = 0;
-        static constexpr int max_exponent = 0;
-        static constexpr int max_exponent10 = 0;
-        static constexpr bool traps = true;
-        static constexpr bool tinyness_before = false;
-
         static constexpr ::ranges::detail::diffmax_t max() noexcept
         {
             return std::uintmax_t(-1);
@@ -421,45 +476,21 @@ namespace std
             return 0;
         }
     };
+
     template<>
     struct numeric_limits<::ranges::detail::diffmax_t const>
       : numeric_limits<::ranges::detail::diffmax_t>
     {};
+
     template<>
     struct numeric_limits<::ranges::detail::diffmax_t volatile>
       : numeric_limits<::ranges::detail::diffmax_t>
     {};
+
     template<>
     struct numeric_limits<::ranges::detail::diffmax_t const volatile>
       : numeric_limits<::ranges::detail::diffmax_t>
     {};
-
-#if RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
-    inline constexpr bool numeric_limits<::ranges::detail::diffmax_t>::is_specialized;
-    inline constexpr bool numeric_limits<::ranges::detail::diffmax_t>::is_signed;
-    inline constexpr bool numeric_limits<::ranges::detail::diffmax_t>::is_integer;
-    inline constexpr bool numeric_limits<::ranges::detail::diffmax_t>::is_exact;
-    inline constexpr bool numeric_limits<::ranges::detail::diffmax_t>::has_infinity;
-    inline constexpr bool numeric_limits<::ranges::detail::diffmax_t>::has_quiet_NaN;
-    inline constexpr bool numeric_limits<::ranges::detail::diffmax_t>::has_signaling_NaN;
-    inline constexpr bool numeric_limits<::ranges::detail::diffmax_t>::has_denorm;
-    inline constexpr bool numeric_limits<::ranges::detail::diffmax_t>::has_denorm_loss;
-    inline constexpr std::float_round_style
-        numeric_limits<::ranges::detail::diffmax_t>::round_style;
-    inline constexpr bool numeric_limits<::ranges::detail::diffmax_t>::is_iec559;
-    inline constexpr bool numeric_limits<::ranges::detail::diffmax_t>::is_bounded;
-    inline constexpr bool numeric_limits<::ranges::detail::diffmax_t>::is_modulo;
-    inline constexpr int numeric_limits<::ranges::detail::diffmax_t>::digits;
-    inline constexpr int numeric_limits<::ranges::detail::diffmax_t>::digits10;
-    inline constexpr int numeric_limits<::ranges::detail::diffmax_t>::max_digits10;
-    inline constexpr int numeric_limits<::ranges::detail::diffmax_t>::radix;
-    inline constexpr int numeric_limits<::ranges::detail::diffmax_t>::min_exponent;
-    inline constexpr int numeric_limits<::ranges::detail::diffmax_t>::min_exponent10;
-    inline constexpr int numeric_limits<::ranges::detail::diffmax_t>::max_exponent;
-    inline constexpr int numeric_limits<::ranges::detail::diffmax_t>::max_exponent10;
-    inline constexpr bool numeric_limits<::ranges::detail::diffmax_t>::traps;
-    inline constexpr bool numeric_limits<::ranges::detail::diffmax_t>::tinyness_before;
-#endif
 } // namespace std
 /// \endcond
 
