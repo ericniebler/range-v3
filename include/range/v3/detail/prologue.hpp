@@ -48,3 +48,7 @@ RANGES_DIAGNOSTIC_KEYWORD_MACRO
 
 #pragma push_macro("I")
 #undef I
+
+#if defined(__apple_build_version__)
+RANGES_DIAGNOSTIC_IGNORE("-Wdeprecated")
+#endif
