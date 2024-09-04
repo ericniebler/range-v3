@@ -22,6 +22,15 @@ jobs:
         config:
         # GCC-6
         - {
+            name: "Linux GCC 6 Debug (C++14, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: Debug,
+            cc: "gcc-6", cxx: "g++-6",
+            cxx_standard: 14,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Linux GCC 6 Debug (C++14)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             container: "ubuntu:18.04",
@@ -29,6 +38,15 @@ jobs:
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 14,
             cxx_concepts: false
+          }
+        - {
+            name: "Linux GCC 6 Release (C++14, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: RelWithDebInfo,
+            cc: "gcc-6", cxx: "g++-6",
+            cxx_standard: 14,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
           }
         - {
             name: "Linux GCC 6 Release (C++14)", artifact: "Linux.tar.xz",
@@ -40,6 +58,15 @@ jobs:
             cxx_concepts: false
           }
         - {
+            name: "Linux GCC 6 Debug (C++17, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: Debug,
+            cc: "gcc-6", cxx: "g++-6",
+            cxx_standard: 17,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Linux GCC 6 Debug (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             container: "ubuntu:18.04",
@@ -49,6 +76,15 @@ jobs:
             cxx_concepts: false
           }
         - {
+            name: "Linux GCC 6 Release (C++17, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: RelWithDebInfo,
+            cc: "gcc-6", cxx: "g++-6",
+            cxx_standard: 17,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Linux GCC 6 Release (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             container: "ubuntu:18.04",
@@ -56,6 +92,14 @@ jobs:
             cc: "gcc-6", cxx: "g++-6",
             cxx_standard: 17,
             cxx_concepts: false
+          }
+        - {
+            name: "Linux GCC 6 Release (C++17, Concepts, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: RelWithDebInfo,
+            cc: "gcc-6", cxx: "g++-6",
+            cxx_standard: 17,
+            cxx_no_rtti: true,
           }
         - {
             name: "Linux GCC 6 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
@@ -68,6 +112,15 @@ jobs:
 
         # GCC-7
         - {
+            name: "Linux GCC 7 Debug (C++14, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: Debug,
+            cc: "gcc-7", cxx: "g++-7",
+            cxx_standard: 14,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Linux GCC 7 Debug (C++14)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             container: "ubuntu:18.04",
@@ -75,6 +128,15 @@ jobs:
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 14,
             cxx_concepts: false
+          }
+        - {
+            name: "Linux GCC 7 Release (C++14, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: RelWithDebInfo,
+            cc: "gcc-7", cxx: "g++-7",
+            cxx_standard: 14,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
           }
         - {
             name: "Linux GCC 7 Release (C++14)", artifact: "Linux.tar.xz",
@@ -86,6 +148,15 @@ jobs:
             cxx_concepts: false
           }
         - {
+            name: "Linux GCC 7 Debug (C++17, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: Debug,
+            cc: "gcc-7", cxx: "g++-7",
+            cxx_standard: 17,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Linux GCC 7 Debug (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             container: "ubuntu:18.04",
@@ -95,6 +166,15 @@ jobs:
             cxx_concepts: false
           }
         - {
+            name: "Linux GCC 7 Release (C++17, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: RelWithDebInfo,
+            cc: "gcc-7", cxx: "g++-7",
+            cxx_standard: 17,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Linux GCC 7 Release (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             container: "ubuntu:18.04",
@@ -102,6 +182,14 @@ jobs:
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 17,
             cxx_concepts: false
+          }
+        - {
+            name: "Linux GCC 7 Release (C++17, Concepts, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: RelWithDebInfo,
+            cc: "gcc-7", cxx: "g++-7",
+            cxx_standard: 17,
+            cxx_no_rtti: true,
           }
         - {
             name: "Linux GCC 7 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
@@ -114,6 +202,15 @@ jobs:
 
         # GCC-8
         - {
+            name: "Linux GCC 8 Debug (C++14, NO RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: Debug,
+            cc: "gcc-8", cxx: "g++-8",
+            cxx_standard: 14,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Linux GCC 8 Debug (C++14)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             container: "ubuntu:18.04",
@@ -121,6 +218,15 @@ jobs:
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 14,
             cxx_concepts: false
+          }
+        - {
+            name: "Linux GCC 8 Release (C++14, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: RelWithDebInfo,
+            cc: "gcc-8", cxx: "g++-8",
+            cxx_standard: 14,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
           }
         - {
             name: "Linux GCC 8 Release (C++14)", artifact: "Linux.tar.xz",
@@ -132,6 +238,15 @@ jobs:
             cxx_concepts: false
           }
         - {
+            name: "Linux GCC 8 Debug (C++17, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: Debug,
+            cc: "gcc-8", cxx: "g++-8",
+            cxx_standard: 17,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Linux GCC 8 Debug (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             container: "ubuntu:18.04",
@@ -141,6 +256,15 @@ jobs:
             cxx_concepts: false
           }
         - {
+            name: "Linux GCC 8 Release (C++17, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: RelWithDebInfo,
+            cc: "gcc-8", cxx: "g++-8",
+            cxx_standard: 17,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Linux GCC 8 Release (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             container: "ubuntu:18.04",
@@ -148,6 +272,14 @@ jobs:
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 17,
             cxx_concepts: false
+          }
+        - {
+            name: "Linux GCC 8 Release (C++17, Concepts, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: RelWithDebInfo,
+            cc: "gcc-8", cxx: "g++-8",
+            cxx_standard: 17,
+            cxx_no_rtti: true,
           }
         - {
             name: "Linux GCC 8 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
@@ -160,12 +292,30 @@ jobs:
 
         # GCC-9
         - {
+            name: "Linux GCC 9 Debug (C++17, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-9", cxx: "g++-9",
+            cxx_standard: 17,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Linux GCC 9 Debug (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: Debug,
             cc: "gcc-9", cxx: "g++-9",
             cxx_standard: 17,
             cxx_concepts: false
+          }
+        - {
+            name: "Linux GCC 9 Release (C++17, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-9", cxx: "g++-9",
+            cxx_standard: 17,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
           }
         - {
             name: "Linux GCC 9 Release (C++17)", artifact: "Linux.tar.xz",
@@ -176,6 +326,15 @@ jobs:
             cxx_concepts: false
           }
         - {
+            name: "Linux GCC 9 Debug (C++20, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-9", cxx: "g++-9",
+            cxx_standard: 20,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Linux GCC 9 Debug (C++20)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: Debug,
@@ -184,12 +343,29 @@ jobs:
             cxx_concepts: false
           }
         - {
+            name: "Linux GCC 9 Release (C++20, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-9", cxx: "g++-9",
+            cxx_standard: 20,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Linux GCC 9 Release (C++20)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: RelWithDebInfo,
             cc: "gcc-9", cxx: "g++-9",
             cxx_standard: 20,
             cxx_concepts: false
+          }
+        - {
+            name: "Linux GCC 9 Release (C++20, Concepts, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-9", cxx: "g++-9",
+            cxx_standard: 20,
+            cxx_no_rtti: true,
           }
         - {
             name: "Linux GCC 9 Release (C++20, Concepts)", artifact: "Linux.tar.xz",
@@ -201,11 +377,27 @@ jobs:
 
         # GCC-10
         - {
+            name: "Linux GCC 10 Debug (C++20, Concepts, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-10", cxx: "g++-10",
+            cxx_standard: 20,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Linux GCC 10 Debug (C++20, Concepts)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: Debug,
             cc: "gcc-10", cxx: "g++-10",
             cxx_standard: 20
+          }
+        - {
+            name: "Linux GCC 10 Release (C++20, Concepts, No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-10", cxx: "g++-10",
+            cxx_standard: 20,
+            cxx_no_rtti: true,
           }
         - {
             name: "Linux GCC 10 Release (C++20, Concepts)", artifact: "Linux.tar.xz",
@@ -217,6 +409,16 @@ jobs:
 
         # Clang-5.0
         - {
+            name: "Linux Clang 5.0 Debug (C++14 / libc++ / ASAN / No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: Debug,
+            cc: "clang-5.0", cxx: "clang++-5.0",
+            cxx_standard: 14,
+            cxx_asan: true,
+            cxx_no_rtti: true,
+            libcxx: true
+          }
+        - {
             name: "Linux Clang 5.0 Debug (C++14 / libc++ / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             container: "ubuntu:18.04",
@@ -225,6 +427,15 @@ jobs:
             cxx_standard: 14,
             cxx_asan: true,
             libcxx: true
+          }
+        - {
+            name: "Linux Clang 5.0 Debug (C++17 / ASAN / No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: Debug,
+            cc: "clang-5.0", cxx: "clang++-5.0",
+            cxx_standard: 17,
+            cxx_no_rtti: true,
+            cxx_asan: true,
           }
         - {
             name: "Linux Clang 5.0 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
@@ -238,6 +449,16 @@ jobs:
 
         # Clang-6.0
         - {
+            name: "Linux Clang 6.0 Debug (C++14 / libc++ / ASAN / No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: Debug,
+            cc: "clang-6.0", cxx: "clang++-6.0",
+            cxx_standard: 14,
+            cxx_asan: true,
+            cxx_no_rtti: true,
+            libcxx: true
+          }
+        - {
             name: "Linux Clang 6.0 Debug (C++14 / libc++ / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             container: "ubuntu:18.04",
@@ -246,6 +467,15 @@ jobs:
             cxx_standard: 14,
             cxx_asan: true,
             libcxx: true
+          }
+        - {
+            name: "Linux Clang 6.0 Debug (C++17 / ASAN / No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-18.04,
+            build_type: Debug,
+            cc: "clang-6.0", cxx: "clang++-6.0",
+            cxx_standard: 17,
+            cxx_no_rtti: true,
+            cxx_asan: true,
           }
         - {
             name: "Linux Clang 6.0 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
@@ -259,6 +489,16 @@ jobs:
 
         # Clang-8
         - {
+            name: "Linux Clang 8 Debug (C++14 / libc++ / ASAN / No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "clang-8", cxx: "clang++-8",
+            cxx_standard: 14,
+            cxx_asan: true,
+            cxx_no_rtti: true,
+            libcxx: true
+          }
+        - {
             name: "Linux Clang 8 Debug (C++14 / libc++ / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             container: "ubuntu:18.04",
@@ -267,6 +507,15 @@ jobs:
             cxx_standard: 14,
             cxx_asan: true,
             libcxx: true
+          }
+        - {
+            name: "Linux Clang 8 Debug (C++17 / ASAN / No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "clang-8", cxx: "clang++-8",
+            cxx_standard: 17,
+            cxx_asan: true,
+            cxx_no_rtti: true,
           }
         - {
             name: "Linux Clang 8 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
@@ -279,6 +528,15 @@ jobs:
 
         # Clang-9
         - {
+            name: "Linux Clang 9 Debug (C++17 / ASAN / No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "clang-9", cxx: "clang++-9",
+            cxx_standard: 17,
+            cxx_asan: true,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Linux Clang 9 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             container: "ubuntu:18.04",
@@ -286,6 +544,14 @@ jobs:
             cc: "clang-9", cxx: "clang++-9",
             cxx_standard: 17,
             cxx_asan: true,
+          }
+        - {
+            name: "Linux Clang 9 Release (C++17 / No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang-9", cxx: "clang++-9",
+            cxx_standard: 17,
+            cxx_no_rtti: true,
           }
         - {
             name: "Linux Clang 9 Release (C++17)", artifact: "Linux.tar.xz",
@@ -298,6 +564,16 @@ jobs:
 
         # Clang-10
         - {
+            name: "Linux Clang 10 Debug (C++20 / ASAN / No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "clang-10", cxx: "clang++-10",
+            cxx_standard: 20,
+            cxx_asan: true,
+            cxx_concepts: false,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Linux Clang 10 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             container: "ubuntu:18.04",
@@ -306,6 +582,14 @@ jobs:
             cxx_standard: 20,
             cxx_asan: true,
             cxx_concepts: false
+          }
+        - {
+            name: "Linux Clang 10 Release (C++20 / Concepts / No RTTI)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang-10", cxx: "clang++-10",
+            cxx_standard: 20,
+            cxx_no_rtti: true,
           }
         - {
             name: "Linux Clang 10 Release (C++20 / Concepts)", artifact: "Linux.tar.xz",
@@ -318,12 +602,29 @@ jobs:
 
         # AppleClang
         - {
+            name: "macOS Clang Debug (C++17 / No RTTI)", artifact: "macOS.tar.xz",
+            os: macos-latest,
+            build_type: Debug,
+            cc: "clang", cxx: "clang++",
+            cxx_standard: 17,
+            cxx_asan: true,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "macOS Clang Debug (C++17)", artifact: "macOS.tar.xz",
             os: macos-latest,
             build_type: Debug,
             cc: "clang", cxx: "clang++",
             cxx_standard: 17,
             cxx_asan: true,
+          }
+        - {
+            name: "macOS Clang Release (C++17 / No RTTI)", artifact: "macOS.tar.xz",
+            os: macos-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang", cxx: "clang++",
+            cxx_standard: 17,
+            cxx_no_rtti: true,
           }
         - {
             name: "macOS Clang Release (C++17)", artifact: "macOS.tar.xz",
@@ -333,12 +634,29 @@ jobs:
             cxx_standard: 17,
           }
         - {
+            name: "macOS Clang Debug (C++20 / ASAN / No RTTI)", artifact: "macOS.tar.xz",
+            os: macos-latest,
+            build_type: Debug,
+            cc: "clang", cxx: "clang++",
+            cxx_standard: 20,
+            cxx_asan: true,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "macOS Clang Debug (C++20 / ASAN)", artifact: "macOS.tar.xz",
             os: macos-latest,
             build_type: Debug,
             cc: "clang", cxx: "clang++",
             cxx_standard: 20,
             cxx_asan: true,
+          }
+        - {
+            name: "macOS Clang Release (C++20 / No RTTI)", artifact: "macOS.tar.xz",
+            os: macos-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang", cxx: "clang++",
+            cxx_standard: 20,
+            cxx_no_rtti: true,
           }
         - {
             name: "macOS Clang Release (C++20)", artifact: "macOS.tar.xz",
@@ -350,12 +668,30 @@ jobs:
 
         # MSVC 2022
         - {
+            name: "Windows MSVC 2022 Debug (C++17, No RTTI)", artifact: "Windows-MSVC.tar.xz",
+            os: windows-latest,
+            build_type: Debug,
+            cc: "cl", cxx: "cl",
+            environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+            cxx_standard: 17,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Windows MSVC 2022 Debug (C++17)", artifact: "Windows-MSVC.tar.xz",
             os: windows-latest,
             build_type: Debug,
             cc: "cl", cxx: "cl",
             environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
             cxx_standard: 17,
+          }
+        - {
+            name: "Windows MSVC 2022 Release (C++17, No RTTI)", artifact: "Windows-MSVC.tar.xz",
+            os: windows-latest,
+            build_type: RelWithDebInfo,
+            cc: "cl", cxx: "cl",
+            environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+            cxx_standard: 17,
+            cxx_no_rtti: true,
           }
         - {
             name: "Windows MSVC 2022 Release (C++17)", artifact: "Windows-MSVC.tar.xz",
@@ -366,12 +702,30 @@ jobs:
             cxx_standard: 17,
           }
         - {
+            name: "Windows MSVC 2022 Debug (C++20, No RTTI)", artifact: "Windows-MSVC.tar.xz",
+            os: windows-latest,
+            build_type: Debug,
+            cc: "cl", cxx: "cl",
+            environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+            cxx_standard: 20,
+            cxx_no_rtti: true,
+          }
+        - {
             name: "Windows MSVC 2022 Debug (C++20)", artifact: "Windows-MSVC.tar.xz",
             os: windows-latest,
             build_type: Debug,
             cc: "cl", cxx: "cl",
             environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
             cxx_standard: 20,
+          }
+        - {
+            name: "Windows MSVC 2022 Release (C++20, No RTTI)", artifact: "Windows-MSVC.tar.xz",
+            os: windows-latest,
+            build_type: RelWithDebInfo,
+            cc: "cl", cxx: "cl",
+            environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+            cxx_standard: 20,
+            cxx_no_rtti: true,
           }
         - {
             name: "Windows MSVC 2022 Release (C++20)", artifact: "Windows-MSVC.tar.xz",
@@ -501,6 +855,14 @@ jobs:
         set(cxx_concepts ON)
         if ("x${{ matrix.config.cxx_concepts }}" STREQUAL "xfalse")
           set(cxx_concepts OFF)
+        endif()
+
+        if ("x${{ matrix.config.cxx_no_rtti }}" STREQUAL "xtrue")
+          if ("${{ matrix.config.cc }}" STREQUAL "gcc" OR "x${{ matrix.config.cc }}" STREQUAL "clang")
+            set(cxx_flags "${cxx_flags} -fno-rtti")
+          elseif ("${{ matrix.config.cc }}" STREQUAL "cl")
+            set(cxx_flags "${cxx_flags} /GR- /D_HAS_STATIC_RTTI=0")
+          endif()
         endif()
 
         execute_process(
