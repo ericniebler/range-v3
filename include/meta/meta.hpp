@@ -2835,12 +2835,14 @@ namespace meta
         template <typename T>
         struct static_const
         {
-            static constexpr T value{};
+            static constexpr T const value{};
         };
 
+#if !META_CXX_INLINE_VARIABLES
         // Avoid potential ODR violations with global objects:
-        template <typename T>
-        constexpr T static_const<T>::value;
+        template<typename T>
+        constexpr T const static_const<T>::value;
+#endif
     } // namespace detail
 
     ///\endcond
@@ -3776,9 +3778,9 @@ namespace meta
     {
         /// A user-defined literal that generates objects of type \c meta::size_t.
         /// \ingroup integral
-        template <char... Chs>
+        template<char... Chs>
         constexpr fold<list<char_<Chs>...>, meta::size_t<0>, quote<detail::atoi_>>
-            operator"" _z()
+        operator""_z()
         {
             return {};
         }
