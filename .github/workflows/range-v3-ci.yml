@@ -350,12 +350,13 @@ jobs:
 
         # MSVC 2022
         - {
-            name: "Windows MSVC 2022 Debug (C++17)", artifact: "Windows-MSVC.tar.xz",
+            name: "Windows MSVC 2022 Debug (C++17) / ASAN", artifact: "Windows-MSVC.tar.xz",
             os: windows-latest,
             build_type: Debug,
             cc: "cl", cxx: "cl",
             environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
             cxx_standard: 17,
+            cxx_asan: true,
           }
         - {
             name: "Windows MSVC 2022 Release (C++17)", artifact: "Windows-MSVC.tar.xz",
@@ -366,12 +367,13 @@ jobs:
             cxx_standard: 17,
           }
         - {
-            name: "Windows MSVC 2022 Debug (C++20)", artifact: "Windows-MSVC.tar.xz",
+            name: "Windows MSVC 2022 Debug (C++20) / ASAN", artifact: "Windows-MSVC.tar.xz",
             os: windows-latest,
             build_type: Debug,
             cc: "cl", cxx: "cl",
             environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
             cxx_standard: 20,
+            cxx_asan: true,
           }
         - {
             name: "Windows MSVC 2022 Release (C++20)", artifact: "Windows-MSVC.tar.xz",
@@ -469,7 +471,7 @@ jobs:
             COMMAND "${{ matrix.config.environment_script }}" && set
             OUTPUT_FILE environment_script_output.txt
           )
-          set(cxx_flags "/permissive- /EHsc")
+          set(cxx_flags "/nologo /permissive- /EHsc")
           file(STRINGS environment_script_output.txt output_lines)
           foreach(line IN LISTS output_lines)
             if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
@@ -495,12 +497,21 @@ jobs:
         endif()
 
         if ("x${{ matrix.config.cxx_asan }}" STREQUAL "xtrue")
-          set(cxx_flags "${cxx_flags} -fsanitize=address -fno-omit-frame-pointer")
+          set(cxx_flags "${cxx_flags} -fsanitize=address")
+          if ("${{ runner.os }}" STREQUAL "Windows")
+            set(link_flags "${link_flags} /INFERASANLIBS /INCREMENTAL:NO")
+          else()
+            set(cxx_flags "${cxx_flags} -fno-omit-frame-pointer")
+          endif()
         endif()
 
         set(cxx_concepts ON)
         if ("x${{ matrix.config.cxx_concepts }}" STREQUAL "xfalse")
           set(cxx_concepts OFF)
+        endif()
+
+        if ("${{ runner.os }}" STREQUAL "Windows")
+          set(link_flags "${link_flags} /NOLOGO")
         endif()
 
         execute_process(
@@ -561,6 +572,15 @@ jobs:
         ProcessorCount(N)
 
         set(ENV{CTEST_OUTPUT_ON_FAILURE} "ON")
+
+        if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
+          file(STRINGS environment_script_output.txt output_lines)
+          foreach(line IN LISTS output_lines)
+            if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
+              set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
+            endif()
+          endforeach()
+        endif()
 
         execute_process(
           COMMAND ${{ steps.cmake_and_ninja.outputs.cmake_dir }}/ctest --verbose -j ${N}
