@@ -1,3 +1,5 @@
+[![range-v3 CI](https://github.com/ericniebler/range-v3/actions/workflows/range-v3-ci.yml/badge.svg)](https://github.com/ericniebler/range-v3/actions/workflows/range-v3-ci.yml)
+
 range-v3
 ========
 
@@ -150,9 +152,3 @@ For example, to make your `build2` project depend on `range-v3`:
 Then just build your project as usual (with `b` or `bdep update`), `build2` will figure out the rest.
 
 For `build2` newcomers or to get more details and use cases, you can read [this document](https://github.com/build2-packaging/range-v3/blob/master/NOTES-build2.md) and the [`build2` toolchain introduction](https://build2.org/build2-toolchain/doc/build2-toolchain-intro.xhtml).
-
-
-Say Thanks!
------------
-
-I do this work because I love it and because I love C++ and want it to be as excellent as I know it can be. If you like my work and are looking for a way to say thank you, you can leave a supportive comment on [my blog](http://ericniebler.com). Or you could leave me some kudos on my Open Hub range-v3 contribution page. Just click the **Give Kudos** button [here](https://www.openhub.net/p/range-v3/contributors/3053743222308608).

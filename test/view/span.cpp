@@ -1096,4 +1096,6 @@ int main() {
     CPP_assert(ranges::contiguous_range<span<int>>);
     CPP_assert(ranges::view_<span<int, 42>>);
     CPP_assert(ranges::contiguous_range<span<int, 42>>);
+
+    return ::test_result();
 }
