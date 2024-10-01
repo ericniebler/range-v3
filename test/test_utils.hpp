@@ -141,7 +141,7 @@ constexpr void has_cardinality(Rng &&)
 template<typename T>
 constexpr T & as_lvalue(T && t)
 {
-    return t;
+    return *&t;  // prevent C++23 implicit move
 }
 
 // A simple, light-weight, non-owning reference to a type-erased function.
