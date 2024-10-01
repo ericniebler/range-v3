@@ -130,8 +130,8 @@ constexpr void has_type(Actual &&)
     static_assert(std::is_same<Expected, Actual>::value, "Not the same");
 }
 
-template<ranges::cardinality Expected, 
-         typename Rng, 
+template<ranges::cardinality Expected,
+         typename Rng,
          ranges::cardinality Actual = ranges::range_cardinality<Rng>::value>
 constexpr void has_cardinality(Rng &&)
 {
@@ -141,7 +141,7 @@ constexpr void has_cardinality(Rng &&)
 template<typename T>
 constexpr T & as_lvalue(T && t)
 {
-    return t;
+    return static_cast<T&>(t); // prevent C++23 implicit move (plain `t` is move-eligible)
 }
 
 // A simple, light-weight, non-owning reference to a type-erased function.
