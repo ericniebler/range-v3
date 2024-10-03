@@ -53,6 +53,7 @@
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/linear_distribute.hpp>
 #include <range/v3/view/map.hpp>
+#include <range/v3/view/maybe.hpp>
 #include <range/v3/view/move.hpp>
 #include <range/v3/view/partial_sum.hpp>
 #include <range/v3/view/ref.hpp>
