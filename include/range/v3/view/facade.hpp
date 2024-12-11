@@ -46,6 +46,23 @@ namespace ranges
         using facade_iterator_t = basic_iterator<begin_cursor_t<Derived>>;
 
         template<typename Derived>
+        CPP_requires(has_begin_cursor_,
+            requires(Derived & t) //
+            (
+                t.begin_cursor()));
+
+        template<typename Derived>
+        CPP_requires(has_end_cursor_,
+            requires(Derived & t) //
+            (t.end_cursor()));
+
+        template<typename T>
+        CPP_concept has_begin_cursor = CPP_requires_ref(has_begin_cursor_, T);
+        template<typename T>
+        CPP_concept has_end_cursor = CPP_requires_ref(has_end_cursor_, T);
+
+
+        template<typename Derived>
         using facade_sentinel_t =
             meta::if_c<same_as<begin_cursor_t<Derived>, end_cursor_t<Derived>>,
                        facade_iterator_t<Derived>, end_cursor_t<Derived>>;
@@ -100,7 +117,7 @@ namespace ranges
         }
         /// \overload
         template(typename D = Derived)(
-            requires same_as<D, Derived>)
+            requires same_as<D, Derived> CPP_and detail::has_begin_cursor<D const>)
         constexpr auto begin() const -> detail::facade_iterator_t<D const>
         {
             return detail::facade_iterator_t<D const>{
@@ -121,7 +138,7 @@ namespace ranges
         }
         /// \overload
         template(typename D = Derived)(
-            requires same_as<D, Derived>)
+            requires same_as<D, Derived> CPP_and detail::has_end_cursor<D const>)
         constexpr auto end() const -> detail::facade_sentinel_t<D const>
         {
             return static_cast<detail::facade_sentinel_t<D const>>(
