@@ -45,16 +45,19 @@ namespace ranges
         template<typename Derived>
         using facade_iterator_t = basic_iterator<begin_cursor_t<Derived>>;
 
+        // Concepts for gently checking whether the call to `range_access::begin_cursor`
+        // is well-formed. This makes the facade more SFINAE-friendly in cases where the
+        // derived class allows for only const or only mutable iteration, but the not
+        // supported `begin_cursor/end_cursor` functions are not SFINAE-friendly.
         template<typename Derived>
         CPP_requires(has_begin_cursor_,
-            requires(Derived & t) //
-            (
-                t.begin_cursor()));
+                     requires(Derived & t) //
+                     (range_access::begin_cursor(t)));
 
         template<typename Derived>
         CPP_requires(has_end_cursor_,
-            requires(Derived & t) //
-            (t.end_cursor()));
+                     requires(Derived & t) //
+                     (range_access::end_cursor(t)));
 
         template<typename T>
         CPP_concept has_begin_cursor = CPP_requires_ref(has_begin_cursor_, T);
@@ -109,7 +112,7 @@ namespace ranges
         /// `b`.
         /// \return `ranges::basic_iterator<B>(b)`
         template(typename D = Derived)(
-            requires same_as<D, Derived>)
+            requires same_as<D, Derived> CPP_and detail::has_begin_cursor<D>)
         constexpr auto begin() -> detail::facade_iterator_t<D>
         {
             return detail::facade_iterator_t<D>{
@@ -130,7 +133,7 @@ namespace ranges
         /// \return `ranges::basic_iterator<E>(e)` if `E` is the same
         /// as `B` computed above for `begin()`; otherwise, return `e`.
         template(typename D = Derived)(
-            requires same_as<D, Derived>)
+            requires same_as<D, Derived> CPP_and detail::has_end_cursor<D>)
         constexpr auto end() -> detail::facade_sentinel_t<D>
         {
             return static_cast<detail::facade_sentinel_t<D>>(
