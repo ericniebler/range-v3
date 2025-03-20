@@ -85,36 +85,35 @@ The range-v3 port in vcpkg is kept up to date by Microsoft team members and comm
 Building range-v3 - Using Conan
 -------------------------------
 
-You can download and install range-v3 using the [Conan](https://github.com/conan-io/conan) dependency manager.
+You can install pre-built binaries for range-v3 or build it from source using [Conan](https://conan.io/).
 
-Setup your CMakeLists.txt (see [Conan documentation](https://docs.conan.io/en/latest/integrations/build_system.html) on how to use MSBuild, Meson and others):
+Setup your `CMakeLists.txt`:
 ```cmake
 project(myproject CXX)
 
 add_executable(${PROJECT_NAME} main.cpp)
-
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake) # Include Conan-generated file
-conan_basic_setup(TARGETS) # Introduce Conan-generated targets
-
-target_link_libraries(${PROJECT_NAME} CONAN_PKG::range-v3)
+find_package(range-v3 REQUIRED)
+target_link_libraries(${PROJECT_NAME} range-v3::range-v3)
 ```
-Create `conanfile.txt` in your source dir:
-```sh
+Create a `conanfile.txt`:
+```
 [requires]
-range-v3/0.12.0
+range-v3/[*]
 
 [generators]
-cmake
+CMakeDeps
+CMakeToolchain
 ```
-Install and run `conan`, then build your project as always:
+Run following commands:
 ```sh
-pip install conan
-mkdir build
-cd build
-conan install ../ --build=missing
-cmake ../
-cmake --build .
+$ conan install . --build=missing --output-folder=build
+$ cmake . -B build -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
+$ cmake --build build
 ```
+For detailed instructions on how to use Conan, please refer to the [Conan documentation](https://docs.conan.io/2/).
+
+The range-v3 package in Conan Center is kept up to date by Conan team members and Conan community contributors.
+If the version is out of date, please [create an issue or pull request](https://github.com/conan-io/conan-center-index) on the conan repository.
 
 Building range-v3 - Using `build2`
 ----------------------------------
