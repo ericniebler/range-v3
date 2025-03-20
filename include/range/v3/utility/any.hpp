@@ -65,16 +65,16 @@ namespace ranges
     {
         struct _base {};
 
-        struct interface
+        struct _interface
         {
-            virtual ~interface()
+            virtual ~_interface()
             {}
-            virtual interface * clone() const = 0;
+            virtual _interface * clone() const = 0;
             virtual std::type_info const & type() const noexcept = 0;
         };
 
         template<typename T>
-        struct impl final : interface
+        struct impl final : _interface
         {
         private:
             T obj;
@@ -126,7 +126,7 @@ namespace ranges
         template<typename T>
         friend T const * any_cast(any const *) noexcept;
 
-        std::unique_ptr<_any_::interface> ptr_;
+        std::unique_ptr<_any_::_interface> ptr_;
 
     public:
         any() noexcept = default;
