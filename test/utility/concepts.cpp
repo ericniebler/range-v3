@@ -318,6 +318,14 @@ struct myview : ranges::view_base {
 };
 CPP_assert(ranges::view_<myview>);
 
+struct move_only_view : myview {
+    move_only_view(const move_only_view&) = delete;
+    move_only_view& operator=(const move_only_view &) = delete;
+    move_only_view(move_only_view&&) = default;
+    move_only_view& operator=(move_only_view &&) = default;
+};
+CPP_assert(ranges::view_<move_only_view>);
+
 CPP_template(class T)
     (requires ranges::regular<T>)
 constexpr bool is_regular(T&&)

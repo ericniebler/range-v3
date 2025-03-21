@@ -251,7 +251,7 @@ namespace ranges
     template<typename T>
     CPP_concept view_ =
         range<T> &&
-        copyable<T> &&
+        movable<T> &&
         enable_view<T>;
 
     /// \concept viewable_range
