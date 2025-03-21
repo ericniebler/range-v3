@@ -105,6 +105,7 @@ namespace ranges
     {
         // clang-format off
         template<typename... Args>
+        RANGES_DEPRECATED("ranges::compressed_tuple is deprecated.")
         constexpr auto CPP_auto_fun(operator())(Args &&... args) (const)
         (
             return compressed_tuple<bind_element_t<Args>...>{
