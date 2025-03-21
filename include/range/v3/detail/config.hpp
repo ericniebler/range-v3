@@ -99,6 +99,21 @@ namespace ranges
 #define RANGES_ENSURE(...) RANGES_ENSURE_MSG((__VA_ARGS__), #__VA_ARGS__)
 #endif
 
+#ifndef RANGES_EXPECT_UNREACHABLE_RETURN
+#if defined(NDEBUG) && defined(_MSC_VER)
+// In release builds, RANGES_EXPECT(false) for msvc invokes an intrinsic that indicates
+// subsequent operations are unreachable. Do not invoke a return after its evaluation,
+// lest the compiler warn that the return is unreachable.
+#define RANGES_EXPECT_UNREACHABLE_RETURN(RETURN_VALUE) RANGES_EXPECT(false)
+#else
+#define RANGES_EXPECT_UNREACHABLE_RETURN(RETURN_VALUE) \
+    do                                                 \
+    {                                                  \
+        return (RANGES_EXPECT(false), RETURN_VALUE);   \
+    } while(false)
+#endif
+#endif // RANGES_EXPECT_UNREACHABLE_RETURN
+
 #define RANGES_DECLTYPE_AUTO_RETURN(...) \
     ->decltype(__VA_ARGS__)              \
     {                                    \
