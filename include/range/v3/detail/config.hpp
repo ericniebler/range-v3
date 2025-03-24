@@ -530,13 +530,21 @@ namespace ranges
 // #endif
 
 #ifndef RANGES_CXX_COROUTINES
-#if defined(__cpp_coroutines) && defined(__has_include)
+#if (defined(__cpp_coroutines) || defined(__cpp_impl_coroutine)) && defined(__has_include)
 #if __has_include(<coroutine>)
+#if defined(__cpp_coroutines)
 #define RANGES_CXX_COROUTINES __cpp_coroutines
+#elif defined(__cpp_impl_coroutine)
+#define RANGES_CXX_COROUTINES __cpp_impl_coroutine
+#endif
 #define RANGES_COROUTINES_HEADER <coroutine>
 #define RANGES_COROUTINES_NS std
 #elif __has_include(<experimental/coroutine>)
+#if defined(__cpp_coroutines)
 #define RANGES_CXX_COROUTINES __cpp_coroutines
+#elif defined(__cpp_impl_coroutine)
+#define RANGES_CXX_COROUTINES __cpp_impl_coroutine
+#endif
 #define RANGES_COROUTINES_HEADER <experimental/coroutine>
 #define RANGES_COROUTINES_NS std::experimental
 #endif
