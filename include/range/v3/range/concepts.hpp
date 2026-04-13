@@ -24,6 +24,9 @@
 #if __has_include(<span>) && !defined(RANGES_WORKAROUND_MSVC_UNUSABLE_SPAN)
 #include <span>
 #endif
+#if __has_include(<cuda/std/span>)
+#include <cuda/std/span>
+#endif
 #if __has_include(<string_view>)
 #include <string_view>
 #endif
@@ -239,6 +242,11 @@ namespace ranges
     (!defined(__GLIBCXX__) || defined(__cpp_lib_concepts))
     template<typename T, std::size_t N>
     RANGES_INLINE_VAR constexpr bool enable_view<std::span<T, N>> = true;
+#endif
+#if defined(__cccl_lib_span) && __cccl_lib_span >= 202002L && \
+    (!defined(__GLIBCXX__) || defined(__cccl_lib_concepts))
+    template<typename T, std::size_t N>
+    RANGES_INLINE_VAR constexpr bool enable_view<cuda::std::span<T, N>> = true;
 #endif
 
     //

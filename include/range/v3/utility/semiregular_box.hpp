@@ -260,7 +260,7 @@ namespace ranges
           : ranges::reference_wrapper<T &>(arg)
         {}
         using ranges::reference_wrapper<T &>::get;
-        using ranges::reference_wrapper<T &>::operator T &;
+        using ranges::reference_wrapper<T &>::operator std::add_lvalue_reference<T>;
         using ranges::reference_wrapper<T &>::operator();
 
 #if defined(_MSC_VER)
