@@ -882,6 +882,208 @@ namespace ranges
         /// \relates set_symmetric_difference_fn
         RANGES_INLINE_VARIABLE(set_symmetric_difference_fn, set_symmetric_difference)
     } // namespace views
+
+    /// \cond
+    namespace detail
+    {
+        template<bool IsConst, typename Rng1, typename Rng2, typename C, typename P1,
+                 typename P2>
+        struct merge_cursor
+        {
+        private:
+            friend struct merge_cursor<!IsConst, Rng1, Rng2, C, P1, P2>;
+            using pred_ref_ = semiregular_box_ref_or_val_t<C, IsConst>;
+            using proj1_ref_ = semiregular_box_ref_or_val_t<P1, IsConst>;
+            using proj2_ref_ = semiregular_box_ref_or_val_t<P2, IsConst>;
+            pred_ref_ pred_;
+            proj1_ref_ proj1_;
+            proj2_ref_ proj2_;
+
+            template<typename T>
+            using constify_if = meta::const_if_c<IsConst, T>;
+
+            using R1 = constify_if<Rng1>;
+            using R2 = constify_if<Rng2>;
+
+            iterator_t<R1> it1_;
+            sentinel_t<R1> end1_;
+
+            iterator_t<R2> it2_;
+            sentinel_t<R2> end2_;
+
+            enum class state_t
+            {
+                FIRST,
+                SECOND
+            } state;
+
+            void satisfy()
+            {
+                if(it1_ == end1_)
+                {
+                    state = state_t::SECOND;
+                    return;
+                }
+
+                if(it2_ == end2_)
+                {
+                    state = state_t::FIRST;
+                    return;
+                }
+
+                if(invoke(pred_, invoke(proj2_, *it2_), invoke(proj1_, *it1_)))
+                {
+                    state = state_t::SECOND;
+                    return;
+                }
+
+                state = state_t::FIRST;
+            }
+
+        public:
+            using value_type = common_type_t<range_value_t<R1>, range_value_t<R2>>;
+            using reference_type =
+                common_reference_t<range_reference_t<R1>, range_reference_t<R2>>;
+            using rvalue_reference_type =
+                common_reference_t<range_rvalue_reference_t<R1>,
+                                   range_rvalue_reference_t<R2>>;
+            using single_pass = meta::or_c<single_pass_iterator_<iterator_t<R1>>,
+                                           single_pass_iterator_<iterator_t<R2>>>;
+
+            merge_cursor() = default;
+            merge_cursor(pred_ref_ pred, proj1_ref_ proj1, proj2_ref_ proj2,
+                             iterator_t<R1> it1, sentinel_t<R1> end1, iterator_t<R2> it2,
+                             sentinel_t<R2> end2)
+              : pred_(std::move(pred))
+              , proj1_(std::move(proj1))
+              , proj2_(std::move(proj2))
+              , it1_(std::move(it1))
+              , end1_(std::move(end1))
+              , it2_(std::move(it2))
+              , end2_(std::move(end2))
+            {
+                satisfy();
+            }
+            template(bool Other)(
+                requires IsConst AND CPP_NOT(Other))
+                merge_cursor(merge_cursor<Other, Rng1, Rng2, C, P1, P2> that)
+              : pred_(std::move(that.pred_))
+              , proj1_(std::move(that.proj1_))
+              , proj2_(std::move(that.proj2_))
+              , it1_(std::move(that.it1_))
+              , end1_(std::move(that.end1_))
+              , it2_(std::move(that.it2_))
+              , end2_(std::move(that.end2_))
+            {}
+            reference_type read() const noexcept(noexcept(*it1_) && noexcept(*it2_))
+            {
+                if(state == state_t::SECOND)
+                    return *it2_;
+                else
+                    return *it1_;
+            }
+            void next()
+            {
+                if(state == state_t::FIRST)
+                    ++it1_;
+                else
+                    ++it2_;
+                satisfy();
+            }
+            CPP_member
+            auto equal(merge_cursor const & that) const //
+                -> CPP_ret(bool)(
+                    requires forward_range<Rng1> && forward_range<Rng2>)
+            {
+                // does not support comparing iterators from different ranges
+                return (it1_ == that.it1_) && (it2_ == that.it2_);
+            }
+            bool equal(default_sentinel_t) const
+            {
+                return (it1_ == end1_) && (it2_ == end2_);
+            }
+            rvalue_reference_type move() const
+                noexcept(noexcept(iter_move(it1_)) && noexcept(iter_move(it2_)))
+            {
+                if(state == state_t::SECOND)
+                    return iter_move(it2_);
+                else
+                    return iter_move(it1_);
+            }
+        };
+
+        constexpr cardinality merge_cardinality(cardinality c1, cardinality c2)
+        {
+            return (c1 == infinite) || (c2 == infinite)
+                       ? infinite
+                       : (c1 == unknown) || (c2 == unknown) ? unknown : finite;
+        }
+    } // namespace detail
+    /// \endcond
+
+    template<typename Rng1, typename Rng2, typename C, typename P1, typename P2>
+    using merge_view =
+        detail::set_algorithm_view<Rng1, Rng2, C, P1, P2, detail::merge_cursor,
+                                   detail::merge_cardinality(
+                                       range_cardinality<Rng1>::value,
+                                       range_cardinality<Rng2>::value)>;
+
+    namespace views
+    {
+        struct merge_base_fn
+        {
+        public:
+            template(typename Rng1, typename Rng2, typename C = less,
+                     typename P1 = identity, typename P2 = identity)(
+                requires //
+                    viewable_range<Rng1> AND input_range<Rng1> AND
+                    viewable_range<Rng2> AND input_range<Rng2> AND
+                    common_with<range_value_t<Rng1>, range_value_t<Rng2>> AND
+                    common_reference_with<range_reference_t<Rng1>,
+                                          range_reference_t<Rng2>> AND
+                    common_reference_with<range_rvalue_reference_t<Rng1>,
+                                          range_rvalue_reference_t<Rng2>> AND
+                    indirect_relation<C,
+                                      projected<iterator_t<Rng1>, P1>,
+                                      projected<iterator_t<Rng2>, P2>>)
+            merge_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2> //
+            operator()(Rng1 && rng1,
+                       Rng2 && rng2,
+                       C pred = C{},
+                       P1 proj1 = P1{},
+                       P2 proj2 = P2{}) const
+            {
+                return {all(static_cast<Rng1 &&>(rng1)),
+                        all(static_cast<Rng2 &&>(rng2)),
+                        std::move(pred),
+                        std::move(proj1),
+                        std::move(proj2)};
+            }
+        };
+
+        struct merge_fn : merge_base_fn
+        {
+            using merge_base_fn::operator();
+
+            template(typename Rng2, typename C = less, typename P1 = identity,
+                     typename P2 = identity)(
+                requires viewable_range<Rng2> AND input_range<Rng2> AND (!range<C>))
+            constexpr auto operator()(Rng2 && rng2,
+                                      C && pred = C{},
+                                      P1 proj1 = P1{},
+                                      P2 proj2 = P2{}) const
+            {
+                return make_view_closure(bind_back(merge_base_fn{},
+                                                   all(rng2),
+                                                   static_cast<C &&>(pred),
+                                                   std::move(proj1),
+                                                   std::move(proj2)));
+            }
+        };
+
+        /// \relates merge_fn
+        RANGES_INLINE_VARIABLE(merge_fn, merge)
+    } // namespace views
     /// @}
 } // namespace ranges
 

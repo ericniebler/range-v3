@@ -16,5 +16,7 @@ int main()
 {
     // make sure, that `utility.hpp` is included correctly
     ranges::optional<int> a;
+
     (void) a;
+
 }
