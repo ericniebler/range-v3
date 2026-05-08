@@ -3,13 +3,6 @@ name: range-v3 CI
 # Trigger on pushes to all branches and for all pull-requests
 on: [push, pull_request]
 
-env:
-  CMAKE_VERSION: 3.16.2
-  NINJA_VERSION: 1.9.0
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-  # https://github.com/vgc/vgc/issues/1804
-  # https://github.blog/changelog/2024-03-07-github-actions-all-actions-will-run-on-node20-instead-of-node16-by-default/
-
 jobs:
   build:
     name: ${{ matrix.config.name }}
@@ -385,61 +378,12 @@ jobs:
           }
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-    - name: Setup container environment
-      if: matrix.config.container
-      run: |
-        apt-get update
-        apt-get -y install sudo python git g++ cmake curl
-
-    - name: Install packages
-      if: matrix.install
-      run: |
-        sudo apt-get update
-        sudo apt-get -y install ${{matrix.install}}
-
-    - name: Download Ninja and CMake
-      id: cmake_and_ninja
-      shell: cmake -P {0}
-      run: |
-        set(cmake_version $ENV{CMAKE_VERSION})
-        set(ninja_version $ENV{NINJA_VERSION})
-
-        message(STATUS "Using host CMake version: ${CMAKE_VERSION}")
-
-        if ("${{ runner.os }}" STREQUAL "Windows")
-          set(ninja_suffix "win.zip")
-          set(cmake_suffix "win64-x64.zip")
-          set(cmake_dir "cmake-${cmake_version}-win64-x64/bin")
-        elseif ("${{ runner.os }}" STREQUAL "Linux")
-          set(ninja_suffix "linux.zip")
-          set(cmake_suffix "Linux-x86_64.tar.gz")
-          set(cmake_dir "cmake-${cmake_version}-Linux-x86_64/bin")
-        elseif ("${{ runner.os }}" STREQUAL "macOS")
-          set(ninja_suffix "mac.zip")
-          set(cmake_suffix "Darwin-x86_64.tar.gz")
-          set(cmake_dir "cmake-${cmake_version}-Darwin-x86_64/CMake.app/Contents/bin")
-        endif()
-
-        set(ninja_url "https://github.com/ninja-build/ninja/releases/download/v${ninja_version}/ninja-${ninja_suffix}")
-        file(DOWNLOAD "${ninja_url}" ./ninja.zip SHOW_PROGRESS)
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./ninja.zip)
-
-        set(cmake_url "https://github.com/Kitware/CMake/releases/download/v${cmake_version}/cmake-${cmake_version}-${cmake_suffix}")
-        file(DOWNLOAD "${cmake_url}" ./cmake.zip SHOW_PROGRESS)
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./cmake.zip)
-
-        # Save the path for other steps
-        file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}/${cmake_dir}" cmake_dir)
-        message("::set-output name=cmake_dir::${cmake_dir}")
-
-        if (NOT "${{ runner.os }}" STREQUAL "Windows")
-          execute_process(
-            COMMAND chmod +x ninja
-            COMMAND chmod +x ${cmake_dir}/cmake
-          )
-        endif()
+    - name: Setup CMake
+      uses: jwlawson/actions-setup-cmake@v2
+      with:
+        cmake-version: '3.16.2'
 
     - name: Install GCC or Clang
       id: install_gcc_clang
@@ -515,7 +459,7 @@ jobs:
         endif()
 
         execute_process(
-          COMMAND ${{ steps.cmake_and_ninja.outputs.cmake_dir }}/cmake
+          COMMAND cmake
             -S .
             -B build
             -G Ninja
@@ -527,8 +471,6 @@ jobs:
             -D CMAKE_VERBOSE_MAKEFILE:BOOL=ON
             -D RANGE_V3_HEADER_CHECKS:BOOL=ON
             -D RANGES_PREFER_REAL_CONCEPTS:BOOL=${cxx_concepts}
-            ${{ matrix.config.cmake_args }}
-            ${extra_cmake_args}
           RESULT_VARIABLE result
         )
         if (NOT result EQUAL 0)
@@ -557,7 +499,7 @@ jobs:
         set(ENV{PATH} "$ENV{GITHUB_WORKSPACE}${path_separator}$ENV{PATH}")
 
         execute_process(
-          COMMAND ${{ steps.cmake_and_ninja.outputs.cmake_dir }}/cmake --build build
+          COMMAND cmake --build build
           RESULT_VARIABLE result
         )
         if (NOT result EQUAL 0)
@@ -583,7 +525,7 @@ jobs:
         endif()
 
         execute_process(
-          COMMAND ${{ steps.cmake_and_ninja.outputs.cmake_dir }}/ctest --verbose -j ${N}
+          COMMAND ctest --verbose -j ${N}
           WORKING_DIRECTORY build
           RESULT_VARIABLE result
         )
