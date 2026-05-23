@@ -176,30 +176,22 @@ jobs:
             cxx_concepts: false
           }
         - {
-            name: "Linux GCC 9 Debug (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            build_type: Debug,
-            cc: "gcc-9", cxx: "g++-9",
-            cxx_standard: 20,
-            cxx_concepts: false
-          }
-        - {
-            name: "Linux GCC 9 Release (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            build_type: RelWithDebInfo,
-            cc: "gcc-9", cxx: "g++-9",
-            cxx_standard: 20,
-            cxx_concepts: false
-          }
-        - {
             name: "Linux GCC 9 Release (C++20, Concepts)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: RelWithDebInfo,
             cc: "gcc-9", cxx: "g++-9",
-            cxx_standard: 20,
+            cxx_standard: 20, 
           }
-
+          
+          
         # GCC-10
+        - {
+            name: "Linux GCC 10 Debug (C++17)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-10", cxx: "g++-10",
+            cxx_standard: 17
+          }
         - {
             name: "Linux GCC 10 Debug (C++20, Concepts)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
@@ -212,6 +204,52 @@ jobs:
             os: ubuntu-latest,
             build_type: RelWithDebInfo,
             cc: "gcc-10", cxx: "g++-10",
+            cxx_standard: 20
+          }
+
+        # GCC-11
+        - {
+            name: "Linux GCC 11 Debug (C++17)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-11", cxx: "g++-11",
+            cxx_standard: 17
+          }
+        - {
+            name: "Linux GCC 11 Debug (C++20, Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-11", cxx: "g++-11",
+            cxx_standard: 20
+          }
+        - {
+            name: "Linux GCC 11 Release (C++20, Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-11", cxx: "g++-11",
+            cxx_standard: 20
+          }
+
+        # GCC-12
+        - {
+            name: "Linux GCC 12 Debug (C++17)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-12", cxx: "g++-12",
+            cxx_standard: 17
+          }
+        - {
+            name: "Linux GCC 12 Debug (C++20, Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "gcc-12", cxx: "g++-12",
+            cxx_standard: 20
+          }
+        - {
+            name: "Linux GCC 12 Release (C++20, Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "gcc-12", cxx: "g++-12",
             cxx_standard: 20
           }
 
@@ -298,6 +336,13 @@ jobs:
 
         # Clang-10
         - {
+            name: "Linux Clang 10 Release (C++17)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang-10", cxx: "clang++-10",
+            cxx_standard: 17,
+          }
+        - {
             name: "Linux Clang 10 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             container: "ubuntu:18.04",
@@ -313,6 +358,106 @@ jobs:
             container: "ubuntu:18.04",
             build_type: RelWithDebInfo,
             cc: "clang-10", cxx: "clang++-10",
+            cxx_standard: 20,
+          }
+
+        # Clang-11
+        - {
+            name: "Linux Clang 11 Release (C++17)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang-11", cxx: "clang++-11",
+            cxx_standard: 17,
+          }
+        - {
+            name: "Linux Clang 11 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "clang-11", cxx: "clang++-11",
+            cxx_standard: 20,
+            cxx_asan: true,
+            cxx_concepts: false
+          }
+        - {
+            name: "Linux Clang 11 Release (C++20 / Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang-11", cxx: "clang++-11",
+            cxx_standard: 20,
+          }
+
+        # Clang-12
+        - {
+            name: "Linux Clang 12 Release (C++17)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang-12", cxx: "clang++-12",
+            cxx_standard: 17,
+          }
+        - {
+            name: "Linux Clang 12 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "clang-12", cxx: "clang++-12",
+            cxx_standard: 20,
+            cxx_asan: true,
+            cxx_concepts: false
+          }
+        - {
+            name: "Linux Clang 12 Release (C++20 / Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang-12", cxx: "clang++-12",
+            cxx_standard: 20,
+          }
+
+        # Clang-13
+        - {
+            name: "Linux Clang 13 Release (C++17)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang-13", cxx: "clang++-13",
+            cxx_standard: 17,
+          }
+        - {
+            name: "Linux Clang 13 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "clang-13", cxx: "clang++-13",
+            cxx_standard: 20,
+            cxx_asan: true,
+            cxx_concepts: false
+          }
+        - {
+            name: "Linux Clang 13 Release (C++20 / Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang-13", cxx: "clang++-13",
+            cxx_standard: 20,
+          }
+
+        # Clang-14
+        - {
+            name: "Linux Clang 14 Release (C++17)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang-14", cxx: "clang++-14",
+            cxx_standard: 17,
+          }
+        - {
+            name: "Linux Clang 14 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: Debug,
+            cc: "clang-14", cxx: "clang++-14",
+            cxx_standard: 20,
+            cxx_asan: true,
+            cxx_concepts: false
+          }
+        - {
+            name: "Linux Clang 14 Release (C++20 / Concepts)", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang-14", cxx: "clang++-14",
             cxx_standard: 20,
           }
 
@@ -447,7 +592,9 @@ jobs:
       shell: bash
       working-directory: ${{ env.HOME }}
       run: |
-        sudo apt-get install -y ${{matrix.config.cc}} ${{matrix.config.cxx}}
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa
+        sudo apt update
+        sudo apt install -y ${{matrix.config.cc}} ${{matrix.config.cxx}}
 
     - name: Install libc++
       id: install_libcxx
