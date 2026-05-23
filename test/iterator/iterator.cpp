@@ -177,6 +177,16 @@ CPP_assert(indirectly_movable<int const *, int *>);
 CPP_assert(!indirectly_swappable<int const *, int const *>);
 CPP_assert(!indirectly_movable<int const *, int const *>);
 
+using IntToFloat = float(*)(int &);
+static_assert(std::is_same<ranges::indirect_value_t<int *>,int &>::value,"");
+static_assert(std::is_same<ranges::indirect_value_t<projected<int *,ranges::identity>>,int &>::value,"");
+static_assert(std::is_same<ranges::indirect_value_t<projected<int *,IntToFloat>>,float>::value,"");
+
+using MoveOnlyIterator = std::vector<MoveOnlyString>::iterator;
+using MoveOnlyMove = MoveOnlyString &&(*)(MoveOnlyString&);
+static_assert(std::is_same<ranges::indirect_value_t<MoveOnlyIterator>,MoveOnlyString &>::value,"");
+static_assert(std::is_same<ranges::indirect_value_t<projected<MoveOnlyIterator,MoveOnlyMove>>,MoveOnlyString &&>::value,"");
+
 namespace Boost
 {
     struct S {}; // just to have a type from Boost namespace
