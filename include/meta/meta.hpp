@@ -3790,7 +3790,8 @@ namespace meta
 /// \cond
 // Non-portable forward declarations of standard containers
 #ifndef META_NO_STD_FORWARD_DECLARATIONS
-#if defined(__apple_build_version__) || (defined(__clang__) && __clang_major__ < 6)
+#if (defined(__apple_build_version__) || (defined(__clang__) && __clang_major__ < 6)) && \
+    (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION < 160000)
 META_BEGIN_NAMESPACE_STD
 META_BEGIN_NAMESPACE_VERSION
 template <class>
