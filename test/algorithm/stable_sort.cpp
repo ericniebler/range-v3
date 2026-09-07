@@ -20,6 +20,7 @@
 
 #include <memory>
 #include <random>
+#include <string>
 #include <vector>
 #include <algorithm>
 #include <range/v3/core.hpp>
@@ -167,6 +168,50 @@ namespace
     {
         int i, j;
     };
+
+    // Regression test for #1848: for lengths > 256, ranges::stable_sort takes
+    // the "adaptive" (temporary buffer) path. The adaptive merge used to
+    // perform a final self-move-assignment on a range that aliased its own
+    // source once the temporary buffer was exhausted, which for types with
+    // observable move-from state (like std::string) silently emptied
+    // elements. Plain `int`s don't reveal this: self-move-assigning a
+    // scalar is harmless, so this needs a type where a move actually
+    // mutates the source.
+    void
+    test_stable_sort_moved_from_regression()
+    {
+        std::mt19937 local_gen(1234);
+        for(int n : {257, 258, 300, 500, 997, 1000, 2000})
+        {
+            for(int trial = 0; trial < 5; ++trial)
+            {
+                std::vector<int> keys(static_cast<std::size_t>(n));
+                for(int i = 0; i < n; ++i)
+                    keys[static_cast<std::size_t>(i)] = i;
+                std::shuffle(keys.begin(), keys.end(), local_gen);
+
+                std::vector<std::string> v;
+                v.reserve(keys.size());
+                for(int k : keys)
+                {
+                    // Long enough to defeat small-string-optimization, so a
+                    // corrupted move is observable as an emptied string.
+                    v.push_back("prefix-needs-to-be-long-enough-for-no-sso-" +
+                                std::to_string(k));
+                }
+
+                auto expected = v;
+                std::sort(expected.begin(), expected.end());
+
+                ranges::stable_sort(v);
+
+                CHECK(std::is_sorted(v.begin(), v.end()));
+                CHECK(v == expected);
+                for(auto const & s : v)
+                    CHECK(!s.empty());
+            }
+        }
+    }
 }
 
 int main()
@@ -195,6 +240,8 @@ int main()
     test_larger_sorts(997);
     test_larger_sorts(1000);
     test_larger_sorts(1009);
+
+    test_stable_sort_moved_from_regression();
 
 #if !defined(__clang__) || !defined(_MSVC_STL_VERSION) // Avoid #890
     // Check move-only types
