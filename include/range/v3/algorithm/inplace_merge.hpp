@@ -61,6 +61,49 @@ namespace ranges
         struct merge_adaptive_fn
         {
         private:
+            // Merges the buffered range [buf_first, buf_last) with the unbuffered
+            // range [first2, last2), writing the result starting at out. Unlike
+            // ranges::merge, this does NOT perform a final copy of any leftover
+            // elements from [first2, last2) -- because in every caller here, out
+            // and [first2, last2) alias the same underlying storage (this is an
+            // in-place merge), so once the buffered range is exhausted, whatever
+            // remains of [first2, last2) is already sitting in its correct final
+            // position. Blindly copying it onto itself (as ranges::merge's
+            // trailing `copy(first2, last2, out)` would) performs a self move-
+            // assignment for every such element, which for types like
+            // std::string silently empties them. See GH issue #1848.
+            template<typename I1, typename I2, typename O, typename C, typename P>
+            static void merge_no_tail_copy(I1 buf_first, I1 buf_last, I2 first2,
+                                           I2 last2, O out, C & pred, P & proj)
+            {
+                for(; buf_first != buf_last; ++out)
+                {
+                    if(first2 == last2)
+                    {
+                        // The buffered range still has elements, but the
+                        // unbuffered range is exhausted. Move the rest of the
+                        // buffer out; nothing aliases it, so this is safe.
+                        for(; buf_first != buf_last; ++buf_first, ++out)
+                            *out = *buf_first;
+                        return;
+                    }
+                    if(invoke(pred, invoke(proj, *first2), invoke(proj, *buf_first)))
+                    {
+                        *out = *first2;
+                        ++first2;
+                    }
+                    else
+                    {
+                        *out = *buf_first;
+                        ++buf_first;
+                    }
+                }
+                // Buffered range exhausted. Any remaining elements of
+                // [first2, last2) are already in their final position (out has
+                // caught up to first2 exactly as the buffer ran out), so there
+                // is nothing left to move.
+            }
+
             template<typename I, typename C, typename P>
             static void impl(I first, I middle, I last, iter_difference_t<I> len1,
                              iter_difference_t<I> len2, iter_value_t<I> * const buf,
@@ -70,28 +113,27 @@ namespace ranges
                 if(len1 <= len2)
                 {
                     auto p = ranges::move(first, middle, tmpbuf.begin()).out;
-                    merge(make_move_iterator(buf),
-                          make_move_iterator(p.base().base()),
-                          make_move_iterator(std::move(middle)),
-                          make_move_iterator(std::move(last)),
-                          std::move(first),
-                          std::ref(pred),
-                          std::ref(proj),
-                          std::ref(proj));
+                    merge_no_tail_copy(make_move_iterator(buf),
+                                       make_move_iterator(p.base().base()),
+                                       make_move_iterator(std::move(middle)),
+                                       make_move_iterator(std::move(last)),
+                                       std::move(first),
+                                       pred,
+                                       proj);
                 }
                 else
                 {
                     auto p = ranges::move(middle, last, tmpbuf.begin()).out;
                     using RBi = ranges::reverse_iterator<I>;
                     using Rv = ranges::reverse_iterator<iter_value_t<I> *>;
-                    merge(make_move_iterator(RBi{std::move(middle)}),
-                          make_move_iterator(RBi{std::move(first)}),
-                          make_move_iterator(Rv{p.base().base()}),
-                          make_move_iterator(Rv{buf}),
-                          RBi{std::move(last)},
-                          not_fn(std::ref(pred)),
-                          std::ref(proj),
-                          std::ref(proj));
+                    auto not_pred = not_fn(std::ref(pred));
+                    merge_no_tail_copy(make_move_iterator(Rv{p.base().base()}),
+                                       make_move_iterator(Rv{buf}),
+                                       make_move_iterator(RBi{std::move(middle)}),
+                                       make_move_iterator(RBi{std::move(first)}),
+                                       RBi{std::move(last)},
+                                       not_pred,
+                                       proj);
                 }
             }
 
