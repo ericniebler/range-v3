@@ -156,6 +156,9 @@ namespace ranges
                 auto const d = it_ - first;
                 auto const off = (d + n) % dist;
                 n_ += (d + n) / dist;
+                // Use floor division when normalizing a negative remainder.
+                if(off < 0)
+                    --n_;
                 RANGES_EXPECT(n_ >= 0);
                 using D = range_difference_t<Rng>;
                 it_ = first + static_cast<D>(off < 0 ? off + dist : off);
