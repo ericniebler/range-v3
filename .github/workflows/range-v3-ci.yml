@@ -399,7 +399,10 @@ jobs:
       if: matrix.config.container
       run: |
         apt-get update
-        apt-get -y install sudo python-is-python3 2to3 git g++ cmake curl
+        apt-get install -y cmake curl git python-is-python3 2to3 python3-launchpadlib sudo
+        apt-get install -y software-properties-common
+        add-apt-repository ppa:ubuntu-toolchain-r/test -y
+        apt-get update
 
     - name: Install packages
       if: matrix.install
