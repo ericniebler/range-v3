@@ -399,7 +399,7 @@ jobs:
       if: matrix.config.container
       run: |
         apt-get update
-        apt-get -y install sudo python git g++ cmake curl
+        apt-get -y install sudo python-is-python3 2to3 git g++ cmake curl
 
     - name: Install packages
       if: matrix.install
