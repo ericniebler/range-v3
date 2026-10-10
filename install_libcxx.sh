@@ -59,14 +59,15 @@ else
     else
         URL_ROOT="https://github.com/llvm/llvm-project/releases/download/llvmorg-${VERSION}"
     fi
+    FALLBACK_URL_ROOT="https://github.com/llvm/llvm-project/releases/download/llvmorg-${VERSION}"
     echo "From url ${URL_ROOT} ..."
 
     LLVM_URL="${URL_ROOT}/llvm-${VERSION}.src.tar.xz"
     LIBCXX_URL="${URL_ROOT}/libcxx-${VERSION}.src.tar.xz"
     LIBCXXABI_URL="${URL_ROOT}/libcxxabi-${VERSION}.src.tar.xz"
-    curl -LO $LLVM_URL
-    curl -LO $LIBCXX_URL
-    curl -LO $LIBCXXABI_URL
+    curl -fLO $LLVM_URL || curl -fLO "${FALLBACK_URL_ROOT}/llvm-${VERSION}.src.tar.xz"
+    curl -fLO $LIBCXX_URL || curl -fLO "${FALLBACK_URL_ROOT}/libcxx-${VERSION}.src.tar.xz"
+    curl -fLO $LIBCXXABI_URL || curl -fLO "${FALLBACK_URL_ROOT}/libcxxabi-${VERSION}.src.tar.xz"
 
     mkdir llvm-source
     mkdir llvm-source/projects
