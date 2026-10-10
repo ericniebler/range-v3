@@ -92,10 +92,13 @@ namespace ranges
         };
 
         template<typename... Ts>
-        using compressed_tuple RANGES_DEPRECATED(
-            "ranges::compressed_tuple is deprecated.") =
+        using compressed_tuple_impl =
             compressed_tuple_<meta::list<Ts...>,
                               meta::make_index_sequence<sizeof...(Ts)>>;
+
+        template<typename... Ts>
+        using compressed_tuple RANGES_DEPRECATED(
+            "ranges::compressed_tuple is deprecated.") = compressed_tuple_impl<Ts...>;
     } // namespace compressed_tuple_detail
     /// \endcond
 
@@ -107,7 +110,7 @@ namespace ranges
         template<typename... Args>
         constexpr auto CPP_auto_fun(operator())(Args &&... args) (const)
         (
-            return compressed_tuple<bind_element_t<Args>...>{
+            return compressed_tuple_detail::compressed_tuple_impl<bind_element_t<Args>...>{
                 static_cast<Args &&>(args)...}
         )
         // clang-format on
