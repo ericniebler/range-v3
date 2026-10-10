@@ -242,5 +242,5 @@ $RECYCLE.BIN/
 \#*#
 .#*
 /CMakeSettings.json
-
+.claude/
 compile_commands.json
