@@ -336,7 +336,7 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        sudo apt-get install -y ${{matrix.config.cc}} ${{matrix.config.cxx}}
+        apt-get install -y ${{matrix.config.cc}} ${{matrix.config.cxx}}
 
     - name: Install libc++
       id: install_libcxx
