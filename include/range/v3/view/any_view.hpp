@@ -128,7 +128,9 @@ namespace ranges
 #ifndef NDEBUG
               , info_(&typeid(rtti_tag<T>))
 #endif
-            {}
+            {
+                (void)info_; // silence unused private member warning
+            }
             template<typename T>
             T & get() const noexcept
             {
@@ -138,9 +140,7 @@ namespace ranges
 
         private:
             void const volatile * obj_ = nullptr;
-#ifndef NDEBUG
             std::type_info const * info_ = nullptr;
-#endif
         };
 
         template<typename Base>

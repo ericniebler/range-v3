@@ -13,20 +13,23 @@
 #ifndef RANGES_V3_UTILITY_STATIC_CONST_HPP
 #define RANGES_V3_UTILITY_STATIC_CONST_HPP
 
+#include <range/v3/detail/config.hpp>
+
 namespace ranges
 {
     /// \ingroup group-utility
-
     template<typename T>
     struct static_const
     {
-        static constexpr T value{};
+        static constexpr T const value{};
     };
 
+#if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17
     /// \ingroup group-utility
     /// \sa `static_const`
     template<typename T>
-    constexpr T static_const<T>::value;
+    constexpr T const static_const<T>::value;
+#endif
 } // namespace ranges
 
 #endif

@@ -28,7 +28,7 @@
 #endif
 
 #ifndef CPP_CXX_INLINE_VARIABLES
-#ifdef __cpp_inline_variables // TODO: fix this if SD-6 picks another name
+#ifdef __cpp_inline_variables
 #define CPP_CXX_INLINE_VARIABLES __cpp_inline_variables
 // TODO: remove once clang defines __cpp_inline_variables (or equivalent)
 #elif defined(__clang__) && \
@@ -108,6 +108,7 @@
 #endif
 #endif // MSVC/Generic configuration switch
 
+CPP_DIAGNOSTIC_PUSH
 namespace concepts
 {
     /// \cond
@@ -124,8 +125,11 @@ namespace concepts
         {
             static constexpr T const value {};
         };
+
+#if CPP_CXX_INLINE_VARIABLES < 201606L
         template<typename T>
         constexpr T const static_const<T>::value;
+#endif
     }
     /// \endcond
 
@@ -336,5 +340,6 @@ namespace concepts
     /// \relates adl_swap_detail::swap_fn
     CPP_DEFINE_CPO(adl_swap_detail::swap_fn, swap)
 }
+CPP_DIAGNOSTIC_POP
 
 #endif
