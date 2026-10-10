@@ -29,6 +29,13 @@
 
 #include <range/v3/detail/prologue.hpp>
 
+RANGES_DIAGNOSTIC_PUSH
+// Suppress deprecated declaration usage within `make_compressed_tuple`,
+// which is itself deprecated
+RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
+// Suppress warning about std::tuple_size declared with both class and struct
+RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
+
 namespace ranges
 {
     /// \cond
@@ -92,10 +99,13 @@ namespace ranges
         };
 
         template<typename... Ts>
-        using compressed_tuple RANGES_DEPRECATED(
-            "ranges::compressed_tuple is deprecated.") =
+        using compressed_tuple_impl =
             compressed_tuple_<meta::list<Ts...>,
                               meta::make_index_sequence<sizeof...(Ts)>>;
+
+        template<typename... Ts>
+        using compressed_tuple RANGES_DEPRECATED(
+            "ranges::compressed_tuple is deprecated.") = compressed_tuple_impl<Ts...>;
     } // namespace compressed_tuple_detail
     /// \endcond
 
@@ -108,7 +118,7 @@ namespace ranges
         RANGES_DEPRECATED("ranges::compressed_tuple is deprecated.")
         constexpr auto CPP_auto_fun(operator())(Args &&... args) (const)
         (
-            return compressed_tuple<bind_element_t<Args>...>{
+            return compressed_tuple_detail::compressed_tuple_impl<bind_element_t<Args>...>{
                 static_cast<Args &&>(args)...}
         )
         // clang-format on
@@ -190,8 +200,6 @@ namespace ranges
     RANGES_INLINE_VARIABLE(make_compressed_pair_fn, make_compressed_pair)
 } // namespace ranges
 
-RANGES_DIAGNOSTIC_PUSH
-RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
 namespace std
 {
     template<typename... Ts, size_t... Is>
@@ -224,6 +232,7 @@ namespace std
         using type = Second;
     };
 } // namespace std
+
 RANGES_DIAGNOSTIC_POP
 
 #include <range/v3/detail/epilogue.hpp>

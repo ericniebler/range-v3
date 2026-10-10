@@ -320,7 +320,17 @@ namespace ranges
                      std::declval<BaseIter const &>(), std::declval<BaseIter const &>()))>
         bool equal_(adaptor_cursor const & that, long) const
         {
+            // GCC's -Wmaybe-uninitialized is a false positive here: it mistakenly
+            // believes a path through this template instantiation can leave the
+            // anonymous temporary used to call equal() uninitialized.
+#if defined(__GNUC__) && !defined(__clang__)
+            RANGES_DIAGNOSTIC_PUSH
+            RANGES_DIAGNOSTIC_IGNORE("-Wmaybe-uninitialized")
+#endif
             return this->data_.second().equal(this->data_.first(), that.data_.first());
+#if defined(__GNUC__) && !defined(__clang__)
+            RANGES_DIAGNOSTIC_POP
+#endif
         }
         template<typename C = adaptor_cursor>
         auto equal(adaptor_cursor const & that) const

@@ -108,6 +108,7 @@
 #endif
 #endif // MSVC/Generic configuration switch
 
+CPP_DIAGNOSTIC_PUSH
 namespace concepts
 {
     /// \cond
@@ -339,5 +340,6 @@ namespace concepts
     /// \relates adl_swap_detail::swap_fn
     CPP_DEFINE_CPO(adl_swap_detail::swap_fn, swap)
 }
+CPP_DIAGNOSTIC_POP
 
 #endif
