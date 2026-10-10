@@ -324,7 +324,7 @@ jobs:
         TZ: Etc/UTC
       run: |
         apt-get update
-        apt-get -y install ninja-build curl
+        apt-get -y install ninja-build make curl
 
     - name: Setup MSVC environment
       if: runner.os == 'Windows'
