@@ -13,57 +13,11 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        # GCC-6
-        - {
-            name: "Linux GCC 6 Debug (C++14)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            container: "ubuntu:18.04",
-            build_type: Debug,
-            cc: "gcc-6", cxx: "g++-6",
-            cxx_standard: 14,
-            cxx_concepts: false
-          }
-        - {
-            name: "Linux GCC 6 Release (C++14)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            container: "ubuntu:18.04",
-            build_type: RelWithDebInfo,
-            cc: "gcc-6", cxx: "g++-6",
-            cxx_standard: 14,
-            cxx_concepts: false
-          }
-        - {
-            name: "Linux GCC 6 Debug (C++17)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            container: "ubuntu:18.04",
-            build_type: Debug,
-            cc: "gcc-6", cxx: "g++-6",
-            cxx_standard: 17,
-            cxx_concepts: false
-          }
-        - {
-            name: "Linux GCC 6 Release (C++17)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            container: "ubuntu:18.04",
-            build_type: RelWithDebInfo,
-            cc: "gcc-6", cxx: "g++-6",
-            cxx_standard: 17,
-            cxx_concepts: false
-          }
-        - {
-            name: "Linux GCC 6 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            container: "ubuntu:18.04",
-            build_type: RelWithDebInfo,
-            cc: "gcc-6", cxx: "g++-6",
-            cxx_standard: 17,
-          }
-
         # GCC-7
         - {
             name: "Linux GCC 7 Debug (C++14)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: Debug,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 14,
@@ -72,7 +26,7 @@ jobs:
         - {
             name: "Linux GCC 7 Release (C++14)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: RelWithDebInfo,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 14,
@@ -81,7 +35,7 @@ jobs:
         - {
             name: "Linux GCC 7 Debug (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: Debug,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 17,
@@ -90,7 +44,7 @@ jobs:
         - {
             name: "Linux GCC 7 Release (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: RelWithDebInfo,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 17,
@@ -99,7 +53,7 @@ jobs:
         - {
             name: "Linux GCC 7 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: RelWithDebInfo,
             cc: "gcc-7", cxx: "g++-7",
             cxx_standard: 17,
@@ -109,7 +63,7 @@ jobs:
         - {
             name: "Linux GCC 8 Debug (C++14)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: Debug,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 14,
@@ -118,7 +72,7 @@ jobs:
         - {
             name: "Linux GCC 8 Release (C++14)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: RelWithDebInfo,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 14,
@@ -127,7 +81,7 @@ jobs:
         - {
             name: "Linux GCC 8 Debug (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: Debug,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 17,
@@ -136,7 +90,7 @@ jobs:
         - {
             name: "Linux GCC 8 Release (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: RelWithDebInfo,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 17,
@@ -145,7 +99,7 @@ jobs:
         - {
             name: "Linux GCC 8 Release (C++17, Concepts)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: RelWithDebInfo,
             cc: "gcc-8", cxx: "g++-8",
             cxx_standard: 17,
@@ -155,6 +109,7 @@ jobs:
         - {
             name: "Linux GCC 9 Debug (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:20.04",
             build_type: Debug,
             cc: "gcc-9", cxx: "g++-9",
             cxx_standard: 17,
@@ -163,6 +118,7 @@ jobs:
         - {
             name: "Linux GCC 9 Release (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:20.04",
             build_type: RelWithDebInfo,
             cc: "gcc-9", cxx: "g++-9",
             cxx_standard: 17,
@@ -171,6 +127,7 @@ jobs:
         - {
             name: "Linux GCC 9 Debug (C++20)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:20.04",
             build_type: Debug,
             cc: "gcc-9", cxx: "g++-9",
             cxx_standard: 20,
@@ -179,6 +136,7 @@ jobs:
         - {
             name: "Linux GCC 9 Release (C++20)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:20.04",
             build_type: RelWithDebInfo,
             cc: "gcc-9", cxx: "g++-9",
             cxx_standard: 20,
@@ -187,6 +145,7 @@ jobs:
         - {
             name: "Linux GCC 9 Release (C++20, Concepts)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:20.04",
             build_type: RelWithDebInfo,
             cc: "gcc-9", cxx: "g++-9",
             cxx_standard: 20,
@@ -196,6 +155,7 @@ jobs:
         - {
             name: "Linux GCC 10 Debug (C++20, Concepts)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:20.04",
             build_type: Debug,
             cc: "gcc-10", cxx: "g++-10",
             cxx_standard: 20
@@ -203,37 +163,17 @@ jobs:
         - {
             name: "Linux GCC 10 Release (C++20, Concepts)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
+            container: "ubuntu:20.04",
             build_type: RelWithDebInfo,
             cc: "gcc-10", cxx: "g++-10",
             cxx_standard: 20
-          }
-
-        # Clang-5.0
-        - {
-            name: "Linux Clang 5.0 Debug (C++14 / libc++ / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            container: "ubuntu:18.04",
-            build_type: Debug,
-            cc: "clang-5.0", cxx: "clang++-5.0",
-            cxx_standard: 14,
-            cxx_asan: true,
-            libcxx: true
-          }
-        - {
-            name: "Linux Clang 5.0 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            container: "ubuntu:18.04",
-            build_type: Debug,
-            cc: "clang-5.0", cxx: "clang++-5.0",
-            cxx_standard: 17,
-            cxx_asan: true,
           }
 
         # Clang-6.0
         - {
             name: "Linux Clang 6.0 Debug (C++14 / libc++ / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: Debug,
             cc: "clang-6.0", cxx: "clang++-6.0",
             cxx_standard: 14,
@@ -243,7 +183,7 @@ jobs:
         - {
             name: "Linux Clang 6.0 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: Debug,
             cc: "clang-6.0", cxx: "clang++-6.0",
             cxx_standard: 17,
@@ -254,7 +194,7 @@ jobs:
         - {
             name: "Linux Clang 8 Debug (C++14 / libc++ / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: Debug,
             cc: "clang-8", cxx: "clang++-8",
             cxx_standard: 14,
@@ -263,7 +203,8 @@ jobs:
           }
         - {
             name: "Linux Clang 8 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
-            os: ubuntu-20.04,
+            os: ubuntu-latest,
+            container: "ubuntu:20.04",
             build_type: Debug,
             cc: "clang-8", cxx: "clang++-8",
             cxx_standard: 17,
@@ -274,7 +215,7 @@ jobs:
         - {
             name: "Linux Clang 9 Debug (C++17 / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: Debug,
             cc: "clang-9", cxx: "clang++-9",
             cxx_standard: 17,
@@ -283,7 +224,7 @@ jobs:
         - {
             name: "Linux Clang 9 Release (C++17)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: RelWithDebInfo,
             cc: "clang-9", cxx: "clang++-9",
             cxx_standard: 17,
@@ -293,7 +234,7 @@ jobs:
         - {
             name: "Linux Clang 10 Debug (C++20 / ASAN)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: Debug,
             cc: "clang-10", cxx: "clang++-10",
             cxx_standard: 20,
@@ -303,7 +244,7 @@ jobs:
         - {
             name: "Linux Clang 10 Release (C++20 / Concepts)", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
-            container: "ubuntu:18.04",
+            container: "ubuntu:20.04",
             build_type: RelWithDebInfo,
             cc: "clang-10", cxx: "clang++-10",
             cxx_standard: 20,
@@ -347,7 +288,6 @@ jobs:
             os: windows-latest,
             build_type: Debug,
             cc: "cl", cxx: "cl",
-            environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
             cxx_standard: 17,
             cxx_asan: true,
           }
@@ -356,7 +296,6 @@ jobs:
             os: windows-latest,
             build_type: RelWithDebInfo,
             cc: "cl", cxx: "cl",
-            environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
             cxx_standard: 17,
           }
         - {
@@ -364,7 +303,6 @@ jobs:
             os: windows-latest,
             build_type: Debug,
             cc: "cl", cxx: "cl",
-            environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
             cxx_standard: 20,
             cxx_asan: true,
           }
@@ -373,12 +311,17 @@ jobs:
             os: windows-latest,
             build_type: RelWithDebInfo,
             cc: "cl", cxx: "cl",
-            environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
             cxx_standard: 20,
           }
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Setup MSVC environment
+      if: runner.os == 'Windows'
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
 
     - name: Setup CMake
       uses: jwlawson/actions-setup-cmake@v2
@@ -390,6 +333,8 @@ jobs:
       if: startsWith(matrix.config.os, 'ubuntu')
       shell: bash
       working-directory: ${{ env.HOME }}
+      env:
+        DEBIAN_FRONTEND: noninteractive
       run: |
         sudo apt-get install -y ${{matrix.config.cc}} ${{matrix.config.cxx}}
 
@@ -410,18 +355,8 @@ jobs:
         set(ENV{CC} ${{ matrix.config.cc }})
         set(ENV{CXX} ${{ matrix.config.cxx }})
 
-        if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
-          execute_process(
-            COMMAND "${{ matrix.config.environment_script }}" && set
-            OUTPUT_FILE environment_script_output.txt
-          )
+        if ("${{ runner.os }}" STREQUAL "Windows")
           set(cxx_flags "/nologo /permissive- /EHsc")
-          file(STRINGS environment_script_output.txt output_lines)
-          foreach(line IN LISTS output_lines)
-            if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
-              set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
-            endif()
-          endforeach()
         endif()
 
         set(path_separator ":")
@@ -483,15 +418,6 @@ jobs:
       run: |
         set(ENV{NINJA_STATUS} "[%f/%t %o/sec] ")
 
-        if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
-          file(STRINGS environment_script_output.txt output_lines)
-          foreach(line IN LISTS output_lines)
-            if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
-              set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
-            endif()
-          endforeach()
-        endif()
-
         set(path_separator ":")
         if ("${{ runner.os }}" STREQUAL "Windows")
           set(path_separator ";")
@@ -514,15 +440,6 @@ jobs:
         ProcessorCount(N)
 
         set(ENV{CTEST_OUTPUT_ON_FAILURE} "ON")
-
-        if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
-          file(STRINGS environment_script_output.txt output_lines)
-          foreach(line IN LISTS output_lines)
-            if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
-              set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
-            endif()
-          endforeach()
-        endif()
 
         execute_process(
           COMMAND ctest --verbose -j ${N}
