@@ -29,6 +29,13 @@
 
 #include <range/v3/detail/prologue.hpp>
 
+RANGES_DIAGNOSTIC_PUSH
+// Suppress deprecated declaration usage within `make_compressed_tuple`,
+// which is itself deprecated
+RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
+// Suppress warning about std::tuple_size declared with both class and struct
+RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
+
 namespace ranges
 {
     /// \cond
@@ -104,11 +111,6 @@ namespace ranges
 
     using compressed_tuple_detail::compressed_tuple;
 
-// Suppress deprecated declaration usage within `make_compressed_tuple`,
-// which is itself deprecated
-RANGES_DIAGNOSTIC_PUSH
-RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
-
     struct make_compressed_tuple_fn
     {
         // clang-format off
@@ -125,8 +127,6 @@ RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
     /// \ingroup group-utility
     /// \sa `make_compressed_tuple_fn`
     RANGES_INLINE_VARIABLE(make_compressed_tuple_fn, make_compressed_tuple)
-
-RANGES_DIAGNOSTIC_POP
 
     template<typename First, typename Second>
     struct RANGES_EMPTY_BASES compressed_pair
@@ -200,8 +200,6 @@ RANGES_DIAGNOSTIC_POP
     RANGES_INLINE_VARIABLE(make_compressed_pair_fn, make_compressed_pair)
 } // namespace ranges
 
-RANGES_DIAGNOSTIC_PUSH
-RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
 namespace std
 {
     template<typename... Ts, size_t... Is>
@@ -234,6 +232,7 @@ namespace std
         using type = Second;
     };
 } // namespace std
+
 RANGES_DIAGNOSTIC_POP
 
 #include <range/v3/detail/epilogue.hpp>
