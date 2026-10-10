@@ -56,8 +56,8 @@ Supported Compilers
 
 The code is known to work on the following compilers:
 
-- clang 5.0 (or later)
-- GCC 6.5 (or later)
+- clang 6 (or later)
+- GCC 7 (or later)
 - Clang/LLVM 6 (or later) on Windows (older versions may work - we haven't tested.)
 - Visual Studio 2019 (or later) on Windows, with some caveats due to range-v3's strict conformance requirements:
   - range-v3 needs `/permissive-` and either `/std:c++latest`, `/std:c++20`,  or `/std:c++17`
