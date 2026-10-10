@@ -335,7 +335,9 @@ jobs:
       working-directory: ${{ env.HOME }}
       env:
         DEBIAN_FRONTEND: noninteractive
+        TZ: Etc/UTC
       run: |
+        apt-get update
         apt-get install -y ${{matrix.config.cc}} ${{matrix.config.cxx}}
 
     - name: Install libc++
