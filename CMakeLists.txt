@@ -6,6 +6,14 @@
 # (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
 
 cmake_minimum_required(VERSION 3.15)
+
+if(POLICY CMP0167)
+  # Don't try to use old FindBoost.cmake
+  # https://cmake.org/cmake/help/latest/policy/CMP0167.html
+  cmake_policy(SET CMP0167 NEW)
+  set(CMAKE_POLICY_DEFAULT_CMP0167 NEW)
+endif()
+
 get_directory_property(is_subproject PARENT_DIRECTORY)
 
 if(NOT is_subproject)
@@ -23,6 +31,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 include(ranges_options)
 include(ranges_env)
 include(ranges_flags)
+include(ranges_clangd)
 
 add_library(range-v3-meta INTERFACE)
 add_library(range-v3::meta ALIAS range-v3-meta)
