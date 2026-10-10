@@ -4,6 +4,16 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+template <class>
+void test_forward(std::false_type)
+{}
+
+template <class R>
+void test_forward(std::true_type)
+{
+    CPP_assert(ranges::forward_range<R>);
+}
+
 int main()
 {
     using namespace ranges;
@@ -22,12 +32,14 @@ int main()
     ::has_type<const std::sub_match<std::string::iterator>&>(*ranges::begin(crng));
 
     CPP_assert(common_range<decltype(rng)>);
-    CPP_assert(forward_range<decltype(rng)>);
+    const bool is_bidi = bidirectional_iterator<std::regex_token_iterator<std::string::iterator>>;
+    test_forward<decltype(rng)>(std::integral_constant<bool, is_bidi>{});
     CPP_assert(!bidirectional_range<decltype(rng)>);
     CPP_assert(!sized_range<decltype(rng)>);
 
     CPP_assert(common_range<decltype(crng)>);
-    CPP_assert(forward_range<decltype(crng)>);
+    const bool const_is_bidi = bidirectional_iterator<std::regex_token_iterator<std::string::const_iterator>>;
+    test_forward<decltype(crng)>(std::integral_constant<bool, const_is_bidi>{});
     CPP_assert(!bidirectional_range<decltype(crng)>);
     CPP_assert(!sized_range<decltype(crng)>);
 

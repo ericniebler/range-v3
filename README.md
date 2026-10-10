@@ -1,3 +1,5 @@
+[![range-v3 CI](https://github.com/ericniebler/range-v3/actions/workflows/range-v3-ci.yml/badge.svg)](https://github.com/ericniebler/range-v3/actions/workflows/range-v3-ci.yml)
+
 range-v3
 ========
 
@@ -54,8 +56,8 @@ Supported Compilers
 
 The code is known to work on the following compilers:
 
-- clang 5.0 (or later)
-- GCC 6.5 (or later)
+- clang 6 (or later)
+- GCC 7 (or later)
 - Clang/LLVM 6 (or later) on Windows (older versions may work - we haven't tested.)
 - Visual Studio 2019 (or later) on Windows, with some caveats due to range-v3's strict conformance requirements:
   - range-v3 needs `/permissive-` and either `/std:c++latest`, `/std:c++20`,  or `/std:c++17`
@@ -83,36 +85,35 @@ The range-v3 port in vcpkg is kept up to date by Microsoft team members and comm
 Building range-v3 - Using Conan
 -------------------------------
 
-You can download and install range-v3 using the [Conan](https://github.com/conan-io/conan) dependency manager.
+You can install pre-built binaries for range-v3 or build it from source using [Conan](https://conan.io/).
 
-Setup your CMakeLists.txt (see [Conan documentation](https://docs.conan.io/en/latest/integrations/build_system.html) on how to use MSBuild, Meson and others):
+Setup your `CMakeLists.txt`:
 ```cmake
 project(myproject CXX)
 
 add_executable(${PROJECT_NAME} main.cpp)
-
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake) # Include Conan-generated file
-conan_basic_setup(TARGETS) # Introduce Conan-generated targets
-
-target_link_libraries(${PROJECT_NAME} CONAN_PKG::range-v3)
+find_package(range-v3 REQUIRED)
+target_link_libraries(${PROJECT_NAME} range-v3::range-v3)
 ```
-Create `conanfile.txt` in your source dir:
-```sh
+Create a `conanfile.txt`:
+```
 [requires]
-range-v3/0.12.0
+range-v3/[*]
 
 [generators]
-cmake
+CMakeDeps
+CMakeToolchain
 ```
-Install and run `conan`, then build your project as always:
+Run following commands:
 ```sh
-pip install conan
-mkdir build
-cd build
-conan install ../ --build=missing
-cmake ../
-cmake --build .
+$ conan install . --build=missing --output-folder=build
+$ cmake . -B build -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
+$ cmake --build build
 ```
+For detailed instructions on how to use Conan, please refer to the [Conan documentation](https://docs.conan.io/2/).
+
+The range-v3 package in Conan Center is kept up to date by Conan team members and Conan community contributors.
+If the version is out of date, please [create an issue or pull request](https://github.com/conan-io/conan-center-index) on the conan repository.
 
 Building range-v3 - Using `build2`
 ----------------------------------
@@ -150,9 +151,3 @@ For example, to make your `build2` project depend on `range-v3`:
 Then just build your project as usual (with `b` or `bdep update`), `build2` will figure out the rest.
 
 For `build2` newcomers or to get more details and use cases, you can read [this document](https://github.com/build2-packaging/range-v3/blob/master/NOTES-build2.md) and the [`build2` toolchain introduction](https://build2.org/build2-toolchain/doc/build2-toolchain-intro.xhtml).
-
-
-Say Thanks!
------------
-
-I do this work because I love it and because I love C++ and want it to be as excellent as I know it can be. If you like my work and are looking for a way to say thank you, you can leave a supportive comment on [my blog](http://ericniebler.com). Or you could leave me some kudos on my Open Hub range-v3 contribution page. Just click the **Give Kudos** button [here](https://www.openhub.net/p/range-v3/contributors/3053743222308608).
