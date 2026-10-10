@@ -281,7 +281,7 @@ namespace ranges
         template<typename I>
         auto is_std_iterator_traits_specialized_impl_(std::iterator_traits<I>* traits)
             -> decltype(libcpp_iterator_traits_base_impl<std::__iterator_traits, I>(traits));
-#elif defined(_MSVC_STL_VERSION)
+#elif defined(_MSVC_STL_VERSION) || defined(_IS_WRS)
         template<typename I>
         char (&is_std_iterator_traits_specialized_impl_(
             std::_Iterator_traits_base<I> *))[2];

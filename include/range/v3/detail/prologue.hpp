@@ -45,3 +45,6 @@ RANGES_DIAGNOSTIC_KEYWORD_MACRO
 #define declval(...) static_cast<__VA_ARGS__(*)()>(nullptr)()
 #endif
 /// \cond
+
+#pragma push_macro("I")
+#undef I

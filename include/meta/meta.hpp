@@ -27,6 +27,8 @@
 #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wdocumentation-deprecated-sync"
 #pragma GCC diagnostic ignored "-Wmissing-variable-declarations"
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
+#pragma GCC diagnostic ignored "-Wreserved-identifier" // _z at namespace scope is not reserved
 #endif
 
 /// \defgroup meta Meta
@@ -169,8 +171,8 @@ namespace meta
 
     /// An integral constant wrapper for \c int.
     /// \ingroup integral
-    template <int I>
-    using int_ = std::integral_constant<int, I>;
+    template <int Int>
+    using int_ = std::integral_constant<int, Int>;
 
     /// An integral constant wrapper for \c char.
     /// \ingroup integral
@@ -2833,12 +2835,14 @@ namespace meta
         template <typename T>
         struct static_const
         {
-            static constexpr T value{};
+            static constexpr T const value{};
         };
 
+#if !META_CXX_INLINE_VARIABLES
         // Avoid potential ODR violations with global objects:
-        template <typename T>
-        constexpr T static_const<T>::value;
+        template<typename T>
+        constexpr T const static_const<T>::value;
+#endif
     } // namespace detail
 
     ///\endcond
@@ -3774,9 +3778,9 @@ namespace meta
     {
         /// A user-defined literal that generates objects of type \c meta::size_t.
         /// \ingroup integral
-        template <char... Chs>
+        template<char... Chs>
         constexpr fold<list<char_<Chs>...>, meta::size_t<0>, quote<detail::atoi_>>
-            operator"" _z()
+        operator""_z()
         {
             return {};
         }

@@ -1,3 +1,5 @@
+[![range-v3 CI](https://github.com/ericniebler/range-v3/actions/workflows/range-v3-ci.yml/badge.svg)](https://github.com/ericniebler/range-v3/actions/workflows/range-v3-ci.yml)
+
 range-v3
 ========
 
@@ -6,7 +8,7 @@ Range library for C++14/17/20. This code was the basis of [a formal proposal](ht
 About:
 ------
 
-Ranges are an extension of the Standard Template Library that makes its iterators and algorithms more powerful by making them _composable_. Unlike other range-like solutions which seek to do away with iterators, in range-v3 ranges are an abstration layer _on top_ of iterators.
+Ranges are an extension of the Standard Template Library that makes its iterators and algorithms more powerful by making them _composable_. Unlike other range-like solutions which seek to do away with iterators, in range-v3 ranges are an abstraction layer _on top_ of iterators.
 
 Range-v3 is built on three pillars: Views, Actions, and Algorithms. The algorithms are the same as those with which you are already familiar in the STL, except that in range-v3 all the algorithms have overloads that take ranges in addition to the overloads that take iterators. Views are composable adaptations of ranges where the adaptation happens lazily as the view is iterated. And an action is an eager application of an algorithm to a container that mutates the container in-place and returns it for further processing.
 
@@ -54,8 +56,8 @@ Supported Compilers
 
 The code is known to work on the following compilers:
 
-- clang 5.0 (or later)
-- GCC 6.5 (or later)
+- clang 6 (or later)
+- GCC 7 (or later)
 - Clang/LLVM 6 (or later) on Windows (older versions may work - we haven't tested.)
 - Visual Studio 2019 (or later) on Windows, with some caveats due to range-v3's strict conformance requirements:
   - range-v3 needs `/permissive-` and either `/std:c++latest`, `/std:c++20`,  or `/std:c++17`
@@ -71,53 +73,52 @@ Building range-v3 - Using vcpkg
 -------------------------------
 
 You can download and install range-v3 using the [vcpkg](https://github.com/Microsoft/vcpkg) dependency manager:
-
-    git clone https://github.com/Microsoft/vcpkg.git
-    cd vcpkg
-    ./bootstrap-vcpkg.sh
-    ./vcpkg integrate install
-    ./vcpkg install range-v3
-
+```sh
+git clone https://github.com/Microsoft/vcpkg.git
+cd vcpkg
+./bootstrap-vcpkg.sh
+./vcpkg integrate install
+./vcpkg install range-v3
+```
 The range-v3 port in vcpkg is kept up to date by Microsoft team members and community contributors. If the version is out of date, please [create an issue or pull request](https://github.com/Microsoft/vcpkg) on the vcpkg repository.
 
 Building range-v3 - Using Conan
 -------------------------------
 
-You can download and install range-v3 using the [Conan](https://github.com/conan-io/conan) dependency manager.
+You can install pre-built binaries for range-v3 or build it from source using [Conan](https://conan.io/).
 
-Setup your CMakeLists.txt (see [Conan documentation](https://docs.conan.io/en/latest/integrations/build_system.html) on how to use MSBuild, Meson and others):
-```
+Setup your `CMakeLists.txt`:
+```cmake
 project(myproject CXX)
 
 add_executable(${PROJECT_NAME} main.cpp)
-
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake) # Include Conan-generated file
-conan_basic_setup(TARGETS) # Introduce Conan-generated targets
-
-target_link_libraries(${PROJECT_NAME} CONAN_PKG::range-v3)
+find_package(range-v3 REQUIRED)
+target_link_libraries(${PROJECT_NAME} range-v3::range-v3)
 ```
-Create `conanfile.txt` in your source dir:
+Create a `conanfile.txt`:
 ```
 [requires]
-range-v3/0.12.0
+range-v3/[*]
 
 [generators]
-cmake
+CMakeDeps
+CMakeToolchain
 ```
-Install and run `conan`, then build your project as always:
+Run following commands:
+```sh
+$ conan install . --build=missing --output-folder=build
+$ cmake . -B build -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
+$ cmake --build build
 ```
-pip install conan
-mkdir build
-cd build
-conan install ../ --build=missing
-cmake ../
-cmake --build .
-```
+For detailed instructions on how to use Conan, please refer to the [Conan documentation](https://docs.conan.io/2/).
+
+The range-v3 package in Conan Center is kept up to date by Conan team members and Conan community contributors.
+If the version is out of date, please [create an issue or pull request](https://github.com/conan-io/conan-center-index) on the conan repository.
 
 Building range-v3 - Using `build2`
 ----------------------------------
 
-You can use [`build2`](https://build2.org), a dependency manager and a build-system combined, to use `range-v3` (or work on it):
+You can use [`build2`](https://build2.org), a dependency manager and build-system combined, to use `range-v3` (or work on it):
 
 Currently this package is available in these package repositories:
  - **https://cppget.org/range-v3/** for released and published versions.
@@ -127,7 +128,7 @@ Currently this package is available in these package repositories:
 
  - `build2` package name: `range-v3`
  - Library target name : `lib{range-v3}`
- - [Detailed use cases and instructions in this document](https://github.com/build2-packaging/range-v3/NOTES-build2.md).
+ - [Detailed use cases and instructions in this document](https://github.com/build2-packaging/range-v3/blob/master/NOTES-build2.md).
 
 For example, to make your `build2` project depend on `range-v3`:
   - Add one of the repositories to your configurations, or in your `repositories.manifest`, if not already there; for example:
@@ -141,7 +142,7 @@ For example, to make your `build2` project depend on `range-v3`:
     depends: range-v3 ~0.11.0
     ```
   - Import the target and use it as a prerequisite to your own target using `range-v3` in the appropriate `buildfile`:
-    ```
+    ```py
     import range_v3 = range-v3%lib{range-v3}
 
     lib{mylib} : cxx{**} ... $range_v3
@@ -149,10 +150,4 @@ For example, to make your `build2` project depend on `range-v3`:
 
 Then just build your project as usual (with `b` or `bdep update`), `build2` will figure out the rest.
 
-For `build2` newcomers or to get more details and use cases, you can read [this document](https://github.com/build2-packaging/range-v3/NOTES-build2.md) and the [`build2` toolchain introduction](https://build2.org/build2-toolchain/doc/build2-toolchain-intro.xhtml).
-
-
-Say Thanks!
------------
-
-I do this work because I love it and because I love C++ and want it to be as excellent as I know it can be. If you like my work and are looking for a way to say thank you, you can leave a supportive comment on [my blog](http://ericniebler.com). Or you could leave me some kudos on my Open Hub range-v3 contribution page. Just click the **Give Kudos** button [here](https://www.openhub.net/p/range-v3/contributors/3053743222308608).
+For `build2` newcomers or to get more details and use cases, you can read [this document](https://github.com/build2-packaging/range-v3/blob/master/NOTES-build2.md) and the [`build2` toolchain introduction](https://build2.org/build2-toolchain/doc/build2-toolchain-intro.xhtml).

@@ -198,6 +198,12 @@ RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_FUNC_TEMPLATE
         CPP_assert(same_as<decltype(l0), decltype(s1)>);
         CPP_assert(same_as<decltype(l0), decltype(s2)>);
     }
+    {
+        subrange s(li.begin(), li.end());
+        subrange s2 = s.next();
+        CHECK(s2.begin() == std::next(li.begin()));
+        CHECK(s2.end() == li.end());
+    }
 #if defined(__clang__) && __clang_major__ < 6
 RANGES_DIAGNOSTIC_POP
 #endif // clang bug workaround

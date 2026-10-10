@@ -312,8 +312,7 @@ namespace ranges
 
         constexpr subrange & advance(iter_difference_t<I> n)
         {
-            set_size_(get_size_() -
-                      static_cast<size_type>(n - ranges::advance(first_(), n, last_())));
+            set_size_(static_cast<size_type>(n - ranges::advance(first_(), n, last_())));
             return *this;
         }
 
@@ -362,7 +361,7 @@ namespace ranges
             -> CPP_ret(void)(
                 requires (detail::store_size_<K, S, I>()))
         {
-            std::get<2>(data_) = n;
+            std::get<2>(data_) = get_size_() - n;
         }
     };
 

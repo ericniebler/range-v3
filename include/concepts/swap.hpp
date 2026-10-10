@@ -28,7 +28,7 @@
 #endif
 
 #ifndef CPP_CXX_INLINE_VARIABLES
-#ifdef __cpp_inline_variables // TODO: fix this if SD-6 picks another name
+#ifdef __cpp_inline_variables
 #define CPP_CXX_INLINE_VARIABLES __cpp_inline_variables
 // TODO: remove once clang defines __cpp_inline_variables (or equivalent)
 #elif defined(__clang__) && \
@@ -124,8 +124,11 @@ namespace concepts
         {
             static constexpr T const value {};
         };
+
+#if CPP_CXX_INLINE_VARIABLES < 201606L
         template<typename T>
         constexpr T const static_const<T>::value;
+#endif
     }
     /// \endcond
 

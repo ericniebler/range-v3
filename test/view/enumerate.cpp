@@ -102,4 +102,6 @@ int main()
         CPP_assert(same_as<range_difference_t<X>, detail::diffmax_t>);
         CPP_assert(same_as<range_value_t<X>, std::pair<detail::diffmax_t, char const*>>);
     }
+
+    return ::test_result();
 }

@@ -282,7 +282,11 @@ namespace ranges
             {
                 // Return the smallest distance (in magnitude) of any of the iterator
                 // pairs. This is to accommodate zippers of sequences of different length.
-                if(0 < std::get<0>(that.its_) - std::get<0>(its_))
+                auto first_size = std::get<0>(that.its_) - std::get<0>(its_);
+                if(first_size == 0)
+                    return static_cast<difference_type>(0);
+
+                if(0 < first_size)
                     return tuple_foldl(
                         tuple_transform(its_, that.its_, detail::distance_to),
                         (std::numeric_limits<difference_type>::max)(),
