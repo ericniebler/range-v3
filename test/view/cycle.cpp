@@ -222,8 +222,69 @@ void test_random_access_it(Rng const &rng)
     }
 }
 
+template<typename Rng, typename Values>
+void test_random_access_positions(Rng & rng, Values const & values, int length)
+{
+    // Build an independent position oracle without random-access arithmetic.
+    std::vector<iterator_t<Rng>> positions;
+    auto it = begin(rng);
+    for(int p = 0; p <= 4 * length; ++p, ++it)
+        positions.push_back(it);
+
+    for(int p = 0; p <= 4 * length; ++p)
+    {
+        for(int q = 0; q <= 4 * length; ++q)
+        {
+            auto advanced = positions[p];
+            advanced += q - p;
+            CHECK(advanced == positions[q]);
+            CHECK(*advanced == values[q % length]);
+            CHECK((advanced - positions[p]) == q - p);
+            CHECK((advanced == positions[p]) == (p == q));
+
+            auto retreated = positions[p];
+            retreated -= p - q;
+            CHECK(retreated == positions[q]);
+            CHECK((positions[p] - retreated) == p - q);
+        }
+    }
+}
+
 int main()
 {
+    // Negative advances across cycle boundaries must update the cycle count.
+    // https://github.com/ericniebler/range-v3/issues/1856
+    {
+        int a[] = {1, 2};
+        auto rng = a | views::cycle;
+        CHECK((begin(rng) + 2 - 1) == begin(rng) + 1);
+        CHECK(((begin(rng) + 2 - 1) - begin(rng)) == 1);
+
+        for(int length : {1, 2, 3, 5})
+        {
+            std::vector<int> values;
+            for(int i = 0; i < length; ++i)
+                values.push_back(i + 1);
+
+            cycled_view<std::vector<int>> cycles{values};
+            static_assert(!same_as<iterator_t<decltype(cycles)>,
+                                   iterator_t<decltype(cycles) const>>,
+                          "");
+            test_random_access_positions(cycles, values, length);
+            auto const & const_cycles = cycles;
+            test_random_access_positions(const_cycles, values, length);
+        }
+
+        for(char const * str : {"a", "ab", "abc", "abcde"})
+        {
+            auto source = views::c_str(str);
+            static_assert(random_access_range<decltype(source)>, "");
+            static_assert(!common_range<decltype(source)>, "");
+            auto cycles = source | views::cycle;
+            test_random_access_positions(cycles, str, int(distance(source)));
+        }
+    }
+
     // initializer list
     {
         auto il = {0, 1, 2};
