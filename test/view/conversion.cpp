@@ -17,7 +17,9 @@
 #include <string>
 #include <vector>
 #include <range/v3/core.hpp>
+#if META_HAS_STATIC_RTTI
 #include <range/v3/view/any_view.hpp>
+#endif
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/drop.hpp>
 #include <range/v3/view/take.hpp>
@@ -57,6 +59,7 @@ int main()
 
     // issue #556
 
+#if META_HAS_STATIC_RTTI
     {
         std::string s{"abc"};
         any_view<any_view<char, category::random_access>, category::random_access> v1 =
@@ -71,6 +74,7 @@ int main()
         ::check_equal(owner1, std::vector<std::vector<char>>{{'b', 'c'}, {'c'}});
         ::check_equal(owner2, std::vector<std::string>{{"bc"}, {"c"}});
     }
+#endif
 
     // map
 

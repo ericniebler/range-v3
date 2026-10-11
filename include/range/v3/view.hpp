@@ -19,7 +19,9 @@
 #include <range/v3/view/adjacent_filter.hpp>
 #include <range/v3/view/adjacent_remove_if.hpp>
 #include <range/v3/view/all.hpp>
+#if META_HAS_STATIC_RTTI
 #include <range/v3/view/any_view.hpp>
+#endif
 #include <range/v3/view/c_str.hpp>
 #include <range/v3/view/cache1.hpp>
 #include <range/v3/view/cartesian_product.hpp>

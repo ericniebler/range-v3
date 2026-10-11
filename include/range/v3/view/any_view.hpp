@@ -15,6 +15,12 @@
 #ifndef RANGES_V3_VIEW_ANY_VIEW_HPP
 #define RANGES_V3_VIEW_ANY_VIEW_HPP
 
+#include <meta/meta_fwd.hpp>
+
+#if !META_HAS_STATIC_RTTI
+#error any_view requires static RTTI
+#endif
+
 #include <type_traits>
 #include <typeinfo>
 #include <utility>
