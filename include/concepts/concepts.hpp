@@ -389,7 +389,7 @@
 #define CPP_CTOR_SFINAE_REQUIRES_0(...)                                         \
     std::enable_if_t<                                                           \
         CPP_PP_CAT(CPP_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__) && CPP_TRUE_FN,     \
-        ::concepts::detail::Nil                                                 \
+        ::concepts::detail::KnightsWhoSayNil                                    \
     > = {})                                                                     \
     CPP_PP_IGNORE_CXX2A_COMPAT_END
 
@@ -400,7 +400,7 @@
         CPP_PP_EVAL(CPP_PP_CAT,                                                 \
             CPP_TEMPLATE_SFINAE_AUX_3_,                                         \
             CPP_PP_CAT(CPP_CTOR_SFINAE_EAT_NOEXCEPT_, __VA_ARGS__)) && CPP_TRUE_FN,\
-        ::concepts::detail::Nil                                                 \
+        ::concepts::detail::KnightsWhoSayNil                                    \
     > = {})                                                                     \
     CPP_PP_EXPAND(CPP_PP_CAT(CPP_CTOR_SFINAE_SHOW_NOEXCEPT_, __VA_ARGS__)))
 
@@ -567,7 +567,7 @@
             CPP_PP_CAT,                                                         \
             CPP_FUN_IMPL_EAT_REQUIRES_,                                         \
             __VA_ARGS__) && CPP_TRUE_FN,                                        \
-        ::concepts::detail::Nil                                                 \
+        ::concepts::detail::KnightsWhoSayNil                                    \
     > = {}) const                                                               \
     CPP_PP_IGNORE_CXX2A_COMPAT_END
 
@@ -578,7 +578,7 @@
             CPP_PP_CAT,                                                         \
             CPP_FUN_IMPL_EAT_REQUIRES_,                                         \
             CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)) && CPP_TRUE_FN,\
-        ::concepts::detail::Nil                                                 \
+        ::concepts::detail::KnightsWhoSayNil                                    \
     > = {}) const                                                               \
     CPP_PP_EXPAND(CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))
 
@@ -607,7 +607,7 @@
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_0(...)                            \
     std::enable_if_t<                                                           \
         CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__) && CPP_TRUE_FN,     \
-        ::concepts::detail::Nil                                                 \
+        ::concepts::detail::KnightsWhoSayNil                                    \
     > = {})                                                                     \
     CPP_PP_IGNORE_CXX2A_COMPAT_END
 
@@ -619,7 +619,7 @@
             CPP_FUN_IMPL_EAT_REQUIRES_,                                         \
             CPP_PP_CAT(CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__)                 \
         ) && CPP_TRUE_FN,                                                       \
-        ::concepts::detail::Nil                                                 \
+        ::concepts::detail::KnightsWhoSayNil                                    \
     > = {})                                                                     \
     CPP_PP_EXPAND(CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))
 
@@ -777,7 +777,7 @@ namespace concepts
             return true;
         }
 
-        struct Nil
+        struct KnightsWhoSayNil
         {};
 
 #ifdef CPP_WORKAROUND_MSVC_779763
@@ -785,7 +785,7 @@ namespace concepts
 
         struct CPP_true_t
         {
-            constexpr bool operator()(Nil) const noexcept
+            constexpr bool operator()(KnightsWhoSayNil) const noexcept
             {
                 return true;
             }
@@ -802,10 +802,10 @@ namespace concepts
             return true;
         }
 #else
-        using xNil = Nil;
+        using xNil = KnightsWhoSayNil;
 #endif
 
-        constexpr bool CPP_true_fn(Nil)
+        constexpr bool CPP_true_fn(KnightsWhoSayNil)
         {
             return true;
         }

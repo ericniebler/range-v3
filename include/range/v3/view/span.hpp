@@ -361,8 +361,10 @@ namespace ranges
     template<typename T, detail::span_index_t N>
     RANGES_INLINE_VAR constexpr bool enable_borrowed_range<span<T, N>> = true;
 
+#if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17
     template<typename T, detail::span_index_t N>
     constexpr detail::span_index_t span<T, N>::extent;
+#endif
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
     template(typename Rng)(

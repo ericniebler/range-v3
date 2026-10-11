@@ -23,8 +23,8 @@
 int main()
 {
     using namespace ranges;
-    static const char * const data[] = {"'allo", "'allo", "???"};
-    std::vector<MoveOnlyString> vs(begin(data), end(data));
+    static const char * const strs[] = {"'allo", "'allo", "???"};
+    std::vector<MoveOnlyString> vs(begin(strs), end(strs));
     auto x = vs | views::move;
 
     {

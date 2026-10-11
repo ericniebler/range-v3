@@ -20,6 +20,9 @@ ranges_append_flag(RANGES_HAS_WNO_MISSING_VARIABLE_DECLARATIONS -Wno-missing-var
 ranges_append_flag(RANGES_HAS_WNO_DOCUMENTATION -Wno-documentation)
 ranges_append_flag(RANGES_HAS_WNO_DOCUMENTATION_UNKNOWN_COMMAND -Wno-documentation-unknown-command)
 ranges_append_flag(RANGES_HAS_WNO_OLD_STYLE_CAST -Wno-old-style-cast)
+ranges_append_flag(RANGES_HAS_WNO_NRVO -Wno-nrvo)
+ranges_append_flag(RANGES_HAS_WNO_MISSING_NORETURN -Wno-missing-noreturn)
+ranges_append_flag(RANGES_HAS_WNO_SWITCH_DEFAULT -Wno-switch-default)
 
 if (RANGES_ENV_MACOSX)
   ranges_append_flag(RANGES_HAS_WNO_GLOBAL_CONSTRUCTORS -Wno-global-constructors)

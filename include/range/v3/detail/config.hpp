@@ -99,6 +99,21 @@ namespace ranges
 #define RANGES_ENSURE(...) RANGES_ENSURE_MSG((__VA_ARGS__), #__VA_ARGS__)
 #endif
 
+#ifndef RANGES_EXPECT_UNREACHABLE_RETURN
+#if defined(NDEBUG) && defined(_MSC_VER)
+// In release builds, RANGES_EXPECT(false) for msvc invokes an intrinsic that indicates
+// subsequent operations are unreachable. Do not invoke a return after its evaluation,
+// lest the compiler warn that the return is unreachable.
+#define RANGES_EXPECT_UNREACHABLE_RETURN(RETURN_VALUE) RANGES_EXPECT(false)
+#else
+#define RANGES_EXPECT_UNREACHABLE_RETURN(RETURN_VALUE) \
+    do                                                 \
+    {                                                  \
+        return (RANGES_EXPECT(false), RETURN_VALUE);   \
+    } while(false)
+#endif
+#endif // RANGES_EXPECT_UNREACHABLE_RETURN
+
 #define RANGES_DECLTYPE_AUTO_RETURN(...) \
     ->decltype(__VA_ARGS__)              \
     {                                    \
@@ -530,13 +545,21 @@ namespace ranges
 // #endif
 
 #ifndef RANGES_CXX_COROUTINES
-#if defined(__cpp_coroutines) && defined(__has_include)
+#if (defined(__cpp_coroutines) || defined(__cpp_impl_coroutine)) && defined(__has_include)
 #if __has_include(<coroutine>)
+#if defined(__cpp_coroutines)
 #define RANGES_CXX_COROUTINES __cpp_coroutines
+#elif defined(__cpp_impl_coroutine)
+#define RANGES_CXX_COROUTINES __cpp_impl_coroutine
+#endif
 #define RANGES_COROUTINES_HEADER <coroutine>
 #define RANGES_COROUTINES_NS std
 #elif __has_include(<experimental/coroutine>)
+#if defined(__cpp_coroutines)
 #define RANGES_CXX_COROUTINES __cpp_coroutines
+#elif defined(__cpp_impl_coroutine)
+#define RANGES_CXX_COROUTINES __cpp_impl_coroutine
+#endif
 #define RANGES_COROUTINES_HEADER <experimental/coroutine>
 #define RANGES_COROUTINES_NS std::experimental
 #endif
@@ -693,9 +716,7 @@ namespace ranges
 #define RANGES_IS_SAME(...) std::is_same<__VA_ARGS__>::value
 #endif
 
-// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=93667
-#if defined(__has_cpp_attribute) && __has_cpp_attribute(no_unique_address) && \
-    !(defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 10)
+#if defined(__has_cpp_attribute) && __has_cpp_attribute(no_unique_address)
 #define RANGES_NO_UNIQUE_ADDRESS [[no_unique_address]]
 #else
 #define RANGES_NO_UNIQUE_ADDRESS

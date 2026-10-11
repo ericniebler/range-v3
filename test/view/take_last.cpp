@@ -32,4 +32,6 @@ int main()
 
     auto rng1 = rgi | views::take_last(7);
     ::check_equal(rng1, {0, 1, 2, 3, 4, 5});
+
+    return ::test_result();
 }

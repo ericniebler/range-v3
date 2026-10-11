@@ -24,6 +24,7 @@
 #include <range/v3/action/join.hpp>
 #include <range/v3/action/push_back.hpp>
 #include <range/v3/action/push_front.hpp>
+#include <range/v3/action/remove.hpp>
 #include <range/v3/action/remove_if.hpp>
 #include <range/v3/action/reverse.hpp>
 #include <range/v3/action/shuffle.hpp>

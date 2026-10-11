@@ -2835,12 +2835,14 @@ namespace meta
         template <typename T>
         struct static_const
         {
-            static constexpr T value{};
+            static constexpr T const value{};
         };
 
+#if !META_CXX_INLINE_VARIABLES
         // Avoid potential ODR violations with global objects:
-        template <typename T>
-        constexpr T static_const<T>::value;
+        template<typename T>
+        constexpr T const static_const<T>::value;
+#endif
     } // namespace detail
 
     ///\endcond
@@ -3776,9 +3778,9 @@ namespace meta
     {
         /// A user-defined literal that generates objects of type \c meta::size_t.
         /// \ingroup integral
-        template <char... Chs>
+        template<char... Chs>
         constexpr fold<list<char_<Chs>...>, meta::size_t<0>, quote<detail::atoi_>>
-            operator"" _z()
+        operator""_z()
         {
             return {};
         }
@@ -3788,7 +3790,8 @@ namespace meta
 /// \cond
 // Non-portable forward declarations of standard containers
 #ifndef META_NO_STD_FORWARD_DECLARATIONS
-#if defined(__apple_build_version__) || (defined(__clang__) && __clang_major__ < 6)
+#if (defined(__apple_build_version__) || (defined(__clang__) && __clang_major__ < 6)) && \
+    (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION < 160000)
 META_BEGIN_NAMESPACE_STD
 META_BEGIN_NAMESPACE_VERSION
 template <class>
